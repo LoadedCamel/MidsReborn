@@ -128,6 +128,10 @@ namespace Base.Data_Classes
 
         public bool OffensiveAdaptation { get; private set; }
 
+        public bool NotDefensiveAdaptation { get; private set; }
+
+        public bool NotDefensiveNorOffensiveAdaptation { get; private set; }
+
         public bool BoxingBuff { get; private set; }
 
         public bool KickBuff { get; private set; }
@@ -333,6 +337,8 @@ namespace Base.Data_Classes
             DefensiveAdaptation = false;
             EfficientAdaptation = false;
             OffensiveAdaptation = false;
+            NotDefensiveAdaptation = true;
+            NotDefensiveNorOffensiveAdaptation = true;
             PerfectionType = string.Empty;
             BoxingBuff = false;
             KickBuff = false;
@@ -359,15 +365,17 @@ namespace Base.Data_Classes
             DefensiveAdaptation = false;
             EfficientAdaptation = false;
             OffensiveAdaptation = false;
+            NotDefensiveAdaptation = true;
+            NotDefensiveNorOffensiveAdaptation = true;
             PerfectionType = string.Empty;
             BoxingBuff = false;
             KickBuff = false;
 
             foreach (var power in CurrentBuild.Powers)
             {
-                //if (power == null || power.Power == null || power.StatInclude == false) continue;
+                if (power == null || power.Power == null || !power.StatInclude) continue;
 
-                switch (power.Name.ToUpper())
+                switch (power.Power.PowerName.ToUpper())
                 {
                     case "TIME_CRAWL":
                         DelayedActive = true;
@@ -422,13 +430,24 @@ namespace Base.Data_Classes
                         break;
                     case "DEFENSIVE_ADAPTATION":
                         DefensiveAdaptation = true;
+                        NotDefensiveAdaptation = false;
+                        NotDefensiveNorOffensiveAdaptation = false;
                         break;
                     case "EFFICIENT_ADAPTATION":
                         EfficientAdaptation = true;
                         break;
                     case "OFFENSIVE_ADAPTATION":
                         OffensiveAdaptation = true;
+                        NotDefensiveNorOffensiveAdaptation = false;
                         break;
+                }
+            }
+
+            foreach (var power in CurrentBuild.Powers)
+            {
+                if (power == null || power.Power == null) continue;
+                switch (power.Power.PowerName.ToUpper())
+                {
                     case "BOXING":
                         BoxingBuff = true;
                         break;
