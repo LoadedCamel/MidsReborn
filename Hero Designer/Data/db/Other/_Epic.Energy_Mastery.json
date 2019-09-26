@@ -680,7 +680,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 18.7684631,
           "MagPercent": 18.7684631,
           "Reward": "",
@@ -1302,7 +1301,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 18.0177269,
           "MagPercent": 18.0177269,
           "Reward": "",

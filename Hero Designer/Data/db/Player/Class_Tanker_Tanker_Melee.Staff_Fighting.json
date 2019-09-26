@@ -1389,7 +1389,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 15.76551,
           "MagPercent": 15.76551,
           "Reward": "",
@@ -2453,7 +2452,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 24.7743721,
           "MagPercent": 24.7743721,
           "Reward": "",
@@ -3078,7 +3076,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 4.34802771,
           "MagPercent": 4.34802771,
           "Duration": 1.5,
@@ -4726,7 +4723,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 3.84753513,
           "MagPercent": 3.84753513,
           "Duration": 2.3,
@@ -6423,7 +6419,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 33.7832375,
           "MagPercent": 33.7832375,
           "Reward": "",
@@ -7121,7 +7116,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 6.23113,
           "MagPercent": 6.23113,
           "Duration": 1.7,
@@ -8707,7 +8701,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 25.90048,
           "MagPercent": 25.90048,
           "Duration": 1.9,

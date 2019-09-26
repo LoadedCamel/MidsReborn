@@ -2,176 +2,176 @@
   {
     "Archetype": "Class_Arachnos_Soldier",
     "Fullname": "Arachnos_Soldiers.Arachnos_Soldier",
-    "Hash": 32638052,
-    "Length": 69107
+    "Hash": -1919404976,
+    "Length": 69079
   },
   {
     "Archetype": "Class_Arachnos_Soldier",
     "Fullname": "Arachnos_Soldiers.Bane_Spider_Soldier",
-    "Hash": 2001708636,
-    "Length": 89793
+    "Hash": -1144298459,
+    "Length": 89779
   },
   {
     "Archetype": "Class_Arachnos_Soldier",
     "Fullname": "Arachnos_Soldiers.Crab_Spider_Soldier",
-    "Hash": 704223721,
-    "Length": 71818
+    "Hash": -1949468299,
+    "Length": 71798
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": 1658694636,
-    "Length": 123661
+    "Hash": -273194532,
+    "Length": 123625
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Assault_Rifle",
-    "Hash": -1295316971,
-    "Length": 135363
+    "Hash": 831278925,
+    "Length": 135315
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Beam_Rifle",
-    "Hash": 868954385,
-    "Length": 168776
+    "Hash": -100003027,
+    "Length": 168714
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Dark_Blast",
-    "Hash": 1065419921,
-    "Length": 140930
+    "Hash": 519942025,
+    "Length": 140908
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Dual_Pistols",
-    "Hash": 51278850,
-    "Length": 373762
+    "Hash": -1359498826,
+    "Length": 373804
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Electrical_Blast",
-    "Hash": 448113652,
-    "Length": 156524
+    "Hash": 40977462,
+    "Length": 156498
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Energy_Blast",
-    "Hash": -156775040,
-    "Length": 146658
+    "Hash": 1318902330,
+    "Length": 146634
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Fire_Blast",
-    "Hash": 801659372,
-    "Length": 126784
+    "Hash": 877345140,
+    "Length": 126750
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Ice_Blast",
-    "Hash": -1009318121,
-    "Length": 157364
+    "Hash": -1627713293,
+    "Length": 157678
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Psychic_Blast",
-    "Hash": -250021353,
-    "Length": 137923
+    "Hash": 972423338,
+    "Length": 137911
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Radiation_Blast",
-    "Hash": 1937756398,
-    "Length": 137662
+    "Hash": -113909434,
+    "Length": 137626
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Sonic_Attack",
-    "Hash": 1703255310,
-    "Length": 185950
+    "Hash": 1125405490,
+    "Length": 185936
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Water_Blast",
-    "Hash": -1396910343,
-    "Length": 221508
+    "Hash": -901551275,
+    "Length": 221696
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Radiation_Manipulation",
-    "Hash": 1340056453,
-    "Length": 151015
+    "Hash": -1676427333,
+    "Length": 151000
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Darkness_Manipulation",
-    "Hash": -1057190410,
-    "Length": 148713
+    "Hash": -975055112,
+    "Length": 148793
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Gadgets",
-    "Hash": -1890915677,
-    "Length": 144969
+    "Hash": -473981985,
+    "Length": 145113
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Electricity_Manipulation",
-    "Hash": 1604360884,
-    "Length": 166853
+    "Hash": 1705984936,
+    "Length": 166811
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Energy_Manipulation",
-    "Hash": 1000911483,
-    "Length": 134811
+    "Hash": -2019986937,
+    "Length": 134805
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Fire_Manipulation",
-    "Hash": 1918271065,
-    "Length": 126837
+    "Hash": 57654765,
+    "Length": 126818
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Ice_Manipulation",
-    "Hash": -268914249,
-    "Length": 162427
+    "Hash": 1309634075,
+    "Length": 162637
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Martial_Manipulation",
-    "Hash": -138846010,
-    "Length": 147975
+    "Hash": -1692362930,
+    "Length": 148019
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Mental_Manipulation",
-    "Hash": -278074683,
-    "Length": 125984
+    "Hash": -731086487,
+    "Length": 125991
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Ninja_Training",
-    "Hash": 1086467767,
-    "Length": 177988
+    "Hash": -106074476,
+    "Length": 178155
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Plant_Manipulation",
-    "Hash": -144075129,
-    "Length": 144780
+    "Hash": -1224423562,
+    "Length": 144759
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Tactical_Arrow",
-    "Hash": 1068086503,
-    "Length": 159048
+    "Hash": 1256723009,
+    "Length": 159260
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Temporal_Manipulation",
-    "Hash": -1197464544,
-    "Length": 163918
+    "Hash": -833821601,
+    "Length": 164025
   },
   {
     "Archetype": "",
@@ -278,8 +278,8 @@
   {
     "Archetype": "",
     "Fullname": "Boosts.Attuned_Aegis_F",
-    "Hash": 834478736,
-    "Length": 9456
+    "Hash": -45573002,
+    "Length": 9464
   },
   {
     "Archetype": "",
@@ -908,7 +908,7 @@
   {
     "Archetype": "",
     "Fullname": "Boosts.Attuned_Call_of_the_Sandman_F",
-    "Hash": 1701863621,
+    "Hash": -59754683,
     "Length": 3509
   },
   {
@@ -1832,7 +1832,7 @@
   {
     "Archetype": "",
     "Fullname": "Boosts.Attuned_Entropic_Chaos_E",
-    "Hash": -2041916749,
+    "Hash": -819171597,
     "Length": 3437
   },
   {
@@ -5792,8 +5792,8 @@
   {
     "Archetype": "",
     "Fullname": "Boosts.Crafted_Aegis_F",
-    "Hash": -330439085,
-    "Length": 9424
+    "Hash": 343620273,
+    "Length": 9432
   },
   {
     "Archetype": "",
@@ -6278,7 +6278,7 @@
   {
     "Archetype": "",
     "Fullname": "Boosts.Crafted_Call_of_the_Sandman_F",
-    "Hash": 1383250101,
+    "Hash": -1120432587,
     "Length": 3489
   },
   {
@@ -7340,7 +7340,7 @@
   {
     "Archetype": "",
     "Fullname": "Boosts.Crafted_Entropic_Chaos_E",
-    "Hash": 1069336518,
+    "Hash": 521107014,
     "Length": 3417
   },
   {
@@ -15482,1238 +15482,1238 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Bio_Organic_Armor",
-    "Hash": 915080222,
-    "Length": 268103
+    "Hash": -398966605,
+    "Length": 269119
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Dark_Armor",
-    "Hash": -1718812052,
-    "Length": 105798
+    "Hash": 938207617,
+    "Length": 106063
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Electric_Armor",
-    "Hash": -925895800,
-    "Length": 118963
+    "Hash": 1939361738,
+    "Length": 119242
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Energy_Aura",
-    "Hash": -1786589699,
-    "Length": 154839
+    "Hash": -2119354538,
+    "Length": 154955
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Fiery_Aura",
-    "Hash": 811057490,
-    "Length": 87511
+    "Hash": 779054820,
+    "Length": 87565
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Ice_Armor",
-    "Hash": 1510089768,
-    "Length": 158060
+    "Hash": -986315782,
+    "Length": 158288
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Invulnerability",
-    "Hash": 1133165201,
-    "Length": 153771
+    "Hash": -1429609154,
+    "Length": 154212
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Radiation_Armor",
-    "Hash": 829593617,
-    "Length": 125708
+    "Hash": 998753542,
+    "Length": 125919
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Regeneration",
-    "Hash": -68743813,
-    "Length": 108867
+    "Hash": 458391706,
+    "Length": 109049
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Shield_Defense",
-    "Hash": 1543861684,
-    "Length": 155189
+    "Hash": 1501951226,
+    "Length": 155400
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Stone_Armor",
-    "Hash": 1439080643,
-    "Length": 160502
+    "Hash": 1481484740,
+    "Length": 160616
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Super_Reflexes",
-    "Hash": -1522970570,
-    "Length": 104979
+    "Hash": -2087493690,
+    "Length": 105025
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Willpower",
-    "Hash": -789697450,
-    "Length": 155067
+    "Hash": 315076231,
+    "Length": 155234
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Battle_Axe",
-    "Hash": 1231427079,
-    "Length": 91963
+    "Hash": 581649794,
+    "Length": 91908
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Broad_Sword",
-    "Hash": -1570150765,
-    "Length": 92378
+    "Hash": -1500838058,
+    "Length": 92409
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Claws",
-    "Hash": -2074445208,
-    "Length": 92197
+    "Hash": -853844595,
+    "Length": 92214
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Dark_Melee",
-    "Hash": -13440741,
-    "Length": 108646
+    "Hash": 1872526947,
+    "Length": 108733
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Dual_Blades",
-    "Hash": -907812629,
-    "Length": 187052
+    "Hash": -1388708578,
+    "Length": 187077
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Electrical_Melee",
-    "Hash": 391725668,
-    "Length": 121457
+    "Hash": -833071569,
+    "Length": 121454
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Energy_Melee",
-    "Hash": 662107908,
-    "Length": 106715
+    "Hash": 1989631309,
+    "Length": 106714
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Fiery_Melee",
-    "Hash": 1029278538,
-    "Length": 99088
+    "Hash": -1068195517,
+    "Length": 99099
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Ice_Melee",
-    "Hash": -127138781,
-    "Length": 108140
+    "Hash": 797905540,
+    "Length": 108379
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Katana",
-    "Hash": -540223611,
-    "Length": 91483
+    "Hash": -1007244842,
+    "Length": 91490
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Kinetic_Attack",
-    "Hash": 1248539483,
-    "Length": 142491
+    "Hash": -125370748,
+    "Length": 142680
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Martial_Arts",
-    "Hash": -372996559,
-    "Length": 115312
+    "Hash": 347378360,
+    "Length": 115305
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Psionic_Melee",
-    "Hash": 59380677,
-    "Length": 122036
+    "Hash": -1016176377,
+    "Length": 122014
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Radiation_Melee",
-    "Hash": 795279494,
-    "Length": 125489
+    "Hash": 1828879508,
+    "Length": 125449
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Savage_Melee",
-    "Hash": 543224740,
-    "Length": 109524
+    "Hash": -1204301515,
+    "Length": 109485
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Spines",
-    "Hash": -645388082,
-    "Length": 139602
+    "Hash": 390828573,
+    "Length": 139969
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Staff_Fighting",
-    "Hash": -12368779,
-    "Length": 299229
+    "Hash": 1376080972,
+    "Length": 299394
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Stone_Melee",
-    "Hash": -1098701752,
-    "Length": 93922
+    "Hash": -744817641,
+    "Length": 93897
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Brawling",
-    "Hash": 2039264593,
-    "Length": 218176
+    "Hash": 959220302,
+    "Length": 218296
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Super_Strength",
-    "Hash": -1090454279,
-    "Length": 110647
+    "Hash": -304594482,
+    "Length": 110560
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Titan_Weapons",
-    "Hash": 2099201299,
-    "Length": 128553
+    "Hash": 1662332300,
+    "Length": 128600
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.War_Mace",
-    "Hash": 1495716822,
-    "Length": 92420
+    "Hash": 1324161137,
+    "Length": 92399
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Cold_Domination",
-    "Hash": 288449720,
-    "Length": 151923
+    "Hash": 180130882,
+    "Length": 151928
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Darkness_Affinity",
-    "Hash": -948666564,
-    "Length": 109068
+    "Hash": 1805839276,
+    "Length": 109064
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Empathy",
-    "Hash": 1505214776,
-    "Length": 73302
+    "Hash": -1967113853,
+    "Length": 73298
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Force_Field",
-    "Hash": 581978831,
-    "Length": 107527
+    "Hash": -1724613433,
+    "Length": 107553
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Kinetics",
-    "Hash": -990734313,
-    "Length": 81969
+    "Hash": -912672989,
+    "Length": 82021
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Nature_Affinity",
-    "Hash": -1392810612,
+    "Hash": 1673418054,
     "Length": 107601
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Pain_Domination",
-    "Hash": 1215274771,
-    "Length": 124291
+    "Hash": 387670339,
+    "Length": 124292
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Poison",
-    "Hash": 93462956,
-    "Length": 199256
+    "Hash": 1006011110,
+    "Length": 199258
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Radiation_Emission",
-    "Hash": -1607797004,
-    "Length": 109525
+    "Hash": -60407121,
+    "Length": 109533
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Sonic_Debuff",
-    "Hash": 821876448,
+    "Hash": 1499773344,
     "Length": 88470
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Storm_Summoning",
-    "Hash": 659098935,
-    "Length": 78828
+    "Hash": -1848120773,
+    "Length": 78820
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Thermal_Radiation",
-    "Hash": 691964206,
-    "Length": 87106
+    "Hash": -575970846,
+    "Length": 87111
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Time_Manipulation",
-    "Hash": -1549180022,
-    "Length": 144504
+    "Hash": -341281061,
+    "Length": 144562
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Traps",
-    "Hash": 1148598376,
+    "Hash": -1697049886,
     "Length": 42694
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Buff.Trick_Arrow",
-    "Hash": 481807695,
-    "Length": 74437
+    "Hash": 1034819735,
+    "Length": 74513
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Darkness_Control",
-    "Hash": 624212088,
-    "Length": 80641
+    "Hash": -1430940009,
+    "Length": 80611
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Earth_Control",
-    "Hash": 896143175,
-    "Length": 84900
+    "Hash": 590309355,
+    "Length": 84866
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Electric_Control",
-    "Hash": 33351607,
-    "Length": 99564
+    "Hash": 1798581787,
+    "Length": 99528
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Fire_Control",
-    "Hash": 504737612,
-    "Length": 82043
+    "Hash": -904678194,
+    "Length": 82070
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Gravity_Control",
-    "Hash": -995399527,
-    "Length": 114844
+    "Hash": 1771570513,
+    "Length": 114826
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Ice_Control",
-    "Hash": -164159934,
-    "Length": 115301
+    "Hash": -1113164165,
+    "Length": 115282
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Illusion_Control",
-    "Hash": -1660116825,
-    "Length": 101532
+    "Hash": 839264643,
+    "Length": 101672
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Mind_Control",
-    "Hash": 291261769,
-    "Length": 68519
+    "Hash": 146143258,
+    "Length": 68509
   },
   {
     "Archetype": "Class_Controller",
     "Fullname": "Controller_Control.Plant_Control",
-    "Hash": -1292276016,
-    "Length": 75835
+    "Hash": 985402906,
+    "Length": 75811
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Cold_Domination",
-    "Hash": 762452676,
-    "Length": 114755
+    "Hash": -1572578322,
+    "Length": 114760
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Dark_Miasma",
-    "Hash": -274422489,
-    "Length": 96468
+    "Hash": 1435867242,
+    "Length": 96458
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Empathy",
-    "Hash": -1411769057,
-    "Length": 73252
+    "Hash": -1498438884,
+    "Length": 73248
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Force_Field",
-    "Hash": -1938778909,
-    "Length": 107448
+    "Hash": 1231494451,
+    "Length": 107474
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Kinetics",
-    "Hash": -1066900263,
-    "Length": 81811
+    "Hash": 1870480769,
+    "Length": 81863
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Nature_Affinity",
-    "Hash": 413073157,
+    "Hash": 2109092393,
     "Length": 107479
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Pain_Domination",
-    "Hash": 2064490245,
-    "Length": 124224
+    "Hash": -1692022795,
+    "Length": 124225
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Poison",
-    "Hash": -1824560259,
-    "Length": 199024
+    "Hash": 1462198809,
+    "Length": 199026
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Radiation_Emission",
-    "Hash": -394226264,
-    "Length": 108145
+    "Hash": -1004619329,
+    "Length": 108153
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Sonic_Resonance",
-    "Hash": 1853914676,
+    "Hash": -2024311116,
     "Length": 86567
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Storm_Summoning",
-    "Hash": -1016528860,
-    "Length": 82122
+    "Hash": 995281920,
+    "Length": 82108
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Thermal_Radiation",
-    "Hash": 1812970220,
-    "Length": 86927
+    "Hash": -195941412,
+    "Length": 86932
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Time_Manipulation",
-    "Hash": -1910204017,
-    "Length": 144329
+    "Hash": 467443924,
+    "Length": 144387
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Traps",
-    "Hash": 2207091,
+    "Hash": 1875598767,
     "Length": 42662
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Trick_Arrow",
-    "Hash": -817226782,
-    "Length": 73049
+    "Hash": 1545753608,
+    "Length": 73125
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Archery",
-    "Hash": -68417674,
-    "Length": 69492
+    "Hash": -515792822,
+    "Length": 69446
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Assault_Rifle",
-    "Hash": 1333581313,
-    "Length": 72873
+    "Hash": 686163569,
+    "Length": 72785
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Beam_Rifle",
-    "Hash": -506507360,
-    "Length": 116942
+    "Hash": 50452072,
+    "Length": 116886
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Dark_Blast",
-    "Hash": 422400886,
+    "Hash": 229161146,
     "Length": 79821
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Dual_Pistols",
-    "Hash": 1246112923,
-    "Length": 322728
+    "Hash": 1019286583,
+    "Length": 322704
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Electrical_Blast",
-    "Hash": 633608805,
-    "Length": 101626
+    "Hash": -849756675,
+    "Length": 101594
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Energy_Blast",
-    "Hash": -232871822,
-    "Length": 97744
+    "Hash": -513977704,
+    "Length": 97710
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Fire_Blast",
-    "Hash": 1818081937,
-    "Length": 72282
+    "Hash": 416693097,
+    "Length": 72212
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Ice_Blast",
-    "Hash": -2021030427,
-    "Length": 104177
+    "Hash": -1647611731,
+    "Length": 104499
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Psychic_Blast",
-    "Hash": 982484309,
-    "Length": 81077
+    "Hash": 96438525,
+    "Length": 81070
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Radiation_Blast",
-    "Hash": -1765819266,
-    "Length": 83946
+    "Hash": 393383356,
+    "Length": 83908
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Sonic_Attack",
-    "Hash": 1077401074,
-    "Length": 135627
+    "Hash": -1941739068,
+    "Length": 135637
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Water_Blast",
-    "Hash": 296492973,
-    "Length": 157739
+    "Hash": -504014807,
+    "Length": 157887
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Cold_Domination",
-    "Hash": -2116199346,
-    "Length": 151613
+    "Hash": 1896411508,
+    "Length": 151618
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Dark_Miasma",
-    "Hash": -153081590,
-    "Length": 114410
+    "Hash": -1440011061,
+    "Length": 114400
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Empathy",
-    "Hash": -1131281557,
-    "Length": 73111
+    "Hash": 656712482,
+    "Length": 73107
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Force_Field",
-    "Hash": 915990235,
-    "Length": 105978
+    "Hash": -534176777,
+    "Length": 106010
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Kinetics",
-    "Hash": 160258060,
-    "Length": 91729
+    "Hash": 1230869902,
+    "Length": 91781
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Nature_Affinity",
-    "Hash": -248577539,
+    "Hash": -449617927,
     "Length": 107360
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Pain_Domination",
-    "Hash": 1748246752,
-    "Length": 124094
+    "Hash": -563195292,
+    "Length": 124095
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Poison",
-    "Hash": 499800064,
-    "Length": 198862
+    "Hash": -1694929126,
+    "Length": 198864
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Radiation_Emission",
-    "Hash": -362565776,
-    "Length": 127187
+    "Hash": 1290680809,
+    "Length": 127195
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Sonic_Debuff",
-    "Hash": 834081291,
+    "Hash": 925796363,
     "Length": 105108
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Storm_Summoning",
-    "Hash": -2051586782,
-    "Length": 79821
+    "Hash": -949603954,
+    "Length": 79819
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Thermal_Radiation",
-    "Hash": 1870501141,
-    "Length": 86872
+    "Hash": -1765068651,
+    "Length": 86877
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Time_Manipulation",
-    "Hash": 1541044800,
-    "Length": 144186
+    "Hash": 2044288373,
+    "Length": 144244
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Traps",
-    "Hash": 1337992882,
+    "Hash": 1652127276,
     "Length": 42701
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Buff.Trick_Arrow",
-    "Hash": 544476200,
-    "Length": 82818
+    "Hash": 984405576,
+    "Length": 82894
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Archery",
-    "Hash": -417664430,
-    "Length": 53810
+    "Hash": 1874841522,
+    "Length": 53784
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Assault_Rifle",
-    "Hash": 1923685128,
-    "Length": 54417
+    "Hash": -563322734,
+    "Length": 54351
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Beam_Rifle",
-    "Hash": -1996356343,
-    "Length": 100915
+    "Hash": 1496647957,
+    "Length": 100861
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Dark_Blast",
-    "Hash": -1159167950,
-    "Length": 60167
+    "Hash": -185500420,
+    "Length": 60147
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Dual_Pistols",
-    "Hash": 1418880342,
-    "Length": 303822
+    "Hash": -784236254,
+    "Length": 303884
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Electrical_Blast",
-    "Hash": 1767037087,
-    "Length": 85489
+    "Hash": -827561573,
+    "Length": 85453
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Energy_Blast",
-    "Hash": 627536392,
-    "Length": 81773
+    "Hash": 2119956384,
+    "Length": 81751
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Fire_Blast",
-    "Hash": 517905549,
-    "Length": 56362
+    "Hash": 1018234929,
+    "Length": 56314
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Ice_Blast",
-    "Hash": -2051748457,
-    "Length": 90442
+    "Hash": 730256059,
+    "Length": 90778
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Psychic_Blast",
-    "Hash": -1543488920,
-    "Length": 60775
+    "Hash": -1526137250,
+    "Length": 60768
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Radiation_Blast",
-    "Hash": 403427097,
-    "Length": 66666
+    "Hash": -2069012067,
+    "Length": 66628
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Sonic_Attack",
-    "Hash": 1066368364,
-    "Length": 120650
+    "Hash": 387168446,
+    "Length": 120622
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Defender_Ranged.Water_Blast",
-    "Hash": 1549113525,
-    "Length": 141891
+    "Hash": -1638188347,
+    "Length": 142077
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Dark_Assault",
-    "Hash": 454351625,
-    "Length": 97982
+    "Hash": 115840618,
+    "Length": 97979
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Earth_Assault",
-    "Hash": -1130282367,
-    "Length": 98974
+    "Hash": 404978425,
+    "Length": 98972
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Electricity_Manipulation",
-    "Hash": -956646576,
-    "Length": 110388
+    "Hash": -1470072668,
+    "Length": 110322
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Energy_Assault",
-    "Hash": 571531919,
-    "Length": 113587
+    "Hash": -223825661,
+    "Length": 113595
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Fiery_Assault",
-    "Hash": -1834029539,
-    "Length": 64531
+    "Hash": -1383642931,
+    "Length": 64507
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Icy_Assault",
-    "Hash": 874585429,
-    "Length": 133920
+    "Hash": -2021707056,
+    "Length": 134205
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Martial_Assault",
-    "Hash": 1365168710,
-    "Length": 67746
+    "Hash": 1499128396,
+    "Length": 67745
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Psionic_Assault",
-    "Hash": 994927101,
-    "Length": 75911
+    "Hash": 1353852943,
+    "Length": 75907
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Radioactive_Assault",
-    "Hash": 271904973,
-    "Length": 107820
+    "Hash": -187389891,
+    "Length": 107818
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Savage_Assault",
-    "Hash": 1245795514,
-    "Length": 87328
+    "Hash": -1926764432,
+    "Length": 87417
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Assault.Thorny_Assault",
-    "Hash": 1013272180,
-    "Length": 82243
+    "Hash": -378417959,
+    "Length": 82267
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Control.Darkness_Control",
-    "Hash": -81260406,
-    "Length": 79700
+    "Hash": 1611432027,
+    "Length": 79675
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Control.Earth_Control",
-    "Hash": 359732806,
-    "Length": 81606
+    "Hash": -537566210,
+    "Length": 81594
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Control.Electric_Control",
-    "Hash": -1972706353,
-    "Length": 93761
+    "Hash": 370658475,
+    "Length": 93743
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Control.Fire_Control",
-    "Hash": -290645124,
-    "Length": 75989
+    "Hash": -445682426,
+    "Length": 76002
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Control.Gravity_Control",
-    "Hash": -1949817995,
-    "Length": 101258
+    "Hash": 1805453273,
+    "Length": 101256
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Control.Ice_Control",
-    "Hash": -403263411,
-    "Length": 111909
+    "Hash": 1658388514,
+    "Length": 111918
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Control.Mind_Control",
-    "Hash": 1490919032,
-    "Length": 70309
+    "Hash": 1244654207,
+    "Length": 70306
   },
   {
     "Archetype": "Class_Dominator",
     "Fullname": "Dominator_Control.Plant_Control",
-    "Hash": -529962996,
-    "Length": 73310
+    "Hash": 88940292,
+    "Length": 73292
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Arctic_Mastery",
-    "Hash": 82623506,
-    "Length": 77013
+    "Hash": 562625791,
+    "Length": 77122
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Blaze_Mastery",
-    "Hash": 77194099,
+    "Hash": -1128060317,
     "Length": 72840
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Body_Mastery_Stalker",
-    "Hash": 447420848,
-    "Length": 38758
+    "Hash": 1385866181,
+    "Length": 38747
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Body_Mastery",
-    "Hash": -1090042684,
-    "Length": 43405
+    "Hash": 370567141,
+    "Length": 43398
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Charge_Mastery",
-    "Hash": -49882387,
-    "Length": 61525
+    "Hash": -1155873228,
+    "Length": 61527
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Chill_Mastery",
-    "Hash": -1218467431,
-    "Length": 59348
+    "Hash": -836218315,
+    "Length": 59428
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Cold_Mastery",
-    "Hash": -1398783256,
-    "Length": 57106
+    "Hash": -1968232366,
+    "Length": 57128
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Dark_Mastery",
-    "Hash": 394238866,
-    "Length": 58081
+    "Hash": 1646332958,
+    "Length": 58079
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Dark_Mastery",
-    "Hash": 1898242371,
-    "Length": 61688
+    "Hash": 1001404799,
+    "Length": 61894
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Darkness_Mastery",
-    "Hash": -2075624173,
-    "Length": 82115
+    "Hash": -930787282,
+    "Length": 82126
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Earth_Mastery",
-    "Hash": -89703548,
-    "Length": 58887
+    "Hash": 1952380421,
+    "Length": 58916
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Electrical_Mastery",
-    "Hash": 1221495883,
-    "Length": 59764
+    "Hash": 1464449023,
+    "Length": 59874
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Electricity_Mastery",
-    "Hash": 180483232,
-    "Length": 67926
+    "Hash": -1367717205,
+    "Length": 67973
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Elec_Mastery",
-    "Hash": -1160413912,
-    "Length": 35627
+    "Hash": -715562574,
+    "Length": 35617
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Energy_Mastery",
-    "Hash": -1619798068,
-    "Length": 39014
+    "Hash": 1974736553,
+    "Length": 39017
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Energy_Mastery_Brute",
-    "Hash": 1713481092,
-    "Length": 39046
+    "Hash": -1755120625,
+    "Length": 39049
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Field_Mastery",
-    "Hash": 2018006231,
-    "Length": 55512
+    "Hash": -1759167733,
+    "Length": 55497
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Fire_Mastery",
-    "Hash": -552184392,
-    "Length": 51051
+    "Hash": -640588033,
+    "Length": 51140
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Fire_Mastery_Dominator",
-    "Hash": 765576106,
-    "Length": 50157
+    "Hash": 1807902835,
+    "Length": 50254
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Fire_Mastery",
-    "Hash": 381928274,
-    "Length": 38159
+    "Hash": 399842796,
+    "Length": 38175
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Flame_Mastery",
-    "Hash": 1521248244,
-    "Length": 54583
+    "Hash": 537306443,
+    "Length": 54692
   },
   {
     "Archetype": "Class_Defender",
     "Fullname": "Epic.Def_Flame_Mastery",
-    "Hash": 1479514570,
-    "Length": 57895
+    "Hash": 1356404415,
+    "Length": 58014
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Corr_Flame_Mastery",
-    "Hash": 1216678745,
-    "Length": 58039
+    "Hash": 1916529316,
+    "Length": 58158
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Force_Mastery",
-    "Hash": 322737732,
-    "Length": 81192
+    "Hash": 147437028,
+    "Length": 81237
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Heat_Mastery_Stalker",
-    "Hash": 182627916,
-    "Length": 37596
+    "Hash": -969276958,
+    "Length": 37588
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Ice_Mastery",
-    "Hash": 1602059795,
-    "Length": 64045
+    "Hash": 1571073719,
+    "Length": 64212
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Ice_Mastery_Dominator",
-    "Hash": 1265078560,
-    "Length": 48096
+    "Hash": -1546369794,
+    "Length": 48130
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Ice_Mastery",
-    "Hash": -85247463,
-    "Length": 62156
+    "Hash": -789596617,
+    "Length": 62236
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Corruptor_Leviathan_Mastery",
-    "Hash": 711809360,
-    "Length": 56357
+    "Hash": -209658471,
+    "Length": 56469
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Dominator_Leviathan_Mastery",
-    "Hash": 1732576473,
-    "Length": 44818
+    "Hash": 1068269142,
+    "Length": 44922
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Brute_Leviathan_Mastery",
-    "Hash": -1853173869,
-    "Length": 81113
+    "Hash": -2127196226,
+    "Length": 81157
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Lev_Mastery",
-    "Hash": 1446414341,
-    "Length": 46509
+    "Hash": 1048180565,
+    "Length": 46501
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Stalker_Leviathan_Mastery",
-    "Hash": 69111275,
-    "Length": 43847
+    "Hash": -1699923637,
+    "Length": 43851
   },
   {
     "Archetype": "",
     "Fullname": "Epic.VEAT_Leviathan_Mastery",
-    "Hash": -2107892045,
-    "Length": 53004
+    "Hash": 1260783480,
+    "Length": 53020
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Mastermind_Leviathan_Mastery",
-    "Hash": 1749375475,
-    "Length": 51181
+    "Hash": 212024830,
+    "Length": 51275
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Mace_Mastery",
-    "Hash": 973516017,
-    "Length": 41408
+    "Hash": -1894927091,
+    "Length": 41448
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Blaster_Mace_Mastery",
-    "Hash": 1898291766,
-    "Length": 59457
+    "Hash": -198999539,
+    "Length": 59535
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Stalker_Mace_Mastery",
-    "Hash": 1928552904,
-    "Length": 58405
+    "Hash": 920873306,
+    "Length": 58421
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Mastermind_Mace_Mastery",
-    "Hash": 317792608,
-    "Length": 81054
+    "Hash": -1826384603,
+    "Length": 81132
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Dominator_Mace_Mastery",
-    "Hash": -1621673686,
-    "Length": 86753
+    "Hash": -1824681149,
+    "Length": 86827
   },
   {
     "Archetype": "",
     "Fullname": "Epic.VEAT_Mace_Mastery",
-    "Hash": -1629119558,
-    "Length": 45186
+    "Hash": 583894604,
+    "Length": 45280
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Controller_Mace_Mastery",
-    "Hash": -2126786863,
-    "Length": 66002
+    "Hash": 725260604,
+    "Length": 66036
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Corruptor_Mace_Mastery",
-    "Hash": 2097738440,
-    "Length": 56529
+    "Hash": 849098783,
+    "Length": 56605
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Brute_Mace_Mastery",
-    "Hash": -1333985051,
-    "Length": 55666
+    "Hash": 1400721253,
+    "Length": 55728
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Dominator_Mu_Mastery",
-    "Hash": -240604089,
-    "Length": 54660
+    "Hash": 721686787,
+    "Length": 54774
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Stalker_Mu_Mastery",
-    "Hash": 1054771066,
-    "Length": 58065
+    "Hash": 1173237114,
+    "Length": 58045
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Blaster_Mu_Mastery",
-    "Hash": 1309268667,
-    "Length": 53191
+    "Hash": -934252210,
+    "Length": 53295
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Corruptor_Mu_Mastery",
-    "Hash": 1256453415,
-    "Length": 43489
+    "Hash": -494356732,
+    "Length": 43591
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Brute_Mu_Mastery",
-    "Hash": -489874174,
-    "Length": 68119
+    "Hash": 1598128672,
+    "Length": 68133
   },
   {
     "Archetype": "",
     "Fullname": "Epic.VEAT_Mu_Mastery",
-    "Hash": 414031749,
-    "Length": 46270
+    "Hash": -639771335,
+    "Length": 46276
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Mastermind_Mu_Mastery",
-    "Hash": -1138731206,
-    "Length": 63906
+    "Hash": 1270031385,
+    "Length": 64006
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Mu_Mastery",
-    "Hash": -1225344739,
-    "Length": 52449
+    "Hash": 270791597,
+    "Length": 52447
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Munitions_Mastery",
-    "Hash": 48531185,
-    "Length": 50868
+    "Hash": -154635128,
+    "Length": 50923
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Ninja_Mastery",
-    "Hash": 1241750325,
-    "Length": 52590
+    "Hash": 1042415537,
+    "Length": 52613
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Power_Mastery",
-    "Hash": -2047831697,
+    "Hash": 659099679,
     "Length": 78947
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Primal_Forces_Mastery_Dominator",
-    "Hash": -29729173,
-    "Length": 46716
+    "Hash": -1329169245,
+    "Length": 46720
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Primal_Forces_Mastery",
-    "Hash": -2052137013,
-    "Length": 66968
+    "Hash": 359028455,
+    "Length": 66952
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Psionic_Mastery",
-    "Hash": 1242975480,
-    "Length": 52098
+    "Hash": 963558277,
+    "Length": 52211
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Psi_Mastery",
-    "Hash": 476196380,
-    "Length": 41133
+    "Hash": -1847940469,
+    "Length": 41017
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Psionic_Mastery_Domingator",
-    "Hash": -1391040937,
-    "Length": 60164
+    "Hash": -1852413110,
+    "Length": 60359
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Psychic_Mastery",
-    "Hash": -2047630440,
-    "Length": 40192
+    "Hash": -797330999,
+    "Length": 40295
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Pyre_Mastery",
-    "Hash": -2094183895,
-    "Length": 65926
+    "Hash": 481974817,
+    "Length": 65942
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Mastermind_Soul_Mastery",
-    "Hash": 1825069995,
-    "Length": 45157
+    "Hash": 928214611,
+    "Length": 45275
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Corruptor_Soul_Mastery",
-    "Hash": 532443783,
-    "Length": 81769
+    "Hash": -1760858805,
+    "Length": 81991
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Brute_Soul_Mastery",
-    "Hash": -384745809,
-    "Length": 61563
+    "Hash": 212598735,
+    "Length": 61567
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Stalker_Soul_Mastery",
-    "Hash": 1930714313,
-    "Length": 47393
+    "Hash": 661359689,
+    "Length": 47405
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Epic.Sentinel_Soul_Mastery",
-    "Hash": -438534304,
-    "Length": 42402
+    "Hash": -1097616613,
+    "Length": 42411
   },
   {
     "Archetype": "",
     "Fullname": "Epic.VEAT_Soul_Mastery",
-    "Hash": -605818412,
-    "Length": 46200
+    "Hash": 1818901468,
+    "Length": 46208
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Dominator_Soul_Mastery",
-    "Hash": -98203677,
-    "Length": 59822
+    "Hash": 1727309767,
+    "Length": 60016
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Stone_Mastery",
-    "Hash": -723924523,
-    "Length": 57673
+    "Hash": 1387206414,
+    "Length": 57664
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Weapon_Mastery_Stalker",
-    "Hash": -581952867,
-    "Length": 44975
+    "Hash": 72352021,
+    "Length": 44997
   },
   {
     "Archetype": "",
     "Fullname": "Epic.Weapon_Mastery",
-    "Hash": -1933691498,
-    "Length": 51938
+    "Hash": 1603804320,
+    "Length": 51952
   },
   {
     "Archetype": "",
@@ -16730,8 +16730,8 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.AntiMatterRayBurn",
-    "Hash": -982071179,
-    "Length": 4294
+    "Hash": 730846304,
+    "Length": 4301
   },
   {
     "Archetype": "",
@@ -16742,8 +16742,8 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Defiler_Pets",
-    "Hash": -1116870775,
-    "Length": 13108
+    "Hash": -898914751,
+    "Length": 13022
   },
   {
     "Archetype": "",
@@ -16790,7 +16790,7 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Genesis_Silent",
-    "Hash": 732300950,
+    "Hash": -1459268138,
     "Length": 207321
   },
   {
@@ -16838,38 +16838,38 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Arachnos_Boss",
-    "Hash": -331637913,
-    "Length": 21763
+    "Hash": 1971176122,
+    "Length": 21818
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Arachnos_LT",
-    "Hash": -1817216717,
-    "Length": 18522
+    "Hash": -1661903461,
+    "Length": 18520
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Arachnos_Support",
-    "Hash": 403592507,
-    "Length": 10292
+    "Hash": 1458483165,
+    "Length": 10294
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Arachnos_Support_Attack",
-    "Hash": -304734116,
-    "Length": 4344
+    "Hash": -1470608489,
+    "Length": 4345
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Banished_Boss",
-    "Hash": 1057003707,
-    "Length": 39944
+    "Hash": 1984302871,
+    "Length": 40004
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Banished_LT",
-    "Hash": -1820998733,
-    "Length": 22340
+    "Hash": 578398019,
+    "Length": 22376
   },
   {
     "Archetype": "",
@@ -16880,44 +16880,44 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Banished_Support_Attack",
-    "Hash": -517777075,
-    "Length": 8053
+    "Hash": 851327201,
+    "Length": 8051
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Carnival_Boss",
-    "Hash": -70800744,
-    "Length": 25412
+    "Hash": 1786359314,
+    "Length": 25400
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Carnival_LT",
-    "Hash": -262306453,
-    "Length": 16293
+    "Hash": -768344473,
+    "Length": 16277
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Carnival_Support",
-    "Hash": -890890538,
-    "Length": 14145
+    "Hash": -491985878,
+    "Length": 14146
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Carnival_Support_Attack",
-    "Hash": -1657590058,
+    "Hash": -1930601066,
     "Length": 4437
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Cimeroran_Boss",
-    "Hash": -202849336,
-    "Length": 19089
+    "Hash": 1087132650,
+    "Length": 19115
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Cimeroran_LT",
-    "Hash": -1670352432,
-    "Length": 15043
+    "Hash": 371902698,
+    "Length": 15069
   },
   {
     "Archetype": "",
@@ -16928,14 +16928,14 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Clockwork_Boss",
-    "Hash": 77281970,
-    "Length": 15602
+    "Hash": -938004126,
+    "Length": 15592
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Clockwork_LT",
-    "Hash": 1792776664,
-    "Length": 13771
+    "Hash": -1375271542,
+    "Length": 13749
   },
   {
     "Archetype": "",
@@ -16946,32 +16946,32 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Drones_Boss",
-    "Hash": -453572636,
+    "Hash": -1487930608,
     "Length": 12376
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Drones_LT",
-    "Hash": -1609697969,
+    "Hash": -727013557,
     "Length": 8366
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Elementals_Boss",
-    "Hash": 984278020,
-    "Length": 25263
+    "Hash": 294185212,
+    "Length": 25253
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Elementals_LT",
-    "Hash": -1062460596,
-    "Length": 18785
+    "Hash": -1594129666,
+    "Length": 18775
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Elementals_Support",
-    "Hash": -1390024545,
-    "Length": 19116
+    "Hash": -212180481,
+    "Length": 19120
   },
   {
     "Archetype": "",
@@ -16982,55 +16982,55 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_IDF_Boss",
-    "Hash": 262696839,
-    "Length": 18470
+    "Hash": -1261355857,
+    "Length": 18464
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_IDF_LT",
-    "Hash": -1576331315,
-    "Length": 11545
+    "Hash": 2125891061,
+    "Length": 11535
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_IDF_Support",
-    "Hash": 629105487,
-    "Length": 33170
+    "Hash": 1916718079,
+    "Length": 33156
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Knives_Boss",
-    "Hash": 532162882,
-    "Length": 66579
+    "Hash": 390450488,
+    "Length": 66567
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Knives_LT",
-    "Hash": 813702090,
-    "Length": 25632
+    "Hash": -447695576,
+    "Length": 25640
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Knives_Support",
-    "Hash": -2137404734,
-    "Length": 52397
+    "Hash": 1884921026,
+    "Length": 52429
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Knives_Support_Attack",
-    "Hash": 1995927012,
-    "Length": 17421
+    "Hash": 1730310958,
+    "Length": 17475
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Lights_Boss",
-    "Hash": -1460905127,
-    "Length": 21451
+    "Hash": -1012822487,
+    "Length": 21437
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Lights_LT",
-    "Hash": -1461330683,
+    "Hash": -228007247,
     "Length": 8283
   },
   {
@@ -17042,14 +17042,14 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Longbow_Boss",
-    "Hash": -189174236,
-    "Length": 19466
+    "Hash": -1239674448,
+    "Length": 19454
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Longbow_LT",
-    "Hash": -1793874723,
-    "Length": 15560
+    "Hash": -1747139523,
+    "Length": 15534
   },
   {
     "Archetype": "",
@@ -17060,38 +17060,38 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Nemesis_Boss",
-    "Hash": 1465547238,
-    "Length": 22092
+    "Hash": 467388966,
+    "Length": 22094
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Nemesis_LT",
-    "Hash": -1896291468,
+    "Hash": 2045730226,
     "Length": 12396
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Nemesis_Support",
-    "Hash": -899000033,
-    "Length": 21121
+    "Hash": -1877125729,
+    "Length": 21107
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Nemesis_Support_Attack",
-    "Hash": -1040328282,
+    "Hash": -1701703450,
     "Length": 3348
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Phantoms_Boss",
-    "Hash": -2090022161,
-    "Length": 18974
+    "Hash": 1806810903,
+    "Length": 19042
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Phantoms_LT",
-    "Hash": -1967213318,
-    "Length": 9453
+    "Hash": 40604730,
+    "Length": 9459
   },
   {
     "Archetype": "",
@@ -17102,31 +17102,31 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Rikti_Boss",
-    "Hash": 1167003004,
-    "Length": 20164
+    "Hash": -635715888,
+    "Length": 20144
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Rikti_LT",
-    "Hash": 234870129,
-    "Length": 16937
+    "Hash": -1158557639,
+    "Length": 16905
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Rikti_Support",
-    "Hash": 715731031,
-    "Length": 22064
+    "Hash": 1123065939,
+    "Length": 22036
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Rularuu_Boss",
-    "Hash": -1867923799,
-    "Length": 21368
+    "Hash": 1901066673,
+    "Length": 21438
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Rularuu_LT",
-    "Hash": 224154154,
+    "Hash": -375035376,
     "Length": 9701
   },
   {
@@ -17138,20 +17138,20 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Rularuu_Support_Attack",
-    "Hash": -69608810,
+    "Hash": 1386920006,
     "Length": 5450
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Seers_Boss",
-    "Hash": 1322391756,
-    "Length": 16572
+    "Hash": 849643451,
+    "Length": 16571
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Seers_LT",
-    "Hash": 2081470836,
-    "Length": 10601
+    "Hash": 687859785,
+    "Length": 10600
   },
   {
     "Archetype": "",
@@ -17162,14 +17162,14 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Talons_Boss",
-    "Hash": -483780348,
-    "Length": 42352
+    "Hash": 435215968,
+    "Length": 42487
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Talons_LT",
-    "Hash": -1654175289,
-    "Length": 38760
+    "Hash": -307813958,
+    "Length": 38797
   },
   {
     "Archetype": "",
@@ -17180,44 +17180,44 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Talons_Support_Attack",
-    "Hash": -2110371789,
+    "Hash": -1458618625,
     "Length": 5700
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Tsoo_Boss",
-    "Hash": 665506377,
-    "Length": 28083
+    "Hash": -2021251827,
+    "Length": 28159
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Tsoo_LT",
-    "Hash": 531041940,
-    "Length": 11600
+    "Hash": -906194304,
+    "Length": 11604
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Tsoo_Support",
-    "Hash": 1922059784,
-    "Length": 15954
+    "Hash": -483034416,
+    "Length": 15961
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Tsoo_Support_Attack",
-    "Hash": 1141192495,
+    "Hash": 1156335951,
     "Length": 4378
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Vanguard_Boss",
-    "Hash": 1201788685,
-    "Length": 32304
+    "Hash": 110012912,
+    "Length": 32429
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Vanguard_LT",
-    "Hash": 197719910,
-    "Length": 17374
+    "Hash": -1100665430,
+    "Length": 17364
   },
   {
     "Archetype": "",
@@ -17228,14 +17228,14 @@
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Warworks_Boss",
-    "Hash": -1479341559,
-    "Length": 22300
+    "Hash": 275775577,
+    "Length": 22314
   },
   {
     "Archetype": "",
     "Fullname": "Incarnate.Lore_Pet_Warworks_LT",
-    "Hash": 879442474,
-    "Length": 8443
+    "Hash": -1179788904,
+    "Length": 8449
   },
   {
     "Archetype": "",
@@ -17300,134 +17300,134 @@
   {
     "Archetype": "",
     "Fullname": "Inherent.Inherent",
-    "Hash": 1969724922,
-    "Length": 1134516
+    "Hash": 187423715,
+    "Length": 1135288
   },
   {
     "Archetype": "",
     "Fullname": "Inherent.Fitness",
-    "Hash": -1407636227,
+    "Hash": -1846872815,
     "Length": 16901
   },
   {
     "Archetype": "",
     "Fullname": "Kheldian_Pets.Omega_Bomb",
-    "Hash": -363153733,
-    "Length": 12984
+    "Hash": -379474253,
+    "Length": 12982
   },
   {
     "Archetype": "",
     "Fullname": "Kheldian_Pets.Energy_Drone1",
-    "Hash": 1227594309,
+    "Hash": -460408891,
     "Length": 12843
   },
   {
     "Archetype": "",
     "Fullname": "Kheldian_Pets.Energy_Drone2",
-    "Hash": -1240760752,
+    "Hash": 52193040,
     "Length": 12843
   },
   {
     "Archetype": "",
     "Fullname": "Kheldian_Pets.Energy_Drone3",
-    "Hash": 1570019815,
+    "Hash": -1629501721,
     "Length": 12843
   },
   {
     "Archetype": "",
     "Fullname": "Kheldian_Pets.Warshade_Extraction",
-    "Hash": -154578786,
-    "Length": 35421
+    "Hash": 780468700,
+    "Length": 35623
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Cold_Domination",
-    "Hash": 1296492189,
-    "Length": 151646
+    "Hash": 355679997,
+    "Length": 151651
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Dark_Miasma",
-    "Hash": -810614819,
-    "Length": 96529
+    "Hash": -515077044,
+    "Length": 96518
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Empathy",
-    "Hash": -1742539360,
-    "Length": 73325
+    "Hash": 133966825,
+    "Length": 73321
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Force_Field",
-    "Hash": 76823117,
-    "Length": 105271
+    "Hash": -180983379,
+    "Length": 105303
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Kinetics",
-    "Hash": 1481936839,
-    "Length": 81974
+    "Hash": -500089261,
+    "Length": 82018
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Nature_Affinity",
-    "Hash": 747800863,
+    "Hash": 931077635,
     "Length": 107590
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Pain_Domination",
-    "Hash": -32971441,
-    "Length": 124174
+    "Hash": 1929422011,
+    "Length": 124175
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Poison",
-    "Hash": 811180784,
-    "Length": 181287
+    "Hash": -782662630,
+    "Length": 181289
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Radiation_Emission",
-    "Hash": 503577791,
-    "Length": 109587
+    "Hash": 1150180250,
+    "Length": 109595
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Sonic_Resonance",
-    "Hash": 1407147662,
+    "Hash": -1057040946,
     "Length": 86585
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Storm_Summoning",
-    "Hash": 815725463,
-    "Length": 77193
+    "Hash": 503072687,
+    "Length": 77191
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Thermal_Radiation",
-    "Hash": -524378073,
-    "Length": 87037
+    "Hash": 1423217631,
+    "Length": 87042
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Time_Manipulation",
-    "Hash": 388966375,
-    "Length": 144348
+    "Hash": -151408480,
+    "Length": 144406
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Traps",
-    "Hash": 52052757,
+    "Hash": 52175313,
     "Length": 43644
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Trick_Arrow",
-    "Hash": 1524920077,
-    "Length": 73236
+    "Hash": -69978691,
+    "Length": 73312
   },
   {
     "Archetype": "",
@@ -17996,56 +17996,56 @@
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Beast_Mastery",
-    "Hash": -1017578743,
-    "Length": 101691
+    "Hash": 239468037,
+    "Length": 101797
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Demon_Summoning",
-    "Hash": 577053657,
-    "Length": 118935
+    "Hash": 213937801,
+    "Length": 118933
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Mercenaries",
-    "Hash": 283310007,
-    "Length": 96724
+    "Hash": -121549965,
+    "Length": 96692
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Necromancy",
-    "Hash": -107010001,
-    "Length": 79485
+    "Hash": 567929335,
+    "Length": 79483
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Ninjas",
-    "Hash": -510694133,
+    "Hash": 63052343,
     "Length": 62275
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Robotics",
-    "Hash": 2041331005,
-    "Length": 61256
+    "Hash": 552850965,
+    "Length": 61232
   },
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Thugs",
-    "Hash": 254566330,
-    "Length": 155267
+    "Hash": 2017299168,
+    "Length": 155259
   },
   {
     "Archetype": "Class_Peacebringer",
     "Fullname": "Peacebringer_Defensive.Luminous_Aura",
-    "Hash": -1914439577,
-    "Length": 206130
+    "Hash": -1054626526,
+    "Length": 206249
   },
   {
     "Archetype": "Class_Peacebringer",
     "Fullname": "Peacebringer_Offensive.Luminous_Blast",
-    "Hash": -2037845695,
-    "Length": 123542
+    "Hash": 1075034468,
+    "Length": 123651
   },
   {
     "Archetype": "",
@@ -19292,8 +19292,8 @@
   {
     "Archetype": "",
     "Fullname": "Pets.Spring_Attack",
-    "Hash": 85404994,
-    "Length": 18675
+    "Hash": -867705136,
+    "Length": 18683
   },
   {
     "Archetype": "",
@@ -19718,56 +19718,56 @@
   {
     "Archetype": "",
     "Fullname": "Pool.Invisibility",
-    "Hash": 1078456184,
-    "Length": 134050
+    "Hash": 1683151394,
+    "Length": 134622
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Fighting",
-    "Hash": -1678864731,
-    "Length": 198084
+    "Hash": -2076258383,
+    "Length": 198244
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Flight",
-    "Hash": -93619444,
-    "Length": 112421
+    "Hash": 304858110,
+    "Length": 112561
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Leadership",
-    "Hash": 511168272,
-    "Length": 93102
+    "Hash": -756236726,
+    "Length": 93082
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Leaping",
-    "Hash": -2040773258,
-    "Length": 89154
+    "Hash": -1763965398,
+    "Length": 89298
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Medicine",
-    "Hash": -1443584689,
-    "Length": 58334
+    "Hash": -1075150453,
+    "Length": 58354
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Manipulation",
-    "Hash": -293763130,
-    "Length": 43003
+    "Hash": 995526173,
+    "Length": 42984
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Sorcery",
-    "Hash": -2113746253,
-    "Length": 93157
+    "Hash": -1814332681,
+    "Length": 93139
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Speed",
-    "Hash": -96894419,
-    "Length": 102251
+    "Hash": -713363995,
+    "Length": 102265
   },
   {
     "Archetype": "",
@@ -19778,752 +19778,752 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Bio_Organic_Armor",
-    "Hash": -86100314,
-    "Length": 259545
+    "Hash": 827719876,
+    "Length": 258527
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Dark_Armor",
-    "Hash": 1837845451,
-    "Length": 103843
+    "Hash": 1054093707,
+    "Length": 104108
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Electric_Armor",
-    "Hash": 713694462,
-    "Length": 114584
+    "Hash": 2104873846,
+    "Length": 114863
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Energy_Aura",
-    "Hash": -1439642773,
-    "Length": 163906
+    "Hash": -1554536773,
+    "Length": 164231
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Fiery_Aura",
-    "Hash": -367725745,
-    "Length": 86593
+    "Hash": -1004202936,
+    "Length": 86668
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Ice_Armor",
-    "Hash": 1610306946,
-    "Length": 164838
+    "Hash": 195713307,
+    "Length": 165075
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Invulnerability",
-    "Hash": 2004160744,
-    "Length": 154518
+    "Hash": 691676975,
+    "Length": 154959
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Ninjitsu",
-    "Hash": -1116337604,
-    "Length": 124138
+    "Hash": -354834783,
+    "Length": 124373
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Radiation_Armor",
-    "Hash": -1473660801,
-    "Length": 122396
+    "Hash": -1992691932,
+    "Length": 122607
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Regeneration",
-    "Hash": -1597594503,
-    "Length": 106743
+    "Hash": -1557182936,
+    "Length": 106925
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Shield_Defense",
-    "Hash": 645406282,
-    "Length": 155806
+    "Hash": -246245442,
+    "Length": 156017
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Super_Reflexes",
-    "Hash": -217294160,
-    "Length": 102593
+    "Hash": -984685218,
+    "Length": 102638
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Willpower",
-    "Hash": -2123280940,
-    "Length": 155726
+    "Hash": -1885710417,
+    "Length": 155893
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Battle_Axe",
-    "Hash": 942564544,
-    "Length": 90318
+    "Hash": 393962991,
+    "Length": 90245
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Broad_Sword",
-    "Hash": 286767985,
-    "Length": 90900
+    "Hash": 1716621734,
+    "Length": 90911
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Claws",
-    "Hash": -1870925851,
-    "Length": 92313
+    "Hash": -886319040,
+    "Length": 92346
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Dark_Melee",
-    "Hash": -317745716,
-    "Length": 107229
+    "Hash": -1843730888,
+    "Length": 107336
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Dual_Blades",
-    "Hash": 1254862144,
-    "Length": 185100
+    "Hash": -367447789,
+    "Length": 185113
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Electrical_Melee",
-    "Hash": 1291655184,
-    "Length": 115833
+    "Hash": -356828179,
+    "Length": 115830
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Fiery_Melee",
-    "Hash": -216458247,
-    "Length": 97526
+    "Hash": -679968642,
+    "Length": 97523
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Ice_Melee",
-    "Hash": -1681513737,
-    "Length": 108047
+    "Hash": -25491942,
+    "Length": 108310
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Katana",
-    "Hash": 849782941,
-    "Length": 90166
+    "Hash": 394198132,
+    "Length": 90149
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Kinetic_Attack",
-    "Hash": -1883281649,
-    "Length": 140067
+    "Hash": 1146403132,
+    "Length": 140106
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Martial_Arts",
-    "Hash": 1169655292,
-    "Length": 97040
+    "Hash": -816776771,
+    "Length": 96977
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Psionic_Melee",
-    "Hash": -798375497,
-    "Length": 120680
+    "Hash": -970902207,
+    "Length": 120688
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Radiation_Melee",
-    "Hash": 887750386,
-    "Length": 123099
+    "Hash": 445960820,
+    "Length": 123087
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Savage_Melee",
-    "Hash": -770145711,
-    "Length": 107372
+    "Hash": 1475947418,
+    "Length": 107351
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Quills",
-    "Hash": 294371092,
-    "Length": 140195
+    "Hash": 1655558747,
+    "Length": 140580
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Staff_Fighting",
-    "Hash": -150230139,
-    "Length": 298257
+    "Hash": 1327631530,
+    "Length": 298414
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Brawling",
-    "Hash": 1518653531,
-    "Length": 219144
+    "Hash": -1615651426,
+    "Length": 219294
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Titan_Weapons",
-    "Hash": -1092278227,
-    "Length": 125570
+    "Hash": 1800880960,
+    "Length": 125647
   },
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.War_Mace",
-    "Hash": 1263758796,
-    "Length": 90774
+    "Hash": 2143111717,
+    "Length": 90731
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Bio_Organic_Armor",
-    "Hash": -936899648,
-    "Length": 180518
+    "Hash": -2013584990,
+    "Length": 181249
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Dark_Armor",
-    "Hash": 1992359730,
-    "Length": 109557
+    "Hash": -1623346109,
+    "Length": 109822
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Electric_Armor",
-    "Hash": 1211631327,
-    "Length": 111540
+    "Hash": 140938450,
+    "Length": 111806
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Energy_Aura",
-    "Hash": 631711350,
-    "Length": 142695
+    "Hash": 1345242264,
+    "Length": 142965
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Fiery_Aura",
-    "Hash": -1673965784,
-    "Length": 84215
+    "Hash": 555878531,
+    "Length": 84288
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Ice_Armor",
-    "Hash": 118587534,
-    "Length": 149514
+    "Hash": -1010197087,
+    "Length": 149609
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Invulnerability",
-    "Hash": 671375321,
-    "Length": 140648
+    "Hash": -2008656674,
+    "Length": 141097
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Ninjitsu",
-    "Hash": -1346481528,
-    "Length": 123305
+    "Hash": -1457610973,
+    "Length": 123532
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Radiation_Armor",
-    "Hash": -42378400,
-    "Length": 115032
+    "Hash": 103521143,
+    "Length": 115240
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Regeneration",
-    "Hash": 1667652128,
-    "Length": 107700
+    "Hash": -283809432,
+    "Length": 107888
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Super_Reflexes",
-    "Hash": -994513843,
-    "Length": 126911
+    "Hash": 595827807,
+    "Length": 127013
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Willpower",
-    "Hash": -190909582,
-    "Length": 149550
+    "Hash": -501192413,
+    "Length": 149709
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Archery",
-    "Hash": 478897246,
-    "Length": 78103
+    "Hash": -1090611650,
+    "Length": 78063
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Assault_Rifle",
-    "Hash": -813394384,
-    "Length": 86367
+    "Hash": -1906587994,
+    "Length": 86299
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Beam_Rifle",
-    "Hash": 583929332,
-    "Length": 95530
+    "Hash": 1939225866,
+    "Length": 95498
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Dark_Blast",
-    "Hash": 1094431147,
-    "Length": 90536
+    "Hash": 1484425030,
+    "Length": 90521
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Dual_Pistols",
-    "Hash": 454053204,
-    "Length": 337198
+    "Hash": -1488778174,
+    "Length": 337214
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Electrical_Blast",
-    "Hash": 1203666814,
-    "Length": 113514
+    "Hash": -2074256836,
+    "Length": 113480
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Energy_Blast",
-    "Hash": 652623787,
-    "Length": 102321
+    "Hash": 576546655,
+    "Length": 102291
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Fire_Blast",
-    "Hash": -1499241548,
-    "Length": 88331
+    "Hash": 249976380,
+    "Length": 88301
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Ice_Blast",
-    "Hash": -323912807,
-    "Length": 117488
+    "Hash": 858878025,
+    "Length": 117878
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Psychic_Blast",
-    "Hash": 555546021,
-    "Length": 92711
+    "Hash": 47282089,
+    "Length": 92706
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Radiation_Blast",
-    "Hash": -231522292,
-    "Length": 92283
+    "Hash": 658655958,
+    "Length": 92249
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Sonic_Attack",
-    "Hash": -1149554668,
-    "Length": 143045
+    "Hash": -951011508,
+    "Length": 143049
   },
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Water_Blast",
-    "Hash": 1636282677,
-    "Length": 166481
+    "Hash": -1437618083,
+    "Length": 166653
   },
   {
     "Archetype": "",
     "Fullname": "Set_Bonus.PVP_Set_Bonus",
-    "Hash": 355742307,
-    "Length": 1651948
+    "Hash": 868791179,
+    "Length": 1651942
   },
   {
     "Archetype": "",
     "Fullname": "Set_Bonus.Set_Bonus",
-    "Hash": -1519942338,
-    "Length": 2011887
+    "Hash": -1542593588,
+    "Length": 2012017
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Bio_Organic_Armor",
-    "Hash": 1153865359,
-    "Length": 242199
+    "Hash": 31365183,
+    "Length": 243325
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Dark_Armor",
-    "Hash": 959028936,
-    "Length": 132844
+    "Hash": 2122327701,
+    "Length": 133268
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Electric_Armor",
-    "Hash": -1266575935,
-    "Length": 152836
+    "Hash": 876696270,
+    "Length": 153358
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Energy_Aura",
-    "Hash": -266104873,
-    "Length": 178269
+    "Hash": 905810066,
+    "Length": 178616
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Fiery_Aura",
-    "Hash": 2071740270,
-    "Length": 122375
+    "Hash": 1668364531,
+    "Length": 122724
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Ice_Armor",
-    "Hash": 1291643622,
-    "Length": 206977
+    "Hash": -1737557673,
+    "Length": 207472
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Invulnerability",
-    "Hash": -695267758,
-    "Length": 182498
+    "Hash": -1548683737,
+    "Length": 183195
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Ninjitsu",
-    "Hash": 1478985475,
-    "Length": 126220
+    "Hash": 557724718,
+    "Length": 126585
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Radiation_Armor",
-    "Hash": -1926701546,
-    "Length": 158906
+    "Hash": -744179064,
+    "Length": 159371
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Regeneration",
-    "Hash": 864956998,
-    "Length": 150441
+    "Hash": 2146720502,
+    "Length": 150883
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Shield_Defense",
-    "Hash": -1225163086,
-    "Length": 195565
+    "Hash": -279808766,
+    "Length": 196044
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Super_Reflexes",
-    "Hash": 1511995681,
-    "Length": 139479
+    "Hash": -139296248,
+    "Length": 139782
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Willpower",
-    "Hash": -1496914083,
-    "Length": 192049
+    "Hash": -941687563,
+    "Length": 192461
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Broad_Sword",
-    "Hash": 663771696,
-    "Length": 101798
+    "Hash": -1957977274,
+    "Length": 101844
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Claws",
-    "Hash": 1269902727,
-    "Length": 98809
+    "Hash": 772966525,
+    "Length": 98803
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Dark_Melee",
-    "Hash": 1212089161,
-    "Length": 104367
+    "Hash": 1666516221,
+    "Length": 104340
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Dual_Blades",
-    "Hash": 839537182,
-    "Length": 193629
+    "Hash": -1852929358,
+    "Length": 193675
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Electrical_Melee",
-    "Hash": 645387002,
-    "Length": 133208
+    "Hash": -2048674684,
+    "Length": 133222
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Energy_Melee",
-    "Hash": 1419662016,
-    "Length": 110177
+    "Hash": -2083429228,
+    "Length": 110231
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Fiery_Melee",
-    "Hash": 510057067,
-    "Length": 92038
+    "Hash": 1824831413,
+    "Length": 92078
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Ice_Melee",
-    "Hash": -1468834805,
-    "Length": 99384
+    "Hash": 116601025,
+    "Length": 99616
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Kinetic_Attack",
-    "Hash": -1571771140,
-    "Length": 151291
+    "Hash": -2028035198,
+    "Length": 151379
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Martial_Arts",
-    "Hash": 321577562,
-    "Length": 104845
+    "Hash": -450890042,
+    "Length": 104791
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Ninja_Sword",
-    "Hash": 2046362803,
-    "Length": 101340
+    "Hash": -486723055,
+    "Length": 101417
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Psionic_Melee",
-    "Hash": -2073181802,
-    "Length": 124318
+    "Hash": -446338373,
+    "Length": 124325
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Radiation_Melee",
-    "Hash": -1658973012,
-    "Length": 143089
+    "Hash": 1318713155,
+    "Length": 143072
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Savage_Melee",
-    "Hash": -1039436927,
-    "Length": 117944
+    "Hash": -1584480293,
+    "Length": 117970
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Spines",
-    "Hash": 1742699247,
-    "Length": 144942
+    "Hash": -1817261920,
+    "Length": 145273
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Staff_Fighting",
-    "Hash": 426329508,
-    "Length": 179184
+    "Hash": 733785848,
+    "Length": 179315
   },
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Brawling",
-    "Hash": 569415663,
-    "Length": 195157
+    "Hash": -1981858791,
+    "Length": 195176
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Bio_Organic_Armor",
-    "Hash": -1555232982,
-    "Length": 268364
+    "Hash": -1602531961,
+    "Length": 269380
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Dark_Armor",
-    "Hash": 1724545008,
-    "Length": 113811
+    "Hash": -776576628,
+    "Length": 114076
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Electric_Armor",
-    "Hash": -1737824505,
-    "Length": 117710
+    "Hash": 81149825,
+    "Length": 117989
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Fiery_Aura",
-    "Hash": 1069674458,
-    "Length": 91121
+    "Hash": 1779091225,
+    "Length": 91196
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Ice_Armor",
-    "Hash": 895359483,
-    "Length": 158244
+    "Hash": 1009697301,
+    "Length": 158472
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Invulnerability",
-    "Hash": 1695014968,
-    "Length": 155092
+    "Hash": 649440097,
+    "Length": 155537
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Radiation_Armor",
-    "Hash": -2143193804,
-    "Length": 125853
+    "Hash": 1479875123,
+    "Length": 126061
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Shield_Defense",
-    "Hash": -1195710943,
-    "Length": 156090
+    "Hash": 1112966477,
+    "Length": 156305
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Stone_Armor",
-    "Hash": 1741232982,
-    "Length": 163973
+    "Hash": -502254619,
+    "Length": 164089
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Super_Reflexes",
-    "Hash": -266627053,
-    "Length": 104674
+    "Hash": 718806691,
+    "Length": 104719
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Willpower",
-    "Hash": -341752449,
-    "Length": 156346
+    "Hash": -1952624184,
+    "Length": 156517
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Battle_Axe",
-    "Hash": -1890586941,
-    "Length": 100267
+    "Hash": -24106554,
+    "Length": 100216
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Broad_Sword",
-    "Hash": -125322585,
-    "Length": 92835
+    "Hash": 1725013040,
+    "Length": 92852
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Claws",
-    "Hash": 1448233129,
-    "Length": 92574
+    "Hash": -1928572804,
+    "Length": 92603
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Dark_Melee",
-    "Hash": -880039996,
-    "Length": 119517
+    "Hash": -1141504042,
+    "Length": 119610
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Dual_Blades",
-    "Hash": 1646817465,
-    "Length": 192439
+    "Hash": -718375118,
+    "Length": 192468
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Electrical_Melee",
-    "Hash": 1175868123,
-    "Length": 128719
+    "Hash": -98899672,
+    "Length": 128706
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Energy_Melee",
-    "Hash": 1765022767,
-    "Length": 115118
+    "Hash": 393641778,
+    "Length": 115127
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Fiery_Melee",
-    "Hash": -1110328397,
-    "Length": 105567
+    "Hash": -1383483172,
+    "Length": 105586
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Ice_Melee",
-    "Hash": -410139859,
-    "Length": 117451
+    "Hash": 2022958302,
+    "Length": 117706
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Katana",
-    "Hash": 1207130529,
-    "Length": 91917
+    "Hash": -791719780,
+    "Length": 91912
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Kinetic_Attack",
-    "Hash": -448120033,
-    "Length": 150635
+    "Hash": -1324078846,
+    "Length": 150870
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Martial_Arts",
-    "Hash": 193847769,
-    "Length": 122913
+    "Hash": 141537996,
+    "Length": 122912
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Psionic_Melee",
-    "Hash": -831366887,
-    "Length": 130382
+    "Hash": 1306263675,
+    "Length": 130376
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Radiation_Melee",
-    "Hash": 1098098027,
-    "Length": 132666
+    "Hash": -160790605,
+    "Length": 132590
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Savage_Melee",
-    "Hash": 2116151374,
-    "Length": 125941
+    "Hash": -1640591721,
+    "Length": 125912
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Spines",
-    "Hash": 1664635147,
-    "Length": 149931
+    "Hash": 114806418,
+    "Length": 150292
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Staff_Fighting",
-    "Hash": -426189596,
-    "Length": 307791
+    "Hash": -1147196887,
+    "Length": 307936
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Stone_Melee",
-    "Hash": -542744379,
-    "Length": 102317
+    "Hash": -1405568884,
+    "Length": 102278
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Brawling",
-    "Hash": 1317004187,
-    "Length": 227733
+    "Hash": -31289380,
+    "Length": 227843
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Super_Strength",
-    "Hash": 2126988265,
-    "Length": 119026
+    "Hash": -754900354,
+    "Length": 118949
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Titan_Weapons",
-    "Hash": 257383797,
-    "Length": 136720
+    "Hash": -253164144,
+    "Length": 136767
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.War_Mace",
-    "Hash": 1648836051,
-    "Length": 100667
+    "Hash": -1037791146,
+    "Length": 100648
   },
   {
     "Archetype": "Class_Arachnos_Widow",
     "Fullname": "Teamwork.Fortunata_Teamwork",
-    "Hash": -633819237,
-    "Length": 109392
+    "Hash": -533817757,
+    "Length": 109644
   },
   {
     "Archetype": "Class_Arachnos_Widow",
     "Fullname": "Teamwork.Teamwork",
-    "Hash": 737514527,
-    "Length": 112770
+    "Hash": 1820025447,
+    "Length": 112864
   },
   {
     "Archetype": "Class_Arachnos_Widow",
     "Fullname": "Teamwork.Widow_Teamwork",
-    "Hash": -1383547616,
-    "Length": 129736
+    "Hash": -2023473573,
+    "Length": 129986
   },
   {
     "Archetype": "",
@@ -20540,8 +20540,8 @@
   {
     "Archetype": "",
     "Fullname": "Temporary_Powers.Accolades",
-    "Hash": 393115599,
-    "Length": 120388
+    "Hash": -1099546517,
+    "Length": 120420
   },
   {
     "Archetype": "",
@@ -20558,8 +20558,8 @@
   {
     "Archetype": "",
     "Fullname": "Temporary_Powers.Day_Job_Powers",
-    "Hash": -559627251,
-    "Length": 400116
+    "Hash": 1592436554,
+    "Length": 400075
   },
   {
     "Archetype": "",
@@ -20570,140 +20570,140 @@
   {
     "Archetype": "",
     "Fullname": "Temporary_Powers.Temporary_Powers",
-    "Hash": -468036149,
-    "Length": 4418939
+    "Hash": -1198604338,
+    "Length": 4419775
   },
   {
     "Archetype": "",
     "Fullname": "Temporary_Powers.SilentPowers",
-    "Hash": -802781459,
-    "Length": 845014
+    "Hash": -585171538,
+    "Length": 845140
   },
   {
     "Archetype": "Class_Arachnos_Soldier",
     "Fullname": "Training_Gadgets.Bane_Spider_Training",
-    "Hash": -90583171,
-    "Length": 104193
+    "Hash": -1383643250,
+    "Length": 104324
   },
   {
     "Archetype": "Class_Arachnos_Soldier",
     "Fullname": "Training_Gadgets.Crab_Spider_Training",
-    "Hash": 98430704,
-    "Length": 65840
+    "Hash": -371383121,
+    "Length": 65701
   },
   {
     "Archetype": "Class_Arachnos_Soldier",
     "Fullname": "Training_Gadgets.Training_and_Gadgets",
-    "Hash": -781776488,
-    "Length": 104562
+    "Hash": 1279888924,
+    "Length": 104444
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Savage_Melee_Assassins_Strike",
-    "Hash": -772012950,
-    "Length": 20861
+    "Hash": -317818314,
+    "Length": 20881
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Titan_Weapons_Brute",
-    "Hash": 1264210041,
-    "Length": 131702
+    "Hash": 1737871757,
+    "Length": 131864
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Ninja_Blade_Assassins_Strike",
-    "Hash": 1361828825,
+    "Hash": -1933433755,
     "Length": 18426
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Electric_Melee_Assassins_Strike",
-    "Hash": 791397672,
-    "Length": 21654
+    "Hash": 885813950,
+    "Length": 21674
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Fiery_Melee_Assassins_Blaze",
-    "Hash": -609465900,
-    "Length": 18119
+    "Hash": -1595718164,
+    "Length": 18131
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dual_Blades_Assassins_Strike",
-    "Hash": 1941633644,
-    "Length": 34814
+    "Hash": -1751369036,
+    "Length": 34834
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Staff_Fighting_Assassins_Strike",
-    "Hash": -2020698910,
-    "Length": 29193
+    "Hash": 763045214,
+    "Length": 29213
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Claws_Assassins_Strike",
-    "Hash": 1021480698,
-    "Length": 18255
+    "Hash": 56978234,
+    "Length": 18275
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Radiation_Melee_Assassins_Corruption",
-    "Hash": 829843485,
-    "Length": 24715
+    "Hash": -1163658555,
+    "Length": 24723
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Ice_Melee_Assassins_Frost",
-    "Hash": 737943836,
-    "Length": 18304
+    "Hash": 1830646614,
+    "Length": 18314
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Street_Justice_Assassins_Strike",
-    "Hash": 956069552,
-    "Length": 29214
+    "Hash": 1293363664,
+    "Length": 29218
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dark_Melee_Assassins_Strike",
-    "Hash": 1405024414,
-    "Length": 21541
+    "Hash": -896270572,
+    "Length": 21561
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Energy_Melee_Assassins_Strike",
-    "Hash": 1664152379,
-    "Length": 21525
+    "Hash": -781347801,
+    "Length": 21545
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Broad_Sword_Assassins_Strike",
-    "Hash": -929996046,
+    "Hash": -185514526,
     "Length": 18456
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Spines_Assassins_Strike",
-    "Hash": -1041159927,
-    "Length": 18446
+    "Hash": 1275214261,
+    "Length": 18466
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Kinetic_Melee_Assassins_Strike",
-    "Hash": -1211879145,
-    "Length": 21456
+    "Hash": 1020524211,
+    "Length": 21472
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Martial_Arts_Assassins_Strike",
-    "Hash": -554113194,
-    "Length": 20213
+    "Hash": -535724822,
+    "Length": 20233
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Psionic_Melee_Assassins_Strike",
-    "Hash": -425752615,
-    "Length": 26471
+    "Hash": -1706472879,
+    "Length": 26475
   },
   {
     "Archetype": "",
@@ -20714,44 +20714,44 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Traps_Acid_Mortar",
-    "Hash": -1994226512,
+    "Hash": 628487272,
     "Length": 55326
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Arachnobot_Blaster",
-    "Hash": 1029700623,
+    "Hash": 56953319,
     "Length": 43443
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Arachnobot_Disrupter",
-    "Hash": 1032212728,
-    "Length": 52079
+    "Hash": 882696874,
+    "Length": 52109
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Arachnobot_Spiderling",
-    "Hash": -1286291959,
+    "Hash": 126917657,
     "Length": 20942
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Blood_Widow",
-    "Hash": -379530144,
-    "Length": 76312
+    "Hash": -388659640,
+    "Length": 76744
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Traps_TimeBomb",
-    "Hash": -10122145,
-    "Length": 48719
+    "Hash": -1694556577,
+    "Length": 48729
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Traps_Bomb",
-    "Hash": 1608332936,
-    "Length": 10603
+    "Hash": -787142512,
+    "Length": 10609
   },
   {
     "Archetype": "",
@@ -20774,44 +20774,44 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Chain_Induction_Jump1",
-    "Hash": -1476393724,
-    "Length": 6500
+    "Hash": 1565286966,
+    "Length": 6504
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Chain_Induction_Jump2",
-    "Hash": -1476967951,
-    "Length": 6500
+    "Hash": -1264020535,
+    "Length": 6504
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Chain_Induction_Jump3",
-    "Hash": 1431497079,
-    "Length": 6502
+    "Hash": 1372142659,
+    "Length": 6506
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Chain_Induction_Jump4",
-    "Hash": 1162582926,
-    "Length": 4331
+    "Hash": 43593612,
+    "Length": 4335
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Chain_Jolt_Dominator_Jump1",
-    "Hash": -1361742841,
-    "Length": 9881
+    "Hash": 1470603235,
+    "Length": 9879
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Chain_Jolt_Dominator_Jump2",
-    "Hash": 1941438196,
-    "Length": 9881
+    "Hash": 1777877622,
+    "Length": 9879
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Chain_Jolt_Dominator_Jump3",
-    "Hash": -1533561567,
-    "Length": 7571
+    "Hash": 383866057,
+    "Length": 7569
   },
   {
     "Archetype": "",
@@ -20822,7 +20822,7 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Chain_Stun_Dominator_Jump1",
-    "Hash": -591376734,
+    "Hash": 983226416,
     "Length": 7639
   },
   {
@@ -20840,98 +20840,98 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Coral_Guardian_Sentinel",
-    "Hash": 2022511994,
-    "Length": 40336
+    "Hash": -172186131,
+    "Length": 40331
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Coral_Guardian_Warder",
-    "Hash": 894109502,
-    "Length": 40987
+    "Hash": -973312439,
+    "Length": 40980
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corolax_Blue_Hybrid",
-    "Hash": -729144147,
-    "Length": 30703
+    "Hash": 1459552804,
+    "Length": 30716
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corolax_Red_Hybrid",
-    "Hash": 600479037,
-    "Length": 30281
+    "Hash": 1963701454,
+    "Length": 30290
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_Archery_Snipe",
-    "Hash": -1276393324,
+    "Hash": -1904894316,
     "Length": 13358
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_AssaultRifle_Snipe",
-    "Hash": 769922065,
+    "Hash": 1708118833,
     "Length": 18132
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_BeamRifle_Snipe",
-    "Hash": -1307365892,
-    "Length": 26128
+    "Hash": -108624912,
+    "Length": 26110
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_DarkBlast_Snipe",
-    "Hash": -1513365988,
+    "Hash": -670707556,
     "Length": 15948
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_ElectricalBlast_Snipe",
-    "Hash": -1302546028,
+    "Hash": 898318612,
     "Length": 22102
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_EnergyBlast_Snipe",
-    "Hash": -1110068282,
-    "Length": 22348
+    "Hash": -1207979322,
+    "Length": 22336
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_FireBlast_Snipe",
-    "Hash": -291651297,
+    "Hash": 510097791,
     "Length": 15808
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_PsychicBlast_Snipe",
-    "Hash": 495336991,
-    "Length": 15829
+    "Hash": 632877399,
+    "Length": 15833
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Corruptor_RadiationBlast_Snipe",
-    "Hash": 317536470,
-    "Length": 16814
+    "Hash": -1184477994,
+    "Length": 16822
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Creeper_Entangle",
-    "Hash": -618417557,
-    "Length": 14505
+    "Hash": -327510293,
+    "Length": 14493
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Creeper_Patch",
-    "Hash": 1876150906,
+    "Hash": -627650720,
     "Length": 11770
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Creeper_Vine",
-    "Hash": -603244736,
-    "Length": 37818
+    "Hash": 124860453,
+    "Length": 37936
   },
   {
     "Archetype": "",
@@ -20942,74 +20942,74 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominating_Grasp",
-    "Hash": -112082034,
-    "Length": 9047
+    "Hash": 180868514,
+    "Length": 9045
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominator_DarkAssault_Snipe",
-    "Hash": -1168157270,
-    "Length": 13349
+    "Hash": 1520674582,
+    "Length": 13341
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominator_ElectricityAssault_Snipe",
-    "Hash": -1459573327,
-    "Length": 19655
+    "Hash": 1434689157,
+    "Length": 19647
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominator_EnergyAssault_Snipe",
-    "Hash": 1503489464,
-    "Length": 19692
+    "Hash": -417551554,
+    "Length": 19690
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominator_FieryAssault_Snipe",
-    "Hash": 1258314703,
-    "Length": 13180
+    "Hash": 290169303,
+    "Length": 13168
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominator_KineticAssault_Snipe",
-    "Hash": 319059347,
-    "Length": 45065
+    "Hash": -2139375573,
+    "Length": 45077
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominator_MartialAssault_Snipe",
-    "Hash": -83582885,
-    "Length": 15626
+    "Hash": 1915608899,
+    "Length": 15606
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominator_PsionicAssault_Snipe",
-    "Hash": -949077721,
-    "Length": 13166
+    "Hash": -682263657,
+    "Length": 13158
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Dominator_RadioactiveAssault_Snipe",
-    "Hash": 959830199,
-    "Length": 21280
+    "Hash": -898588021,
+    "Length": 21276
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Power_Surge",
-    "Hash": -1014193771,
-    "Length": 11893
+    "Hash": 1547537477,
+    "Length": 11889
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Lightning_Rod_Brute",
-    "Hash": 1573140122,
-    "Length": 6336
+    "Hash": 1839168506,
+    "Length": 6340
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Lightning_Rod_Stalker",
-    "Hash": 1751964515,
-    "Length": 6366
+    "Hash": -2024135933,
+    "Length": 6358
   },
   {
     "Archetype": "",
@@ -21026,8 +21026,8 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Fly_Trap",
-    "Hash": 548396312,
-    "Length": 37346
+    "Hash": -460710465,
+    "Length": 37331
   },
   {
     "Archetype": "",
@@ -21038,20 +21038,20 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Fortunata_Mistress",
-    "Hash": -679466920,
-    "Length": 43638
+    "Hash": -54397736,
+    "Length": 43670
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Fortunata_Seer",
-    "Hash": -448903117,
-    "Length": 39934
+    "Hash": 652015159,
+    "Length": 39982
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.HeatLossDebuff",
-    "Hash": 1294849316,
-    "Length": 20162
+    "Hash": 2044724242,
+    "Length": 20064
   },
   {
     "Archetype": "",
@@ -21068,38 +21068,38 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Kuji_Kiri",
-    "Hash": -986747024,
-    "Length": 4134
+    "Hash": 493814970,
+    "Length": 4128
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Traps_Trip_Mine",
-    "Hash": -461789297,
-    "Length": 45902
+    "Hash": 1453951683,
+    "Length": 45900
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Mu_Adept",
-    "Hash": 1862714504,
-    "Length": 44676
+    "Hash": 775948668,
+    "Length": 44670
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Mu_Guardian",
-    "Hash": 232975779,
-    "Length": 37147
+    "Hash": -2079826901,
+    "Length": 37149
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Mu_Striker",
-    "Hash": -1645615412,
-    "Length": 44582
+    "Hash": -1461186374,
+    "Length": 44578
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Night_Widow",
-    "Hash": 1955585973,
-    "Length": 68488
+    "Hash": -847564597,
+    "Length": 68806
   },
   {
     "Archetype": "",
@@ -21110,32 +21110,32 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.OilSlickTarget_Corruptor",
-    "Hash": -673598088,
-    "Length": 49206
+    "Hash": 1076750990,
+    "Length": 49208
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.OilSlickOil_Corruptor",
-    "Hash": 1685380949,
-    "Length": 9484
+    "Hash": 824708702,
+    "Length": 9494
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.OilSlickBurn_Corruptor",
-    "Hash": -404436129,
-    "Length": 12515
+    "Hash": 847780839,
+    "Length": 12503
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Traps_Poison_Gas",
-    "Hash": 1668527922,
-    "Length": 16149
+    "Hash": 840493547,
+    "Length": 16155
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Poison_Poison_Gas",
-    "Hash": -2043195828,
-    "Length": 18065
+    "Hash": -1011935058,
+    "Length": 18061
   },
   {
     "Archetype": "",
@@ -21152,8 +21152,8 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.RainofArrows_Corruptor",
-    "Hash": -442943586,
-    "Length": 8856
+    "Hash": -1385923778,
+    "Length": 8860
   },
   {
     "Archetype": "",
@@ -21164,74 +21164,74 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Traps_Seeker1",
-    "Hash": 1668394915,
-    "Length": 24958
+    "Hash": 847369249,
+    "Length": 25010
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Traps_Seeker2",
-    "Hash": 1664931683,
-    "Length": 24957
+    "Hash": 315457529,
+    "Length": 25009
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Traps_Seeker3",
-    "Hash": -1471575997,
-    "Length": 24957
+    "Hash": -212436839,
+    "Length": 25009
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Shade",
-    "Hash": 1119262500,
-    "Length": 27344
+    "Hash": 25871125,
+    "Length": 27349
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Shadow_Field",
-    "Hash": 1686532743,
-    "Length": 10769
+    "Hash": -1861271997,
+    "Length": 10770
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Shadow_Field_Dominator",
-    "Hash": 1852412608,
-    "Length": 9739
+    "Hash": -91354928,
+    "Length": 9740
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Shadow_Field_Dominator_Domination",
-    "Hash": 193804276,
-    "Length": 10999
+    "Hash": 40088154,
+    "Length": 11000
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Shield_Charge_AoE3",
-    "Hash": -917375999,
-    "Length": 6419
+    "Hash": -1052846319,
+    "Length": 6417
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Shield_Charge_AoE2",
-    "Hash": -1444910797,
-    "Length": 10527
+    "Hash": 57363163,
+    "Length": 10533
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Shield_Charge_AoE4",
-    "Hash": 1996564135,
-    "Length": 6396
+    "Hash": -1422119609,
+    "Length": 6398
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Shield_Charge_AoE",
-    "Hash": -1135915577,
-    "Length": 10503
+    "Hash": -2052644769,
+    "Length": 10511
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Sleet",
-    "Hash": -1028902251,
-    "Length": 29457
+    "Hash": 2038704442,
+    "Length": 29555
   },
   {
     "Archetype": "",
@@ -21248,26 +21248,26 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Stalker_EpicMaceMastery_Snipe",
-    "Hash": -560926791,
+    "Hash": 775123385,
     "Length": 26185
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Stalker_EpicMuMastery_Snipe",
-    "Hash": 1011081162,
-    "Length": 26224
+    "Hash": 668866826,
+    "Length": 26200
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Stalker_EpicSoulMastery_Snipe",
-    "Hash": -811349508,
-    "Length": 19976
+    "Hash": 456934680,
+    "Length": 19942
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Static_Field_Dominator",
-    "Hash": -145015020,
-    "Length": 13096
+    "Hash": -648989877,
+    "Length": 13153
   },
   {
     "Archetype": "",
@@ -21296,8 +21296,8 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Thorntrops",
-    "Hash": 844110378,
-    "Length": 8067
+    "Hash": -1592016412,
+    "Length": 8081
   },
   {
     "Archetype": "",
@@ -21308,20 +21308,20 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.DistortionField_Mastermind",
-    "Hash": 237471201,
-    "Length": 14441
+    "Hash": 1668776422,
+    "Length": 14446
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.DistortionField_Corruptor",
-    "Hash": 1742428550,
-    "Length": 14425
+    "Hash": -1084998393,
+    "Length": 14430
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Toxic_Tarantula",
-    "Hash": -942639377,
-    "Length": 44570
+    "Hash": -1424217014,
+    "Length": 44625
   },
   {
     "Archetype": "",
@@ -21332,26 +21332,26 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Trick_Shot_Jump1",
-    "Hash": -2039301308,
-    "Length": 6351
+    "Hash": 681997898,
+    "Length": 6353
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Trick_Shot_Jump2",
-    "Hash": -382733877,
-    "Length": 6351
+    "Hash": -1075700793,
+    "Length": 6353
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Trick_Shot_Jump3",
-    "Hash": 1388911643,
-    "Length": 6351
+    "Hash": -1419228681,
+    "Length": 6353
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Trick_Shot_Jump4",
-    "Hash": -2111628847,
-    "Length": 4226
+    "Hash": -2130448139,
+    "Length": 4228
   },
   {
     "Archetype": "",
@@ -21362,20 +21362,20 @@
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Umbra_Beast",
-    "Hash": -129173750,
-    "Length": 59999
+    "Hash": 1355674858,
+    "Length": 60042
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Water_Spout",
-    "Hash": 1268647683,
-    "Length": 20597
+    "Hash": 1248897847,
+    "Length": 20591
   },
   {
     "Archetype": "",
     "Fullname": "Villain_Pets.Water_Spout_Stalker",
-    "Hash": 672823292,
-    "Length": 20829
+    "Hash": 888123190,
+    "Length": 20823
   },
   {
     "Archetype": "",
@@ -21428,31 +21428,31 @@
   {
     "Archetype": "Class_Warshade",
     "Fullname": "Warshade_Defensive.Umbral_Aura",
-    "Hash": 1442130929,
-    "Length": 186330
+    "Hash": -1691996884,
+    "Length": 186444
   },
   {
     "Archetype": "Class_Warshade",
     "Fullname": "Warshade_Offensive.Umbral_Blast",
-    "Hash": -1154289296,
-    "Length": 173862
+    "Hash": -562920371,
+    "Length": 174355
   },
   {
     "Archetype": "Class_Arachnos_Widow",
     "Fullname": "Widow_Training.Fortunata_Training",
-    "Hash": 1876736614,
-    "Length": 69354
+    "Hash": -2086633538,
+    "Length": 69379
   },
   {
     "Archetype": "Class_Arachnos_Widow",
     "Fullname": "Widow_Training.Night_Widow_Training",
-    "Hash": -126634025,
-    "Length": 53951
+    "Hash": 1426833526,
+    "Length": 54096
   },
   {
     "Archetype": "Class_Arachnos_Widow",
     "Fullname": "Widow_Training.Widow_Training",
-    "Hash": 2035059550,
-    "Length": 86436
+    "Hash": 552808514,
+    "Length": 86698
   }
 ]

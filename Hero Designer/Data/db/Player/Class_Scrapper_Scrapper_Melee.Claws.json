@@ -349,7 +349,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 14.2640333,
           "MagPercent": 14.2640333,
           "Reward": "",
@@ -381,7 +380,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 5.63053942,
           "MagPercent": 5.63053942,
           "Reward": "",
@@ -669,7 +667,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 20.2699413,
           "MagPercent": 20.2699413,
           "Reward": "",
@@ -1056,7 +1053,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 12.3871861,
           "MagPercent": 12.3871861,
           "Reward": "",
@@ -1088,7 +1084,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 12.3871861,
           "MagPercent": 12.3871861,
           "Reward": "",
@@ -1367,7 +1362,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 29.6541748,
           "MagPercent": 29.6541748,
           "Reward": "",
@@ -1984,7 +1978,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 15.0147724,
           "MagPercent": 15.0147724,
           "Reward": "",
@@ -2549,7 +2542,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 26.0881672,
           "MagPercent": 26.0881672,
           "Reward": "",
@@ -2792,7 +2784,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 37.3492432,
           "MagPercent": 37.3492432,
           "Reward": "",
@@ -3146,7 +3137,6 @@
         },
         {
           "MagnitudeExpression": "",
-          "Probability": 1.0,
           "Mag": 19.7068882,
           "MagPercent": 19.7068882,
           "Reward": "",
