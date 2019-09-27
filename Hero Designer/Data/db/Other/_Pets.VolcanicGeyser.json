@@ -50,6 +50,7 @@
       "TargetLoS": true,
       "Range": 30.0,
       "RechargeTime": 6.0,
+      "BaseRechargeTime": 6.0,
       "EffectArea": 2,
       "Radius": 10.0,
       "MaxTargets": 5,

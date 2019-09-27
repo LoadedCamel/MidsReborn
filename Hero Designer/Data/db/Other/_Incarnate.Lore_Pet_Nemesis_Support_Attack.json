@@ -50,6 +50,7 @@
       "TargetLoS": true,
       "Range": 70.0,
       "RechargeTime": 4.0,
+      "BaseRechargeTime": 4.0,
       "EffectArea": 1,
       "MaxBoosts": "6",
       "NumAllowed": 1,
@@ -82,8 +83,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 27.8051,
-          "MagPercent": 27.8051,
+          "Mag": 62.5615,
+          "MagPercent": 62.5615,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

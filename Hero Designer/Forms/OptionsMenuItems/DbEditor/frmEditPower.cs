@@ -2310,7 +2310,10 @@ namespace Hero_Designer
             IPower power = myPower;
             float num = (float)Conversion.Val(txtRechargeTime.Text);
             if (num >= 0.0 & num <= 2147483904.0)
+            {
                 power.RechargeTime = num;
+                power.BaseRechargeTime = num;
+            }
         }
 
         void txtScaleName_TextChanged(object sender, EventArgs e)

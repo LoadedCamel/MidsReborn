@@ -211,6 +211,10 @@ namespace Hero_Designer
         void btnOK_Click(object sender, EventArgs e)
         {
             BusyMsg("Re-Indexing && Saving...");
+            foreach (var power in DatabaseAPI.Database.Power)
+            {
+                power.BaseRechargeTime = power.RechargeTime;
+            }
             Array.Sort(DatabaseAPI.Database.Power);
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);

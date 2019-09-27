@@ -53,6 +53,7 @@
       "Range": 80.0,
       "EndCost": 8.528,
       "RechargeTime": 8.0,
+      "BaseRechargeTime": 8.0,
       "EffectArea": 1,
       "MaxBoosts": "6",
       "NumAllowed": 1,

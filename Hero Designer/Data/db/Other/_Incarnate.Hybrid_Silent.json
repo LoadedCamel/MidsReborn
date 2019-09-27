@@ -8379,6 +8379,7 @@
       "Target": 1,
       "TargetLoS": true,
       "RechargeTime": 120.0,
+      "BaseRechargeTime": 120.0,
       "ActivatePeriod": 10.0,
       "EffectArea": 1,
       "MaxBoosts": "0",

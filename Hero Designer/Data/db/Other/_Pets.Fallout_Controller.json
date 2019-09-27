@@ -49,6 +49,7 @@
       "Target": 1,
       "TargetLoS": true,
       "RechargeTime": 300.0,
+      "BaseRechargeTime": 300.0,
       "ActivatePeriod": 300.0,
       "EffectArea": 2,
       "Radius": 30.0,

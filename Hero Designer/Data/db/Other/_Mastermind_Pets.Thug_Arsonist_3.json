@@ -53,6 +53,7 @@
       "Range": 70.0,
       "EndCost": 7.8,
       "RechargeTime": 16.0,
+      "BaseRechargeTime": 16.0,
       "EffectArea": 2,
       "Radius": 15.0,
       "MaxTargets": 16,

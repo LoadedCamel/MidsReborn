@@ -88,6 +88,8 @@ namespace Base.Data_Classes
 
         public float RechargeTime { get; set; }
 
+        public float BaseRechargeTime { get; set; }
+
         public float ActivatePeriod { get; set; }
 
         public Enums.eEffectArea EffectArea { get; set; }
@@ -304,6 +306,7 @@ namespace Base.Data_Classes
             InterruptTime = template.InterruptTime;
             CastTime = template.CastTimeReal;
             RechargeTime = template.RechargeTime;
+            BaseRechargeTime = template.BaseRechargeTime;
             ActivatePeriod = template.ActivatePeriod;
             EffectArea = template.EffectArea;
             Radius = template.Radius;
@@ -421,6 +424,7 @@ namespace Base.Data_Classes
             InterruptTime = reader.ReadSingle();
             CastTime = reader.ReadSingle();
             RechargeTime = reader.ReadSingle();
+            BaseRechargeTime = reader.ReadSingle();
             ActivatePeriod = reader.ReadSingle();
             EffectArea = (Enums.eEffectArea)reader.ReadInt32();
             Radius = reader.ReadSingle();
@@ -563,6 +567,7 @@ namespace Base.Data_Classes
             writer.Write(InterruptTime);
             writer.Write(CastTimeReal);
             writer.Write(RechargeTime);
+            writer.Write(BaseRechargeTime);
             writer.Write(ActivatePeriod);
             writer.Write((int)EffectArea);
             writer.Write(Radius);

@@ -85,6 +85,8 @@ public interface IPower : IComparable
 
     float RechargeTime { get; set; }
 
+    float BaseRechargeTime { get; set; }
+
     float ActivatePeriod { get; set; }
 
     Enums.eEffectArea EffectArea { get; set; }

@@ -149,8 +149,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.719999969,
-          "MagPercent": -72.0,
+          "Mag": -0.9,
+          "MagPercent": -90.0,
           "Duration": 0.45,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -218,8 +218,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.1875,
-          "MagPercent": -18.75,
+          "Mag": -0.175,
+          "MagPercent": -17.5,
           "Duration": 0.45,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

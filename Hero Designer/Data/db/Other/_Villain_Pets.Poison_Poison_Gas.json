@@ -52,6 +52,7 @@
       "Target": 1,
       "TargetLoS": true,
       "RechargeTime": 1000.0,
+      "BaseRechargeTime": 1000.0,
       "ActivatePeriod": 1.0,
       "EffectArea": 2,
       "Radius": 15.0,
@@ -297,8 +298,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.251231,
-          "MagPercent": 1.251231,
+          "Mag": 1.66830587,
+          "MagPercent": 1.66830587,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

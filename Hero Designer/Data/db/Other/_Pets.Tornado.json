@@ -553,6 +553,7 @@
       "TargetLoS": true,
       "Range": 1.0,
       "RechargeTime": 2.0,
+      "BaseRechargeTime": 2.0,
       "EffectArea": 1,
       "MaxBoosts": "6",
       "NumAllowed": 1,

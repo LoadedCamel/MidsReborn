@@ -51,6 +51,7 @@
       "TargetLoS": true,
       "Range": 100.0,
       "RechargeTime": 5.5,
+      "BaseRechargeTime": 5.5,
       "EffectArea": 2,
       "Radius": 8.0,
       "MaxTargets": 16,
@@ -84,8 +85,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.278051,
-          "MagPercent": 0.278051,
+          "Mag": 0.625615,
+          "MagPercent": 0.625615,
           "Duration": 20.0,
           "BaseProbability": 1.0,
           "Reward": "",
