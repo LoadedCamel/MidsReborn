@@ -4,8 +4,6 @@
   "FullName": "Temporary_Powers.SilentPowers",
   "ImageName": "",
   "Power": [
-    9083,
-    9084,
     9085,
     9086,
     9087,
@@ -109,12 +107,14 @@
     9185,
     9186,
     9187,
-    9188
+    9188,
+    9189,
+    9190
   ],
   "SetType": 7,
   "DisplayName": "Temporary Powers",
   "nArchetype": -1,
-  "nID": 3429,
+  "nID": 3430,
   "SubName": "Temporary Powers",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -126,8 +126,8 @@
   "GroupName": "Temporary_Powers",
   "Powers": [
     {
-      "PowerIndex": 9083,
-      "PowerSetID": 3429,
+      "PowerIndex": 9085,
+      "PowerSetID": 3430,
       "StaticIndex": 8702,
       "NGroupMembership": [],
       "FullName": "Temporary_Powers.SilentPowers.Summer_Event_Heist_Grifter",
@@ -245,8 +245,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9084,
-      "PowerSetID": 3429,
+      "PowerIndex": 9086,
+      "PowerSetID": 3430,
       "PowerSetIndex": 1,
       "StaticIndex": 4861,
       "NGroupMembership": [],
@@ -327,8 +327,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9085,
-      "PowerSetID": 3429,
+      "PowerIndex": 9087,
+      "PowerSetID": 3430,
       "PowerSetIndex": 2,
       "StaticIndex": 6081,
       "NGroupMembership": [],
@@ -478,8 +478,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9086,
-      "PowerSetID": 3429,
+      "PowerIndex": 9088,
+      "PowerSetID": 3430,
       "PowerSetIndex": 3,
       "StaticIndex": 6269,
       "NGroupMembership": [],
@@ -563,8 +563,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9087,
-      "PowerSetID": 3429,
+      "PowerIndex": 9089,
+      "PowerSetID": 3430,
       "PowerSetIndex": 4,
       "StaticIndex": 6268,
       "NGroupMembership": [],
@@ -648,8 +648,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9088,
-      "PowerSetID": 3429,
+      "PowerIndex": 9090,
+      "PowerSetID": 3430,
       "PowerSetIndex": 5,
       "StaticIndex": 4893,
       "NGroupMembership": [],
@@ -973,8 +973,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9089,
-      "PowerSetID": 3429,
+      "PowerIndex": 9091,
+      "PowerSetID": 3430,
       "PowerSetIndex": 6,
       "StaticIndex": 4902,
       "NGroupMembership": [],
@@ -1298,8 +1298,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9090,
-      "PowerSetID": 3429,
+      "PowerIndex": 9092,
+      "PowerSetID": 3430,
       "PowerSetIndex": 7,
       "StaticIndex": 4903,
       "NGroupMembership": [],
@@ -1623,8 +1623,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9091,
-      "PowerSetID": 3429,
+      "PowerIndex": 9093,
+      "PowerSetID": 3430,
       "PowerSetIndex": 8,
       "StaticIndex": 4904,
       "NGroupMembership": [],
@@ -1948,8 +1948,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9092,
-      "PowerSetID": 3429,
+      "PowerIndex": 9094,
+      "PowerSetID": 3430,
       "PowerSetIndex": 9,
       "StaticIndex": 4905,
       "NGroupMembership": [],
@@ -2273,8 +2273,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9093,
-      "PowerSetID": 3429,
+      "PowerIndex": 9095,
+      "PowerSetID": 3430,
       "PowerSetIndex": 10,
       "StaticIndex": 4906,
       "NGroupMembership": [],
@@ -2598,8 +2598,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9094,
-      "PowerSetID": 3429,
+      "PowerIndex": 9096,
+      "PowerSetID": 3430,
       "PowerSetIndex": 11,
       "StaticIndex": 4907,
       "NGroupMembership": [],
@@ -2923,8 +2923,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9095,
-      "PowerSetID": 3429,
+      "PowerIndex": 9097,
+      "PowerSetID": 3430,
       "PowerSetIndex": 12,
       "StaticIndex": 4894,
       "NGroupMembership": [],
@@ -3248,8 +3248,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9096,
-      "PowerSetID": 3429,
+      "PowerIndex": 9098,
+      "PowerSetID": 3430,
       "PowerSetIndex": 13,
       "StaticIndex": 4895,
       "NGroupMembership": [],
@@ -3573,8 +3573,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9097,
-      "PowerSetID": 3429,
+      "PowerIndex": 9099,
+      "PowerSetID": 3430,
       "PowerSetIndex": 14,
       "StaticIndex": 4896,
       "NGroupMembership": [],
@@ -3898,8 +3898,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9098,
-      "PowerSetID": 3429,
+      "PowerIndex": 9100,
+      "PowerSetID": 3430,
       "PowerSetIndex": 15,
       "StaticIndex": 4897,
       "NGroupMembership": [],
@@ -4223,8 +4223,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9099,
-      "PowerSetID": 3429,
+      "PowerIndex": 9101,
+      "PowerSetID": 3430,
       "PowerSetIndex": 16,
       "StaticIndex": 4898,
       "NGroupMembership": [],
@@ -4548,8 +4548,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9100,
-      "PowerSetID": 3429,
+      "PowerIndex": 9102,
+      "PowerSetID": 3430,
       "PowerSetIndex": 17,
       "StaticIndex": 4899,
       "NGroupMembership": [],
@@ -4873,8 +4873,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9101,
-      "PowerSetID": 3429,
+      "PowerIndex": 9103,
+      "PowerSetID": 3430,
       "PowerSetIndex": 18,
       "StaticIndex": 4900,
       "NGroupMembership": [],
@@ -5198,8 +5198,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9102,
-      "PowerSetID": 3429,
+      "PowerIndex": 9104,
+      "PowerSetID": 3430,
       "PowerSetIndex": 19,
       "StaticIndex": 4901,
       "NGroupMembership": [],
@@ -5523,8 +5523,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9103,
-      "PowerSetID": 3429,
+      "PowerIndex": 9105,
+      "PowerSetID": 3430,
       "PowerSetIndex": 20,
       "StaticIndex": 4908,
       "NGroupMembership": [],
@@ -5848,8 +5848,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9104,
-      "PowerSetID": 3429,
+      "PowerIndex": 9106,
+      "PowerSetID": 3430,
       "PowerSetIndex": 21,
       "StaticIndex": 4917,
       "NGroupMembership": [],
@@ -6173,8 +6173,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9105,
-      "PowerSetID": 3429,
+      "PowerIndex": 9107,
+      "PowerSetID": 3430,
       "PowerSetIndex": 22,
       "StaticIndex": 4918,
       "NGroupMembership": [],
@@ -6498,8 +6498,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9106,
-      "PowerSetID": 3429,
+      "PowerIndex": 9108,
+      "PowerSetID": 3430,
       "PowerSetIndex": 23,
       "StaticIndex": 4919,
       "NGroupMembership": [],
@@ -6823,8 +6823,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9107,
-      "PowerSetID": 3429,
+      "PowerIndex": 9109,
+      "PowerSetID": 3430,
       "PowerSetIndex": 24,
       "StaticIndex": 4920,
       "NGroupMembership": [],
@@ -7148,8 +7148,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9108,
-      "PowerSetID": 3429,
+      "PowerIndex": 9110,
+      "PowerSetID": 3430,
       "PowerSetIndex": 25,
       "StaticIndex": 4921,
       "NGroupMembership": [],
@@ -7473,8 +7473,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9109,
-      "PowerSetID": 3429,
+      "PowerIndex": 9111,
+      "PowerSetID": 3430,
       "PowerSetIndex": 26,
       "StaticIndex": 4922,
       "NGroupMembership": [],
@@ -7798,8 +7798,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9110,
-      "PowerSetID": 3429,
+      "PowerIndex": 9112,
+      "PowerSetID": 3430,
       "PowerSetIndex": 27,
       "StaticIndex": 4909,
       "NGroupMembership": [],
@@ -8123,8 +8123,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9111,
-      "PowerSetID": 3429,
+      "PowerIndex": 9113,
+      "PowerSetID": 3430,
       "PowerSetIndex": 28,
       "StaticIndex": 4910,
       "NGroupMembership": [],
@@ -8448,8 +8448,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9112,
-      "PowerSetID": 3429,
+      "PowerIndex": 9114,
+      "PowerSetID": 3430,
       "PowerSetIndex": 29,
       "StaticIndex": 4911,
       "NGroupMembership": [],
@@ -8773,8 +8773,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9113,
-      "PowerSetID": 3429,
+      "PowerIndex": 9115,
+      "PowerSetID": 3430,
       "PowerSetIndex": 30,
       "StaticIndex": 4912,
       "NGroupMembership": [],
@@ -9098,8 +9098,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9114,
-      "PowerSetID": 3429,
+      "PowerIndex": 9116,
+      "PowerSetID": 3430,
       "PowerSetIndex": 31,
       "StaticIndex": 4913,
       "NGroupMembership": [],
@@ -9423,8 +9423,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9115,
-      "PowerSetID": 3429,
+      "PowerIndex": 9117,
+      "PowerSetID": 3430,
       "PowerSetIndex": 32,
       "StaticIndex": 4914,
       "NGroupMembership": [],
@@ -9748,8 +9748,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9116,
-      "PowerSetID": 3429,
+      "PowerIndex": 9118,
+      "PowerSetID": 3430,
       "PowerSetIndex": 33,
       "StaticIndex": 4915,
       "NGroupMembership": [],
@@ -10073,8 +10073,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9117,
-      "PowerSetID": 3429,
+      "PowerIndex": 9119,
+      "PowerSetID": 3430,
       "PowerSetIndex": 34,
       "StaticIndex": 4916,
       "NGroupMembership": [],
@@ -10398,8 +10398,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9118,
-      "PowerSetID": 3429,
+      "PowerIndex": 9120,
+      "PowerSetID": 3430,
       "PowerSetIndex": 35,
       "StaticIndex": 4878,
       "NGroupMembership": [],
@@ -10715,8 +10715,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9119,
-      "PowerSetID": 3429,
+      "PowerIndex": 9121,
+      "PowerSetID": 3430,
       "PowerSetIndex": 36,
       "StaticIndex": 4887,
       "NGroupMembership": [],
@@ -11032,8 +11032,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9120,
-      "PowerSetID": 3429,
+      "PowerIndex": 9122,
+      "PowerSetID": 3430,
       "PowerSetIndex": 37,
       "StaticIndex": 4888,
       "NGroupMembership": [],
@@ -11349,8 +11349,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9121,
-      "PowerSetID": 3429,
+      "PowerIndex": 9123,
+      "PowerSetID": 3430,
       "PowerSetIndex": 38,
       "StaticIndex": 4889,
       "NGroupMembership": [],
@@ -11666,8 +11666,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9122,
-      "PowerSetID": 3429,
+      "PowerIndex": 9124,
+      "PowerSetID": 3430,
       "PowerSetIndex": 39,
       "StaticIndex": 4890,
       "NGroupMembership": [],
@@ -11983,8 +11983,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9123,
-      "PowerSetID": 3429,
+      "PowerIndex": 9125,
+      "PowerSetID": 3430,
       "PowerSetIndex": 40,
       "StaticIndex": 4891,
       "NGroupMembership": [],
@@ -12300,8 +12300,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9124,
-      "PowerSetID": 3429,
+      "PowerIndex": 9126,
+      "PowerSetID": 3430,
       "PowerSetIndex": 41,
       "StaticIndex": 4892,
       "NGroupMembership": [],
@@ -12617,8 +12617,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9125,
-      "PowerSetID": 3429,
+      "PowerIndex": 9127,
+      "PowerSetID": 3430,
       "PowerSetIndex": 42,
       "StaticIndex": 4879,
       "NGroupMembership": [],
@@ -12934,8 +12934,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9126,
-      "PowerSetID": 3429,
+      "PowerIndex": 9128,
+      "PowerSetID": 3430,
       "PowerSetIndex": 43,
       "StaticIndex": 4880,
       "NGroupMembership": [],
@@ -13251,8 +13251,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9127,
-      "PowerSetID": 3429,
+      "PowerIndex": 9129,
+      "PowerSetID": 3430,
       "PowerSetIndex": 44,
       "StaticIndex": 4881,
       "NGroupMembership": [],
@@ -13568,8 +13568,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9128,
-      "PowerSetID": 3429,
+      "PowerIndex": 9130,
+      "PowerSetID": 3430,
       "PowerSetIndex": 45,
       "StaticIndex": 4882,
       "NGroupMembership": [],
@@ -13885,8 +13885,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9129,
-      "PowerSetID": 3429,
+      "PowerIndex": 9131,
+      "PowerSetID": 3430,
       "PowerSetIndex": 46,
       "StaticIndex": 4883,
       "NGroupMembership": [],
@@ -14202,8 +14202,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9130,
-      "PowerSetID": 3429,
+      "PowerIndex": 9132,
+      "PowerSetID": 3430,
       "PowerSetIndex": 47,
       "StaticIndex": 4884,
       "NGroupMembership": [],
@@ -14519,8 +14519,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9131,
-      "PowerSetID": 3429,
+      "PowerIndex": 9133,
+      "PowerSetID": 3430,
       "PowerSetIndex": 48,
       "StaticIndex": 4885,
       "NGroupMembership": [],
@@ -14836,8 +14836,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9132,
-      "PowerSetID": 3429,
+      "PowerIndex": 9134,
+      "PowerSetID": 3430,
       "PowerSetIndex": 49,
       "StaticIndex": 4886,
       "NGroupMembership": [],
@@ -15153,8 +15153,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9133,
-      "PowerSetID": 3429,
+      "PowerIndex": 9135,
+      "PowerSetID": 3430,
       "PowerSetIndex": 50,
       "StaticIndex": 6271,
       "NGroupMembership": [],
@@ -15238,8 +15238,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9134,
-      "PowerSetID": 3429,
+      "PowerIndex": 9136,
+      "PowerSetID": 3430,
       "PowerSetIndex": 51,
       "StaticIndex": 6262,
       "NGroupMembership": [],
@@ -15335,8 +15335,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9135,
-      "PowerSetID": 3429,
+      "PowerIndex": 9137,
+      "PowerSetID": 3430,
       "PowerSetIndex": 52,
       "StaticIndex": 6263,
       "NGroupMembership": [],
@@ -15416,8 +15416,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9136,
-      "PowerSetID": 3429,
+      "PowerIndex": 9138,
+      "PowerSetID": 3430,
       "PowerSetIndex": 53,
       "StaticIndex": 6266,
       "NGroupMembership": [],
@@ -15531,8 +15531,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9137,
-      "PowerSetID": 3429,
+      "PowerIndex": 9139,
+      "PowerSetID": 3430,
       "PowerSetIndex": 54,
       "StaticIndex": 5711,
       "NGroupMembership": [],
@@ -15616,8 +15616,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9138,
-      "PowerSetID": 3429,
+      "PowerIndex": 9140,
+      "PowerSetID": 3430,
       "PowerSetIndex": 55,
       "StaticIndex": 6079,
       "NGroupMembership": [],
@@ -15832,8 +15832,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9139,
-      "PowerSetID": 3429,
+      "PowerIndex": 9141,
+      "PowerSetID": 3430,
       "PowerSetIndex": 56,
       "StaticIndex": 6270,
       "NGroupMembership": [],
@@ -15917,8 +15917,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9140,
-      "PowerSetID": 3429,
+      "PowerIndex": 9142,
+      "PowerSetID": 3430,
       "PowerSetIndex": 57,
       "StaticIndex": 6273,
       "NGroupMembership": [],
@@ -16069,8 +16069,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9141,
-      "PowerSetID": 3429,
+      "PowerIndex": 9143,
+      "PowerSetID": 3430,
       "PowerSetIndex": 58,
       "StaticIndex": 6265,
       "NGroupMembership": [],
@@ -16158,8 +16158,8 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 9142,
-      "PowerSetID": 3429,
+      "PowerIndex": 9144,
+      "PowerSetID": 3430,
       "PowerSetIndex": 59,
       "StaticIndex": 6274,
       "NGroupMembership": [],
@@ -16241,8 +16241,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9143,
-      "PowerSetID": 3429,
+      "PowerIndex": 9145,
+      "PowerSetID": 3430,
       "PowerSetIndex": 60,
       "StaticIndex": 6261,
       "NGroupMembership": [],
@@ -17670,8 +17670,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17704,8 +17704,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 12.5,
-          "MagPercent": 1250.0,
+          "Mag": 8.0,
+          "MagPercent": 800.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17738,8 +17738,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 12.5,
-          "MagPercent": 1250.0,
+          "Mag": 8.0,
+          "MagPercent": 800.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17772,8 +17772,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 12.5,
-          "MagPercent": 1250.0,
+          "Mag": 8.0,
+          "MagPercent": 800.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17806,8 +17806,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 12.5,
-          "MagPercent": 1250.0,
+          "Mag": 8.0,
+          "MagPercent": 800.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17840,8 +17840,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 12.5,
-          "MagPercent": 1250.0,
+          "Mag": 8.0,
+          "MagPercent": 800.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17874,8 +17874,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 12.5,
-          "MagPercent": 1250.0,
+          "Mag": 8.0,
+          "MagPercent": 800.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17908,8 +17908,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 12.5,
-          "MagPercent": 1250.0,
+          "Mag": 8.0,
+          "MagPercent": 800.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17942,8 +17942,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 12.5,
-          "MagPercent": 1250.0,
+          "Mag": 8.0,
+          "MagPercent": 800.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -17976,8 +17976,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18011,8 +18011,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18046,8 +18046,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18081,8 +18081,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18116,8 +18116,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18151,8 +18151,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18186,8 +18186,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18221,8 +18221,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18256,8 +18256,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -18291,8 +18291,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.0,
-          "MagPercent": 700.0,
+          "Mag": 9.0,
+          "MagPercent": 900.0,
           "Duration": 10.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -19447,8 +19447,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9144,
-      "PowerSetID": 3429,
+      "PowerIndex": 9146,
+      "PowerSetID": 3430,
       "PowerSetIndex": 61,
       "StaticIndex": 6275,
       "NGroupMembership": [],
@@ -19533,8 +19533,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9145,
-      "PowerSetID": 3429,
+      "PowerIndex": 9147,
+      "PowerSetID": 3430,
       "PowerSetIndex": 62,
       "StaticIndex": 6260,
       "NGroupMembership": [],
@@ -19617,8 +19617,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9146,
-      "PowerSetID": 3429,
+      "PowerIndex": 9148,
+      "PowerSetID": 3430,
       "PowerSetIndex": 63,
       "StaticIndex": 6267,
       "NGroupMembership": [],
@@ -19732,8 +19732,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9147,
-      "PowerSetID": 3429,
+      "PowerIndex": 9149,
+      "PowerSetID": 3430,
       "PowerSetIndex": 64,
       "StaticIndex": 6080,
       "NGroupMembership": [],
@@ -19915,8 +19915,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9148,
-      "PowerSetID": 3429,
+      "PowerIndex": 9150,
+      "PowerSetID": 3430,
       "PowerSetIndex": 65,
       "StaticIndex": 4863,
       "NGroupMembership": [],
@@ -20232,8 +20232,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9149,
-      "PowerSetID": 3429,
+      "PowerIndex": 9151,
+      "PowerSetID": 3430,
       "PowerSetIndex": 66,
       "StaticIndex": 4872,
       "NGroupMembership": [],
@@ -20549,8 +20549,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9150,
-      "PowerSetID": 3429,
+      "PowerIndex": 9152,
+      "PowerSetID": 3430,
       "PowerSetIndex": 67,
       "StaticIndex": 4873,
       "NGroupMembership": [],
@@ -20866,8 +20866,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9151,
-      "PowerSetID": 3429,
+      "PowerIndex": 9153,
+      "PowerSetID": 3430,
       "PowerSetIndex": 68,
       "StaticIndex": 4874,
       "NGroupMembership": [],
@@ -21183,8 +21183,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9152,
-      "PowerSetID": 3429,
+      "PowerIndex": 9154,
+      "PowerSetID": 3430,
       "PowerSetIndex": 69,
       "StaticIndex": 4875,
       "NGroupMembership": [],
@@ -21500,8 +21500,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9153,
-      "PowerSetID": 3429,
+      "PowerIndex": 9155,
+      "PowerSetID": 3430,
       "PowerSetIndex": 70,
       "StaticIndex": 4876,
       "NGroupMembership": [],
@@ -21817,8 +21817,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9154,
-      "PowerSetID": 3429,
+      "PowerIndex": 9156,
+      "PowerSetID": 3430,
       "PowerSetIndex": 71,
       "StaticIndex": 4877,
       "NGroupMembership": [],
@@ -22134,8 +22134,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9155,
-      "PowerSetID": 3429,
+      "PowerIndex": 9157,
+      "PowerSetID": 3430,
       "PowerSetIndex": 72,
       "StaticIndex": 4864,
       "NGroupMembership": [],
@@ -22451,8 +22451,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9156,
-      "PowerSetID": 3429,
+      "PowerIndex": 9158,
+      "PowerSetID": 3430,
       "PowerSetIndex": 73,
       "StaticIndex": 4865,
       "NGroupMembership": [],
@@ -22768,8 +22768,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9157,
-      "PowerSetID": 3429,
+      "PowerIndex": 9159,
+      "PowerSetID": 3430,
       "PowerSetIndex": 74,
       "StaticIndex": 4866,
       "NGroupMembership": [],
@@ -23085,8 +23085,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9158,
-      "PowerSetID": 3429,
+      "PowerIndex": 9160,
+      "PowerSetID": 3430,
       "PowerSetIndex": 75,
       "StaticIndex": 4867,
       "NGroupMembership": [],
@@ -23402,8 +23402,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9159,
-      "PowerSetID": 3429,
+      "PowerIndex": 9161,
+      "PowerSetID": 3430,
       "PowerSetIndex": 76,
       "StaticIndex": 4868,
       "NGroupMembership": [],
@@ -23719,8 +23719,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9160,
-      "PowerSetID": 3429,
+      "PowerIndex": 9162,
+      "PowerSetID": 3430,
       "PowerSetIndex": 77,
       "StaticIndex": 4869,
       "NGroupMembership": [],
@@ -24036,8 +24036,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9161,
-      "PowerSetID": 3429,
+      "PowerIndex": 9163,
+      "PowerSetID": 3430,
       "PowerSetIndex": 78,
       "StaticIndex": 4870,
       "NGroupMembership": [],
@@ -24353,8 +24353,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9162,
-      "PowerSetID": 3429,
+      "PowerIndex": 9164,
+      "PowerSetID": 3430,
       "PowerSetIndex": 79,
       "StaticIndex": 4871,
       "NGroupMembership": [],
@@ -24670,8 +24670,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9163,
-      "PowerSetID": 3429,
+      "PowerIndex": 9165,
+      "PowerSetID": 3430,
       "PowerSetIndex": 80,
       "StaticIndex": 5712,
       "NGroupMembership": [],
@@ -24755,8 +24755,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9164,
-      "PowerSetID": 3429,
+      "PowerIndex": 9166,
+      "PowerSetID": 3430,
       "PowerSetIndex": 81,
       "StaticIndex": 6264,
       "NGroupMembership": [],
@@ -24910,8 +24910,8 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 9165,
-      "PowerSetID": 3429,
+      "PowerIndex": 9167,
+      "PowerSetID": 3430,
       "PowerSetIndex": 82,
       "StaticIndex": 6082,
       "NGroupMembership": [],
@@ -24994,8 +24994,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9166,
-      "PowerSetID": 3429,
+      "PowerIndex": 9168,
+      "PowerSetID": 3430,
       "PowerSetIndex": 83,
       "StaticIndex": 8994,
       "NGroupMembership": [],
@@ -25052,7 +25052,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Summer_Event_Administrator",
-          "nSummon": 9835,
+          "nSummon": 9837,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -25110,8 +25110,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9167,
-      "PowerSetID": 3429,
+      "PowerIndex": 9169,
+      "PowerSetID": 3430,
       "PowerSetIndex": 84,
       "StaticIndex": 8993,
       "NGroupMembership": [],
@@ -25224,8 +25224,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9168,
-      "PowerSetID": 3429,
+      "PowerIndex": 9170,
+      "PowerSetID": 3430,
       "PowerSetIndex": 85,
       "StaticIndex": 8991,
       "NGroupMembership": [],
@@ -25338,8 +25338,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9169,
-      "PowerSetID": 3429,
+      "PowerIndex": 9171,
+      "PowerSetID": 3430,
       "PowerSetIndex": 86,
       "StaticIndex": 8706,
       "NGroupMembership": [],
@@ -25453,8 +25453,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9170,
-      "PowerSetID": 3429,
+      "PowerIndex": 9172,
+      "PowerSetID": 3430,
       "PowerSetIndex": 87,
       "StaticIndex": 8701,
       "NGroupMembership": [],
@@ -25572,8 +25572,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9171,
-      "PowerSetID": 3429,
+      "PowerIndex": 9173,
+      "PowerSetID": 3430,
       "PowerSetIndex": 88,
       "StaticIndex": 8990,
       "NGroupMembership": [],
@@ -25686,8 +25686,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9172,
-      "PowerSetID": 3429,
+      "PowerIndex": 9174,
+      "PowerSetID": 3430,
       "PowerSetIndex": 89,
       "StaticIndex": 8705,
       "NGroupMembership": [],
@@ -25801,8 +25801,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9173,
-      "PowerSetID": 3429,
+      "PowerIndex": 9175,
+      "PowerSetID": 3430,
       "PowerSetIndex": 90,
       "StaticIndex": 8700,
       "NGroupMembership": [],
@@ -25920,8 +25920,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9174,
-      "PowerSetID": 3429,
+      "PowerIndex": 9176,
+      "PowerSetID": 3430,
       "PowerSetIndex": 91,
       "StaticIndex": 8989,
       "NGroupMembership": [],
@@ -26034,8 +26034,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9175,
-      "PowerSetID": 3429,
+      "PowerIndex": 9177,
+      "PowerSetID": 3430,
       "PowerSetIndex": 92,
       "StaticIndex": 8704,
       "NGroupMembership": [],
@@ -26149,8 +26149,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9176,
-      "PowerSetID": 3429,
+      "PowerIndex": 9178,
+      "PowerSetID": 3430,
       "PowerSetIndex": 93,
       "StaticIndex": 8709,
       "NGroupMembership": [],
@@ -26328,8 +26328,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9177,
-      "PowerSetID": 3429,
+      "PowerIndex": 9179,
+      "PowerSetID": 3430,
       "PowerSetIndex": 94,
       "StaticIndex": 8710,
       "NGroupMembership": [],
@@ -26507,8 +26507,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9178,
-      "PowerSetID": 3429,
+      "PowerIndex": 9180,
+      "PowerSetID": 3430,
       "PowerSetIndex": 95,
       "StaticIndex": 8988,
       "NGroupMembership": [],
@@ -26592,8 +26592,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9179,
-      "PowerSetID": 3429,
+      "PowerIndex": 9181,
+      "PowerSetID": 3430,
       "PowerSetIndex": 96,
       "StaticIndex": 8703,
       "NGroupMembership": [],
@@ -26711,8 +26711,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9180,
-      "PowerSetID": 3429,
+      "PowerIndex": 9182,
+      "PowerSetID": 3430,
       "PowerSetIndex": 97,
       "StaticIndex": 8992,
       "NGroupMembership": [],
@@ -26825,8 +26825,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9181,
-      "PowerSetID": 3429,
+      "PowerIndex": 9183,
+      "PowerSetID": 3430,
       "PowerSetIndex": 98,
       "StaticIndex": 8707,
       "NGroupMembership": [],
@@ -26940,8 +26940,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9182,
-      "PowerSetID": 3429,
+      "PowerIndex": 9184,
+      "PowerSetID": 3430,
       "PowerSetIndex": 99,
       "StaticIndex": 8708,
       "NGroupMembership": [],
@@ -27157,8 +27157,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9183,
-      "PowerSetID": 3429,
+      "PowerIndex": 9185,
+      "PowerSetID": 3430,
       "PowerSetIndex": 100,
       "StaticIndex": 8699,
       "NGroupMembership": [],
@@ -27272,8 +27272,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9184,
-      "PowerSetID": 3429,
+      "PowerIndex": 9186,
+      "PowerSetID": 3430,
       "PowerSetIndex": 101,
       "StaticIndex": 6272,
       "NGroupMembership": [],
@@ -27357,8 +27357,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9185,
-      "PowerSetID": 3429,
+      "PowerIndex": 9187,
+      "PowerSetID": 3430,
       "PowerSetIndex": 102,
       "StaticIndex": 6083,
       "NGroupMembership": [],
@@ -27571,8 +27571,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9186,
-      "PowerSetID": 3429,
+      "PowerIndex": 9188,
+      "PowerSetID": 3430,
       "PowerSetIndex": 103,
       "StaticIndex": 6084,
       "NGroupMembership": [],
@@ -27750,8 +27750,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9187,
-      "PowerSetID": 3429,
+      "PowerIndex": 9189,
+      "PowerSetID": 3430,
       "PowerSetIndex": 104,
       "StaticIndex": 9731,
       "NGroupMembership": [],
@@ -27836,8 +27836,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9188,
-      "PowerSetID": 3429,
+      "PowerIndex": 9190,
+      "PowerSetID": 3430,
       "PowerSetIndex": 105,
       "StaticIndex": 4862,
       "NGroupMembership": [],

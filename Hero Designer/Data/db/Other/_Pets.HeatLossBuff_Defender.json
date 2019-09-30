@@ -4,12 +4,12 @@
   "FullName": "Pets.HeatLossBuff_Defender",
   "ImageName": "",
   "Power": [
-    6286
+    6288
   ],
   "SetType": 8,
   "DisplayName": "Heat Loss",
   "nArchetype": -1,
-  "nID": 3100,
+  "nID": 3101,
   "SubName": "Cold Domination",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6286,
-      "PowerSetID": 3100,
+      "PowerIndex": 6288,
+      "PowerSetID": 3101,
       "StaticIndex": 1606,
       "NGroupMembership": [],
       "FullName": "Pets.HeatLossBuff_Defender.Heat_Loss",

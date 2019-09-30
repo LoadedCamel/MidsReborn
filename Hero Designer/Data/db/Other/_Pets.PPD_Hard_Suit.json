@@ -4,16 +4,16 @@
   "FullName": "Pets.PPD_Hard_Suit",
   "ImageName": "",
   "Power": [
-    6401,
-    6402,
     6403,
     6404,
-    6405
+    6405,
+    6406,
+    6407
   ],
   "SetType": 8,
   "DisplayName": "PPD Hard Suit",
   "nArchetype": -1,
-  "nID": 3168,
+  "nID": 3169,
   "SubName": "Paragon Police",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -25,8 +25,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6401,
-      "PowerSetID": 3168,
+      "PowerIndex": 6403,
+      "PowerSetID": 3169,
       "StaticIndex": 4263,
       "NGroupMembership": [],
       "FullName": "Pets.PPD_Hard_Suit.Resistances",
@@ -178,8 +178,8 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 5.46,
-      "PowerIndex": 6402,
-      "PowerSetID": 3168,
+      "PowerIndex": 6404,
+      "PowerSetID": 3169,
       "PowerSetIndex": 1,
       "StaticIndex": 4264,
       "NGroupMembership": [],
@@ -274,8 +274,8 @@
     {
       "CastTimeReal": 0.57,
       "ToggleCost": 6.5,
-      "PowerIndex": 6403,
-      "PowerSetID": 3168,
+      "PowerIndex": 6405,
+      "PowerSetID": 3169,
       "PowerSetIndex": 2,
       "StaticIndex": 4265,
       "NGroupMembership": [],
@@ -474,8 +474,8 @@
     {
       "CastTimeReal": 3.87,
       "ToggleCost": 9.1,
-      "PowerIndex": 6404,
-      "PowerSetID": 3168,
+      "PowerIndex": 6406,
+      "PowerSetID": 3169,
       "PowerSetIndex": 3,
       "StaticIndex": 4266,
       "NGroupMembership": [],
@@ -572,8 +572,8 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 8.45,
-      "PowerIndex": 6405,
-      "PowerSetID": 3168,
+      "PowerIndex": 6407,
+      "PowerSetID": 3169,
       "PowerSetIndex": 4,
       "StaticIndex": 4267,
       "NGroupMembership": [],

@@ -4,13 +4,13 @@
   "FullName": "Pets.Defender_Electric_Snipe",
   "ImageName": "",
   "Power": [
-    6230,
-    6231
+    6232,
+    6233
   ],
   "SetType": 8,
   "DisplayName": "",
   "nArchetype": -1,
-  "nID": 3009,
+  "nID": 3016,
   "SubName": "Electric Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 4.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6230,
-      "PowerSetID": 3009,
+      "PowerIndex": 6232,
+      "PowerSetID": 3016,
       "StaticIndex": 9576,
       "NGroupMembership": [],
       "FullName": "Pets.Defender_Electric_Snipe.Zapp_Normal",
@@ -310,8 +310,8 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6231,
-      "PowerSetID": 3009,
+      "PowerIndex": 6233,
+      "PowerSetID": 3016,
       "PowerSetIndex": 1,
       "StaticIndex": 9577,
       "NGroupMembership": [],

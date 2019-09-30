@@ -4,13 +4,13 @@
   "FullName": "Pets.Defender_Psychic_Snipe",
   "ImageName": "",
   "Power": [
-    6236,
-    6237
+    6238,
+    6239
   ],
   "SetType": 8,
   "DisplayName": "",
   "nArchetype": -1,
-  "nID": 3012,
+  "nID": 3013,
   "SubName": "Psychic Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 6236,
-      "PowerSetID": 3012,
+      "PowerIndex": 6238,
+      "PowerSetID": 3013,
       "StaticIndex": 9582,
       "NGroupMembership": [],
       "FullName": "Pets.Defender_Psychic_Snipe.Psionic_Lance_Normal",
@@ -206,8 +206,8 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 6237,
-      "PowerSetID": 3012,
+      "PowerIndex": 6239,
+      "PowerSetID": 3013,
       "PowerSetIndex": 1,
       "StaticIndex": 9583,
       "NGroupMembership": [],

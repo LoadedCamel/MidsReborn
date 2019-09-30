@@ -4,12 +4,12 @@
   "FullName": "Pets.Venomous_Gas",
   "ImageName": "",
   "Power": [
-    6589
+    6591
   ],
   "SetType": 8,
   "DisplayName": "Venomous Gas",
   "nArchetype": -1,
-  "nID": 3257,
+  "nID": 3258,
   "SubName": "Poison",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6589,
-      "PowerSetID": 3257,
+      "PowerIndex": 6591,
+      "PowerSetID": 3258,
       "StaticIndex": 5631,
       "NGroupMembership": [],
       "FullName": "Pets.Venomous_Gas.Venomous_Gas",

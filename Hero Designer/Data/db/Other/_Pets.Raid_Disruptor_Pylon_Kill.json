@@ -4,12 +4,12 @@
   "FullName": "Pets.Raid_Disruptor_Pylon_Kill",
   "ImageName": "",
   "Power": [
-    6419
+    6421
   ],
   "SetType": 8,
   "DisplayName": "Raid_Disruptor_Pylon_Kill",
   "nArchetype": -1,
-  "nID": 3180,
+  "nID": 3181,
   "SubName": "Object",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6419,
-      "PowerSetID": 3180,
+      "PowerIndex": 6421,
+      "PowerSetID": 3181,
       "StaticIndex": 1690,
       "NGroupMembership": [],
       "FullName": "Pets.Raid_Disruptor_Pylon_Kill.Destroy",

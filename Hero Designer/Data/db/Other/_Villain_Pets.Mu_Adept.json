@@ -4,19 +4,19 @@
   "FullName": "Villain_Pets.Mu_Adept",
   "ImageName": "",
   "Power": [
-    10112,
-    10113,
     10114,
     10115,
     10116,
     10117,
     10118,
-    10119
+    10119,
+    10120,
+    10121
   ],
   "SetType": 8,
   "DisplayName": "Mu Adept",
   "nArchetype": -1,
-  "nID": 3513,
+  "nID": 3514,
   "SubName": "Mu Mastery",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -28,8 +28,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10112,
-      "PowerSetID": 3513,
+      "PowerIndex": 10114,
+      "PowerSetID": 3514,
       "StaticIndex": 3105,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Mu_Adept.Resistance",
@@ -78,8 +78,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.14,
-          "MagPercent": 14.0,
+          "Mag": 0.2,
+          "MagPercent": 20.0,
           "Duration": 10.5,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -111,8 +111,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.14,
-          "MagPercent": 14.0,
+          "Mag": 0.2,
+          "MagPercent": 20.0,
           "Duration": 10.5,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -150,8 +150,8 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.58,
-      "PowerIndex": 10113,
-      "PowerSetID": 3513,
+      "PowerIndex": 10115,
+      "PowerSetID": 3514,
       "PowerSetIndex": 1,
       "StaticIndex": 3106,
       "NGroupMembership": [],
@@ -215,8 +215,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 15.6403751,
-          "MagPercent": 15.6403751,
+          "Mag": 7.6464,
+          "MagPercent": 7.6464,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -434,8 +434,8 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 14.3,
-      "PowerIndex": 10114,
-      "PowerSetID": 3513,
+      "PowerIndex": 10116,
+      "PowerSetID": 3514,
       "PowerSetIndex": 2,
       "StaticIndex": 3107,
       "NGroupMembership": [],
@@ -676,8 +676,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 102.600861,
-          "MagPercent": 102.600861,
+          "Mag": 50.1603851,
+          "MagPercent": 50.1603851,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -714,8 +714,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10115,
-      "PowerSetID": 3513,
+      "PowerIndex": 10117,
+      "PowerSetID": 3514,
       "PowerSetIndex": 3,
       "StaticIndex": 3108,
       "NGroupMembership": [],
@@ -903,8 +903,8 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 10.66,
-      "PowerIndex": 10116,
-      "PowerSetID": 3513,
+      "PowerIndex": 10118,
+      "PowerSetID": 3514,
       "PowerSetIndex": 4,
       "StaticIndex": 3109,
       "NGroupMembership": [],
@@ -966,8 +966,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 102.600861,
-          "MagPercent": 102.600861,
+          "Mag": 50.1603851,
+          "MagPercent": 50.1603851,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1108,8 +1108,8 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 10117,
-      "PowerSetID": 3513,
+      "PowerIndex": 10119,
+      "PowerSetID": 3514,
       "PowerSetIndex": 5,
       "StaticIndex": 3110,
       "NGroupMembership": [],
@@ -1171,8 +1171,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 62.5615,
-          "MagPercent": 62.5615,
+          "Mag": 30.5856,
+          "MagPercent": 30.5856,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1311,8 +1311,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10118,
-      "PowerSetID": 3513,
+      "PowerIndex": 10120,
+      "PowerSetID": 3514,
       "PowerSetIndex": 6,
       "StaticIndex": 3111,
       "NGroupMembership": [],
@@ -1395,8 +1395,8 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 8.58,
-      "PowerIndex": 10119,
-      "PowerSetID": 3513,
+      "PowerIndex": 10121,
+      "PowerSetID": 3514,
       "PowerSetIndex": 7,
       "StaticIndex": 3112,
       "NGroupMembership": [],
@@ -1458,8 +1458,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 15.6403751,
-          "MagPercent": 15.6403751,
+          "Mag": 7.6464,
+          "MagPercent": 7.6464,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

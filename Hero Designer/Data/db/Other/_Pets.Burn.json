@@ -4,13 +4,13 @@
   "FullName": "Pets.Burn",
   "ImageName": "",
   "Power": [
-    6157,
-    6158
+    6159,
+    6160
   ],
   "SetType": 8,
   "DisplayName": "Burn",
   "nArchetype": -1,
-  "nID": 3041,
+  "nID": 3042,
   "SubName": "Fire",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6157,
-      "PowerSetID": 3041,
+      "PowerIndex": 6159,
+      "PowerSetID": 3042,
       "StaticIndex": 1553,
       "NGroupMembership": [],
       "FullName": "Pets.Burn.Burn",
@@ -113,8 +113,8 @@
     },
     {
       "CastTimeReal": 1.716,
-      "PowerIndex": 6158,
-      "PowerSetID": 3041,
+      "PowerIndex": 6160,
+      "PowerSetID": 3042,
       "PowerSetIndex": 1,
       "StaticIndex": 1554,
       "NGroupMembership": [],

@@ -4,13 +4,13 @@
   "FullName": "Pets.Blaster_BR_Snipe",
   "ImageName": "",
   "Power": [
-    6123,
-    6124
+    6125,
+    6126
   ],
   "SetType": 8,
   "DisplayName": "Beam Rifle",
   "nArchetype": -1,
-  "nID": 3026,
+  "nID": 3027,
   "SubName": "Beam Rifle",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 4.4,
       "ToggleCost": 14.352,
-      "PowerIndex": 6123,
-      "PowerSetID": 3026,
+      "PowerIndex": 6125,
+      "PowerSetID": 3027,
       "StaticIndex": 9551,
       "NGroupMembership": [],
       "FullName": "Pets.Blaster_BR_Snipe.Penetrating_Ray_Normal",
@@ -674,8 +674,8 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6124,
-      "PowerSetID": 3026,
+      "PowerIndex": 6126,
+      "PowerSetID": 3027,
       "PowerSetIndex": 1,
       "StaticIndex": 9552,
       "NGroupMembership": [],

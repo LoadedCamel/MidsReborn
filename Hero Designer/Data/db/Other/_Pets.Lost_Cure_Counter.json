@@ -4,13 +4,13 @@
   "FullName": "Pets.Lost_Cure_Counter",
   "ImageName": "",
   "Power": [
-    6350,
-    6351
+    6352,
+    6353
   ],
   "SetType": 8,
   "DisplayName": "Lost_Cure_Counter",
   "nArchetype": -1,
-  "nID": 3142,
+  "nID": 3143,
   "SubName": "Devices",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6350,
-      "PowerSetID": 3142,
+      "PowerIndex": 6352,
+      "PowerSetID": 3143,
       "StaticIndex": 1656,
       "NGroupMembership": [],
       "FullName": "Pets.Lost_Cure_Counter.Lost_Cured",
@@ -89,7 +89,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Cured_Counter",
-          "nSummon": 9382,
+          "nSummon": 9384,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -114,8 +114,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6351,
-      "PowerSetID": 3142,
+      "PowerIndex": 6353,
+      "PowerSetID": 3143,
       "PowerSetIndex": 1,
       "StaticIndex": 1657,
       "NGroupMembership": [],

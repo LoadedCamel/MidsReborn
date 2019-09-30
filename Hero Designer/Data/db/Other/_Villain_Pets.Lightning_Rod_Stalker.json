@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Lightning_Rod_Stalker",
   "ImageName": "",
   "Power": [
-    10108
+    10110
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
   "nArchetype": -1,
-  "nID": 3501,
+  "nID": 3502,
   "SubName": "Electric Melee",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10108,
-      "PowerSetID": 3501,
+      "PowerIndex": 10110,
+      "PowerSetID": 3502,
       "StaticIndex": 4113,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Lightning_Rod_Stalker.Lightning_Rod",
@@ -83,8 +83,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 125.901489,
-          "MagPercent": 125.901489,
+          "Mag": 69.2458,
+          "MagPercent": 69.2458,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -115,8 +115,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 51.7730942,
-          "MagPercent": 51.7730942,
+          "Mag": 28.475193,
+          "MagPercent": 28.475193,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

@@ -4,12 +4,12 @@
   "FullName": "Pets.ResistAll_NoFly",
   "ImageName": "",
   "Power": [
-    6436
+    6438
   ],
   "SetType": 8,
   "DisplayName": "ResistAll NoFly",
   "nArchetype": -1,
-  "nID": 3193,
+  "nID": 3194,
   "SubName": "Resistance",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6436,
-      "PowerSetID": 3193,
+      "PowerIndex": 6438,
+      "PowerSetID": 3194,
       "StaticIndex": 1700,
       "NGroupMembership": [],
       "FullName": "Pets.ResistAll_NoFly.ResistAll",

@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Chain_Jolt_Dominator_Jump1",
   "ImageName": "",
   "Power": [
-    9980
+    9982
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 1",
   "nArchetype": -1,
-  "nID": 3466,
+  "nID": 3467,
   "SubName": "Chain Jolt Jump 1",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 9980,
-      "PowerSetID": 3466,
+      "PowerIndex": 9982,
+      "PowerSetID": 3467,
       "StaticIndex": 4485,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Chain_Jolt_Dominator_Jump1.Charge",
@@ -89,8 +89,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 11.12204,
-          "MagPercent": 11.12204,
+          "Mag": 6.11712027,
+          "MagPercent": 6.11712027,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -122,8 +122,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 15.8883905,
-          "MagPercent": 15.8883905,
+          "Mag": 8.738612,
+          "MagPercent": 8.738612,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

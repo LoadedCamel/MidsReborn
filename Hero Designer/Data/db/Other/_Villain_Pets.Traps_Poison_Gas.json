@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Traps_Poison_Gas",
   "ImageName": "",
   "Power": [
-    10230,
-    10231,
-    10232
+    10232,
+    10233,
+    10234
   ],
   "SetType": 8,
   "DisplayName": "Poison Gas",
   "nArchetype": -1,
-  "nID": 3521,
+  "nID": 3522,
   "SubName": "Traps",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10230,
-      "PowerSetID": 3521,
+      "PowerIndex": 10232,
+      "PowerSetID": 3522,
       "StaticIndex": 3162,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Traps_Poison_Gas.Poison_Gas",
@@ -187,7 +187,7 @@
           "Probability": 0.02,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 4.768,
+          "Duration": 5.96,
           "BaseProbability": 0.02,
           "Reward": "",
           "EffectId": "Sleep",
@@ -339,8 +339,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10231,
-      "PowerSetID": 3521,
+      "PowerIndex": 10233,
+      "PowerSetID": 3522,
       "PowerSetIndex": 1,
       "StaticIndex": 3163,
       "NGroupMembership": [],
@@ -396,7 +396,7 @@
           "Probability": 1.0,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 4.768,
+          "Duration": 5.96,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Sleep",
@@ -473,8 +473,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10232,
-      "PowerSetID": 3521,
+      "PowerIndex": 10234,
+      "PowerSetID": 3522,
       "PowerSetIndex": 2,
       "StaticIndex": 3164,
       "NGroupMembership": [],

@@ -4,12 +4,12 @@
   "FullName": "Pets.Defenders_Bastion_Proc",
   "ImageName": "",
   "Power": [
-    6218
+    6220
   ],
   "SetType": 8,
   "DisplayName": "Defender's Bastion",
   "nArchetype": -1,
-  "nID": 3066,
+  "nID": 3067,
   "SubName": "Defender's Bastion",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6218,
-      "PowerSetID": 3066,
+      "PowerIndex": 6220,
+      "PowerSetID": 3067,
       "StaticIndex": 5603,
       "NGroupMembership": [],
       "FullName": "Pets.Defenders_Bastion_Proc.Defenders_Bastion",

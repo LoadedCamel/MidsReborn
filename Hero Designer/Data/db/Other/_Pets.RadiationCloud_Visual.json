@@ -4,12 +4,12 @@
   "FullName": "Pets.RadiationCloud_Visual",
   "ImageName": "",
   "Power": [
-    6414
+    6416
   ],
   "SetType": 8,
   "DisplayName": "Radiation Control",
   "nArchetype": -1,
-  "nID": 3176,
+  "nID": 3177,
   "SubName": "Radiation Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6414,
-      "PowerSetID": 3176,
+      "PowerIndex": 6416,
+      "PowerSetID": 3177,
       "StaticIndex": 10625,
       "NGroupMembership": [],
       "FullName": "Pets.RadiationCloud_Visual.Radiation_Cloud",

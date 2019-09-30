@@ -4,12 +4,12 @@
   "FullName": "Pets.Static_Field_Controller",
   "ImageName": "",
   "Power": [
-    6470
+    6472
   ],
   "SetType": 8,
   "DisplayName": "Static Field Controller",
   "nArchetype": -1,
-  "nID": 3216,
+  "nID": 3217,
   "SubName": "Electrical Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6470,
-      "PowerSetID": 3216,
+      "PowerIndex": 6472,
+      "PowerSetID": 3217,
       "StaticIndex": 4438,
       "NGroupMembership": [],
       "FullName": "Pets.Static_Field_Controller.Static_Field",

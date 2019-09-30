@@ -113,7 +113,6 @@
         {
           "MagnitudeExpression": "",
           "ProcsPerMinute": 5.0,
-          "Probability": 0.8333333,
           "Mag": 7.0,
           "MagPercent": 7.0,
           "Duration": 1.0,

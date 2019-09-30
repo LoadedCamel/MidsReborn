@@ -4,14 +4,14 @@
   "FullName": "Pets.Guard",
   "ImageName": "",
   "Power": [
-    6283,
-    6284,
-    6285
+    6285,
+    6286,
+    6287
   ],
   "SetType": 8,
   "DisplayName": "Guard",
   "nArchetype": -1,
-  "nID": 3099,
+  "nID": 3100,
   "SubName": "Paragon Police",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6283,
-      "PowerSetID": 3099,
+      "PowerIndex": 6285,
+      "PowerSetID": 3100,
       "StaticIndex": 1603,
       "NGroupMembership": [],
       "FullName": "Pets.Guard.TransLocation_Beam",
@@ -351,8 +351,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6284,
-      "PowerSetID": 3099,
+      "PowerIndex": 6286,
+      "PowerSetID": 3100,
       "PowerSetIndex": 1,
       "StaticIndex": 1604,
       "NGroupMembership": [],
@@ -471,8 +471,8 @@
       "AoEModifier": 10.0
     },
     {
-      "PowerIndex": 6285,
-      "PowerSetID": 3099,
+      "PowerIndex": 6287,
+      "PowerSetID": 3100,
       "PowerSetIndex": 2,
       "StaticIndex": 1605,
       "NGroupMembership": [],

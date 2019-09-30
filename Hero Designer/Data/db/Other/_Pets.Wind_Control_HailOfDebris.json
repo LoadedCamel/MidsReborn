@@ -4,7 +4,7 @@
   "FullName": "Pets.Wind_Control_HailOfDebris",
   "ImageName": "",
   "Power": [
-    6632
+    6634
   ],
   "SetType": 8,
   "DisplayName": "Wind Control",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6632,
+      "PowerIndex": 6634,
       "PowerSetID": 3281,
       "StaticIndex": 9601,
       "NGroupMembership": [],

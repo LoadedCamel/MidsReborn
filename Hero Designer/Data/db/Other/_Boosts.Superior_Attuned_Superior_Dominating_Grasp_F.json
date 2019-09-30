@@ -89,7 +89,6 @@
         {
           "MagnitudeExpression": "",
           "ProcsPerMinute": 2.0,
-          "Probability": 0.333333343,
           "Mag": -50.0,
           "MagPercent": -5000.0,
           "DisplayPercentage": true,

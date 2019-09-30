@@ -4,12 +4,12 @@
   "FullName": "Pets.FaerieResists",
   "ImageName": "",
   "Power": [
-    6267
+    6269
   ],
   "SetType": 8,
   "DisplayName": "FaerieResists",
   "nArchetype": -1,
-  "nID": 3086,
+  "nID": 3087,
   "SubName": "Trick Arrow",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6267,
-      "PowerSetID": 3086,
+      "PowerIndex": 6269,
+      "PowerSetID": 3087,
       "StaticIndex": 1592,
       "NGroupMembership": [],
       "FullName": "Pets.FaerieResists.Resistance",

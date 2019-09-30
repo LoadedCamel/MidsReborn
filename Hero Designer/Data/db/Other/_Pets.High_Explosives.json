@@ -4,14 +4,14 @@
   "FullName": "Pets.High_Explosives",
   "ImageName": "",
   "Power": [
-    6289,
-    6290,
-    6291
+    6291,
+    6292,
+    6293
   ],
   "SetType": 8,
   "DisplayName": "High Explosives",
   "nArchetype": -1,
-  "nID": 3103,
+  "nID": 3104,
   "SubName": "Devices",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6289,
-      "PowerSetID": 3103,
+      "PowerIndex": 6291,
+      "PowerSetID": 3104,
       "StaticIndex": 1609,
       "NGroupMembership": [],
       "FullName": "Pets.High_Explosives.High_Explosives",
@@ -212,8 +212,8 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 6290,
-      "PowerSetID": 3103,
+      "PowerIndex": 6292,
+      "PowerSetID": 3104,
       "PowerSetIndex": 1,
       "StaticIndex": 1610,
       "NGroupMembership": [],
@@ -1355,8 +1355,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6291,
-      "PowerSetID": 3103,
+      "PowerIndex": 6293,
+      "PowerSetID": 3104,
       "PowerSetIndex": 2,
       "StaticIndex": 1611,
       "NGroupMembership": [],

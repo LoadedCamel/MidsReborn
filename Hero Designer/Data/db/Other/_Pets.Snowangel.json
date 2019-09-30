@@ -4,12 +4,12 @@
   "FullName": "Pets.Snowangel",
   "ImageName": "",
   "Power": [
-    6465
+    6467
   ],
   "SetType": 8,
   "DisplayName": "Snowangel",
   "nArchetype": -1,
-  "nID": 3213,
+  "nID": 3214,
   "SubName": "Snowangel",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6465,
-      "PowerSetID": 3213,
+      "PowerIndex": 6467,
+      "PowerSetID": 3214,
       "StaticIndex": 1716,
       "NGroupMembership": [],
       "FullName": "Pets.Snowangel.Snowangel",

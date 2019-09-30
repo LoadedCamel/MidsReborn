@@ -4,12 +4,12 @@
   "FullName": "Pets.Tech_Lab_DeBuff_Regeneration",
   "ImageName": "",
   "Power": [
-    6498
+    6500
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
   "nArchetype": -1,
-  "nID": 3236,
+  "nID": 3239,
   "SubName": "Lab Equipment",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6498,
-      "PowerSetID": 3236,
+      "PowerIndex": 6500,
+      "PowerSetID": 3239,
       "StaticIndex": 1735,
       "NGroupMembership": [],
       "FullName": "Pets.Tech_Lab_DeBuff_Regeneration.Sick",

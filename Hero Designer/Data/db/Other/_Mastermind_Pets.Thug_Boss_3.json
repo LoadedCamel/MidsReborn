@@ -4,14 +4,14 @@
   "FullName": "Mastermind_Pets.Thug_Boss_3",
   "ImageName": "",
   "Power": [
-    5988,
-    5989,
-    5990
+    5990,
+    5991,
+    5992
   ],
   "SetType": 8,
   "DisplayName": "Thug Boss",
   "nArchetype": -1,
-  "nID": 2979,
+  "nID": 2980,
   "SubName": "Thugs",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -25,8 +25,8 @@
     {
       "CastTimeReal": 2.23,
       "ToggleCost": 18.512,
-      "PowerIndex": 5988,
-      "PowerSetID": 2979,
+      "PowerIndex": 5990,
+      "PowerSetID": 2980,
       "StaticIndex": 1358,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Thug_Boss_3.Knockout_Blow",
@@ -275,8 +275,8 @@
     {
       "CastTimeReal": 3.83,
       "ToggleCost": 9.36,
-      "PowerIndex": 5989,
-      "PowerSetID": 2979,
+      "PowerIndex": 5991,
+      "PowerSetID": 2980,
       "PowerSetIndex": 1,
       "StaticIndex": 1359,
       "NGroupMembership": [],
@@ -484,8 +484,8 @@
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 18.512,
-      "PowerIndex": 5990,
-      "PowerSetID": 2979,
+      "PowerIndex": 5992,
+      "PowerSetID": 2980,
       "PowerSetIndex": 2,
       "StaticIndex": 1360,
       "NGroupMembership": [],

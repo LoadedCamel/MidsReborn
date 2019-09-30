@@ -374,6 +374,9 @@ namespace Hero_Designer
                 case Enums.eEffectType.GlobalChanceMod:
                     fx.Reward = lvSubAttribute.SelectedItems[0].Text;
                     break;
+                case Enums.eEffectType.GrantPower:
+                    fx.Summon = lvSubAttribute.SelectedItems[0].Text;
+                    break;
             }
             UpdateFXText();
             UpdateSubSubList();

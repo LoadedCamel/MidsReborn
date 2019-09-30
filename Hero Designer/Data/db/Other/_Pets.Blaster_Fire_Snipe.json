@@ -4,13 +4,13 @@
   "FullName": "Pets.Blaster_Fire_Snipe",
   "ImageName": "",
   "Power": [
-    6131,
-    6132
+    6133,
+    6134
   ],
   "SetType": 8,
   "DisplayName": "Fire Blast",
   "nArchetype": -1,
-  "nID": 3090,
+  "nID": 3091,
   "SubName": "Fire Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 4.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6131,
-      "PowerSetID": 3090,
+      "PowerIndex": 6133,
+      "PowerSetID": 3091,
       "StaticIndex": 9559,
       "NGroupMembership": [],
       "FullName": "Pets.Blaster_Fire_Snipe.Blazing_Bolt_Normal",
@@ -523,8 +523,8 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6132,
-      "PowerSetID": 3090,
+      "PowerIndex": 6134,
+      "PowerSetID": 3091,
       "PowerSetIndex": 1,
       "StaticIndex": 9560,
       "NGroupMembership": [],

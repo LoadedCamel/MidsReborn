@@ -45,7 +45,7 @@
   "SetType": 11,
   "DisplayName": "Genesis",
   "nArchetype": -1,
-  "nID": 2797,
+  "nID": 2798,
   "SubName": "Incarnate",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -60,7 +60,7 @@
       "CastTimeReal": 2.17,
       "ToggleCost": 20.0,
       "PowerIndex": 4669,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "StaticIndex": 4614,
       "NGroupMembership": [],
       "FullName": "Incarnate.Genesis.Nothing",
@@ -118,7 +118,7 @@
     },
     {
       "PowerIndex": 4670,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 1,
       "StaticIndex": 9394,
       "NGroupMembership": [],
@@ -301,7 +301,7 @@
     },
     {
       "PowerIndex": 4671,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 2,
       "StaticIndex": 9388,
       "NGroupMembership": [],
@@ -484,7 +484,7 @@
     },
     {
       "PowerIndex": 4672,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 3,
       "StaticIndex": 9387,
       "NGroupMembership": [],
@@ -667,7 +667,7 @@
     },
     {
       "PowerIndex": 4673,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 4,
       "StaticIndex": 9391,
       "NGroupMembership": [],
@@ -850,7 +850,7 @@
     },
     {
       "PowerIndex": 4674,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 5,
       "StaticIndex": 9392,
       "NGroupMembership": [],
@@ -1033,7 +1033,7 @@
     },
     {
       "PowerIndex": 4675,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 6,
       "StaticIndex": 9395,
       "NGroupMembership": [],
@@ -1216,7 +1216,7 @@
     },
     {
       "PowerIndex": 4676,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 7,
       "StaticIndex": 9389,
       "NGroupMembership": [],
@@ -1399,7 +1399,7 @@
     },
     {
       "PowerIndex": 4677,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 8,
       "StaticIndex": 9390,
       "NGroupMembership": [],
@@ -1582,7 +1582,7 @@
     },
     {
       "PowerIndex": 4678,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 9,
       "StaticIndex": 9393,
       "NGroupMembership": [],
@@ -1765,7 +1765,7 @@
     },
     {
       "PowerIndex": 4679,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 10,
       "StaticIndex": 9412,
       "NGroupMembership": [],
@@ -1948,7 +1948,7 @@
     },
     {
       "PowerIndex": 4680,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 11,
       "StaticIndex": 9406,
       "NGroupMembership": [],
@@ -2131,7 +2131,7 @@
     },
     {
       "PowerIndex": 4681,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 12,
       "StaticIndex": 9405,
       "NGroupMembership": [],
@@ -2314,7 +2314,7 @@
     },
     {
       "PowerIndex": 4682,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 13,
       "StaticIndex": 9409,
       "NGroupMembership": [],
@@ -2497,7 +2497,7 @@
     },
     {
       "PowerIndex": 4683,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 14,
       "StaticIndex": 9410,
       "NGroupMembership": [],
@@ -2680,7 +2680,7 @@
     },
     {
       "PowerIndex": 4684,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 15,
       "StaticIndex": 9413,
       "NGroupMembership": [],
@@ -2863,7 +2863,7 @@
     },
     {
       "PowerIndex": 4685,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 16,
       "StaticIndex": 9407,
       "NGroupMembership": [],
@@ -3046,7 +3046,7 @@
     },
     {
       "PowerIndex": 4686,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 17,
       "StaticIndex": 9408,
       "NGroupMembership": [],
@@ -3229,7 +3229,7 @@
     },
     {
       "PowerIndex": 4687,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 18,
       "StaticIndex": 9411,
       "NGroupMembership": [],
@@ -3412,7 +3412,7 @@
     },
     {
       "PowerIndex": 4688,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 19,
       "StaticIndex": 9421,
       "NGroupMembership": [],
@@ -4120,7 +4120,7 @@
     },
     {
       "PowerIndex": 4689,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 20,
       "StaticIndex": 9415,
       "NGroupMembership": [],
@@ -4730,7 +4730,7 @@
     },
     {
       "PowerIndex": 4690,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 21,
       "StaticIndex": 9414,
       "NGroupMembership": [],
@@ -5340,7 +5340,7 @@
     },
     {
       "PowerIndex": 4691,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 22,
       "StaticIndex": 9418,
       "NGroupMembership": [],
@@ -6048,7 +6048,7 @@
     },
     {
       "PowerIndex": 4692,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 23,
       "StaticIndex": 9419,
       "NGroupMembership": [],
@@ -6756,7 +6756,7 @@
     },
     {
       "PowerIndex": 4693,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 24,
       "StaticIndex": 9422,
       "NGroupMembership": [],
@@ -7464,7 +7464,7 @@
     },
     {
       "PowerIndex": 4694,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 25,
       "StaticIndex": 9416,
       "NGroupMembership": [],
@@ -8171,7 +8171,7 @@
     },
     {
       "PowerIndex": 4695,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 26,
       "StaticIndex": 9417,
       "NGroupMembership": [],
@@ -8782,7 +8782,7 @@
     },
     {
       "PowerIndex": 4696,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 27,
       "StaticIndex": 9420,
       "NGroupMembership": [],
@@ -9393,7 +9393,7 @@
     },
     {
       "PowerIndex": 4697,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 28,
       "StaticIndex": 9403,
       "NGroupMembership": [],
@@ -9576,7 +9576,7 @@
     },
     {
       "PowerIndex": 4698,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 29,
       "StaticIndex": 9397,
       "NGroupMembership": [],
@@ -9759,7 +9759,7 @@
     },
     {
       "PowerIndex": 4699,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 30,
       "StaticIndex": 9396,
       "NGroupMembership": [],
@@ -9942,7 +9942,7 @@
     },
     {
       "PowerIndex": 4700,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 31,
       "StaticIndex": 9400,
       "NGroupMembership": [],
@@ -10125,7 +10125,7 @@
     },
     {
       "PowerIndex": 4701,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 32,
       "StaticIndex": 9401,
       "NGroupMembership": [],
@@ -10308,7 +10308,7 @@
     },
     {
       "PowerIndex": 4702,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 33,
       "StaticIndex": 9404,
       "NGroupMembership": [],
@@ -10491,7 +10491,7 @@
     },
     {
       "PowerIndex": 4703,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 34,
       "StaticIndex": 9398,
       "NGroupMembership": [],
@@ -10674,7 +10674,7 @@
     },
     {
       "PowerIndex": 4704,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 35,
       "StaticIndex": 9399,
       "NGroupMembership": [],
@@ -10857,7 +10857,7 @@
     },
     {
       "PowerIndex": 4705,
-      "PowerSetID": 2797,
+      "PowerSetID": 2798,
       "PowerSetIndex": 36,
       "StaticIndex": 9402,
       "NGroupMembership": [],

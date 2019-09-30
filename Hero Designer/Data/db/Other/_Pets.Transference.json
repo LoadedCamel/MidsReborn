@@ -4,12 +4,12 @@
   "FullName": "Pets.Transference",
   "ImageName": "",
   "Power": [
-    6534
+    6536
   ],
   "SetType": 8,
   "DisplayName": "Transference",
   "nArchetype": -1,
-  "nID": 3246,
+  "nID": 3247,
   "SubName": "Kinetics",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6534,
-      "PowerSetID": 3246,
+      "PowerIndex": 6536,
+      "PowerSetID": 3247,
       "StaticIndex": 1751,
       "NGroupMembership": [],
       "FullName": "Pets.Transference.Transference",

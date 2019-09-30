@@ -4,13 +4,13 @@
   "FullName": "Pets.StickyArrow",
   "ImageName": "",
   "Power": [
-    6472,
-    6473
+    6474,
+    6475
   ],
   "SetType": 8,
   "DisplayName": "Sticky Arrow",
   "nArchetype": -1,
-  "nID": 3219,
+  "nID": 3220,
   "SubName": "Trick Arrow",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6472,
-      "PowerSetID": 3219,
+      "PowerIndex": 6474,
+      "PowerSetID": 3220,
       "StaticIndex": 1719,
       "NGroupMembership": [],
       "FullName": "Pets.StickyArrow.StickyArrow",
@@ -281,8 +281,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6473,
-      "PowerSetID": 3219,
+      "PowerIndex": 6475,
+      "PowerSetID": 3220,
       "PowerSetIndex": 1,
       "StaticIndex": 1720,
       "NGroupMembership": [],

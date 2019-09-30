@@ -4,13 +4,13 @@
   "FullName": "Pets.Defender_Energy_Snipe",
   "ImageName": "",
   "Power": [
-    6232,
-    6233
+    6234,
+    6235
   ],
   "SetType": 8,
   "DisplayName": "",
   "nArchetype": -1,
-  "nID": 3008,
+  "nID": 3009,
   "SubName": "Energy Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 4.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6232,
-      "PowerSetID": 3008,
+      "PowerIndex": 6234,
+      "PowerSetID": 3009,
       "StaticIndex": 9578,
       "NGroupMembership": [],
       "FullName": "Pets.Defender_Energy_Snipe.Sniper_Blast_Normal",
@@ -314,8 +314,8 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6233,
-      "PowerSetID": 3008,
+      "PowerIndex": 6235,
+      "PowerSetID": 3009,
       "PowerSetIndex": 1,
       "StaticIndex": 9579,
       "NGroupMembership": [],

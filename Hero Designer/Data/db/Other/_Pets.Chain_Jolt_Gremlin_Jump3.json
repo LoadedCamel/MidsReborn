@@ -4,12 +4,12 @@
   "FullName": "Pets.Chain_Jolt_Gremlin_Jump3",
   "ImageName": "",
   "Power": [
-    6174
+    6176
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 3",
   "nArchetype": -1,
-  "nID": 3056,
+  "nID": 3057,
   "SubName": "Chain Jolt Jump 3",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6174,
-      "PowerSetID": 3056,
+      "PowerIndex": 6176,
+      "PowerSetID": 3057,
       "StaticIndex": 4415,
       "NGroupMembership": [],
       "FullName": "Pets.Chain_Jolt_Gremlin_Jump3.Charge",

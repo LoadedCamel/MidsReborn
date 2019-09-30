@@ -4,12 +4,12 @@
   "FullName": "Pets.Traps_Bomb",
   "ImageName": "",
   "Power": [
-    6548
+    6550
   ],
   "SetType": 8,
   "DisplayName": "Bomb",
   "nArchetype": -1,
-  "nID": 3035,
+  "nID": 3033,
   "SubName": "Traps",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6548,
-      "PowerSetID": 3035,
+      "PowerIndex": 6550,
+      "PowerSetID": 3033,
       "StaticIndex": 3537,
       "NGroupMembership": [],
       "FullName": "Pets.Traps_Bomb.Bomb",

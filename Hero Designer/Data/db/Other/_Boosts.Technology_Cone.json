@@ -9,7 +9,7 @@
   "SetType": 10,
   "DisplayName": "Technology Range",
   "nArchetype": -1,
-  "nID": 2554,
+  "nID": 2553,
   "SubName": "Cybernetics (Technology)",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 2746,
-      "PowerSetID": 2554,
+      "PowerSetID": 2553,
       "StaticIndex": 8582,
       "NGroupMembership": [],
       "FullName": "Boosts.Technology_Cone.Technology_Cone",

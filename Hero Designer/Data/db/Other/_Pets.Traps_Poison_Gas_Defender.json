@@ -4,14 +4,14 @@
   "FullName": "Pets.Traps_Poison_Gas_Defender",
   "ImageName": "",
   "Power": [
-    6552,
-    6553,
-    6554
+    6554,
+    6555,
+    6556
   ],
   "SetType": 8,
   "DisplayName": "Poison Gas",
   "nArchetype": -1,
-  "nID": 3162,
+  "nID": 3163,
   "SubName": "Traps",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6552,
-      "PowerSetID": 3162,
+      "PowerIndex": 6554,
+      "PowerSetID": 3163,
       "StaticIndex": 3541,
       "NGroupMembership": [],
       "FullName": "Pets.Traps_Poison_Gas_Defender.Poison_Gas",
@@ -339,8 +339,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6553,
-      "PowerSetID": 3162,
+      "PowerIndex": 6555,
+      "PowerSetID": 3163,
       "PowerSetIndex": 1,
       "StaticIndex": 3542,
       "NGroupMembership": [],
@@ -473,8 +473,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6554,
-      "PowerSetID": 3162,
+      "PowerIndex": 6556,
+      "PowerSetID": 3163,
       "PowerSetIndex": 2,
       "StaticIndex": 3543,
       "NGroupMembership": [],

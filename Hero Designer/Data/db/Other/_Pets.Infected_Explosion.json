@@ -4,12 +4,12 @@
   "FullName": "Pets.Infected_Explosion",
   "ImageName": "",
   "Power": [
-    6307
+    6309
   ],
   "SetType": 8,
   "DisplayName": "Infected Explosion",
   "nArchetype": -1,
-  "nID": 3116,
+  "nID": 3117,
   "SubName": "Infected",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6307,
-      "PowerSetID": 3116,
+      "PowerIndex": 6309,
+      "PowerSetID": 3117,
       "StaticIndex": 1623,
       "NGroupMembership": [],
       "FullName": "Pets.Infected_Explosion.Infected_Explosion",

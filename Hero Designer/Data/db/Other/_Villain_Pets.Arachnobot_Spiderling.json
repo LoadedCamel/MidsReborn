@@ -4,16 +4,16 @@
   "FullName": "Villain_Pets.Arachnobot_Spiderling",
   "ImageName": "",
   "Power": [
-    9957,
-    9958,
     9959,
     9960,
-    9961
+    9961,
+    9962,
+    9963
   ],
   "SetType": 8,
   "DisplayName": "Arachnobot Spiderling",
   "nArchetype": -1,
-  "nID": 3455,
+  "nID": 3456,
   "SubName": "Mace Mastery",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -27,8 +27,8 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 5.46,
-      "PowerIndex": 9957,
-      "PowerSetID": 3455,
+      "PowerIndex": 9959,
+      "PowerSetID": 3456,
       "StaticIndex": 3022,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Arachnobot_Spiderling.Chain_Gun",
@@ -91,8 +91,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 17.51722,
-          "MagPercent": 17.51722,
+          "Mag": 8.563968,
+          "MagPercent": 8.563968,
           "Duration": 1.0,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -127,8 +127,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.07,
-          "MagPercent": -7.0,
+          "Mag": -0.075,
+          "MagPercent": -7.50000048,
           "Duration": 5.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -168,8 +168,8 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 4.42,
-      "PowerIndex": 9958,
-      "PowerSetID": 3455,
+      "PowerIndex": 9960,
+      "PowerSetID": 3456,
       "PowerSetIndex": 1,
       "StaticIndex": 3023,
       "NGroupMembership": [],
@@ -231,8 +231,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 37.8149376,
-          "MagPercent": 37.8149376,
+          "Mag": 20.7982082,
+          "MagPercent": 20.7982082,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -266,8 +266,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9959,
-      "PowerSetID": 3455,
+      "PowerIndex": 9961,
+      "PowerSetID": 3456,
       "PowerSetIndex": 2,
       "StaticIndex": 3024,
       "NGroupMembership": [],
@@ -454,8 +454,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9960,
-      "PowerSetID": 3455,
+      "PowerIndex": 9962,
+      "PowerSetID": 3456,
       "PowerSetIndex": 3,
       "StaticIndex": 3025,
       "NGroupMembership": [],
@@ -639,8 +639,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9961,
-      "PowerSetID": 3455,
+      "PowerIndex": 9963,
+      "PowerSetID": 3456,
       "PowerSetIndex": 4,
       "StaticIndex": 3026,
       "NGroupMembership": [],

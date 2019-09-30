@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Thug_Lt_2",
   "ImageName": "",
   "Power": [
-    5997,
-    5998,
     5999,
-    6000
+    6000,
+    6001,
+    6002
   ],
   "SetType": 8,
   "DisplayName": "Thug Lieutenant",
@@ -26,7 +26,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 5.2,
-      "PowerIndex": 5997,
+      "PowerIndex": 5999,
       "PowerSetID": 2981,
       "StaticIndex": 1367,
       "NGroupMembership": [],
@@ -165,7 +165,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5998,
+      "PowerIndex": 6000,
       "PowerSetID": 2981,
       "PowerSetIndex": 1,
       "StaticIndex": 1377,
@@ -259,7 +259,7 @@
     {
       "CastTimeReal": 3.03,
       "ToggleCost": 10.4,
-      "PowerIndex": 5999,
+      "PowerIndex": 6001,
       "PowerSetID": 2981,
       "PowerSetIndex": 2,
       "StaticIndex": 1378,
@@ -403,7 +403,7 @@
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 8.528,
-      "PowerIndex": 6000,
+      "PowerIndex": 6002,
       "PowerSetID": 2981,
       "PowerSetIndex": 3,
       "StaticIndex": 1379,

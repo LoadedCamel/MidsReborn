@@ -4,14 +4,14 @@
   "FullName": "Mastermind_Pets.Thug_Lt_3",
   "ImageName": "",
   "Power": [
-    6001,
-    6002,
-    6003
+    6003,
+    6004,
+    6005
   ],
   "SetType": 8,
   "DisplayName": "Thug Lieutenant",
   "nArchetype": -1,
-  "nID": 2980,
+  "nID": 2983,
   "SubName": "Thugs",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -25,8 +25,8 @@
     {
       "CastTimeReal": 3.03,
       "ToggleCost": 15.184,
-      "PowerIndex": 6001,
-      "PowerSetID": 2980,
+      "PowerIndex": 6003,
+      "PowerSetID": 2983,
       "StaticIndex": 1380,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Thug_Lt_3.Dual_UZIs",
@@ -167,8 +167,8 @@
       "AoEModifier": 2.52327943
     },
     {
-      "PowerIndex": 6002,
-      "PowerSetID": 2980,
+      "PowerIndex": 6004,
+      "PowerSetID": 2983,
       "PowerSetIndex": 1,
       "StaticIndex": 1381,
       "NGroupMembership": [],
@@ -498,8 +498,8 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 15.184,
-      "PowerIndex": 6003,
-      "PowerSetID": 2980,
+      "PowerIndex": 6005,
+      "PowerSetID": 2983,
       "PowerSetIndex": 2,
       "StaticIndex": 1382,
       "NGroupMembership": [],

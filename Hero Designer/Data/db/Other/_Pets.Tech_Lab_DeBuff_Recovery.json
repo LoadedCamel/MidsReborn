@@ -4,12 +4,12 @@
   "FullName": "Pets.Tech_Lab_DeBuff_Recovery",
   "ImageName": "",
   "Power": [
-    6497
+    6499
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
   "nArchetype": -1,
-  "nID": 3234,
+  "nID": 3236,
   "SubName": "Lab Equipment",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6497,
-      "PowerSetID": 3234,
+      "PowerIndex": 6499,
+      "PowerSetID": 3236,
       "StaticIndex": 1734,
       "NGroupMembership": [],
       "FullName": "Pets.Tech_Lab_DeBuff_Recovery.Lethargic",

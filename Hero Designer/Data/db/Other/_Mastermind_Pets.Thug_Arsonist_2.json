@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Arsonist_2",
   "ImageName": "",
   "Power": [
-    5977
+    5979
   ],
   "SetType": 8,
   "DisplayName": "Arsonist",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.83,
       "ToggleCost": 15.184,
-      "PowerIndex": 5977,
+      "PowerIndex": 5979,
       "PowerSetID": 2908,
       "StaticIndex": 1323,
       "NGroupMembership": [],

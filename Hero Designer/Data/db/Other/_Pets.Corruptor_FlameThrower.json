@@ -4,13 +4,13 @@
   "FullName": "Pets.Corruptor_FlameThrower",
   "ImageName": "",
   "Power": [
-    6185,
-    6186
+    6187,
+    6188
   ],
   "SetType": 8,
   "DisplayName": "Flame Thrower",
   "nArchetype": -1,
-  "nID": 3092,
+  "nID": 3093,
   "SubName": "Fire",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6185,
-      "PowerSetID": 3092,
+      "PowerIndex": 6187,
+      "PowerSetID": 3093,
       "StaticIndex": 1561,
       "NGroupMembership": [],
       "FullName": "Pets.Corruptor_FlameThrower.Flame_Thrower",
@@ -184,8 +184,8 @@
       "AoEModifier": 1.6
     },
     {
-      "PowerIndex": 6186,
-      "PowerSetID": 3092,
+      "PowerIndex": 6188,
+      "PowerSetID": 3093,
       "PowerSetIndex": 1,
       "StaticIndex": 1562,
       "NGroupMembership": [],

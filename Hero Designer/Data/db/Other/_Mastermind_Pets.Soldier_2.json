@@ -4,13 +4,13 @@
   "FullName": "Mastermind_Pets.Soldier_2",
   "ImageName": "",
   "Power": [
-    5957,
-    5958
+    5959,
+    5960
   ],
   "SetType": 8,
   "DisplayName": "Soldier",
   "nArchetype": -1,
-  "nID": 2971,
+  "nID": 2972,
   "SubName": "Mercenaries",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 6.864,
-      "PowerIndex": 5957,
-      "PowerSetID": 2971,
+      "PowerIndex": 5959,
+      "PowerSetID": 2972,
       "StaticIndex": 1299,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Soldier_2.ASMG_Heavy_Burst",
@@ -165,8 +165,8 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 8.528,
-      "PowerIndex": 5958,
-      "PowerSetID": 2971,
+      "PowerIndex": 5960,
+      "PowerSetID": 2972,
       "PowerSetIndex": 1,
       "StaticIndex": 1300,
       "NGroupMembership": [],

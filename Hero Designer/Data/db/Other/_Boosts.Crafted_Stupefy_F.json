@@ -80,7 +80,6 @@
           "MagnitudeExpression": "",
           "ProcsPerMinute": 3.5,
           "CancelOnMiss": true,
-          "Probability": 0.5833333,
           "Mag": 6.0,
           "MagPercent": 6.0,
           "Reward": "",

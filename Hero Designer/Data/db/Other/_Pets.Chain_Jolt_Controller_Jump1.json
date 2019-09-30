@@ -4,12 +4,12 @@
   "FullName": "Pets.Chain_Jolt_Controller_Jump1",
   "ImageName": "",
   "Power": [
-    6169
+    6171
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 1",
   "nArchetype": -1,
-  "nID": 3051,
+  "nID": 3052,
   "SubName": "Chain Jolt Jump 1",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6169,
-      "PowerSetID": 3051,
+      "PowerIndex": 6171,
+      "PowerSetID": 3052,
       "StaticIndex": 4410,
       "NGroupMembership": [],
       "FullName": "Pets.Chain_Jolt_Controller_Jump1.Charge",

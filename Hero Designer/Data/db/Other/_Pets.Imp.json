@@ -4,13 +4,13 @@
   "FullName": "Pets.Imp",
   "ImageName": "",
   "Power": [
-    6305,
-    6306
+    6307,
+    6308
   ],
   "SetType": 8,
   "DisplayName": "Imp",
   "nArchetype": -1,
-  "nID": 3115,
+  "nID": 3116,
   "SubName": "Fire Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "Powers": [
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 6305,
-      "PowerSetID": 3115,
+      "PowerIndex": 6307,
+      "PowerSetID": 3116,
       "StaticIndex": 1621,
       "NGroupMembership": [],
       "FullName": "Pets.Imp.Brawl",
@@ -229,8 +229,8 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6306,
-      "PowerSetID": 3115,
+      "PowerIndex": 6308,
+      "PowerSetID": 3116,
       "PowerSetIndex": 1,
       "StaticIndex": 1622,
       "NGroupMembership": [],

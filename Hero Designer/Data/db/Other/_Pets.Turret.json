@@ -4,14 +4,14 @@
   "FullName": "Pets.Turret",
   "ImageName": "",
   "Power": [
-    6584,
-    6585,
-    6586
+    6586,
+    6587,
+    6588
   ],
   "SetType": 8,
   "DisplayName": "Turret",
   "nArchetype": -1,
-  "nID": 3254,
+  "nID": 3255,
   "SubName": "Devices",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6584,
-      "PowerSetID": 3254,
+      "PowerIndex": 6586,
+      "PowerSetID": 3255,
       "StaticIndex": 1761,
       "NGroupMembership": [],
       "FullName": "Pets.Turret.Gattling_Gun",
@@ -121,8 +121,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6585,
-      "PowerSetID": 3254,
+      "PowerIndex": 6587,
+      "PowerSetID": 3255,
       "PowerSetIndex": 1,
       "StaticIndex": 1762,
       "NGroupMembership": [],
@@ -1462,8 +1462,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6586,
-      "PowerSetID": 3254,
+      "PowerIndex": 6588,
+      "PowerSetID": 3255,
       "PowerSetIndex": 2,
       "StaticIndex": 1763,
       "NGroupMembership": [],

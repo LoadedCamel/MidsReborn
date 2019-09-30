@@ -28,7 +28,9 @@ namespace Hero_Designer
 
         frmMain _myParent;
 
+        List<IPower> _myPetPowers;
         List<IPower> _myPowers;
+
 
         public List<string> PetPowers { get; set; }
 
@@ -117,12 +119,12 @@ namespace Hero_Designer
             llRight.SuspendRedraw = true;
             llLeft.ClearItems();
             llRight.ClearItems();
-            int num = _myPowers.Count - 1;
+            int num = _myPetPowers.Count - 1;
             for (int index = 0; index <= num; ++index)
             {
-                ListLabelV2.LLItemState iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]) ? (!(_myPowers[index].PowerType != Enums.ePowerType.Click | _myPowers[index].ClickBuff) ? (!_myPowers[index].SubIsAltColour ? ListLabelV2.LLItemState.Disabled : ListLabelV2.LLItemState.Invalid) : ListLabelV2.LLItemState.Enabled) : ListLabelV2.LLItemState.Selected;
-                ListLabelV2.ListLabelItemV2 iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV2.ListLabelItemV2(_myPowers[index].DisplayName, iState) : new ListLabelV2.ListLabelItemV2(_myPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV2.LLFontFlags.Bold);
-                if (index >= _myPowers.Count / 2.0)
+                ListLabelV2.LLItemState iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPetPowers[index]) ? (!(_myPetPowers[index].PowerType != Enums.ePowerType.Click | _myPetPowers[index].ClickBuff) ? (!_myPetPowers[index].SubIsAltColour ? ListLabelV2.LLItemState.Disabled : ListLabelV2.LLItemState.Invalid) : ListLabelV2.LLItemState.Enabled) : ListLabelV2.LLItemState.Selected;
+                ListLabelV2.ListLabelItemV2 iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV2.ListLabelItemV2(_myPetPowers[index].DisplayName, iState) : new ListLabelV2.ListLabelItemV2(_myPetPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV2.LLFontFlags.Bold);
+                if (index >= _myPetPowers.Count / 2.0)
                     llRight.AddItem(iItem);
                 else
                     llLeft.AddItem(iItem);
@@ -159,6 +161,8 @@ namespace Hero_Designer
 
         public void UpdatePetPowersCombo(List<string> pPowersList)
         {
+            //_myPowers = new List<IPower>();
+            
             foreach (var power in pPowersList)
             {
                 cbSelPetPower.Items.Add(power);
@@ -286,7 +290,10 @@ namespace Hero_Designer
 
         void cbSelPet_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _myPowers = new List<IPower>();
+            //var pow = DatabaseAPI.NidFromUidPower("Mastermind_Summon.Demon_Summoning.Summon_Demons");
+            //var psetp = DatabaseAPI.Database.Power[pow].FXGetDamageValue();
+            //MessageBox.Show(psetp.ToString());
+            _myPetPowers = new List<IPower>();
             var ent = DatabaseAPI.NidFromUidEntity($"Pets_{cbSelPets.SelectedItem.ToString().Replace(" ", "_")}");
             var pset = DatabaseAPI.Database.Entities[ent].GetNPowerset();
             foreach (var entity in pset)
@@ -294,8 +301,10 @@ namespace Hero_Designer
                 var powers = DatabaseAPI.Database.Powersets[entity].Powers;
                 foreach (var power in powers)
                 {
-                    _myPowers.Add(power);
-                    //PopInfo?.UpdateData(dvLastPower);
+                    /*Calculates damage effects and outputs as string
+                    var dmgval = power.FXGetDamageString();*/
+
+                    _myPetPowers.Add(power);
                 }
             }
             ChangedScrollFrameContents();
@@ -327,14 +336,14 @@ namespace Hero_Designer
             {
                 if (Item.ItemState == ListLabelV2.LLItemState.Disabled)
                     return;
-                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[Item.Index]))
+                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPetPowers[Item.Index]))
                 {
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[Item.Index]);
+                    MidsContext.Character.CurrentBuild.RemovePower(_myPetPowers[Item.Index]);
                     Item.ItemState = ListLabelV2.LLItemState.Enabled;
                 }
                 else
                 {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index]).StatInclude = true;
+                    MidsContext.Character.CurrentBuild.AddPower(_myPetPowers[Item.Index]).StatInclude = true;
                     Item.ItemState = ListLabelV2.LLItemState.Selected;
                 }
                 llLeft.Refresh();
@@ -368,14 +377,14 @@ namespace Hero_Designer
             {
                 if (Item.ItemState == ListLabelV2.LLItemState.Disabled)
                     return;
-                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[pIDX]))
+                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPetPowers[pIDX]))
                 {
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[pIDX]);
+                    MidsContext.Character.CurrentBuild.RemovePower(_myPetPowers[pIDX]);
                     Item.ItemState = ListLabelV2.LLItemState.Enabled;
                 }
                 else
                 {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX]).StatInclude = true;
+                    MidsContext.Character.CurrentBuild.AddPower(_myPetPowers[pIDX]).StatInclude = true;
                     Item.ItemState = ListLabelV2.LLItemState.Selected;
                 }
                 llRight.Refresh();
@@ -397,7 +406,7 @@ namespace Hero_Designer
         {
             if (_locked)
                 return;
-            IPower power1 = new Power(_myPowers[pIDX]);
+            IPower power1 = new Power(_myPetPowers[pIDX]);
             PopUp.PopupData iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {

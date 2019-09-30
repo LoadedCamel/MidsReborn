@@ -4,14 +4,14 @@
   "FullName": "Pets.LightningStorm",
   "ImageName": "",
   "Power": [
-    6328,
-    6329,
-    6330
+    6330,
+    6331,
+    6332
   ],
   "SetType": 8,
   "DisplayName": "Lightning Storm",
   "nArchetype": -1,
-  "nID": 3132,
+  "nID": 3133,
   "SubName": "Storm Summoning",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
   "Powers": [
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6328,
-      "PowerSetID": 3132,
+      "PowerIndex": 6330,
+      "PowerSetID": 3133,
       "StaticIndex": 1638,
       "NGroupMembership": [],
       "FullName": "Pets.LightningStorm.Lightning",
@@ -426,8 +426,8 @@
       "AoEModifier": 1.75
     },
     {
-      "PowerIndex": 6329,
-      "PowerSetID": 3132,
+      "PowerIndex": 6331,
+      "PowerSetID": 3133,
       "PowerSetIndex": 1,
       "StaticIndex": 1639,
       "NGroupMembership": [],
@@ -511,8 +511,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6330,
-      "PowerSetID": 3132,
+      "PowerIndex": 6332,
+      "PowerSetID": 3133,
       "PowerSetIndex": 2,
       "StaticIndex": 1640,
       "NGroupMembership": [],

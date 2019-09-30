@@ -4,13 +4,13 @@
   "FullName": "Pets.Quartz",
   "ImageName": "",
   "Power": [
-    6411,
-    6412
+    6413,
+    6414
   ],
   "SetType": 8,
   "DisplayName": "Quartz",
   "nArchetype": -1,
-  "nID": 3171,
+  "nID": 3172,
   "SubName": "Devouring Earth",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6411,
-      "PowerSetID": 3171,
+      "PowerIndex": 6413,
+      "PowerSetID": 3172,
       "StaticIndex": 1685,
       "NGroupMembership": [],
       "FullName": "Pets.Quartz.Quartz",
@@ -110,8 +110,8 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6412,
-      "PowerSetID": 3171,
+      "PowerIndex": 6414,
+      "PowerSetID": 3172,
       "PowerSetIndex": 1,
       "StaticIndex": 1686,
       "NGroupMembership": [],

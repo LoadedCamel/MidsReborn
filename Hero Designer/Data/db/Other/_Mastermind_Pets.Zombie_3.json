@@ -4,12 +4,12 @@
   "FullName": "Mastermind_Pets.Zombie_3",
   "ImageName": "Necromancy.png",
   "Power": [
-    6027
+    6029
   ],
   "SetType": 8,
   "DisplayName": "Zombie",
   "nArchetype": -1,
-  "nID": 2998,
+  "nID": 2999,
   "SubName": "Zombie",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 7.8,
-      "PowerIndex": 6027,
-      "PowerSetID": 2998,
+      "PowerIndex": 6029,
+      "PowerSetID": 2999,
       "StaticIndex": 1436,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Zombie_3.Siphon_Life",

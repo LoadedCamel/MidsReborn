@@ -4,9 +4,9 @@
   "FullName": "Pets.Villain_Mine",
   "ImageName": "",
   "Power": [
-    6595,
-    6596,
-    6597
+    6597,
+    6598,
+    6599
   ],
   "SetType": 8,
   "DisplayName": "Mine",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6595,
+      "PowerIndex": 6597,
       "PowerSetID": 3148,
       "StaticIndex": 1770,
       "NGroupMembership": [],
@@ -220,7 +220,7 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 6596,
+      "PowerIndex": 6598,
       "PowerSetID": 3148,
       "PowerSetIndex": 1,
       "StaticIndex": 1771,
@@ -1461,7 +1461,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6597,
+      "PowerIndex": 6599,
       "PowerSetID": 3148,
       "PowerSetIndex": 2,
       "StaticIndex": 1772,

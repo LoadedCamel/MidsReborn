@@ -79,7 +79,6 @@
         {
           "MagnitudeExpression": "",
           "ProcsPerMinute": 5.0,
-          "Probability": 0.8333333,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "Reward": "",
@@ -110,7 +109,6 @@
         {
           "MagnitudeExpression": "",
           "ProcsPerMinute": 5.0,
-          "Probability": 0.8333333,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "Reward": "",
@@ -142,7 +140,6 @@
         {
           "MagnitudeExpression": "",
           "ProcsPerMinute": 5.0,
-          "Probability": 0.8333333,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "Reward": "",
@@ -174,7 +171,6 @@
         {
           "MagnitudeExpression": "",
           "ProcsPerMinute": 5.0,
-          "Probability": 0.8333333,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "Reward": "",
@@ -206,7 +202,6 @@
         {
           "MagnitudeExpression": "",
           "ProcsPerMinute": 5.0,
-          "Probability": 0.8333333,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "Reward": "",

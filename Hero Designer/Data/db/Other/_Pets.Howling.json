@@ -4,12 +4,12 @@
   "FullName": "Pets.Howling",
   "ImageName": "",
   "Power": [
-    6295
+    6297
   ],
   "SetType": 8,
   "DisplayName": "Howling",
   "nArchetype": -1,
-  "nID": 3105,
+  "nID": 3106,
   "SubName": "Dark Miasma",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6295,
-      "PowerSetID": 3105,
+      "PowerIndex": 6297,
+      "PowerSetID": 3106,
       "StaticIndex": 1615,
       "NGroupMembership": [],
       "FullName": "Pets.Howling.Howling",

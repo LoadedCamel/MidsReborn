@@ -4,12 +4,12 @@
   "FullName": "Pets.MonkeyGas",
   "ImageName": "",
   "Power": [
-    6356
+    6358
   ],
   "SetType": 8,
   "DisplayName": "Monkey Gas",
   "nArchetype": -1,
-  "nID": 3149,
+  "nID": 3150,
   "SubName": "Rikti",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6356,
-      "PowerSetID": 3149,
+      "PowerIndex": 6358,
+      "PowerSetID": 3150,
       "StaticIndex": 1661,
       "NGroupMembership": [],
       "FullName": "Pets.MonkeyGas.Monkey_Gas",

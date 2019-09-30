@@ -4,12 +4,12 @@
   "FullName": "Pets.KineticTransferDebuff",
   "ImageName": "",
   "Power": [
-    6319
+    6321
   ],
   "SetType": 8,
   "DisplayName": "Kinetic Transfer",
   "nArchetype": -1,
-  "nID": 3119,
+  "nID": 3123,
   "SubName": "Kinetics",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6319,
-      "PowerSetID": 3119,
+      "PowerIndex": 6321,
+      "PowerSetID": 3123,
       "StaticIndex": 1634,
       "NGroupMembership": [],
       "FullName": "Pets.KineticTransferDebuff.KineticTransfer",

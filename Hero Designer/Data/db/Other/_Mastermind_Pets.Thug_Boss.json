@@ -4,18 +4,18 @@
   "FullName": "Mastermind_Pets.Thug_Boss",
   "ImageName": "",
   "Power": [
-    5979,
-    5980,
     5981,
     5982,
     5983,
     5984,
-    5985
+    5985,
+    5986,
+    5987
   ],
   "SetType": 8,
   "DisplayName": "Thug Boss",
   "nArchetype": -1,
-  "nID": 2977,
+  "nID": 2978,
   "SubName": "Thugs",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -27,8 +27,8 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5979,
-      "PowerSetID": 2977,
+      "PowerIndex": 5981,
+      "PowerSetID": 2978,
       "StaticIndex": 1337,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Thug_Boss.Resistance",
@@ -414,8 +414,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5980,
-      "PowerSetID": 2977,
+      "PowerIndex": 5982,
+      "PowerSetID": 2978,
       "PowerSetIndex": 1,
       "StaticIndex": 1338,
       "NGroupMembership": [],
@@ -524,8 +524,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5981,
-      "PowerSetID": 2977,
+      "PowerIndex": 5983,
+      "PowerSetID": 2978,
       "PowerSetIndex": 2,
       "StaticIndex": 1339,
       "NGroupMembership": [],
@@ -856,8 +856,8 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 3.536,
-      "PowerIndex": 5982,
-      "PowerSetID": 2977,
+      "PowerIndex": 5984,
+      "PowerSetID": 2978,
       "PowerSetIndex": 3,
       "StaticIndex": 1340,
       "NGroupMembership": [],
@@ -1033,8 +1033,8 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 5.2,
-      "PowerIndex": 5983,
-      "PowerSetID": 2977,
+      "PowerIndex": 5985,
+      "PowerSetID": 2978,
       "PowerSetIndex": 4,
       "StaticIndex": 1341,
       "NGroupMembership": [],
@@ -1204,8 +1204,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5984,
-      "PowerSetID": 2977,
+      "PowerIndex": 5986,
+      "PowerSetID": 2978,
       "PowerSetIndex": 5,
       "StaticIndex": 1342,
       "NGroupMembership": [],
@@ -1287,8 +1287,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5985,
-      "PowerSetID": 2977,
+      "PowerIndex": 5987,
+      "PowerSetID": 2978,
       "PowerSetIndex": 6,
       "StaticIndex": 1343,
       "NGroupMembership": [],

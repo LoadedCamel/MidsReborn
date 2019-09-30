@@ -4,17 +4,17 @@
   "FullName": "Pets.Wind_Control_Vortex",
   "ImageName": "",
   "Power": [
-    6637,
-    6638,
     6639,
     6640,
     6641,
-    6642
+    6642,
+    6643,
+    6644
   ],
   "SetType": 8,
   "DisplayName": "Wind Control",
   "nArchetype": -1,
-  "nID": 3280,
+  "nID": 3282,
   "SubName": "Wind Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -28,8 +28,8 @@
     {
       "CastTimeReal": 1.63,
       "ToggleCost": 5.2,
-      "PowerIndex": 6637,
-      "PowerSetID": 3280,
+      "PowerIndex": 6639,
+      "PowerSetID": 3282,
       "StaticIndex": 9606,
       "NGroupMembership": [],
       "FullName": "Pets.Wind_Control_Vortex.Blast_of_Debris",
@@ -446,8 +446,8 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 10.2,
-      "PowerIndex": 6638,
-      "PowerSetID": 3280,
+      "PowerIndex": 6640,
+      "PowerSetID": 3282,
       "PowerSetIndex": 1,
       "StaticIndex": 9609,
       "NGroupMembership": [],
@@ -728,8 +728,8 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 26.8,
-      "PowerIndex": 6639,
-      "PowerSetID": 3280,
+      "PowerIndex": 6641,
+      "PowerSetID": 3282,
       "PowerSetIndex": 2,
       "StaticIndex": 9608,
       "NGroupMembership": [],
@@ -828,8 +828,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6640,
-      "PowerSetID": 3280,
+      "PowerIndex": 6642,
+      "PowerSetID": 3282,
       "PowerSetIndex": 3,
       "StaticIndex": 9610,
       "NGroupMembership": [],
@@ -943,8 +943,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6641,
-      "PowerSetID": 3280,
+      "PowerIndex": 6643,
+      "PowerSetID": 3282,
       "PowerSetIndex": 4,
       "StaticIndex": 9611,
       "NGroupMembership": [],
@@ -1786,8 +1786,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6642,
-      "PowerSetID": 3280,
+      "PowerIndex": 6644,
+      "PowerSetID": 3282,
       "PowerSetIndex": 5,
       "StaticIndex": 9607,
       "NGroupMembership": [],

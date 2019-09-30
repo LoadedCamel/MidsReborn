@@ -4,12 +4,12 @@
   "FullName": "Pets.Bonfire",
   "ImageName": "",
   "Power": [
-    6153
+    6155
   ],
   "SetType": 8,
   "DisplayName": "Bonfire",
   "nArchetype": -1,
-  "nID": 3038,
+  "nID": 3039,
   "SubName": "Fire Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6153,
-      "PowerSetID": 3038,
+      "PowerIndex": 6155,
+      "PowerSetID": 3039,
       "StaticIndex": 1551,
       "NGroupMembership": [],
       "FullName": "Pets.Bonfire.Bonfire",

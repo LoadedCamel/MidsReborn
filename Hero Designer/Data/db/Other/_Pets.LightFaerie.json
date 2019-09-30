@@ -4,13 +4,13 @@
   "FullName": "Pets.LightFaerie",
   "ImageName": "",
   "Power": [
-    6326,
-    6327
+    6328,
+    6329
   ],
   "SetType": 8,
   "DisplayName": "LightFaerie",
   "nArchetype": -1,
-  "nID": 3131,
+  "nID": 3132,
   "SubName": "Pet",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6326,
-      "PowerSetID": 3131,
+      "PowerIndex": 6328,
+      "PowerSetID": 3132,
       "StaticIndex": 1636,
       "NGroupMembership": [],
       "FullName": "Pets.LightFaerie.Blessing_of_Light",
@@ -149,8 +149,8 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.8,
-      "PowerIndex": 6327,
-      "PowerSetID": 3131,
+      "PowerIndex": 6329,
+      "PowerSetID": 3132,
       "PowerSetIndex": 1,
       "StaticIndex": 1637,
       "NGroupMembership": [],

@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Creeper_Patch",
   "ImageName": "",
   "Power": [
-    10041,
-    10042,
-    10043
+    10043,
+    10044,
+    10045
   ],
   "SetType": 8,
   "DisplayName": "Creeper Patch",
   "nArchetype": -1,
-  "nID": 3487,
+  "nID": 3488,
   "SubName": "Plant Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10041,
-      "PowerSetID": 3487,
+      "PowerIndex": 10043,
+      "PowerSetID": 3488,
       "StaticIndex": 3073,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Creeper_Patch.Carrion_Creepers",
@@ -118,8 +118,8 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 10042,
-      "PowerSetID": 3487,
+      "PowerIndex": 10044,
+      "PowerSetID": 3488,
       "PowerSetIndex": 1,
       "StaticIndex": 3074,
       "NGroupMembership": [],
@@ -314,8 +314,8 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 10043,
-      "PowerSetID": 3487,
+      "PowerIndex": 10045,
+      "PowerSetID": 3488,
       "PowerSetIndex": 2,
       "StaticIndex": 3075,
       "NGroupMembership": [],

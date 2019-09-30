@@ -4,17 +4,17 @@
   "FullName": "Mastermind_Pets.Spec_Ops",
   "ImageName": "",
   "Power": [
-    5962,
-    5963,
     5964,
     5965,
     5966,
-    5967
+    5967,
+    5968,
+    5969
   ],
   "SetType": 8,
   "DisplayName": "Spec Ops",
   "nArchetype": -1,
-  "nID": 2975,
+  "nID": 2976,
   "SubName": "Mercenaries",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -26,8 +26,8 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5962,
-      "PowerSetID": 2975,
+      "PowerIndex": 5964,
+      "PowerSetID": 2976,
       "StaticIndex": 1306,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Spec_Ops.Resistance",
@@ -247,8 +247,8 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 4.368,
-      "PowerIndex": 5963,
-      "PowerSetID": 2975,
+      "PowerIndex": 5965,
+      "PowerSetID": 2976,
       "PowerSetIndex": 1,
       "StaticIndex": 1307,
       "NGroupMembership": [],
@@ -347,8 +347,8 @@
     {
       "CastTimeReal": 2.2,
       "ToggleCost": 4.368,
-      "PowerIndex": 5964,
-      "PowerSetID": 2975,
+      "PowerIndex": 5966,
+      "PowerSetID": 2976,
       "PowerSetIndex": 2,
       "StaticIndex": 1308,
       "NGroupMembership": [],
@@ -488,8 +488,8 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 6.864,
-      "PowerIndex": 5965,
-      "PowerSetID": 2975,
+      "PowerIndex": 5967,
+      "PowerSetID": 2976,
       "PowerSetIndex": 3,
       "StaticIndex": 1309,
       "NGroupMembership": [],
@@ -627,8 +627,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5966,
-      "PowerSetID": 2975,
+      "PowerIndex": 5968,
+      "PowerSetID": 2976,
       "PowerSetIndex": 4,
       "StaticIndex": 1310,
       "NGroupMembership": [],
@@ -852,8 +852,8 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 7.8,
-      "PowerIndex": 5967,
-      "PowerSetID": 2975,
+      "PowerIndex": 5969,
+      "PowerSetID": 2976,
       "PowerSetIndex": 5,
       "StaticIndex": 1311,
       "NGroupMembership": [],

@@ -28,7 +28,7 @@
   "SetType": 11,
   "DisplayName": "Genesis",
   "nArchetype": -1,
-  "nID": 2798,
+  "nID": 2797,
   "SubName": "Incarnate",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -41,7 +41,7 @@
   "Powers": [
     {
       "PowerIndex": 4706,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "StaticIndex": 9423,
       "NGroupMembership": [],
       "FullName": "Incarnate.Genesis_Silent.Lore_Boost",
@@ -135,7 +135,7 @@
     },
     {
       "PowerIndex": 4707,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 1,
       "StaticIndex": 9439,
       "NGroupMembership": [],
@@ -961,7 +961,7 @@
     },
     {
       "PowerIndex": 4708,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 2,
       "StaticIndex": 9440,
       "NGroupMembership": [],
@@ -1787,7 +1787,7 @@
     },
     {
       "PowerIndex": 4709,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 3,
       "StaticIndex": 9441,
       "NGroupMembership": [],
@@ -2613,7 +2613,7 @@
     },
     {
       "PowerIndex": 4710,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 4,
       "StaticIndex": 9442,
       "NGroupMembership": [],
@@ -3439,7 +3439,7 @@
     },
     {
       "PowerIndex": 4711,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 5,
       "StaticIndex": 9435,
       "NGroupMembership": [],
@@ -3488,8 +3488,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 30.1189747,
-          "MagPercent": 30.1189747,
+          "Mag": 20.0793247,
+          "MagPercent": 20.0793247,
           "Duration": 10.25,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3555,7 +3555,7 @@
     },
     {
       "PowerIndex": 4712,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 6,
       "StaticIndex": 9436,
       "NGroupMembership": [],
@@ -3604,8 +3604,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 60.23795,
-          "MagPercent": 60.23795,
+          "Mag": 40.15865,
+          "MagPercent": 40.15865,
           "Duration": 10.25,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3671,7 +3671,7 @@
     },
     {
       "PowerIndex": 4713,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 7,
       "StaticIndex": 9437,
       "NGroupMembership": [],
@@ -3720,8 +3720,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 90.356926,
-          "MagPercent": 90.356926,
+          "Mag": 60.2379761,
+          "MagPercent": 60.2379761,
           "Duration": 10.25,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3787,7 +3787,7 @@
     },
     {
       "PowerIndex": 4714,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 8,
       "StaticIndex": 9438,
       "NGroupMembership": [],
@@ -3836,8 +3836,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 120.4759,
-          "MagPercent": 120.4759,
+          "Mag": 80.3173,
+          "MagPercent": 80.3173,
           "Duration": 10.25,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3903,7 +3903,7 @@
     },
     {
       "PowerIndex": 4715,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 9,
       "StaticIndex": 9431,
       "NGroupMembership": [],
@@ -4234,7 +4234,7 @@
     },
     {
       "PowerIndex": 4716,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 10,
       "StaticIndex": 9432,
       "NGroupMembership": [],
@@ -4565,7 +4565,7 @@
     },
     {
       "PowerIndex": 4717,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 11,
       "StaticIndex": 9433,
       "NGroupMembership": [],
@@ -4896,7 +4896,7 @@
     },
     {
       "PowerIndex": 4718,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 12,
       "StaticIndex": 9434,
       "NGroupMembership": [],
@@ -5227,7 +5227,7 @@
     },
     {
       "PowerIndex": 4719,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 13,
       "StaticIndex": 9424,
       "NGroupMembership": [],
@@ -5321,7 +5321,7 @@
     },
     {
       "PowerIndex": 4720,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 14,
       "StaticIndex": 9425,
       "NGroupMembership": [],
@@ -5415,7 +5415,7 @@
     },
     {
       "PowerIndex": 4721,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 15,
       "StaticIndex": 9426,
       "NGroupMembership": [],
@@ -5509,7 +5509,7 @@
     },
     {
       "PowerIndex": 4722,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 16,
       "StaticIndex": 9427,
       "NGroupMembership": [],
@@ -5866,7 +5866,7 @@
     },
     {
       "PowerIndex": 4723,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 17,
       "StaticIndex": 9428,
       "NGroupMembership": [],
@@ -6223,7 +6223,7 @@
     },
     {
       "PowerIndex": 4724,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 18,
       "StaticIndex": 9429,
       "NGroupMembership": [],
@@ -6580,7 +6580,7 @@
     },
     {
       "PowerIndex": 4725,
-      "PowerSetID": 2798,
+      "PowerSetID": 2797,
       "PowerSetIndex": 19,
       "StaticIndex": 9430,
       "NGroupMembership": [],

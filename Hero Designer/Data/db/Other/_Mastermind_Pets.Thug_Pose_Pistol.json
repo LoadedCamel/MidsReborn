@@ -4,12 +4,12 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Pistol",
   "ImageName": "",
   "Power": [
-    6018
+    6020
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
   "nArchetype": -1,
-  "nID": 2986,
+  "nID": 2988,
   "SubName": "Thugs",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
     {
       "CastTimeReal": 2.33,
       "ToggleCost": 3.952,
-      "PowerIndex": 6018,
-      "PowerSetID": 2986,
+      "PowerIndex": 6020,
+      "PowerSetID": 2988,
       "StaticIndex": 1426,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Thug_Pose_Pistol.Automatic_Pistol",

@@ -4,14 +4,14 @@
   "FullName": "Pets.DimensionShift",
   "ImageName": "",
   "Power": [
-    6242,
-    6243,
-    6244
+    6244,
+    6245,
+    6246
   ],
   "SetType": 8,
   "DisplayName": "DimensionShift",
   "nArchetype": -1,
-  "nID": 3067,
+  "nID": 3068,
   "SubName": "Dimension Shift",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6242,
-      "PowerSetID": 3067,
+      "PowerIndex": 6244,
+      "PowerSetID": 3068,
       "StaticIndex": 6225,
       "NGroupMembership": [],
       "FullName": "Pets.DimensionShift.Dimension_Shift",
@@ -447,8 +447,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6243,
-      "PowerSetID": 3067,
+      "PowerIndex": 6245,
+      "PowerSetID": 3068,
       "PowerSetIndex": 1,
       "StaticIndex": 8665,
       "NGroupMembership": [],
@@ -635,8 +635,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6244,
-      "PowerSetID": 3067,
+      "PowerIndex": 6246,
+      "PowerSetID": 3068,
       "PowerSetIndex": 2,
       "StaticIndex": 6226,
       "NGroupMembership": [],

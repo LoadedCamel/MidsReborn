@@ -4,17 +4,17 @@
   "FullName": "Pets.DarkServant",
   "ImageName": "",
   "Power": [
-    6198,
-    6199,
     6200,
     6201,
     6202,
-    6203
+    6203,
+    6204,
+    6205
   ],
   "SetType": 8,
   "DisplayName": "Dark Servant",
   "nArchetype": -1,
-  "nID": 3062,
+  "nID": 3063,
   "SubName": "Dark Miasma",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -27,8 +27,8 @@
   "Powers": [
     {
       "CastTimeReal": 3.17,
-      "PowerIndex": 6198,
-      "PowerSetID": 3062,
+      "PowerIndex": 6200,
+      "PowerSetID": 3063,
       "StaticIndex": 1569,
       "NGroupMembership": [],
       "FullName": "Pets.DarkServant.Chill_of_the_Night",
@@ -157,8 +157,8 @@
     },
     {
       "CastTimeReal": 3.17,
-      "PowerIndex": 6199,
-      "PowerSetID": 3062,
+      "PowerIndex": 6201,
+      "PowerSetID": 3063,
       "PowerSetIndex": 1,
       "StaticIndex": 1570,
       "NGroupMembership": [],
@@ -827,8 +827,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6200,
-      "PowerSetID": 3062,
+      "PowerIndex": 6202,
+      "PowerSetID": 3063,
       "PowerSetIndex": 2,
       "StaticIndex": 1571,
       "NGroupMembership": [],
@@ -945,8 +945,8 @@
     },
     {
       "CastTimeReal": 2.37,
-      "PowerIndex": 6201,
-      "PowerSetID": 3062,
+      "PowerIndex": 6203,
+      "PowerSetID": 3063,
       "PowerSetIndex": 3,
       "StaticIndex": 1572,
       "NGroupMembership": [],
@@ -1744,8 +1744,8 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6202,
-      "PowerSetID": 3062,
+      "PowerIndex": 6204,
+      "PowerSetID": 3063,
       "PowerSetIndex": 4,
       "StaticIndex": 1573,
       "NGroupMembership": [],
@@ -1991,8 +1991,8 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6203,
-      "PowerSetID": 3062,
+      "PowerIndex": 6205,
+      "PowerSetID": 3063,
       "PowerSetIndex": 5,
       "StaticIndex": 1574,
       "NGroupMembership": [],

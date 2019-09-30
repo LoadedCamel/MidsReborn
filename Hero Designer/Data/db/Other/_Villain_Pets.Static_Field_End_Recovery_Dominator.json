@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Static_Field_End_Recovery_Dominator",
   "ImageName": "",
   "Power": [
-    10202
+    10204
   ],
   "SetType": 8,
   "DisplayName": "Static Field Endurance Recovery Dominator",
   "nArchetype": -1,
-  "nID": 3545,
+  "nID": 3546,
   "SubName": "Electrical Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10202,
-      "PowerSetID": 3545,
+      "PowerIndex": 10204,
+      "PowerSetID": 3546,
       "StaticIndex": 4490,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Static_Field_End_Recovery_Dominator.Endurance_Recovered",
@@ -80,8 +80,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 2.5,
-          "MagPercent": 2.5,
+          "Mag": 2.75,
+          "MagPercent": 2.75,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",

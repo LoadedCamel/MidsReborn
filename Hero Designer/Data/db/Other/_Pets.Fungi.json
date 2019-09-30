@@ -4,13 +4,13 @@
   "FullName": "Pets.Fungi",
   "ImageName": "",
   "Power": [
-    6277,
-    6278
+    6279,
+    6280
   ],
   "SetType": 8,
   "DisplayName": "Fungi",
   "nArchetype": -1,
-  "nID": 3097,
+  "nID": 3098,
   "SubName": "Devouring Earth",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6277,
-      "PowerSetID": 3097,
+      "PowerIndex": 6279,
+      "PowerSetID": 3098,
       "StaticIndex": 1601,
       "NGroupMembership": [],
       "FullName": "Pets.Fungi.Fungi",
@@ -307,8 +307,8 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6278,
-      "PowerSetID": 3097,
+      "PowerIndex": 6280,
+      "PowerSetID": 3098,
       "PowerSetIndex": 1,
       "StaticIndex": 1602,
       "NGroupMembership": [],

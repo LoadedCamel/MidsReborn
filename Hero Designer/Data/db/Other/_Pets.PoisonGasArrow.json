@@ -4,13 +4,13 @@
   "FullName": "Pets.PoisonGasArrow",
   "ImageName": "",
   "Power": [
-    6388,
-    6389
+    6390,
+    6391
   ],
   "SetType": 8,
   "DisplayName": "Poison Gas Arrow",
   "nArchetype": -1,
-  "nID": 3164,
+  "nID": 3165,
   "SubName": "Trick Arrow",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6388,
-      "PowerSetID": 3164,
+      "PowerIndex": 6390,
+      "PowerSetID": 3165,
       "StaticIndex": 1680,
       "NGroupMembership": [],
       "FullName": "Pets.PoisonGasArrow.PoisonGasArrow",
@@ -1069,8 +1069,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6389,
-      "PowerSetID": 3164,
+      "PowerIndex": 6391,
+      "PowerSetID": 3165,
       "PowerSetIndex": 1,
       "StaticIndex": 1681,
       "NGroupMembership": [],

@@ -4,12 +4,12 @@
   "FullName": "Pets.Tech_Lab_Buff_Dam",
   "ImageName": "",
   "Power": [
-    6491
+    6493
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
   "nArchetype": -1,
-  "nID": 3230,
+  "nID": 3233,
   "SubName": "Lab Equipment",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6491,
-      "PowerSetID": 3230,
+      "PowerIndex": 6493,
+      "PowerSetID": 3233,
       "StaticIndex": 1728,
       "NGroupMembership": [],
       "FullName": "Pets.Tech_Lab_Buff_Dam.Strengthen",

@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.MMTwilight",
   "ImageName": "",
   "Power": [
-    10111
+    10113
   ],
   "SetType": 8,
   "DisplayName": "Twilight",
   "nArchetype": -1,
-  "nID": 3559,
+  "nID": 3560,
   "SubName": "Dark Miasma",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10111,
-      "PowerSetID": 3559,
+      "PowerIndex": 10113,
+      "PowerSetID": 3560,
       "StaticIndex": 3104,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.MMTwilight.Twilight",
@@ -76,8 +76,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 188.906174,
-          "MagPercent": 188.906174,
+          "Mag": 230.885254,
+          "MagPercent": 230.885254,
           "Duration": 1.0,
           "BaseProbability": 1.0,
           "Reward": "",

@@ -4,12 +4,12 @@
   "FullName": "Pets.Tech_Lab_Buff_Regeneration",
   "ImageName": "",
   "Power": [
-    6493
+    6495
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
   "nArchetype": -1,
-  "nID": 3233,
+  "nID": 3234,
   "SubName": "Lab Equipment",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6493,
-      "PowerSetID": 3233,
+      "PowerIndex": 6495,
+      "PowerSetID": 3234,
       "StaticIndex": 1730,
       "NGroupMembership": [],
       "FullName": "Pets.Tech_Lab_Buff_Regeneration.Invigorate",

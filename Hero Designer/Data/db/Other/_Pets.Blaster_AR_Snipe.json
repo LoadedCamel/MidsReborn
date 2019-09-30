@@ -4,13 +4,13 @@
   "FullName": "Pets.Blaster_AR_Snipe",
   "ImageName": "",
   "Power": [
-    6121,
-    6122
+    6123,
+    6124
   ],
   "SetType": 8,
   "DisplayName": "Assault Rifle",
   "nArchetype": -1,
-  "nID": 3025,
+  "nID": 3026,
   "SubName": "Assault Rifle",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6121,
-      "PowerSetID": 3025,
+      "PowerIndex": 6123,
+      "PowerSetID": 3026,
       "StaticIndex": 9547,
       "NGroupMembership": [],
       "FullName": "Pets.Blaster_AR_Snipe.Sniper_Rifle_Normal",
@@ -591,8 +591,8 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6122,
-      "PowerSetID": 3025,
+      "PowerIndex": 6124,
+      "PowerSetID": 3026,
       "PowerSetIndex": 1,
       "StaticIndex": 9548,
       "NGroupMembership": [],

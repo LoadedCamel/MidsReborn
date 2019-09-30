@@ -4,13 +4,13 @@
   "FullName": "Pets.Defender_Radiation_Snipe",
   "ImageName": "",
   "Power": [
-    6238,
-    6239
+    6240,
+    6241
   ],
   "SetType": 8,
   "DisplayName": "",
   "nArchetype": -1,
-  "nID": 3018,
+  "nID": 3017,
   "SubName": "Radiation Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 4.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6238,
-      "PowerSetID": 3018,
+      "PowerIndex": 6240,
+      "PowerSetID": 3017,
       "StaticIndex": 9584,
       "NGroupMembership": [],
       "FullName": "Pets.Defender_Radiation_Snipe.Proton_Volley_Normal",
@@ -217,8 +217,8 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6239,
-      "PowerSetID": 3018,
+      "PowerIndex": 6241,
+      "PowerSetID": 3017,
       "PowerSetIndex": 1,
       "StaticIndex": 9585,
       "NGroupMembership": [],

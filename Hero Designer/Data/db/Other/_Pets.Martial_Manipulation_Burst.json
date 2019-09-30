@@ -4,12 +4,12 @@
   "FullName": "Pets.Martial_Manipulation_Burst",
   "ImageName": "",
   "Power": [
-    6352
+    6354
   ],
   "SetType": 8,
   "DisplayName": "Martial Manipulation",
   "nArchetype": -1,
-  "nID": 3143,
+  "nID": 3144,
   "SubName": "Martial Manipulation",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6352,
-      "PowerSetID": 3143,
+      "PowerIndex": 6354,
+      "PowerSetID": 3144,
       "StaticIndex": 9592,
       "NGroupMembership": [],
       "FullName": "Pets.Martial_Manipulation_Burst.Burst_of_Speed",

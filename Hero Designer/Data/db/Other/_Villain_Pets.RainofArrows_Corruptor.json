@@ -4,13 +4,13 @@
   "FullName": "Villain_Pets.RainofArrows_Corruptor",
   "ImageName": "",
   "Power": [
-    10167,
-    10168
+    10169,
+    10170
   ],
   "SetType": 8,
   "DisplayName": "Rain of Arrows",
   "nArchetype": -1,
-  "nID": 3525,
+  "nID": 3526,
   "SubName": "Archery",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10167,
-      "PowerSetID": 3525,
+      "PowerIndex": 10169,
+      "PowerSetID": 3526,
       "StaticIndex": 4102,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.RainofArrows_Corruptor.RainofArrows",
@@ -79,8 +79,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 50.299427,
-          "MagPercent": 50.299427,
+          "Mag": 27.6646748,
+          "MagPercent": 27.6646748,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -112,8 +112,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 23.8328629,
-          "MagPercent": 23.8328629,
+          "Mag": 13.10807,
+          "MagPercent": 13.10807,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -146,8 +146,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 50.299427,
-          "MagPercent": 50.299427,
+          "Mag": 27.6646748,
+          "MagPercent": 27.6646748,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -182,8 +182,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 23.8328629,
-          "MagPercent": 23.8328629,
+          "Mag": 13.10807,
+          "MagPercent": 13.10807,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -221,8 +221,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10168,
-      "PowerSetID": 3525,
+      "PowerIndex": 10170,
+      "PowerSetID": 3526,
       "PowerSetIndex": 1,
       "StaticIndex": 4103,
       "NGroupMembership": [],

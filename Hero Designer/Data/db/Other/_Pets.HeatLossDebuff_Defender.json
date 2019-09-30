@@ -4,12 +4,12 @@
   "FullName": "Pets.HeatLossDebuff_Defender",
   "ImageName": "",
   "Power": [
-    6287
+    6289
   ],
   "SetType": 8,
   "DisplayName": "Heat Loss",
   "nArchetype": -1,
-  "nID": 3101,
+  "nID": 3102,
   "SubName": "Cold Domination",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6287,
-      "PowerSetID": 3101,
+      "PowerIndex": 6289,
+      "PowerSetID": 3102,
       "StaticIndex": 1607,
       "NGroupMembership": [],
       "FullName": "Pets.HeatLossDebuff_Defender.Heat_Loss",

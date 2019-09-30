@@ -2459,12 +2459,15 @@ namespace Hero_Designer
                     int num = power2.SubPowers.Length - 1;
                     for (int index = 0; index <= num; ++index)
                     {
-                        power2.SubPowers[index] = new PowerSubEntry
+                        if (power2.SubPowers[index] != null)
                         {
-                            nIDPower = power1.NIDSubPower[index],
-                            Powerset = DatabaseAPI.Database.Power[power2.SubPowers[index].nIDPower].PowerSetID,
-                            Power = DatabaseAPI.Database.Power[power2.SubPowers[index].nIDPower].PowerSetIndex
-                        };
+                            power2.SubPowers[index] = new PowerSubEntry
+                            {
+                                nIDPower = power1.NIDSubPower[index],
+                                Powerset = DatabaseAPI.Database.Power[power2.SubPowers[index].nIDPower].PowerSetID,
+                                Power = DatabaseAPI.Database.Power[power2.SubPowers[index].nIDPower].PowerSetIndex
+                            };
+                        }
                     }
                 }
 

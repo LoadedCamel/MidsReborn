@@ -4,16 +4,16 @@
   "FullName": "Pets.PPD_Sergeant",
   "ImageName": "",
   "Power": [
-    6406,
-    6407,
     6408,
     6409,
-    6410
+    6410,
+    6411,
+    6412
   ],
   "SetType": 8,
   "DisplayName": "PPD Sergeant",
   "nArchetype": -1,
-  "nID": 3169,
+  "nID": 3170,
   "SubName": "PPD Sergeant",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -25,8 +25,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6406,
-      "PowerSetID": 3169,
+      "PowerIndex": 6408,
+      "PowerSetID": 3170,
       "StaticIndex": 4428,
       "NGroupMembership": [],
       "FullName": "Pets.PPD_Sergeant.Resistances",
@@ -178,8 +178,8 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.58,
-      "PowerIndex": 6407,
-      "PowerSetID": 3169,
+      "PowerIndex": 6409,
+      "PowerSetID": 3170,
       "PowerSetIndex": 1,
       "StaticIndex": 4429,
       "NGroupMembership": [],
@@ -375,8 +375,8 @@
     {
       "CastTimeReal": 0.57,
       "ToggleCost": 5.46,
-      "PowerIndex": 6408,
-      "PowerSetID": 3169,
+      "PowerIndex": 6410,
+      "PowerSetID": 3170,
       "PowerSetIndex": 2,
       "StaticIndex": 4430,
       "NGroupMembership": [],
@@ -575,8 +575,8 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 12.74,
-      "PowerIndex": 6409,
-      "PowerSetID": 3169,
+      "PowerIndex": 6411,
+      "PowerSetID": 3170,
       "PowerSetIndex": 3,
       "StaticIndex": 4431,
       "NGroupMembership": [],
@@ -774,8 +774,8 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 10.66,
-      "PowerIndex": 6410,
-      "PowerSetID": 3169,
+      "PowerIndex": 6412,
+      "PowerSetID": 3170,
       "PowerSetIndex": 4,
       "StaticIndex": 4432,
       "NGroupMembership": [],

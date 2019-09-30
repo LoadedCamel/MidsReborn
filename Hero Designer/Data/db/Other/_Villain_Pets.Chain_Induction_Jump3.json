@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Chain_Induction_Jump3",
   "ImageName": "",
   "Power": [
-    9978
+    9980
   ],
   "SetType": 8,
   "DisplayName": "Chain Induction Jump 3",
   "nArchetype": -1,
-  "nID": 3464,
+  "nID": 3465,
   "SubName": "Chain Induction Jump 3",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 9978,
-      "PowerSetID": 3464,
+      "PowerIndex": 9980,
+      "PowerSetID": 3465,
       "StaticIndex": 3264,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Chain_Induction_Jump3.Charge",
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 38.92714,
-          "MagPercent": 38.92714,
+          "Mag": 21.40992,
+          "MagPercent": 21.40992,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

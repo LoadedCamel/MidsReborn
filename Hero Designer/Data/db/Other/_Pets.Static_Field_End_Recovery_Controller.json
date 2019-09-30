@@ -4,12 +4,12 @@
   "FullName": "Pets.Static_Field_End_Recovery_Controller",
   "ImageName": "",
   "Power": [
-    6471
+    6473
   ],
   "SetType": 8,
   "DisplayName": "Static Field Endurance Recovery Controller",
   "nArchetype": -1,
-  "nID": 3217,
+  "nID": 3218,
   "SubName": "Electrical Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6471,
-      "PowerSetID": 3217,
+      "PowerIndex": 6473,
+      "PowerSetID": 3218,
       "StaticIndex": 4439,
       "NGroupMembership": [],
       "FullName": "Pets.Static_Field_End_Recovery_Controller.Endurance_Recovered",

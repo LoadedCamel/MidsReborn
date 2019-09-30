@@ -4,7 +4,7 @@
   "FullName": "Pets.KineticTransferDebuff_Mastermind",
   "ImageName": "",
   "Power": [
-    6321
+    6323
   ],
   "SetType": 8,
   "DisplayName": "Kinetic Transfer",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6321,
+      "PowerIndex": 6323,
       "PowerSetID": 3125,
       "StaticIndex": 10771,
       "NGroupMembership": [],

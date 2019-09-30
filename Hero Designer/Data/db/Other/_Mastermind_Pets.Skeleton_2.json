@@ -4,15 +4,15 @@
   "FullName": "Mastermind_Pets.Skeleton_2",
   "ImageName": "",
   "Power": [
-    5944,
-    5945,
     5946,
-    5947
+    5947,
+    5948,
+    5949
   ],
   "SetType": 8,
   "DisplayName": "Skeleton Warrior",
   "nArchetype": -1,
-  "nID": 2969,
+  "nID": 2971,
   "SubName": "Grave Knight",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -26,8 +26,8 @@
     {
       "CastTimeReal": 2.87,
       "ToggleCost": 5.2,
-      "PowerIndex": 5944,
-      "PowerSetID": 2969,
+      "PowerIndex": 5946,
+      "PowerSetID": 2971,
       "StaticIndex": 1281,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Skeleton_2.Disembowel",
@@ -238,8 +238,8 @@
     {
       "CastTimeReal": 1.1,
       "ToggleCost": 4.16,
-      "PowerIndex": 5945,
-      "PowerSetID": 2969,
+      "PowerIndex": 5947,
+      "PowerSetID": 2971,
       "PowerSetIndex": 1,
       "StaticIndex": 1284,
       "NGroupMembership": [],
@@ -379,8 +379,8 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 4.16,
-      "PowerIndex": 5946,
-      "PowerSetID": 2969,
+      "PowerIndex": 5948,
+      "PowerSetID": 2971,
       "PowerSetIndex": 2,
       "StaticIndex": 1285,
       "NGroupMembership": [],
@@ -518,8 +518,8 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 2.6,
-      "PowerIndex": 5947,
-      "PowerSetID": 2969,
+      "PowerIndex": 5949,
+      "PowerSetID": 2971,
       "PowerSetIndex": 3,
       "StaticIndex": 1286,
       "NGroupMembership": [],

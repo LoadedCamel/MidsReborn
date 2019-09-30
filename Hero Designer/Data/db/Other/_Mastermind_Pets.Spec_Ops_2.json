@@ -4,13 +4,13 @@
   "FullName": "Mastermind_Pets.Spec_Ops_2",
   "ImageName": "",
   "Power": [
-    5968,
-    5969
+    5970,
+    5971
   ],
   "SetType": 8,
   "DisplayName": "Spec Ops",
   "nArchetype": -1,
-  "nID": 2976,
+  "nID": 2977,
   "SubName": "Mercenaries",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 10.14,
-      "PowerIndex": 5968,
-      "PowerSetID": 2976,
+      "PowerIndex": 5970,
+      "PowerSetID": 2977,
       "StaticIndex": 1312,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Spec_Ops_2.Rifle_Butt",
@@ -191,8 +191,8 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 7.8,
-      "PowerIndex": 5969,
-      "PowerSetID": 2976,
+      "PowerIndex": 5971,
+      "PowerSetID": 2977,
       "PowerSetIndex": 1,
       "StaticIndex": 1314,
       "NGroupMembership": [],

@@ -4,15 +4,15 @@
   "FullName": "Pets.Zombie",
   "ImageName": "",
   "Power": [
-    6643,
-    6644,
     6645,
-    6646
+    6646,
+    6647,
+    6648
   ],
   "SetType": 8,
   "DisplayName": "Zombie",
   "nArchetype": -1,
-  "nID": 3285,
+  "nID": 3286,
   "SubName": "Zombie",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6643,
-      "PowerSetID": 3285,
+      "PowerIndex": 6645,
+      "PowerSetID": 3286,
       "StaticIndex": 1789,
       "NGroupMembership": [],
       "FullName": "Pets.Zombie.Resistance",
@@ -477,8 +477,8 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6644,
-      "PowerSetID": 3285,
+      "PowerIndex": 6646,
+      "PowerSetID": 3286,
       "PowerSetIndex": 1,
       "StaticIndex": 1790,
       "NGroupMembership": [],
@@ -603,8 +603,8 @@
     },
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 6645,
-      "PowerSetID": 3285,
+      "PowerIndex": 6647,
+      "PowerSetID": 3286,
       "PowerSetIndex": 2,
       "StaticIndex": 1791,
       "NGroupMembership": [],
@@ -692,8 +692,8 @@
     },
     {
       "CastTimeReal": 2.67,
-      "PowerIndex": 6646,
-      "PowerSetID": 3285,
+      "PowerIndex": 6648,
+      "PowerSetID": 3286,
       "PowerSetIndex": 3,
       "StaticIndex": 1792,
       "NGroupMembership": [],

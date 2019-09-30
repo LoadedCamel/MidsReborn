@@ -4,13 +4,13 @@
   "FullName": "Pets.RainofArrows_Critter",
   "ImageName": "",
   "Power": [
-    6423,
-    6424
+    6425,
+    6426
   ],
   "SetType": 8,
   "DisplayName": "Rain of Arrows",
   "nArchetype": -1,
-  "nID": 3182,
+  "nID": 3187,
   "SubName": "Archery",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6423,
-      "PowerSetID": 3182,
+      "PowerIndex": 6425,
+      "PowerSetID": 3187,
       "StaticIndex": 4268,
       "NGroupMembership": [],
       "FullName": "Pets.RainofArrows_Critter.RainofArrows",
@@ -115,8 +115,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6424,
-      "PowerSetID": 3182,
+      "PowerIndex": 6426,
+      "PowerSetID": 3187,
       "PowerSetIndex": 1,
       "StaticIndex": 4269,
       "NGroupMembership": [],

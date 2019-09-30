@@ -4,13 +4,13 @@
   "FullName": "Pets.Blaster_Archery_Snipe",
   "ImageName": "",
   "Power": [
-    6119,
-    6120
+    6121,
+    6122
   ],
   "SetType": 8,
   "DisplayName": "Archery",
   "nArchetype": -1,
-  "nID": 3024,
+  "nID": 3025,
   "SubName": "Archery",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 4.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6119,
-      "PowerSetID": 3024,
+      "PowerIndex": 6121,
+      "PowerSetID": 3025,
       "StaticIndex": 9549,
       "NGroupMembership": [],
       "FullName": "Pets.Blaster_Archery_Snipe.Ranged_Shot_Normal",
@@ -484,8 +484,8 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6120,
-      "PowerSetID": 3024,
+      "PowerIndex": 6122,
+      "PowerSetID": 3025,
       "PowerSetIndex": 1,
       "StaticIndex": 9550,
       "NGroupMembership": [],

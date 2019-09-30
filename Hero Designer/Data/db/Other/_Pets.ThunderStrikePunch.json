@@ -4,12 +4,12 @@
   "FullName": "Pets.ThunderStrikePunch",
   "ImageName": "",
   "Power": [
-    6508
+    6510
   ],
   "SetType": 8,
   "DisplayName": "Thunder Strike",
   "nArchetype": -1,
-  "nID": 3241,
+  "nID": 3242,
   "SubName": "Electricity Manipulation",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6508,
-      "PowerSetID": 3241,
+      "PowerIndex": 6510,
+      "PowerSetID": 3242,
       "StaticIndex": 1745,
       "NGroupMembership": [],
       "FullName": "Pets.ThunderStrikePunch.Thunder_Strike",

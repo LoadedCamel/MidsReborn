@@ -4,14 +4,14 @@
   "FullName": "Pets.Bomb_Defender",
   "ImageName": "",
   "Power": [
-    6150,
-    6151,
-    6152
+    6152,
+    6153,
+    6154
   ],
   "SetType": 8,
   "DisplayName": "Bomb",
   "nArchetype": -1,
-  "nID": 3036,
+  "nID": 3035,
   "SubName": "Devices",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6150,
-      "PowerSetID": 3036,
+      "PowerIndex": 6152,
+      "PowerSetID": 3035,
       "StaticIndex": 3523,
       "NGroupMembership": [],
       "FullName": "Pets.Bomb_Defender.Time_Bomb",
@@ -307,8 +307,8 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 6151,
-      "PowerSetID": 3036,
+      "PowerIndex": 6153,
+      "PowerSetID": 3035,
       "PowerSetIndex": 1,
       "StaticIndex": 3525,
       "NGroupMembership": [],
@@ -1546,8 +1546,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6152,
-      "PowerSetID": 3036,
+      "PowerIndex": 6154,
+      "PowerSetID": 3035,
       "PowerSetIndex": 2,
       "StaticIndex": 3524,
       "NGroupMembership": [],

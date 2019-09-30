@@ -4,13 +4,13 @@
   "FullName": "Villain_Pets.Dominator_PsionicAssault_Snipe",
   "ImageName": "",
   "Power": [
-    10067,
-    10068
+    10069,
+    10070
   ],
   "SetType": 8,
   "DisplayName": "Dominator_PsionicAssault_Snipe",
   "nArchetype": -1,
-  "nID": 3497,
+  "nID": 3498,
   "SubName": "Psionic Assault",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 18.512,
-      "PowerIndex": 10067,
-      "PowerSetID": 3497,
+      "PowerIndex": 10069,
+      "PowerSetID": 3498,
       "StaticIndex": 9821,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Dominator_PsionicAssault_Snipe.Psionic_Lance_Quick",
@@ -91,8 +91,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 222.718933,
-          "MagPercent": 222.718933,
+          "Mag": 108.884735,
+          "MagPercent": 108.884735,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -161,8 +161,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 147.144653,
-          "MagPercent": 147.144653,
+          "Mag": 71.93733,
+          "MagPercent": 71.93733,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -232,8 +232,8 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 18.512,
-      "PowerIndex": 10068,
-      "PowerSetID": 3497,
+      "PowerIndex": 10070,
+      "PowerSetID": 3498,
       "PowerSetIndex": 1,
       "StaticIndex": 9822,
       "NGroupMembership": [],
@@ -302,8 +302,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 222.718933,
-          "MagPercent": 222.718933,
+          "Mag": 108.884735,
+          "MagPercent": 108.884735,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -372,8 +372,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 331.075439,
-          "MagPercent": 331.075439,
+          "Mag": 161.859,
+          "MagPercent": 161.859,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

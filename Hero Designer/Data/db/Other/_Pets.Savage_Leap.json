@@ -4,12 +4,12 @@
   "FullName": "Pets.Savage_Leap",
   "ImageName": "",
   "Power": [
-    6447
+    6449
   ],
   "SetType": 8,
   "DisplayName": "Savage Leap",
   "nArchetype": -1,
-  "nID": 3197,
+  "nID": 3198,
   "SubName": "",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6447,
-      "PowerSetID": 3197,
+      "PowerIndex": 6449,
+      "PowerSetID": 3198,
       "StaticIndex": 10416,
       "NGroupMembership": [],
       "FullName": "Pets.Savage_Leap.Savage_Leap",

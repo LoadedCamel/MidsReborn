@@ -4,17 +4,17 @@
   "FullName": "Pets.Pool_Leadership_VictoryRush",
   "ImageName": "",
   "Power": [
-    6393,
-    6394,
     6395,
     6396,
     6397,
-    6398
+    6398,
+    6399,
+    6400
   ],
   "SetType": 8,
   "DisplayName": "Leadership",
   "nArchetype": -1,
-  "nID": 3126,
+  "nID": 3127,
   "SubName": "Leadership",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -26,8 +26,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6393,
-      "PowerSetID": 3126,
+      "PowerIndex": 6395,
+      "PowerSetID": 3127,
       "StaticIndex": 9593,
       "NGroupMembership": [],
       "FullName": "Pets.Pool_Leadership_VictoryRush.VictoryRush_Base",
@@ -153,8 +153,8 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6394,
-      "PowerSetID": 3126,
+      "PowerIndex": 6396,
+      "PowerSetID": 3127,
       "PowerSetIndex": 1,
       "StaticIndex": 9598,
       "NGroupMembership": [],
@@ -280,8 +280,8 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6395,
-      "PowerSetID": 3126,
+      "PowerIndex": 6397,
+      "PowerSetID": 3127,
       "PowerSetIndex": 2,
       "StaticIndex": 9596,
       "NGroupMembership": [],
@@ -407,8 +407,8 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6396,
-      "PowerSetID": 3126,
+      "PowerIndex": 6398,
+      "PowerSetID": 3127,
       "PowerSetIndex": 3,
       "StaticIndex": 9597,
       "NGroupMembership": [],
@@ -534,8 +534,8 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6397,
-      "PowerSetID": 3126,
+      "PowerIndex": 6399,
+      "PowerSetID": 3127,
       "PowerSetIndex": 4,
       "StaticIndex": 9595,
       "NGroupMembership": [],
@@ -661,8 +661,8 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6398,
-      "PowerSetID": 3126,
+      "PowerIndex": 6400,
+      "PowerSetID": 3127,
       "PowerSetIndex": 5,
       "StaticIndex": 9594,
       "NGroupMembership": [],

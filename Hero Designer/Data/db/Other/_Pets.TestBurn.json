@@ -4,12 +4,12 @@
   "FullName": "Pets.TestBurn",
   "ImageName": "",
   "Power": [
-    6507
+    6509
   ],
   "SetType": 8,
   "DisplayName": "Burn",
   "nArchetype": -1,
-  "nID": 3040,
+  "nID": 3041,
   "SubName": "Fire",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6507,
-      "PowerSetID": 3040,
+      "PowerIndex": 6509,
+      "PowerSetID": 3041,
       "StaticIndex": 1744,
       "NGroupMembership": [],
       "FullName": "Pets.TestBurn.Burn",

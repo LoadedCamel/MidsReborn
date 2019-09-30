@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Power_Surge",
   "ImageName": "",
   "Power": [
-    10162
+    10164
   ],
   "SetType": 8,
   "DisplayName": "Electric Armor",
   "nArchetype": -1,
-  "nID": 3499,
+  "nID": 3500,
   "SubName": "Electric Armor",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10162,
-      "PowerSetID": 3499,
+      "PowerIndex": 10164,
+      "PowerSetID": 3500,
       "StaticIndex": 3144,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Power_Surge.EM_Pulse",
@@ -300,8 +300,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -7.26600027,
-          "MagPercent": -726.600037,
+          "Mag": -7.785,
+          "MagPercent": -778.5,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -336,8 +336,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 102.600861,
-          "MagPercent": 102.600861,
+          "Mag": 50.1603851,
+          "MagPercent": 50.1603851,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

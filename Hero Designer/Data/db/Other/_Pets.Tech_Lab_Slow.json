@@ -4,12 +4,12 @@
   "FullName": "Pets.Tech_Lab_Slow",
   "ImageName": "",
   "Power": [
-    6501
+    6503
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
   "nArchetype": -1,
-  "nID": 3232,
+  "nID": 3230,
   "SubName": "Lab Equipment",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6501,
-      "PowerSetID": 3232,
+      "PowerIndex": 6503,
+      "PowerSetID": 3230,
       "StaticIndex": 1738,
       "NGroupMembership": [],
       "FullName": "Pets.Tech_Lab_Slow.Slow",

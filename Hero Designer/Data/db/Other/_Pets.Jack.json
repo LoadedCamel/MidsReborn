@@ -4,17 +4,17 @@
   "FullName": "Pets.Jack",
   "ImageName": "",
   "Power": [
-    6308,
-    6309,
     6310,
     6311,
     6312,
-    6313
+    6313,
+    6314,
+    6315
   ],
   "SetType": 8,
   "DisplayName": "Jack",
   "nArchetype": -1,
-  "nID": 3117,
+  "nID": 3118,
   "SubName": "Ice Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -27,8 +27,8 @@
   "Powers": [
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6308,
-      "PowerSetID": 3117,
+      "PowerIndex": 6310,
+      "PowerSetID": 3118,
       "StaticIndex": 1624,
       "NGroupMembership": [],
       "FullName": "Pets.Jack.Jacks_Ice_Sword",
@@ -337,8 +337,8 @@
     },
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 6309,
-      "PowerSetID": 3117,
+      "PowerIndex": 6311,
+      "PowerSetID": 3118,
       "PowerSetIndex": 1,
       "StaticIndex": 1625,
       "NGroupMembership": [],
@@ -607,8 +607,8 @@
     },
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6310,
-      "PowerSetID": 3117,
+      "PowerIndex": 6312,
+      "PowerSetID": 3118,
       "PowerSetIndex": 2,
       "StaticIndex": 1626,
       "NGroupMembership": [],
@@ -922,8 +922,8 @@
     },
     {
       "CastTimeReal": 2.33,
-      "PowerIndex": 6311,
-      "PowerSetID": 3117,
+      "PowerIndex": 6313,
+      "PowerSetID": 3118,
       "PowerSetIndex": 3,
       "StaticIndex": 1627,
       "NGroupMembership": [],
@@ -1232,8 +1232,8 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6312,
-      "PowerSetID": 3117,
+      "PowerIndex": 6314,
+      "PowerSetID": 3118,
       "PowerSetIndex": 4,
       "StaticIndex": 1628,
       "NGroupMembership": [],
@@ -1547,8 +1547,8 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6313,
-      "PowerSetID": 3117,
+      "PowerIndex": 6315,
+      "PowerSetID": 3118,
       "PowerSetIndex": 5,
       "StaticIndex": 1629,
       "NGroupMembership": [],

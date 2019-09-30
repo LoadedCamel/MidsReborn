@@ -4,12 +4,12 @@
   "FullName": "Pets.BounceWorld",
   "ImageName": "",
   "Power": [
-    6154
+    6156
   ],
   "SetType": 8,
   "DisplayName": "Bounce World",
   "nArchetype": -1,
-  "nID": 3039,
+  "nID": 3040,
   "SubName": "Alternate Physics",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6154,
-      "PowerSetID": 3039,
+      "PowerIndex": 6156,
+      "PowerSetID": 3040,
       "StaticIndex": 1552,
       "NGroupMembership": [],
       "FullName": "Pets.BounceWorld.Immobilize",

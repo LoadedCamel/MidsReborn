@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.DistortionField_Mastermind",
   "ImageName": "",
   "Power": [
-    10051
+    10053
   ],
   "SetType": 8,
   "DisplayName": "Time Manipulation",
   "nArchetype": -1,
-  "nID": 3551,
+  "nID": 3552,
   "SubName": "Time Manipulation",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10051,
-      "PowerSetID": 3551,
+      "PowerIndex": 10053,
+      "PowerSetID": 3552,
       "StaticIndex": 5815,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.DistortionField_Mastermind.Distortion_Field",
@@ -322,7 +322,7 @@
           "Probability": 0.02,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 4.768,
+          "Duration": 5.96,
           "BaseProbability": 0.02,
           "Reward": "",
           "EffectId": "Sleep",
@@ -401,7 +401,7 @@
           "Probability": 0.03,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 4.768,
+          "Duration": 5.96,
           "BaseProbability": 0.03,
           "Reward": "",
           "EffectId": "Sleep",

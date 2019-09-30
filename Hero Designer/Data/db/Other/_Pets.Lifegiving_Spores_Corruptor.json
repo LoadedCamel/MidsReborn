@@ -4,12 +4,12 @@
   "FullName": "Pets.Lifegiving_Spores_Corruptor",
   "ImageName": "",
   "Power": [
-    6323
+    6325
   ],
   "SetType": 8,
   "DisplayName": "Lifegiving Spores",
   "nArchetype": -1,
-  "nID": 3130,
+  "nID": 3131,
   "SubName": "Nature Affinity",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "Powers": [
     {
       "CastTimeReal": 3.1,
-      "PowerIndex": 6323,
-      "PowerSetID": 3130,
+      "PowerIndex": 6325,
+      "PowerSetID": 3131,
       "StaticIndex": 9105,
       "NGroupMembership": [],
       "FullName": "Pets.Lifegiving_Spores_Corruptor.Lifegiving_Spores",

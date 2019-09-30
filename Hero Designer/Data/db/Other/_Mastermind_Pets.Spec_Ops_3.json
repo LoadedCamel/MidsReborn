@@ -4,14 +4,14 @@
   "FullName": "Mastermind_Pets.Spec_Ops_3",
   "ImageName": "",
   "Power": [
-    5970,
-    5971,
-    5972
+    5972,
+    5973,
+    5974
   ],
   "SetType": 8,
   "DisplayName": "Spec Ops",
   "nArchetype": -1,
-  "nID": 2974,
+  "nID": 2975,
   "SubName": "Mercenaries",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -25,8 +25,8 @@
     {
       "CastTimeReal": 3.83,
       "ToggleCost": 6.864,
-      "PowerIndex": 5970,
-      "PowerSetID": 2974,
+      "PowerIndex": 5972,
+      "PowerSetID": 2975,
       "StaticIndex": 1315,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Spec_Ops_3.SCAR_Snipe",
@@ -124,8 +124,8 @@
     },
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 5971,
-      "PowerSetID": 2974,
+      "PowerIndex": 5973,
+      "PowerSetID": 2975,
       "PowerSetIndex": 1,
       "StaticIndex": 1316,
       "NGroupMembership": [],
@@ -960,8 +960,8 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 7.8,
-      "PowerIndex": 5972,
-      "PowerSetID": 2974,
+      "PowerIndex": 5974,
+      "PowerSetID": 2975,
       "PowerSetIndex": 2,
       "StaticIndex": 1318,
       "NGroupMembership": [],

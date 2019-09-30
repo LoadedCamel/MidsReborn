@@ -4,12 +4,12 @@
   "FullName": "Pets.TempPower_Warwolf_Wistel_Pet",
   "ImageName": "",
   "Power": [
-    6503
+    6505
   ],
   "SetType": 8,
   "DisplayName": "Warwolf",
   "nArchetype": -1,
-  "nID": 3271,
+  "nID": 3272,
   "SubName": "TempPower_Warwolf_Wistel_Pet",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6503,
-      "PowerSetID": 3271,
+      "PowerIndex": 6505,
+      "PowerSetID": 3272,
       "StaticIndex": 1740,
       "NGroupMembership": [],
       "FullName": "Pets.TempPower_Warwolf_Wistel_Pet.Metamorphosis",

@@ -4,13 +4,13 @@
   "FullName": "Pets.FlameThrower",
   "ImageName": "",
   "Power": [
-    6271,
-    6272
+    6273,
+    6274
   ],
   "SetType": 8,
   "DisplayName": "Flame Thrower",
   "nArchetype": -1,
-  "nID": 3091,
+  "nID": 3092,
   "SubName": "Fire",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6271,
-      "PowerSetID": 3091,
+      "PowerIndex": 6273,
+      "PowerSetID": 3092,
       "StaticIndex": 1595,
       "NGroupMembership": [],
       "FullName": "Pets.FlameThrower.Flame_Thrower",
@@ -177,8 +177,8 @@
       "AoEModifier": 1.6
     },
     {
-      "PowerIndex": 6272,
-      "PowerSetID": 3091,
+      "PowerIndex": 6274,
+      "PowerSetID": 3092,
       "PowerSetIndex": 1,
       "StaticIndex": 1596,
       "NGroupMembership": [],

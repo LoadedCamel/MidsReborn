@@ -79,7 +79,6 @@
         {
           "MagnitudeExpression": "",
           "ProcsPerMinute": 3.5,
-          "Probability": 0.5833333,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "Reward": "",

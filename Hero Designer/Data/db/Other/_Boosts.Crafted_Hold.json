@@ -9,7 +9,7 @@
   "SetType": 10,
   "DisplayName": "Crafted Hold 10",
   "nArchetype": -1,
-  "nID": 1394,
+  "nID": 1395,
   "SubName": "Invention",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 1631,
-      "PowerSetID": 1394,
+      "PowerSetID": 1395,
       "StaticIndex": 7587,
       "NGroupMembership": [],
       "FullName": "Boosts.Crafted_Hold.Crafted_Hold",

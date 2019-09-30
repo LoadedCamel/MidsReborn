@@ -4,12 +4,12 @@
   "FullName": "Pets.IceSlick",
   "ImageName": "",
   "Power": [
-    6298
+    6300
   ],
   "SetType": 8,
   "DisplayName": "Ice Slick",
   "nArchetype": -1,
-  "nID": 3108,
+  "nID": 3109,
   "SubName": "Ice Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6298,
-      "PowerSetID": 3108,
+      "PowerIndex": 6300,
+      "PowerSetID": 3109,
       "StaticIndex": 1618,
       "NGroupMembership": [],
       "FullName": "Pets.IceSlick.IceSlick",

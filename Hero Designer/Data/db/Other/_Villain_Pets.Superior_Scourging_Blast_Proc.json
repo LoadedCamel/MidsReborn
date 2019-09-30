@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Superior_Scourging_Blast_Proc",
   "ImageName": "",
   "Power": [
-    10205
+    10207
   ],
   "SetType": 8,
   "DisplayName": "Superior Scourging Blast",
   "nArchetype": -1,
-  "nID": 3548,
+  "nID": 3549,
   "SubName": "Superior Scourging Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10205,
-      "PowerSetID": 3548,
+      "PowerIndex": 10207,
+      "PowerSetID": 3549,
       "StaticIndex": 9028,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Superior_Scourging_Blast_Proc.Superior_Scourging_Blast",
@@ -108,8 +108,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 72.28552,
-          "MagPercent": 72.28552,
+          "Mag": 88.34895,
+          "MagPercent": 88.34895,
           "Duration": 1.0,
           "BaseProbability": 1.0,
           "Reward": "",

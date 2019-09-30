@@ -4,15 +4,15 @@
   "FullName": "Villain_Pets.Chain_Lightning",
   "ImageName": "",
   "Power": [
-    9983,
-    9984,
     9985,
-    9986
+    9986,
+    9987,
+    9988
   ],
   "SetType": 8,
   "DisplayName": "Chain Lightning",
   "nArchetype": -1,
-  "nID": 3469,
+  "nID": 3470,
   "SubName": "Chain Lightning",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 9983,
-      "PowerSetID": 3469,
+      "PowerIndex": 9985,
+      "PowerSetID": 3470,
       "StaticIndex": 3036,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Chain_Lightning.Charge",
@@ -120,7 +120,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Villain_Pets.Chain_Lightning.Charge2",
-          "nSummon": 9984,
+          "nSummon": 9986,
           "DelayedTime": 1.5,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -181,8 +181,8 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 9984,
-      "PowerSetID": 3469,
+      "PowerIndex": 9986,
+      "PowerSetID": 3470,
       "PowerSetIndex": 1,
       "StaticIndex": 3037,
       "NGroupMembership": [],
@@ -277,7 +277,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Villain_Pets.Chain_Lightning.Charge3",
-          "nSummon": 9985,
+          "nSummon": 9987,
           "DelayedTime": 1.5,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -338,8 +338,8 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 9985,
-      "PowerSetID": 3469,
+      "PowerIndex": 9987,
+      "PowerSetID": 3470,
       "PowerSetIndex": 2,
       "StaticIndex": 3038,
       "NGroupMembership": [],
@@ -434,7 +434,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Villain_Pets.Chain_Lightning.Charge4",
-          "nSummon": 9986,
+          "nSummon": 9988,
           "DelayedTime": 1.5,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -495,8 +495,8 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 9986,
-      "PowerSetID": 3469,
+      "PowerIndex": 9988,
+      "PowerSetID": 3470,
       "PowerSetIndex": 3,
       "StaticIndex": 3039,
       "NGroupMembership": [],

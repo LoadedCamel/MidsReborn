@@ -4,7 +4,7 @@
   "FullName": "Pets.Fallout",
   "ImageName": "",
   "Power": [
-    6268
+    6270
   ],
   "SetType": 8,
   "DisplayName": "Fallout",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6268,
+      "PowerIndex": 6270,
       "PowerSetID": 3089,
       "StaticIndex": 1593,
       "NGroupMembership": [],

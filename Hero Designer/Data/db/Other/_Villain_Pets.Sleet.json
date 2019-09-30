@@ -4,13 +4,13 @@
   "FullName": "Villain_Pets.Sleet",
   "ImageName": "",
   "Power": [
-    10188,
-    10189
+    10190,
+    10191
   ],
   "SetType": 8,
   "DisplayName": "Sleet",
   "nArchetype": -1,
-  "nID": 3538,
+  "nID": 3539,
   "SubName": "Cold Domination",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10188,
-      "PowerSetID": 3538,
+      "PowerIndex": 10190,
+      "PowerSetID": 3539,
       "StaticIndex": 3145,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Sleet.Sleet",
@@ -504,8 +504,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.3336612,
-          "MagPercent": 0.3336612,
+          "Mag": 0.1835136,
+          "MagPercent": 0.1835136,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -537,8 +537,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -571,8 +571,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -605,8 +605,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -639,8 +639,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -673,8 +673,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -707,8 +707,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -741,8 +741,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -775,8 +775,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -809,8 +809,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.210000008,
-          "MagPercent": -21.0,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -915,8 +915,8 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 10189,
-      "PowerSetID": 3538,
+      "PowerIndex": 10191,
+      "PowerSetID": 3539,
       "PowerSetIndex": 1,
       "StaticIndex": 3146,
       "NGroupMembership": [],

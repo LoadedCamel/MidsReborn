@@ -4,13 +4,13 @@
   "FullName": "Villain_Pets.Shield_Charge_AoE",
   "ImageName": "",
   "Power": [
-    10182,
-    10183
+    10184,
+    10185
   ],
   "SetType": 8,
   "DisplayName": "Shield Defense",
   "nArchetype": -1,
-  "nID": 3537,
+  "nID": 3538,
   "SubName": "Shield Defense",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "Powers": [
     {
       "CastTimeReal": 1.716,
-      "PowerIndex": 10182,
-      "PowerSetID": 3537,
+      "PowerIndex": 10184,
+      "PowerSetID": 3538,
       "StaticIndex": 3410,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Shield_Charge_AoE.Shield_Charge_AoE",
@@ -87,8 +87,8 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 10183,
-      "PowerSetID": 3537,
+      "PowerIndex": 10185,
+      "PowerSetID": 3538,
       "PowerSetIndex": 1,
       "StaticIndex": 4114,
       "NGroupMembership": [],
@@ -149,8 +149,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 29.1953526,
-          "MagPercent": 29.1953526,
+          "Mag": 16.05744,
+          "MagPercent": 16.05744,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -181,8 +181,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 70.903,
-          "MagPercent": 70.903,
+          "Mag": 38.99664,
+          "MagPercent": 38.99664,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

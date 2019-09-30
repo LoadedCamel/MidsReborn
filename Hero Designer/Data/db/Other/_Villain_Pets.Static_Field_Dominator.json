@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Static_Field_Dominator",
   "ImageName": "",
   "Power": [
-    10201
+    10203
   ],
   "SetType": 8,
   "DisplayName": "Static Field Dominator",
   "nArchetype": -1,
-  "nID": 3544,
+  "nID": 3545,
   "SubName": "Electrical Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10201,
-      "PowerSetID": 3544,
+      "PowerIndex": 10203,
+      "PowerSetID": 3545,
       "StaticIndex": 4489,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Static_Field_Dominator.Static_Field",
@@ -87,7 +87,7 @@
           "Probability": 1.0,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 5.066,
+          "Duration": 6.3325,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Immobilize",
@@ -194,8 +194,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 0.5,
-          "Mag": -2.0,
-          "MagPercent": -2.0,
+          "Mag": -2.2,
+          "MagPercent": -2.2,
           "BaseProbability": 0.5,
           "Reward": "",
           "EffectId": "EndDrain",

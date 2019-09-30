@@ -4,16 +4,16 @@
   "FullName": "Pets.DecoyPhantasm",
   "ImageName": "",
   "Power": [
-    6213,
-    6214,
     6215,
     6216,
-    6217
+    6217,
+    6218,
+    6219
   ],
   "SetType": 8,
   "DisplayName": "Decoy Phantasm",
   "nArchetype": -1,
-  "nID": 3065,
+  "nID": 3066,
   "SubName": "Illusion Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -26,8 +26,8 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6213,
-      "PowerSetID": 3065,
+      "PowerIndex": 6215,
+      "PowerSetID": 3066,
       "StaticIndex": 1584,
       "NGroupMembership": [],
       "FullName": "Pets.DecoyPhantasm.Power_Bolt",
@@ -192,8 +192,8 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 6214,
-      "PowerSetID": 3065,
+      "PowerIndex": 6216,
+      "PowerSetID": 3066,
       "PowerSetIndex": 1,
       "StaticIndex": 1585,
       "NGroupMembership": [],
@@ -360,8 +360,8 @@
       "AoEModifier": 2.37995839
     },
     {
-      "PowerIndex": 6215,
-      "PowerSetID": 3065,
+      "PowerIndex": 6217,
+      "PowerSetID": 3066,
       "PowerSetIndex": 2,
       "StaticIndex": 1586,
       "NGroupMembership": [],
@@ -544,8 +544,8 @@
     {
       "CastTimeReal": 1.716,
       "IsEpic": true,
-      "PowerIndex": 6216,
-      "PowerSetID": 3065,
+      "PowerIndex": 6218,
+      "PowerSetID": 3066,
       "PowerSetIndex": 3,
       "StaticIndex": 1587,
       "NGroupMembership": [],
@@ -572,11 +572,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6213,
+            6215,
             -1
           ],
           [
-            6214,
+            6216,
             -1
           ]
         ],
@@ -612,8 +612,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6217,
-      "PowerSetID": 3065,
+      "PowerIndex": 6219,
+      "PowerSetID": 3066,
       "PowerSetIndex": 4,
       "StaticIndex": 1588,
       "NGroupMembership": [],

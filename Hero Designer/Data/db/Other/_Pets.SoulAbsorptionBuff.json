@@ -4,12 +4,12 @@
   "FullName": "Pets.SoulAbsorptionBuff",
   "ImageName": "",
   "Power": [
-    6468
+    6470
   ],
   "SetType": 8,
   "DisplayName": "Soul Absorption",
   "nArchetype": -1,
-  "nID": 3214,
+  "nID": 3215,
   "SubName": "Dark Affinity",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6468,
-      "PowerSetID": 3214,
+      "PowerIndex": 6470,
+      "PowerSetID": 3215,
       "StaticIndex": 6228,
       "NGroupMembership": [],
       "FullName": "Pets.SoulAbsorptionBuff.Soul_Absorption",

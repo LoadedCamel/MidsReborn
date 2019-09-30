@@ -4,12 +4,12 @@
   "FullName": "Pets.Tech_Lab_DeBuff_Dam",
   "ImageName": "",
   "Power": [
-    6496
+    6498
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
   "nArchetype": -1,
-  "nID": 3229,
+  "nID": 3228,
   "SubName": "Lab Equipment",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6496,
-      "PowerSetID": 3229,
+      "PowerIndex": 6498,
+      "PowerSetID": 3228,
       "StaticIndex": 1733,
       "NGroupMembership": [],
       "FullName": "Pets.Tech_Lab_DeBuff_Dam.Weaken",

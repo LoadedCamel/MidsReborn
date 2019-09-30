@@ -4,12 +4,12 @@
   "FullName": "Mastermind_Pets.Thug_Minion_3",
   "ImageName": "",
   "Power": [
-    6010
+    6012
   ],
   "SetType": 8,
   "DisplayName": "Thug Minion",
   "nArchetype": -1,
-  "nID": 2983,
+  "nID": 2984,
   "SubName": "Thugs",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 15.184,
-      "PowerIndex": 6010,
-      "PowerSetID": 2983,
+      "PowerIndex": 6012,
+      "PowerSetID": 2984,
       "StaticIndex": 1408,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Thug_Minion_3.Empty_Clips",

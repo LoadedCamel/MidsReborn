@@ -4,12 +4,12 @@
   "FullName": "Pets.Warburg_Biological",
   "ImageName": "",
   "Power": [
-    6615
+    6617
   ],
   "SetType": 8,
   "DisplayName": "Warburg_Biological",
   "nArchetype": -1,
-  "nID": 3268,
+  "nID": 3269,
   "SubName": "Warburg",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "Powers": [
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 6615,
-      "PowerSetID": 3268,
+      "PowerIndex": 6617,
+      "PowerSetID": 3269,
       "StaticIndex": 1786,
       "NGroupMembership": [],
       "FullName": "Pets.Warburg_Biological.Warburg_Biological",

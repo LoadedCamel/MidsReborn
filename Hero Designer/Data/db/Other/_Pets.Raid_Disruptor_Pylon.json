@@ -4,12 +4,12 @@
   "FullName": "Pets.Raid_Disruptor_Pylon",
   "ImageName": "",
   "Power": [
-    6417
+    6419
   ],
   "SetType": 8,
   "DisplayName": "Raid_Disruptor_Pylon",
   "nArchetype": -1,
-  "nID": 3178,
+  "nID": 3179,
   "SubName": "Object",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6417,
-      "PowerSetID": 3178,
+      "PowerIndex": 6419,
+      "PowerSetID": 3179,
       "StaticIndex": 1688,
       "NGroupMembership": [],
       "FullName": "Pets.Raid_Disruptor_Pylon.Suicide",

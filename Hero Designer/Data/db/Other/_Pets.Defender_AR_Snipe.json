@@ -4,13 +4,13 @@
   "FullName": "Pets.Defender_AR_Snipe",
   "ImageName": "",
   "Power": [
-    6221,
-    6222
+    6223,
+    6224
   ],
   "SetType": 8,
   "DisplayName": "",
   "nArchetype": -1,
-  "nID": 3010,
+  "nID": 3012,
   "SubName": "Assault Rifle",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6221,
-      "PowerSetID": 3010,
+      "PowerIndex": 6223,
+      "PowerSetID": 3012,
       "StaticIndex": 9565,
       "NGroupMembership": [],
       "FullName": "Pets.Defender_AR_Snipe.Sniper_Rifle_Normal",
@@ -244,8 +244,8 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6222,
-      "PowerSetID": 3010,
+      "PowerIndex": 6224,
+      "PowerSetID": 3012,
       "PowerSetIndex": 1,
       "StaticIndex": 9566,
       "NGroupMembership": [],

@@ -4,12 +4,12 @@
   "FullName": "Pets.Liquefy",
   "ImageName": "",
   "Power": [
-    6340
+    6342
   ],
   "SetType": 8,
   "DisplayName": "Liquefy",
   "nArchetype": -1,
-  "nID": 3139,
+  "nID": 3140,
   "SubName": "Sonic Attack",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6340,
-      "PowerSetID": 3139,
+      "PowerIndex": 6342,
+      "PowerSetID": 3140,
       "StaticIndex": 1647,
       "NGroupMembership": [],
       "FullName": "Pets.Liquefy.Liquefy",

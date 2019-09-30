@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.HeatLossBuff",
   "ImageName": "",
   "Power": [
-    10099
+    10101
   ],
   "SetType": 8,
   "DisplayName": "Heat Loss",
   "nArchetype": -1,
-  "nID": 3509,
+  "nID": 3510,
   "SubName": "Cold Domination",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10099,
-      "PowerSetID": 3509,
+      "PowerIndex": 10101,
+      "PowerSetID": 3510,
       "StaticIndex": 3100,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.HeatLossBuff.Heat_Loss",

@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Rock",
   "ImageName": "",
   "Power": [
-    6020
+    6022
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 3.33,
       "ToggleCost": 3.536,
-      "PowerIndex": 6020,
+      "PowerIndex": 6022,
       "PowerSetID": 2995,
       "StaticIndex": 1428,
       "NGroupMembership": [],

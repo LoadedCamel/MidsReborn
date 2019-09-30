@@ -4,12 +4,12 @@
   "FullName": "Pets.ChargeCone",
   "ImageName": "",
   "Power": [
-    6176
+    6178
   ],
   "SetType": 8,
   "DisplayName": "Charge Cone",
   "nArchetype": -1,
-  "nID": 3058,
+  "nID": 3059,
   "SubName": "Charge Cone",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6176,
-      "PowerSetID": 3058,
+      "PowerIndex": 6178,
+      "PowerSetID": 3059,
       "StaticIndex": 3333,
       "NGroupMembership": [],
       "FullName": "Pets.ChargeCone.Shield_Charge",

@@ -4,17 +4,17 @@
   "FullName": "Pets.Phantasm",
   "ImageName": "",
   "Power": [
-    6381,
-    6382,
     6383,
     6384,
     6385,
-    6386
+    6386,
+    6387,
+    6388
   ],
   "SetType": 8,
   "DisplayName": "Phantasm",
   "nArchetype": -1,
-  "nID": 3160,
+  "nID": 3161,
   "SubName": "Illusion Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -27,8 +27,8 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6381,
-      "PowerSetID": 3160,
+      "PowerIndex": 6383,
+      "PowerSetID": 3161,
       "StaticIndex": 1673,
       "NGroupMembership": [],
       "FullName": "Pets.Phantasm.Power_Bolt",
@@ -192,8 +192,8 @@
     },
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 6382,
-      "PowerSetID": 3160,
+      "PowerIndex": 6384,
+      "PowerSetID": 3161,
       "PowerSetIndex": 1,
       "StaticIndex": 1674,
       "NGroupMembership": [],
@@ -283,8 +283,8 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 6383,
-      "PowerSetID": 3160,
+      "PowerIndex": 6385,
+      "PowerSetID": 3161,
       "PowerSetIndex": 2,
       "StaticIndex": 1675,
       "NGroupMembership": [],
@@ -450,8 +450,8 @@
       "AoEModifier": 2.37995839
     },
     {
-      "PowerIndex": 6384,
-      "PowerSetID": 3160,
+      "PowerIndex": 6386,
+      "PowerSetID": 3161,
       "PowerSetIndex": 3,
       "StaticIndex": 1676,
       "NGroupMembership": [],
@@ -633,8 +633,8 @@
     },
     {
       "CastTimeReal": 1.716,
-      "PowerIndex": 6385,
-      "PowerSetID": 3160,
+      "PowerIndex": 6387,
+      "PowerSetID": 3161,
       "PowerSetIndex": 4,
       "StaticIndex": 1677,
       "NGroupMembership": [],
@@ -683,8 +683,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6386,
-      "PowerSetID": 3160,
+      "PowerIndex": 6388,
+      "PowerSetID": 3161,
       "PowerSetIndex": 5,
       "StaticIndex": 1678,
       "NGroupMembership": [],

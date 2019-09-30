@@ -4,12 +4,12 @@
   "FullName": "Pets.Warburg_Afterglow",
   "ImageName": "",
   "Power": [
-    6614
+    6616
   ],
   "SetType": 8,
   "DisplayName": "Warburg_Afterglow",
   "nArchetype": -1,
-  "nID": 3267,
+  "nID": 3268,
   "SubName": "Trick Arrow",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6614,
-      "PowerSetID": 3267,
+      "PowerIndex": 6616,
+      "PowerSetID": 3268,
       "StaticIndex": 1785,
       "NGroupMembership": [],
       "FullName": "Pets.Warburg_Afterglow.Aftereffects",

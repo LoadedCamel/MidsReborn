@@ -4,12 +4,12 @@
   "FullName": "Pets.Experimentation_Corrosive_Vial",
   "ImageName": "",
   "Power": [
-    6266
+    6268
   ],
   "SetType": 8,
   "DisplayName": "Experimentation",
   "nArchetype": -1,
-  "nID": 3085,
+  "nID": 3086,
   "SubName": "Experimentation",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6266,
-      "PowerSetID": 3085,
+      "PowerIndex": 6268,
+      "PowerSetID": 3086,
       "StaticIndex": 9589,
       "NGroupMembership": [],
       "FullName": "Pets.Experimentation_Corrosive_Vial.Corrosive_Vial_Splat",

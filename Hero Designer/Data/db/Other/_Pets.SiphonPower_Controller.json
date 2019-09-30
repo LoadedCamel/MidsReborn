@@ -4,12 +4,12 @@
   "FullName": "Pets.SiphonPower_Controller",
   "ImageName": "",
   "Power": [
-    6461
+    6463
   ],
   "SetType": 8,
   "DisplayName": "Siphon Power",
   "nArchetype": -1,
-  "nID": 3209,
+  "nID": 3210,
   "SubName": "Kinetics",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6461,
-      "PowerSetID": 3209,
+      "PowerIndex": 6463,
+      "PowerSetID": 3210,
       "StaticIndex": 1713,
       "NGroupMembership": [],
       "FullName": "Pets.SiphonPower_Controller.SiphonPower",

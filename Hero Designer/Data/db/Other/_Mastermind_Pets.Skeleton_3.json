@@ -4,11 +4,11 @@
   "FullName": "Mastermind_Pets.Skeleton_3",
   "ImageName": "",
   "Power": [
-    5948,
-    5949,
     5950,
     5951,
-    5952
+    5952,
+    5953,
+    5954
   ],
   "SetType": 8,
   "DisplayName": "Skeleton Warrior",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 2.87,
       "ToggleCost": 6.76,
-      "PowerIndex": 5948,
+      "PowerIndex": 5950,
       "PowerSetID": 2970,
       "StaticIndex": 1287,
       "NGroupMembership": [],
@@ -276,7 +276,7 @@
     {
       "CastTimeReal": 2.87,
       "ToggleCost": 5.2,
-      "PowerIndex": 5949,
+      "PowerIndex": 5951,
       "PowerSetID": 2970,
       "PowerSetIndex": 1,
       "StaticIndex": 1289,
@@ -488,7 +488,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 4.16,
-      "PowerIndex": 5950,
+      "PowerIndex": 5952,
       "PowerSetID": 2970,
       "PowerSetIndex": 2,
       "StaticIndex": 1291,
@@ -627,7 +627,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 7.8,
-      "PowerIndex": 5951,
+      "PowerIndex": 5953,
       "PowerSetID": 2970,
       "PowerSetIndex": 3,
       "StaticIndex": 1293,
@@ -837,7 +837,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 2.6,
-      "PowerIndex": 5952,
+      "PowerIndex": 5954,
       "PowerSetID": 2970,
       "PowerSetIndex": 4,
       "StaticIndex": 1294,

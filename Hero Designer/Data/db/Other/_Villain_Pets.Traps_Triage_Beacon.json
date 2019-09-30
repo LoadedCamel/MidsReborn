@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Traps_Triage_Beacon",
   "ImageName": "",
   "Power": [
-    10248
+    10250
   ],
   "SetType": 8,
   "DisplayName": "Triage Beacon",
   "nArchetype": -1,
-  "nID": 3554,
+  "nID": 3555,
   "SubName": "Traps",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10248,
-      "PowerSetID": 3554,
+      "PowerIndex": 10250,
+      "PowerSetID": 3555,
       "StaticIndex": 3180,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Traps_Triage_Beacon.Triage_Beacon",

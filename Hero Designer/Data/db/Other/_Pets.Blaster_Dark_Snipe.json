@@ -4,13 +4,13 @@
   "FullName": "Pets.Blaster_Dark_Snipe",
   "ImageName": "",
   "Power": [
-    6125,
-    6126
+    6127,
+    6128
   ],
   "SetType": 8,
   "DisplayName": "Dark Blast",
   "nArchetype": -1,
-  "nID": 3061,
+  "nID": 3062,
   "SubName": "Dark Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
     {
       "CastTimeReal": 4.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6125,
-      "PowerSetID": 3061,
+      "PowerIndex": 6127,
+      "PowerSetID": 3062,
       "StaticIndex": 9553,
       "NGroupMembership": [],
       "FullName": "Pets.Blaster_Dark_Snipe.Moonbeam_Normal",
@@ -524,8 +524,8 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6126,
-      "PowerSetID": 3061,
+      "PowerIndex": 6128,
+      "PowerSetID": 3062,
       "PowerSetIndex": 1,
       "StaticIndex": 9554,
       "NGroupMembership": [],

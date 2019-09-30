@@ -4,12 +4,12 @@
   "FullName": "Pets.Tech_Lab_Buff_Acc",
   "ImageName": "",
   "Power": [
-    6490
+    6492
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
   "nArchetype": -1,
-  "nID": 3227,
+  "nID": 3229,
   "SubName": "Lab Equipment",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6490,
-      "PowerSetID": 3227,
+      "PowerIndex": 6492,
+      "PowerSetID": 3229,
       "StaticIndex": 1727,
       "NGroupMembership": [],
       "FullName": "Pets.Tech_Lab_Buff_Acc.Keen_Sight",
