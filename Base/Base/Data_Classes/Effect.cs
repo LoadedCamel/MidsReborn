@@ -206,7 +206,7 @@ namespace Base.Data_Classes
             }
         }
 
-        public bool InherentSpecial => SpecialCase == Enums.eSpecialCase.Assassination || SpecialCase == Enums.eSpecialCase.Hidden || (SpecialCase == Enums.eSpecialCase.Containment || SpecialCase == Enums.eSpecialCase.CriticalHit) || SpecialCase == Enums.eSpecialCase.Domination || SpecialCase == Enums.eSpecialCase.Scourge;
+        public bool InherentSpecial => SpecialCase == Enums.eSpecialCase.Assassination || SpecialCase == Enums.eSpecialCase.Hidden || (SpecialCase == Enums.eSpecialCase.Containment || SpecialCase == Enums.eSpecialCase.CriticalHit) || SpecialCase == Enums.eSpecialCase.Domination || SpecialCase == Enums.eSpecialCase.Scourge || SpecialCase == Enums.eSpecialCase.Supremacy;
 
         public float BaseProbability { get; set; }
 
@@ -1469,6 +1469,66 @@ namespace Base.Data_Classes
                     break;
                 case Enums.eSpecialCase.KickBuff:
                     if (MidsContext.Character.KickBuff)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Supremacy:
+                    if (MidsContext.Character.Supremacy)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.TrainBeasts:
+                    if (MidsContext.Character.TrainBeasts)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.TameBeasts:
+                    if (MidsContext.Character.TameBeasts)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.EnchantDemon:
+                    if (MidsContext.Character.EnchantDemon)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.AbyssalEmpowerment:
+                    if (MidsContext.Character.AbyssalEmpowerment)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.EquipMercenary:
+                    if (MidsContext.Character.EquipMercenary)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.TacticalUpgrade:
+                    if (MidsContext.Character.TacticalUpgrade)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.EnchantUndead:
+                    if (MidsContext.Character.EnchantUndead)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.DarkEmpowerment:
+                    if (MidsContext.Character.DarkEmpowerment)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.TrainNinjas:
+                    if (MidsContext.Character.TrainNinjas)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.KujiInZen:
+                    if (MidsContext.Character.KujiInZen)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.EquipRobot:
+                    if (MidsContext.Character.TrainBeasts)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.UpgradeRobot:
+                    if (MidsContext.Character.TrainBeasts)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.EquipThugs:
+                    if (MidsContext.Character.EquipThugs)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.UpgradeEquipment:
+                    if (MidsContext.Character.UpgradeEquipment)
                         return true;
                     break;
             }

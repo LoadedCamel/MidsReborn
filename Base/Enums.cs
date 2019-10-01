@@ -1196,7 +1196,22 @@ public static class Enums
         NotDefensiveAdaptation,
         NotDefensiveNorOffensiveAdaptation,
         BoxingBuff,
-        KickBuff
+        KickBuff,
+        Supremacy,
+        TrainBeasts,
+        TameBeasts,
+        EnchantDemon,
+        AbyssalEmpowerment,
+        EquipMercenary,
+        TacticalUpgrade,
+        EnchantUndead,
+        DarkEmpowerment,
+        TrainNinjas,
+        KujiInZen,
+        EquipRobot,
+        UpgradeRobot,
+        EquipThugs,
+        UpgradeEquipment
     }
 
     public enum eDDStyle
