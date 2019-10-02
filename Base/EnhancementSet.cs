@@ -112,6 +112,7 @@ public class EnhancementSet
         Enhancements = new int[0];
         Image = string.Empty;
         InitBonus();
+        InitBonusPvP();
         LevelMin = 0;
         LevelMax = 52;
     }

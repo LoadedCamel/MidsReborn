@@ -279,7 +279,7 @@ namespace Hero_Designer
                 if (mySet.Bonus[index1].Index.Length > 0)
                     str1 = str1 + RTF.Crlf() + "   " + RTF.Italic(mySet.GetEffectString(index1, false));
                 if (mySet.Bonus[index1].PvMode == Enums.ePvX.PvP)
-                    str1 += "(PvP)";
+                    str1 += " (PvP)";
                 if (mySet.Bonus[index1].Index.Length > 0)
                     str1 += RTF.Crlf();
             }
@@ -814,7 +814,7 @@ namespace Hero_Designer
                 if (isBonus())
                 {
                     var BonusPower = lvBonusList.SelectedItems[0].Text;
-                    var BonusMode = BonusPower.Contains("(PVP Only)") ? Enums.ePvX.PvP : Enums.ePvX.PvE;
+                    var BonusMode = BonusPower.Contains("(PVP Only)") ? Enums.ePvX.PvP : Enums.ePvX.Any;
                     mySet.Bonus[BonusID()].PvMode = BonusMode;
                     mySet.Bonus[BonusID()].Name = (string[]) Utils.CopyArray(mySet.Bonus[BonusID()].Name, new string[mySet.Bonus[BonusID()].Name.Length + 1]);
                     mySet.Bonus[BonusID()].Index = (int[]) Utils.CopyArray(mySet.Bonus[BonusID()].Index, new int[mySet.Bonus[BonusID()].Index.Length + 1]);

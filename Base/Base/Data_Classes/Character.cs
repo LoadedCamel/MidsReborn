@@ -881,7 +881,7 @@ namespace Base.Data_Classes
                 if (string.IsNullOrEmpty(effectString))
                     continue;
                 if (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP)
-                    effectString += "(PvP)";
+                    effectString += " (PvP)";
                 if (num >= enhancementSet.Bonus[index].Slotted & (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any))
                     section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 0);
                 else if (power == null)

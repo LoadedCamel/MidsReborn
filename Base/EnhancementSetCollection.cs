@@ -28,7 +28,7 @@ public class EnhancementSetCollection : List<EnhancementSet>
             if (string.IsNullOrEmpty(effectString))
                 continue;
             if (DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].PvMode == Enums.ePvX.PvP)
-                effectString += "(PvP)";
+                effectString += " (PvP)";
             if (enhCount >= DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].Slotted & (!MidsContext.Config.Inc.DisablePvE & DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].PvMode == Enums.ePvX.PvE | MidsContext.Config.Inc.DisablePvE & DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].PvMode == Enums.ePvX.PvP | DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].PvMode == Enums.ePvX.Any))
                 str3 = str3 + RTF.Crlf() + RTF.Bold(RTF.Color(RTF.ElementID.Text) + "  " + DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].Slotted + " Slotted: ") + RTF.Color(RTF.ElementID.Invention) + effectString + RTF.Color(RTF.ElementID.Text);
             else
