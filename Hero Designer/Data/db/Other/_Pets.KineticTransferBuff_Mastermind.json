@@ -9,7 +9,7 @@
   "SetType": 8,
   "DisplayName": "Kinetic Transfer",
   "nArchetype": -1,
-  "nID": 3119,
+  "nID": 3120,
   "SubName": "",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 6320,
-      "PowerSetID": 3119,
+      "PowerSetID": 3120,
       "StaticIndex": 10770,
       "NGroupMembership": [],
       "FullName": "Pets.KineticTransferBuff_Mastermind.KineticTransfer",

@@ -156,7 +156,7 @@ namespace Hero_Designer
             if (MainModule.MidsController.Toon == null)
                 return;
             lblDate.Text = Strings.Format(DatabaseAPI.Database.Date, "dd/MM/yyyy");
-            UdIssue.Value = new decimal(DatabaseAPI.Database.Issue);
+            UdIssue.Value = Convert.ToDecimal(DatabaseAPI.Database.Issue);
             lblCountAT.Text = Conversions.ToString(DatabaseAPI.Database.Classes.Length);
             lblCountEnh.Text = Strings.Format(DatabaseAPI.Database.Enhancements.Length, "#,###,##0");
             lblCountIOSet.Text = Strings.Format(DatabaseAPI.Database.EnhancementSets.Count, "#,###,##0");
@@ -189,7 +189,7 @@ namespace Hero_Designer
 
         void txtDBVer_TextChanged(object sender, EventArgs e)
         {
-            float num = (float)Conversion.Val(txtDBVer.Text);
+            float num = Convert.ToSingle(txtDBVer.Text);
             if (num < 1.0)
                 num = 1f;
             DatabaseAPI.Database.Version = num;
@@ -204,7 +204,7 @@ namespace Hero_Designer
 
         void udIssue_ValueChanged(object sender, EventArgs e)
         {
-            if (!MainModule.MidsController.IsAppInitialized | !Initialized)
+            if (!MainModule.MidsController.IsAppInitialized || !Initialized)
                 return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
         }

@@ -4,13 +4,13 @@
   "FullName": "Villain_Pets.Creeper_Entangle",
   "ImageName": "",
   "Power": [
-    10041,
-    10042
+    10047,
+    10048
   ],
   "SetType": 8,
   "DisplayName": "Creeper Patch",
   "nArchetype": -1,
-  "nID": 3487,
+  "nID": 3488,
   "SubName": "Plant Control",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10041,
-      "PowerSetID": 3487,
+      "PowerIndex": 10047,
+      "PowerSetID": 3488,
       "StaticIndex": 3071,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Creeper_Entangle.Entangle",
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.05856013,
-          "MagPercent": 3.05856013,
+          "Mag": 6.25615025,
+          "MagPercent": 6.25615025,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -121,8 +121,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.05856013,
-          "MagPercent": 3.05856013,
+          "Mag": 6.25615025,
+          "MagPercent": 6.25615025,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -416,8 +416,8 @@
       "AoEModifier": 2.2
     },
     {
-      "PowerIndex": 10042,
-      "PowerSetID": 3487,
+      "PowerIndex": 10048,
+      "PowerSetID": 3488,
       "PowerSetIndex": 1,
       "StaticIndex": 3072,
       "NGroupMembership": [],

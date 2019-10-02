@@ -9,7 +9,7 @@
   "SetType": 8,
   "DisplayName": "Rain of Arrows",
   "nArchetype": -1,
-  "nID": 3183,
+  "nID": 3187,
   "SubName": "Archery",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 6431,
-      "PowerSetID": 3183,
+      "PowerSetID": 3187,
       "StaticIndex": 1696,
       "NGroupMembership": [],
       "FullName": "Pets.RainofArrows_Visual.RainofArrows",

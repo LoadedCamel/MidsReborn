@@ -1,5 +1,7 @@
 
+using System;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace Hero_Designer
 {
@@ -88,6 +90,8 @@ namespace Hero_Designer
             0,
             0,
             0});
+            this.udIssue.KeyPress += new KeyPressEventHandler(udIssue_KeyPress);
+            this.udIssue.ValueChanged += new EventHandler(udIssue_ValueChanged);
             // 
             // Label1
             // 

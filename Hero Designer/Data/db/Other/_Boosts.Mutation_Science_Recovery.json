@@ -9,7 +9,7 @@
   "SetType": 10,
   "DisplayName": "Mutation Science Endurance",
   "nArchetype": -1,
-  "nID": 2122,
+  "nID": 2123,
   "SubName": "Genetic Alteration (Mutation, Science)",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 2373,
-      "PowerSetID": 2122,
+      "PowerSetID": 2123,
       "StaticIndex": 8311,
       "NGroupMembership": [],
       "FullName": "Boosts.Mutation_Science_Recovery.Mutation_Science_Recovery",

@@ -4,15 +4,15 @@
   "FullName": "Villain_Pets.OilSlickBurn_Corruptor",
   "ImageName": "",
   "Power": [
-    10150,
-    10151,
-    10152,
-    10153
+    10156,
+    10157,
+    10158,
+    10159
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick Fire",
   "nArchetype": -1,
-  "nID": 3521,
+  "nID": 3522,
   "SubName": "Trick Arrow",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,8 +24,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10150,
-      "PowerSetID": 3521,
+      "PowerIndex": 10156,
+      "PowerSetID": 3522,
       "StaticIndex": 4093,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.OilSlickBurn_Corruptor.Fire",
@@ -79,8 +79,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.83513594,
-          "MagPercent": 1.83513594,
+          "Mag": 3.33661175,
+          "MagPercent": 3.33661175,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -111,8 +111,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.83513594,
-          "MagPercent": 1.83513594,
+          "Mag": 3.33661175,
+          "MagPercent": 3.33661175,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -147,8 +147,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.83513594,
-          "MagPercent": 1.83513594,
+          "Mag": 3.33661175,
+          "MagPercent": 3.33661175,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -186,8 +186,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10151,
-      "PowerSetID": 3521,
+      "PowerIndex": 10157,
+      "PowerSetID": 3522,
       "PowerSetIndex": 1,
       "StaticIndex": 4094,
       "NGroupMembership": [],
@@ -274,8 +274,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10152,
-      "PowerSetID": 3521,
+      "PowerIndex": 10158,
+      "PowerSetID": 3522,
       "PowerSetIndex": 2,
       "StaticIndex": 4096,
       "NGroupMembership": [],
@@ -358,8 +358,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10153,
-      "PowerSetID": 3521,
+      "PowerIndex": 10159,
+      "PowerSetID": 3522,
       "PowerSetIndex": 3,
       "StaticIndex": 4095,
       "NGroupMembership": [],

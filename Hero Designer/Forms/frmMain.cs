@@ -4182,7 +4182,7 @@ namespace Hero_Designer
             if (MidsContext.Config.MasterMode)
             {
                 Text = str2 + " (Master Mode) v" + MidsContext.AppAssemblyVersion + " (DB: I" + DatabaseAPI.Database.Issue + " - Updated: " +
-                       DatabaseAPI.Database.Date.ToString(" dd / MMM / yyyy @ hh:mm tt") + ")";
+                       DatabaseAPI.Database.Date.ToString(" MMM / dd / yyyy @ hh:mm tt") + ")";
             }
             else
             {

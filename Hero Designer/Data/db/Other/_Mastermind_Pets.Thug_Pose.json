@@ -10,7 +10,7 @@
   "SetType": 8,
   "DisplayName": "Thug Posse",
   "nArchetype": -1,
-  "nID": 2990,
+  "nID": 2993,
   "SubName": "Thugs",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "PowerIndex": 6013,
-      "PowerSetID": 2990,
+      "PowerSetID": 2993,
       "StaticIndex": 1419,
       "NGroupMembership": [],
       "FullName": "Mastermind_Pets.Thug_Pose.Resistance",
@@ -175,7 +175,7 @@
     },
     {
       "PowerIndex": 6014,
-      "PowerSetID": 2990,
+      "PowerSetID": 2993,
       "PowerSetIndex": 1,
       "StaticIndex": 1420,
       "NGroupMembership": [],

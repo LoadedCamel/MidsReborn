@@ -9,7 +9,7 @@
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 2",
   "nArchetype": -1,
-  "nID": 3054,
+  "nID": 3055,
   "SubName": "Chain Jolt Jump 2",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 6175,
-      "PowerSetID": 3054,
+      "PowerSetID": 3055,
       "StaticIndex": 4414,
       "NGroupMembership": [],
       "FullName": "Pets.Chain_Jolt_Gremlin_Jump2.Charge",

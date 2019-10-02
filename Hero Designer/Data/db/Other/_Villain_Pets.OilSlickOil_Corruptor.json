@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.OilSlickOil_Corruptor",
   "ImageName": "",
   "Power": [
-    10154
+    10160
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick",
   "nArchetype": -1,
-  "nID": 3520,
+  "nID": 3521,
   "SubName": "Trick Arrow",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10154,
-      "PowerSetID": 3520,
+      "PowerIndex": 10160,
+      "PowerSetID": 3521,
       "StaticIndex": 4097,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.OilSlickOil_Corruptor.Oil_Slick",
@@ -218,8 +218,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.175,
+          "MagPercent": -17.5,
           "Duration": 0.45,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

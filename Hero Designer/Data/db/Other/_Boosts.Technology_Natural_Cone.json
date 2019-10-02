@@ -9,7 +9,7 @@
   "SetType": 10,
   "DisplayName": "Technology Natural Range",
   "nArchetype": -1,
-  "nID": 2542,
+  "nID": 2543,
   "SubName": "Gadget (Technology, Natural)",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 2763,
-      "PowerSetID": 2542,
+      "PowerSetID": 2543,
       "StaticIndex": 8599,
       "NGroupMembership": [],
       "FullName": "Boosts.Technology_Natural_Cone.Technology_Natural_Cone",

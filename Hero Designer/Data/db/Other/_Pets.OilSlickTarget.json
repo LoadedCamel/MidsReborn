@@ -12,7 +12,7 @@
   "SetType": 8,
   "DisplayName": "Oil Slick",
   "nArchetype": -1,
-  "nID": 3157,
+  "nID": 3158,
   "SubName": "Trick Arrow",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -25,7 +25,7 @@
   "Powers": [
     {
       "PowerIndex": 6376,
-      "PowerSetID": 3157,
+      "PowerSetID": 3158,
       "StaticIndex": 1669,
       "NGroupMembership": [],
       "FullName": "Pets.OilSlickTarget.Ignited_Oil",
@@ -142,7 +142,7 @@
     },
     {
       "PowerIndex": 6377,
-      "PowerSetID": 3157,
+      "PowerSetID": 3158,
       "PowerSetIndex": 1,
       "StaticIndex": 1670,
       "NGroupMembership": [],
@@ -230,7 +230,7 @@
     },
     {
       "PowerIndex": 6378,
-      "PowerSetID": 3157,
+      "PowerSetID": 3158,
       "PowerSetIndex": 2,
       "StaticIndex": 1671,
       "NGroupMembership": [],
@@ -1568,7 +1568,7 @@
     },
     {
       "PowerIndex": 6379,
-      "PowerSetID": 3157,
+      "PowerSetID": 3158,
       "PowerSetIndex": 3,
       "StaticIndex": 1672,
       "NGroupMembership": [],

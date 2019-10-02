@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Thorntrops",
   "ImageName": "",
   "Power": [
-    10208
+    10214
   ],
   "SetType": 8,
   "DisplayName": "Thorntrops",
   "nArchetype": -1,
-  "nID": 3550,
+  "nID": 3551,
   "SubName": "Devices",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10208,
-      "PowerSetID": 3550,
+      "PowerIndex": 10214,
+      "PowerSetID": 3551,
       "StaticIndex": 3148,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Thorntrops.Thorntrops",
@@ -113,8 +113,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.52928007,
-          "MagPercent": 1.52928007,
+          "Mag": 2.78051,
+          "MagPercent": 2.78051,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

@@ -10,7 +10,7 @@
   "SetType": 8,
   "DisplayName": "Whirlpool",
   "nArchetype": -1,
-  "nID": 3276,
+  "nID": 3279,
   "SubName": "Water Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "PowerIndex": 6632,
-      "PowerSetID": 3276,
+      "PowerSetID": 3279,
       "StaticIndex": 10651,
       "NGroupMembership": [],
       "FullName": "Pets.Whirlpool_Sentinel.Whirlpool",
@@ -365,7 +365,7 @@
     },
     {
       "PowerIndex": 6633,
-      "PowerSetID": 3276,
+      "PowerSetID": 3279,
       "PowerSetIndex": 1,
       "StaticIndex": 10652,
       "NGroupMembership": [],

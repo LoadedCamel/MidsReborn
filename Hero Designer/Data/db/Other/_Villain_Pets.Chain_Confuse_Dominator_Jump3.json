@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Chain_Confuse_Dominator_Jump3",
   "ImageName": "",
   "Power": [
-    9977
+    9983
   ],
   "SetType": 8,
   "DisplayName": "Chain Confuse Jump 3",
   "nArchetype": -1,
-  "nID": 3462,
+  "nID": 3463,
   "SubName": "Chain Confuse Jump 3",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 9977,
-      "PowerSetID": 3462,
+      "PowerIndex": 9983,
+      "PowerSetID": 3463,
       "StaticIndex": 4484,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Chain_Confuse_Dominator_Jump3.Charge",
@@ -92,7 +92,7 @@
           "Probability": 1.0,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 22.35,
+          "Duration": 17.8800011,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Stun",
@@ -128,7 +128,7 @@
           "Probability": 1.0,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 5.96,
+          "Duration": 4.768,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Stun",

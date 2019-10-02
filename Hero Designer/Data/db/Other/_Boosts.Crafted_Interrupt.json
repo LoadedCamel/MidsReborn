@@ -9,7 +9,7 @@
   "SetType": 10,
   "DisplayName": "Crafted Interrupt 10",
   "nArchetype": -1,
-  "nID": 1452,
+  "nID": 1453,
   "SubName": "Invention",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 1689,
-      "PowerSetID": 1452,
+      "PowerSetID": 1453,
       "StaticIndex": 7645,
       "NGroupMembership": [],
       "FullName": "Boosts.Crafted_Interrupt.Crafted_Interrupt",

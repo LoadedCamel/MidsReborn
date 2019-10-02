@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.DistortionField_Corruptor",
   "ImageName": "",
   "Power": [
-    10052
+    10058
   ],
   "SetType": 8,
   "DisplayName": "Time Manipulation",
   "nArchetype": -1,
-  "nID": 3553,
+  "nID": 3554,
   "SubName": "Time Manipulation",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10052,
-      "PowerSetID": 3553,
+      "PowerIndex": 10058,
+      "PowerSetID": 3554,
       "StaticIndex": 5814,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.DistortionField_Corruptor.Distortion_Field",
@@ -322,7 +322,7 @@
           "Probability": 0.02,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 5.96,
+          "Duration": 4.768,
           "BaseProbability": 0.02,
           "Reward": "",
           "EffectId": "Sleep",
@@ -401,7 +401,7 @@
           "Probability": 0.03,
           "Mag": 3.0,
           "MagPercent": 3.0,
-          "Duration": 5.96,
+          "Duration": 4.768,
           "BaseProbability": 0.03,
           "Reward": "",
           "EffectId": "Sleep",

@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Dominating_Grasp",
   "ImageName": "",
   "Power": [
-    10054,
-    10055,
-    10056
+    10060,
+    10061,
+    10062
   ],
   "SetType": 8,
   "DisplayName": "Dominating Grasp",
   "nArchetype": -1,
-  "nID": 3491,
+  "nID": 3492,
   "SubName": "Dominating Grasp",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10054,
-      "PowerSetID": 3491,
+      "PowerIndex": 10060,
+      "PowerSetID": 3492,
       "StaticIndex": 9024,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Dominating_Grasp.Blazing_Aura",
@@ -75,8 +75,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.11712027,
-          "MagPercent": 6.11712027,
+          "Mag": 11.12204,
+          "MagPercent": 11.12204,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -148,8 +148,8 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 10055,
-      "PowerSetID": 3491,
+      "PowerIndex": 10061,
+      "PowerSetID": 3492,
       "PowerSetIndex": 1,
       "StaticIndex": 9025,
       "NGroupMembership": [],
@@ -198,8 +198,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -20.0793247,
-          "MagPercent": -20.0793247,
+          "Mag": -30.1189747,
+          "MagPercent": -30.1189747,
           "Duration": 999999.0,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -232,8 +232,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10056,
-      "PowerSetID": 3491,
+      "PowerIndex": 10062,
+      "PowerSetID": 3492,
       "PowerSetIndex": 2,
       "StaticIndex": 9026,
       "NGroupMembership": [],

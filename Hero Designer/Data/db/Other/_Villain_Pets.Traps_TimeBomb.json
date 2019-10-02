@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Traps_TimeBomb",
   "ImageName": "",
   "Power": [
-    10247,
-    10248,
-    10249
+    10253,
+    10254,
+    10255
   ],
   "SetType": 8,
   "DisplayName": "Bomb",
   "nArchetype": -1,
-  "nID": 3458,
+  "nID": 3460,
   "SubName": "Traps",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,8 +23,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10247,
-      "PowerSetID": 3458,
+      "PowerIndex": 10253,
+      "PowerSetID": 3460,
       "StaticIndex": 3177,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Traps_TimeBomb.Time_Bomb",
@@ -85,8 +85,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 91.7568,
-          "MagPercent": 91.7568,
+          "Mag": 166.8306,
+          "MagPercent": 166.8306,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -117,8 +117,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 76.464,
-          "MagPercent": 76.464,
+          "Mag": 139.0255,
+          "MagPercent": 139.0255,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -307,8 +307,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10248,
-      "PowerSetID": 3458,
+      "PowerIndex": 10254,
+      "PowerSetID": 3460,
       "PowerSetIndex": 1,
       "StaticIndex": 3178,
       "NGroupMembership": [],
@@ -1547,8 +1547,8 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10249,
-      "PowerSetID": 3458,
+      "PowerIndex": 10255,
+      "PowerSetID": 3460,
       "PowerSetIndex": 2,
       "StaticIndex": 3179,
       "NGroupMembership": [],

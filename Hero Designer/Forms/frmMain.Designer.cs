@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using midsControls;
 
@@ -1963,9 +1964,9 @@ namespace Hero_Designer
             this.ibPopup.TextOn = "Pop-Up: On";
             this.ibPopup.Toggle = true;
             this.ibPopup.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibPopup_ButtonClicked);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1056, 752);
+            this.ClientSize = new System.Drawing.Size(1156, 772);
             this.Controls.Add(this.heroVillain);
             this.Controls.Add(this.petsButton);
             this.Controls.Add(this.tempPowersButton);
@@ -2027,7 +2028,8 @@ namespace Hero_Designer
             this.MainMenuStrip = this.MenuBar;
 
             this.MinimumSize = new System.Drawing.Size(640, 480);
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Location = new Point(300, 50);
             this.Text = "Hero Designer";
             this.MenuBar.ResumeLayout(false);
             this.MenuBar.PerformLayout();

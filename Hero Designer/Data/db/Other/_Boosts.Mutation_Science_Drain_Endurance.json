@@ -9,7 +9,7 @@
   "SetType": 10,
   "DisplayName": "Mutation Science Endurance",
   "nArchetype": -1,
-  "nID": 2123,
+  "nID": 2122,
   "SubName": "Genetic Alteration (Mutation, Science)",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "PowerIndex": 2360,
-      "PowerSetID": 2123,
+      "PowerSetID": 2122,
       "StaticIndex": 8298,
       "NGroupMembership": [],
       "FullName": "Boosts.Mutation_Science_Drain_Endurance.Mutation_Science_Drain_Endurance",

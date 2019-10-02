@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Lightning_Rod_Brute",
   "ImageName": "",
   "Power": [
-    10109
+    10115
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
   "nArchetype": -1,
-  "nID": 3501,
+  "nID": 3502,
   "SubName": "Electric Melee",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10109,
-      "PowerSetID": 3501,
+      "PowerIndex": 10115,
+      "PowerSetID": 3502,
       "StaticIndex": 4112,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Lightning_Rod_Brute.Lightning_Rod",
@@ -83,8 +83,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 51.99552,
-          "MagPercent": 51.99552,
+          "Mag": 94.53734,
+          "MagPercent": 94.53734,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -115,8 +115,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 21.40992,
-          "MagPercent": 21.40992,
+          "Mag": 38.92714,
+          "MagPercent": 38.92714,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

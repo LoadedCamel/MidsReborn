@@ -9,7 +9,7 @@
   "SetType": 8,
   "DisplayName": "Lifegiving Spores",
   "nArchetype": -1,
-  "nID": 3128,
+  "nID": 3131,
   "SubName": "Nature Affinity",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 3.1,
       "PowerIndex": 6324,
-      "PowerSetID": 3128,
+      "PowerSetID": 3131,
       "StaticIndex": 9104,
       "NGroupMembership": [],
       "FullName": "Pets.Lifegiving_Spores_Controller.Lifegiving_Spores",

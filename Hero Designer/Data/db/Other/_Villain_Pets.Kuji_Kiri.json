@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Kuji_Kiri",
   "ImageName": "",
   "Power": [
-    10107
+    10113
   ],
   "SetType": 8,
   "DisplayName": "Kuji Kiri",
   "nArchetype": -1,
-  "nID": 3512,
+  "nID": 3513,
   "SubName": "Ninjas",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10107,
-      "PowerSetID": 3512,
+      "PowerIndex": 10113,
+      "PowerSetID": 3513,
       "StaticIndex": 3102,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Kuji_Kiri.Smoke_Bomb",

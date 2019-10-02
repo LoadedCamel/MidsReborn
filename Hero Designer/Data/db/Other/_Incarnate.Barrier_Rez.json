@@ -11,7 +11,7 @@
   "SetType": 11,
   "DisplayName": "Destiny",
   "nArchetype": -1,
-  "nID": 2791,
+  "nID": 2792,
   "SubName": "Incarnate",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "PowerIndex": 4594,
-      "PowerSetID": 2791,
+      "PowerSetID": 2792,
       "StaticIndex": 5005,
       "NGroupMembership": [],
       "FullName": "Incarnate.Barrier_Rez.Barrier_Rez_Single",
@@ -183,7 +183,7 @@
     },
     {
       "PowerIndex": 4595,
-      "PowerSetID": 2791,
+      "PowerSetID": 2792,
       "PowerSetIndex": 1,
       "StaticIndex": 5006,
       "NGroupMembership": [],
@@ -342,7 +342,7 @@
     },
     {
       "PowerIndex": 4596,
-      "PowerSetID": 2791,
+      "PowerSetID": 2792,
       "PowerSetIndex": 2,
       "StaticIndex": 5007,
       "NGroupMembership": [],

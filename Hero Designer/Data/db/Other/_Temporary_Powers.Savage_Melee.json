@@ -4,12 +4,12 @@
   "FullName": "Temporary_Powers.Savage_Melee",
   "ImageName": "",
   "Power": [
-    9084
+    9090
   ],
   "SetType": 7,
   "DisplayName": "Blood Frenzy",
   "nArchetype": -1,
-  "nID": 3426,
+  "nID": 3427,
   "SubName": "",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Temporary_Powers",
   "Powers": [
     {
-      "PowerIndex": 9084,
-      "PowerSetID": 3426,
+      "PowerIndex": 9090,
+      "PowerSetID": 3427,
       "StaticIndex": 10418,
       "NGroupMembership": [],
       "FullName": "Temporary_Powers.Savage_Melee.Blood_Frenzy",

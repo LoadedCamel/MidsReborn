@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Trick_Shot_Jump4",
   "ImageName": "",
   "Power": [
-    10257
+    10263
   ],
   "SetType": 8,
   "DisplayName": "Trick Shot Jump 4",
   "nArchetype": -1,
-  "nID": 3559,
+  "nID": 3560,
   "SubName": "Trick Shot Jump 4",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10257,
-      "PowerSetID": 3559,
+      "PowerIndex": 10263,
+      "PowerSetID": 3560,
       "StaticIndex": 9838,
       "NGroupMembership": [],
       "FullName": "Villain_Pets.Trick_Shot_Jump4.Bounce",
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 42.81984,
-          "MagPercent": 42.81984,
+          "Mag": 87.5861,
+          "MagPercent": 87.5861,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
