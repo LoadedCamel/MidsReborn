@@ -15482,7 +15482,7 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Bio_Organic_Armor",
-    "Hash": 1693475292,
+    "Hash": -390730012,
     "Length": 269363
   },
   {
@@ -15656,7 +15656,7 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Staff_Fighting",
-    "Hash": -1700393831,
+    "Hash": 1252392237,
     "Length": 299585
   },
   {
@@ -17294,20 +17294,20 @@
   {
     "Archetype": "",
     "Fullname": "Inherent.Savage_Melee",
-    "Hash": 36813972,
+    "Hash": 329188884,
     "Length": 6225
   },
   {
     "Archetype": "",
     "Fullname": "Inherent.Inherent",
-    "Hash": -1397722941,
-    "Length": 1137105
+    "Hash": 46516188,
+    "Length": 1136309
   },
   {
     "Archetype": "",
     "Fullname": "Inherent.Fitness",
-    "Hash": -1407636227,
-    "Length": 16901
+    "Hash": 1976429293,
+    "Length": 16897
   },
   {
     "Archetype": "",
@@ -18002,8 +18002,8 @@
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Beast_Mastery",
-    "Hash": -754558822,
-    "Length": 115887
+    "Hash": 1701797105,
+    "Length": 110609
   },
   {
     "Archetype": "Class_Mastermind",
@@ -18026,8 +18026,8 @@
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Summon.Ninjas",
-    "Hash": -212821859,
-    "Length": 65599
+    "Hash": -1453163487,
+    "Length": 72614
   },
   {
     "Archetype": "Class_Mastermind",
@@ -19790,8 +19790,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Bio_Organic_Armor",
-    "Hash": -719108476,
-    "Length": 258771
+    "Hash": -680037477,
+    "Length": 258409
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19958,8 +19958,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Staff_Fighting",
-    "Hash": 1794891520,
-    "Length": 298612
+    "Hash": 453097670,
+    "Length": 298189
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19982,8 +19982,8 @@
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Bio_Organic_Armor",
-    "Hash": -691359569,
-    "Length": 181713
+    "Hash": -412761470,
+    "Length": 181351
   },
   {
     "Archetype": "Class_Sentinel",
@@ -20144,8 +20144,8 @@
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Bio_Organic_Armor",
-    "Hash": -1777857631,
-    "Length": 243459
+    "Hash": -691736644,
+    "Length": 243097
   },
   {
     "Archetype": "Class_Stalker",
@@ -20324,8 +20324,8 @@
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Bio_Organic_Armor",
-    "Hash": -660032598,
-    "Length": 269624
+    "Hash": 215650639,
+    "Length": 269262
   },
   {
     "Archetype": "Class_Tanker",
@@ -20486,8 +20486,8 @@
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Staff_Fighting",
-    "Hash": 1533011639,
-    "Length": 308147
+    "Hash": -1622007581,
+    "Length": 307724
   },
   {
     "Archetype": "Class_Tanker",

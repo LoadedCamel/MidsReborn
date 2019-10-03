@@ -24,7 +24,7 @@
   "GroupName": "Inherent",
   "Powers": [
     {
-      "LocationIndex": 17,
+      "LocationIndex": 2,
       "PowerIndex": 5432,
       "PowerSetID": 2884,
       "StaticIndex": 2797,
@@ -186,10 +186,10 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 17
+      "DisplayLocation": 2
     },
     {
-      "LocationIndex": 19,
+      "LocationIndex": 10,
       "PowerIndex": 5433,
       "PowerSetID": 2884,
       "PowerSetIndex": 1,
@@ -351,10 +351,10 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 19
+      "DisplayLocation": 10
     },
     {
-      "LocationIndex": 18,
+      "LocationIndex": 6,
       "PowerIndex": 5434,
       "PowerSetID": 2884,
       "PowerSetIndex": 2,
@@ -514,10 +514,10 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 18
+      "DisplayLocation": 6
     },
     {
-      "LocationIndex": 20,
+      "LocationIndex": 14,
       "PowerIndex": 5435,
       "PowerSetID": 2884,
       "PowerSetIndex": 3,
@@ -645,7 +645,7 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 20
+      "DisplayLocation": 14
     }
   ]
 }

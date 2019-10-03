@@ -34,7 +34,7 @@
     {
       "CastTimeReal": 0.63,
       "IsEpic": true,
-      "LocationIndex": 10,
+      "LocationIndex": 24,
       "PowerIndex": 3090,
       "PowerSetID": 2609,
       "StaticIndex": 8658,
@@ -380,12 +380,12 @@
       "FullSetName": "Brute_Melee.Staff_Fighting",
       "CastTime": 0.792,
       "AoEModifier": 1.0,
-      "DisplayLocation": 10
+      "DisplayLocation": 24
     },
     {
       "CastTimeReal": 0.63,
       "IsEpic": true,
-      "LocationIndex": 32,
+      "LocationIndex": 28,
       "PowerIndex": 3091,
       "PowerSetID": 2609,
       "PowerSetIndex": 1,
@@ -731,12 +731,12 @@
       "FullSetName": "Brute_Melee.Staff_Fighting",
       "CastTime": 0.792,
       "AoEModifier": 1.0,
-      "DisplayLocation": 32
+      "DisplayLocation": 28
     },
     {
       "CastTimeReal": 0.63,
       "IsEpic": true,
-      "LocationIndex": 33,
+      "LocationIndex": 32,
       "PowerIndex": 3092,
       "PowerSetID": 2609,
       "PowerSetIndex": 2,
@@ -1082,7 +1082,7 @@
       "FullSetName": "Brute_Melee.Staff_Fighting",
       "CastTime": 0.792,
       "AoEModifier": 1.0,
-      "DisplayLocation": 33
+      "DisplayLocation": 32
     },
     {
       "CastTimeReal": 1.0,

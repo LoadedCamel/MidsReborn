@@ -34,7 +34,7 @@
     {
       "CastTimeReal": 1.0,
       "IsEpic": true,
-      "LocationIndex": 11,
+      "LocationIndex": 25,
       "PowerIndex": 2817,
       "PowerSetID": 2580,
       "StaticIndex": 9144,
@@ -469,12 +469,12 @@
       "FullSetName": "Brute_Defense.Bio_Organic_Armor",
       "CastTime": 1.188,
       "AoEModifier": 1.0,
-      "DisplayLocation": 11
+      "DisplayLocation": 25
     },
     {
       "CastTimeReal": 0.67,
       "IsEpic": true,
-      "LocationIndex": 34,
+      "LocationIndex": 29,
       "PowerIndex": 2818,
       "PowerSetID": 2580,
       "PowerSetIndex": 1,
@@ -607,12 +607,12 @@
       "FullSetName": "Brute_Defense.Bio_Organic_Armor",
       "CastTime": 0.924,
       "AoEModifier": 1.0,
-      "DisplayLocation": 34
+      "DisplayLocation": 29
     },
     {
       "CastTimeReal": 0.67,
       "IsEpic": true,
-      "LocationIndex": 35,
+      "LocationIndex": 33,
       "PowerIndex": 2819,
       "PowerSetID": 2580,
       "PowerSetIndex": 2,
@@ -1047,7 +1047,7 @@
       "FullSetName": "Brute_Defense.Bio_Organic_Armor",
       "CastTime": 0.924,
       "AoEModifier": 1.0,
-      "DisplayLocation": 35
+      "DisplayLocation": 33
     },
     {
       "CastTimeReal": 0.67,

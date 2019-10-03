@@ -297,9 +297,6 @@ namespace Hero_Designer
                 }
 
                 Size = new Size(width1, height1);
-                tsView2Col.Checked = MidsContext.Config.Columns == 2;
-                tsView3Col.Checked = MidsContext.Config.Columns == 3;
-                tsView4Col.Checked = MidsContext.Config.Columns == 4;
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 tsIODefault.Text = "Default (" + (MidsContext.Config.I9.DefaultIOLevel + 1) + ")";
@@ -3937,9 +3934,6 @@ namespace Hero_Designer
             DoResize();
             DoRedraw();
             SetFormWidth();
-            tsView4Col.Checked = columns == 4;
-            tsView3Col.Checked = columns == 3;
-            tsView2Col.Checked = columns == 2;
         }
 
         void SetDamageMenuCheckMarks()

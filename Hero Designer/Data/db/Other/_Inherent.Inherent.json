@@ -188,7 +188,7 @@
     {
       "CastTimeReal": 1.67,
       "IsEpic": true,
-      "LocationIndex": 15,
+      "LocationIndex": 28,
       "PowerIndex": 5436,
       "PowerSetID": 2883,
       "StaticIndex": 1027,
@@ -418,13 +418,13 @@
       "CastTime": 1.848,
       "Slottable": true,
       "AoEModifier": 3.25,
-      "DisplayLocation": 15
+      "DisplayLocation": 28
     },
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 15.6,
       "IsEpic": true,
-      "LocationIndex": 13,
+      "LocationIndex": 24,
       "PowerIndex": 5437,
       "PowerSetID": 2883,
       "PowerSetIndex": 1,
@@ -840,13 +840,13 @@
       "CastTime": 2.112,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 13
+      "DisplayLocation": 24
     },
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 15.6,
       "IsEpic": true,
-      "LocationIndex": 12,
+      "LocationIndex": 20,
       "PowerIndex": 5438,
       "PowerSetID": 2883,
       "PowerSetIndex": 2,
@@ -1260,13 +1260,13 @@
       "CastTime": 0.924,
       "Slottable": true,
       "AoEModifier": 3.25,
-      "DisplayLocation": 12
+      "DisplayLocation": 20
     },
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 6.864,
       "IsEpic": true,
-      "LocationIndex": 11,
+      "LocationIndex": 16,
       "PowerIndex": 5439,
       "PowerSetID": 2883,
       "PowerSetIndex": 3,
@@ -1895,13 +1895,13 @@
       "CastTime": 1.716,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 11
+      "DisplayLocation": 16
     },
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 13.0,
       "IsEpic": true,
-      "LocationIndex": 14,
+      "LocationIndex": 32,
       "PowerIndex": 5440,
       "PowerSetID": 2883,
       "PowerSetIndex": 4,
@@ -2186,13 +2186,13 @@
       "CastTime": 0.924,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 14
+      "DisplayLocation": 32
     },
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 4.368,
       "IsEpic": true,
-      "LocationIndex": 10,
+      "LocationIndex": 12,
       "PowerIndex": 5441,
       "PowerSetID": 2883,
       "PowerSetIndex": 5,
@@ -2767,13 +2767,13 @@
       "CastTime": 1.452,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 10
+      "DisplayLocation": 12
     },
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 5.2,
       "IsEpic": true,
-      "LocationIndex": 7,
+      "LocationIndex": 17,
       "PowerIndex": 5442,
       "PowerSetID": 2883,
       "PowerSetIndex": 6,
@@ -3039,13 +3039,13 @@
       "CastTime": 1.716,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 7
+      "DisplayLocation": 17
     },
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 3.12,
       "IsEpic": true,
-      "LocationIndex": 6,
+      "LocationIndex": 13,
       "PowerIndex": 5443,
       "PowerSetID": 2883,
       "PowerSetIndex": 7,
@@ -3238,13 +3238,13 @@
       "CastTime": 1.716,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 6
+      "DisplayLocation": 13
     },
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 15.184,
       "IsEpic": true,
-      "LocationIndex": 9,
+      "LocationIndex": 25,
       "PowerIndex": 5444,
       "PowerSetID": 2883,
       "PowerSetIndex": 8,
@@ -3578,13 +3578,13 @@
       "CastTime": 2.63999987,
       "Slottable": true,
       "AoEModifier": 3.25,
-      "DisplayLocation": 9
+      "DisplayLocation": 25
     },
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 11.856,
       "IsEpic": true,
-      "LocationIndex": 8,
+      "LocationIndex": 21,
       "PowerIndex": 5445,
       "PowerSetID": 2883,
       "PowerSetIndex": 9,
@@ -3779,13 +3779,13 @@
       "CastTime": 1.716,
       "Slottable": true,
       "AoEModifier": 3.06993747,
-      "DisplayLocation": 8
+      "DisplayLocation": 21
     },
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 5.2,
       "IsEpic": true,
-      "LocationIndex": 7,
+      "LocationIndex": 17,
       "PowerIndex": 5446,
       "PowerSetID": 2883,
       "PowerSetIndex": 10,
@@ -4157,13 +4157,13 @@
       "CastTime": 1.716,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 7
+      "DisplayLocation": 17
     },
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 3.12,
       "IsEpic": true,
-      "LocationIndex": 6,
+      "LocationIndex": 13,
       "PowerIndex": 5447,
       "PowerSetID": 2883,
       "PowerSetIndex": 11,
@@ -4498,13 +4498,13 @@
       "CastTime": 1.716,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 6
+      "DisplayLocation": 13
     },
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 15.184,
       "IsEpic": true,
-      "LocationIndex": 9,
+      "LocationIndex": 25,
       "PowerIndex": 5448,
       "PowerSetID": 2883,
       "PowerSetIndex": 12,
@@ -4878,13 +4878,13 @@
       "CastTime": 2.63999987,
       "Slottable": true,
       "AoEModifier": 3.25,
-      "DisplayLocation": 9
+      "DisplayLocation": 25
     },
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 11.856,
       "IsEpic": true,
-      "LocationIndex": 8,
+      "LocationIndex": 21,
       "PowerIndex": 5449,
       "PowerSetID": 2883,
       "PowerSetIndex": 13,
@@ -5225,7 +5225,7 @@
       "CastTime": 1.716,
       "Slottable": true,
       "AoEModifier": 3.06993747,
-      "DisplayLocation": 8
+      "DisplayLocation": 21
     },
     {
       "PowerIndex": 5450,
@@ -6761,7 +6761,7 @@
     {
       "CastTimeReal": 1.67,
       "IsEpic": true,
-      "LocationIndex": 14,
+      "LocationIndex": 28,
       "PowerIndex": 5454,
       "PowerSetID": 2883,
       "PowerSetIndex": 18,
@@ -6991,13 +6991,13 @@
       "CastTime": 1.848,
       "Slottable": true,
       "AoEModifier": 3.25,
-      "DisplayLocation": 14
+      "DisplayLocation": 28
     },
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 15.184,
       "IsEpic": true,
-      "LocationIndex": 12,
+      "LocationIndex": 20,
       "PowerIndex": 5455,
       "PowerSetID": 2883,
       "PowerSetIndex": 19,
@@ -7304,13 +7304,13 @@
       "CastTime": 2.244,
       "Slottable": true,
       "AoEModifier": 3.25,
-      "DisplayLocation": 12
+      "DisplayLocation": 20
     },
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 6.864,
       "IsEpic": true,
-      "LocationIndex": 11,
+      "LocationIndex": 16,
       "PowerIndex": 5456,
       "PowerSetID": 2883,
       "PowerSetIndex": 20,
@@ -7796,13 +7796,13 @@
       "CastTime": 1.716,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 11
+      "DisplayLocation": 16
     },
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 13.0,
       "IsEpic": true,
-      "LocationIndex": 15,
+      "LocationIndex": 32,
       "PowerIndex": 5457,
       "PowerSetID": 2883,
       "PowerSetIndex": 21,
@@ -8087,13 +8087,13 @@
       "CastTime": 0.924,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 15
+      "DisplayLocation": 32
     },
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 4.368,
       "IsEpic": true,
-      "LocationIndex": 10,
+      "LocationIndex": 12,
       "PowerIndex": 5458,
       "PowerSetID": 2883,
       "PowerSetIndex": 22,
@@ -8525,13 +8525,13 @@
       "CastTime": 1.452,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 10
+      "DisplayLocation": 12
     },
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 10.4,
       "IsEpic": true,
-      "LocationIndex": 13,
+      "LocationIndex": 24,
       "PowerIndex": 5459,
       "PowerSetID": 2883,
       "PowerSetIndex": 23,
@@ -8644,11 +8644,11 @@
       "CastTime": 0.924,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 13
+      "DisplayLocation": 24
     },
     {
       "IsEpic": true,
-      "LocationIndex": 6,
+      "LocationIndex": 4,
       "PowerIndex": 5460,
       "PowerSetID": 2883,
       "PowerSetIndex": 24,
@@ -8852,11 +8852,11 @@
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
       "AoEModifier": 1.0,
-      "DisplayLocation": 6
+      "DisplayLocation": 4
     },
     {
       "IsEpic": true,
-      "LocationIndex": 7,
+      "LocationIndex": 8,
       "PowerIndex": 5461,
       "PowerSetID": 2883,
       "PowerSetIndex": 25,
@@ -9060,11 +9060,11 @@
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
       "AoEModifier": 1.0,
-      "DisplayLocation": 7
+      "DisplayLocation": 8
     },
     {
       "IsEpic": true,
-      "LocationIndex": 8,
+      "LocationIndex": 12,
       "PowerIndex": 5462,
       "PowerSetID": 2883,
       "PowerSetIndex": 26,
@@ -9268,10 +9268,9 @@
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
       "AoEModifier": 1.0,
-      "DisplayLocation": 8
+      "DisplayLocation": 12
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5463,
       "PowerSetID": 2883,
       "PowerSetIndex": 27,
@@ -9484,12 +9483,11 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "IsEpic": true,
-      "LocationIndex": 6,
+      "LocationIndex": 4,
       "PowerIndex": 5464,
       "PowerSetID": 2883,
       "PowerSetIndex": 28,
@@ -9577,7 +9575,7 @@
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
       "AoEModifier": 1.0,
-      "DisplayLocation": 6
+      "DisplayLocation": 4
     },
     {
       "PowerIndex": 5465,
@@ -10821,6 +10819,7 @@
     },
     {
       "CastTimeReal": 0.83,
+      "LocationIndex": 1,
       "PowerIndex": 5472,
       "PowerSetID": 2883,
       "PowerSetIndex": 36,
@@ -11125,11 +11124,11 @@
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.056,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 1
     },
     {
       "CastTimeReal": 1.716,
-      "LocationIndex": 3,
       "PowerIndex": 5473,
       "PowerSetID": 2883,
       "PowerSetIndex": 37,
@@ -11218,12 +11217,10 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.848,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "CastTimeReal": 1.716,
-      "LocationIndex": 3,
       "PowerIndex": 5474,
       "PowerSetID": 2883,
       "PowerSetIndex": 38,
@@ -12103,12 +12100,10 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.848,
-      "AoEModifier": 46.0,
-      "DisplayLocation": 3
+      "AoEModifier": 46.0
     },
     {
       "CastTimeReal": 1.716,
-      "LocationIndex": 3,
       "PowerIndex": 5475,
       "PowerSetID": 2883,
       "PowerSetIndex": 39,
@@ -12197,12 +12192,10 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.848,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "CastTimeReal": 1.716,
-      "LocationIndex": 3,
       "PowerIndex": 5476,
       "PowerSetID": 2883,
       "PowerSetIndex": 40,
@@ -13082,11 +13075,9 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.848,
-      "AoEModifier": 46.0,
-      "DisplayLocation": 3
+      "AoEModifier": 46.0
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5477,
       "PowerSetID": 2883,
       "PowerSetIndex": 41,
@@ -13170,12 +13161,10 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "CastTimeReal": 1.17,
-      "LocationIndex": 3,
       "PowerIndex": 5478,
       "PowerSetID": 2883,
       "PowerSetIndex": 42,
@@ -14071,8 +14060,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.31999993,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "PowerIndex": 5479,
@@ -14168,7 +14156,6 @@
       "AoEModifier": 46.0
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5480,
       "PowerSetID": 2883,
       "PowerSetIndex": 44,
@@ -14255,8 +14242,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "PowerIndex": 5481,
@@ -17228,7 +17214,6 @@
       "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5502,
       "PowerSetID": 2883,
       "PowerSetIndex": 66,
@@ -17316,8 +17301,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "CastTimeReal": 1.5,
@@ -19222,7 +19206,6 @@
       "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5514,
       "PowerSetID": 2883,
       "PowerSetIndex": 78,
@@ -19690,12 +19673,11 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 22,
+      "LocationIndex": 3,
       "PowerIndex": 5515,
       "PowerSetID": 2883,
       "PowerSetIndex": 79,
@@ -19870,7 +19852,7 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 22
+      "DisplayLocation": 3
     },
     {
       "CastTimeReal": 2.33,
@@ -20752,7 +20734,7 @@
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 21,
+      "LocationIndex": 15,
       "PowerIndex": 5525,
       "PowerSetID": 2883,
       "PowerSetIndex": 89,
@@ -20962,11 +20944,11 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 21
+      "DisplayLocation": 15
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 23,
+      "LocationIndex": 7,
       "PowerIndex": 5526,
       "PowerSetID": 2883,
       "PowerSetIndex": 90,
@@ -21141,7 +21123,7 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 23
+      "DisplayLocation": 7
     },
     {
       "CastTimeReal": 2.33,
@@ -21335,7 +21317,7 @@
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 25,
+      "LocationIndex": 11,
       "PowerIndex": 5529,
       "PowerSetID": 2883,
       "PowerSetIndex": 93,
@@ -21510,11 +21492,11 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 25
+      "DisplayLocation": 11
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 24,
+      "LocationIndex": 19,
       "PowerIndex": 5530,
       "PowerSetID": 2883,
       "PowerSetIndex": 94,
@@ -21689,7 +21671,7 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 24
+      "DisplayLocation": 19
     },
     {
       "CastTimeReal": 1.17,
@@ -26386,7 +26368,6 @@
       "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5565,
       "PowerSetID": 2883,
       "PowerSetIndex": 129,
@@ -26761,11 +26742,9 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5566,
       "PowerSetID": 2883,
       "PowerSetIndex": 130,
@@ -26885,8 +26864,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "PowerIndex": 5567,
@@ -27279,7 +27257,6 @@
     },
     {
       "CastTimeReal": 1.716,
-      "LocationIndex": 3,
       "PowerIndex": 5569,
       "PowerSetID": 2883,
       "PowerSetIndex": 133,
@@ -27650,8 +27627,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.848,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "CastTimeReal": 0.67,
@@ -28516,7 +28492,7 @@
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 1,
+      "LocationIndex": 5,
       "PowerIndex": 5576,
       "PowerSetID": 2883,
       "PowerSetIndex": 140,
@@ -28691,11 +28667,10 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 1
+      "DisplayLocation": 5
     },
     {
       "CastTimeReal": 1.716,
-      "LocationIndex": 3,
       "PowerIndex": 5577,
       "PowerSetID": 2883,
       "PowerSetIndex": 141,
@@ -29123,8 +29098,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.848,
-      "AoEModifier": 10.0,
-      "DisplayLocation": 3
+      "AoEModifier": 10.0
     },
     {
       "ToggleCost": 0.195,
@@ -29614,7 +29588,6 @@
       "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5580,
       "PowerSetID": 2883,
       "PowerSetIndex": 144,
@@ -30781,8 +30754,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "PowerIndex": 5581,
@@ -31805,7 +31777,6 @@
       "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 3,
       "PowerIndex": 5584,
       "PowerSetID": 2883,
       "PowerSetIndex": 148,
@@ -31955,8 +31926,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0,
-      "DisplayLocation": 3
+      "AoEModifier": 1.0
     },
     {
       "ToggleCost": 0.0195,
@@ -33607,7 +33577,7 @@
     },
     {
       "CastTimeReal": 6.0,
-      "LocationIndex": 2,
+      "LocationIndex": 9,
       "PowerIndex": 5588,
       "PowerSetID": 2883,
       "PowerSetIndex": 152,
@@ -34375,7 +34345,7 @@
       "CastTime": 6.204,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 2
+      "DisplayLocation": 9
     },
     {
       "PowerIndex": 5589,
@@ -36514,6 +36484,7 @@
     },
     {
       "ToggleCost": 0.455,
+      "LocationIndex": 23,
       "PowerIndex": 5596,
       "PowerSetID": 2883,
       "PowerSetIndex": 160,
@@ -37002,12 +36973,13 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 0.132,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 23
     },
     {
       "CastTimeReal": 1.716,
       "ToggleCost": 0.455,
-      "LocationIndex": 16,
+      "LocationIndex": 27,
       "PowerIndex": 5597,
       "PowerSetID": 2883,
       "PowerSetIndex": 161,
@@ -37066,7 +37038,6 @@
       "MutexAuto": true,
       "NeverAutoUpdate": true,
       "NeverAutoUpdateRequirements": true,
-      "IncludeFlag": true,
       "ForcedClass": "",
       "Effects": [
         {
@@ -37466,7 +37437,7 @@
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.848,
       "AoEModifier": 1.0,
-      "DisplayLocation": 16
+      "DisplayLocation": 27
     },
     {
       "ToggleCost": 0.039,
@@ -37855,7 +37826,7 @@
     },
     {
       "ToggleCost": 0.195,
-      "LocationIndex": 5,
+      "LocationIndex": 8,
       "PowerIndex": 5600,
       "PowerSetID": 2883,
       "PowerSetIndex": 164,
@@ -38528,12 +38499,12 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 5
+      "DisplayLocation": 8
     },
     {
       "CastTimeReal": 5.93,
       "ToggleCost": 20.0,
-      "LocationIndex": 5,
+      "LocationIndex": 8,
       "PowerIndex": 5601,
       "PowerSetID": 2883,
       "PowerSetIndex": 165,
@@ -38673,7 +38644,7 @@
       "CastTime": 6.072,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 5
+      "DisplayLocation": 8
     }
   ]
 }

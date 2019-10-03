@@ -125,10 +125,6 @@ namespace Hero_Designer
             this.ToolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.AutoArrangeAllSlotsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsView4Col = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsView3Col = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsView2Col = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewIOLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewRelative = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSlotLevels = new System.Windows.Forms.ToolStripMenuItem();
@@ -1087,12 +1083,8 @@ namespace Hero_Designer
             // 
             // ViewToolStripMenuItem
             // 
-            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[11]
+            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[7]
             {
-            (System.Windows.Forms.ToolStripItem) this.tsView4Col,
-            (System.Windows.Forms.ToolStripItem) this.tsView3Col,
-            (System.Windows.Forms.ToolStripItem) this.tsView2Col,
-            (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator13,
             (System.Windows.Forms.ToolStripItem) this.tsViewIOLevels,
             (System.Windows.Forms.ToolStripItem) this.tsViewRelative,
             (System.Windows.Forms.ToolStripItem) this.tsViewSlotLevels,
@@ -1105,34 +1097,6 @@ namespace Hero_Designer
             this.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem";
             this.ViewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.ViewToolStripMenuItem.Text = "&View";
-            // 
-            // tsView4Col
-            // 
-            this.tsView4Col.Name = "tsView4Col";
-            this.tsView4Col.Size = new System.Drawing.Size(282, 22);
-            this.tsView4Col.Text = "&4 Columns";
-            this.tsView4Col.Click += new System.EventHandler(tsView4Col_Click);
-            // 
-            // tsView3Col
-            // 
-            this.tsView3Col.Checked = true;
-            this.tsView3Col.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tsView3Col.Name = "tsView3Col";
-            this.tsView3Col.Size = new System.Drawing.Size(282, 22);
-            this.tsView3Col.Text = "&3 Columns";
-            this.tsView3Col.Click += new System.EventHandler(tsView3Col_Click);
-            // 
-            // tsView2Col
-            // 
-            this.tsView2Col.Name = "tsView2Col";
-            this.tsView2Col.Size = new System.Drawing.Size(282, 22);
-            this.tsView2Col.Text = "&2 Columns";
-            this.tsView2Col.Click += new System.EventHandler(tsView2Col_Click);
-            // 
-            // ToolStripSeparator13
-            // 
-            this.ToolStripSeparator13.Name = "ToolStripSeparator13";
-            this.ToolStripSeparator13.Size = new System.Drawing.Size(279, 6);
             // 
             // tsViewIOLevels
             // 
@@ -2096,9 +2060,6 @@ namespace Hero_Designer
         ToolStripMenuItem tsGitHubCrytilis;
         ToolStripMenuItem tsGitHubImaginary;
         ToolStripMenuItem tsUpdateCheck;
-        ToolStripMenuItem tsView2Col;
-        ToolStripMenuItem tsView3Col;
-        ToolStripMenuItem tsView4Col;
         ToolStripMenuItem tsViewActualDamage_New;
         ToolStripMenuItem tsViewData;
         ToolStripMenuItem tsViewDPS_New;
@@ -2186,7 +2147,6 @@ namespace Hero_Designer
         ToolStripSeparator ToolStripSeparator10;
         ToolStripSeparator ToolStripSeparator11;
         ToolStripSeparator ToolStripSeparator12;
-        ToolStripSeparator ToolStripSeparator13;
         ToolStripSeparator ToolStripSeparator14;
         ToolStripSeparator ToolStripSeparator15;
         ToolStripSeparator ToolStripSeparator16;

@@ -402,7 +402,11 @@
       "RegenCap": 20.0,
       "RecoveryCap": 5.0,
       "Origin": [
-        "Natural"
+        "Magic",
+        "Mutation",
+        "Natural",
+        "Science",
+        "Technology"
       ],
       "Primary": [
         3008
@@ -439,7 +443,11 @@
       "RegenCap": 20.0,
       "RecoveryCap": 5.0,
       "Origin": [
-        "Science"
+        "Magic",
+        "Mutation",
+        "Natural",
+        "Science",
+        "Technology"
       ],
       "Primary": [
         3574
@@ -915,7 +923,11 @@
       "RegenCap": 20.0,
       "RecoveryCap": 5.0,
       "Origin": [
-        "Natural"
+        "Magic",
+        "Mutation",
+        "Natural",
+        "Science",
+        "Technology"
       ],
       "Primary": [
         0,
@@ -960,7 +972,11 @@
       "RegenCap": 20.0,
       "RecoveryCap": 5.0,
       "Origin": [
-        "Natural"
+        "Magic",
+        "Mutation",
+        "Natural",
+        "Science",
+        "Technology"
       ],
       "Primary": [
         3575,

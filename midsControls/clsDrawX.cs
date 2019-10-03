@@ -64,8 +64,8 @@ namespace midsControls
             InterfaceMode = 0;
             //VillainColor = false;
             ScaleValue = 1f;
-            Scaling = false;
-            vcCols = 3;
+            Scaling = true;
+            vcCols = 4;
             vcRowsPowers = 8;
             bxPower = new ExtendedBitmap[4];
             checked
@@ -109,10 +109,10 @@ namespace midsControls
 
         void DrawSplit()
         {
-            Pen pen = new Pen(Color.Goldenrod, 2f);
+            Pen pen = new Pen(Color.Goldenrod, 1.5f);
             checked
             {
-                int iValue = 4 + vcRowsPowers * (SzPower.Height + 18) - 10;
+                int iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 1;
                 bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 195), ScaleDown(iValue));
             }
         }
@@ -475,7 +475,7 @@ namespace midsControls
                                 text2 = "(Sec)";
                                 break;
                             case Enums.ePowerSetType.Ancillary:
-                                text2 = "(Ancil)";
+                                text2 = "(Epic)";
                                 break;
                             case Enums.ePowerSetType.Inherent:
                                 text2 = "";
@@ -1164,7 +1164,7 @@ namespace midsControls
 
         public bool WithinPowerBar(Rectangle pBounds, Point e)
         {
-            pBounds.Height = SzPower.Height;
+            pBounds.Height = SzPower.Height + 5;
             return (e.X >= pBounds.Left && e.X < pBounds.Right) && (e.Y >= pBounds.Top && e.Y < pBounds.Bottom);
         }
 
@@ -1175,287 +1175,50 @@ namespace midsControls
 
         int[][] GetInherentGrid()
         {
-            switch (vcCols)
-            {
-                case 2:
-                    if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
-                    {
-                        return new[]
-                        {
-                            new[]
-                            {
-                                3, 17
-                            },
-                            new[]
-                            {
-                                0, 18
-                            },
-                            new[]
-                            {
-                                1, 19
-                            },
-                            new[]
-                            {
-                                2, 20
-                            },
-                            new[]
-                            {
-                                4, 10
-                            },
-                            new[]
-                            {
-                                5, 11
-                            },
-                            new[]
-                            {
-                                6, 12
-                            },
-                            new[]
-                            {
-                                7, 13
-                            },
-                            new[]
-                            {
-                                8, 14
-                            },
-                            new[]
-                            {
-                                9, 15
-                            },
-                            new[]
-                            {
-                                18, 21
-                            },
-                            new[]
-                            {
-                                22, 23
-                            },
-                            new[]
-                            {
-                                24, 25
-                            },
-                            new[]
-                            {
-                                16, 17
-                            },
-                            new[]
-                            {
-                                26, 27
-                            },
-                            new[]
-                            {
-                                28, 29
-                            },
-                            new[]
-                            {
-                                30, 31
-                            },
-                            new[]
-                            {
-                                32, 33
-                            },
-                            new[]
-                            {
-                                34, 35
-                            }
-                        };
-                    }
-
-                    return new[]
-                    {
-                        new[]
-                        {
-                            3, 17
-                        },
-                        new[]
-                        {
-                            0, 18
-                        },
-                        new[]
-                        {
-                            1, 19
-                        },
-                        new[]
-                        {
-                            2, 20
-                        },
-                        new[]
-                        {
-                            16, 21
-                        },
-                        new[]
-                        {
-                            6, 22
-                        },
-                        new[]
-                        {
-                            7, 23
-                        },
-                        new[]
-                        {
-                            8, 24
-                        },
-                        new[]
-                        {
-                            9, 25
-                        },
-                        new[]
-                        {
-                            10, 11
-                        },
-                        new[]
-                        {
-                            26, 27
-                        },
-                        new[]
-                        {
-                            28, 29
-                        },
-                        new[]
-                        {
-                            30, 31
-                        },
-                        new[]
-                        {
-                            32, 33
-                        },
-                        new[]
-                        {
-                            34, 35
-                        }
-                    };
-                case 4:
-                    if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
-                    {
-                        return new[]
-                        {
-                            new[]
-                            {
-                                3, 17, 4, 10
-                            },
-                            new[]
-                            {
-                                0, 18, 5, 11
-                            },
-                            new[]
-                            {
-                                1, 19, 6, 12
-                            },
-                            new[]
-                            {
-                                2, 20, 7, 13
-                            },
-                            new[]
-                            {
-                                16, 21, 8, 14
-                            },
-                            new[]
-                            {
-                                22, 23, 9, 15
-                            },
-                            new[]
-                            {
-                                24, 25, 26, 17
-                            },
-                            new[]
-                            {
-                                28, 29, 30, 31
-                            },
-                            new[]
-                            {
-                                32, 33, 34, 35
-                            }
-                        };
-                    }
-
-                    return new[]
-                    {
-                        new[]
-                        {
-                            3, 17, 21, 16
-                        },
-                        new[]
-                        {
-                            0, 18, 22, 6
-                        },
-                        new[]
-                        {
-                            1, 19, 23, 7
-                        },
-                        new[]
-                        {
-                            2, 20, 24, 8
-                        },
-                        new[]
-                        {
-                            26, 27, 25, 9
-                        },
-                        new[]
-                        {
-                            28, 29, 30, 10
-                        },
-                        new[]
-                        {
-                            31, 32, 33, 11
-                        },
-                        new[]
-                        {
-                            34, 35, 4, 5
-                        }
-                    };
-            }
-
             if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
             {
+
                 return new[]
                 {
                     new[]
                     {
-                        3, 17, 4
+                        0, 1, 2, 3
                     },
                     new[]
                     {
-                        0, 18, 5
+                        4, 5, 6, 7
                     },
                     new[]
                     {
-                        1, 19, 10
+                        8, 9, 10, 11
                     },
                     new[]
                     {
-                        2, 20, 11
+                        12, 13, 14, 15
                     },
                     new[]
                     {
-                        21, 6, 12
+                        16, 17, 18, 19
                     },
                     new[]
                     {
-                        22, 7, 13
+                        20, 21, 22, 23
                     },
                     new[]
                     {
-                        23, 8, 14
+                        24, 25, 26, 27
                     },
                     new[]
                     {
-                        24, 9, 15
+                        28, 29, 30, 31
                     },
                     new[]
                     {
-                        25, 16, 26
+                        32, 33, 34, 35
                     },
                     new[]
                     {
-                        27, 28, 29
-                    },
-                    new[]
-                    {
-                        30, 31, 32
-                    },
-                    new[]
-                    {
-                        33, 34, 35
+                        36, 37, 38, 39
                     }
                 };
             }
@@ -1464,43 +1227,43 @@ namespace midsControls
             {
                 new[]
                 {
-                    3, 17, 21
+                    0, 1, 2, 3
                 },
                 new[]
                 {
-                    0, 18, 22
+                    4, 5, 6, 7
                 },
                 new[]
                 {
-                    1, 19, 23
+                    8, 9, 10, 11
                 },
                 new[]
                 {
-                    2, 20, 24
+                    12, 13, 14, 15
                 },
                 new[]
                 {
-                    6, 16, 25
+                    16, 17, 18, 19
                 },
                 new[]
                 {
-                    7, 26, 27
+                    20, 21, 22, 23
                 },
                 new[]
                 {
-                    8, 28, 29
+                    24, 25, 26, 27
                 },
                 new[]
                 {
-                    9, 30, 31
+                    28, 29, 30, 31
                 },
                 new[]
                 {
-                    10, 32, 33
+                    32, 33, 34, 35
                 },
                 new[]
                 {
-                    11, 34, 35
+                    36, 37, 38, 39
                 }
             };
         }
@@ -1537,19 +1300,19 @@ namespace midsControls
                             string setName = powerEntry.PowerSet.SetName;
                             if (Operators.CompareString(setName, "Alpha", false) == 0)
                             {
-                                displayLocation = 26;
+                                displayLocation = 22;
                             }
                             else if (Operators.CompareString(setName, "Judgement", false) == 0)
                             {
-                                displayLocation = 27;
+                                displayLocation = 23;
                             }
                             else if (Operators.CompareString(setName, "Interface", false) == 0)
                             {
-                                displayLocation = 28;
+                                displayLocation = 26;
                             }
                             else if (Operators.CompareString(setName, "Lore", false) == 0)
                             {
-                                displayLocation = 29;
+                                displayLocation = 27;
                             }
                             else if (Operators.CompareString(setName, "Destiny", false) == 0)
                             {
@@ -1561,19 +1324,19 @@ namespace midsControls
                             }
                             else if (Operators.CompareString(setName, "Genesis", false) == 0)
                             {
-                                displayLocation = 32;
+                                displayLocation = 34;
                             }
                             else if (Operators.CompareString(setName, "Stance", false) == 0)
                             {
-                                displayLocation = 33;
+                                displayLocation = 35;
                             }
                             else if (Operators.CompareString(setName, "Vitae", false) == 0)
                             {
-                                displayLocation = 34;
+                                displayLocation = 38;
                             }
                             else if (Operators.CompareString(setName, "Omega", false) == 0)
                             {
-                                displayLocation = 35;
+                                displayLocation = 39;
                             }
                             else
                             {
@@ -1628,13 +1391,13 @@ namespace midsControls
             {
                 if (iRow >= vcRowsPowers)
                 {
-                    result.X = iCol * (SzPower.Width + 7);
-                    result.Y = 4 + iRow * (SzPower.Height + 17);
+                    result.X = iCol * (SzPower.Width + 8);
+                    result.Y = 4 + iRow * (SzPower.Height + 20);
                 }
                 else
                 {
-                    result.X = iCol * (SzPower.Width + 7);
-                    result.Y = iRow * (SzPower.Height + 17);
+                    result.X = iCol * (SzPower.Width + 10);
+                    result.Y = iRow * (SzPower.Height + 20);
                 }
 
                 return result;
@@ -1647,21 +1410,21 @@ namespace midsControls
             checked
             {
                 result.Width += SzPower.Width;
-                result.Height = result.Height + SzPower.Height + 17;
+                result.Height = result.Height + SzPower.Height + 20;
                 for (int i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
                 {
                     if (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen &&
                         i > MidsContext.Character.CurrentBuild.LastPower)
                         continue;
-                    Size size = new Size(result.Width, PowerPosition(i).Y + SzPower.Height + 17);
+                    Size size = new Size(result.Width, PowerPosition(i).Y + SzPower.Height + 20);
                     if (size.Height > result.Height)
                     {
-                        result.Height = size.Height;
+                        result.Height = size.Height + 20;
                     }
 
                     if (size.Width > result.Width)
                     {
-                        result.Width = size.Width;
+                        result.Width = size.Width + 20;
                     }
                 }
 
@@ -1681,7 +1444,7 @@ namespace midsControls
                 Size size = (Size) CRtoXY(inherentGrid[inherentGrid.Length - 1].Length - 1, inherentGrid.Length - 1);
                 if (size.Height > result.Height)
                 {
-                    result.Height = size.Height;
+                    result.Height = size.Height + 20;
                 }
 
                 if (size.Width > result.Width)
@@ -1691,7 +1454,7 @@ namespace midsControls
 
                 MiniSetCol(cols);
                 result.Width += SzPower.Width;
-                result.Height = result.Height + SzPower.Height + 17;
+                result.Height = result.Height + SzPower.Height + 20;
                 return result;
             }
         }
@@ -1732,13 +1495,13 @@ namespace midsControls
                 Size result;
                 if (maxX > -1 & maxY > -1)
                 {
-                    Size size = new Size(maxX + SzPower.Width, maxY + SzPower.Height + 17);
+                    Size size = new Size(maxX + SzPower.Width, maxY + SzPower.Height + 20);
                     result = size;
                 }
                 else
                 {
                     Point point2 = PowerPosition(MidsContext.Character.CurrentBuild.LastPower);
-                    Size size = new Size(point2.X + SzPower.Width, point2.Y + SzPower.Height + 17 + 4);
+                    Size size = new Size(point2.X + SzPower.Width, point2.Y + SzPower.Height + 20 + 4);
                     result = size;
                 }
 
@@ -1758,7 +1521,7 @@ namespace midsControls
 
         const int PaddingY = 17;
 
-        public const int OffsetY = 18;
+        public const int OffsetY = 20;
 
         const int OffsetInherent = 4;
 

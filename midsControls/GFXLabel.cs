@@ -106,7 +106,7 @@ namespace midsControls
 			layoutRectangle.X = 0f;
 			layoutRectangle.Width = Width;
 			layoutRectangle.Height = Font.GetHeight();
-			bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+			bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 			Brush brush = new SolidBrush(BackColor);
 			bxBuffer.Graphics.FillRectangle(brush, rect);
 			brush = new SolidBrush(ForeColor);

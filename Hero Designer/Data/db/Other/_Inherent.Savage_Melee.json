@@ -22,7 +22,7 @@
   "Powers": [
     {
       "IsEpic": true,
-      "LocationIndex": 6,
+      "LocationIndex": 4,
       "PowerIndex": 5602,
       "PowerSetID": 2882,
       "StaticIndex": 10085,
@@ -201,7 +201,7 @@
       "FullSetName": "Inherent.Savage_Melee",
       "CastTime": 0.132,
       "AoEModifier": 1.0,
-      "DisplayLocation": 6
+      "DisplayLocation": 4
     }
   ]
 }
