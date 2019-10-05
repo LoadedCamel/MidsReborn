@@ -87,6 +87,22 @@
       "ForcedClass": "Class_Minion_Henchman",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 11.3862057,
@@ -124,6 +140,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 2.84168553,
@@ -227,6 +259,22 @@
       "ForcedClass": "Class_Minion_Henchman",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 157.4219,

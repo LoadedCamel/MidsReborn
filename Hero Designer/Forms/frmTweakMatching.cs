@@ -49,8 +49,8 @@ namespace Hero_Designer
                     MidsContext.Config.CompOverride = (Enums.CompOverride[])Utils.CopyArray(MidsContext.Config.CompOverride, new Enums.CompOverride[MidsContext.Config.CompOverride.Length + 1]);
                     Enums.CompOverride[] compOverride = MidsContext.Config.CompOverride;
                     int index = MidsContext.Config.CompOverride.Length - 1;
-                    compOverride[index].Power = Conversions.ToString(cbPower.SelectedItem);
-                    compOverride[index].Powerset = Conversions.ToString(cbSet1.SelectedItem);
+                    compOverride[index].Power = Convert.ToString(cbPower.SelectedItem);
+                    compOverride[index].Powerset = Convert.ToString(cbSet1.SelectedItem);
                     compOverride[index].Override = txtAddOvr.Text;
                 }
                 listOverrides();

@@ -83,6 +83,22 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 3.0,
@@ -118,10 +134,26 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 125.123,
-          "MagPercent": 125.123,
+          "Mag": 61.1712,
+          "MagPercent": 61.1712,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

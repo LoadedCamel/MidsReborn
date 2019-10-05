@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Traps_Bomb",
   "ImageName": "",
   "Power": [
-    10234
+    10237
   ],
   "SetType": 8,
   "DisplayName": "Bomb",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10234,
+      "PowerIndex": 10237,
       "PowerSetID": 3459,
       "StaticIndex": 3158,
       "NGroupMembership": [],
@@ -79,10 +79,26 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 166.8306,
-          "MagPercent": 166.8306,
+          "Mag": 91.7568,
+          "MagPercent": 91.7568,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -111,10 +127,26 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 111.2204,
-          "MagPercent": 111.2204,
+          "Mag": 61.1712,
+          "MagPercent": 61.1712,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -144,6 +176,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 0.8,
           "Mag": 8.3084,
@@ -178,6 +226,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 8.3084,
@@ -213,6 +277,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,
@@ -245,6 +325,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Mag": 1.0,
@@ -275,6 +371,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Mag": 1.0,
@@ -305,6 +417,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Mag": 1.0,
@@ -335,6 +463,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Mag": 1.0,

@@ -4,8 +4,8 @@
   "FullName": "Pets.Water_Blast_Defender",
   "ImageName": "",
   "Power": [
-    6624,
-    6625
+    6627,
+    6628
   ],
   "SetType": 8,
   "DisplayName": "Water Blast",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.43,
       "ToggleCost": 10.192,
-      "PowerIndex": 6624,
+      "PowerIndex": 6627,
       "PowerSetID": 3275,
       "StaticIndex": 9123,
       "NGroupMembership": [],
@@ -93,6 +93,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 21.79922,
@@ -127,6 +143,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 65.39766,
@@ -162,6 +194,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 31.26008,
@@ -197,6 +245,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 93.7802353,
@@ -232,6 +296,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -0.2,
@@ -268,6 +348,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -0.2,
@@ -304,6 +400,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -0.2,
@@ -340,6 +452,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -0.2,
@@ -376,6 +504,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,
@@ -387,7 +531,7 @@
           "nID": 8,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9875,
+          "nSummon": 9878,
           "SpecialCase": 42,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -415,7 +559,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 5.096,
-      "PowerIndex": 6625,
+      "PowerIndex": 6628,
       "PowerSetID": 3275,
       "PowerSetIndex": 1,
       "StaticIndex": 9124,
@@ -484,6 +628,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 21.79922,
@@ -518,6 +678,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 65.39766,
@@ -553,6 +729,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 26.03583,
@@ -588,6 +780,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 78.10704,
@@ -623,6 +831,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -0.2,
@@ -659,6 +883,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -0.2,
@@ -695,6 +935,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -0.2,
@@ -731,6 +987,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -0.2,
@@ -767,6 +1039,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,
@@ -798,6 +1086,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,
@@ -831,6 +1135,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,
@@ -864,6 +1184,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,

@@ -32,9 +32,9 @@ namespace Hero_Designer
             lvDPA.Items.Add(new ListViewItem(new[]
             {
                 recipe.InternalName,
-                recipe.EnhIdx <= -1 ? "None" : recipe.Enhancement + " (" + Conversions.ToString(recipe.EnhIdx) + ")",
+                recipe.EnhIdx <= -1 ? "None" : recipe.Enhancement + " (" + Convert.ToString(recipe.EnhIdx) + ")",
                 Enum.GetName(recipe.Rarity.GetType(),  recipe.Rarity),
-                Conversions.ToString(recipe.Item.Length)
+                Convert.ToString(recipe.Item.Length)
             }));
         }
 
@@ -584,7 +584,7 @@ namespace Hero_Designer
                 lstItems.Items.Clear();
                 int num = DatabaseAPI.Database.Recipes[Index].Item.Length - 1;
                 for (int index = 0; index <= num; ++index)
-                    lstItems.Items.Add(("Level: " + Conversions.ToString(DatabaseAPI.Database.Recipes[Index].Item[index].Level + 1)));
+                    lstItems.Items.Add(("Level: " + Convert.ToString(DatabaseAPI.Database.Recipes[Index].Item[index].Level + 1)));
                 if (lstItems.Items.Count > 0)
                     lstItems.SelectedIndex = 0;
                 NoUpdate = false;
@@ -657,9 +657,9 @@ namespace Hero_Designer
             if (!(index > -1 & index < DatabaseAPI.Database.Recipes.Length))
                 return;
             lvDPA.Items[index].SubItems[0].Text = DatabaseAPI.Database.Recipes[index].InternalName;
-            lvDPA.Items[index].SubItems[1].Text = DatabaseAPI.Database.Recipes[index].EnhIdx <= -1 ? "None" : DatabaseAPI.Database.Recipes[index].Enhancement + " (" + Conversions.ToString(DatabaseAPI.Database.Recipes[index].EnhIdx) + ")";
+            lvDPA.Items[index].SubItems[1].Text = DatabaseAPI.Database.Recipes[index].EnhIdx <= -1 ? "None" : DatabaseAPI.Database.Recipes[index].Enhancement + " (" + Convert.ToString(DatabaseAPI.Database.Recipes[index].EnhIdx) + ")";
             lvDPA.Items[index].SubItems[2].Text = Enum.GetName(DatabaseAPI.Database.Recipes[index].Rarity.GetType(), DatabaseAPI.Database.Recipes[index].Rarity);
-            lvDPA.Items[index].SubItems[3].Text = Conversions.ToString(DatabaseAPI.Database.Recipes[index].Item.Length);
+            lvDPA.Items[index].SubItems[3].Text = Convert.ToString(DatabaseAPI.Database.Recipes[index].Item.Length);
         }
     }
 }

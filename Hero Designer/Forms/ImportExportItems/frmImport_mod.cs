@@ -39,7 +39,7 @@ namespace Hero_Designer
                     if (DatabaseAPI.Database.AttribMods.ImportModifierTablefromCSV(lblAttribIndex.Text, lblAttribTables.Text, Convert.ToInt32(udAttribRevision.Value)))
                     {
                         DatabaseAPI.Database.AttribMods.Store(MyApplication.GetSerializer());
-                        Interaction.MsgBox((Conversions.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length) + " modifier tables imported and saved."), MsgBoxStyle.Information, "Done.");
+                        Interaction.MsgBox((Convert.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length) + " modifier tables imported and saved."), MsgBoxStyle.Information, "Done.");
                     }
                     else
                     {
@@ -81,7 +81,7 @@ namespace Hero_Designer
             lblAttribTables.Text = DatabaseAPI.Database.AttribMods.SourceTables;
             lblAttribDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.AttribMods.RevisionDate, "dd/MMM/yy HH:mm:ss");
             udAttribRevision.Value = new Decimal(DatabaseAPI.Database.AttribMods.Revision);
-            lblAttribTableCount.Text = "Tables: " + Conversions.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length);
+            lblAttribTableCount.Text = "Tables: " + Convert.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length);
         }
 
         void frmImport_mod_Load(object sender, EventArgs e)

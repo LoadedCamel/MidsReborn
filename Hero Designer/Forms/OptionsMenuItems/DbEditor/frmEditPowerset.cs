@@ -32,7 +32,7 @@ namespace Hero_Designer
         {
             lvPowers.Items.Add(new ListViewItem(new[]
             {
-                Conversions.ToString(DatabaseAPI.Database.Power[myPS.Power[Index]].Level),
+                Convert.ToString(DatabaseAPI.Database.Power[myPS.Power[Index]].Level),
                 DatabaseAPI.Database.Power[myPS.Power[Index]].DisplayName,
                 DatabaseAPI.Database.Power[myPS.Power[Index]].DescShort
             }));
@@ -60,7 +60,7 @@ namespace Hero_Designer
             {
                 int num1 = (int)Interaction.MsgBox(("Powerset name '" + ps.FullName + " is invalid."), MsgBoxStyle.Exclamation, "No Can Do");
             }
-            else if (!PowersetFullNameIsUnique(Conversions.ToString(ps.nID)))
+            else if (!PowersetFullNameIsUnique(Convert.ToString(ps.nID)))
             {
                 int num2 = (int)Interaction.MsgBox(("Powerset name '" + ps.FullName + " already exists, please enter a unique name."), MsgBoxStyle.Exclamation, "No Can Do");
             }
@@ -241,7 +241,7 @@ namespace Hero_Designer
             lblNameFull.Text = BuildFullName();
             if (ps.GroupName == "" | ps.SetName == "")
                 lblNameUnique.Text = "This name is invalid.";
-            else if (PowersetFullNameIsUnique(Conversions.ToString(ps.nID)))
+            else if (PowersetFullNameIsUnique(Convert.ToString(ps.nID)))
                 lblNameUnique.Text = "This name is unique.";
             else
                 lblNameUnique.Text = "This name is NOT unique.";
@@ -385,7 +385,7 @@ namespace Hero_Designer
             lvMutexSets.Items.Clear();
             if (cbMutexGroup.SelectedIndex > -1)
             {
-                int[] numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Conversions.ToString(-1), Enums.ePowerSetType.None);
+                int[] numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Convert.ToString(-1), Enums.ePowerSetType.None);
                 int num1 = numArray.Length - 1;
                 for (int index1 = 0; index1 <= num1; ++index1)
                 {
@@ -425,7 +425,7 @@ namespace Hero_Designer
             IPowerset ps = myPS;
             ps.UIDMutexSets = new string[lvMutexSets.SelectedIndices.Count - 1 + 1];
             ps.nIDMutexSets = new int[lvMutexSets.SelectedIndices.Count - 1 + 1];
-            int[] numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Conversions.ToString(-1), Enums.ePowerSetType.None);
+            int[] numArray = DatabaseAPI.NidSets(cbMutexGroup.SelectedText, Convert.ToString(-1), Enums.ePowerSetType.None);
             int num = lvMutexSets.SelectedIndices.Count - 1;
             for (int index = 0; index <= num; ++index)
             {

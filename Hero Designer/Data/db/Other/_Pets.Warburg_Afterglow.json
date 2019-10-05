@@ -4,7 +4,7 @@
   "FullName": "Pets.Warburg_Afterglow",
   "ImageName": "",
   "Power": [
-    6616
+    6619
   ],
   "SetType": 8,
   "DisplayName": "Warburg_Afterglow",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6616,
+      "PowerIndex": 6619,
       "PowerSetID": 3268,
       "StaticIndex": 1785,
       "NGroupMembership": [],
@@ -70,6 +70,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.112204,

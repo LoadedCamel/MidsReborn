@@ -158,7 +158,7 @@ namespace Hero_Designer
                 lstImport.Items[0].EnsureVisible();
             lstImport.EndUpdate();
             HideUnchanged.Text = "Hide Unchanged";
-            int num5 = (int)Interaction.MsgBox(("New: " + Conversions.ToString(num2) + "\r\nModified: " + Conversions.ToString(num3)));
+            int num5 = (int)Interaction.MsgBox(("New: " + Convert.ToString(num2) + "\r\nModified: " + Convert.ToString(num3)));
         }
 
         void frmImportEnhSets_Load(object sender, EventArgs e)
@@ -221,7 +221,7 @@ namespace Hero_Designer
             }
             while (iString != null);
             iStream.Close();
-            int num6 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Conversions.ToString(num3) + "\r\nGood: " + Conversions.ToString(num1) + "\r\nRejected: " + Conversions.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
+            int num6 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
 
@@ -235,11 +235,11 @@ namespace Hero_Designer
             {
                 if (!lstImport.Items[index].Checked)
                     continue;
-                _importBuffer[Conversions.ToInteger(lstImport.Items[index].Tag)].Apply();
+                _importBuffer[Convert.ToInt32(lstImport.Items[index].Tag)].Apply();
                 ++num1;
                 if (num1 <= 0 || num1 % 10 != 0)
                     continue;
-                BusyMsg("Applying: " + Conversions.ToString(index) + " records done.");
+                BusyMsg("Applying: " + Convert.ToString(index) + " records done.");
                 Application.DoEvents();
             }
             Enabled = true;
@@ -247,7 +247,7 @@ namespace Hero_Designer
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             BusyHide();
-            Interaction.MsgBox(("Import of " + Conversions.ToString(num1) + " records completed!"), MsgBoxStyle.Information, "Done");
+            Interaction.MsgBox(("Import of " + Convert.ToString(num1) + " records completed!"), MsgBoxStyle.Information, "Done");
             DisplayInfo();
             return false;
         }

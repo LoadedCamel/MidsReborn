@@ -150,7 +150,7 @@ namespace Hero_Designer
             while (str2 != null);
             iStream.Close();
             Clipboard.SetDataObject(str1);
-            Interaction.MsgBox(("Import Completed!\r\nTotal Records: " + Conversions.ToString(num1) + "\r\nGood: " + Conversions.ToString(num4) + "\r\nRejected: " + Conversions.ToString(num2) + "\r\nRejected List has been placed on the clipboard. Database will be saved when you click OK"), MsgBoxStyle.Information, "Import Done");
+            Interaction.MsgBox(("Import Completed!\r\nTotal Records: " + Convert.ToString(num1) + "\r\nGood: " + Convert.ToString(num4) + "\r\nRejected: " + Convert.ToString(num2) + "\r\nRejected List has been placed on the clipboard. Database will be saved when you click OK"), MsgBoxStyle.Information, "Import Done");
             Enabled = true;
             BusyHide();
             var serializer = MyApplication.GetSerializer();

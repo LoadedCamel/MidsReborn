@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Spirit_Tree",
   "ImageName": "",
   "Power": [
-    10200
+    10203
   ],
   "SetType": 8,
   "DisplayName": "Spirit Tree",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10200,
+      "PowerIndex": 10203,
       "PowerSetID": 3542,
       "StaticIndex": 3147,
       "NGroupMembership": [],
@@ -74,6 +74,22 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.5,

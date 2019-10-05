@@ -78,6 +78,22 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "ProcsPerMinute": 4.5,
           "CancelOnMiss": true,
@@ -89,7 +105,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Set_Bonus.Set_Bonus.Contagious_Confusion",
-          "nSummon": 7732,
+          "nSummon": 7735,
           "Ticks": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

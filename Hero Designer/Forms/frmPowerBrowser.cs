@@ -821,7 +821,7 @@ namespace Hero_Designer
                     continue;
                 items[0] = !DisplayFullName ? DatabaseAPI.Database.Power[iPowers[index]].PowerName : DatabaseAPI.Database.Power[iPowers[index]].FullName;
                 items[1] = DatabaseAPI.Database.Power[iPowers[index]].DisplayName;
-                items[2] = Conversions.ToString(DatabaseAPI.Database.Power[iPowers[index]].Level);
+                items[2] = Convert.ToString(DatabaseAPI.Database.Power[iPowers[index]].Level);
                 items[3] = DatabaseAPI.Database.Power[iPowers[index]].FullName;
                 lvPower.Items.Add(new ListViewItem(items)
                 {
@@ -843,7 +843,7 @@ namespace Hero_Designer
                     continue;
                 items[0] = !DisplayFullName ? DatabaseAPI.Database.Power[index2].PowerName : DatabaseAPI.Database.Power[index2].FullName;
                 items[1] = DatabaseAPI.Database.Power[index2].DisplayName;
-                items[2] = Conversions.ToString(DatabaseAPI.Database.Power[index2].Level);
+                items[2] = Convert.ToString(DatabaseAPI.Database.Power[index2].Level);
                 items[3] = DatabaseAPI.Database.Power[index2].FullName;
                 lvPower.Items.Add(new ListViewItem(items));
             }
@@ -1060,7 +1060,7 @@ namespace Hero_Designer
                         break;
                 }
                 items[3] = DatabaseAPI.Database.Powersets[iSets[imageIndex]].FullName;
-                items[4] = Conversions.ToString(iSets[imageIndex]);
+                items[4] = Convert.ToString(iSets[imageIndex]);
                 lvSet.Items.Add(new ListViewItem(items, imageIndex));
             }
         }

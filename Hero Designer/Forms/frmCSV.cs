@@ -119,8 +119,8 @@ namespace Hero_Designer
 
         static void btnStaticExport_Click(object sender, EventArgs e)
         {
-            string str1 = "Static Indexes, App version " + MidsContext.AppVersion + ", database version " + Conversions.ToString(DatabaseAPI.Database.Version) + ":\r\n";
-            str1 = (from Power power in DatabaseAPI.Database.Power where power.GetPowerSet().SetType != Enums.ePowerSetType.Boost select Conversions.ToString(power.StaticIndex) + "\t" + power.FullName + "\r\n").Aggregate(str1, (current, str2) => current + str2);
+            string str1 = "Static Indexes, App version " + MidsContext.AppVersion + ", database version " + Convert.ToString(DatabaseAPI.Database.Version) + ":\r\n";
+            str1 = (from Power power in DatabaseAPI.Database.Power where power.GetPowerSet().SetType != Enums.ePowerSetType.Boost select Convert.ToString(power.StaticIndex) + "\t" + power.FullName + "\r\n").Aggregate(str1, (current, str2) => current + str2);
             string text = str1 + "Enhancements\r\n";
             foreach (var enhancement1 in DatabaseAPI.Database.Enhancements)
             {
@@ -128,9 +128,9 @@ namespace Hero_Designer
                 string str2;
                 var power = enhancement.GetPower();
                 if (power != null)
-                    str2 = Conversions.ToString(enhancement.StaticIndex) + "\t" + power.FullName + "\r\n";
+                    str2 = Convert.ToString(enhancement.StaticIndex) + "\t" + power.FullName + "\r\n";
                 else
-                    str2 = "THIS ONE IS NULL  " + Conversions.ToString(enhancement.StaticIndex) + "\t" + enhancement.Name + "\r\n";
+                    str2 = "THIS ONE IS NULL  " + Convert.ToString(enhancement.StaticIndex) + "\t" + enhancement.Name + "\r\n";
                 text += str2;
             }
             Clipboard.SetText(text);
@@ -178,25 +178,25 @@ namespace Hero_Designer
         void DisplayInfo()
         {
             mod_Date.Text = Strings.Format(DatabaseAPI.Database.AttribMods.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            mod_Revision.Text = Conversions.ToString(DatabaseAPI.Database.AttribMods.Revision);
-            mod_Count.Text = Conversions.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length);
+            mod_Revision.Text = Convert.ToString(DatabaseAPI.Database.AttribMods.Revision);
+            mod_Count.Text = Convert.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length);
             at_Date.Text = Strings.Format(DatabaseAPI.Database.ArchetypeVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            at_Revision.Text = Conversions.ToString(DatabaseAPI.Database.ArchetypeVersion.Revision);
-            at_Count.Text = Conversions.ToString(DatabaseAPI.Database.Classes.Length);
+            at_Revision.Text = Convert.ToString(DatabaseAPI.Database.ArchetypeVersion.Revision);
+            at_Count.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length);
             set_Date.Text = Strings.Format(DatabaseAPI.Database.PowersetVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            set_Revision.Text = Conversions.ToString(DatabaseAPI.Database.PowersetVersion.Revision);
-            set_Count.Text = Conversions.ToString(DatabaseAPI.Database.Powersets.Length);
+            set_Revision.Text = Convert.ToString(DatabaseAPI.Database.PowersetVersion.Revision);
+            set_Count.Text = Convert.ToString(DatabaseAPI.Database.Powersets.Length);
             pow_Date.Text = Strings.Format(DatabaseAPI.Database.PowerVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            pow_Revision.Text = Conversions.ToString(DatabaseAPI.Database.PowerVersion.Revision);
-            pow_Count.Text = Conversions.ToString(DatabaseAPI.Database.Power.Length);
+            pow_Revision.Text = Convert.ToString(DatabaseAPI.Database.PowerVersion.Revision);
+            pow_Count.Text = Convert.ToString(DatabaseAPI.Database.Power.Length);
             lev_date.Text = Strings.Format(DatabaseAPI.Database.PowerLevelVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            lev_Revision.Text = Conversions.ToString(DatabaseAPI.Database.PowerLevelVersion.Revision);
-            lev_Count.Text = Conversions.ToString(DatabaseAPI.Database.Power.Length);
+            lev_Revision.Text = Convert.ToString(DatabaseAPI.Database.PowerLevelVersion.Revision);
+            lev_Count.Text = Convert.ToString(DatabaseAPI.Database.Power.Length);
             fx_Date.Text = Strings.Format(DatabaseAPI.Database.PowerEffectVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            fx_Revision.Text = Conversions.ToString(DatabaseAPI.Database.PowerEffectVersion.Revision);
+            fx_Revision.Text = Convert.ToString(DatabaseAPI.Database.PowerEffectVersion.Revision);
             fx_Count.Text = "Many Lots";
             invent_Date.Text = Strings.Format(DatabaseAPI.Database.IOAssignmentVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            invent_Revision.Text = Conversions.ToString(DatabaseAPI.Database.IOAssignmentVersion.Revision);
+            invent_Revision.Text = Convert.ToString(DatabaseAPI.Database.IOAssignmentVersion.Revision);
             invent_RecipeDate.Text = Strings.Format(DatabaseAPI.Database.RecipeRevisionDate, "dd/MMM/yy HH:mm:ss");
         }
 

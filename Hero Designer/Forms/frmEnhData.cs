@@ -359,9 +359,9 @@ namespace Hero_Designer
             txtNameFull.Text = myEnh.Name;
             txtNameShort.Text = myEnh.ShortName;
             txtDesc.Text = myEnh.Desc;
-            txtProb.Text = Conversions.ToString(myEnh.EffectChance);
+            txtProb.Text = Convert.ToString(myEnh.EffectChance);
             txtInternal.Text = myEnh.UID;
-            StaticIndex.Text = Conversions.ToString(myEnh.StaticIndex);
+            StaticIndex.Text = Convert.ToString(myEnh.StaticIndex);
             SetMinLevel(myEnh.LevelMin + 1);
             SetMaxLevel(myEnh.LevelMax + 1);
             udMaxLevel.Minimum = udMinLevel.Value;
@@ -457,7 +457,7 @@ namespace Hero_Designer
                             txtModOther.Enabled = false;
                             break;
                         default:
-                            txtModOther.Text = Conversions.ToString(myEnh.Effect[selectedIndex].Multiplier);
+                            txtModOther.Text = Convert.ToString(myEnh.Effect[selectedIndex].Multiplier);
                             rbModOther.Checked = true;
                             txtModOther.Enabled = true;
                             break;
@@ -647,7 +647,7 @@ namespace Hero_Designer
             Enums.eEnhance eEnhance = Enums.eEnhance.None;
             bool flag = true;
             int tSub = -1;
-            Enums.eEnhance integer = (Enums.eEnhance)Conversions.ToInteger(Enum.Parse(eEnhance.GetType(), Conversions.ToString(lstAvailable.Items[lstAvailable.SelectedIndex])));
+            Enums.eEnhance integer = (Enums.eEnhance)Convert.ToInt32(Enum.Parse(eEnhance.GetType(), Convert.ToString(lstAvailable.Items[lstAvailable.SelectedIndex])));
             if (integer == Enums.eEnhance.Mez)
             {
                 tSub = MezPicker();
@@ -810,7 +810,7 @@ namespace Hero_Designer
 
         {
             DisplayEnhanceData();
-            tTip.SetToolTip(lstSelected, Conversions.ToString(lstSelected.SelectedItem));
+            tTip.SetToolTip(lstSelected, Convert.ToString(lstSelected.SelectedItem));
         }
 
         public int MezPicker(int index = 1)
@@ -1092,7 +1092,7 @@ namespace Hero_Designer
         void StaticIndex_TextChanged(object sender, EventArgs e)
 
         {
-            myEnh.StaticIndex = Conversions.ToInteger(StaticIndex.Text);
+            myEnh.StaticIndex = Convert.ToInt32(StaticIndex.Text);
         }
 
         void txtDesc_TextChanged(object sender, EventArgs e)
@@ -1143,7 +1143,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtProb.Text = Conversions.ToString(myEnh.EffectChance);
+            txtProb.Text = Convert.ToString(myEnh.EffectChance);
         }
 
         void txtProb_TextChanged(object sender, EventArgs e)

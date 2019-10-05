@@ -4,7 +4,7 @@
   "FullName": "Pets.Defenders_Bastion_Proc",
   "ImageName": "",
   "Power": [
-    6220
+    6223
   ],
   "SetType": 8,
   "DisplayName": "Defender's Bastion",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6220,
+      "PowerIndex": 6223,
       "PowerSetID": 3067,
       "StaticIndex": 5603,
       "NGroupMembership": [],
@@ -70,6 +70,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 71.7501,

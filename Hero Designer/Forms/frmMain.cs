@@ -3358,7 +3358,7 @@ namespace Hero_Designer
                         num2 = finish;
                     }
 
-                    //int integer1 = Conversions.ToInteger(Interaction.IIf(num2 == 22, index, RuntimeHelpers.GetObjectValue(Interaction.IIf(index == 22, num2, 22))));
+                    //int integer1 = Convert.ToInt32(Interaction.IIf(num2 == 22, index, RuntimeHelpers.GetObjectValue(Interaction.IIf(index == 22, num2, 22))));
                     int integer1 = num2 == 22 ? index :
                         index == 22 ? num2 : 22;
                     int integer2 = num2 == 23 ? index : 23;

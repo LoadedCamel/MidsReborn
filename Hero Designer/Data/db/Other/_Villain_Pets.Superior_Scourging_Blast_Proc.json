@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Superior_Scourging_Blast_Proc",
   "ImageName": "",
   "Power": [
-    10213
+    10216
   ],
   "SetType": 8,
   "DisplayName": "Superior Scourging Blast",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10213,
+      "PowerIndex": 10216,
       "PowerSetID": 3550,
       "StaticIndex": 9028,
       "NGroupMembership": [],
@@ -70,6 +70,22 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 0.075,
@@ -106,10 +122,26 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 72.28552,
-          "MagPercent": 72.28552,
+          "Mag": 88.34895,
+          "MagPercent": 88.34895,
           "Duration": 1.0,
           "BaseProbability": 1.0,
           "Reward": "",

@@ -4,10 +4,10 @@
   "FullName": "Villain_Pets.OilSlickBurn_Corruptor",
   "ImageName": "",
   "Power": [
-    10156,
-    10157,
-    10158,
-    10159
+    10159,
+    10160,
+    10161,
+    10162
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick Fire",
@@ -24,7 +24,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10156,
+      "PowerIndex": 10159,
       "PowerSetID": 3522,
       "StaticIndex": 4093,
       "NGroupMembership": [],
@@ -77,10 +77,26 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.33661175,
-          "MagPercent": 3.33661175,
+          "Mag": 1.83513594,
+          "MagPercent": 1.83513594,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -109,10 +125,26 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.33661175,
-          "MagPercent": 3.33661175,
+          "Mag": 1.83513594,
+          "MagPercent": 1.83513594,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -145,10 +177,26 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.33661175,
-          "MagPercent": 3.33661175,
+          "Mag": 1.83513594,
+          "MagPercent": 1.83513594,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -186,7 +234,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10157,
+      "PowerIndex": 10160,
       "PowerSetID": 3522,
       "PowerSetIndex": 1,
       "StaticIndex": 4094,
@@ -235,6 +283,22 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 5.0,
@@ -274,7 +338,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10158,
+      "PowerIndex": 10161,
       "PowerSetID": 3522,
       "PowerSetIndex": 2,
       "StaticIndex": 4096,
@@ -321,6 +385,22 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 100.0,
@@ -358,7 +438,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10159,
+      "PowerIndex": 10162,
       "PowerSetID": 3522,
       "PowerSetIndex": 3,
       "StaticIndex": 4095,
@@ -404,6 +484,22 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,

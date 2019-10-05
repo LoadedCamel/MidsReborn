@@ -33,7 +33,7 @@ namespace Hero_Designer
             items[0] = DatabaseAPI.Database.Salvage[Index].ExternalName;
             items[1] = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Origin.GetType(), DatabaseAPI.Database.Salvage[Index].Origin);
             items[2] = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Rarity.GetType(), DatabaseAPI.Database.Salvage[Index].Rarity);
-            items[3] = Conversions.ToString(DatabaseAPI.Database.Salvage[Index].LevelMin + 1) + " - " + Conversions.ToString(DatabaseAPI.Database.Salvage[Index].LevelMax + 1);
+            items[3] = Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMin + 1) + " - " + Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMax + 1);
             lvSalvage.Items.Add(new ListViewItem(items));
         }
 
@@ -250,7 +250,7 @@ namespace Hero_Designer
             lvSalvage.Items[Index].SubItems[0].Text = DatabaseAPI.Database.Salvage[Index].ExternalName;
             lvSalvage.Items[Index].SubItems[1].Text = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Origin.GetType(), DatabaseAPI.Database.Salvage[Index].Origin);
             lvSalvage.Items[Index].SubItems[2].Text = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Rarity.GetType(), DatabaseAPI.Database.Salvage[Index].Rarity);
-            lvSalvage.Items[Index].SubItems[3].Text = Conversions.ToString(DatabaseAPI.Database.Salvage[Index].LevelMin + 1) + " - " + Conversions.ToString(DatabaseAPI.Database.Salvage[Index].LevelMax + 1);
+            lvSalvage.Items[Index].SubItems[3].Text = Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMin + 1) + " - " + Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMax + 1);
         }
     }
 }

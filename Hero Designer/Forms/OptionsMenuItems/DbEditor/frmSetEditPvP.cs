@@ -150,9 +150,9 @@ namespace Hero_Designer
 
         /*void btnPaste_Click(object sender, EventArgs e)
         {
-            string str = Conversions.ToString(Clipboard.GetData("System.String"));
+            string str = Convert.ToString(Clipboard.GetData("System.String"));
             char[] chArray = new char[1] { '^' };
-            string[] strArray1 = str.Replace("\r\n", Conversions.ToString(chArray[0])).Split(chArray);
+            string[] strArray1 = str.Replace("\r\n", Convert.ToString(chArray[0])).Split(chArray);
             chArray[0] = '\t';
             this.mySet.InitBonus();
             int num1 = strArray1.Length - 1;
@@ -264,7 +264,7 @@ namespace Hero_Designer
             {
                 if (mySet.Bonus[index1].Index.Length > 0)
                     str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                           RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                           RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                 int num2 = mySet.Bonus[index1].Index.Length - 1;
                 for (int index2 = 0; index2 <= num2; ++index2)
                 {
@@ -377,61 +377,61 @@ namespace Hero_Designer
                         mySet.Bonus[index1].Slotted = 2;
                     if (mySet.Bonus[index1].Index.Length > 0)
                         str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                               RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                               RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                     break;
                     case 1:
                         mySet.Bonus[index1].Slotted = 2;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                     case 2:
                         mySet.Bonus[index1].Slotted = 3;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                     case 3:
                         mySet.Bonus[index1].Slotted = 3;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                     case 4:
                         mySet.Bonus[index1].Slotted = 4;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                     case 5:
                         mySet.Bonus[index1].Slotted = 4;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                     case 6:
                         mySet.Bonus[index1].Slotted = 5;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                     case 7:
                         mySet.Bonus[index1].Slotted = 5;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                     case 8:
                         mySet.Bonus[index1].Slotted = 6;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                     case 9:
                         mySet.Bonus[index1].Slotted = 6;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                         break;
                 }
 
@@ -576,34 +576,34 @@ namespace Hero_Designer
                 switch (index)
                 {
                     case 2:
-                        cbSlotCount.Items.Add((Conversions.ToString(index) + " Enhancements"));
+                        cbSlotCount.Items.Add((Convert.ToString(index) + " Enhancements"));
                         break;
                     case 3:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 1) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 1) + " Enhancements (PVP Effect)"));
                         break;
                     case 4:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 1) + " Enhancements"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 1) + " Enhancements"));
                         break;
                     case 5:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 2) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 2) + " Enhancements (PVP Effect)"));
                         break;
                     case 6:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 2) + " Enhancements"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 2) + " Enhancements"));
                         break;
                     case 7:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 3) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 3) + " Enhancements (PVP Effect)"));
                         break;
                     case 8:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 3) + " Enhancements"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 3) + " Enhancements"));
                         break;
                     case 9:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 4) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 4) + " Enhancements (PVP Effect)"));
                         break;
                     case 10:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 4) + " Enhancements"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 4) + " Enhancements"));
                         break;
                     case 11:
-                        cbSlotCount.Items.Add((Conversions.ToString(index - 5) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add((Convert.ToString(index - 5) + " Enhancements (PVP Effect)"));
                         break;
                 }
             }

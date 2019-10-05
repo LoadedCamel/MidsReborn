@@ -145,7 +145,7 @@ namespace Hero_Designer
                     int index1 = DatabaseAPI.NidFromUidioSet(array[0]);
                     if (index1 > -1)
                     {
-                        int integer = Conversions.ToInteger(array[1]);
+                        int integer = Convert.ToInt32(array[1]);
                         string[] strArray1 = array[3].Split(" ".ToCharArray());
                         Enums.ePvX ePvX = Enums.ePvX.Any;
                         if (array[2].Contains("isPVPMap?"))
@@ -232,7 +232,7 @@ namespace Hero_Designer
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveEnhancementDb(serializer);
             DisplayInfo();
-            int num10 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Conversions.ToString(num3) + "\r\nGood: " + Conversions.ToString(num1) + "\r\nRejected: " + Conversions.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
+            int num10 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
     }

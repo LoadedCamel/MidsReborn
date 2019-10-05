@@ -64,7 +64,7 @@ namespace Base.Data_Classes
 
         public int[] Levels_MainPowers { get; set; }
 
-        public ArrayList EffectIds { get; set; } = new ArrayList();
+        public List<string> EffectIds { get; set; } = new List<string>();
 
         public static Database Instance { get; } = new Database();
 

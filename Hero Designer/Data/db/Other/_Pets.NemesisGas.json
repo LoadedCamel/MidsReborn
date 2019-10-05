@@ -4,7 +4,7 @@
   "FullName": "Pets.NemesisGas",
   "ImageName": "",
   "Power": [
-    6368
+    6371
   ],
   "SetType": 8,
   "DisplayName": "Nemesis Gas",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6368,
+      "PowerIndex": 6371,
       "PowerSetID": 3156,
       "StaticIndex": 1663,
       "NGroupMembership": [],
@@ -71,6 +71,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 11.12204,

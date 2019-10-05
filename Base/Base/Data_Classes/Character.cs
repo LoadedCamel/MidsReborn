@@ -140,22 +140,9 @@ namespace Base.Data_Classes
 
         //Mastermind 
         public bool Supremacy { get; private set; }
-        public bool TrainBeasts { get; private set; }
-        public bool TameBeasts { get; private set; }
-        public bool EnchantDemon { get; private set; }
-        public bool AbyssalEmpowerment { get; private set; }
-        public bool EquipMercenary { get; private set; }
-        public bool TacticalUpgrade { get; private set; }
-        public bool EnchantUndead { get; private set; }
-        public bool DarkEmpowerment { get; private set; }
-        public bool TrainNinjas { get; private set; }
-        public bool KujiInZen { get; private set; }
-        public bool EquipRobot { get; private set; }
-        public bool UpgradeRobot { get; private set; }
-        public bool EquipThugs { get; private set; }
-        public bool UpgradeEquipment { get; private set; }
-
-
+        public bool PetTier2 { get; private set; }
+        public bool PetTier3 { get; private set; }
+        public bool PetBuffPwr { get; private set; }
 
         public Dictionary<string, float> ModifyEffects { get; protected set; }
 
@@ -364,20 +351,9 @@ namespace Base.Data_Classes
             BoxingBuff = false;
             KickBuff = false;
             Supremacy = false;
-            TrainBeasts = false;
-            TameBeasts = false;
-            EnchantDemon = false;
-            AbyssalEmpowerment = false;
-            EquipMercenary = false;
-            TacticalUpgrade = false;
-            EnchantUndead = false;
-            DarkEmpowerment = false;
-            TrainNinjas = false;
-            KujiInZen = false;
-            EquipRobot = false;
-            UpgradeRobot = false;
-            EquipThugs = false;
-            UpgradeEquipment = false;
+            PetTier2 = false;
+            PetTier3 = false;
+            PetBuffPwr = false;
             Totals.Init();
             TotalsCapped.Init();
             RequestedLevel = -1;
@@ -407,20 +383,9 @@ namespace Base.Data_Classes
             BoxingBuff = false;
             KickBuff = false;
             Supremacy = false;
-            TrainBeasts = false;
-            TameBeasts = false;
-            EnchantDemon = false;
-            AbyssalEmpowerment = false;
-            EquipMercenary = false;
-            TacticalUpgrade = false;
-            EnchantUndead = false;
-            DarkEmpowerment = false;
-            TrainNinjas = false;
-            KujiInZen = false;
-            EquipRobot = false;
-            UpgradeRobot = false;
-            EquipThugs = false;
-            UpgradeEquipment = false;
+            PetTier2 = false;
+            PetTier3 = false;
+            PetBuffPwr = false;
 
             foreach (var power in CurrentBuild.Powers)
             {
@@ -495,46 +460,56 @@ namespace Base.Data_Classes
                         Supremacy = true;
                         break;
                     case "TRAIN_BEASTS":
-                        TrainBeasts = true;
+                        PetTier2 = true;
                         break;
                     case "TAME_BEASTS":
-                        TameBeasts = true;
+                        PetTier2 = true;
+                        PetTier3 = true;
                         break;
                     case "ENCHANT_DEMONS":
-                        EnchantDemon = true;
+                        PetTier2 = true;
                         break;
                     case "ABYSSAL_EMPOWERMENT":
-                        AbyssalEmpowerment = true;
+                        PetTier2 = true;
+                        PetTier3 = true;
                         break;
                     case "EQUIP_MERCENARY":
-                        EquipMercenary = true;
+                        PetTier2 = true;
                         break;
                     case "TACTICAL_UPGRADE":
-                        TacticalUpgrade = true;
+                        PetTier2 = true;
+                        PetTier3 = true;
                         break;
                     case "ENCHANT_UNDEAD":
-                        EnchantUndead = true;
+                        PetTier2 = true;
                         break;
                     case "DARK_EMPOWERMENT":
-                        DarkEmpowerment = true;
+                        PetTier2 = true;
+                        PetTier3 = true;
                         break;
                     case "TRAIN_NINJAS":
-                        TrainNinjas = true;
+                        PetTier2 = true;
                         break;
                     case "KUJI_IN_ZEN":
-                        KujiInZen = true;
+                        PetTier2 = true;
+                        PetTier3 = true;
                         break;
                     case "EQUIP_ROBOT":
-                        EquipRobot = true;
+                        PetTier2 = true;
                         break;
                     case "UPGRADE_ROBOT":
-                        UpgradeRobot = true;
+                        PetTier2 = true;
+                        PetTier3 = true;
                         break;
                     case "EQUIP_THUGS":
-                        EquipThugs = true;
+                        PetTier2 = true;
                         break;
                     case "UPGRADE_EQUIPMENT":
-                        UpgradeEquipment = true;
+                        PetTier2 = true;
+                        PetTier3 = true;
+                        break;
+                    case "PACK_MENTALITY":
+                        PetBuffPwr = true;
                         break;
                 }
             }

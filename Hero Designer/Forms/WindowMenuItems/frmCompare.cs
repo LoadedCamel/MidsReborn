@@ -898,7 +898,7 @@ namespace Hero_Designer
 
         void SetScaleLabel()
         {
-            lblScale.Text = "Scale: 0 - " + Conversions.ToString(Graph.ScaleValue);
+            lblScale.Text = "Scale: 0 - " + Convert.ToString(Graph.ScaleValue);
         }
 
         void StoreLocation()
@@ -955,7 +955,7 @@ namespace Hero_Designer
                             string[][] tips = Tips;
                             int index3 = index1;
                             int index4 = index2;
-                            tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                            tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                         }
                         string[][] tips1 = Tips;
                         int index5 = index1;
@@ -995,7 +995,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1009,7 +1009,7 @@ namespace Hero_Designer
                         string[][] tips2 = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips2[index3][index4] = tips2[index3][index4] + "\r\n  (Applied every " + Conversions.ToString(Powers[index1][index2].ActivatePeriod) + "s)";
+                        tips2[index3][index4] = tips2[index3][index4] + "\r\n  (Applied every " + Convert.ToString(Powers[index1][index2].ActivatePeriod) + "s)";
                     }
                 }
                 ++index1;
@@ -1036,7 +1036,7 @@ namespace Hero_Designer
                     if (Matching)
                     {
                         string[][] tips = Tips;
-                        tips[index1][index2] = tips[index1][index2] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index1][index2] = tips[index1][index2] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1069,7 +1069,7 @@ namespace Hero_Designer
                         Values[powIdx][subPowIdx] /= Powers[powIdx][subPowIdx].EndCost;
                     Tips[powIdx][subPowIdx] = DatabaseAPI.Database.Classes[Powers[powIdx][subPowIdx].ForcedClassID].DisplayName + ":" + Powers[powIdx][subPowIdx].DisplayName;
                     if (Matching)
-                        Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " [Level " + Conversions.ToString(Powers[powIdx][subPowIdx].Level) + "]";
+                        Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " [Level " + Convert.ToString(Powers[powIdx][subPowIdx].Level) + "]";
                     Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + "\r\n  " + Powers[powIdx][subPowIdx].FXGetDamageString();
                     if (num1 < (double)Values[powIdx][subPowIdx])
                         num1 = Values[powIdx][subPowIdx];
@@ -1102,7 +1102,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1139,7 +1139,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1172,7 +1172,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1224,7 +1224,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1264,7 +1264,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1303,7 +1303,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1342,7 +1342,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1376,21 +1376,21 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     if (Values[index1][index2] > 1.0)
                     {
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Conversions.ToString(Values[index1][index2]) + " Targets Max.";
+                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Convert.ToString(Values[index1][index2]) + " Targets Max.";
                     }
                     else
                     {
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Conversions.ToString(Values[index1][index2]) + " Target Max.";
+                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Convert.ToString(Values[index1][index2]) + " Target Max.";
                     }
                     if (num1 < (double)Values[index1][index2])
                         num1 = Values[index1][index2];
@@ -1414,34 +1414,34 @@ namespace Hero_Designer
                     switch (Powers[index1][index2].EffectArea)
                     {
                         case Enums.eEffectArea.Character:
-                            str = Conversions.ToString(Powers[index1][index2].Range) + "ft range.";
+                            str = Convert.ToString(Powers[index1][index2].Range) + "ft range.";
                             Values[index1][index2] = Powers[index1][index2].Range;
                             break;
                         case Enums.eEffectArea.Sphere:
                             Values[index1][index2] = Powers[index1][index2].Radius;
                             if (Powers[index1][index2].Range > 0.0)
                             {
-                                str = Conversions.ToString(Powers[index1][index2].Range) + "ft range, ";
+                                str = Convert.ToString(Powers[index1][index2].Range) + "ft range, ";
                                 Values[index1][index2] = Powers[index1][index2].Range;
                             }
-                            str = str + Conversions.ToString(Powers[index1][index2].Radius) + "ft radius.";
+                            str = str + Convert.ToString(Powers[index1][index2].Radius) + "ft radius.";
                             break;
                         case Enums.eEffectArea.Cone:
                             Values[index1][index2] = Powers[index1][index2].Range;
-                            str = Conversions.ToString(Powers[index1][index2].Range) + "ft range, " + Conversions.ToString(Powers[index1][index2].Arc) + " degree cone.";
+                            str = Convert.ToString(Powers[index1][index2].Range) + "ft range, " + Convert.ToString(Powers[index1][index2].Arc) + " degree cone.";
                             break;
                         case Enums.eEffectArea.Location:
                             Values[index1][index2] = Powers[index1][index2].Range;
-                            str = Conversions.ToString(Powers[index1][index2].Range) + "ft range, " + Conversions.ToString(Powers[index1][index2].Radius) + "ft radius.";
+                            str = Convert.ToString(Powers[index1][index2].Range) + "ft range, " + Convert.ToString(Powers[index1][index2].Radius) + "ft radius.";
                             break;
                         case Enums.eEffectArea.Volume:
                             Values[index1][index2] = Powers[index1][index2].Radius;
                             if (Powers[index1][index2].Range > 0.0)
                             {
-                                str = Conversions.ToString(Powers[index1][index2].Range) + "ft range, ";
+                                str = Convert.ToString(Powers[index1][index2].Range) + "ft range, ";
                                 Values[index1][index2] = Powers[index1][index2].Range;
                             }
-                            str = str + Conversions.ToString(Powers[index1][index2].Radius) + "ft radius.";
+                            str = str + Convert.ToString(Powers[index1][index2].Radius) + "ft radius.";
                             break;
                     }
 
@@ -1453,7 +1453,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1486,7 +1486,7 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
                     string[][] tips1 = Tips;
                     int index5 = index1;
@@ -1568,7 +1568,7 @@ namespace Hero_Designer
                             string[][] tips = Tips;
                             int index4 = index1;
                             int index5 = index2;
-                            tips[index4][index5] = tips[index4][index5] + " [Level " + Conversions.ToString(Powers[index1][index2].Level) + "]";
+                            tips[index4][index5] = tips[index4][index5] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
                         }
                         if (Sum)
                         {

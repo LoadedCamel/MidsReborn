@@ -1591,7 +1591,7 @@ namespace Hero_Designer
         static string[] IoGrab2(StreamReader iStream, string delimiter = ";", char fakeLf = '\0')
         {
             string str = FileIO.ReadLineUnlimited(iStream, fakeLf);
-            string[] strArray = str.Split(Conversions.ToChar(delimiter));
+            string[] strArray = str.Split(Convert.ToChar(delimiter));
             if (strArray.Length < 2)
                 strArray = str.Split(';');
             for (int index = 0; index <= strArray.Length - 1; ++index)
@@ -1665,17 +1665,17 @@ namespace Hero_Designer
             {
                 if (CurrentBuild.Powers[hIDX].Chosen)
                 {
-                    popupData.Sections[index1].Add("Available: Level " + Conversions.ToString(power.Level), PopUp.Colors.Title, 0.9f,
+                    popupData.Sections[index1].Add("Available: Level " + Convert.ToString(power.Level), PopUp.Colors.Title, 0.9f,
                         FontStyle.Bold, 1);
-                    popupData.Sections[index1].Add("Placed: Level " + Conversions.ToString(CurrentBuild.Powers[hIDX].Level + 1),
+                    popupData.Sections[index1].Add("Placed: Level " + Convert.ToString(CurrentBuild.Powers[hIDX].Level + 1),
                         PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
                 }
                 else
-                    popupData.Sections[index1].Add("Inherent: Level " + Conversions.ToString(CurrentBuild.Powers[hIDX].Level + 1),
+                    popupData.Sections[index1].Add("Inherent: Level " + Convert.ToString(CurrentBuild.Powers[hIDX].Level + 1),
                         PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
             }
             else
-                popupData.Sections[index1].Add("Available: Level " + Conversions.ToString(power.Level), PopUp.Colors.Title, 0.9f,
+                popupData.Sections[index1].Add("Available: Level " + Convert.ToString(power.Level), PopUp.Colors.Title, 0.9f,
                     FontStyle.Bold, 1);
 
             popupData.Sections[index1].Add(power.DescShort, PopUp.Colors.Text);
@@ -1765,8 +1765,8 @@ namespace Hero_Designer
                             DatabaseAPI.Database.EnhancementSets[CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].SetIDX];
                         popupData.Sections[index1]
                             .Add(
-                                enhancementSet.DisplayName + " (" + Conversions.ToString(setInfo[senInfoIdx].SlottedCount) + "/" +
-                                Conversions.ToString(enhancementSet.Enhancements.Length) + ")", PopUp.Colors.Title);
+                                enhancementSet.DisplayName + " (" + Convert.ToString(setInfo[senInfoIdx].SlottedCount) + "/" +
+                                Convert.ToString(enhancementSet.Enhancements.Length) + ")", PopUp.Colors.Title);
                         for (int bonusIdx = 0; bonusIdx <= enhancementSet.Bonus.Length - 1; ++bonusIdx)
                         {
                             if (setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted &
@@ -2020,7 +2020,7 @@ namespace Hero_Designer
                                     break;
                                 default:
                                     int index3 = effect.ETModifies != Enums.eEffectType.RechargeTime
-                                        ? Conversions.ToInteger(Enum.Parse(typeof(Enums.eEnhance), effect.ETModifies.ToString()))
+                                        ? Convert.ToInt32(Enum.Parse(typeof(Enums.eEnhance), effect.ETModifies.ToString()))
                                         : 14;
                                     if (effect.IgnoreED)
                                     {
@@ -2189,7 +2189,7 @@ namespace Hero_Designer
                 goto label_23;
                 label_22:
                 message = "This power has been placed in a way that is not possible in-game. One of the " +
-                          Conversions.ToString(numArray.Length) + " level 1 powers from your " +
+                          Convert.ToString(numArray.Length) + " level 1 powers from your " +
                           Enum.GetName(powersetType.GetType(), powersetType) + " set must be taken at level 1.";
                 return ListLabelV2.LLItemState.Invalid;
                 label_23:

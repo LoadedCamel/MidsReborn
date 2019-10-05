@@ -209,7 +209,7 @@ namespace Hero_Designer
         {
             if (lvPower.SelectedIndices.Count < 1)
                 return;
-            PS_DisplaySet(Conversions.ToString(myEntity.PowersetFullName[lvPower.SelectedIndices[0]][0]));
+            PS_DisplaySet(Convert.ToString(myEntity.PowersetFullName[lvPower.SelectedIndices[0]][0]));
         }
 
         void lvPSGroup_SelectedIndexChanged(object sender, EventArgs e)
@@ -269,7 +269,7 @@ namespace Hero_Designer
         {
             if (lvUpgrade.SelectedIndices.Count < 1)
                 return;
-            UG_DisplayPower(Conversions.ToString(myEntity.UpgradePowerFullName[lvUpgrade.SelectedIndices[0]][0]));
+            UG_DisplayPower(Convert.ToString(myEntity.UpgradePowerFullName[lvUpgrade.SelectedIndices[0]][0]));
         }
 
         void PS_DisplaySet(string iPower)
@@ -451,7 +451,7 @@ namespace Hero_Designer
             }
             else
             {
-                int index1 = DatabaseAPI.NidFromUidPowerset(Conversions.ToString(lvUGSet.SelectedItems[0].Tag));
+                int index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvUGSet.SelectedItems[0].Tag));
                 if (index1 > -1)
                 {
                     int num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;

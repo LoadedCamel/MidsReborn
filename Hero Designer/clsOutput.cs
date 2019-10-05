@@ -71,9 +71,9 @@ namespace Hero_Designer
                 num = 50;
             string str5;
             if (MidsContext.Character.Name != "")
-                str5 = str4 + formatBold(formatColor(MidsContext.Character.Name + ":", ExportConfig.Element.Heading) + formatColor(" Level " + Conversions.ToString(num) + " " + MidsContext.Character.Archetype.Origin[MidsContext.Character.Origin] + " " + MidsContext.Character.Archetype.DisplayName, ExportConfig.Element.Power)) + LineBreak();
+                str5 = str4 + formatBold(formatColor(MidsContext.Character.Name + ":", ExportConfig.Element.Heading) + formatColor(" Level " + Convert.ToString(num) + " " + MidsContext.Character.Archetype.Origin[MidsContext.Character.Origin] + " " + MidsContext.Character.Archetype.DisplayName, ExportConfig.Element.Power)) + LineBreak();
             else
-                str5 = str4 + formatBold(formatColor("Level " + Conversions.ToString(num) + " " + MidsContext.Character.Archetype.Origin[MidsContext.Character.Origin] + " " + MidsContext.Character.Archetype.DisplayName, ExportConfig.Element.Power)) + LineBreak();
+                str5 = str4 + formatBold(formatColor("Level " + Convert.ToString(num) + " " + MidsContext.Character.Archetype.Origin[MidsContext.Character.Origin] + " " + MidsContext.Character.Archetype.DisplayName, ExportConfig.Element.Power)) + LineBreak();
             string str6 = str5 + formatBold(formatColor("Primary Power Set: ", ExportConfig.Element.Heading) + formatColor(MidsContext.Character.Powersets[0].DisplayName, ExportConfig.Element.Power)) + LineBreak() + formatBold(formatColor("Secondary Power Set: ", ExportConfig.Element.Heading) + formatColor(MidsContext.Character.Powersets[1].DisplayName, ExportConfig.Element.Power)) + LineBreak();
             if (MidsContext.Character.PoolTaken(3))
                 str6 = str6 + formatBold(formatColor("Power Pool: ", ExportConfig.Element.Heading) + formatColor(MidsContext.Character.Powersets[3].DisplayName, ExportConfig.Element.Power)) + LineBreak();
@@ -136,11 +136,11 @@ namespace Hero_Designer
                     continue;
                 if (MidsContext.Character.CurrentBuild.Powers[index1].NIDPowerset > -1 & MidsContext.Character.CurrentBuild.Powers[index1].IDXPower > -1)
                 {
-                    str1 = str1 + formatBold(formatColor("Level " + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Level + 1) + ":", ExportConfig.Element.Level) + str2 + formatColor(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[index1].NIDPower].DisplayName, ExportConfig.Element.Power)) + str2;
+                    str1 = str1 + formatBold(formatColor("Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Level + 1) + ":", ExportConfig.Element.Level) + str2 + formatColor(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[index1].NIDPower].DisplayName, ExportConfig.Element.Power)) + str2;
                     bool flag5 = !MidsContext.Character.CurrentBuild.Powers[index1].Chosen;
                 }
                 else
-                    str1 = str1 + formatBold(formatColor("Level " + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Level + 1) + ":", ExportConfig.Element.Level) + str2 + formatItalic(formatColor("[Empty]", ExportConfig.Element.Power))) + str2;
+                    str1 = str1 + formatBold(formatColor("Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Level + 1) + ":", ExportConfig.Element.Level) + str2 + formatItalic(formatColor("[Empty]", ExportConfig.Element.Power))) + str2;
                 if (MidsContext.Character.CurrentBuild.Powers[index1].Slots.Length > 0)
                 {
                     if (!LongExport)
@@ -167,7 +167,7 @@ namespace Hero_Designer
                             {
                                 string str4 = iText + ListItemOn();
                                 string str5 = " (";
-                                str3 = (index2 != 0 ? str5 + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Level + 1) : str5 + "A") + ") ";
+                                str3 = (index2 != 0 ? str5 + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Level + 1) : str5 + "A") + ") ";
                                 iText = str4 + str3;
                             }
                             else if (index2 > 0)
@@ -187,7 +187,7 @@ namespace Hero_Designer
                                         iText = LongExport ? iText + formatColor(DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].Name, ExportConfig.Element.IO) + formatColor(" IO", ExportConfig.Element.IO) : iText + formatColor(DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh].ShortName, ExportConfig.Element.IO) + formatColor("-I", ExportConfig.Element.IO);
                                         if (exportIoLevels)
                                         {
-                                            iText = !LongExport ? iText + formatColor(":" + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.IO) : iText + formatColor(": Level " + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.IO);
+                                            iText = !LongExport ? iText + formatColor(":" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.IO) : iText + formatColor(": Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.IO);
                                         }
                                         break;
                                     case Enums.eType.SpecialO:
@@ -207,17 +207,17 @@ namespace Hero_Designer
                                         if (LongExport)
                                         {
                                             if (exportIoLevels & flag1)
-                                                iText += formatColor(": Level " + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
+                                                iText += formatColor(": Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
                                             if (exportIoLevels & !flag1)
                                             {
-                                                iText += formatColor(": Level " + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
+                                                iText += formatColor(": Level " + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
                                             }
                                             break;
                                         }
                                         if (exportIoLevels & flag1)
-                                            iText += formatColor(":" + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
+                                            iText += formatColor(":" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
                                         if (exportIoLevels & !flag1)
-                                            iText += formatColor("-S:" + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
+                                            iText += formatColor("-S:" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.IOLevel + 1), ExportConfig.Element.SetO);
                                         break;
                                 }
                             }
@@ -225,14 +225,14 @@ namespace Hero_Designer
                         if (!LongExport)
                         {
                             string str4 = "(";
-                            str3 = (index2 != 0 ? str4 + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Level + 1) : str4 + "A") + ")";
+                            str3 = (index2 != 0 ? str4 + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Level + 1) : str4 + "A") + ")";
                         }
                         else if (!flag2)
                         {
                             if (index2 == 0)
                                 iText += ListItemOn();
                             string str4 = " (";
-                            str3 = (index2 != 0 ? str4 + Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Level + 1) : str4 + "A") + ")";
+                            str3 = (index2 != 0 ? str4 + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Level + 1) : str4 + "A") + ")";
                             iText += str3;
                         }
                         if (LongExport)

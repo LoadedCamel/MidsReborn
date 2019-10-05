@@ -149,9 +149,9 @@ namespace Hero_Designer
 
         void btnPaste_Click(object sender, EventArgs e)
         {
-            string str = Conversions.ToString(Clipboard.GetData("System.String"));
+            string str = Convert.ToString(Clipboard.GetData("System.String"));
             char[] chArray = new char[1] { '^' };
-            string[] strArray1 = str.Replace("\r\n", Conversions.ToString(chArray[0])).Split(chArray);
+            string[] strArray1 = str.Replace("\r\n", Convert.ToString(chArray[0])).Split(chArray);
             chArray[0] = '\t';
             mySet.InitBonus();
             int num1 = strArray1.Length - 1;
@@ -232,7 +232,7 @@ namespace Hero_Designer
             for (int index1 = 0; index1 <= num1; ++index1)
             {
                 if (mySet.Bonus[index1].Index.Length > 0)
-                    str1 = str1 + RTF.Color(RTF.ElementID.Black) + RTF.Bold(Conversions.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                    str1 = str1 + RTF.Color(RTF.ElementID.Black) + RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
                 int num2 = mySet.Bonus[index1].Index.Length - 1;
                 for (int index2 = 0; index2 <= num2; ++index2)
                 {
@@ -356,7 +356,7 @@ namespace Hero_Designer
             cbSlotCount.Items.Clear();
             int num1 = mySet.Enhancements.Length - 2;
             for (int index = 0; index <= num1; ++index)
-                cbSlotCount.Items.Add((Conversions.ToString(index + 2) + " Enhancements"));
+                cbSlotCount.Items.Add((Convert.ToString(index + 2) + " Enhancements"));
             int num2 = mySet.Enhancements.Length - 1;
             for (int index = 0; index <= num2; ++index)
                 cbSlotCount.Items.Add(DatabaseAPI.Database.Enhancements[mySet.Enhancements[index]].Name);

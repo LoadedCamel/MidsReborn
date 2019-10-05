@@ -443,9 +443,9 @@ namespace midsControls
                     int num = 0;
                     do
                     {
-                        AddItemPair("Value " + Conversions.ToString(num), "Value " + Conversions.ToString(num) + "b",
+                        AddItemPair("Value " + Convert.ToString(num), "Value " + Convert.ToString(num) + "b",
                             (int) Math.Round(Conversion.Int(101f * VBMath.Rnd() + 0f)),
-                            (int) Math.Round(Conversion.Int(101f * VBMath.Rnd() + 0f)), Conversions.ToString(num));
+                            (int) Math.Round(Conversion.Int(101f * VBMath.Rnd() + 0f)), Convert.ToString(num));
                         num++;
                     } while (num <= 60);
                 }

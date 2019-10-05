@@ -274,7 +274,7 @@ namespace midsControls
             string s;
             if (UI.View.TabID == Enums.eType.InventO | UI.View.TabID == Enums.eType.SetO)
             {
-                s = Conversions.ToString(UI.View.IOLevel);
+                s = Convert.ToString(UI.View.IOLevel);
             }
             else
             {
@@ -1210,12 +1210,12 @@ namespace midsControls
                         string str;
                         if (DatabaseAPI.Database.EnhancementSets[tId].LevelMin == DatabaseAPI.Database.EnhancementSets[tId].LevelMax)
                         {
-                            str = " (" + Conversions.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1) + ")";
+                            str = " (" + Convert.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1) + ")";
                         }
                         else
                         {
-                            str = string.Concat(" (", Conversions.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1), "-",
-                                Conversions.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMax + 1), ")");
+                            str = string.Concat(" (", Convert.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMin + 1), "-",
+                                Convert.ToString(DatabaseAPI.Database.EnhancementSets[tId].LevelMax + 1), ")");
                         }
 
                         SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str,
@@ -1256,17 +1256,17 @@ namespace midsControls
                                 if (DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMin ==
                                     DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMax)
                                 {
-                                    str2 = " (" + Conversions.ToString(
+                                    str2 = " (" + Convert.ToString(
                                                DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMin +
                                                1) + ")";
                                 }
                                 else
                                 {
                                     str2 = string.Concat(" (",
-                                        Conversions.ToString(DatabaseAPI.Database
+                                        Convert.ToString(DatabaseAPI.Database
                                                                  .EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMin + 1),
                                         "-",
-                                        Conversions.ToString(DatabaseAPI.Database
+                                        Convert.ToString(DatabaseAPI.Database
                                                                  .EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMax + 1),
                                         ")");
                                     if (DatabaseAPI.Database.Enhancements[tId].Unique)
@@ -1683,8 +1683,8 @@ namespace midsControls
             }
             else
             {
-                string text = Conversions.ToString(UI.View.IOLevel);
-                text += Conversions.ToString(iNumber);
+                string text = Convert.ToString(UI.View.IOLevel);
+                text += Convert.ToString(iNumber);
                 checked
                 {
                     if (text.Length > 2)

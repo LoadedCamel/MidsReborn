@@ -172,7 +172,7 @@ namespace Hero_Designer
                 MyAT.Origin = new string[clbOrigin.CheckedItems.Count - 1 + 1];
                 int num14 = clbOrigin.CheckedItems.Count - 1;
                 for (int index = 0; index <= num14; ++index)
-                    MyAT.Origin[index] = Conversions.ToString(clbOrigin.CheckedItems[index]);
+                    MyAT.Origin[index] = Convert.ToString(clbOrigin.CheckedItems[index]);
                 MyAT.Column = Decimal.Compare(udColumn.Value, new Decimal(0)) >= 0 ? Convert.ToInt32(udColumn.Value) : 0;
                 MyAT.BaseThreat = Decimal.Compare(udThreat.Value, new Decimal(0)) >= 0 ? Convert.ToSingle(udThreat.Value) : 0.0f;
                 DialogResult = DialogResult.OK;
@@ -226,16 +226,16 @@ namespace Hero_Designer
             udColumn.Value = !(Decimal.Compare(new Decimal(MyAT.Column + 2), udColumn.Maximum) <= 0 & Decimal.Compare(new Decimal(MyAT.Column), udColumn.Minimum) >= 0) ? udColumn.Minimum : new Decimal(MyAT.Column);
             udThreat.Value = !(MyAT.BaseThreat > (double)Convert.ToSingle(udThreat.Maximum) | MyAT.BaseThreat < (double)Convert.ToSingle(udThreat.Minimum)) ? new Decimal(MyAT.BaseThreat) : new Decimal(0);
             chkPlayable.Checked = MyAT.Playable;
-            txtHP.Text = Conversions.ToString(MyAT.Hitpoints);
-            txtHPCap.Text = Conversions.ToString(MyAT.HPCap);
-            txtResCap.Text = Conversions.ToString(MyAT.ResCap * 100f);
-            txtDamCap.Text = Conversions.ToString(MyAT.DamageCap * 100f);
-            txtRechargeCap.Text = Conversions.ToString(MyAT.RechargeCap * 100f);
-            txtRecCap.Text = Conversions.ToString(MyAT.RecoveryCap * 100f);
-            txtRegCap.Text = Conversions.ToString(MyAT.RegenCap * 100f);
+            txtHP.Text = Convert.ToString(MyAT.Hitpoints);
+            txtHPCap.Text = Convert.ToString(MyAT.HPCap);
+            txtResCap.Text = Convert.ToString(MyAT.ResCap * 100f);
+            txtDamCap.Text = Convert.ToString(MyAT.DamageCap * 100f);
+            txtRechargeCap.Text = Convert.ToString(MyAT.RechargeCap * 100f);
+            txtRecCap.Text = Convert.ToString(MyAT.RecoveryCap * 100f);
+            txtRegCap.Text = Convert.ToString(MyAT.RegenCap * 100f);
             txtBaseRec.Text = Strings.Format(MyAT.BaseRecovery, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00##");
             txtBaseRegen.Text = Strings.Format(MyAT.BaseRegen, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00##");
-            txtPerceptionCap.Text = Conversions.ToString(MyAT.PerceptionCap);
+            txtPerceptionCap.Text = Convert.ToString(MyAT.PerceptionCap);
             cbPriGroup.BeginUpdate();
             cbSecGroup.BeginUpdate();
             cbPriGroup.Items.Clear();

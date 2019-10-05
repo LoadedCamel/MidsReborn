@@ -140,13 +140,13 @@ namespace Hero_Designer
 
         void csList_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (Conversions.ToString(e.KeyChar) == "[")
+            if (Convert.ToString(e.KeyChar) == "[")
             {
                 forumColorUp();
             }
             else
             {
-                if (Conversions.ToString(e.KeyChar) != "]")
+                if (Convert.ToString(e.KeyChar) != "]")
                     return;
                 ForumColorDown();
             }
@@ -273,11 +273,11 @@ namespace Hero_Designer
 
         void fcList_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (Conversions.ToString(e.KeyChar) == "[")
+            if (Convert.ToString(e.KeyChar) == "[")
                 forumCodeUp();
             else
             {
-                if (Conversions.ToString(e.KeyChar) != "]")
+                if (Convert.ToString(e.KeyChar) != "]")
                     return;
                 ForumCodeDown();
             }

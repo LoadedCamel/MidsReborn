@@ -1198,20 +1198,9 @@ public static class Enums
         BoxingBuff,
         KickBuff,
         Supremacy,
-        TrainBeasts,
-        TameBeasts,
-        EnchantDemon,
-        AbyssalEmpowerment,
-        EquipMercenary,
-        TacticalUpgrade,
-        EnchantUndead,
-        DarkEmpowerment,
-        TrainNinjas,
-        KujiInZen,
-        EquipRobot,
-        UpgradeRobot,
-        EquipThugs,
-        UpgradeEquipment
+        PetTier2,
+        PetTier3,
+        PetBuffPwr
     }
 
     public enum eDDStyle

@@ -135,7 +135,7 @@ namespace Hero_Designer
                 if (DatabaseAPI.Database.Power[index].NeverAutoUpdate)
                     ++num1;
             }
-            txtNoAU.Text = Conversions.ToString(num1) + " powers locked.";
+            txtNoAU.Text = Convert.ToString(num1) + " powers locked.";
         }
 
         void FillListView()
@@ -187,9 +187,9 @@ namespace Hero_Designer
                     items[3] = "No";
                 if (_importBuffer[index].IndexChanged)
                 {
-                    items[4] = "Yes (" + Conversions.ToString(_importBuffer[index].Nid) + ")";
+                    items[4] = "Yes (" + Convert.ToString(_importBuffer[index].Nid) + ")";
                     if (_importBuffer[index].IsLocked)
-                        items[2] = "Lock (" + Conversions.ToString(_importBuffer[index].Nid) + ")";
+                        items[2] = "Lock (" + Convert.ToString(_importBuffer[index].Nid) + ")";
                     ++num4;
                 }
                 else
@@ -206,7 +206,7 @@ namespace Hero_Designer
                 lstImport.Items[0].EnsureVisible();
             lstImport.EndUpdate();
             HideUnchanged.Text = "Hide Unchanged";
-            int num6 = (int)Interaction.MsgBox(("New: " + Conversions.ToString(num2) + "\r\nModified: " + Conversions.ToString(num3) + "\r\nRe-Indexed: " + Conversions.ToString(num4)));
+            int num6 = (int)Interaction.MsgBox(("New: " + Convert.ToString(num2) + "\r\nModified: " + Convert.ToString(num3) + "\r\nRe-Indexed: " + Convert.ToString(num4)));
         }
 
         void frmImportEffects_Load(object sender, EventArgs e)
@@ -341,7 +341,7 @@ namespace Hero_Designer
             }
             while (iString != null);
             iStream.Close();
-            int num9 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Conversions.ToString(num3) + "\r\nGood: " + Conversions.ToString(num1) + "\r\nRejected: " + Conversions.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
+            int num9 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
 
@@ -358,13 +358,13 @@ namespace Hero_Designer
             {
                 if (!lstImport.Items[index].Checked)
                     continue;
-                if (!_importBuffer[Conversions.ToInteger(lstImport.Items[index].Tag)].Apply())
+                if (!_importBuffer[Convert.ToInt32(lstImport.Items[index].Tag)].Apply())
                     ++num3;
                 ++num1;
                 ++num2;
                 if (num2 < 9)
                     continue;
-                BusyMsg("Applying: " + Conversions.ToString(index) + " records done.");
+                BusyMsg("Applying: " + Convert.ToString(index) + " records done.");
                 Application.DoEvents();
                 num2 = 0;
             }
@@ -377,7 +377,7 @@ namespace Hero_Designer
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             BusyHide();
-            int num5 = (int)Interaction.MsgBox(("Import of " + Conversions.ToString(num1) + " records completed!\r\nOf these, " + Conversions.ToString(num3) + " records were found read-only."), MsgBoxStyle.Information, "Done");
+            int num5 = (int)Interaction.MsgBox(("Import of " + Convert.ToString(num1) + " records completed!\r\nOf these, " + Convert.ToString(num3) + " records were found read-only."), MsgBoxStyle.Information, "Done");
             DisplayInfo();
             return false;
         }

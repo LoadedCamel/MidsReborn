@@ -1,7 +1,12 @@
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Master_Classes;
@@ -183,6 +188,10 @@ namespace Base.Data_Classes
                             return false;
                     }
                     if (EffectType == Enums.eEffectType.EntCreate & ToWho == Enums.eToWho.Target & Stacking == Enums.eStacking.Yes)
+                    {
+                        flag = true;
+                    }
+                    else if (EffectType == Enums.eEffectType.DamageBuff & ToWho == Enums.eToWho.Target & Stacking == Enums.eStacking.Yes)
                     {
                         flag = true;
                     }
@@ -812,6 +821,24 @@ namespace Base.Data_Classes
             return str8 + str10 + iStr1 + str5 + str7 + str4 + strCondition;
         }
 
+        public List<string> NewEffects = new List<string>()
+        {
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+        };
+
         public void StoreTo(ref BinaryWriter writer)
         {
             writer.Write(PowerFullName);
@@ -839,6 +866,7 @@ namespace Base.Data_Classes
             writer.Write(nDuration);
             writer.Write((int)AttribType);
             writer.Write((int)Aspect);
+            DatabaseAPI.Database.EffectIds.AddRange(NewEffects.Except(DatabaseAPI.Database.EffectIds));
             writer.Write(ModifierTable);
             writer.Write(NearGround);
             writer.Write(CancelOnMiss);
@@ -1475,60 +1503,16 @@ namespace Base.Data_Classes
                     if (MidsContext.Character.Supremacy)
                         return true;
                     break;
-                case Enums.eSpecialCase.TrainBeasts:
-                    if (MidsContext.Character.TrainBeasts)
+                case Enums.eSpecialCase.PetTier2:
+                    if (MidsContext.Character.PetTier2)
                         return true;
                     break;
-                case Enums.eSpecialCase.TameBeasts:
-                    if (MidsContext.Character.TameBeasts)
+                case Enums.eSpecialCase.PetTier3:
+                    if (MidsContext.Character.PetTier3)
                         return true;
                     break;
-                case Enums.eSpecialCase.EnchantDemon:
-                    if (MidsContext.Character.EnchantDemon)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.AbyssalEmpowerment:
-                    if (MidsContext.Character.AbyssalEmpowerment)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.EquipMercenary:
-                    if (MidsContext.Character.EquipMercenary)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.TacticalUpgrade:
-                    if (MidsContext.Character.TacticalUpgrade)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.EnchantUndead:
-                    if (MidsContext.Character.EnchantUndead)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.DarkEmpowerment:
-                    if (MidsContext.Character.DarkEmpowerment)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.TrainNinjas:
-                    if (MidsContext.Character.TrainNinjas)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.KujiInZen:
-                    if (MidsContext.Character.KujiInZen)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.EquipRobot:
-                    if (MidsContext.Character.TrainBeasts)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.UpgradeRobot:
-                    if (MidsContext.Character.TrainBeasts)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.EquipThugs:
-                    if (MidsContext.Character.EquipThugs)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.UpgradeEquipment:
-                    if (MidsContext.Character.UpgradeEquipment)
+                case Enums.eSpecialCase.PetBuffPwr:
+                    if (MidsContext.Character.PetBuffPwr)
                         return true;
                     break;
             }

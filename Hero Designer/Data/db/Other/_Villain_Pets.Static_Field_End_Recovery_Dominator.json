@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Static_Field_End_Recovery_Dominator",
   "ImageName": "",
   "Power": [
-    10210
+    10213
   ],
   "SetType": 8,
   "DisplayName": "Static Field Endurance Recovery Dominator",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10210,
+      "PowerIndex": 10213,
       "PowerSetID": 3547,
       "StaticIndex": 4490,
       "NGroupMembership": [],
@@ -78,10 +78,26 @@
       "ForcedClass": "",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 2.5,
-          "MagPercent": 2.5,
+          "Mag": 2.75,
+          "MagPercent": 2.75,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",

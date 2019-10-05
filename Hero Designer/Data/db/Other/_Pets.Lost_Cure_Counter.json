@@ -4,8 +4,8 @@
   "FullName": "Pets.Lost_Cure_Counter",
   "ImageName": "",
   "Power": [
-    6352,
-    6353
+    6355,
+    6356
   ],
   "SetType": 8,
   "DisplayName": "Lost_Cure_Counter",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6352,
+      "PowerIndex": 6355,
       "PowerSetID": 3143,
       "StaticIndex": 1656,
       "NGroupMembership": [],
@@ -78,6 +78,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": -1.0,
@@ -89,7 +105,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Cured_Counter",
-          "nSummon": 9390,
+          "nSummon": 9393,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -114,7 +130,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6353,
+      "PowerIndex": 6356,
       "PowerSetID": 3143,
       "PowerSetIndex": 1,
       "StaticIndex": 1657,
@@ -159,6 +175,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Mag": 52.0,
           "MagPercent": 5200.0,
@@ -189,6 +221,22 @@
           "nOverride": -1
         },
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,

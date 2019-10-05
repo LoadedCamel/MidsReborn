@@ -101,9 +101,9 @@ namespace Hero_Designer
                 iPopup.Sections[index2].Add("Power Type:", PopUp.Colors.Text, Enum.GetName(power1.PowerType.GetType(), power1.PowerType), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Text, TwoDP(power1.Accuracy), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 if (power1.ActivatePeriod > 0.0)
-                    iPopup.Sections[index2].Add("Activate Interval:", PopUp.Colors.Text, Conversions.ToString(power1.ActivatePeriod) + "s", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                    iPopup.Sections[index2].Add("Activate Interval:", PopUp.Colors.Text, Convert.ToString(power1.ActivatePeriod) + "s", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 if (power1.Arc > 0)
-                    iPopup.Sections[index2].Add("Arc Radius:", PopUp.Colors.Text, Conversions.ToString(power1.Arc) + "°", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                    iPopup.Sections[index2].Add("Arc Radius:", PopUp.Colors.Text, Convert.ToString(power1.Arc) + "°", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 if (power1.AttackTypes != Enums.eVector.None)
                 {
                     int[] values = (int[])Enum.GetValues(power1.AttackTypes.GetType());
@@ -130,22 +130,22 @@ namespace Hero_Designer
                 iPopup.Sections[index2].Add("Auto-Hit:", PopUp.Colors.Text, Enum.GetName(power1.EntitiesAutoHit.GetType(), power1.EntitiesAutoHit), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 if (Math.Abs(power1.InterruptTime) > float.Epsilon)
                     iPopup.Sections[index2].Add("Interrupt:", PopUp.Colors.Text, TwoDP(power1.InterruptTime) + "s", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
-                iPopup.Sections[index2].Add("Level Available:", PopUp.Colors.Text, Conversions.ToString(power1.Level), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
-                iPopup.Sections[index2].Add("Max Targets:", PopUp.Colors.Text, Conversions.ToString(power1.MaxTargets), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                iPopup.Sections[index2].Add("Level Available:", PopUp.Colors.Text, Convert.ToString(power1.Level), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                iPopup.Sections[index2].Add("Max Targets:", PopUp.Colors.Text, Convert.ToString(power1.MaxTargets), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 iPopup.Sections[index2].Add("Notify Mobs:", PopUp.Colors.Text, Enum.GetName(power1.AIReport.GetType(), power1.AIReport), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 if (Math.Abs(power1.Radius) > float.Epsilon)
-                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Text, Conversions.ToString(power1.Radius) + "ft", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Text, Convert.ToString(power1.Radius) + "ft", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 if (Math.Abs(power1.Range) > float.Epsilon)
-                    iPopup.Sections[index2].Add("Range:", PopUp.Colors.Text, Conversions.ToString(power1.Range) + "ft", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
-                iPopup.Sections[index2].Add("RechargeTime:", PopUp.Colors.Text, Conversions.ToString(power1.RechargeTime) + "s", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                    iPopup.Sections[index2].Add("Range:", PopUp.Colors.Text, Convert.ToString(power1.Range) + "ft", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                iPopup.Sections[index2].Add("RechargeTime:", PopUp.Colors.Text, Convert.ToString(power1.RechargeTime) + "s", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 iPopup.Sections[index2].Add("Target:", PopUp.Colors.Text, Enum.GetName(power1.EntitiesAffected.GetType(), power1.EntitiesAffected), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
-                iPopup.Sections[index2].Add("Line of Sight:", PopUp.Colors.Text, Conversions.ToString(power1.TargetLoS), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
-                iPopup.Sections[index2].Add("Variable:", PopUp.Colors.Text, Conversions.ToString(power1.VariableEnabled), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                iPopup.Sections[index2].Add("Line of Sight:", PopUp.Colors.Text, Convert.ToString(power1.TargetLoS), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
+                iPopup.Sections[index2].Add("Variable:", PopUp.Colors.Text, Convert.ToString(power1.VariableEnabled), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 if (power1.VariableEnabled)
                 {
                     iPopup.Sections[index2].Add("Attrib:", PopUp.Colors.Text, power1.VariableName, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 2);
-                    iPopup.Sections[index2].Add("Min:", PopUp.Colors.Text, Conversions.ToString(power1.VariableMin), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 2);
-                    iPopup.Sections[index2].Add("Max:", PopUp.Colors.Text, Conversions.ToString(power1.VariableMax), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 2);
+                    iPopup.Sections[index2].Add("Min:", PopUp.Colors.Text, Convert.ToString(power1.VariableMin), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 2);
+                    iPopup.Sections[index2].Add("Max:", PopUp.Colors.Text, Convert.ToString(power1.VariableMax), PopUp.Colors.Text, 0.9f, FontStyle.Bold, 2);
                 }
                 if (power1.Effects.Length > 0)
                 {

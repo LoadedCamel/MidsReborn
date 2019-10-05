@@ -45,7 +45,7 @@ public interface IDatabase
 
     int[] Levels_MainPowers { get; set; }
 
-    ArrayList EffectIds { get; set; }
+    List<string> EffectIds { get; set; }
 
     IEnhancement[] Enhancements { get; set; }
 

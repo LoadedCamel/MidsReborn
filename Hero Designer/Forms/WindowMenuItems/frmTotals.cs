@@ -515,8 +515,8 @@ namespace Hero_Designer
             graphRegen.MarkerValue = 100f;
             graphRegen.Draw();
             graphHP.Clear();
-            string iTip5 = "Base HitPoints: " + Conversions.ToString(MidsContext.Character.Archetype.Hitpoints) + "\r\nCurrent HitPoints: " +
-                           Conversions.ToString(displayStats.HealthHitpointsNumeric(false));
+            string iTip5 = "Base HitPoints: " + Convert.ToString(MidsContext.Character.Archetype.Hitpoints) + "\r\nCurrent HitPoints: " +
+                           Convert.ToString(displayStats.HealthHitpointsNumeric(false));
             if (Math.Abs(displayStats.HealthHitpointsNumeric(false) - displayStats.HealthHitpointsNumeric(true)) > 0.01)
                 iTip5 = iTip5 + "\r\n(Capped from a total of: " + Strings.Format(displayStats.HealthHitpointsNumeric(true), "###0.#") + ")";
             graphHP.AddItem("Max HP:|" + Strings.Format(displayStats.HealthHitpointsPercentage, "###0.#") + "%",
@@ -601,8 +601,8 @@ namespace Hero_Designer
             graphDam.Clear();
             string str7 = "";
             if (A_GT_B(displayStats.BuffDamage(true), displayStats.BuffDamage(false)))
-                str7 = "\r\n\r\nDamage Capped from " + Conversions.ToString(displayStats.BuffDamage(true)) + "% to " +
-                       Conversions.ToString(displayStats.BuffDamage(false)) + "%";
+                str7 = "\r\n\r\nDamage Capped from " + Convert.ToString(displayStats.BuffDamage(true)) + "% to " +
+                       Convert.ToString(displayStats.BuffDamage(false)) + "%";
             graphDam.AddItem("Damage:|" + PM(displayStats.BuffDamage(false) - 100f, "##0.#", "%"), displayStats.BuffDamage(false),
                 displayStats.BuffDamage(true),
                 "This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included." +
@@ -613,8 +613,8 @@ namespace Hero_Designer
             graphHaste.Clear();
             string str8 = "";
             if (A_GT_B(displayStats.BuffHaste(true), displayStats.BuffHaste(false)))
-                str8 = "\r\n\r\nRecharge Speed Capped from " + Conversions.ToString(displayStats.BuffHaste(true)) + "% to " +
-                       Conversions.ToString(displayStats.BuffHaste(false)) + "%";
+                str8 = "\r\n\r\nRecharge Speed Capped from " + Convert.ToString(displayStats.BuffHaste(true)) + "% to " +
+                       Convert.ToString(displayStats.BuffHaste(false)) + "%";
             graphHaste.AddItem("Haste:|" + PM(displayStats.BuffHaste(false) - 100f, "##0.##", "%"), displayStats.BuffHaste(false),
                 displayStats.BuffHaste(true),
                 "This effect alters the recharge speed of all your powers.\r\nThe higher the value, the faster the recharge.\r\nAs some powers can slow your recharge, this bar starts with your base recharge (100%) included." +

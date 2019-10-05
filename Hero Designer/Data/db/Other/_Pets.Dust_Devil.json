@@ -4,9 +4,9 @@
   "FullName": "Pets.Dust_Devil",
   "ImageName": "",
   "Power": [
-    6251,
-    6252,
-    6253
+    6254,
+    6255,
+    6256
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6251,
+      "PowerIndex": 6254,
       "PowerSetID": 3016,
       "StaticIndex": 3530,
       "NGroupMembership": [],
@@ -72,6 +72,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,
@@ -108,7 +124,7 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 6252,
+      "PowerIndex": 6255,
       "PowerSetID": 3016,
       "PowerSetIndex": 1,
       "StaticIndex": 3531,
@@ -157,6 +173,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 100.0,
@@ -194,7 +226,7 @@
       "AoEModifier": 2.95
     },
     {
-      "PowerIndex": 6253,
+      "PowerIndex": 6256,
       "PowerSetID": 3016,
       "PowerSetIndex": 2,
       "StaticIndex": 3532,
@@ -241,6 +273,22 @@
       "ForcedClass": "Class_Minion_Pets",
       "Effects": [
         {
+          "NewEffects": [
+            "TrainBeasts",
+            "TameBeasts",
+            "EnchantDemons",
+            "AbyssalEmpowerment",
+            "EquipMercenary",
+            "TacticalUpgrade",
+            "EnchantUndead",
+            "DarkEmpowerment",
+            "TrainNinjas",
+            "KujiInZen",
+            "EquipRobot",
+            "UpgradeRobot",
+            "EquipThugs",
+            "UpgradeEquipment"
+          ],
           "MagnitudeExpression": "",
           "Probability": 1.0,
           "Mag": 1.0,

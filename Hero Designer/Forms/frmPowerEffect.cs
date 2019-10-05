@@ -277,7 +277,7 @@ namespace Hero_Designer
             string[] strArray = new string[DatabaseAPI.Database.EffectIds.Count - 1 + 1];
             int num2 = DatabaseAPI.Database.EffectIds.Count - 1;
             for (int index = 0; index <= num2; ++index)
-                strArray[index] = Conversions.ToString(DatabaseAPI.Database.EffectIds[index]);
+                strArray[index] = Convert.ToString(DatabaseAPI.Database.EffectIds[index]);
             if (strArray.Length <= 0)
                 return;
             int num3 = strArray.Length - 1;
@@ -291,7 +291,7 @@ namespace Hero_Designer
             FillComboBoxes();
             DisplayEffectData();
             if (myFX.GetPower() is IPower power)
-                Text = "Edit Effect " + Conversions.ToString(myFX.nID) + " for: " + power.FullName;
+                Text = "Edit Effect " + Convert.ToString(myFX.nID) + " for: " + power.FullName;
             else if (myFX.Enhancement != null)
                 Text = "Edit Effect for: " + myFX.Enhancement.UID;
             else
@@ -414,7 +414,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtFXDelay.Text = Conversions.ToString(myFX.DelayedTime);
+            txtFXDelay.Text = Convert.ToString(myFX.DelayedTime);
             UpdateFXText();
         }
 
@@ -452,7 +452,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtFXMag.Text = Conversions.ToString(myFX.nMagnitude);
+            txtFXMag.Text = Convert.ToString(myFX.nMagnitude);
             UpdateFXText();
         }
 
@@ -474,7 +474,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtFXProb.Text = Conversions.ToString(myFX.BaseProbability);
+            txtFXProb.Text = Convert.ToString(myFX.BaseProbability);
             UpdateFXText();
         }
 
@@ -520,7 +520,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtFXTicks.Text = Conversions.ToString(myFX.Ticks);
+            txtFXTicks.Text = Convert.ToString(myFX.Ticks);
             UpdateFXText();
         }
 
@@ -547,7 +547,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtPPM.Text = Conversions.ToString(myFX.ProcsPerMinute);
+            txtPPM.Text = Convert.ToString(myFX.ProcsPerMinute);
         }
 
         void txtPPM_TextChanged(object sender, EventArgs e)
@@ -625,7 +625,7 @@ namespace Hero_Designer
                     int num = DatabaseAPI.Database.EffectIds.Count - 1;
                     for (int index2 = 0; index2 <= num; ++index2)
                     {
-                        strArray[index2] = Conversions.ToString(DatabaseAPI.Database.EffectIds[index2]);
+                        strArray[index2] = Convert.ToString(DatabaseAPI.Database.EffectIds[index2]);
                         if (strArray[index2].ToLower() == lower)
                             index1 = index2;
                     }

@@ -103,7 +103,7 @@ namespace Hero_Designer
             lblFile.Text = FileIO.StripPath(FullFileName);
             lblDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.PowersetVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
             udRevision.Value = new Decimal(DatabaseAPI.Database.PowersetVersion.Revision);
-            lblCount.Text = "Records: " + Conversions.ToString(DatabaseAPI.Database.Powersets.Length);
+            lblCount.Text = "Records: " + Convert.ToString(DatabaseAPI.Database.Powersets.Length);
         }
 
         void FillListView()
@@ -204,7 +204,7 @@ namespace Hero_Designer
                 return false;
             }
             iStream.Close();
-            int num6 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Conversions.ToString(num3) + "\r\nGood: " + Conversions.ToString(num1) + "\r\nRejected: " + Conversions.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
+            int num6 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
 
@@ -217,7 +217,7 @@ namespace Hero_Designer
             {
                 if (!lstImport.Items[index].Checked)
                     continue;
-                ImportBuffer[Conversions.ToInteger(lstImport.Items[index].Tag)].Apply();
+                ImportBuffer[Convert.ToInt32(lstImport.Items[index].Tag)].Apply();
                 ++num1;
             }
             DatabaseAPI.Database.PowersetVersion.SourceFile = dlgBrowse.FileName;
@@ -226,7 +226,7 @@ namespace Hero_Designer
             DatabaseAPI.MatchAllIDs();
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
-            int num3 = (int)Interaction.MsgBox(("Import of " + Conversions.ToString(num1) + " records completed!"), MsgBoxStyle.Information, "Done");
+            int num3 = (int)Interaction.MsgBox(("Import of " + Convert.ToString(num1) + " records completed!"), MsgBoxStyle.Information, "Done");
             DisplayInfo();
             return false;
         }

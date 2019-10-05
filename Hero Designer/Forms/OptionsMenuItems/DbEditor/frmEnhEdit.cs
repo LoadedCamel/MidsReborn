@@ -26,9 +26,9 @@ namespace Hero_Designer
         {
             string[] items = new string[5];
             IEnhancement enhancement = DatabaseAPI.Database.Enhancements[Index];
-            items[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Conversions.ToString(enhancement.StaticIndex);
+            items[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Convert.ToString(enhancement.StaticIndex);
             items[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
-            items[2] = Conversions.ToString(enhancement.Effect.Length);
+            items[2] = Convert.ToString(enhancement.Effect.Length);
             items[3] = "";
             int num1 = enhancement.ClassID.Length - 1;
             for (int index1 = 0; index1 <= num1; ++index1)
@@ -275,9 +275,9 @@ namespace Hero_Designer
         {
             string[] strArray1 = new string[5];
             IEnhancement enhancement = DatabaseAPI.Database.Enhancements[Index];
-            strArray1[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Conversions.ToString(enhancement.StaticIndex);
+            strArray1[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Convert.ToString(enhancement.StaticIndex);
             strArray1[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
-            strArray1[2] = Conversions.ToString(enhancement.Effect.Length);
+            strArray1[2] = Convert.ToString(enhancement.Effect.Length);
             strArray1[3] = "";
             int num1 = enhancement.ClassID.Length - 1;
             for (int index1 = 0; index1 <= num1; ++index1)

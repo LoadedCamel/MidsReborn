@@ -59,9 +59,9 @@ namespace Hero_Designer
             lvSet.Items.Add(new ListViewItem(new[]
             {
         DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName,
-        Conversions.ToString(DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1) + " - " + Conversions.ToString(DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1),
+        Convert.ToString(DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin + 1) + " - " + Convert.ToString(DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax + 1),
         DatabaseAPI.Database.SetTypeStringLong[(int) DatabaseAPI.Database.EnhancementSets[nIDSet].SetType],
-        BonusID >= 0 ? Conversions.ToString(DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nIDSet, BonusID)) : "Special"
+        BonusID >= 0 ? Convert.ToString(DatabaseAPI.Database.EnhancementSets.GetSetBonusEnhCount(nIDSet, BonusID)) : "Special"
             }, nIDSet));
             lvSet.Items[lvSet.Items.Count - 1].Tag = nIDSet;
         }
@@ -174,7 +174,7 @@ namespace Hero_Designer
                 if (!flag)
                 {
                     if (Conversion.Val(RuntimeHelpers.GetObjectValue(lvMag.SelectedItems[0].Tag)) > -1.0)
-                        AddEffect(ref List, ref nIDList, DatabaseAPI.Database.Power[Conversions.ToInteger(lvMag.SelectedItems[0].Tag)].PowerName, Conversions.ToInteger(lvMag.SelectedItems[0].Tag));
+                        AddEffect(ref List, ref nIDList, DatabaseAPI.Database.Power[Convert.ToInt32(lvMag.SelectedItems[0].Tag)].PowerName, Convert.ToInt32(lvMag.SelectedItems[0].Tag));
                 }
                 else
                 {
@@ -329,7 +329,7 @@ namespace Hero_Designer
         {
             if (lvSet.SelectedItems.Count <= 0)
                 return;
-            SetInfo.SetPopup(Character.PopSetInfo(Conversions.ToInteger(lvSet.SelectedItems[0].Tag)));
+            SetInfo.SetPopup(Character.PopSetInfo(Convert.ToInt32(lvSet.SelectedItems[0].Tag)));
         }
     }
 }

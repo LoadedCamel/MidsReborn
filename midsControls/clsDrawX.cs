@@ -74,7 +74,7 @@ namespace midsControls
                 for (int i = 0; i <= num2; i++)
                 {
                     bxPower[i] = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + GfxPowerFn +
-                                                    Strings.Trim(Conversions.ToString(i)) + GfxFileExt);
+                                                    Strings.Trim(Convert.ToString(i)) + GfxFileExt);
                 }
 
                 ColourSwitch();
@@ -175,7 +175,7 @@ namespace midsControls
                     RectangleF iValue2 = rect;
                     iValue2.Y -= 3f;
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                    string iStr = Conversions.ToString(checked(slot.Enhancement.IOLevel + 1));
+                    string iStr = Convert.ToString(checked(slot.Enhancement.IOLevel + 1));
                     RectangleF bounds = ScaleDown(iValue2);
                     Color cyan = Color.Cyan;
                     Color outline = Color.FromArgb(128, 0, 0, 0);
@@ -422,7 +422,7 @@ namespace midsControls
 
                         Graphics graphics5 = bxBuffer.Graphics;
                         DrawOutlineText(
-                            iStr: Conversions.ToString(slot.Level + 1),
+                            iStr: Convert.ToString(slot.Level + 1),
                             bounds: ScaleDown(iValue2),
                             textColor: Color.FromArgb(0, 255, 0),
                             outlineColor: Color.FromArgb(192, 0, 0, 0),
@@ -439,7 +439,7 @@ namespace midsControls
                     bxBuffer.Graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(iValue2));
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
                     iValue2.Y += (szSlot.Height - iValue2.Height) / 2f;
-                    DrawOutlineText(Conversions.ToString(slotChk + 1), ScaleDown(iValue2),
+                    DrawOutlineText(Convert.ToString(slotChk + 1), ScaleDown(iValue2),
                         Color.FromArgb(0, 255, 255), Color.FromArgb(192, 0, 0, 0), font, 1f, bxBuffer.Graphics);
                 }
 
@@ -463,7 +463,7 @@ namespace midsControls
                         break;
                     case Enums.ePowerState.Empty:
                         solidBrush = new SolidBrush(Color.WhiteSmoke);
-                        text = "(" + Conversions.ToString(iSlot.Level + 1) + ")";
+                        text = "(" + Convert.ToString(iSlot.Level + 1) + ")";
                         break;
                     case Enums.ePowerState.Used:
                         switch (iSlot.PowerSet.SetType)
@@ -488,11 +488,11 @@ namespace midsControls
                         solidBrush = new SolidBrush(Color.Black);
                         text = iSlot.Virtual
                             ? iSlot.Name
-                            : string.Concat("(", Conversions.ToString(iSlot.Level + 1), ") ", iSlot.Name, " ", text2);
+                            : string.Concat("(", Convert.ToString(iSlot.Level + 1), ") ", iSlot.Name, " ", text2);
                         break;
                     case Enums.ePowerState.Open:
                         solidBrush = new SolidBrush(Color.Yellow);
-                        text = "(" + Conversions.ToString(iSlot.Level + 1) + ")";
+                        text = "(" + Convert.ToString(iSlot.Level + 1) + ")";
                         break;
                 }
 

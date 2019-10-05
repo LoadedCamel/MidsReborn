@@ -100,7 +100,7 @@ namespace Hero_Designer
                 int num6 = lvDPA.Items.Count - 1;
                 for (int index1 = 1; index1 <= num6; ++index1)
                 {
-                    int rIDX = DatabaseAPI.Database.Enhancements[Conversions.ToInteger(lvDPA.Items[index1].Tag)].RecipeIDX;
+                    int rIDX = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[index1].Tag)].RecipeIDX;
                     if (lvDPA.Items[index1].SubItems[1].Text == "*")
                     {
                         rIDX = -1;
@@ -109,7 +109,7 @@ namespace Hero_Designer
 
                     if (rIDX <= -1)
                         continue;
-                    int iLevel = Conversions.ToInteger(lvDPA.Items[index1].SubItems[1].Text) - 1;
+                    int iLevel = Convert.ToInt32(lvDPA.Items[index1].SubItems[1].Text) - 1;
                     int itemId = FindItemID(rIDX, iLevel);
                     if (itemId <= -1)
                         continue;
@@ -132,7 +132,7 @@ namespace Hero_Designer
                     num1 += recipeEntry.CraftCost;
                     if (recipeEntry.CraftCostM > 0)
                         num3 += recipeEntry.CraftCostM;
-                    else if (DatabaseAPI.Database.Enhancements[Conversions.ToInteger(lvDPA.Items[index1].Tag)].TypeID == Enums.eType.SetO)
+                    else if (DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[index1].Tag)].TypeID == Enums.eType.SetO)
                         num3 += recipeEntry.CraftCost;
                     num2 += recipeEntry.BuyCost;
                 }
@@ -147,14 +147,14 @@ namespace Hero_Designer
                             ? DatabaseAPI.Database
                                 .Power[
                                     MidsContext.Character.CurrentBuild
-                                        .Powers[Conversions.ToInteger(lvPower.CheckedItems[0].Tag)].NIDPower]
+                                        .Powers[Convert.ToInt32(lvPower.CheckedItems[0].Tag)].NIDPower]
                                 .DisplayName
                             : "All Powers", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
                 }
                 else
-                    popupData.Sections[index3].Add(Conversions.ToString(lvPower.CheckedIndices.Count) + " Powers", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    popupData.Sections[index3].Add(Convert.ToString(lvPower.CheckedIndices.Count) + " Powers", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
                 if (!chkRecipe.Checked)
-                    popupData.Sections[index3].Add(Conversions.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    popupData.Sections[index3].Add(Convert.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
                 if (Mini)
                 {
                     string str = "Buy:";
@@ -195,7 +195,7 @@ namespace Hero_Designer
                 {
                     RecipeInfo.ColumnPosition = 0.75f;
                     int index1 = popupData.Add();
-                    popupData.Sections[index1].Add(Conversions.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    popupData.Sections[index1].Add(Convert.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
                     int num7 = numArray2.Length - 1;
                     for (int index2 = 0; index2 <= num7; ++index2)
                     {
@@ -221,9 +221,9 @@ namespace Hero_Designer
                                     break;
                             }
                             if (Mini)
-                                popupData.Sections[index1].Add(" " + Conversions.ToString(numArray2[index2][index4]) + " x", color, DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[index2].EnhIdx) + " (" + Conversions.ToString(DatabaseAPI.Database.Recipes[index2].Item[index4].Level + 1) + ")", color, 0.9f, FontStyle.Bold, iIndent);
+                                popupData.Sections[index1].Add(" " + Convert.ToString(numArray2[index2][index4]) + " x", color, DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[index2].EnhIdx) + " (" + Convert.ToString(DatabaseAPI.Database.Recipes[index2].Item[index4].Level + 1) + ")", color, 0.9f, FontStyle.Bold, iIndent);
                             else
-                                popupData.Sections[index1].Add(DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[index2].EnhIdx) + " (" + Conversions.ToString(DatabaseAPI.Database.Recipes[index2].Item[index4].Level + 1) + ")", color, Conversions.ToString(numArray2[index2][index4]), color, 0.9f, FontStyle.Bold, iIndent);
+                                popupData.Sections[index1].Add(DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[index2].EnhIdx) + " (" + Convert.ToString(DatabaseAPI.Database.Recipes[index2].Item[index4].Level + 1) + ")", color, Convert.ToString(numArray2[index2][index4]), color, 0.9f, FontStyle.Bold, iIndent);
                         }
                     }
                     popupData.Sections[index1].Content = sortPopupStrings(Mini, 2, popupData.Sections[index1].Content);
@@ -236,7 +236,7 @@ namespace Hero_Designer
                     popupData.ColRight = false;
                 }
                 int index5 = popupData.Add();
-                string iText1 = !Mini ? Conversions.ToString(num4) + " Salvage Items:" : Conversions.ToString(num4) + " Items:";
+                string iText1 = !Mini ? Convert.ToString(num4) + " Salvage Items:" : Convert.ToString(num4) + " Items:";
                 popupData.Sections[index5].Add(iText1, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
                 int num9 = numArray1.Length - 1;
                 for (int index1 = 0; index1 <= num9; ++index1)
@@ -257,40 +257,40 @@ namespace Hero_Designer
                             break;
                     }
                     if (Mini)
-                        popupData.Sections[index5].Add(" " + Conversions.ToString(numArray1[index1]) + " x", color, DatabaseAPI.Database.Salvage[index1].ExternalName, color, 0.9f, FontStyle.Bold, 0);
+                        popupData.Sections[index5].Add(" " + Convert.ToString(numArray1[index1]) + " x", color, DatabaseAPI.Database.Salvage[index1].ExternalName, color, 0.9f, FontStyle.Bold, 0);
                     else
-                        popupData.Sections[index5].Add(DatabaseAPI.Database.Salvage[index1].ExternalName, color, Conversions.ToString(numArray1[index1]), color, 0.9f, FontStyle.Bold, 1);
+                        popupData.Sections[index5].Add(DatabaseAPI.Database.Salvage[index1].ExternalName, color, Convert.ToString(numArray1[index1]), color, 0.9f, FontStyle.Bold, 1);
                 }
                 popupData.Sections[index5].Content = sortPopupStrings(Mini, 1, popupData.Sections[index5].Content);
                 if (nonRecipeCount == 1)
                     return popupData;
                 {
                     int index1 = popupData.Add();
-                    string iText2 = !Mini ? Conversions.ToString(nonRecipeCount - 1) + " Non-Crafted Enhancements:" : Conversions.ToString(nonRecipeCount - 1) + " Enhs:";
+                    string iText2 = !Mini ? Convert.ToString(nonRecipeCount - 1) + " Non-Crafted Enhancements:" : Convert.ToString(nonRecipeCount - 1) + " Enhs:";
                     popupData.Sections[index1].Add(iText2, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
                     int num7 = tl.Length - 1;
                     for (int index2 = 0; index2 <= num7; ++index2)
                     {
                         Color common = PopUp.Colors.Common;
                         if (Mini)
-                            popupData.Sections[index1].Add(" " + Conversions.ToString(tl[index2].Count) + " x", common, tl[index2].Text, common, 0.9f, FontStyle.Bold, 0);
+                            popupData.Sections[index1].Add(" " + Convert.ToString(tl[index2].Count) + " x", common, tl[index2].Text, common, 0.9f, FontStyle.Bold, 0);
                         else
-                            popupData.Sections[index1].Add(tl[index2].Text, common, Conversions.ToString(tl[index2].Count), common, 0.9f, FontStyle.Bold, 1);
+                            popupData.Sections[index1].Add(tl[index2].Text, common, Convert.ToString(tl[index2].Count), common, 0.9f, FontStyle.Bold, 1);
                     }
                     popupData.Sections[index1].Content = sortPopupStrings(Mini, 1, popupData.Sections[index1].Content);
                 }
                 return popupData;
             }
-            lblHeader.Text = DatabaseAPI.Database.Enhancements[Conversions.ToInteger(lvDPA.SelectedItems[0].Tag)].LongName + " (" + lvDPA.SelectedItems[0].SubItems[1].Text + ")";
-            int rIdx = DatabaseAPI.Database.Enhancements[Conversions.ToInteger(lvDPA.SelectedItems[0].Tag)].RecipeIDX;
+            lblHeader.Text = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].LongName + " (" + lvDPA.SelectedItems[0].SubItems[1].Text + ")";
+            int rIdx = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].RecipeIDX;
             if (lvDPA.SelectedItems[0].SubItems[1].Text == "*")
                 rIdx = -1;
-            DrawIcon(Conversions.ToInteger(lvDPA.SelectedItems[0].Tag));
+            DrawIcon(Convert.ToInt32(lvDPA.SelectedItems[0].Tag));
             if (rIdx <= -1)
                 return popupData;
             {
                 int index1 = popupData.Add();
-                popupData.Sections[index1] = Character.PopRecipeInfo(rIdx, Conversions.ToInteger(lvDPA.SelectedItems[0].SubItems[1].Text) - 1);
+                popupData.Sections[index1] = Character.PopRecipeInfo(rIdx, Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text) - 1);
                 if (popupData.Sections[index1].Content != null && popupData.Sections[index1].Content.Length > 0)
                 {
                     PopUp.StringValue[] content = popupData.Sections[index1].Content;
@@ -426,7 +426,7 @@ namespace Hero_Designer
                 int num2 = num1;
                 for (int index1 = 0; index1 <= num2; ++index1)
                 {
-                    int hIDX = flag ? index1 : Conversions.ToInteger(lvPower.CheckedItems[index1].Tag);
+                    int hIDX = flag ? index1 : Convert.ToInt32(lvPower.CheckedItems[index1].Tag);
                     if (!(MidsContext.Character.CurrentBuild.Powers[hIDX].NIDPowerset > -1 & HasIOs(hIDX)))
                         continue;
                     int num3 = MidsContext.Character.CurrentBuild.Powers[hIDX].Slots.Length - 1;
@@ -444,12 +444,12 @@ namespace Hero_Designer
                                 string[] strArray2;
                                 IntPtr index3;
                                 (strArray2 = strArray1)[(int)(index3 = (IntPtr)num4)] = strArray2[(int)index3] + DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index2].Enhancement.Enh].Name;
-                                items[1] = Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index2].Enhancement.IOLevel + 1);
+                                items[1] = Convert.ToString(MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index2].Enhancement.IOLevel + 1);
                                 break;
                             }
                             case Enums.eType.InventO:
                                 items[0] = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index2].Enhancement.Enh].Name + " (Common)";
-                                items[1] = Conversions.ToString(MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index2].Enhancement.IOLevel + 1);
+                                items[1] = Convert.ToString(MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index2].Enhancement.IOLevel + 1);
                                 break;
                             default:
                                 items[0] = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index2].Enhancement.Enh].Name;
@@ -688,7 +688,7 @@ namespace Hero_Designer
         void RecipeInfo_MouseWheel(object sender, MouseEventArgs e)
 
         {
-            VScrollBar1.Value = Conversions.ToInteger(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
+            VScrollBar1.Value = Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
             if (VScrollBar1.Value > VScrollBar1.Maximum - 9)
                 VScrollBar1.Value = VScrollBar1.Maximum - 9;
             VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender), new ScrollEventArgs(ScrollEventType.EndScroll, 0));
@@ -748,8 +748,8 @@ namespace Hero_Designer
                     }
 
                     if ((num1 != 0 || string.CompareOrdinal(
-                             Conversions.ToString(Interaction.IIf(Mini, inStrs[index1].TextColumn, inStrs[index1].Text)),
-                             Conversions.ToString(Interaction.IIf(Mini, inStrs[numArray[index2]].TextColumn,
+                             Convert.ToString(Interaction.IIf(Mini, inStrs[index1].TextColumn, inStrs[index1].Text)),
+                             Convert.ToString(Interaction.IIf(Mini, inStrs[numArray[index2]].TextColumn,
                                  inStrs[numArray[index2]].Text))) >= 0) && num1 <= 0)
                         continue;
                     int num4 = index2;

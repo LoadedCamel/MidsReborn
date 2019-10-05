@@ -228,7 +228,7 @@ namespace Hero_Designer
             {
                 Interaction.MsgBox(("Power name '" + power.FullName + " is invalid."), MsgBoxStyle.Exclamation, "No Can Do");
             }
-            else if (!PowerFullNameIsUnique(Conversions.ToString(power.PowerIndex)))
+            else if (!PowerFullNameIsUnique(Convert.ToString(power.PowerIndex)))
             {
                 Interaction.MsgBox(("Power name '" + power.FullName + " already exists, please enter a unique name."), MsgBoxStyle.Exclamation, "No Can Do");
             }
@@ -253,7 +253,7 @@ namespace Hero_Designer
                 int checkedMutexCount = clbMutex.CheckedItems.Count - 1;
                 for (int index = 0; index <= checkedMutexCount; ++index)
                 {
-                    myPower.GroupMembership[index] = Conversions.ToString(clbMutex.CheckedItems[index]);
+                    myPower.GroupMembership[index] = Convert.ToString(clbMutex.CheckedItems[index]);
                     myPower.NGroupMembership[index] = clbMutex.CheckedIndices[index];
                 }
                 DialogResult = DialogResult.OK;
@@ -378,7 +378,7 @@ namespace Hero_Designer
         {
             if (lvSPPower.SelectedItems.Count < 1)
                 return;
-            string b = Conversions.ToString(lvSPPower.SelectedItems[0].Tag);
+            string b = Convert.ToString(lvSPPower.SelectedItems[0].Tag);
             int num = myPower.UIDSubPower.Length - 1;
             for (int index = 0; index <= num; ++index)
             {
@@ -621,8 +621,8 @@ namespace Hero_Designer
                 return;
             if (!myPower.VariableEnabled)
             {
-                udScaleMin.Value = new Decimal(0);
-                udScaleMax.Value = myPower.MaxTargets <= 1 ? new Decimal(3) : new Decimal(myPower.MaxTargets);
+                udScaleMin.Value = new decimal(0);
+                udScaleMax.Value = myPower.MaxTargets <= 1 ? new decimal(3) : new decimal(myPower.MaxTargets);
             }
             myPower.VariableEnabled = chkScale.Checked;
             udScaleMax.Enabled = myPower.VariableEnabled;
@@ -676,7 +676,7 @@ namespace Hero_Designer
             }
             else
             {
-                int[] numArray = new int[26];
+                int[] numArray = new int[28];
                 int num1 = 0;
                 int num2 = 1;
                 int num3 = numArray.Length - 1;
@@ -730,7 +730,7 @@ namespace Hero_Designer
             lblNameFull.Text = power.GroupName + "." + power.SetName + "." + power.PowerName;
             if (power.GroupName == "" | power.SetName == "" | power.PowerName == "")
                 lblNameUnique.Text = "This name is invalid.";
-            else if (PowerFullNameIsUnique(Conversions.ToString(power.PowerIndex)))
+            else if (PowerFullNameIsUnique(Convert.ToString(power.PowerIndex)))
                 lblNameUnique.Text = "This name is unique.";
             else
                 lblNameUnique.Text = "This name is NOT unique.";
@@ -1010,7 +1010,7 @@ namespace Hero_Designer
         {
             IPower power = myPower;
             string Style = "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###";
-            txtLevel.Text = Conversions.ToString(power.Level);
+            txtLevel.Text = Convert.ToString(power.Level);
             txtAcc.Text = Strings.Format(power.Accuracy, Style);
             txtInterrupt.Text = Strings.Format(power.InterruptTime, Style);
             txtCastTime.Text = Strings.Format(power.CastTimeReal, Style);
@@ -1019,18 +1019,18 @@ namespace Hero_Designer
             txtEndCost.Text = Strings.Format(power.EndCost, Style);
             txtRange.Text = Strings.Format(power.Range, Style);
             txtRangeSec.Text = Strings.Format(power.RangeSecondary, Style);
-            txtRadius.Text = Conversions.ToString(power.Radius);
-            txtArc.Text = Conversions.ToString(power.Arc);
-            txtMaxTargets.Text = Conversions.ToString(power.MaxTargets);
+            txtRadius.Text = Convert.ToString(power.Radius);
+            txtArc.Text = Convert.ToString(power.Arc);
+            txtMaxTargets.Text = Convert.ToString(power.MaxTargets);
             cbPowerType.SelectedIndex = (int)power.PowerType;
             cbEffectArea.SelectedIndex = (int)power.EffectArea;
             cbNotify.SelectedIndex = (int)power.AIReport;
             chkLos.Checked = power.TargetLoS;
             chkIgnoreStrength.Checked = power.IgnoreStrength;
-            txtNumCharges.Text = Conversions.ToString(power.NumCharges);
-            txtUseageTime.Text = Conversions.ToString(power.UsageTime);
-            txtLifeTimeGame.Text = Conversions.ToString(power.LifeTimeInGame);
-            txtLifeTimeReal.Text = Conversions.ToString(power.LifeTime);
+            txtNumCharges.Text = Convert.ToString(power.NumCharges);
+            txtUseageTime.Text = Convert.ToString(power.UsageTime);
+            txtLifeTimeGame.Text = Convert.ToString(power.LifeTimeInGame);
+            txtLifeTimeReal.Text = Convert.ToString(power.LifeTime);
             rbFlagAutoHit.Checked = true;
             FillAdvAtrList();
         }
@@ -1055,7 +1055,7 @@ namespace Hero_Designer
             chkAltSub.Checked = power.SubIsAltColour;
             chkSubInclude.Checked = power.IncludeFlag;
             chkSortOverride.Checked = power.SortOverride;
-            txtVisualLocation.Text = Conversions.ToString(power.DisplayLocation);
+            txtVisualLocation.Text = Convert.ToString(power.DisplayLocation);
             chkSummonStealEffects.Checked = power.AbsorbSummonEffects;
             chkSummonStealAttributes.Checked = power.AbsorbSummonAttributes;
             chkSummonDisplayEntity.Checked = power.ShowSummonAnyway;
@@ -1287,7 +1287,7 @@ namespace Hero_Designer
 
         void lblStaticIndex_Click(object sender, EventArgs e)
         {
-            string s = Interaction.InputBox("Insert new static index for this power.", "", Conversions.ToString(myPower.StaticIndex));
+            string s = Interaction.InputBox("Insert new static index for this power.", "", Convert.ToString(myPower.StaticIndex));
             try
             {
                 int num1 = int.Parse(s);
@@ -1297,7 +1297,7 @@ namespace Hero_Designer
                 }
                 else
                 {
-                    lblStaticIndex.Text = Conversions.ToString(num1);
+                    lblStaticIndex.Text = Convert.ToString(num1);
                     myPower.StaticIndex = num1;
                 }
             }
@@ -1758,7 +1758,7 @@ namespace Hero_Designer
         void refresh_PowerData()
         {
             Text = "Edit Power (" + myPower.FullName + ")";
-            lblStaticIndex.Text = Conversions.ToString(myPower.StaticIndex);
+            lblStaticIndex.Text = Convert.ToString(myPower.StaticIndex);
             FillCombo_Basic();
             FillTab_Basic();
             FillCombo_Attribs();
@@ -1815,7 +1815,7 @@ namespace Hero_Designer
             }
             else
             {
-                int index1 = DatabaseAPI.NidFromUidPowerset(Conversions.ToString(lvPrSet.SelectedItems[0].Tag));
+                int index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvPrSet.SelectedItems[0].Tag));
                 if (index1 > -1)
                 {
                     int num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;
@@ -1963,7 +1963,7 @@ namespace Hero_Designer
             }
             else
             {
-                int index1 = DatabaseAPI.NidFromUidPowerset(Conversions.ToString(lvSPSet.SelectedItems[0].Tag));
+                int index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvSPSet.SelectedItems[0].Tag));
                 if (index1 > -1)
                 {
                     int num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;
@@ -2026,7 +2026,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtAcc.Text = Conversions.ToString(myPower.Accuracy);
+            txtAcc.Text = Convert.ToString(myPower.Accuracy);
         }
 
         void txtAcc_TextChanged(object sender, EventArgs e)
@@ -2043,7 +2043,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtActivate.Text = Conversions.ToString(myPower.ActivatePeriod);
+            txtActivate.Text = Convert.ToString(myPower.ActivatePeriod);
         }
 
         void txtActivate_TextChanged(object sender, EventArgs e)
@@ -2060,7 +2060,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtArc.Text = Conversions.ToString(myPower.Arc);
+            txtArc.Text = Convert.ToString(myPower.Arc);
         }
 
         void txtArc_TextChanged(object sender, EventArgs e)
@@ -2077,7 +2077,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtCastTime.Text = Conversions.ToString(myPower.CastTimeReal);
+            txtCastTime.Text = Convert.ToString(myPower.CastTimeReal);
         }
 
         void txtCastTime_TextChanged(object sender, EventArgs e)
@@ -2108,7 +2108,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtEndCost.Text = Conversions.ToString(myPower.EndCost);
+            txtEndCost.Text = Convert.ToString(myPower.EndCost);
         }
 
         void txtEndCost_TextChanged(object sender, EventArgs e)
@@ -2125,7 +2125,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtInterrupt.Text = Conversions.ToString(myPower.InterruptTime);
+            txtInterrupt.Text = Convert.ToString(myPower.InterruptTime);
         }
 
         void txtInterrupt_TextChanged(object sender, EventArgs e)
@@ -2142,7 +2142,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtLevel.Text = Conversions.ToString(myPower.Level);
+            txtLevel.Text = Convert.ToString(myPower.Level);
         }
 
         void txtLevel_TextChanged(object sender, EventArgs e)
@@ -2159,7 +2159,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtLifeTimeGame.Text = Conversions.ToString(myPower.LifeTimeInGame);
+            txtLifeTimeGame.Text = Convert.ToString(myPower.LifeTimeInGame);
         }
 
         void txtLifeTimeGame_TextChanged(object sender, EventArgs e)
@@ -2176,7 +2176,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtLifeTimeReal.Text = Conversions.ToString(myPower.LifeTime);
+            txtLifeTimeReal.Text = Convert.ToString(myPower.LifeTime);
         }
 
         void txtLifeTimeReal_TextChanged(object sender, EventArgs e)
@@ -2193,7 +2193,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtMaxTargets.Text = Conversions.ToString(myPower.MaxTargets);
+            txtMaxTargets.Text = Convert.ToString(myPower.MaxTargets);
         }
 
         void txtMaxTargets_TextChanged(object sender, EventArgs e)
@@ -2225,7 +2225,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtNumCharges.Text = Conversions.ToString(myPower.NumCharges);
+            txtNumCharges.Text = Convert.ToString(myPower.NumCharges);
         }
 
         void txtNumCharges_TextChanged(object sender, EventArgs e)
@@ -2249,7 +2249,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtRadius.Text = Conversions.ToString(myPower.Radius);
+            txtRadius.Text = Convert.ToString(myPower.Radius);
         }
 
         void txtRadius_TextChanged(object sender, EventArgs e)
@@ -2266,7 +2266,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtRange.Text = Conversions.ToString(myPower.Range);
+            txtRange.Text = Convert.ToString(myPower.Range);
         }
 
         void txtRange_TextChanged(object sender, EventArgs e)
@@ -2283,7 +2283,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtRangeSec.Text = Conversions.ToString(myPower.RangeSecondary);
+            txtRangeSec.Text = Convert.ToString(myPower.RangeSecondary);
         }
 
         void txtRangeSec_TextChanged(object sender, EventArgs e)
@@ -2300,7 +2300,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtRechargeTime.Text = Conversions.ToString(myPower.RechargeTime);
+            txtRechargeTime.Text = Convert.ToString(myPower.RechargeTime);
         }
 
         void txtRechargeTime_TextChanged(object sender, EventArgs e)
@@ -2327,7 +2327,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtUseageTime.Text = Conversions.ToString(myPower.UsageTime);
+            txtUseageTime.Text = Convert.ToString(myPower.UsageTime);
         }
 
         void txtUseageTime_TextChanged(object sender, EventArgs e)
@@ -2344,7 +2344,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtVisualLocation.Text = Conversions.ToString(myPower.DisplayLocation);
+            txtVisualLocation.Text = Convert.ToString(myPower.DisplayLocation);
         }
 
         void txtVisualLocation_TextChanged(object sender, EventArgs e)

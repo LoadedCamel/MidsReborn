@@ -157,12 +157,12 @@ namespace Hero_Designer
                 return;
             lblDate.Text = Strings.Format(DatabaseAPI.Database.Date, "dd/MM/yyyy");
             UdIssue.Value = Convert.ToDecimal(DatabaseAPI.Database.Issue);
-            lblCountAT.Text = Conversions.ToString(DatabaseAPI.Database.Classes.Length);
+            lblCountAT.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length);
             lblCountEnh.Text = Strings.Format(DatabaseAPI.Database.Enhancements.Length, "#,###,##0");
             lblCountIOSet.Text = Strings.Format(DatabaseAPI.Database.EnhancementSets.Count, "#,###,##0");
             lblCountPS.Text = Strings.Format(DatabaseAPI.Database.Powersets.Length, "#,###,##0");
             lblCountPwr.Text = Strings.Format(DatabaseAPI.Database.Power.Length, "#,###,##0");
-            txtDBVer.Text = Conversions.ToString(DatabaseAPI.Database.Version);
+            txtDBVer.Text = Convert.ToString(DatabaseAPI.Database.Version);
             int num1 = 0;
             int num2 = DatabaseAPI.Database.Power.Length - 1;
             for (int index = 0; index <= num2; ++index)

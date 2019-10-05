@@ -60,7 +60,7 @@ namespace Hero_Designer
             lblATFile.Text = FileIO.StripPath(FullFileName);
             lblATDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.ArchetypeVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
             udATRevision.Value = new Decimal(DatabaseAPI.Database.ArchetypeVersion.Revision);
-            lblATCount.Text = "Classes: " + Conversions.ToString(DatabaseAPI.Database.Classes.Length);
+            lblATCount.Text = "Classes: " + Convert.ToString(DatabaseAPI.Database.Classes.Length);
         }
 
         void FillListView()
@@ -147,7 +147,7 @@ namespace Hero_Designer
                 return false;
             }
             iStream.Close();
-            int num5 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Conversions.ToString(num3) + "\r\nGood: " + Conversions.ToString(num1) + "\r\nBad: " + Conversions.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
+            int num5 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nBad: " + Convert.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
 
@@ -160,7 +160,7 @@ namespace Hero_Designer
             {
                 if (!lstImport.Items[index].Checked)
                     continue;
-                ImportBuffer[Conversions.ToInteger(lstImport.Items[index].Tag)].Apply();
+                ImportBuffer[Convert.ToInt32(lstImport.Items[index].Tag)].Apply();
                 ++num1;
             }
             DatabaseAPI.Database.ArchetypeVersion.SourceFile = dlgBrowse.FileName;
@@ -168,7 +168,7 @@ namespace Hero_Designer
             DatabaseAPI.Database.ArchetypeVersion.Revision = Convert.ToInt32(udATRevision.Value);
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
-            int num3 = (int)Interaction.MsgBox(("Import of " + Conversions.ToString(num1) + " classes completed!"), MsgBoxStyle.Information, "Done");
+            int num3 = (int)Interaction.MsgBox(("Import of " + Convert.ToString(num1) + " classes completed!"), MsgBoxStyle.Information, "Done");
             DisplayInfo();
             return false;
         }

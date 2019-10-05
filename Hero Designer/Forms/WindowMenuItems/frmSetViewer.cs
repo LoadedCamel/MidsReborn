@@ -107,7 +107,7 @@ namespace Hero_Designer
                                         .NIDPowerset].Powers[
                                     MainModule.MidsController.Toon.CurrentBuild
                                         .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].IDXPower].DisplayName;
-                    items[2] = Conversions.ToString(setInfo[index3].SlottedCount);
+                    items[2] = Convert.ToString(setInfo[index3].SlottedCount);
                     ++imageIndex;
                     lstSets.Items.Add(new ListViewItem(items, imageIndex));
                     lstSets.Items[lstSets.Items.Count - 1].Tag = setInfo[index3].SetIDX;
@@ -312,8 +312,8 @@ namespace Hero_Designer
         {
             if (lstSets.SelectedItems.Count < 1)
                 return;
-            rtxtInfo.Rtf = RTF.StartRTF() + EnhancementSetCollection.GetSetInfoLongRTF(Conversions.ToInteger(lstSets.SelectedItems[0].Tag),
-                               Conversions.ToInteger(lstSets.SelectedItems[0].SubItems[2].Text)) + RTF.EndRTF();
+            rtxtInfo.Rtf = RTF.StartRTF() + EnhancementSetCollection.GetSetInfoLongRTF(Convert.ToInt32(lstSets.SelectedItems[0].Tag),
+                               Convert.ToInt32(lstSets.SelectedItems[0].SubItems[2].Text)) + RTF.EndRTF();
         }
 
         public void SetLocation()

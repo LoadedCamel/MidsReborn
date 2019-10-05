@@ -31,9 +31,9 @@ namespace Hero_Designer
             EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[Index];
             items[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
             items[1] = Enum.GetName(enhancementSet.SetType.GetType(), enhancementSet.SetType);
-            items[2] = Conversions.ToString(enhancementSet.LevelMin + 1);
-            items[3] = Conversions.ToString(enhancementSet.LevelMax + 1);
-            items[4] = Conversions.ToString(enhancementSet.Enhancements.Length);
+            items[2] = Convert.ToString(enhancementSet.LevelMin + 1);
+            items[3] = Convert.ToString(enhancementSet.LevelMax + 1);
+            items[4] = Convert.ToString(enhancementSet.Enhancements.Length);
             int num1 = 0;
             int num2 = enhancementSet.Bonus.Length - 1;
             for (int index = 0; index <= num2; ++index)
@@ -41,7 +41,7 @@ namespace Hero_Designer
                 if (enhancementSet.Bonus[index].Index.Length > 0)
                     ++num1;
             }
-            items[5] = Conversions.ToString(num1);
+            items[5] = Convert.ToString(num1);
             lvSets.Items.Add(new ListViewItem(items, Index));
             lvSets.Items[lvSets.Items.Count - 1].Selected = true;
             lvSets.Items[lvSets.Items.Count - 1].EnsureVisible();
@@ -281,9 +281,9 @@ namespace Hero_Designer
             EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[Index];
             strArray[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
             strArray[1] = Enum.GetName(enhancementSet.SetType.GetType(), enhancementSet.SetType);
-            strArray[2] = Conversions.ToString(enhancementSet.LevelMin + 1);
-            strArray[3] = Conversions.ToString(enhancementSet.LevelMax + 1);
-            strArray[4] = Conversions.ToString(enhancementSet.Enhancements.Length);
+            strArray[2] = Convert.ToString(enhancementSet.LevelMin + 1);
+            strArray[3] = Convert.ToString(enhancementSet.LevelMax + 1);
+            strArray[4] = Convert.ToString(enhancementSet.Enhancements.Length);
             int num1 = 0;
             int num2 = enhancementSet.Bonus.Length - 1;
             for (int index = 0; index <= num2; ++index)
@@ -291,7 +291,7 @@ namespace Hero_Designer
                 if (enhancementSet.Bonus[index].Index.Length > 0)
                     ++num1;
             }
-            strArray[5] = Conversions.ToString(num1);
+            strArray[5] = Convert.ToString(num1);
             if (num1 > 5)
             {
                 int num3 = strArray.Length - 1;

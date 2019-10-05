@@ -560,7 +560,7 @@ namespace Hero_Designer
                 if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
                     iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
                 if (BaseArray[index].PowerType == Enums.ePowerType.Toggle)
-                    iTip = iTip + "\r\n(Applied every " + Conversions.ToString(BaseArray[index].ActivatePeriod) + "s)";
+                    iTip = iTip + "\r\n(Applied every " + Convert.ToString(BaseArray[index].ActivatePeriod) + "s)";
                 if (BaseOverride)
                 {
                     float num3 = nBase;
@@ -1336,7 +1336,7 @@ namespace Hero_Designer
 
         public void SetScaleLabel()
         {
-            lblScale.Text = "Scale: 0 - " + Conversions.ToString(Graph.ScaleValue);
+            lblScale.Text = "Scale: 0 - " + Convert.ToString(Graph.ScaleValue);
         }
 
         void StoreLocation()
