@@ -1345,13 +1345,14 @@ namespace Base.Data_Classes
                     string lower = GroupName.ToLower();
                     if (string.IsNullOrEmpty(ForcedClass))
                     {
-                        if (lower != "pets")
+                        if (lower == "pets")
                         {
-                            if (lower == "mastermind_pets")
-                                ForcedClass = "Class_Minion_Henchman";
-                        }
-                        else
                             ForcedClass = "Class_Minion_Pets";
+                        }
+                        else if (lower == "mastermind_pets")
+                        {
+                            ForcedClass = "Class_Minion_Henchman";
+                        }
                     }
                     DisplayName = array[1];
                     Available = int.Parse(array[2]);
@@ -2014,6 +2015,12 @@ namespace Base.Data_Classes
                         if (effect.Stacking == Enums.eStacking.Yes)
                             effect.Scale *= stacking;
                     }
+                    if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet)
+                    {
+                        effect.ToWho = Enums.eToWho.Target;
+                        if (effect.Stacking == Enums.eStacking.Yes)
+                            effect.Scale *= stacking;
+                    }
                     effect.Absorbed_Duration = nDuration;
                     if (source.RechargeTime > 0.0 & source.PowerType == Enums.ePowerType.Click)
                         effect.Absorbed_Interval = source.RechargeTime + source.CastTime;
@@ -2049,6 +2056,12 @@ namespace Base.Data_Classes
                     if (effect.Stacking == Enums.eStacking.Yes)
                         effect.Scale *= stacking;
                 }
+                if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet)
+                {
+                    effect.ToWho = Enums.eToWho.Target;
+                    if (effect.Stacking == Enums.eStacking.Yes)
+                        effect.Scale *= stacking;
+                }
                 effect.Absorbed_Duration = nDuration;
                 if (source.RechargeTime > 0.0 & source.PowerType == Enums.ePowerType.Click)
                     effect.Absorbed_Interval = source.RechargeTime + source.CastTime;
@@ -2066,7 +2079,7 @@ namespace Base.Data_Classes
             bool flag = true;
             int num1 = 0;
             int num2 = 0;
-            if (!HasGrantPowerEffect || EntitiesAffected == Enums.eEntity.MyPet)
+            if (!HasGrantPowerEffect)
                 return;
             for (; flag & num1 < 100; ++num1)
             {

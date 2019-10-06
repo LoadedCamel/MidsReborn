@@ -182,7 +182,7 @@ namespace Base.Data_Classes
                         }
                         else if (ps.SetType == Enums.ePowerSetType.None
                                 || ps.SetType == Enums.ePowerSetType.Accolade
-                                || ps.SetType == Enums.ePowerSetType.Pet
+                                //|| ps.SetType == Enums.ePowerSetType.Pet
                                 || ps.SetType == Enums.ePowerSetType.SetBonus
                                 || ps.SetType == Enums.ePowerSetType.Temp)
                             return false;
@@ -866,6 +866,7 @@ namespace Base.Data_Classes
             writer.Write(nDuration);
             writer.Write((int)AttribType);
             writer.Write((int)Aspect);
+            DatabaseAPI.Database.EffectIds.RemoveRange(DatabaseAPI.Database.EffectIds.Count - NewEffects.Count, NewEffects.Count);
             DatabaseAPI.Database.EffectIds.AddRange(NewEffects.Except(DatabaseAPI.Database.EffectIds));
             writer.Write(ModifierTable);
             writer.Write(NearGround);
