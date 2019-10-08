@@ -4,7 +4,7 @@
   "FullName": "Pets.Traps_Bomb",
   "ImageName": "",
   "Power": [
-    6553
+    6555
   ],
   "SetType": 8,
   "DisplayName": "Bomb",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6553,
+      "PowerIndex": 6555,
       "PowerSetID": 3033,
       "StaticIndex": 3537,
       "NGroupMembership": [],
@@ -297,6 +297,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

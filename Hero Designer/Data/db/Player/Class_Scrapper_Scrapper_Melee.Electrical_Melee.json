@@ -4,15 +4,15 @@
   "FullName": "Scrapper_Melee.Electrical_Melee",
   "ImageName": "ElectricMelee.png",
   "Power": [
-    6883,
-    6884,
     6885,
     6886,
     6887,
     6888,
     6889,
     6890,
-    6891
+    6891,
+    6892,
+    6893
   ],
   "SetType": 1,
   "DisplayName": "Electrical Melee",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 4.368,
-      "PowerIndex": 6883,
+      "PowerIndex": 6885,
       "PowerSetID": 3316,
       "StaticIndex": 3573,
       "NGroupMembership": [],
@@ -821,7 +821,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 6.864,
-      "PowerIndex": 6884,
+      "PowerIndex": 6886,
       "PowerSetID": 3316,
       "PowerSetIndex": 1,
       "StaticIndex": 3574,
@@ -1611,7 +1611,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.528,
-      "PowerIndex": 6885,
+      "PowerIndex": 6887,
       "PowerSetID": 3316,
       "PowerSetIndex": 2,
       "StaticIndex": 3575,
@@ -2254,7 +2254,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 6886,
+      "PowerIndex": 6888,
       "PowerSetID": 3316,
       "PowerSetIndex": 3,
       "StaticIndex": 3576,
@@ -2789,7 +2789,7 @@
     {
       "CastTimeReal": 3.3,
       "ToggleCost": 10.192,
-      "PowerIndex": 6887,
+      "PowerIndex": 6889,
       "PowerSetID": 3316,
       "PowerSetIndex": 4,
       "StaticIndex": 3577,
@@ -3678,7 +3678,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6888,
+      "PowerIndex": 6890,
       "PowerSetID": 3316,
       "PowerSetIndex": 5,
       "StaticIndex": 3578,
@@ -3906,7 +3906,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 10.192,
-      "PowerIndex": 6889,
+      "PowerIndex": 6891,
       "PowerSetID": 3316,
       "PowerSetIndex": 6,
       "StaticIndex": 3579,
@@ -4689,7 +4689,7 @@
     {
       "CastTimeReal": 1.23,
       "ToggleCost": 13.0,
-      "PowerIndex": 6890,
+      "PowerIndex": 6892,
       "PowerSetID": 3316,
       "PowerSetIndex": 7,
       "StaticIndex": 3580,
@@ -5075,7 +5075,7 @@
     {
       "CastTimeReal": 2.57,
       "ToggleCost": 13.52,
-      "PowerIndex": 6891,
+      "PowerIndex": 6893,
       "PowerSetID": 3316,
       "PowerSetIndex": 8,
       "StaticIndex": 3581,

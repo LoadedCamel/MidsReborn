@@ -3926,7 +3926,7 @@
           "nID": 4,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10066,
+          "nSummon": 10068,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -3944,7 +3944,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 5,
           "Override": "Villain_Pets.Dominator_DarkAssault_Snipe.Death_Shroud_Quick",
-          "nOverride": 10066
+          "nOverride": 10068
         },
         {
           "NewEffects": [
@@ -3975,7 +3975,7 @@
           "nID": 5,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10067,
+          "nSummon": 10069,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3992,7 +3992,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 6,
           "Override": "Villain_Pets.Dominator_DarkAssault_Snipe.Death_Shroud_Normal",
-          "nOverride": 10067
+          "nOverride": 10069
         }
       ],
       "HasPowerOverrideEffect": true,

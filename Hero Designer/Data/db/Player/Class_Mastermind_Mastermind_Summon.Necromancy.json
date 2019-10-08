@@ -4,15 +4,15 @@
   "FullName": "Mastermind_Summon.Necromancy",
   "ImageName": "Necromancy.png",
   "Power": [
-    6060,
-    6061,
     6062,
     6063,
     6064,
     6065,
     6066,
     6067,
-    6068
+    6068,
+    6069,
+    6070
   ],
   "SetType": 1,
   "DisplayName": "Necromancy",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 6060,
+      "PowerIndex": 6062,
       "PowerSetID": 3003,
       "StaticIndex": 1447,
       "NGroupMembership": [],
@@ -261,7 +261,7 @@
     {
       "CastTimeReal": 3.1,
       "ToggleCost": 19.5,
-      "PowerIndex": 6061,
+      "PowerIndex": 6063,
       "PowerSetID": 3003,
       "PowerSetIndex": 1,
       "StaticIndex": 1448,
@@ -718,7 +718,7 @@
     {
       "CastTimeReal": 1.1,
       "ToggleCost": 10.66,
-      "PowerIndex": 6062,
+      "PowerIndex": 6064,
       "PowerSetID": 3003,
       "PowerSetIndex": 2,
       "StaticIndex": 1449,
@@ -954,7 +954,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 22.75,
-      "PowerIndex": 6063,
+      "PowerIndex": 6065,
       "PowerSetID": 3003,
       "PowerSetIndex": 3,
       "StaticIndex": 1450,
@@ -1759,7 +1759,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 10.66,
-      "PowerIndex": 6064,
+      "PowerIndex": 6066,
       "PowerSetID": 3003,
       "PowerSetIndex": 4,
       "StaticIndex": 1451,
@@ -2043,7 +2043,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 19.5,
-      "PowerIndex": 6065,
+      "PowerIndex": 6067,
       "PowerSetID": 3003,
       "PowerSetIndex": 5,
       "StaticIndex": 1452,
@@ -2278,7 +2278,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 13.0,
-      "PowerIndex": 6066,
+      "PowerIndex": 6068,
       "PowerSetID": 3003,
       "PowerSetIndex": 6,
       "StaticIndex": 1453,
@@ -2556,7 +2556,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 19.5,
-      "PowerIndex": 6067,
+      "PowerIndex": 6069,
       "PowerSetID": 3003,
       "PowerSetIndex": 7,
       "StaticIndex": 1454,
@@ -2746,7 +2746,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 22.75,
-      "PowerIndex": 6068,
+      "PowerIndex": 6070,
       "PowerSetID": 3003,
       "PowerSetIndex": 8,
       "StaticIndex": 1455,

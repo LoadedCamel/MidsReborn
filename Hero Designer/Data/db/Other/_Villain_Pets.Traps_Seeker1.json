@@ -4,9 +4,9 @@
   "FullName": "Villain_Pets.Traps_Seeker1",
   "ImageName": "",
   "Power": [
-    10246,
-    10247,
-    10248
+    10248,
+    10249,
+    10250
   ],
   "SetType": 8,
   "DisplayName": "Seeker 1",
@@ -23,7 +23,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10246,
+      "PowerIndex": 10248,
       "PowerSetID": 3529,
       "StaticIndex": 3167,
       "NGroupMembership": [],
@@ -809,7 +809,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 10247,
+      "PowerIndex": 10249,
       "PowerSetID": 3529,
       "PowerSetIndex": 1,
       "StaticIndex": 3168,
@@ -1008,7 +1008,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10248,
+      "PowerIndex": 10250,
       "PowerSetID": 3529,
       "PowerSetIndex": 2,
       "StaticIndex": 3169,
@@ -1122,6 +1122,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

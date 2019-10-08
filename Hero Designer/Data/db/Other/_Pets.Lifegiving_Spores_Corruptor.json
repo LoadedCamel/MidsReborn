@@ -4,7 +4,7 @@
   "FullName": "Pets.Lifegiving_Spores_Corruptor",
   "ImageName": "",
   "Power": [
-    6328
+    6330
   ],
   "SetType": 8,
   "DisplayName": "Lifegiving Spores",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 3.1,
-      "PowerIndex": 6328,
+      "PowerIndex": 6330,
       "PowerSetID": 3128,
       "StaticIndex": 9105,
       "NGroupMembership": [],

@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Induction_Jump1_Scrapper",
   "ImageName": "",
   "Power": [
-    6170
+    6172
   ],
   "SetType": 8,
   "DisplayName": "Chain Induction Jump 1",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6170,
+      "PowerIndex": 6172,
       "PowerSetID": 3048,
       "StaticIndex": 3526,
       "NGroupMembership": [],
@@ -152,6 +152,7 @@
           "MagPercent": -100.0,
           "Duration": 3.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

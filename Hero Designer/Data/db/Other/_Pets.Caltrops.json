@@ -4,7 +4,7 @@
   "FullName": "Pets.Caltrops",
   "ImageName": "",
   "Power": [
-    6166
+    6168
   ],
   "SetType": 8,
   "DisplayName": "Caltrops",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6166,
+      "PowerIndex": 6168,
       "PowerSetID": 3044,
       "StaticIndex": 1557,
       "NGroupMembership": [],

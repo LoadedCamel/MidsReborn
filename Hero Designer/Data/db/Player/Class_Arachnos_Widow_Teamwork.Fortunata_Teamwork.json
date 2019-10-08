@@ -4,11 +4,11 @@
   "FullName": "Teamwork.Fortunata_Teamwork",
   "ImageName": "i12_Sec_Fortunata.png",
   "Power": [
-    8807,
-    8808,
     8809,
     8810,
-    8811
+    8811,
+    8812,
+    8813
   ],
   "SetType": 2,
   "DisplayName": "Fortunata Teamwork",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.208,
-      "PowerIndex": 8807,
+      "PowerIndex": 8809,
       "PowerSetID": 3420,
       "StaticIndex": 2622,
       "NGroupMembership": [
@@ -2198,7 +2198,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 10.192,
-      "PowerIndex": 8808,
+      "PowerIndex": 8810,
       "PowerSetID": 3420,
       "PowerSetIndex": 1,
       "StaticIndex": 2623,
@@ -2881,7 +2881,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.528,
-      "PowerIndex": 8809,
+      "PowerIndex": 8811,
       "PowerSetID": 3420,
       "PowerSetIndex": 2,
       "StaticIndex": 2624,
@@ -3059,7 +3059,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 8810,
+      "PowerIndex": 8812,
       "PowerSetID": 3420,
       "PowerSetIndex": 3,
       "StaticIndex": 2625,
@@ -4839,7 +4839,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 26.0,
-      "PowerIndex": 8811,
+      "PowerIndex": 8813,
       "PowerSetID": 3420,
       "PowerSetIndex": 4,
       "StaticIndex": 2626,

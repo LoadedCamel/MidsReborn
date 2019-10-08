@@ -4,10 +4,10 @@
   "FullName": "Villain_Pets.Creeper_Vine",
   "ImageName": "",
   "Power": [
-    10055,
-    10056,
     10057,
-    10058
+    10058,
+    10059,
+    10060
   ],
   "SetType": 8,
   "DisplayName": "Creeper Vine",
@@ -26,7 +26,7 @@
     {
       "CastTimeReal": 0.9,
       "ToggleCost": 5.2,
-      "PowerIndex": 10055,
+      "PowerIndex": 10057,
       "PowerSetID": 3490,
       "StaticIndex": 3076,
       "NGroupMembership": [],
@@ -611,7 +611,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10056,
+      "PowerIndex": 10058,
       "PowerSetID": 3490,
       "PowerSetIndex": 1,
       "StaticIndex": 3077,
@@ -1163,7 +1163,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10057,
+      "PowerIndex": 10059,
       "PowerSetID": 3490,
       "PowerSetIndex": 2,
       "StaticIndex": 3078,
@@ -1229,6 +1229,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -1263,7 +1264,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 5.2,
-      "PowerIndex": 10058,
+      "PowerIndex": 10060,
       "PowerSetID": 3490,
       "PowerSetIndex": 3,
       "StaticIndex": 3079,

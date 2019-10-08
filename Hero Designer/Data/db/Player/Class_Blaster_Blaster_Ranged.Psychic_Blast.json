@@ -3539,7 +3539,7 @@
           "nID": 2,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6139,
+          "nSummon": 6141,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -3557,7 +3557,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 3,
           "Override": "Pets.Blaster_Psychic_Snipe.Psionic_Lance_Quick",
-          "nOverride": 6139
+          "nOverride": 6141
         },
         {
           "NewEffects": [
@@ -3589,7 +3589,7 @@
           "nID": 3,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6138,
+          "nSummon": 6140,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3606,7 +3606,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 4,
           "Override": "Pets.Blaster_Psychic_Snipe.Psionic_Lance_Normal",
-          "nOverride": 6138
+          "nOverride": 6140
         },
         {
           "NewEffects": [

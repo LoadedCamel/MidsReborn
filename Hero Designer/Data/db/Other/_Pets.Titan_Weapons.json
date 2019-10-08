@@ -4,8 +4,6 @@
   "FullName": "Pets.Titan_Weapons",
   "ImageName": "",
   "Power": [
-    6514,
-    6515,
     6516,
     6517,
     6518,
@@ -13,7 +11,9 @@
     6520,
     6521,
     6522,
-    6523
+    6523,
+    6524,
+    6525
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -32,7 +32,7 @@
     {
       "CastTimeReal": 2.2,
       "ToggleCost": 5.356,
-      "PowerIndex": 6514,
+      "PowerIndex": 6516,
       "PowerSetID": 3009,
       "StaticIndex": 6008,
       "NGroupMembership": [],
@@ -179,6 +179,7 @@
           "MagPercent": 15.000001,
           "Duration": 10.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
@@ -231,6 +232,7 @@
           "MagPercent": 15.000001,
           "Duration": 10.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
@@ -612,7 +614,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 19.06736,
-      "PowerIndex": 6515,
+      "PowerIndex": 6517,
       "PowerSetID": 3009,
       "PowerSetIndex": 1,
       "StaticIndex": 6017,
@@ -1041,7 +1043,7 @@
     {
       "CastTimeReal": 2.7,
       "ToggleCost": 19.06736,
-      "PowerIndex": 6516,
+      "PowerIndex": 6518,
       "PowerSetID": 3009,
       "PowerSetIndex": 2,
       "StaticIndex": 6016,
@@ -1568,7 +1570,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 8.78384,
-      "PowerIndex": 6517,
+      "PowerIndex": 6519,
       "PowerSetID": 3009,
       "PowerSetIndex": 3,
       "StaticIndex": 6011,
@@ -1992,7 +1994,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.78384,
-      "PowerIndex": 6518,
+      "PowerIndex": 6520,
       "PowerSetID": 3009,
       "PowerSetIndex": 4,
       "StaticIndex": 6010,
@@ -2514,7 +2516,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 5.356,
-      "PowerIndex": 6519,
+      "PowerIndex": 6521,
       "PowerSetID": 3009,
       "PowerSetIndex": 5,
       "StaticIndex": 6009,
@@ -2661,6 +2663,7 @@
           "MagPercent": 15.000001,
           "Duration": 10.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
@@ -2713,6 +2716,7 @@
           "MagPercent": 15.000001,
           "Duration": 10.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
@@ -2996,7 +3000,7 @@
     {
       "CastTimeReal": 1.3,
       "ToggleCost": 15.63952,
-      "PowerIndex": 6520,
+      "PowerIndex": 6522,
       "PowerSetID": 3009,
       "PowerSetIndex": 6,
       "StaticIndex": 6015,
@@ -3821,7 +3825,7 @@
     {
       "CastTimeReal": 2.3,
       "ToggleCost": 15.63952,
-      "PowerIndex": 6521,
+      "PowerIndex": 6523,
       "PowerSetID": 3009,
       "PowerSetIndex": 7,
       "StaticIndex": 6014,
@@ -4744,7 +4748,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 10.49776,
-      "PowerIndex": 6522,
+      "PowerIndex": 6524,
       "PowerSetID": 3009,
       "PowerSetIndex": 8,
       "StaticIndex": 6013,
@@ -5221,7 +5225,7 @@
     {
       "CastTimeReal": 2.43,
       "ToggleCost": 10.49776,
-      "PowerIndex": 6523,
+      "PowerIndex": 6525,
       "PowerSetID": 3009,
       "PowerSetIndex": 9,
       "StaticIndex": 6012,

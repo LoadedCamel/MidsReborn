@@ -4,15 +4,15 @@
   "FullName": "Scrapper_Melee.Martial_Arts",
   "ImageName": "MartialArtsHero.png",
   "Power": [
-    6928,
-    6929,
     6930,
     6931,
     6932,
     6933,
     6934,
     6935,
-    6936
+    6936,
+    6937,
+    6938
   ],
   "SetType": 1,
   "DisplayName": "Martial Arts",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 4.368,
-      "PowerIndex": 6928,
+      "PowerIndex": 6930,
       "PowerSetID": 3321,
       "StaticIndex": 1941,
       "NGroupMembership": [],
@@ -514,7 +514,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 7.0044,
-      "PowerIndex": 6929,
+      "PowerIndex": 6931,
       "PowerSetID": 3321,
       "PowerSetIndex": 1,
       "StaticIndex": 1942,
@@ -883,7 +883,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 10.192,
-      "PowerIndex": 6930,
+      "PowerIndex": 6932,
       "PowerSetID": 3321,
       "PowerSetIndex": 2,
       "StaticIndex": 1943,
@@ -1315,7 +1315,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 6931,
+      "PowerIndex": 6933,
       "PowerSetID": 3321,
       "PowerSetIndex": 3,
       "StaticIndex": 1944,
@@ -1850,7 +1850,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 10.192,
-      "PowerIndex": 6932,
+      "PowerIndex": 6934,
       "PowerSetID": 3321,
       "PowerSetIndex": 4,
       "StaticIndex": 1945,
@@ -2328,7 +2328,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6933,
+      "PowerIndex": 6935,
       "PowerSetID": 3321,
       "PowerSetIndex": 5,
       "StaticIndex": 1946,
@@ -2608,7 +2608,7 @@
     {
       "CastTimeReal": 1.6,
       "ToggleCost": 11.024,
-      "PowerIndex": 6934,
+      "PowerIndex": 6936,
       "PowerSetID": 3321,
       "PowerSetIndex": 6,
       "StaticIndex": 1947,
@@ -3408,7 +3408,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 13.52,
-      "PowerIndex": 6935,
+      "PowerIndex": 6937,
       "PowerSetID": 3321,
       "PowerSetIndex": 7,
       "StaticIndex": 1948,
@@ -3890,7 +3890,7 @@
     {
       "CastTimeReal": 2.53,
       "ToggleCost": 11.856,
-      "PowerIndex": 6936,
+      "PowerIndex": 6938,
       "PowerSetID": 3321,
       "PowerSetIndex": 8,
       "StaticIndex": 1949,

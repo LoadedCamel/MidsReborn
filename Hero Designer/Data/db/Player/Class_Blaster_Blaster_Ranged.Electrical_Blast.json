@@ -4022,7 +4022,7 @@
           "nID": 2,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6133,
+          "nSummon": 6135,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -4040,7 +4040,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 3,
           "Override": "Pets.Blaster_Electric_Snipe.Zapp_Quick",
-          "nOverride": 6133
+          "nOverride": 6135
         },
         {
           "NewEffects": [
@@ -4072,7 +4072,7 @@
           "nID": 3,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6132,
+          "nSummon": 6134,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4089,7 +4089,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 4,
           "Override": "Pets.Blaster_Electric_Snipe.Zapp_Normal",
-          "nOverride": 6132
+          "nOverride": 6134
         },
         {
           "NewEffects": [

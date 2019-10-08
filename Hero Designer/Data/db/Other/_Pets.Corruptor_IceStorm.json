@@ -4,13 +4,13 @@
   "FullName": "Pets.Corruptor_IceStorm",
   "ImageName": "",
   "Power": [
-    6192,
-    6193
+    6194,
+    6195
   ],
   "SetType": 8,
   "DisplayName": "Ice Storm",
   "nArchetype": -1,
-  "nID": 3111,
+  "nID": 3112,
   "SubName": "Ice Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -22,8 +22,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6192,
-      "PowerSetID": 3111,
+      "PowerIndex": 6194,
+      "PowerSetID": 3112,
       "StaticIndex": 1563,
       "NGroupMembership": [],
       "FullName": "Pets.Corruptor_IceStorm.IceStorm",
@@ -589,8 +589,8 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6193,
-      "PowerSetID": 3111,
+      "PowerIndex": 6195,
+      "PowerSetID": 3112,
       "PowerSetIndex": 1,
       "StaticIndex": 1564,
       "NGroupMembership": [],

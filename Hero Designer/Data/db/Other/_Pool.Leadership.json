@@ -4,11 +4,11 @@
   "FullName": "Pool.Leadership",
   "ImageName": "Leadership.png",
   "Power": [
-    6673,
-    6674,
     6675,
     6676,
-    6677
+    6677,
+    6678,
+    6679
   ],
   "SetType": 5,
   "DisplayName": "Leadership",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 0.39,
-      "PowerIndex": 6673,
+      "PowerIndex": 6675,
       "PowerSetID": 3291,
       "StaticIndex": 1809,
       "NGroupMembership": [],
@@ -1148,7 +1148,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 0.39,
-      "PowerIndex": 6674,
+      "PowerIndex": 6676,
       "PowerSetID": 3291,
       "PowerSetIndex": 1,
       "StaticIndex": 1810,
@@ -1726,7 +1726,7 @@
       "CastTimeReal": 3.67,
       "ToggleCost": 0.39,
       "IsEpic": true,
-      "PowerIndex": 6675,
+      "PowerIndex": 6677,
       "PowerSetID": 3291,
       "PowerSetIndex": 2,
       "StaticIndex": 1811,
@@ -1754,11 +1754,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6673,
+            6675,
             -1
           ],
           [
-            6674,
+            6676,
             -1
           ]
         ],
@@ -2174,7 +2174,7 @@
     {
       "CastTimeReal": 1.17,
       "IsEpic": true,
-      "PowerIndex": 6676,
+      "PowerIndex": 6678,
       "PowerSetID": 3291,
       "PowerSetIndex": 3,
       "StaticIndex": 1812,
@@ -2206,16 +2206,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6673,
-            6674
+            6675,
+            6676
           ],
           [
-            6673,
-            6675
+            6675,
+            6677
           ],
           [
-            6674,
-            6675
+            6676,
+            6677
           ]
         ],
         "NPowerIDNot": []
@@ -3931,7 +3931,7 @@
       "CastTimeReal": 1.17,
       "ToggleCost": 9.75,
       "IsEpic": true,
-      "PowerIndex": 6677,
+      "PowerIndex": 6679,
       "PowerSetID": 3291,
       "PowerSetIndex": 4,
       "StaticIndex": 9614,
@@ -3975,28 +3975,28 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6673,
-            6674
-          ],
-          [
-            6673,
-            6675
-          ],
-          [
-            6673,
-            6676
-          ],
-          [
-            6674,
-            6675
-          ],
-          [
-            6674,
+            6675,
             6676
           ],
           [
             6675,
-            6676
+            6677
+          ],
+          [
+            6675,
+            6678
+          ],
+          [
+            6676,
+            6677
+          ],
+          [
+            6676,
+            6678
+          ],
+          [
+            6677,
+            6678
           ]
         ],
         "NPowerIDNot": []

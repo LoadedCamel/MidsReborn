@@ -4,8 +4,8 @@
   "FullName": "Pets.Team_Transport",
   "ImageName": "",
   "Power": [
-    6493,
-    6494
+    6495,
+    6496
   ],
   "SetType": 8,
   "DisplayName": "Team Transport",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.0,
-      "PowerIndex": 6493,
+      "PowerIndex": 6495,
       "PowerSetID": 3227,
       "StaticIndex": 6229,
       "NGroupMembership": [],
@@ -127,7 +127,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 6494,
+      "PowerIndex": 6496,
       "PowerSetID": 3227,
       "PowerSetIndex": 1,
       "StaticIndex": 6230,
@@ -193,6 +193,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

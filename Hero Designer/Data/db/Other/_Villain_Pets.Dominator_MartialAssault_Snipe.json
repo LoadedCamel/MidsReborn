@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Dominator_MartialAssault_Snipe",
   "ImageName": "",
   "Power": [
-    10076,
-    10077
+    10078,
+    10079
   ],
   "SetType": 8,
   "DisplayName": "Dominator_MartialAssault_Snipe",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 18.512,
-      "PowerIndex": 10076,
+      "PowerIndex": 10078,
       "PowerSetID": 3498,
       "StaticIndex": 9819,
       "NGroupMembership": [],
@@ -351,7 +351,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 18.512,
-      "PowerIndex": 10077,
+      "PowerIndex": 10079,
       "PowerSetID": 3498,
       "PowerSetIndex": 1,
       "StaticIndex": 9820,

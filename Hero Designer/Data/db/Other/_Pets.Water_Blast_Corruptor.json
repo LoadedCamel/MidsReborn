@@ -4,8 +4,8 @@
   "FullName": "Pets.Water_Blast_Corruptor",
   "ImageName": "",
   "Power": [
-    6625,
-    6626
+    6627,
+    6628
   ],
   "SetType": 8,
   "DisplayName": "Water Blast",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.43,
       "ToggleCost": 10.192,
-      "PowerIndex": 6625,
+      "PowerIndex": 6627,
       "PowerSetID": 3274,
       "StaticIndex": 9121,
       "NGroupMembership": [],
@@ -637,7 +637,7 @@
           "nID": 10,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9878,
+          "nSummon": 9880,
           "SpecialCase": 42,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -665,7 +665,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 5.096,
-      "PowerIndex": 6626,
+      "PowerIndex": 6628,
       "PowerSetID": 3274,
       "PowerSetIndex": 1,
       "StaticIndex": 9122,
@@ -1319,6 +1319,7 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "Corruptor_Ranged.Water_Blast.Water_Jet",
           "EffectId": "Ones",

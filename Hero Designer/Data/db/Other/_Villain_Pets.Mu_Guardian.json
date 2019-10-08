@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Mu_Guardian",
   "ImageName": "",
   "Power": [
-    10131,
-    10132,
     10133,
     10134,
     10135,
     10136,
     10137,
-    10138
+    10138,
+    10139,
+    10140
   ],
   "SetType": 8,
   "DisplayName": "Mu Guardian",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10131,
+      "PowerIndex": 10133,
       "PowerSetID": 3516,
       "StaticIndex": 3113,
       "NGroupMembership": [],
@@ -182,7 +182,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 14.3,
-      "PowerIndex": 10132,
+      "PowerIndex": 10134,
       "PowerSetID": 3516,
       "PowerSetIndex": 1,
       "StaticIndex": 3114,
@@ -558,7 +558,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10133,
+      "PowerIndex": 10135,
       "PowerSetID": 3516,
       "PowerSetIndex": 2,
       "StaticIndex": 3115,
@@ -811,7 +811,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 10.66,
-      "PowerIndex": 10134,
+      "PowerIndex": 10136,
       "PowerSetID": 3516,
       "PowerSetIndex": 3,
       "StaticIndex": 3116,
@@ -1080,7 +1080,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 10135,
+      "PowerIndex": 10137,
       "PowerSetID": 3516,
       "PowerSetIndex": 4,
       "StaticIndex": 3117,
@@ -1347,7 +1347,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10136,
+      "PowerIndex": 10138,
       "PowerSetID": 3516,
       "PowerSetIndex": 5,
       "StaticIndex": 3118,
@@ -1414,6 +1414,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -1447,7 +1448,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 13.0,
-      "PowerIndex": 10137,
+      "PowerIndex": 10139,
       "PowerSetID": 3516,
       "PowerSetIndex": 6,
       "StaticIndex": 3119,
@@ -1529,6 +1530,7 @@
           "MagPercent": 5000.0,
           "Duration": 45.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Level",
@@ -1565,7 +1567,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 7.8,
-      "PowerIndex": 10138,
+      "PowerIndex": 10140,
       "PowerSetID": 3516,
       "PowerSetIndex": 7,
       "StaticIndex": 3120,

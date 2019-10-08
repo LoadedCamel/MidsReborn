@@ -4,15 +4,15 @@
   "FullName": "Stalker_Melee.Ninja_Sword",
   "ImageName": "NinjaBlade.png",
   "Power": [
-    8450,
-    8451,
     8452,
     8453,
     8454,
     8455,
     8456,
     8457,
-    8458
+    8458,
+    8459,
+    8460
   ],
   "SetType": 1,
   "DisplayName": "Ninja Blade",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 6.032,
-      "PowerIndex": 8450,
+      "PowerIndex": 8452,
       "PowerSetID": 3380,
       "StaticIndex": 2469,
       "NGroupMembership": [],
@@ -495,7 +495,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -523,7 +523,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 4.368,
-      "PowerIndex": 8451,
+      "PowerIndex": 8453,
       "PowerSetID": 3380,
       "PowerSetIndex": 1,
       "StaticIndex": 2470,
@@ -985,7 +985,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -1013,7 +1013,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 6.032,
-      "PowerIndex": 8452,
+      "PowerIndex": 8454,
       "PowerSetID": 3380,
       "PowerSetIndex": 2,
       "StaticIndex": 2471,
@@ -1468,7 +1468,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -1496,7 +1496,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 8453,
+      "PowerIndex": 8455,
       "PowerSetID": 3380,
       "PowerSetIndex": 3,
       "StaticIndex": 2472,
@@ -1592,7 +1592,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10157,
+          "nSummon": 10159,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1609,7 +1609,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Villain_Pets.Ninja_Blade_Assassins_Strike.Assassins_Blade_Quick",
-          "nOverride": 10157
+          "nOverride": 10159
         },
         {
           "NewEffects": [
@@ -1641,7 +1641,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10156,
+          "nSummon": 10158,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1658,7 +1658,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Villain_Pets.Ninja_Blade_Assassins_Strike.Assassins_Blade_Stealth",
-          "nOverride": 10156
+          "nOverride": 10158
         },
         {
           "NewEffects": [
@@ -1891,7 +1891,7 @@
           "nID": 6,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9213,
+          "nSummon": 9215,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2022,7 +2022,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 8454,
+      "PowerIndex": 8456,
       "PowerSetID": 3380,
       "PowerSetIndex": 4,
       "StaticIndex": 2473,
@@ -2504,7 +2504,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 8455,
+      "PowerIndex": 8457,
       "PowerSetID": 3380,
       "PowerSetIndex": 5,
       "StaticIndex": 2474,
@@ -2877,7 +2877,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 4.368,
-      "PowerIndex": 8456,
+      "PowerIndex": 8458,
       "PowerSetID": 3380,
       "PowerSetIndex": 6,
       "StaticIndex": 2475,
@@ -3387,7 +3387,7 @@
           "nID": 8,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -3415,7 +3415,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 9.36,
-      "PowerIndex": 8457,
+      "PowerIndex": 8459,
       "PowerSetID": 3380,
       "PowerSetIndex": 7,
       "StaticIndex": 2476,
@@ -3975,7 +3975,7 @@
           "nID": 9,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -4003,7 +4003,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 11.856,
-      "PowerIndex": 8458,
+      "PowerIndex": 8460,
       "PowerSetID": 3380,
       "PowerSetIndex": 8,
       "StaticIndex": 2477,
@@ -4562,7 +4562,7 @@
           "nID": 9,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

@@ -4,9 +4,9 @@
   "FullName": "Pets.High_Explosives_Tech",
   "ImageName": "",
   "Power": [
-    6297,
-    6298,
-    6299
+    6299,
+    6300,
+    6301
   ],
   "SetType": 8,
   "DisplayName": "High Explosives Tech",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6297,
+      "PowerIndex": 6299,
       "PowerSetID": 3105,
       "StaticIndex": 1612,
       "NGroupMembership": [],
@@ -375,7 +375,7 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 6298,
+      "PowerIndex": 6300,
       "PowerSetID": 3105,
       "PowerSetIndex": 1,
       "StaticIndex": 1613,
@@ -2046,7 +2046,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6299,
+      "PowerIndex": 6301,
       "PowerSetID": 3105,
       "PowerSetIndex": 2,
       "StaticIndex": 1614,
@@ -2157,6 +2157,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

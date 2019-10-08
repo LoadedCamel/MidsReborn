@@ -4,13 +4,13 @@
   "FullName": "Teamwork.Teamwork",
   "ImageName": "i12_Sec_Widow.png",
   "Power": [
-    8812,
-    8813,
     8814,
     8815,
     8816,
     8817,
-    8818
+    8818,
+    8819,
+    8820
   ],
   "SetType": 2,
   "DisplayName": "Teamwork",
@@ -28,7 +28,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 8812,
+      "PowerIndex": 8814,
       "PowerSetID": 3421,
       "StaticIndex": 2627,
       "NGroupMembership": [],
@@ -416,7 +416,7 @@
     },
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 8813,
+      "PowerIndex": 8815,
       "PowerSetID": 3421,
       "PowerSetIndex": 1,
       "StaticIndex": 2628,
@@ -576,7 +576,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 8814,
+      "PowerIndex": 8816,
       "PowerSetID": 3421,
       "PowerSetIndex": 2,
       "StaticIndex": 2629,
@@ -1697,7 +1697,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.208,
-      "PowerIndex": 8815,
+      "PowerIndex": 8817,
       "PowerSetID": 3421,
       "PowerSetIndex": 3,
       "StaticIndex": 2630,
@@ -3071,7 +3071,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 8816,
+      "PowerIndex": 8818,
       "PowerSetID": 3421,
       "PowerSetIndex": 4,
       "StaticIndex": 2631,
@@ -3648,7 +3648,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 8817,
+      "PowerIndex": 8819,
       "PowerSetID": 3421,
       "PowerSetIndex": 5,
       "StaticIndex": 2632,
@@ -4180,7 +4180,7 @@
       "AoEModifier": 13.0
     },
     {
-      "PowerIndex": 8818,
+      "PowerIndex": 8820,
       "PowerSetID": 3421,
       "PowerSetIndex": 6,
       "StaticIndex": 2633,

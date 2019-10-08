@@ -4,7 +4,7 @@
   "FullName": "Pets.Warburg_Biological",
   "ImageName": "",
   "Power": [
-    6620
+    6622
   ],
   "SetType": 8,
   "DisplayName": "Warburg_Biological",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 6620,
+      "PowerIndex": 6622,
       "PowerSetID": 3269,
       "StaticIndex": 1786,
       "NGroupMembership": [],

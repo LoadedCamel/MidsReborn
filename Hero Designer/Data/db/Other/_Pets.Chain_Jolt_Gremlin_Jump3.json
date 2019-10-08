@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Jolt_Gremlin_Jump3",
   "ImageName": "",
   "Power": [
-    6179
+    6181
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 3",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6179,
+      "PowerIndex": 6181,
       "PowerSetID": 3057,
       "StaticIndex": 4415,
       "NGroupMembership": [],

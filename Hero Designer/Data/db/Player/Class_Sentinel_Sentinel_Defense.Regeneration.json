@@ -4,15 +4,15 @@
   "FullName": "Sentinel_Defense.Regeneration",
   "ImageName": "Regeneration.png",
   "Power": [
-    7087,
-    7088,
     7089,
     7090,
     7091,
     7092,
     7093,
     7094,
-    7095
+    7095,
+    7096,
+    7097
   ],
   "SetType": 2,
   "DisplayName": "Regeneration",
@@ -29,7 +29,7 @@
   "GroupName": "Sentinel_Defense",
   "Powers": [
     {
-      "PowerIndex": 7087,
+      "PowerIndex": 7089,
       "PowerSetID": 3339,
       "StaticIndex": 10322,
       "NGroupMembership": [],
@@ -190,7 +190,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 10.4,
-      "PowerIndex": 7088,
+      "PowerIndex": 7090,
       "PowerSetID": 3339,
       "PowerSetIndex": 1,
       "StaticIndex": 10323,
@@ -360,7 +360,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7089,
+      "PowerIndex": 7091,
       "PowerSetID": 3339,
       "PowerSetIndex": 2,
       "StaticIndex": 10324,
@@ -472,7 +472,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.26,
-      "PowerIndex": 7090,
+      "PowerIndex": 7092,
       "PowerSetID": 3339,
       "PowerSetIndex": 3,
       "StaticIndex": 10325,
@@ -692,7 +692,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7091,
+      "PowerIndex": 7093,
       "PowerSetID": 3339,
       "PowerSetIndex": 4,
       "StaticIndex": 10326,
@@ -850,7 +850,7 @@
     {
       "CastTimeReal": 3.1,
       "ToggleCost": 0.26,
-      "PowerIndex": 7092,
+      "PowerIndex": 7094,
       "PowerSetID": 3339,
       "PowerSetIndex": 5,
       "StaticIndex": 10327,
@@ -2282,7 +2282,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7093,
+      "PowerIndex": 7095,
       "PowerSetID": 3339,
       "PowerSetIndex": 6,
       "StaticIndex": 10675,
@@ -2895,7 +2895,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 7094,
+      "PowerIndex": 7096,
       "PowerSetID": 3339,
       "PowerSetIndex": 7,
       "StaticIndex": 10676,
@@ -3455,7 +3455,7 @@
     {
       "CastTimeReal": 2.57,
       "ToggleCost": 2.6,
-      "PowerIndex": 7095,
+      "PowerIndex": 7097,
       "PowerSetID": 3339,
       "PowerSetIndex": 8,
       "StaticIndex": 10330,

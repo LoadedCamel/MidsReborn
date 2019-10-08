@@ -4,15 +4,15 @@
   "FullName": "Mastermind_Summon.Thugs",
   "ImageName": "Thugs.png",
   "Power": [
-    6087,
-    6088,
     6089,
     6090,
     6091,
     6092,
     6093,
     6094,
-    6095
+    6095,
+    6096,
+    6097
   ],
   "SetType": 1,
   "DisplayName": "Thugs",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 6.5,
-      "PowerIndex": 6087,
+      "PowerIndex": 6089,
       "PowerSetID": 3006,
       "StaticIndex": 1474,
       "NGroupMembership": [],
@@ -205,7 +205,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 19.5,
-      "PowerIndex": 6088,
+      "PowerIndex": 6090,
       "PowerSetID": 3006,
       "PowerSetIndex": 1,
       "StaticIndex": 1475,
@@ -480,7 +480,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 8.58,
-      "PowerIndex": 6089,
+      "PowerIndex": 6091,
       "PowerSetID": 3006,
       "PowerSetIndex": 2,
       "StaticIndex": 1476,
@@ -766,7 +766,7 @@
     {
       "CastTimeReal": 1.3,
       "ToggleCost": 22.75,
-      "PowerIndex": 6090,
+      "PowerIndex": 6092,
       "PowerSetID": 3006,
       "PowerSetIndex": 3,
       "StaticIndex": 1477,
@@ -3525,7 +3525,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 18.98,
-      "PowerIndex": 6091,
+      "PowerIndex": 6093,
       "PowerSetID": 3006,
       "PowerSetIndex": 4,
       "StaticIndex": 1478,
@@ -3814,7 +3814,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 19.5,
-      "PowerIndex": 6092,
+      "PowerIndex": 6094,
       "PowerSetID": 3006,
       "PowerSetIndex": 5,
       "StaticIndex": 1479,
@@ -4047,7 +4047,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 6093,
+      "PowerIndex": 6095,
       "PowerSetID": 3006,
       "PowerSetIndex": 6,
       "StaticIndex": 1480,
@@ -4170,7 +4170,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 19.5,
-      "PowerIndex": 6094,
+      "PowerIndex": 6096,
       "PowerSetID": 3006,
       "PowerSetIndex": 7,
       "StaticIndex": 1481,
@@ -4349,7 +4349,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 22.75,
-      "PowerIndex": 6095,
+      "PowerIndex": 6097,
       "PowerSetID": 3006,
       "PowerSetIndex": 8,
       "StaticIndex": 1482,

@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Sleet",
   "ImageName": "",
   "Power": [
-    10199,
-    10200
+    10201,
+    10202
   ],
   "SetType": 8,
   "DisplayName": "Sleet",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10199,
+      "PowerIndex": 10201,
       "PowerSetID": 3540,
       "StaticIndex": 3145,
       "NGroupMembership": [],
@@ -1299,7 +1299,7 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 10200,
+      "PowerIndex": 10202,
       "PowerSetID": 3540,
       "PowerSetIndex": 1,
       "StaticIndex": 3146,

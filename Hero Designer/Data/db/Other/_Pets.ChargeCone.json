@@ -4,7 +4,7 @@
   "FullName": "Pets.ChargeCone",
   "ImageName": "",
   "Power": [
-    6181
+    6183
   ],
   "SetType": 8,
   "DisplayName": "Charge Cone",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6181,
+      "PowerIndex": 6183,
       "PowerSetID": 3059,
       "StaticIndex": 3333,
       "NGroupMembership": [],

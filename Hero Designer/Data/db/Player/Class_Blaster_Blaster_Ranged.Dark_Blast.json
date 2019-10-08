@@ -2836,7 +2836,7 @@
           "nID": 2,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6131,
+          "nSummon": 6133,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -2854,7 +2854,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 3,
           "Override": "Pets.Blaster_Dark_Snipe.Moonbeam_Quick",
-          "nOverride": 6131
+          "nOverride": 6133
         },
         {
           "NewEffects": [
@@ -2886,7 +2886,7 @@
           "nID": 3,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6130,
+          "nSummon": 6132,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2903,7 +2903,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 4,
           "Override": "Pets.Blaster_Dark_Snipe.Moonbeam_Normal",
-          "nOverride": 6130
+          "nOverride": 6132
         },
         {
           "NewEffects": [

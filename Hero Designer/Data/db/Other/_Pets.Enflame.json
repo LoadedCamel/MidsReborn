@@ -4,9 +4,9 @@
   "FullName": "Pets.Enflame",
   "ImageName": "",
   "Power": [
-    6263,
-    6264,
-    6265
+    6265,
+    6266,
+    6267
   ],
   "SetType": 8,
   "DisplayName": "Enflame",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6263,
+      "PowerIndex": 6265,
       "PowerSetID": 3085,
       "StaticIndex": 9586,
       "NGroupMembership": [],
@@ -522,7 +522,7 @@
       "AoEModifier": 2.05
     },
     {
-      "PowerIndex": 6264,
+      "PowerIndex": 6266,
       "PowerSetID": 3085,
       "PowerSetIndex": 1,
       "StaticIndex": 9587,
@@ -627,7 +627,7 @@
       "AoEModifier": 1.6
     },
     {
-      "PowerIndex": 6265,
+      "PowerIndex": 6267,
       "PowerSetID": 3085,
       "PowerSetIndex": 2,
       "StaticIndex": 9588,
@@ -693,6 +693,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

@@ -4,9 +4,9 @@
   "FullName": "Pets.Traps_Trip_Mine_Defender",
   "ImageName": "",
   "Power": [
-    6584,
-    6585,
-    6586
+    6586,
+    6587,
+    6588
   ],
   "SetType": 8,
   "DisplayName": "Mine",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6584,
+      "PowerIndex": 6586,
       "PowerSetID": 3146,
       "StaticIndex": 3559,
       "NGroupMembership": [],
@@ -374,7 +374,7 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 6585,
+      "PowerIndex": 6587,
       "PowerSetID": 3146,
       "PowerSetIndex": 1,
       "StaticIndex": 3561,
@@ -2045,7 +2045,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6586,
+      "PowerIndex": 6588,
       "PowerSetID": 3146,
       "PowerSetIndex": 2,
       "StaticIndex": 3560,
@@ -2156,6 +2156,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

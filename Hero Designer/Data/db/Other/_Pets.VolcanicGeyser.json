@@ -4,8 +4,8 @@
   "FullName": "Pets.VolcanicGeyser",
   "ImageName": "",
   "Power": [
-    6605,
-    6606
+    6607,
+    6608
   ],
   "SetType": 8,
   "DisplayName": "Volcanic Geyser",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6605,
+      "PowerIndex": 6607,
       "PowerSetID": 3261,
       "StaticIndex": 1775,
       "NGroupMembership": [],
@@ -191,7 +191,7 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 6606,
+      "PowerIndex": 6608,
       "PowerSetID": 3261,
       "PowerSetIndex": 1,
       "StaticIndex": 1776,

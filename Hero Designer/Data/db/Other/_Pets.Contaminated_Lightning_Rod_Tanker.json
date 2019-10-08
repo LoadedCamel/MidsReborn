@@ -4,7 +4,7 @@
   "FullName": "Pets.Contaminated_Lightning_Rod_Tanker",
   "ImageName": "",
   "Power": [
-    6186
+    6188
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6186,
+      "PowerIndex": 6188,
       "PowerSetID": 3077,
       "StaticIndex": 6224,
       "NGroupMembership": [],

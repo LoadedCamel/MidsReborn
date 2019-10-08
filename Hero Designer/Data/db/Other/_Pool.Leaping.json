@@ -4,11 +4,11 @@
   "FullName": "Pool.Leaping",
   "ImageName": "Leaping.png",
   "Power": [
-    6678,
-    6679,
     6680,
     6681,
-    6682
+    6682,
+    6683,
+    6684
   ],
   "SetType": 5,
   "DisplayName": "Leaping",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 5.46,
-      "PowerIndex": 6678,
+      "PowerIndex": 6680,
       "PowerSetID": 3292,
       "StaticIndex": 1813,
       "NGroupMembership": [],
@@ -1426,7 +1426,7 @@
     },
     {
       "ToggleCost": 0.456,
-      "PowerIndex": 6679,
+      "PowerIndex": 6681,
       "PowerSetID": 3292,
       "PowerSetIndex": 1,
       "StaticIndex": 1815,
@@ -1914,7 +1914,7 @@
     {
       "CastTimeReal": 1.716,
       "ToggleCost": 0.065,
-      "PowerIndex": 6680,
+      "PowerIndex": 6682,
       "PowerSetID": 3292,
       "PowerSetIndex": 2,
       "StaticIndex": 1814,
@@ -3348,7 +3348,7 @@
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
       "IsEpic": true,
-      "PowerIndex": 6681,
+      "PowerIndex": 6683,
       "PowerSetID": 3292,
       "PowerSetIndex": 3,
       "StaticIndex": 1816,
@@ -3380,16 +3380,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6678,
-            6680
-          ],
-          [
-            6678,
-            6679
+            6680,
+            6682
           ],
           [
             6680,
-            6679
+            6681
+          ],
+          [
+            6682,
+            6681
           ]
         ],
         "NPowerIDNot": []
@@ -4002,7 +4002,7 @@
       "CastTimeReal": 1.5,
       "ToggleCost": 13.52,
       "IsEpic": true,
-      "PowerIndex": 6682,
+      "PowerIndex": 6684,
       "PowerSetID": 3292,
       "PowerSetIndex": 4,
       "StaticIndex": 5633,
@@ -4034,16 +4034,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6678,
-            6680
-          ],
-          [
-            6678,
-            6679
+            6680,
+            6682
           ],
           [
             6680,
-            6679
+            6681
+          ],
+          [
+            6682,
+            6681
           ]
         ],
         "NPowerIDNot": []

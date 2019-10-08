@@ -4,9 +4,9 @@
   "FullName": "Pets.OilSlickOil",
   "ImageName": "",
   "Power": [
-    6376,
-    6377,
-    6378
+    6378,
+    6379,
+    6380
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6376,
+      "PowerIndex": 6378,
       "PowerSetID": 3157,
       "StaticIndex": 1668,
       "NGroupMembership": [],
@@ -433,7 +433,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6377,
+      "PowerIndex": 6379,
       "PowerSetID": 3157,
       "PowerSetIndex": 1,
       "StaticIndex": 4426,
@@ -505,6 +505,7 @@
           "MagPercent": -100.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -537,7 +538,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6378,
+      "PowerIndex": 6380,
       "PowerSetID": 3157,
       "PowerSetIndex": 2,
       "StaticIndex": 4427,
@@ -610,6 +611,7 @@
           "Mag": -1.0,
           "MagPercent": -100.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -657,6 +659,7 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "Pets.OilSlickOil.Res_Target",
           "EffectId": "Ones",

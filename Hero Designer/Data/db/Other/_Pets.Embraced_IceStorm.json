@@ -4,12 +4,12 @@
   "FullName": "Pets.Embraced_IceStorm",
   "ImageName": "",
   "Power": [
-    6258
+    6260
   ],
   "SetType": 8,
   "DisplayName": "Ice Storm",
   "nArchetype": -1,
-  "nID": 3115,
+  "nID": 3114,
   "SubName": "Ice Blast",
   "ATClass": "",
   "UIDTrunkSet": "",
@@ -21,8 +21,8 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6258,
-      "PowerSetID": 3115,
+      "PowerIndex": 6260,
+      "PowerSetID": 3114,
       "StaticIndex": 4417,
       "NGroupMembership": [],
       "FullName": "Pets.Embraced_IceStorm.IceStorm",

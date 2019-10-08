@@ -4,15 +4,15 @@
   "FullName": "Tanker_Melee.Broad_Sword",
   "ImageName": "BroadSword.png",
   "Power": [
-    8624,
-    8625,
     8626,
     8627,
     8628,
     8629,
     8630,
     8631,
-    8632
+    8632,
+    8633,
+    8634
   ],
   "SetType": 2,
   "DisplayName": "Broad Sword",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 8.528,
-      "PowerIndex": 8624,
+      "PowerIndex": 8626,
       "PowerSetID": 3399,
       "StaticIndex": 10131,
       "NGroupMembership": [],
@@ -798,7 +798,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 5.2,
-      "PowerIndex": 8625,
+      "PowerIndex": 8627,
       "PowerSetID": 3399,
       "PowerSetIndex": 1,
       "StaticIndex": 10132,
@@ -1189,7 +1189,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.528,
-      "PowerIndex": 8626,
+      "PowerIndex": 8628,
       "PowerSetID": 3399,
       "PowerSetIndex": 2,
       "StaticIndex": 10133,
@@ -1580,7 +1580,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 8627,
+      "PowerIndex": 8629,
       "PowerSetID": 3399,
       "PowerSetIndex": 3,
       "StaticIndex": 10134,
@@ -1810,7 +1810,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 4.368,
-      "PowerIndex": 8628,
+      "PowerIndex": 8630,
       "PowerSetID": 3399,
       "PowerSetIndex": 4,
       "StaticIndex": 10136,
@@ -2252,7 +2252,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 8629,
+      "PowerIndex": 8631,
       "PowerSetID": 3399,
       "PowerSetIndex": 5,
       "StaticIndex": 10135,
@@ -2787,7 +2787,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 13.52,
-      "PowerIndex": 8630,
+      "PowerIndex": 8632,
       "PowerSetID": 3399,
       "PowerSetIndex": 6,
       "StaticIndex": 10137,
@@ -3281,7 +3281,7 @@
     {
       "CastTimeReal": 1.8,
       "ToggleCost": 10.192,
-      "PowerIndex": 8631,
+      "PowerIndex": 8633,
       "PowerSetID": 3399,
       "PowerSetIndex": 7,
       "StaticIndex": 10139,
@@ -3778,7 +3778,7 @@
     {
       "CastTimeReal": 2.33,
       "ToggleCost": 13.52,
-      "PowerIndex": 8632,
+      "PowerIndex": 8634,
       "PowerSetID": 3399,
       "PowerSetIndex": 8,
       "StaticIndex": 10138,

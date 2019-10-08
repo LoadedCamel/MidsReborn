@@ -1200,7 +1200,10 @@ public static class Enums
         Supremacy,
         PetTier2,
         PetTier3,
-        PetBuffPwr
+        PetBuffPwr,
+        NotPetBuffPwr,
+        PetT2AndBuffPwr,
+        PetT3AndBuffPwr
     }
 
     public enum eDDStyle

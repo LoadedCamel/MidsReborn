@@ -4,8 +4,8 @@
   "FullName": "Pets.Imp",
   "ImageName": "",
   "Power": [
-    6310,
-    6311
+    6312,
+    6313
   ],
   "SetType": 8,
   "DisplayName": "Imp",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 6310,
+      "PowerIndex": 6312,
       "PowerSetID": 3116,
       "StaticIndex": 1621,
       "NGroupMembership": [],
@@ -293,7 +293,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6311,
+      "PowerIndex": 6313,
       "PowerSetID": 3116,
       "PowerSetIndex": 1,
       "StaticIndex": 1622,

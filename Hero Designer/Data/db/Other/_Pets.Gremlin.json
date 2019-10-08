@@ -4,10 +4,10 @@
   "FullName": "Pets.Gremlin",
   "ImageName": "",
   "Power": [
-    6284,
-    6285,
     6286,
-    6287
+    6287,
+    6288,
+    6289
   ],
   "SetType": 8,
   "DisplayName": "Gremlin",
@@ -26,7 +26,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 5.2,
-      "PowerIndex": 6284,
+      "PowerIndex": 6286,
       "PowerSetID": 3099,
       "StaticIndex": 4422,
       "NGroupMembership": [],
@@ -458,6 +458,7 @@
           "Probability": 0.3,
           "Mag": 4.265,
           "MagPercent": 4.265,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",
@@ -492,7 +493,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6285,
+      "PowerIndex": 6287,
       "PowerSetID": 3099,
       "PowerSetIndex": 1,
       "StaticIndex": 4423,
@@ -935,7 +936,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6286,
+      "PowerIndex": 6288,
       "PowerSetID": 3099,
       "PowerSetIndex": 2,
       "StaticIndex": 4424,
@@ -1045,7 +1046,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 6.5,
-      "PowerIndex": 6287,
+      "PowerIndex": 6289,
       "PowerSetID": 3099,
       "PowerSetIndex": 3,
       "StaticIndex": 4425,
@@ -1332,6 +1333,7 @@
           "MagPercent": -100.0,
           "Duration": 1.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -1385,6 +1387,7 @@
           "MagPercent": -100.0,
           "Duration": 1.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

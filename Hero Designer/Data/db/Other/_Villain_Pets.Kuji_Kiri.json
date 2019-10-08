@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Kuji_Kiri",
   "ImageName": "",
   "Power": [
-    10116
+    10118
   ],
   "SetType": 8,
   "DisplayName": "Kuji Kiri",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10116,
+      "PowerIndex": 10118,
       "PowerSetID": 3513,
       "StaticIndex": 3102,
       "NGroupMembership": [],

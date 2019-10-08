@@ -4,10 +4,10 @@
   "FullName": "Pets.Zombie",
   "ImageName": "",
   "Power": [
-    6648,
-    6649,
     6650,
-    6651
+    6651,
+    6652,
+    6653
   ],
   "SetType": 8,
   "DisplayName": "Zombie",
@@ -24,7 +24,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6648,
+      "PowerIndex": 6650,
       "PowerSetID": 3286,
       "StaticIndex": 1789,
       "NGroupMembership": [],
@@ -669,7 +669,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6649,
+      "PowerIndex": 6651,
       "PowerSetID": 3286,
       "PowerSetIndex": 1,
       "StaticIndex": 1790,
@@ -827,7 +827,7 @@
     },
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 6650,
+      "PowerIndex": 6652,
       "PowerSetID": 3286,
       "PowerSetIndex": 2,
       "StaticIndex": 1791,
@@ -932,7 +932,7 @@
     },
     {
       "CastTimeReal": 2.67,
-      "PowerIndex": 6651,
+      "PowerIndex": 6653,
       "PowerSetID": 3286,
       "PowerSetIndex": 3,
       "StaticIndex": 1792,

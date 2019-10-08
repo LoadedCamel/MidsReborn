@@ -4,7 +4,7 @@
   "FullName": "Pets.Savage_Assault_Feral_Charge",
   "ImageName": "",
   "Power": [
-    6451
+    6453
   ],
   "SetType": 8,
   "DisplayName": "Savage Assault",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6451,
+      "PowerIndex": 6453,
       "PowerSetID": 3197,
       "StaticIndex": 10773,
       "NGroupMembership": [],

@@ -4,15 +4,15 @@
   "FullName": "Sentinel_Ranged.Beam_Rifle",
   "ImageName": "BeamRifle.png",
   "Power": [
-    7133,
-    7134,
     7135,
     7136,
     7137,
     7138,
     7139,
     7140,
-    7141
+    7141,
+    7142,
+    7143
   ],
   "SetType": 1,
   "DisplayName": "Beam Rifle",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 5.2,
-      "PowerIndex": 7133,
+      "PowerIndex": 7135,
       "PowerSetID": 3344,
       "StaticIndex": 10708,
       "NGroupMembership": [],
@@ -469,7 +469,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.528,
-      "PowerIndex": 7134,
+      "PowerIndex": 7136,
       "PowerSetID": 3344,
       "PowerSetIndex": 1,
       "StaticIndex": 10709,
@@ -908,7 +908,7 @@
     {
       "CastTimeReal": 1.9,
       "ToggleCost": 10.192,
-      "PowerIndex": 7135,
+      "PowerIndex": 7137,
       "PowerSetID": 3344,
       "PowerSetIndex": 2,
       "StaticIndex": 10710,
@@ -1256,7 +1256,7 @@
     {
       "CastTimeReal": 1.9,
       "ToggleCost": 10.192,
-      "PowerIndex": 7136,
+      "PowerIndex": 7138,
       "PowerSetID": 3344,
       "PowerSetIndex": 3,
       "StaticIndex": 10711,
@@ -1609,7 +1609,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Beam_Rifle_Debuff",
-          "nSummon": 9338,
+          "nSummon": 9340,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -1638,7 +1638,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 7137,
+      "PowerIndex": 7139,
       "PowerSetID": 3344,
       "PowerSetIndex": 4,
       "StaticIndex": 10712,
@@ -2173,7 +2173,7 @@
     {
       "CastTimeReal": 1.9,
       "ToggleCost": 11.024,
-      "PowerIndex": 7138,
+      "PowerIndex": 7140,
       "PowerSetID": 3344,
       "PowerSetIndex": 5,
       "StaticIndex": 10713,
@@ -2615,7 +2615,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 15.18,
-      "PowerIndex": 7139,
+      "PowerIndex": 7141,
       "PowerSetID": 3344,
       "PowerSetIndex": 6,
       "StaticIndex": 10714,
@@ -2908,7 +2908,7 @@
     {
       "CastTimeReal": 2.33,
       "ToggleCost": 13.52,
-      "PowerIndex": 7140,
+      "PowerIndex": 7142,
       "PowerSetID": 3344,
       "PowerSetIndex": 7,
       "StaticIndex": 10715,
@@ -3704,7 +3704,7 @@
     {
       "CastTimeReal": 2.9,
       "ToggleCost": 20.8,
-      "PowerIndex": 7141,
+      "PowerIndex": 7143,
       "PowerSetID": 3344,
       "PowerSetIndex": 8,
       "StaticIndex": 10716,

@@ -4,8 +4,8 @@
   "FullName": "Pets.FlameThrower",
   "ImageName": "",
   "Power": [
-    6276,
-    6277
+    6278,
+    6279
   ],
   "SetType": 8,
   "DisplayName": "Flame Thrower",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6276,
+      "PowerIndex": 6278,
       "PowerSetID": 3092,
       "StaticIndex": 1595,
       "NGroupMembership": [],
@@ -225,7 +225,7 @@
       "AoEModifier": 1.6
     },
     {
-      "PowerIndex": 6277,
+      "PowerIndex": 6279,
       "PowerSetID": 3092,
       "PowerSetIndex": 1,
       "StaticIndex": 1596,

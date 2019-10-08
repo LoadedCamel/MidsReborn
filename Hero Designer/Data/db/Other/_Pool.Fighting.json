@@ -4,11 +4,11 @@
   "FullName": "Pool.Fighting",
   "ImageName": "Fighting.png",
   "Power": [
-    6652,
-    6653,
     6654,
     6655,
-    6656
+    6656,
+    6657,
+    6658
   ],
   "SetType": 5,
   "DisplayName": "Fighting",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 4.42,
-      "PowerIndex": 6652,
+      "PowerIndex": 6654,
       "PowerSetID": 3288,
       "StaticIndex": 1793,
       "NGroupMembership": [],
@@ -3319,7 +3319,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 4.94,
-      "PowerIndex": 6653,
+      "PowerIndex": 6655,
       "PowerSetID": 3288,
       "PowerSetIndex": 1,
       "StaticIndex": 1794,
@@ -6167,7 +6167,7 @@
       "CastTimeReal": 1.67,
       "ToggleCost": 10.66,
       "IsEpic": true,
-      "PowerIndex": 6654,
+      "PowerIndex": 6656,
       "PowerSetID": 3288,
       "PowerSetIndex": 2,
       "StaticIndex": 9612,
@@ -6211,28 +6211,28 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6652,
-            6653
-          ],
-          [
-            6652,
+            6654,
             6655
           ],
           [
-            6652,
-            6656
+            6654,
+            6657
           ],
           [
-            6653,
-            6655
-          ],
-          [
-            6653,
-            6656
+            6654,
+            6658
           ],
           [
             6655,
-            6656
+            6657
+          ],
+          [
+            6655,
+            6658
+          ],
+          [
+            6657,
+            6658
           ]
         ],
         "NPowerIDNot": []
@@ -7412,7 +7412,7 @@
       "CastTimeReal": 3.1,
       "ToggleCost": 0.325,
       "IsEpic": true,
-      "PowerIndex": 6655,
+      "PowerIndex": 6657,
       "PowerSetID": 3288,
       "PowerSetIndex": 3,
       "StaticIndex": 1795,
@@ -7440,11 +7440,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6652,
+            6654,
             -1
           ],
           [
-            6653,
+            6655,
             -1
           ]
         ],
@@ -8013,7 +8013,7 @@
       "CastTimeReal": 0.67,
       "ToggleCost": 0.325,
       "IsEpic": true,
-      "PowerIndex": 6656,
+      "PowerIndex": 6658,
       "PowerSetID": 3288,
       "PowerSetIndex": 4,
       "StaticIndex": 1796,
@@ -8045,16 +8045,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6652,
-            6653
-          ],
-          [
-            6652,
+            6654,
             6655
           ],
           [
-            6653,
-            6655
+            6654,
+            6657
+          ],
+          [
+            6655,
+            6657
           ]
         ],
         "NPowerIDNot": []

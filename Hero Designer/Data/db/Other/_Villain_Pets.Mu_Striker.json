@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Mu_Striker",
   "ImageName": "",
   "Power": [
-    10139,
-    10140,
     10141,
     10142,
     10143,
     10144,
     10145,
-    10146
+    10146,
+    10147,
+    10148
   ],
   "SetType": 8,
   "DisplayName": "Mu Striker",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10139,
+      "PowerIndex": 10141,
       "PowerSetID": 3517,
       "StaticIndex": 3121,
       "NGroupMembership": [],
@@ -182,7 +182,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 13.0,
-      "PowerIndex": 10140,
+      "PowerIndex": 10142,
       "PowerSetID": 3517,
       "PowerSetIndex": 1,
       "StaticIndex": 3122,
@@ -506,7 +506,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 14.3,
-      "PowerIndex": 10141,
+      "PowerIndex": 10143,
       "PowerSetID": 3517,
       "PowerSetIndex": 2,
       "StaticIndex": 3123,
@@ -882,7 +882,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10142,
+      "PowerIndex": 10144,
       "PowerSetID": 3517,
       "PowerSetIndex": 3,
       "StaticIndex": 3124,
@@ -1135,7 +1135,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 10.66,
-      "PowerIndex": 10143,
+      "PowerIndex": 10145,
       "PowerSetID": 3517,
       "PowerSetIndex": 4,
       "StaticIndex": 3125,
@@ -1404,7 +1404,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 10144,
+      "PowerIndex": 10146,
       "PowerSetID": 3517,
       "PowerSetIndex": 5,
       "StaticIndex": 3126,
@@ -1671,7 +1671,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10145,
+      "PowerIndex": 10147,
       "PowerSetID": 3517,
       "PowerSetIndex": 6,
       "StaticIndex": 3127,
@@ -1738,6 +1738,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -1771,7 +1772,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 10146,
+      "PowerIndex": 10148,
       "PowerSetID": 3517,
       "PowerSetIndex": 7,
       "StaticIndex": 3128,

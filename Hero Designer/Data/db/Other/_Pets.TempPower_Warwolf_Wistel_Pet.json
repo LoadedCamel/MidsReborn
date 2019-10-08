@@ -4,7 +4,7 @@
   "FullName": "Pets.TempPower_Warwolf_Wistel_Pet",
   "ImageName": "",
   "Power": [
-    6508
+    6510
   ],
   "SetType": 8,
   "DisplayName": "Warwolf",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6508,
+      "PowerIndex": 6510,
       "PowerSetID": 3272,
       "StaticIndex": 1740,
       "NGroupMembership": [],

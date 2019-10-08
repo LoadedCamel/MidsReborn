@@ -4,8 +4,6 @@
   "FullName": "Widow_Training.Fortunata_Training",
   "ImageName": "i12_Pri_Fortunata.png",
   "Power": [
-    10310,
-    10311,
     10312,
     10313,
     10314,
@@ -13,7 +11,9 @@
     10316,
     10317,
     10318,
-    10319
+    10319,
+    10320,
+    10321
   ],
   "SetType": 1,
   "DisplayName": "Fortunata Training",
@@ -32,7 +32,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 5.46,
-      "PowerIndex": 10310,
+      "PowerIndex": 10312,
       "PowerSetID": 3575,
       "StaticIndex": 3215,
       "NGroupMembership": [],
@@ -259,7 +259,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 5.46,
-      "PowerIndex": 10311,
+      "PowerIndex": 10313,
       "PowerSetID": 3575,
       "PowerSetIndex": 1,
       "StaticIndex": 3216,
@@ -642,7 +642,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.996,
-      "PowerIndex": 10312,
+      "PowerIndex": 10314,
       "PowerSetID": 3575,
       "PowerSetIndex": 2,
       "StaticIndex": 3217,
@@ -929,7 +929,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 10313,
+      "PowerIndex": 10315,
       "PowerSetID": 3575,
       "PowerSetIndex": 3,
       "StaticIndex": 3218,
@@ -1464,7 +1464,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 13.52,
-      "PowerIndex": 10314,
+      "PowerIndex": 10316,
       "PowerSetID": 3575,
       "PowerSetIndex": 4,
       "StaticIndex": 3219,
@@ -1694,7 +1694,7 @@
     {
       "CastTimeReal": 1.1,
       "ToggleCost": 7.228,
-      "PowerIndex": 10315,
+      "PowerIndex": 10317,
       "PowerSetID": 3575,
       "PowerSetIndex": 5,
       "StaticIndex": 3220,
@@ -1979,7 +1979,7 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 21.112,
-      "PowerIndex": 10316,
+      "PowerIndex": 10318,
       "PowerSetID": 3575,
       "PowerSetIndex": 6,
       "StaticIndex": 3221,
@@ -2320,7 +2320,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 10.4,
-      "PowerIndex": 10317,
+      "PowerIndex": 10319,
       "PowerSetID": 3575,
       "PowerSetIndex": 7,
       "StaticIndex": 3222,
@@ -2553,7 +2553,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 15.6,
-      "PowerIndex": 10318,
+      "PowerIndex": 10320,
       "PowerSetID": 3575,
       "PowerSetIndex": 8,
       "StaticIndex": 3223,
@@ -2734,7 +2734,7 @@
     {
       "CastTimeReal": 1.97,
       "ToggleCost": 27.716,
-      "PowerIndex": 10319,
+      "PowerIndex": 10321,
       "PowerSetID": 3575,
       "PowerSetIndex": 9,
       "StaticIndex": 3224,

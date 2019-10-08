@@ -4,8 +4,8 @@
   "FullName": "Pets.Whirlpool_Defender",
   "ImageName": "",
   "Power": [
-    6633,
-    6634
+    6635,
+    6636
   ],
   "SetType": 8,
   "DisplayName": "Whirlpool",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6633,
+      "PowerIndex": 6635,
       "PowerSetID": 3278,
       "StaticIndex": 9129,
       "NGroupMembership": [],
@@ -493,7 +493,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6634,
+      "PowerIndex": 6636,
       "PowerSetID": 3278,
       "PowerSetIndex": 1,
       "StaticIndex": 9130,

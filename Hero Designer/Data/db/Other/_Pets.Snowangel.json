@@ -4,7 +4,7 @@
   "FullName": "Pets.Snowangel",
   "ImageName": "",
   "Power": [
-    6470
+    6472
   ],
   "SetType": 8,
   "DisplayName": "Snowangel",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6470,
+      "PowerIndex": 6472,
       "PowerSetID": 3214,
       "StaticIndex": 1716,
       "NGroupMembership": [],

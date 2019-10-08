@@ -1114,7 +1114,7 @@
           "nID": 5,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10046,
+          "nSummon": 10048,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -1132,7 +1132,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 6,
           "Override": "Villain_Pets.Corruptor_PsychicBlast_Snipe.Psionic_Lance_Quick",
-          "nOverride": 10046
+          "nOverride": 10048
         },
         {
           "NewEffects": [
@@ -1163,7 +1163,7 @@
           "nID": 6,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10047,
+          "nSummon": 10049,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1180,7 +1180,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 7,
           "Override": "Villain_Pets.Corruptor_PsychicBlast_Snipe.Psionic_Lance_Normal",
-          "nOverride": 10047
+          "nOverride": 10049
         }
       ],
       "HasPowerOverrideEffect": true,

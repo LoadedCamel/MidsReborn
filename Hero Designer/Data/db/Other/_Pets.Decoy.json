@@ -4,15 +4,15 @@
   "FullName": "Pets.Decoy",
   "ImageName": "",
   "Power": [
-    6209,
-    6210,
     6211,
     6212,
     6213,
     6214,
     6215,
     6216,
-    6217
+    6217,
+    6218,
+    6219
   ],
   "SetType": 8,
   "DisplayName": "Decoy",
@@ -29,7 +29,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6209,
+      "PowerIndex": 6211,
       "PowerSetID": 3065,
       "StaticIndex": 1575,
       "NGroupMembership": [],
@@ -277,7 +277,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6210,
+      "PowerIndex": 6212,
       "PowerSetID": 3065,
       "PowerSetIndex": 1,
       "StaticIndex": 1576,
@@ -539,7 +539,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6211,
+      "PowerIndex": 6213,
       "PowerSetID": 3065,
       "PowerSetIndex": 2,
       "StaticIndex": 1577,
@@ -800,7 +800,7 @@
     },
     {
       "CastTimeReal": 2.5,
-      "PowerIndex": 6212,
+      "PowerIndex": 6214,
       "PowerSetID": 3065,
       "PowerSetIndex": 3,
       "StaticIndex": 1578,
@@ -1016,7 +1016,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6213,
+      "PowerIndex": 6215,
       "PowerSetID": 3065,
       "PowerSetIndex": 4,
       "StaticIndex": 1579,
@@ -1278,7 +1278,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6214,
+      "PowerIndex": 6216,
       "PowerSetID": 3065,
       "PowerSetIndex": 5,
       "StaticIndex": 1580,
@@ -1539,7 +1539,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6215,
+      "PowerIndex": 6217,
       "PowerSetID": 3065,
       "PowerSetIndex": 6,
       "StaticIndex": 1581,
@@ -1754,7 +1754,7 @@
     },
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6216,
+      "PowerIndex": 6218,
       "PowerSetID": 3065,
       "PowerSetIndex": 7,
       "StaticIndex": 1582,
@@ -1969,7 +1969,7 @@
     },
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 6217,
+      "PowerIndex": 6219,
       "PowerSetID": 3065,
       "PowerSetIndex": 8,
       "StaticIndex": 1583,

@@ -4,15 +4,15 @@
   "FullName": "Stalker_Defense.Radiation_Armor",
   "ImageName": "RadiationArmor.png",
   "Power": [
-    8306,
-    8307,
     8308,
     8309,
     8310,
     8311,
     8312,
     8313,
-    8314
+    8314,
+    8315,
+    8316
   ],
   "SetType": 2,
   "DisplayName": "Radiation Armor",
@@ -30,7 +30,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 8306,
+      "PowerIndex": 8308,
       "PowerSetID": 3365,
       "StaticIndex": 10066,
       "NGroupMembership": [
@@ -2208,7 +2208,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 8307,
+      "PowerIndex": 8309,
       "PowerSetID": 3365,
       "PowerSetIndex": 1,
       "StaticIndex": 10067,
@@ -2586,7 +2586,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8308,
+      "PowerIndex": 8310,
       "PowerSetID": 3365,
       "PowerSetIndex": 2,
       "StaticIndex": 10681,
@@ -2894,7 +2894,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.208,
-      "PowerIndex": 8309,
+      "PowerIndex": 8311,
       "PowerSetID": 3365,
       "PowerSetIndex": 3,
       "StaticIndex": 10070,
@@ -4584,7 +4584,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 8310,
+      "PowerIndex": 8312,
       "PowerSetID": 3365,
       "PowerSetIndex": 4,
       "StaticIndex": 10069,
@@ -5066,7 +5066,7 @@
     {
       "CastTimeReal": 1.03,
       "ToggleCost": 13.0,
-      "PowerIndex": 8311,
+      "PowerIndex": 8313,
       "PowerSetID": 3365,
       "PowerSetIndex": 5,
       "StaticIndex": 10071,
@@ -5594,7 +5594,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 10.4,
-      "PowerIndex": 8312,
+      "PowerIndex": 8314,
       "PowerSetID": 3365,
       "PowerSetIndex": 6,
       "StaticIndex": 10072,
@@ -5808,7 +5808,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 8313,
+      "PowerIndex": 8315,
       "PowerSetID": 3365,
       "PowerSetIndex": 7,
       "StaticIndex": 10073,
@@ -6146,7 +6146,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 2.6,
-      "PowerIndex": 8314,
+      "PowerIndex": 8316,
       "PowerSetID": 3365,
       "PowerSetIndex": 8,
       "StaticIndex": 10074,

@@ -4,7 +4,7 @@
   "FullName": "Pets.ShockCont",
   "ImageName": "",
   "Power": [
-    6457
+    6459
   ],
   "SetType": 8,
   "DisplayName": "Liquefy",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6457,
+      "PowerIndex": 6459,
       "PowerSetID": 3139,
       "StaticIndex": 1705,
       "NGroupMembership": [],

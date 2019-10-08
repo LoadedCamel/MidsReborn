@@ -4,15 +4,15 @@
   "FullName": "Tanker_Defense.Dark_Armor",
   "ImageName": "DarkArmor.png",
   "Power": [
-    8516,
-    8517,
     8518,
     8519,
     8520,
     8521,
     8522,
     8523,
-    8524
+    8524,
+    8525,
+    8526
   ],
   "SetType": 1,
   "DisplayName": "Dark Armor",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 3.47,
       "ToggleCost": 0.52,
-      "PowerIndex": 8516,
+      "PowerIndex": 8518,
       "PowerSetID": 3388,
       "StaticIndex": 2487,
       "NGroupMembership": [],
@@ -312,7 +312,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.208,
-      "PowerIndex": 8517,
+      "PowerIndex": 8519,
       "PowerSetID": 3388,
       "PowerSetIndex": 1,
       "StaticIndex": 2488,
@@ -794,7 +794,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.208,
-      "PowerIndex": 8518,
+      "PowerIndex": 8520,
       "PowerSetID": 3388,
       "PowerSetIndex": 2,
       "StaticIndex": 2489,
@@ -1376,7 +1376,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.208,
-      "PowerIndex": 8519,
+      "PowerIndex": 8521,
       "PowerSetID": 3388,
       "PowerSetIndex": 3,
       "StaticIndex": 2490,
@@ -2303,7 +2303,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 33.8,
-      "PowerIndex": 8520,
+      "PowerIndex": 8522,
       "PowerSetID": 3388,
       "PowerSetIndex": 4,
       "StaticIndex": 2491,
@@ -2595,7 +2595,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.26,
-      "PowerIndex": 8521,
+      "PowerIndex": 8523,
       "PowerSetID": 3388,
       "PowerSetIndex": 5,
       "StaticIndex": 2492,
@@ -4020,7 +4020,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.52,
-      "PowerIndex": 8522,
+      "PowerIndex": 8524,
       "PowerSetID": 3388,
       "PowerSetIndex": 6,
       "StaticIndex": 2493,
@@ -4363,7 +4363,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.078,
-      "PowerIndex": 8523,
+      "PowerIndex": 8525,
       "PowerSetID": 3388,
       "PowerSetIndex": 7,
       "StaticIndex": 2494,
@@ -4700,7 +4700,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 8524,
+      "PowerIndex": 8526,
       "PowerSetID": 3388,
       "PowerSetIndex": 8,
       "StaticIndex": 2495,

@@ -340,7 +340,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy",
-          "nSummon": 9789,
+          "nSummon": 9791,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -885,7 +885,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy",
-          "nSummon": 9789,
+          "nSummon": 9791,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1732,7 +1732,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Exhausted",
-          "nSummon": 9791,
+          "nSummon": 9793,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -2863,7 +2863,7 @@
           "nID": 6,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy",
-          "nSummon": 9789,
+          "nSummon": 9791,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -3423,7 +3423,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6161,
+          "nSummon": 6163,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3440,7 +3440,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Brute_Savage_Melee.Rending_Flurry_Large",
-          "nOverride": 6161
+          "nOverride": 6163
         },
         {
           "NewEffects": [
@@ -3472,7 +3472,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6160,
+          "nSummon": 6162,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3489,7 +3489,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Brute_Savage_Melee.Rending_Flurry_Normal",
-          "nOverride": 6160
+          "nOverride": 6162
         },
         {
           "NewEffects": [
@@ -3773,7 +3773,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Exhausted",
-          "nSummon": 9791,
+          "nSummon": 9793,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -4459,7 +4459,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Exhausted",
-          "nSummon": 9791,
+          "nSummon": 9793,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -4892,7 +4892,7 @@
           "nID": 2,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy",
-          "nSummon": 9789,
+          "nSummon": 9791,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

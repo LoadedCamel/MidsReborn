@@ -4,15 +4,15 @@
   "FullName": "Mastermind_Summon.Mercenaries",
   "ImageName": "Mercenaries.png",
   "Power": [
-    6051,
-    6052,
     6053,
     6054,
     6055,
     6056,
     6057,
     6058,
-    6059
+    6059,
+    6060,
+    6061
   ],
   "SetType": 1,
   "DisplayName": "Mercenaries",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 6051,
+      "PowerIndex": 6053,
       "PowerSetID": 3002,
       "StaticIndex": 1438,
       "NGroupMembership": [],
@@ -267,7 +267,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 19.5,
-      "PowerIndex": 6052,
+      "PowerIndex": 6054,
       "PowerSetID": 3002,
       "PowerSetIndex": 1,
       "StaticIndex": 1439,
@@ -321,7 +321,9 @@
       "DescLong": "Calls forth one to three Mercenary Soldiers (depending on your level) to do your bidding. The third Soldier you gain will be a Medic.  All Soldiers use Sub Machine Guns, but these can be upgraded. You may only have 3 Soldiers under your control at any given time.  If you attempt to call more Soldiers, you can only replace the ones you have lost in battle.  If you already have three, the power will fail. Recharge: Very Long",
       "SetTypes": [
         6,
+        9,
         21,
+        23,
         27,
         30,
         40,
@@ -545,7 +547,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 10.66,
-      "PowerIndex": 6053,
+      "PowerIndex": 6055,
       "PowerSetID": 3002,
       "PowerSetIndex": 2,
       "StaticIndex": 1440,
@@ -825,7 +827,7 @@
     {
       "CastTimeReal": 1.3,
       "ToggleCost": 22.75,
-      "PowerIndex": 6054,
+      "PowerIndex": 6056,
       "PowerSetID": 3002,
       "PowerSetIndex": 3,
       "StaticIndex": 1441,
@@ -1495,7 +1497,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 18.98,
-      "PowerIndex": 6055,
+      "PowerIndex": 6057,
       "PowerSetID": 3002,
       "PowerSetIndex": 4,
       "StaticIndex": 1442,
@@ -1879,7 +1881,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 19.5,
-      "PowerIndex": 6056,
+      "PowerIndex": 6058,
       "PowerSetID": 3002,
       "PowerSetIndex": 5,
       "StaticIndex": 1443,
@@ -1939,10 +1941,14 @@
       "DescLong": "You can enlist one to two highly skilled Spec Ops Mercenary (depending on your level).  Spec Ops weapons are highly accurate and long ranged, and they are adept in many different tactical weapons. Like all Henchmen, Spec Ops can be equipped with even deadlier munitions. You may only have 2 Spec Ops under your control at any given time.  If you attempt to summon more Spec Ops, you can only replace the ones you have lost in battle.  If you already have two, the power will fail. Recharge: Very Long",
       "SetTypes": [
         6,
+        10,
+        11,
+        12,
         21,
         26,
         27,
         30,
+        31,
         40,
         44
       ],
@@ -2114,7 +2120,7 @@
     {
       "CastTimeReal": 1.3,
       "ToggleCost": 13.0,
-      "PowerIndex": 6057,
+      "PowerIndex": 6059,
       "PowerSetID": 3002,
       "PowerSetIndex": 6,
       "StaticIndex": 1444,
@@ -3383,7 +3389,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 19.5,
-      "PowerIndex": 6058,
+      "PowerIndex": 6060,
       "PowerSetID": 3002,
       "PowerSetIndex": 7,
       "StaticIndex": 1445,
@@ -3562,7 +3568,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 22.75,
-      "PowerIndex": 6059,
+      "PowerIndex": 6061,
       "PowerSetID": 3002,
       "PowerSetIndex": 8,
       "StaticIndex": 1446,

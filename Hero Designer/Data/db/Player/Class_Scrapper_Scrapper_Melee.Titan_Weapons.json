@@ -4,15 +4,15 @@
   "FullName": "Scrapper_Melee.Titan_Weapons",
   "ImageName": "TitanWeapons.png",
   "Power": [
-    6985,
-    6986,
     6987,
     6988,
     6989,
     6990,
     6991,
     6992,
-    6993
+    6993,
+    6994,
+    6995
   ],
   "SetType": 1,
   "DisplayName": "Titan Weapons",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 2.2,
       "ToggleCost": 5.356,
-      "PowerIndex": 6985,
+      "PowerIndex": 6987,
       "PowerSetID": 3328,
       "StaticIndex": 6028,
       "NGroupMembership": [],
@@ -145,7 +145,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6519,
+          "nSummon": 6521,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -163,7 +163,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Titan_Weapons.Defensive_Sweep_Fast",
-          "nOverride": 6519
+          "nOverride": 6521
         },
         {
           "NewEffects": [
@@ -195,7 +195,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6514,
+          "nSummon": 6516,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -212,7 +212,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Titan_Weapons.Defensive_Sweep_Slow",
-          "nOverride": 6514
+          "nOverride": 6516
         },
         {
           "NewEffects": [
@@ -727,7 +727,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.78384,
-      "PowerIndex": 6986,
+      "PowerIndex": 6988,
       "PowerSetID": 3328,
       "PowerSetIndex": 1,
       "StaticIndex": 6029,
@@ -835,7 +835,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6517,
+          "nSummon": 6519,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -853,7 +853,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Titan_Weapons.Crushing_Blow_Fast",
-          "nOverride": 6517
+          "nOverride": 6519
         },
         {
           "NewEffects": [
@@ -885,7 +885,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6518,
+          "nSummon": 6520,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -902,7 +902,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Titan_Weapons.Crushing_Blow_Slow",
-          "nOverride": 6518
+          "nOverride": 6520
         },
         {
           "NewEffects": [
@@ -1363,7 +1363,7 @@
     {
       "CastTimeReal": 2.43,
       "ToggleCost": 10.49818,
-      "PowerIndex": 6987,
+      "PowerIndex": 6989,
       "PowerSetID": 3328,
       "PowerSetIndex": 2,
       "StaticIndex": 6030,
@@ -1463,7 +1463,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6522,
+          "nSummon": 6524,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -1481,7 +1481,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Titan_Weapons.Sweeping_Strike_Fast",
-          "nOverride": 6522
+          "nOverride": 6524
         },
         {
           "NewEffects": [
@@ -1513,7 +1513,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6523,
+          "nSummon": 6525,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1530,7 +1530,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Titan_Weapons.Sweeping_Strike_Slow",
-          "nOverride": 6523
+          "nOverride": 6525
         },
         {
           "NewEffects": [
@@ -2042,7 +2042,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 10.49776,
-      "PowerIndex": 6988,
+      "PowerIndex": 6990,
       "PowerSetID": 3328,
       "PowerSetIndex": 3,
       "StaticIndex": 6031,
@@ -2685,7 +2685,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 6989,
+      "PowerIndex": 6991,
       "PowerSetID": 3328,
       "PowerSetIndex": 4,
       "StaticIndex": 6032,
@@ -3316,7 +3316,7 @@
     },
     {
       "CastTimeReal": 1.93,
-      "PowerIndex": 6990,
+      "PowerIndex": 6992,
       "PowerSetID": 3328,
       "PowerSetIndex": 5,
       "StaticIndex": 6033,
@@ -3596,7 +3596,7 @@
     {
       "CastTimeReal": 2.3,
       "ToggleCost": 15.63952,
-      "PowerIndex": 6991,
+      "PowerIndex": 6993,
       "PowerSetID": 3328,
       "PowerSetIndex": 6,
       "StaticIndex": 6034,
@@ -3694,7 +3694,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6520,
+          "nSummon": 6522,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -3712,7 +3712,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Titan_Weapons.Shatter_Armor_Fast",
-          "nOverride": 6520
+          "nOverride": 6522
         },
         {
           "NewEffects": [
@@ -3744,7 +3744,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6521,
+          "nSummon": 6523,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3761,7 +3761,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Titan_Weapons.Shatter_Armor_Slow",
-          "nOverride": 6521
+          "nOverride": 6523
         },
         {
           "NewEffects": [
@@ -4623,7 +4623,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 13.9256,
-      "PowerIndex": 6992,
+      "PowerIndex": 6994,
       "PowerSetID": 3328,
       "PowerSetIndex": 7,
       "StaticIndex": 6035,
@@ -5157,7 +5157,7 @@
     {
       "CastTimeReal": 2.7,
       "ToggleCost": 19.06736,
-      "PowerIndex": 6993,
+      "PowerIndex": 6995,
       "PowerSetID": 3328,
       "PowerSetIndex": 8,
       "StaticIndex": 6036,
@@ -5258,7 +5258,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6515,
+          "nSummon": 6517,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -5276,7 +5276,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Titan_Weapons.Arc_of_Destruction_Fast",
-          "nOverride": 6515
+          "nOverride": 6517
         },
         {
           "NewEffects": [
@@ -5308,7 +5308,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6516,
+          "nSummon": 6518,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -5325,7 +5325,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Titan_Weapons.Arc_of_Destruction_Slow",
-          "nOverride": 6516
+          "nOverride": 6518
         },
         {
           "NewEffects": [

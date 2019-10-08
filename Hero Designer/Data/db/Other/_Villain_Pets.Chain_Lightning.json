@@ -4,10 +4,10 @@
   "FullName": "Villain_Pets.Chain_Lightning",
   "ImageName": "",
   "Power": [
-    9994,
-    9995,
     9996,
-    9997
+    9997,
+    9998,
+    9999
   ],
   "SetType": 8,
   "DisplayName": "Chain Lightning",
@@ -24,7 +24,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 9994,
+      "PowerIndex": 9996,
       "PowerSetID": 3471,
       "StaticIndex": 3036,
       "NGroupMembership": [],
@@ -152,7 +152,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Villain_Pets.Chain_Lightning.Charge2",
-          "nSummon": 9995,
+          "nSummon": 9997,
           "DelayedTime": 1.5,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -229,7 +229,7 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 9995,
+      "PowerIndex": 9997,
       "PowerSetID": 3471,
       "PowerSetIndex": 1,
       "StaticIndex": 3037,
@@ -357,7 +357,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Villain_Pets.Chain_Lightning.Charge3",
-          "nSummon": 9996,
+          "nSummon": 9998,
           "DelayedTime": 1.5,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -434,7 +434,7 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 9996,
+      "PowerIndex": 9998,
       "PowerSetID": 3471,
       "PowerSetIndex": 2,
       "StaticIndex": 3038,
@@ -562,7 +562,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Villain_Pets.Chain_Lightning.Charge4",
-          "nSummon": 9997,
+          "nSummon": 9999,
           "DelayedTime": 1.5,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -639,7 +639,7 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 9997,
+      "PowerIndex": 9999,
       "PowerSetID": 3471,
       "PowerSetIndex": 3,
       "StaticIndex": 3039,

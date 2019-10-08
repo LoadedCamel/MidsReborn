@@ -4,7 +4,7 @@
   "FullName": "Pets.Savage_Leap",
   "ImageName": "",
   "Power": [
-    6452
+    6454
   ],
   "SetType": 8,
   "DisplayName": "Savage Leap",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6452,
+      "PowerIndex": 6454,
       "PowerSetID": 3198,
       "StaticIndex": 10416,
       "NGroupMembership": [],

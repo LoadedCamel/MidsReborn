@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Jolt_Controller_Jump1",
   "ImageName": "",
   "Power": [
-    6174
+    6176
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 1",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6174,
+      "PowerIndex": 6176,
       "PowerSetID": 3052,
       "StaticIndex": 4410,
       "NGroupMembership": [],
@@ -310,6 +310,7 @@
           "MagPercent": -100.0,
           "Duration": 1.5,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -363,6 +364,7 @@
           "MagPercent": -100.0,
           "Duration": 1.5,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

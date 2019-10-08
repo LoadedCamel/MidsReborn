@@ -4,8 +4,8 @@
   "FullName": "Pets.Nature_Affinity_Defender",
   "ImageName": "",
   "Power": [
-    6366,
-    6367
+    6368,
+    6369
   ],
   "SetType": 8,
   "DisplayName": "Nature Affinity",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 26.0,
-      "PowerIndex": 6366,
+      "PowerIndex": 6368,
       "PowerSetID": 3154,
       "StaticIndex": 9112,
       "NGroupMembership": [],
@@ -265,7 +265,7 @@
           "nID": 3,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -293,7 +293,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 6367,
+      "PowerIndex": 6369,
       "PowerSetID": 3154,
       "PowerSetIndex": 1,
       "StaticIndex": 9113,
@@ -487,7 +487,7 @@
           "nID": 2,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

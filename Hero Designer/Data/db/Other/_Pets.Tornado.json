@@ -4,10 +4,10 @@
   "FullName": "Pets.Tornado",
   "ImageName": "",
   "Power": [
-    6534,
-    6535,
     6536,
-    6537
+    6537,
+    6538,
+    6539
   ],
   "SetType": 8,
   "DisplayName": "Tornado",
@@ -24,7 +24,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6534,
+      "PowerIndex": 6536,
       "PowerSetID": 3246,
       "StaticIndex": 1746,
       "NGroupMembership": [],
@@ -452,7 +452,7 @@
       "AoEModifier": 2.05
     },
     {
-      "PowerIndex": 6535,
+      "PowerIndex": 6537,
       "PowerSetID": 3246,
       "PowerSetIndex": 1,
       "StaticIndex": 1747,
@@ -700,7 +700,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6536,
+      "PowerIndex": 6538,
       "PowerSetID": 3246,
       "PowerSetIndex": 2,
       "StaticIndex": 1748,
@@ -801,7 +801,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6537,
+      "PowerIndex": 6539,
       "PowerSetID": 3246,
       "PowerSetIndex": 3,
       "StaticIndex": 1749,

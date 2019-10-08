@@ -4,10 +4,10 @@
   "FullName": "Pets.VillainBomb",
   "ImageName": "",
   "Power": [
-    6596,
-    6597,
     6598,
-    6599
+    6599,
+    6600,
+    6601
   ],
   "SetType": 8,
   "DisplayName": "Bomb",
@@ -24,7 +24,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6596,
+      "PowerIndex": 6598,
       "PowerSetID": 3038,
       "StaticIndex": 1766,
       "NGroupMembership": [],
@@ -228,7 +228,7 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 6597,
+      "PowerIndex": 6599,
       "PowerSetID": 3038,
       "PowerSetIndex": 1,
       "StaticIndex": 1767,
@@ -332,7 +332,7 @@
       "AoEModifier": 6.25
     },
     {
-      "PowerIndex": 6598,
+      "PowerIndex": 6600,
       "PowerSetID": 3038,
       "PowerSetIndex": 2,
       "StaticIndex": 1768,
@@ -2154,7 +2154,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6599,
+      "PowerIndex": 6601,
       "PowerSetID": 3038,
       "PowerSetIndex": 3,
       "StaticIndex": 1769,

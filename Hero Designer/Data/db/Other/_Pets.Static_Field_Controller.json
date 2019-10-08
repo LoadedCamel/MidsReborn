@@ -4,7 +4,7 @@
   "FullName": "Pets.Static_Field_Controller",
   "ImageName": "",
   "Power": [
-    6475
+    6477
   ],
   "SetType": 8,
   "DisplayName": "Static Field Controller",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6475,
+      "PowerIndex": 6477,
       "PowerSetID": 3217,
       "StaticIndex": 4438,
       "NGroupMembership": [],
@@ -367,6 +367,7 @@
           "MagPercent": -100.0,
           "Duration": 1.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 0.25,
           "Reward": "",
           "EffectId": "Ones",

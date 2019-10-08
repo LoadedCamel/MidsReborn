@@ -4,8 +4,6 @@
   "FullName": "Peacebringer_Defensive.Luminous_Aura",
   "ImageName": "LuminousAura.png",
   "Power": [
-    6096,
-    6097,
     6098,
     6099,
     6100,
@@ -16,7 +14,9 @@
     6105,
     6106,
     6107,
-    6108
+    6108,
+    6109,
+    6110
   ],
   "SetType": 2,
   "DisplayName": "Luminous Aura",
@@ -33,7 +33,7 @@
   "GroupName": "Peacebringer_Defensive",
   "Powers": [
     {
-      "PowerIndex": 6096,
+      "PowerIndex": 6098,
       "PowerSetID": 3007,
       "StaticIndex": 1517,
       "NGroupMembership": [],
@@ -195,7 +195,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 6097,
+      "PowerIndex": 6099,
       "PowerSetID": 3007,
       "PowerSetIndex": 1,
       "StaticIndex": 1518,
@@ -471,7 +471,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 10.4,
-      "PowerIndex": 6098,
+      "PowerIndex": 6100,
       "PowerSetID": 3007,
       "PowerSetIndex": 2,
       "StaticIndex": 1519,
@@ -743,7 +743,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 6099,
+      "PowerIndex": 6101,
       "PowerSetID": 3007,
       "PowerSetIndex": 3,
       "StaticIndex": 1520,
@@ -1019,7 +1019,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.26,
-      "PowerIndex": 6100,
+      "PowerIndex": 6102,
       "PowerSetID": 3007,
       "PowerSetIndex": 4,
       "StaticIndex": 1521,
@@ -1346,7 +1346,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 0.52,
-      "PowerIndex": 6101,
+      "PowerIndex": 6103,
       "PowerSetID": 3007,
       "PowerSetIndex": 5,
       "StaticIndex": 1522,
@@ -1621,7 +1621,7 @@
     },
     {
       "ToggleCost": 0.26,
-      "PowerIndex": 6102,
+      "PowerIndex": 6104,
       "PowerSetID": 3007,
       "PowerSetIndex": 6,
       "StaticIndex": 1523,
@@ -5240,7 +5240,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 10.4,
-      "PowerIndex": 6103,
+      "PowerIndex": 6105,
       "PowerSetID": 3007,
       "PowerSetIndex": 7,
       "StaticIndex": 1524,
@@ -5355,7 +5355,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 7.8,
-      "PowerIndex": 6104,
+      "PowerIndex": 6106,
       "PowerSetID": 3007,
       "PowerSetIndex": 8,
       "StaticIndex": 1525,
@@ -5469,7 +5469,7 @@
     },
     {
       "ToggleCost": 1.0,
-      "PowerIndex": 6105,
+      "PowerIndex": 6107,
       "PowerSetID": 3007,
       "PowerSetIndex": 9,
       "StaticIndex": 5600,
@@ -6837,7 +6837,7 @@
     },
     {
       "ToggleCost": 2.6,
-      "PowerIndex": 6106,
+      "PowerIndex": 6108,
       "PowerSetID": 3007,
       "PowerSetIndex": 10,
       "StaticIndex": 1526,
@@ -7431,7 +7431,7 @@
           "nID": 10,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.NoPhase",
-          "nSummon": 9665,
+          "nSummon": 9667,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -7557,7 +7557,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 6107,
+      "PowerIndex": 6109,
       "PowerSetID": 3007,
       "PowerSetIndex": 11,
       "StaticIndex": 1527,
@@ -7870,7 +7870,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 2.6,
-      "PowerIndex": 6108,
+      "PowerIndex": 6110,
       "PowerSetID": 3007,
       "PowerSetIndex": 12,
       "StaticIndex": 1528,

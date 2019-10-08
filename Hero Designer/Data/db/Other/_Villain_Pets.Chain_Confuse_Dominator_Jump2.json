@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Chain_Confuse_Dominator_Jump2",
   "ImageName": "",
   "Power": [
-    9985
+    9987
   ],
   "SetType": 8,
   "DisplayName": "Chain Confuse Jump 2",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 9985,
+      "PowerIndex": 9987,
       "PowerSetID": 3462,
       "StaticIndex": 4483,
       "NGroupMembership": [],
@@ -216,6 +216,7 @@
           "MagPercent": -100.0,
           "Duration": 4.1,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -269,6 +270,7 @@
           "MagPercent": -100.0,
           "Duration": 8.1,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

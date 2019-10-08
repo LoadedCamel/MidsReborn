@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Dominator_ElectricityAssault_Snipe",
   "ImageName": "",
   "Power": [
-    10068,
-    10069
+    10070,
+    10071
   ],
   "SetType": 8,
   "DisplayName": "Dominator_ElectricityAssault_Snipe",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 18.512,
-      "PowerIndex": 10068,
+      "PowerIndex": 10070,
       "PowerSetID": 3494,
       "StaticIndex": 9811,
       "NGroupMembership": [],
@@ -413,6 +413,7 @@
           "Probability": 0.3,
           "Mag": 7.2,
           "MagPercent": 7.2,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",
@@ -448,7 +449,7 @@
     {
       "CastTimeReal": 4.33,
       "ToggleCost": 18.512,
-      "PowerIndex": 10069,
+      "PowerIndex": 10071,
       "PowerSetID": 3494,
       "PowerSetIndex": 1,
       "StaticIndex": 9812,
@@ -840,6 +841,7 @@
           "Probability": 0.3,
           "Mag": 7.2,
           "MagPercent": 7.2,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",

@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Traps_Poison_Trap",
   "ImageName": "",
   "Power": [
-    10244,
-    10245
+    10246,
+    10247
   ],
   "SetType": 8,
   "DisplayName": "Poison Trap",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10244,
+      "PowerIndex": 10246,
       "PowerSetID": 3526,
       "StaticIndex": 3165,
       "NGroupMembership": [],
@@ -138,6 +138,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -187,6 +188,7 @@
           "Mag": -1.0,
           "MagPercent": -100.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -219,7 +221,7 @@
       "AoEModifier": 3.4
     },
     {
-      "PowerIndex": 10245,
+      "PowerIndex": 10247,
       "PowerSetID": 3526,
       "PowerSetIndex": 1,
       "StaticIndex": 3166,

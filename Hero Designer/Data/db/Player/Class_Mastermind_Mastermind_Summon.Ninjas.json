@@ -4,15 +4,15 @@
   "FullName": "Mastermind_Summon.Ninjas",
   "ImageName": "Ninjas.png",
   "Power": [
-    6069,
-    6070,
     6071,
     6072,
     6073,
     6074,
     6075,
     6076,
-    6077
+    6077,
+    6078,
+    6079
   ],
   "SetType": 1,
   "DisplayName": "Ninjas",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 4.42,
-      "PowerIndex": 6069,
+      "PowerIndex": 6071,
       "PowerSetID": 3004,
       "StaticIndex": 1456,
       "NGroupMembership": [],
@@ -205,7 +205,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 19.5,
-      "PowerIndex": 6070,
+      "PowerIndex": 6072,
       "PowerSetID": 3004,
       "PowerSetIndex": 1,
       "StaticIndex": 1457,
@@ -484,7 +484,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 6071,
+      "PowerIndex": 6073,
       "PowerSetID": 3004,
       "PowerSetIndex": 2,
       "StaticIndex": 1458,
@@ -658,7 +658,7 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 22.75,
-      "PowerIndex": 6072,
+      "PowerIndex": 6074,
       "PowerSetID": 3004,
       "PowerSetIndex": 3,
       "StaticIndex": 1459,
@@ -1281,7 +1281,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 10.66,
-      "PowerIndex": 6073,
+      "PowerIndex": 6075,
       "PowerSetID": 3004,
       "PowerSetIndex": 4,
       "StaticIndex": 1460,
@@ -1458,7 +1458,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 19.5,
-      "PowerIndex": 6074,
+      "PowerIndex": 6076,
       "PowerSetID": 3004,
       "PowerSetIndex": 5,
       "StaticIndex": 1461,
@@ -2057,7 +2057,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 30.0,
-      "PowerIndex": 6075,
+      "PowerIndex": 6077,
       "PowerSetID": 3004,
       "PowerSetIndex": 6,
       "StaticIndex": 1462,
@@ -2342,7 +2342,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Villain_Pets.Kuji_Kiri.Smoke_Bomb",
-          "nSummon": 10116,
+          "nSummon": 10118,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -2370,7 +2370,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 19.5,
-      "PowerIndex": 6076,
+      "PowerIndex": 6078,
       "PowerSetID": 3004,
       "PowerSetIndex": 7,
       "StaticIndex": 1463,
@@ -2549,7 +2549,7 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 22.75,
-      "PowerIndex": 6077,
+      "PowerIndex": 6079,
       "PowerSetID": 3004,
       "PowerSetIndex": 8,
       "StaticIndex": 1464,

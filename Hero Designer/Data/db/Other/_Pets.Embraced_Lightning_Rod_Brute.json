@@ -4,7 +4,7 @@
   "FullName": "Pets.Embraced_Lightning_Rod_Brute",
   "ImageName": "",
   "Power": [
-    6259
+    6261
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6259,
+      "PowerIndex": 6261,
       "PowerSetID": 3074,
       "StaticIndex": 4418,
       "NGroupMembership": [],

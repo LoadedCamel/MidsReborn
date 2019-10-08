@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Chain_Jolt_Dominator_Jump3",
   "ImageName": "",
   "Power": [
-    9993
+    9995
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 3",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 9993,
+      "PowerIndex": 9995,
       "PowerSetID": 3470,
       "StaticIndex": 4487,
       "NGroupMembership": [],

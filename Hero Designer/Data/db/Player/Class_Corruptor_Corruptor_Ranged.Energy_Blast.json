@@ -2503,7 +2503,7 @@
           "nID": 8,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10042,
+          "nSummon": 10044,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -2521,7 +2521,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 9,
           "Override": "Villain_Pets.Corruptor_EnergyBlast_Snipe.Sniper_Blast_Quick",
-          "nOverride": 10042
+          "nOverride": 10044
         },
         {
           "NewEffects": [
@@ -2552,7 +2552,7 @@
           "nID": 9,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10043,
+          "nSummon": 10045,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2569,7 +2569,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 10,
           "Override": "Villain_Pets.Corruptor_EnergyBlast_Snipe.Sniper_Blast_Normal",
-          "nOverride": 10043
+          "nOverride": 10045
         }
       ],
       "HasPowerOverrideEffect": true,

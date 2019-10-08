@@ -143,6 +143,9 @@ namespace Base.Data_Classes
         public bool PetTier2 { get; private set; }
         public bool PetTier3 { get; private set; }
         public bool PetBuffPwr { get; private set; }
+        public bool NotPetBuffPwr { get; private set; }
+        public bool PetT2AndBuffPwr { get; private set; }
+        public bool PetT3AndBuffPwr { get; private set; }
 
         public Dictionary<string, float> ModifyEffects { get; protected set; }
 
@@ -354,6 +357,9 @@ namespace Base.Data_Classes
             PetTier2 = false;
             PetTier3 = false;
             PetBuffPwr = false;
+            NotPetBuffPwr = true;
+            PetT2AndBuffPwr = false;
+            PetT3AndBuffPwr = false;
             Totals.Init();
             TotalsCapped.Init();
             RequestedLevel = -1;
@@ -386,6 +392,9 @@ namespace Base.Data_Classes
             PetTier2 = false;
             PetTier3 = false;
             PetBuffPwr = false;
+            NotPetBuffPwr = true;
+            PetT2AndBuffPwr = false;
+            PetT3AndBuffPwr = false;
 
             foreach (var power in CurrentBuild.Powers)
             {
@@ -460,11 +469,25 @@ namespace Base.Data_Classes
                         Supremacy = true;
                         break;
                     case "TRAIN_BEASTS":
-                        PetTier2 = true;
+                        if (PetBuffPwr)
+                        {
+                            PetT2AndBuffPwr = true;
+                        }
+                        else
+                        {
+                            PetTier2 = true;
+                        }
+
                         break;
                     case "TAME_BEASTS":
-                        PetTier2 = true;
-                        PetTier3 = true;
+                        if (PetBuffPwr)
+                        {
+                            PetT3AndBuffPwr = true;
+                        }
+                        else
+                        {
+                            PetTier3 = true;
+                        }
                         break;
                     case "ENCHANT_DEMONS":
                         PetTier2 = true;
@@ -510,6 +533,7 @@ namespace Base.Data_Classes
                         break;
                     case "PACK_MENTALITY":
                         PetBuffPwr = true;
+                        NotPetBuffPwr = false;
                         break;
                 }
             }

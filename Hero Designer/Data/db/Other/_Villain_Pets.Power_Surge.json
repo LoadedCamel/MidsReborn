@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Power_Surge",
   "ImageName": "",
   "Power": [
-    10173
+    10175
   ],
   "SetType": 8,
   "DisplayName": "Electric Armor",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10173,
+      "PowerIndex": 10175,
       "PowerSetID": 3501,
       "StaticIndex": 3144,
       "NGroupMembership": [],
@@ -519,6 +519,7 @@
           "MagPercent": -1000.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

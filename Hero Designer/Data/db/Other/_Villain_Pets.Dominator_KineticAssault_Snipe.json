@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Dominator_KineticAssault_Snipe",
   "ImageName": "",
   "Power": [
-    10074,
-    10075
+    10076,
+    10077
   ],
   "SetType": 8,
   "DisplayName": "Dominator_KineticAssault_Snipe",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 18.512,
-      "PowerIndex": 10074,
+      "PowerIndex": 10076,
       "PowerSetID": 3497,
       "StaticIndex": 9817,
       "NGroupMembership": [],
@@ -927,6 +927,7 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "Temporary_Powers.Temporary_Powers.Kinetic_Assault_Impulse",
           "EffectId": "Ones",
@@ -934,7 +935,7 @@
           "nID": 16,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Kinetic_Assault_Impulse",
-          "nSummon": 9585,
+          "nSummon": 9587,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1009,7 +1010,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 18.512,
-      "PowerIndex": 10075,
+      "PowerIndex": 10077,
       "PowerSetID": 3497,
       "PowerSetIndex": 1,
       "StaticIndex": 9818,
@@ -1915,6 +1916,7 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "Temporary_Powers.Temporary_Powers.Kinetic_Assault_Impulse",
           "EffectId": "Ones",
@@ -1922,7 +1924,7 @@
           "nID": 16,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Kinetic_Assault_Impulse",
-          "nSummon": 9585,
+          "nSummon": 9587,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

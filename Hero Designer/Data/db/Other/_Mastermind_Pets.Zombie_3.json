@@ -156,6 +156,7 @@
           "Probability": 1.0,
           "Mag": 115.6568,
           "MagPercent": 115.6568,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "HealSelf",

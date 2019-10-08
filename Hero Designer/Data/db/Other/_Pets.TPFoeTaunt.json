@@ -4,7 +4,7 @@
   "FullName": "Pets.TPFoeTaunt",
   "ImageName": "",
   "Power": [
-    6538
+    6540
   ],
   "SetType": 8,
   "DisplayName": "Teleport Foe",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6538,
+      "PowerIndex": 6540,
       "PowerSetID": 3240,
       "StaticIndex": 1750,
       "NGroupMembership": [],

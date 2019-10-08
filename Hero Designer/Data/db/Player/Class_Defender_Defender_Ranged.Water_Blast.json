@@ -383,7 +383,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9878,
+          "nSummon": 9880,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -1024,7 +1024,7 @@
           "nID": 10,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9878,
+          "nSummon": 9880,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -2476,7 +2476,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9878,
+          "nSummon": 9880,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -3058,7 +3058,7 @@
           "nID": 9,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9878,
+          "nSummon": 9880,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -3920,7 +3920,7 @@
           "nID": 14,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9878,
+          "nSummon": 9880,
           "SpecialCase": 42,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4093,7 +4093,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6628,
+          "nSummon": 6630,
           "Stacking": 1,
           "SpecialCase": 24,
           "UIDClassName": "",
@@ -4111,7 +4111,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Water_Blast_Defender.Water_Jet_Fast",
-          "nOverride": 6628
+          "nOverride": 6630
         },
         {
           "NewEffects": [
@@ -4143,7 +4143,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6627,
+          "nSummon": 6629,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4160,7 +4160,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Water_Blast_Defender.Water_Jet_Normal",
-          "nOverride": 6627
+          "nOverride": 6629
         },
         {
           "NewEffects": [
@@ -4602,7 +4602,7 @@
           "nID": 10,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9878,
+          "nSummon": 9880,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -4944,7 +4944,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9878,
+          "nSummon": 9880,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

@@ -4,8 +4,8 @@
   "FullName": "Pets.FreezingRain_Controller",
   "ImageName": "",
   "Power": [
-    6280,
-    6281
+    6282,
+    6283
   ],
   "SetType": 8,
   "DisplayName": "Freezing Rain",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6280,
+      "PowerIndex": 6282,
       "PowerSetID": 3097,
       "StaticIndex": 1599,
       "NGroupMembership": [],
@@ -1299,7 +1299,7 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 6281,
+      "PowerIndex": 6283,
       "PowerSetID": 3097,
       "PowerSetIndex": 1,
       "StaticIndex": 1600,

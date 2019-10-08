@@ -4,15 +4,15 @@
   "FullName": "Tanker_Defense.Shield_Defense",
   "ImageName": "ShieldDef.png",
   "Power": [
-    8570,
-    8571,
     8572,
     8573,
     8574,
     8575,
     8576,
     8577,
-    8578
+    8578,
+    8579,
+    8580
   ],
   "SetType": 1,
   "DisplayName": "Shield Defense",
@@ -39,7 +39,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 8570,
+      "PowerIndex": 8572,
       "PowerSetID": 3394,
       "StaticIndex": 3396,
       "NGroupMembership": [],
@@ -587,7 +587,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 8571,
+      "PowerIndex": 8573,
       "PowerSetID": 3394,
       "PowerSetIndex": 1,
       "StaticIndex": 3397,
@@ -1027,7 +1027,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8572,
+      "PowerIndex": 8574,
       "PowerSetID": 3394,
       "PowerSetIndex": 2,
       "StaticIndex": 3398,
@@ -1391,7 +1391,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 10.4,
-      "PowerIndex": 8573,
+      "PowerIndex": 8575,
       "PowerSetID": 3394,
       "PowerSetIndex": 3,
       "StaticIndex": 3399,
@@ -3111,7 +3111,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 8574,
+      "PowerIndex": 8576,
       "PowerSetID": 3394,
       "PowerSetIndex": 4,
       "StaticIndex": 3400,
@@ -4561,7 +4561,7 @@
     },
     {
       "CastTimeReal": 1.716,
-      "PowerIndex": 8575,
+      "PowerIndex": 8577,
       "PowerSetID": 3394,
       "PowerSetIndex": 5,
       "StaticIndex": 3401,
@@ -4937,7 +4937,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 0.156,
-      "PowerIndex": 8576,
+      "PowerIndex": 8578,
       "PowerSetID": 3394,
       "PowerSetIndex": 6,
       "StaticIndex": 3402,
@@ -5577,7 +5577,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 13.52,
-      "PowerIndex": 8577,
+      "PowerIndex": 8579,
       "PowerSetID": 3394,
       "PowerSetIndex": 7,
       "StaticIndex": 3403,
@@ -5759,7 +5759,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 2.6,
-      "PowerIndex": 8578,
+      "PowerIndex": 8580,
       "PowerSetID": 3394,
       "PowerSetIndex": 8,
       "StaticIndex": 3404,

@@ -3274,7 +3274,7 @@
           "nID": 13,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Beam_Rifle_Debuff",
-          "nSummon": 9338,
+          "nSummon": 9340,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -4898,7 +4898,7 @@
           "nID": 2,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6129,
+          "nSummon": 6131,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -4916,7 +4916,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 3,
           "Override": "Pets.Blaster_BR_Snipe.Penetrating_Ray_Quick",
-          "nOverride": 6129
+          "nOverride": 6131
         },
         {
           "NewEffects": [
@@ -4947,7 +4947,7 @@
           "nID": 3,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6128,
+          "nSummon": 6130,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4964,7 +4964,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 4,
           "Override": "Pets.Blaster_BR_Snipe.Penetrating_Ray_Normal",
-          "nOverride": 6128
+          "nOverride": 6130
         },
         {
           "NewEffects": [

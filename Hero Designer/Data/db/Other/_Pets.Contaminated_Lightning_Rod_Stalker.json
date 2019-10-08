@@ -4,7 +4,7 @@
   "FullName": "Pets.Contaminated_Lightning_Rod_Stalker",
   "ImageName": "",
   "Power": [
-    6185
+    6187
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6185,
+      "PowerIndex": 6187,
       "PowerSetID": 3083,
       "StaticIndex": 6223,
       "NGroupMembership": [],

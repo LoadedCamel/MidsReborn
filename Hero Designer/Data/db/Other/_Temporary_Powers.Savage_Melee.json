@@ -4,7 +4,7 @@
   "FullName": "Temporary_Powers.Savage_Melee",
   "ImageName": "",
   "Power": [
-    9093
+    9095
   ],
   "SetType": 7,
   "DisplayName": "Blood Frenzy",
@@ -21,7 +21,7 @@
   "GroupName": "Temporary_Powers",
   "Powers": [
     {
-      "PowerIndex": 9093,
+      "PowerIndex": 9095,
       "PowerSetID": 3427,
       "StaticIndex": 10418,
       "NGroupMembership": [],

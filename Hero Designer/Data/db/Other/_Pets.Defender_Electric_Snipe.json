@@ -4,8 +4,8 @@
   "FullName": "Pets.Defender_Electric_Snipe",
   "ImageName": "",
   "Power": [
-    6235,
-    6236
+    6237,
+    6238
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 4.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6235,
+      "PowerIndex": 6237,
       "PowerSetID": 3011,
       "StaticIndex": 9576,
       "NGroupMembership": [],
@@ -371,6 +371,7 @@
           "Probability": 0.3,
           "Mag": 7.2,
           "MagPercent": 7.2,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",
@@ -406,7 +407,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 6236,
+      "PowerIndex": 6238,
       "PowerSetID": 3011,
       "PowerSetIndex": 1,
       "StaticIndex": 9577,
@@ -752,6 +753,7 @@
           "Probability": 0.3,
           "Mag": 7.2,
           "MagPercent": 7.2,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",

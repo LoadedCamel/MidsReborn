@@ -4,7 +4,7 @@
   "FullName": "Pets.Raid_Disruptor_Pylon_Nuke",
   "ImageName": "",
   "Power": [
-    6425
+    6427
   ],
   "SetType": 8,
   "DisplayName": "Raid_Disruptor_Pylon_Nuke",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6425,
+      "PowerIndex": 6427,
       "PowerSetID": 3182,
       "StaticIndex": 1691,
       "NGroupMembership": [],
@@ -96,7 +96,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Pets.Raid_Disruptor_Pylon_Kill.Destroy",
-          "nSummon": 6424,
+          "nSummon": 6426,
           "DelayedTime": 0.5,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -143,7 +143,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Pets.Raid_Disruptor_Pylon_Create.Create",
-          "nSummon": 6423,
+          "nSummon": 6425,
           "DelayedTime": 0.5,
           "UIDClassName": "",
           "nIDClassName": -1,

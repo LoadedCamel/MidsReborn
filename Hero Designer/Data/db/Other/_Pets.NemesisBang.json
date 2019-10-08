@@ -4,7 +4,7 @@
   "FullName": "Pets.NemesisBang",
   "ImageName": "",
   "Power": [
-    6370
+    6372
   ],
   "SetType": 8,
   "DisplayName": "Nemesis",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6370,
+      "PowerIndex": 6372,
       "PowerSetID": 3155,
       "StaticIndex": 1662,
       "NGroupMembership": [],

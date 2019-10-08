@@ -4,7 +4,7 @@
   "FullName": "Pets.Raid_Disruptor_Pylon",
   "ImageName": "",
   "Power": [
-    6422
+    6424
   ],
   "SetType": 8,
   "DisplayName": "Raid_Disruptor_Pylon",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6422,
+      "PowerIndex": 6424,
       "PowerSetID": 3179,
       "StaticIndex": 1688,
       "NGroupMembership": [],
@@ -88,6 +88,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

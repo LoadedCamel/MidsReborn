@@ -4,8 +4,6 @@
   "FullName": "Sentinel_Ranged.Dual_Pistols",
   "ImageName": "DualPistols.png",
   "Power": [
-    7151,
-    7152,
     7153,
     7154,
     7155,
@@ -15,7 +13,9 @@
     7159,
     7160,
     7161,
-    7162
+    7162,
+    7163,
+    7164
   ],
   "SetType": 1,
   "DisplayName": "Dual Pistols",
@@ -35,7 +35,7 @@
       "CastTimeReal": 0.63,
       "IsEpic": true,
       "LocationIndex": 6,
-      "PowerIndex": 7151,
+      "PowerIndex": 7153,
       "PowerSetID": 3346,
       "StaticIndex": 10199,
       "NGroupMembership": [
@@ -60,7 +60,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            7158,
+            7160,
             -1
           ]
         ],
@@ -744,7 +744,7 @@
       "CastTimeReal": 0.63,
       "IsEpic": true,
       "LocationIndex": 7,
-      "PowerIndex": 7152,
+      "PowerIndex": 7154,
       "PowerSetID": 3346,
       "PowerSetIndex": 1,
       "StaticIndex": 10203,
@@ -770,7 +770,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            7158,
+            7160,
             -1
           ]
         ],
@@ -1503,7 +1503,7 @@
       "CastTimeReal": 0.63,
       "IsEpic": true,
       "LocationIndex": 8,
-      "PowerIndex": 7153,
+      "PowerIndex": 7155,
       "PowerSetID": 3346,
       "PowerSetIndex": 2,
       "StaticIndex": 10204,
@@ -1529,7 +1529,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            7158,
+            7160,
             -1
           ]
         ],
@@ -2211,7 +2211,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 4.16,
-      "PowerIndex": 7154,
+      "PowerIndex": 7156,
       "PowerSetID": 3346,
       "PowerSetIndex": 3,
       "StaticIndex": 10205,
@@ -3953,7 +3953,7 @@
           "nID": 33,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Vulnerability",
-          "nSummon": 9212,
+          "nSummon": 9214,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -4145,7 +4145,7 @@
           "nID": 37,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Opportunity_Lock",
-          "nSummon": 9205,
+          "nSummon": 9207,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -4173,7 +4173,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 6.86,
-      "PowerIndex": 7155,
+      "PowerIndex": 7157,
       "PowerSetID": 3346,
       "PowerSetIndex": 4,
       "StaticIndex": 10206,
@@ -5967,7 +5967,7 @@
           "nID": 34,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Vulnerability",
-          "nSummon": 9212,
+          "nSummon": 9214,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -6159,7 +6159,7 @@
           "nID": 38,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Opportunity_Lock",
-          "nSummon": 9205,
+          "nSummon": 9207,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -6187,7 +6187,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 10.19,
-      "PowerIndex": 7156,
+      "PowerIndex": 7158,
       "PowerSetID": 3346,
       "PowerSetIndex": 5,
       "StaticIndex": 10207,
@@ -7651,7 +7651,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.53,
-      "PowerIndex": 7157,
+      "PowerIndex": 7159,
       "PowerSetID": 3346,
       "PowerSetIndex": 6,
       "StaticIndex": 10208,
@@ -9224,7 +9224,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7158,
+      "PowerIndex": 7160,
       "PowerSetID": 3346,
       "PowerSetIndex": 7,
       "StaticIndex": 10209,
@@ -9327,7 +9327,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 16.85,
-      "PowerIndex": 7159,
+      "PowerIndex": 7161,
       "PowerSetID": 3346,
       "PowerSetIndex": 8,
       "StaticIndex": 10210,
@@ -10734,7 +10734,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 10.19,
-      "PowerIndex": 7160,
+      "PowerIndex": 7162,
       "PowerSetID": 3346,
       "PowerSetIndex": 9,
       "StaticIndex": 10211,
@@ -12165,7 +12165,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 14.35,
-      "PowerIndex": 7161,
+      "PowerIndex": 7163,
       "PowerSetID": 3346,
       "PowerSetIndex": 10,
       "StaticIndex": 10212,
@@ -13793,7 +13793,7 @@
     },
     {
       "ToggleCost": 15.6,
-      "PowerIndex": 7162,
+      "PowerIndex": 7164,
       "PowerSetID": 3346,
       "PowerSetIndex": 11,
       "StaticIndex": 10213,

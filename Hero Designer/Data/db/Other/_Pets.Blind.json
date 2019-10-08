@@ -4,7 +4,7 @@
   "FullName": "Pets.Blind",
   "ImageName": "",
   "Power": [
-    6142
+    6144
   ],
   "SetType": 8,
   "DisplayName": "Blind",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6142,
+      "PowerIndex": 6144,
       "PowerSetID": 3028,
       "StaticIndex": 1544,
       "NGroupMembership": [],

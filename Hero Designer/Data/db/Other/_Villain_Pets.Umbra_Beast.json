@@ -4,12 +4,12 @@
   "FullName": "Villain_Pets.Umbra_Beast",
   "ImageName": "",
   "Power": [
-    10267,
-    10268,
     10269,
     10270,
     10271,
-    10272
+    10272,
+    10273,
+    10274
   ],
   "SetType": 8,
   "DisplayName": "Umbra Beast",
@@ -28,7 +28,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 4.368,
-      "PowerIndex": 10267,
+      "PowerIndex": 10269,
       "PowerSetID": 3562,
       "StaticIndex": 6354,
       "NGroupMembership": [],
@@ -246,7 +246,7 @@
     {
       "CastTimeReal": 1.4,
       "ToggleCost": 6.864,
-      "PowerIndex": 10268,
+      "PowerIndex": 10270,
       "PowerSetID": 3562,
       "PowerSetIndex": 1,
       "StaticIndex": 6355,
@@ -563,7 +563,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 10269,
+      "PowerIndex": 10271,
       "PowerSetID": 3562,
       "PowerSetIndex": 2,
       "StaticIndex": 6358,
@@ -1400,7 +1400,7 @@
     {
       "CastTimeReal": 2.83,
       "ToggleCost": 7.8,
-      "PowerIndex": 10270,
+      "PowerIndex": 10272,
       "PowerSetID": 3562,
       "PowerSetIndex": 3,
       "StaticIndex": 6357,
@@ -1992,7 +1992,7 @@
     {
       "CastTimeReal": 1.4,
       "ToggleCost": 8.528,
-      "PowerIndex": 10271,
+      "PowerIndex": 10273,
       "PowerSetID": 3562,
       "PowerSetIndex": 4,
       "StaticIndex": 6356,
@@ -2313,7 +2313,7 @@
     {
       "CastTimeReal": 2.83,
       "ToggleCost": 10.192,
-      "PowerIndex": 10272,
+      "PowerIndex": 10274,
       "PowerSetID": 3562,
       "PowerSetIndex": 5,
       "StaticIndex": 6359,

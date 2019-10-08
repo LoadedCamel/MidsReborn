@@ -4,9 +4,9 @@
   "FullName": "Pets.Mine",
   "ImageName": "",
   "Power": [
-    6358,
-    6359,
-    6360
+    6360,
+    6361,
+    6362
   ],
   "SetType": 8,
   "DisplayName": "Mine",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6358,
+      "PowerIndex": 6360,
       "PowerSetID": 3149,
       "StaticIndex": 1658,
       "NGroupMembership": [],
@@ -376,7 +376,7 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 6359,
+      "PowerIndex": 6361,
       "PowerSetID": 3149,
       "PowerSetIndex": 1,
       "StaticIndex": 1659,
@@ -2046,7 +2046,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6360,
+      "PowerIndex": 6362,
       "PowerSetID": 3149,
       "PowerSetIndex": 2,
       "StaticIndex": 1660,
@@ -2157,6 +2157,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

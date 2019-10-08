@@ -155,7 +155,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Set_Bonus.Set_Bonus.Critical_Strikes_Proc",
-          "nSummon": 7736,
+          "nSummon": 7738,
           "Ticks": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

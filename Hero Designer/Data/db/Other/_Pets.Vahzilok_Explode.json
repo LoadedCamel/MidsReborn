@@ -4,7 +4,7 @@
   "FullName": "Pets.Vahzilok_Explode",
   "ImageName": "",
   "Power": [
-    6593
+    6595
   ],
   "SetType": 8,
   "DisplayName": "Vahzilok Explosion",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6593,
+      "PowerIndex": 6595,
       "PowerSetID": 3257,
       "StaticIndex": 1765,
       "NGroupMembership": [],

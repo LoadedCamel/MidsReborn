@@ -4,10 +4,10 @@
   "FullName": "Training_Gadgets.Bane_Spider_Training",
   "ImageName": "i12_Sec_Bane.png",
   "Power": [
-    9936,
-    9937,
     9938,
-    9939
+    9939,
+    9940,
+    9941
   ],
   "SetType": 2,
   "DisplayName": "Bane Spider Training",
@@ -24,7 +24,7 @@
   "GroupName": "Training_Gadgets",
   "Powers": [
     {
-      "PowerIndex": 9936,
+      "PowerIndex": 9938,
       "PowerSetID": 3432,
       "StaticIndex": 2990,
       "NGroupMembership": [],
@@ -1619,7 +1619,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.208,
-      "PowerIndex": 9937,
+      "PowerIndex": 9939,
       "PowerSetID": 3432,
       "PowerSetIndex": 1,
       "StaticIndex": 2991,
@@ -3790,7 +3790,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 10.66,
-      "PowerIndex": 9938,
+      "PowerIndex": 9940,
       "PowerSetID": 3432,
       "PowerSetIndex": 2,
       "StaticIndex": 2992,
@@ -4361,7 +4361,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 10.66,
-      "PowerIndex": 9939,
+      "PowerIndex": 9941,
       "PowerSetID": 3432,
       "PowerSetIndex": 3,
       "StaticIndex": 2993,

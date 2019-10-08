@@ -4,8 +4,8 @@
   "FullName": "Pets.Nature_Affinity_Corruptor",
   "ImageName": "",
   "Power": [
-    6364,
-    6365
+    6366,
+    6367
   ],
   "SetType": 8,
   "DisplayName": "Nature Affinity",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 26.0,
-      "PowerIndex": 6364,
+      "PowerIndex": 6366,
       "PowerSetID": 3151,
       "StaticIndex": 9110,
       "NGroupMembership": [],
@@ -265,7 +265,7 @@
           "nID": 3,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -293,7 +293,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 6365,
+      "PowerIndex": 6367,
       "PowerSetID": 3151,
       "PowerSetIndex": 1,
       "StaticIndex": 9111,
@@ -487,7 +487,7 @@
           "nID": 2,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

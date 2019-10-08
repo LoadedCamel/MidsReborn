@@ -4,13 +4,13 @@
   "FullName": "Villain_Pets.Toxic_Tarantula",
   "ImageName": "",
   "Power": [
-    10228,
-    10229,
     10230,
     10231,
     10232,
     10233,
-    10234
+    10234,
+    10235,
+    10236
   ],
   "SetType": 8,
   "DisplayName": "Toxic Tarantula",
@@ -29,7 +29,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 6.5,
-      "PowerIndex": 10228,
+      "PowerIndex": 10230,
       "PowerSetID": 3555,
       "StaticIndex": 3149,
       "NGroupMembership": [],
@@ -250,7 +250,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10229,
+      "PowerIndex": 10231,
       "PowerSetID": 3555,
       "PowerSetIndex": 1,
       "StaticIndex": 3150,
@@ -449,7 +449,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10230,
+      "PowerIndex": 10232,
       "PowerSetID": 3555,
       "PowerSetIndex": 2,
       "StaticIndex": 3151,
@@ -516,6 +516,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -549,7 +550,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 6.5,
-      "PowerIndex": 10231,
+      "PowerIndex": 10233,
       "PowerSetID": 3555,
       "PowerSetIndex": 3,
       "StaticIndex": 3152,
@@ -718,7 +719,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 10.66,
-      "PowerIndex": 10232,
+      "PowerIndex": 10234,
       "PowerSetID": 3555,
       "PowerSetIndex": 4,
       "StaticIndex": 3153,
@@ -890,7 +891,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 10.66,
-      "PowerIndex": 10233,
+      "PowerIndex": 10235,
       "PowerSetID": 3555,
       "PowerSetIndex": 5,
       "StaticIndex": 3154,
@@ -1379,7 +1380,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 13.0,
-      "PowerIndex": 10234,
+      "PowerIndex": 10236,
       "PowerSetID": 3555,
       "PowerSetIndex": 6,
       "StaticIndex": 3155,

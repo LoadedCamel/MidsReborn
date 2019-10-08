@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Dominator_PsionicAssault_Snipe",
   "ImageName": "",
   "Power": [
-    10078,
-    10079
+    10080,
+    10081
   ],
   "SetType": 8,
   "DisplayName": "Dominator_PsionicAssault_Snipe",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 18.512,
-      "PowerIndex": 10078,
+      "PowerIndex": 10080,
       "PowerSetID": 3499,
       "StaticIndex": 9821,
       "NGroupMembership": [],
@@ -296,7 +296,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 18.512,
-      "PowerIndex": 10079,
+      "PowerIndex": 10081,
       "PowerSetID": 3499,
       "PowerSetIndex": 1,
       "StaticIndex": 9822,

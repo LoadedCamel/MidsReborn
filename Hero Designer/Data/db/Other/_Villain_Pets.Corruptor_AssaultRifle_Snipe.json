@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Corruptor_AssaultRifle_Snipe",
   "ImageName": "",
   "Power": [
-    10034,
-    10035
+    10036,
+    10037
   ],
   "SetType": 8,
   "DisplayName": "Corruptor_AssaultRifle_Snipe",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 10034,
+      "PowerIndex": 10036,
       "PowerSetID": 3480,
       "StaticIndex": 9793,
       "NGroupMembership": [],
@@ -410,7 +410,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 10035,
+      "PowerIndex": 10037,
       "PowerSetID": 3480,
       "PowerSetIndex": 1,
       "StaticIndex": 9794,

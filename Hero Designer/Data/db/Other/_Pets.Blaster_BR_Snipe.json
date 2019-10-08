@@ -4,8 +4,8 @@
   "FullName": "Pets.Blaster_BR_Snipe",
   "ImageName": "",
   "Power": [
-    6128,
-    6129
+    6130,
+    6131
   ],
   "SetType": 8,
   "DisplayName": "Beam Rifle",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 4.4,
       "ToggleCost": 14.352,
-      "PowerIndex": 6128,
+      "PowerIndex": 6130,
       "PowerSetID": 3027,
       "StaticIndex": 9551,
       "NGroupMembership": [],
@@ -435,6 +435,7 @@
           "MagPercent": -100.0,
           "Duration": 6.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -930,7 +931,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6129,
+      "PowerIndex": 6131,
       "PowerSetID": 3027,
       "PowerSetIndex": 1,
       "StaticIndex": 9552,
@@ -1340,6 +1341,7 @@
           "MagPercent": -100.0,
           "Duration": 6.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

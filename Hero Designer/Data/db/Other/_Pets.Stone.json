@@ -4,11 +4,11 @@
   "FullName": "Pets.Stone",
   "ImageName": "",
   "Power": [
-    6482,
-    6483,
     6484,
     6485,
-    6486
+    6486,
+    6487,
+    6488
   ],
   "SetType": 8,
   "DisplayName": "Stone",
@@ -26,7 +26,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.57,
-      "PowerIndex": 6482,
+      "PowerIndex": 6484,
       "PowerSetID": 3221,
       "StaticIndex": 1721,
       "NGroupMembership": [],
@@ -300,7 +300,7 @@
     {
       "CastTimeReal": 3.83,
       "ToggleCost": 9.36,
-      "PowerIndex": 6483,
+      "PowerIndex": 6485,
       "PowerSetID": 3221,
       "PowerSetIndex": 1,
       "StaticIndex": 1722,
@@ -521,7 +521,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6484,
+      "PowerIndex": 6486,
       "PowerSetID": 3221,
       "PowerSetIndex": 2,
       "StaticIndex": 1723,
@@ -1405,7 +1405,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 23.14,
-      "PowerIndex": 6485,
+      "PowerIndex": 6487,
       "PowerSetID": 3221,
       "PowerSetIndex": 3,
       "StaticIndex": 3270,
@@ -1680,7 +1680,7 @@
     {
       "CastTimeReal": 2.904,
       "IsEpic": true,
-      "PowerIndex": 6486,
+      "PowerIndex": 6488,
       "PowerSetID": 3221,
       "PowerSetIndex": 4,
       "StaticIndex": 1724,
@@ -1724,28 +1724,28 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6482,
-            6483
-          ],
-          [
-            6482,
-            6484
-          ],
-          [
-            6482,
-            6485
-          ],
-          [
-            6483,
-            6484
-          ],
-          [
-            6483,
+            6484,
             6485
           ],
           [
             6484,
-            6485
+            6486
+          ],
+          [
+            6484,
+            6487
+          ],
+          [
+            6485,
+            6486
+          ],
+          [
+            6485,
+            6487
+          ],
+          [
+            6486,
+            6487
           ]
         ],
         "NPowerIDNot": []

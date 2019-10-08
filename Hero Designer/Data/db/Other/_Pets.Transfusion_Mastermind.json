@@ -4,7 +4,7 @@
   "FullName": "Pets.Transfusion_Mastermind",
   "ImageName": "",
   "Power": [
-    6544
+    6546
   ],
   "SetType": 8,
   "DisplayName": "Transfusion",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6544,
+      "PowerIndex": 6546,
       "PowerSetID": 3251,
       "StaticIndex": 10767,
       "NGroupMembership": [],

@@ -4,15 +4,15 @@
   "FullName": "Stalker_Melee.Ice_Melee",
   "ImageName": "IceMelee.png",
   "Power": [
-    8423,
-    8424,
     8425,
     8426,
     8427,
     8428,
     8429,
     8430,
-    8431
+    8431,
+    8432,
+    8433
   ],
   "SetType": 1,
   "DisplayName": "Ice Melee",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 4.368,
-      "PowerIndex": 8423,
+      "PowerIndex": 8425,
       "PowerSetID": 3377,
       "StaticIndex": 10095,
       "NGroupMembership": [],
@@ -334,7 +334,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -722,7 +722,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 6.864,
-      "PowerIndex": 8424,
+      "PowerIndex": 8426,
       "PowerSetID": 3377,
       "PowerSetIndex": 1,
       "StaticIndex": 10096,
@@ -1019,7 +1019,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -1407,7 +1407,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 11.024,
-      "PowerIndex": 8425,
+      "PowerIndex": 8427,
       "PowerSetID": 3377,
       "PowerSetIndex": 2,
       "StaticIndex": 10097,
@@ -1658,7 +1658,7 @@
           "nID": 3,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -1996,7 +1996,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 8426,
+      "PowerIndex": 8428,
       "PowerSetID": 3377,
       "PowerSetIndex": 3,
       "StaticIndex": 10682,
@@ -2093,7 +2093,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10113,
+          "nSummon": 10115,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2110,7 +2110,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Villain_Pets.Ice_Melee_Assassins_Frost.Assassins_Frost_Quick",
-          "nOverride": 10113
+          "nOverride": 10115
         },
         {
           "NewEffects": [
@@ -2142,7 +2142,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10112,
+          "nSummon": 10114,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2159,7 +2159,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Villain_Pets.Ice_Melee_Assassins_Frost.Assassins_Frost_Stealth",
-          "nOverride": 10112
+          "nOverride": 10114
         },
         {
           "NewEffects": [
@@ -2290,7 +2290,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9213,
+          "nSummon": 9215,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2419,7 +2419,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 8427,
+      "PowerIndex": 8429,
       "PowerSetID": 3377,
       "PowerSetIndex": 4,
       "StaticIndex": 10100,
@@ -2792,7 +2792,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 8428,
+      "PowerIndex": 8430,
       "PowerSetID": 3377,
       "PowerSetIndex": 5,
       "StaticIndex": 10099,
@@ -3327,7 +3327,7 @@
     {
       "CastTimeReal": 3.47,
       "ToggleCost": 10.4,
-      "PowerIndex": 8429,
+      "PowerIndex": 8431,
       "PowerSetID": 3377,
       "PowerSetIndex": 6,
       "StaticIndex": 10101,
@@ -3448,7 +3448,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 10.192,
-      "PowerIndex": 8430,
+      "PowerIndex": 8432,
       "PowerSetID": 3377,
       "PowerSetIndex": 7,
       "StaticIndex": 10102,
@@ -3698,7 +3698,7 @@
           "nID": 3,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -4088,7 +4088,7 @@
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 18.512,
-      "PowerIndex": 8431,
+      "PowerIndex": 8433,
       "PowerSetID": 3377,
       "PowerSetIndex": 8,
       "StaticIndex": 10103,
@@ -4440,7 +4440,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9335,
+          "nSummon": 9337,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

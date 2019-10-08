@@ -148,7 +148,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10223,
+          "nSummon": 10225,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -166,7 +166,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Defensive_Sweep_Fast",
-          "nOverride": 10223
+          "nOverride": 10225
         },
         {
           "NewEffects": [
@@ -198,7 +198,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10218,
+          "nSummon": 10220,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -215,7 +215,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Defensive_Sweep_Slow",
-          "nOverride": 10218
+          "nOverride": 10220
         },
         {
           "NewEffects": [
@@ -848,7 +848,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10221,
+          "nSummon": 10223,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -866,7 +866,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Crushing_Blow_Fast",
-          "nOverride": 10221
+          "nOverride": 10223
         },
         {
           "NewEffects": [
@@ -898,7 +898,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10222,
+          "nSummon": 10224,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -915,7 +915,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Crushing_Blow_Slow",
-          "nOverride": 10222
+          "nOverride": 10224
         },
         {
           "NewEffects": [
@@ -1486,7 +1486,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10226,
+          "nSummon": 10228,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -1504,7 +1504,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Sweeping_Strike_Fast",
-          "nOverride": 10226
+          "nOverride": 10228
         },
         {
           "NewEffects": [
@@ -1536,7 +1536,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10227,
+          "nSummon": 10229,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1553,7 +1553,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Sweeping_Strike_Slow",
-          "nOverride": 10227
+          "nOverride": 10229
         },
         {
           "NewEffects": [
@@ -3739,7 +3739,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10224,
+          "nSummon": 10226,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -3757,7 +3757,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Shatter_Armor_Fast",
-          "nOverride": 10224
+          "nOverride": 10226
         },
         {
           "NewEffects": [
@@ -3789,7 +3789,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10225,
+          "nSummon": 10227,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3806,7 +3806,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Shatter_Armor_Slow",
-          "nOverride": 10225
+          "nOverride": 10227
         },
         {
           "NewEffects": [
@@ -5323,7 +5323,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10219,
+          "nSummon": 10221,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -5341,7 +5341,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Arc_of_Destruction_Fast",
-          "nOverride": 10219
+          "nOverride": 10221
         },
         {
           "NewEffects": [
@@ -5373,7 +5373,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10220,
+          "nSummon": 10222,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -5390,7 +5390,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Villain_Pets.Titan_Weapons_Brute.Arc_of_Destruction_Slow",
-          "nOverride": 10220
+          "nOverride": 10222
         },
         {
           "NewEffects": [

@@ -4,9 +4,9 @@
   "FullName": "Pets.LightningStorm_Controller",
   "ImageName": "",
   "Power": [
-    6336,
-    6337,
-    6338
+    6338,
+    6339,
+    6340
   ],
   "SetType": 8,
   "DisplayName": "LightningStorm_Controller",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6336,
+      "PowerIndex": 6338,
       "PowerSetID": 3134,
       "StaticIndex": 1641,
       "NGroupMembership": [],
@@ -586,7 +586,7 @@
       "AoEModifier": 1.75
     },
     {
-      "PowerIndex": 6337,
+      "PowerIndex": 6339,
       "PowerSetID": 3134,
       "PowerSetIndex": 1,
       "StaticIndex": 1642,
@@ -687,7 +687,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6338,
+      "PowerIndex": 6340,
       "PowerSetID": 3134,
       "PowerSetIndex": 2,
       "StaticIndex": 1643,

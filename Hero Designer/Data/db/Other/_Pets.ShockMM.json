@@ -4,7 +4,7 @@
   "FullName": "Pets.ShockMM",
   "ImageName": "",
   "Power": [
-    6459
+    6461
   ],
   "SetType": 8,
   "DisplayName": "Liquefy",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6459,
+      "PowerIndex": 6461,
       "PowerSetID": 3137,
       "StaticIndex": 5608,
       "NGroupMembership": [],

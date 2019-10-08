@@ -4,14 +4,14 @@
   "FullName": "Temporary_Powers.Art_Test",
   "ImageName": "",
   "Power": [
-    8845,
-    8846,
     8847,
     8848,
     8849,
     8850,
     8851,
-    8852
+    8852,
+    8853,
+    8854
   ],
   "SetType": 7,
   "DisplayName": "Art Test",
@@ -29,7 +29,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 8845,
+      "PowerIndex": 8847,
       "PowerSetID": 3426,
       "StaticIndex": 4686,
       "NGroupMembership": [],
@@ -140,7 +140,7 @@
     },
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 8846,
+      "PowerIndex": 8848,
       "PowerSetID": 3426,
       "PowerSetIndex": 1,
       "StaticIndex": 4687,
@@ -252,7 +252,7 @@
     },
     {
       "CastTimeReal": 4.67,
-      "PowerIndex": 8847,
+      "PowerIndex": 8849,
       "PowerSetID": 3426,
       "PowerSetIndex": 2,
       "StaticIndex": 4692,
@@ -364,7 +364,7 @@
     },
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 8848,
+      "PowerIndex": 8850,
       "PowerSetID": 3426,
       "PowerSetIndex": 3,
       "StaticIndex": 4693,
@@ -480,7 +480,7 @@
     },
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 8849,
+      "PowerIndex": 8851,
       "PowerSetID": 3426,
       "PowerSetIndex": 4,
       "StaticIndex": 4688,
@@ -591,7 +591,7 @@
     },
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 8850,
+      "PowerIndex": 8852,
       "PowerSetID": 3426,
       "PowerSetIndex": 5,
       "StaticIndex": 4689,
@@ -704,7 +704,7 @@
     },
     {
       "CastTimeReal": 4.67,
-      "PowerIndex": 8851,
+      "PowerIndex": 8853,
       "PowerSetID": 3426,
       "PowerSetIndex": 6,
       "StaticIndex": 4691,
@@ -816,7 +816,7 @@
     },
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 8852,
+      "PowerIndex": 8854,
       "PowerSetID": 3426,
       "PowerSetIndex": 7,
       "StaticIndex": 4690,

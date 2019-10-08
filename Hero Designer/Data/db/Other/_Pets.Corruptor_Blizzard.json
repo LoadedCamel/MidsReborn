@@ -4,9 +4,9 @@
   "FullName": "Pets.Corruptor_Blizzard",
   "ImageName": "",
   "Power": [
-    6187,
-    6188,
-    6189
+    6189,
+    6190,
+    6191
   ],
   "SetType": 8,
   "DisplayName": "Blizzard",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6187,
+      "PowerIndex": 6189,
       "PowerSetID": 3029,
       "StaticIndex": 1558,
       "NGroupMembership": [],
@@ -744,7 +744,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 6188,
+      "PowerIndex": 6190,
       "PowerSetID": 3029,
       "PowerSetIndex": 1,
       "StaticIndex": 1559,
@@ -848,7 +848,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 6189,
+      "PowerIndex": 6191,
       "PowerSetID": 3029,
       "PowerSetIndex": 2,
       "StaticIndex": 1560,

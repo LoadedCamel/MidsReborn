@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Coral_Guardian_Sentinel",
   "ImageName": "",
   "Power": [
-    10001,
-    10002,
     10003,
     10004,
     10005,
     10006,
     10007,
-    10008
+    10008,
+    10009,
+    10010
   ],
   "SetType": 8,
   "DisplayName": "Coral Guardian Sentinel",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10001,
+      "PowerIndex": 10003,
       "PowerSetID": 3475,
       "StaticIndex": 3040,
       "NGroupMembership": [],
@@ -179,7 +179,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 7.54,
-      "PowerIndex": 10002,
+      "PowerIndex": 10004,
       "PowerSetID": 3475,
       "PowerSetIndex": 1,
       "StaticIndex": 3041,
@@ -295,7 +295,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 6.5,
-      "PowerIndex": 10003,
+      "PowerIndex": 10005,
       "PowerSetID": 3475,
       "PowerSetIndex": 2,
       "StaticIndex": 3042,
@@ -414,7 +414,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 8.58,
-      "PowerIndex": 10004,
+      "PowerIndex": 10006,
       "PowerSetID": 3475,
       "PowerSetIndex": 3,
       "StaticIndex": 3043,
@@ -635,7 +635,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 10.66,
-      "PowerIndex": 10005,
+      "PowerIndex": 10007,
       "PowerSetID": 3475,
       "PowerSetIndex": 4,
       "StaticIndex": 3044,
@@ -858,7 +858,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10006,
+      "PowerIndex": 10008,
       "PowerSetID": 3475,
       "PowerSetIndex": 5,
       "StaticIndex": 3045,
@@ -925,6 +925,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -958,7 +959,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 9.75,
-      "PowerIndex": 10007,
+      "PowerIndex": 10009,
       "PowerSetID": 3475,
       "PowerSetIndex": 6,
       "StaticIndex": 3046,
@@ -1397,7 +1398,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 10.66,
-      "PowerIndex": 10008,
+      "PowerIndex": 10010,
       "PowerSetID": 3475,
       "PowerSetIndex": 7,
       "StaticIndex": 3047,

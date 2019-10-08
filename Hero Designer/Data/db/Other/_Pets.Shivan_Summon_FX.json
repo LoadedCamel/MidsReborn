@@ -4,7 +4,7 @@
   "FullName": "Pets.Shivan_Summon_FX",
   "ImageName": "",
   "Power": [
-    6456
+    6458
   ],
   "SetType": 8,
   "DisplayName": "Shivan Summon fx",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6456,
+      "PowerIndex": 6458,
       "PowerSetID": 3208,
       "StaticIndex": 1704,
       "NGroupMembership": [],

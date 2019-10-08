@@ -1566,7 +1566,7 @@
           "nID": 3,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2146,7 +2146,7 @@
           "nID": 9,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3597,7 +3597,7 @@
           "nID": 3,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3719,7 +3719,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6365,
+          "nSummon": 6367,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3736,7 +3736,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Nature_Affinity_Corruptor.Rebirth_Corruptor_Heal",
-          "nOverride": 6365
+          "nOverride": 6367
         },
         {
           "NewEffects": [
@@ -3768,7 +3768,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6364,
+          "nSummon": 6366,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3785,7 +3785,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Nature_Affinity_Corruptor.Rebirth_Corruptor_Rez",
-          "nOverride": 6364
+          "nOverride": 6366
         },
         {
           "NewEffects": [
@@ -3969,7 +3969,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4816,7 +4816,7 @@
           "nID": 10,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Bloom",
-          "nSummon": 9343,
+          "nSummon": 9345,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

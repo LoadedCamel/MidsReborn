@@ -4,7 +4,7 @@
   "FullName": "Pets.Vigilant_Assault_Proc",
   "ImageName": "",
   "Power": [
-    6595
+    6597
   ],
   "SetType": 8,
   "DisplayName": "Vigilant Assault",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6595,
+      "PowerIndex": 6597,
       "PowerSetID": 3259,
       "StaticIndex": 8970,
       "NGroupMembership": [],

@@ -4,11 +4,11 @@
   "FullName": "Villain_Pets.Fly_Trap",
   "ImageName": "",
   "Power": [
-    10090,
-    10091,
     10092,
     10093,
-    10094
+    10094,
+    10095,
+    10096
   ],
   "SetType": 8,
   "DisplayName": "Fly Trap",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 7.8,
-      "PowerIndex": 10090,
+      "PowerIndex": 10092,
       "PowerSetID": 3506,
       "StaticIndex": 3080,
       "NGroupMembership": [],
@@ -571,7 +571,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 10091,
+      "PowerIndex": 10093,
       "PowerSetID": 3506,
       "PowerSetIndex": 1,
       "StaticIndex": 3081,
@@ -795,7 +795,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 13.0,
-      "PowerIndex": 10092,
+      "PowerIndex": 10094,
       "PowerSetID": 3506,
       "PowerSetIndex": 2,
       "StaticIndex": 3082,
@@ -1025,7 +1025,7 @@
       "AoEModifier": 2.03496885
     },
     {
-      "PowerIndex": 10093,
+      "PowerIndex": 10095,
       "PowerSetID": 3506,
       "PowerSetIndex": 3,
       "StaticIndex": 3083,
@@ -1480,7 +1480,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 4.368,
-      "PowerIndex": 10094,
+      "PowerIndex": 10096,
       "PowerSetID": 3506,
       "PowerSetIndex": 4,
       "StaticIndex": 3084,

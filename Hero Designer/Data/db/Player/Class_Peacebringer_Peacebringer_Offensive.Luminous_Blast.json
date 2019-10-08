@@ -4,8 +4,6 @@
   "FullName": "Peacebringer_Offensive.Luminous_Blast",
   "ImageName": "LuminousBlast.png",
   "Power": [
-    6109,
-    6110,
     6111,
     6112,
     6113,
@@ -17,7 +15,9 @@
     6119,
     6120,
     6121,
-    6122
+    6122,
+    6123,
+    6124
   ],
   "SetType": 1,
   "DisplayName": "Luminous Blast",
@@ -36,7 +36,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 3.12,
-      "PowerIndex": 6109,
+      "PowerIndex": 6111,
       "PowerSetID": 3008,
       "StaticIndex": 1529,
       "NGroupMembership": [],
@@ -268,7 +268,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 5.2,
-      "PowerIndex": 6110,
+      "PowerIndex": 6112,
       "PowerSetID": 3008,
       "PowerSetIndex": 1,
       "StaticIndex": 1530,
@@ -499,7 +499,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.528,
-      "PowerIndex": 6111,
+      "PowerIndex": 6113,
       "PowerSetID": 3008,
       "PowerSetIndex": 2,
       "StaticIndex": 1531,
@@ -835,7 +835,7 @@
     },
     {
       "ToggleCost": 0.26,
-      "PowerIndex": 6112,
+      "PowerIndex": 6114,
       "PowerSetID": 3008,
       "PowerSetIndex": 3,
       "StaticIndex": 1532,
@@ -1619,7 +1619,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 10.192,
-      "PowerIndex": 6113,
+      "PowerIndex": 6115,
       "PowerSetID": 3008,
       "PowerSetIndex": 4,
       "StaticIndex": 1533,
@@ -2104,7 +2104,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 11.856,
-      "PowerIndex": 6114,
+      "PowerIndex": 6116,
       "PowerSetID": 3008,
       "PowerSetIndex": 5,
       "StaticIndex": 1534,
@@ -2338,7 +2338,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 6115,
+      "PowerIndex": 6117,
       "PowerSetID": 3008,
       "PowerSetIndex": 6,
       "StaticIndex": 1535,
@@ -3341,7 +3341,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 15.184,
-      "PowerIndex": 6116,
+      "PowerIndex": 6118,
       "PowerSetID": 3008,
       "PowerSetIndex": 7,
       "StaticIndex": 1536,
@@ -3680,7 +3680,7 @@
     {
       "CastTimeReal": 3.3,
       "ToggleCost": 18.512,
-      "PowerIndex": 6117,
+      "PowerIndex": 6119,
       "PowerSetID": 3008,
       "PowerSetIndex": 8,
       "StaticIndex": 1537,
@@ -4275,7 +4275,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 15.6,
-      "PowerIndex": 6118,
+      "PowerIndex": 6120,
       "PowerSetID": 3008,
       "PowerSetIndex": 9,
       "StaticIndex": 1538,
@@ -4505,7 +4505,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 13.0,
-      "PowerIndex": 6119,
+      "PowerIndex": 6121,
       "PowerSetID": 3008,
       "PowerSetIndex": 10,
       "StaticIndex": 1539,
@@ -4623,7 +4623,7 @@
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 18.512,
-      "PowerIndex": 6120,
+      "PowerIndex": 6122,
       "PowerSetID": 3008,
       "PowerSetIndex": 11,
       "StaticIndex": 1540,
@@ -4957,7 +4957,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 27.716,
-      "PowerIndex": 6121,
+      "PowerIndex": 6123,
       "PowerSetID": 3008,
       "PowerSetIndex": 12,
       "StaticIndex": 1541,
@@ -5293,7 +5293,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 31.2,
-      "PowerIndex": 6122,
+      "PowerIndex": 6124,
       "PowerSetID": 3008,
       "PowerSetIndex": 13,
       "StaticIndex": 1542,

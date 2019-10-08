@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.HeatLossDebuff",
   "ImageName": "",
   "Power": [
-    10111
+    10113
   ],
   "SetType": 8,
   "DisplayName": "Heat Loss",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10111,
+      "PowerIndex": 10113,
       "PowerSetID": 3511,
       "StaticIndex": 3101,
       "NGroupMembership": [],
@@ -910,6 +910,7 @@
           "MagPercent": -100.0,
           "Duration": 2.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

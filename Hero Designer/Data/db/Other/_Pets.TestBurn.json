@@ -4,7 +4,7 @@
   "FullName": "Pets.TestBurn",
   "ImageName": "",
   "Power": [
-    6512
+    6514
   ],
   "SetType": 8,
   "DisplayName": "Burn",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6512,
+      "PowerIndex": 6514,
       "PowerSetID": 3042,
       "StaticIndex": 1744,
       "NGroupMembership": [],

@@ -4,8 +4,6 @@
   "FullName": "Sentinel_Defense.Super_Reflexes",
   "ImageName": "SuperReflexes.png",
   "Power": [
-    7096,
-    7097,
     7098,
     7099,
     7100,
@@ -13,7 +11,9 @@
     7102,
     7103,
     7104,
-    7105
+    7105,
+    7106,
+    7107
   ],
   "SetType": 2,
   "DisplayName": "Super Reflexes",
@@ -32,7 +32,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 7096,
+      "PowerIndex": 7098,
       "PowerSetID": 3340,
       "StaticIndex": 10331,
       "NGroupMembership": [],
@@ -711,7 +711,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 0.26,
-      "PowerIndex": 7097,
+      "PowerIndex": 7099,
       "PowerSetID": 3340,
       "PowerSetIndex": 1,
       "StaticIndex": 10332,
@@ -1444,7 +1444,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7098,
+      "PowerIndex": 7100,
       "PowerSetID": 3340,
       "PowerSetIndex": 2,
       "StaticIndex": 10333,
@@ -1882,7 +1882,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 5.2,
-      "PowerIndex": 7099,
+      "PowerIndex": 7101,
       "PowerSetID": 3340,
       "PowerSetIndex": 3,
       "StaticIndex": 10334,
@@ -2058,7 +2058,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 10.4,
-      "PowerIndex": 7100,
+      "PowerIndex": 7102,
       "PowerSetID": 3340,
       "PowerSetIndex": 4,
       "StaticIndex": 10335,
@@ -2087,7 +2087,7 @@
         "NPowerID": [],
         "NPowerIDNot": [
           [
-            7099,
+            7101,
             -1
           ]
         ]
@@ -3114,7 +3114,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7101,
+      "PowerIndex": 7103,
       "PowerSetID": 3340,
       "PowerSetIndex": 5,
       "StaticIndex": 10337,
@@ -3903,7 +3903,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7102,
+      "PowerIndex": 7104,
       "PowerSetID": 3340,
       "PowerSetIndex": 6,
       "StaticIndex": 10336,
@@ -4339,7 +4339,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7103,
+      "PowerIndex": 7105,
       "PowerSetID": 3340,
       "PowerSetIndex": 7,
       "StaticIndex": 10338,
@@ -4697,7 +4697,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 0.26,
-      "PowerIndex": 7104,
+      "PowerIndex": 7106,
       "PowerSetID": 3340,
       "PowerSetIndex": 8,
       "StaticIndex": 10339,
@@ -4973,7 +4973,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 2.6,
-      "PowerIndex": 7105,
+      "PowerIndex": 7107,
       "PowerSetID": 3340,
       "PowerSetIndex": 9,
       "StaticIndex": 10340,

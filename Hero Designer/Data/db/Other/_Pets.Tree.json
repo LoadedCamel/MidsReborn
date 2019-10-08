@@ -4,8 +4,8 @@
   "FullName": "Pets.Tree",
   "ImageName": "",
   "Power": [
-    6587,
-    6588
+    6589,
+    6590
   ],
   "SetType": 8,
   "DisplayName": "Tree",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6587,
+      "PowerIndex": 6589,
       "PowerSetID": 3254,
       "StaticIndex": 1759,
       "NGroupMembership": [],
@@ -126,7 +126,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6588,
+      "PowerIndex": 6590,
       "PowerSetID": 3254,
       "PowerSetIndex": 1,
       "StaticIndex": 1760,

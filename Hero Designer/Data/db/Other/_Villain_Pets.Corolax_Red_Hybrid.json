@@ -4,13 +4,13 @@
   "FullName": "Villain_Pets.Corolax_Red_Hybrid",
   "ImageName": "",
   "Power": [
-    10025,
-    10026,
     10027,
     10028,
     10029,
     10030,
-    10031
+    10031,
+    10032,
+    10033
   ],
   "SetType": 8,
   "DisplayName": "Coralax Red Hybrid",
@@ -27,7 +27,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10025,
+      "PowerIndex": 10027,
       "PowerSetID": 3478,
       "StaticIndex": 3064,
       "NGroupMembership": [],
@@ -179,7 +179,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 10.66,
-      "PowerIndex": 10026,
+      "PowerIndex": 10028,
       "PowerSetID": 3478,
       "PowerSetIndex": 1,
       "StaticIndex": 3065,
@@ -400,7 +400,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.58,
-      "PowerIndex": 10027,
+      "PowerIndex": 10029,
       "PowerSetID": 3478,
       "PowerSetIndex": 2,
       "StaticIndex": 3066,
@@ -570,7 +570,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 6.5,
-      "PowerIndex": 10028,
+      "PowerIndex": 10030,
       "PowerSetID": 3478,
       "PowerSetIndex": 3,
       "StaticIndex": 3067,
@@ -789,7 +789,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10029,
+      "PowerIndex": 10031,
       "PowerSetID": 3478,
       "PowerSetIndex": 4,
       "StaticIndex": 3068,
@@ -856,6 +856,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -889,7 +890,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.58,
-      "PowerIndex": 10030,
+      "PowerIndex": 10032,
       "PowerSetID": 3478,
       "PowerSetIndex": 5,
       "StaticIndex": 3069,
@@ -1116,7 +1117,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 10031,
+      "PowerIndex": 10033,
       "PowerSetID": 3478,
       "PowerSetIndex": 6,
       "StaticIndex": 3070,

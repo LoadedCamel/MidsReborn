@@ -4,8 +4,8 @@
   "FullName": "Pets.StickyArrow",
   "ImageName": "",
   "Power": [
-    6477,
-    6478
+    6479,
+    6480
   ],
   "SetType": 8,
   "DisplayName": "Sticky Arrow",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6477,
+      "PowerIndex": 6479,
       "PowerSetID": 3220,
       "StaticIndex": 1719,
       "NGroupMembership": [],
@@ -377,7 +377,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6478,
+      "PowerIndex": 6480,
       "PowerSetID": 3220,
       "PowerSetIndex": 1,
       "StaticIndex": 1720,
@@ -487,6 +487,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

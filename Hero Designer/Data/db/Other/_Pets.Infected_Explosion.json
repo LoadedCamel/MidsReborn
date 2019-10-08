@@ -4,7 +4,7 @@
   "FullName": "Pets.Infected_Explosion",
   "ImageName": "",
   "Power": [
-    6312
+    6314
   ],
   "SetType": 8,
   "DisplayName": "Infected Explosion",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6312,
+      "PowerIndex": 6314,
       "PowerSetID": 3117,
       "StaticIndex": 1623,
       "NGroupMembership": [],
@@ -190,6 +190,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

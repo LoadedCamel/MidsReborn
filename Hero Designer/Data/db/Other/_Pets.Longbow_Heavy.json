@@ -4,13 +4,13 @@
   "FullName": "Pets.Longbow_Heavy",
   "ImageName": "",
   "Power": [
-    6348,
-    6349,
     6350,
     6351,
     6352,
     6353,
-    6354
+    6354,
+    6355,
+    6356
   ],
   "SetType": 8,
   "DisplayName": "Longbow Heavy",
@@ -29,7 +29,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 9.1,
-      "PowerIndex": 6348,
+      "PowerIndex": 6350,
       "PowerSetID": 3142,
       "StaticIndex": 1649,
       "NGroupMembership": [],
@@ -103,6 +103,7 @@
           "MagPercent": -100.0,
           "Duration": 5.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -189,7 +190,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 19.5,
-      "PowerIndex": 6349,
+      "PowerIndex": 6351,
       "PowerSetID": 3142,
       "PowerSetIndex": 1,
       "StaticIndex": 1650,
@@ -262,6 +263,7 @@
           "MagPercent": -100.0,
           "Duration": 2.5,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -296,7 +298,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 19.5,
-      "PowerIndex": 6350,
+      "PowerIndex": 6352,
       "PowerSetID": 3142,
       "PowerSetIndex": 2,
       "StaticIndex": 1651,
@@ -510,7 +512,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 5.2,
-      "PowerIndex": 6351,
+      "PowerIndex": 6353,
       "PowerSetID": 3142,
       "PowerSetIndex": 3,
       "StaticIndex": 1652,
@@ -719,7 +721,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 5.2,
-      "PowerIndex": 6352,
+      "PowerIndex": 6354,
       "PowerSetID": 3142,
       "PowerSetIndex": 4,
       "StaticIndex": 1653,
@@ -925,7 +927,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6353,
+      "PowerIndex": 6355,
       "PowerSetID": 3142,
       "PowerSetIndex": 5,
       "StaticIndex": 1654,
@@ -1174,7 +1176,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 12.35,
-      "PowerIndex": 6354,
+      "PowerIndex": 6356,
       "PowerSetID": 3142,
       "PowerSetIndex": 6,
       "StaticIndex": 1655,

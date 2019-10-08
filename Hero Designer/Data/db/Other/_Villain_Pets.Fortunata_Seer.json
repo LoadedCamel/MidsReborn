@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Fortunata_Seer",
   "ImageName": "",
   "Power": [
-    10102,
-    10103,
     10104,
     10105,
     10106,
     10107,
     10108,
-    10109
+    10109,
+    10110,
+    10111
   ],
   "SetType": 8,
   "DisplayName": "Fortunata Seer",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10102,
+      "PowerIndex": 10104,
       "PowerSetID": 3509,
       "StaticIndex": 3092,
       "NGroupMembership": [],
@@ -146,6 +146,7 @@
           "MagPercent": 33.0,
           "Duration": 10.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -197,6 +198,7 @@
           "MagPercent": 33.0,
           "Duration": 10.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -248,6 +250,7 @@
           "MagPercent": 33.0,
           "Duration": 10.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -299,6 +302,7 @@
           "MagPercent": 33.0,
           "Duration": 10.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -589,7 +593,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 5.2,
-      "PowerIndex": 10103,
+      "PowerIndex": 10105,
       "PowerSetID": 3509,
       "PowerSetIndex": 1,
       "StaticIndex": 3093,
@@ -755,7 +759,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10104,
+      "PowerIndex": 10106,
       "PowerSetID": 3509,
       "PowerSetIndex": 2,
       "StaticIndex": 3094,
@@ -961,7 +965,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 5.2,
-      "PowerIndex": 10105,
+      "PowerIndex": 10107,
       "PowerSetID": 3509,
       "PowerSetIndex": 3,
       "StaticIndex": 3095,
@@ -1129,7 +1133,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 7.8,
-      "PowerIndex": 10106,
+      "PowerIndex": 10108,
       "PowerSetID": 3509,
       "PowerSetIndex": 4,
       "StaticIndex": 3096,
@@ -1295,7 +1299,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10107,
+      "PowerIndex": 10109,
       "PowerSetID": 3509,
       "PowerSetIndex": 5,
       "StaticIndex": 3097,
@@ -1362,6 +1366,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -1395,7 +1400,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 7.8,
-      "PowerIndex": 10108,
+      "PowerIndex": 10110,
       "PowerSetID": 3509,
       "PowerSetIndex": 6,
       "StaticIndex": 3098,
@@ -1622,7 +1627,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 8.528,
-      "PowerIndex": 10109,
+      "PowerIndex": 10111,
       "PowerSetID": 3509,
       "PowerSetIndex": 7,
       "StaticIndex": 3099,

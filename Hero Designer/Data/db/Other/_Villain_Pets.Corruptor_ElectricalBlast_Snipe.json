@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Corruptor_ElectricalBlast_Snipe",
   "ImageName": "",
   "Power": [
-    10040,
-    10041
+    10042,
+    10043
   ],
   "SetType": 8,
   "DisplayName": "Corruptor_ElectricalBlast_Snipe",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 10040,
+      "PowerIndex": 10042,
       "PowerSetID": 3483,
       "StaticIndex": 9799,
       "NGroupMembership": [],
@@ -475,6 +475,7 @@
           "Probability": 0.3,
           "Mag": 7.2,
           "MagPercent": 7.2,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",
@@ -510,7 +511,7 @@
     {
       "CastTimeReal": 4.33,
       "ToggleCost": 14.352,
-      "PowerIndex": 10041,
+      "PowerIndex": 10043,
       "PowerSetID": 3483,
       "PowerSetIndex": 1,
       "StaticIndex": 9800,
@@ -962,6 +963,7 @@
           "Probability": 0.3,
           "Mag": 7.2,
           "MagPercent": 7.2,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",

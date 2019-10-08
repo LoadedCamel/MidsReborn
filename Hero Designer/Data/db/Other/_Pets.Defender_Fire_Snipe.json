@@ -4,8 +4,8 @@
   "FullName": "Pets.Defender_Fire_Snipe",
   "ImageName": "",
   "Power": [
-    6239,
-    6240
+    6241,
+    6242
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 4.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6239,
+      "PowerIndex": 6241,
       "PowerSetID": 3012,
       "StaticIndex": 9580,
       "NGroupMembership": [],
@@ -257,7 +257,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 6240,
+      "PowerIndex": 6242,
       "PowerSetID": 3012,
       "PowerSetIndex": 1,
       "StaticIndex": 9581,

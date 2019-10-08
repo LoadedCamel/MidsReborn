@@ -4,11 +4,11 @@
   "FullName": "Pets.Resistance_Rifle",
   "ImageName": "",
   "Power": [
-    6443,
-    6444,
     6445,
     6446,
-    6447
+    6447,
+    6448,
+    6449
   ],
   "SetType": 8,
   "DisplayName": "Resistance_Rifle",
@@ -25,7 +25,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6443,
+      "PowerIndex": 6445,
       "PowerSetID": 3196,
       "StaticIndex": 4433,
       "NGroupMembership": [],
@@ -226,7 +226,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 6.5,
-      "PowerIndex": 6444,
+      "PowerIndex": 6446,
       "PowerSetID": 3196,
       "PowerSetIndex": 1,
       "StaticIndex": 4434,
@@ -442,7 +442,7 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 6.5,
-      "PowerIndex": 6445,
+      "PowerIndex": 6447,
       "PowerSetID": 3196,
       "PowerSetIndex": 2,
       "StaticIndex": 4435,
@@ -602,7 +602,7 @@
     {
       "CastTimeReal": 2.2,
       "ToggleCost": 6.5,
-      "PowerIndex": 6446,
+      "PowerIndex": 6448,
       "PowerSetID": 3196,
       "PowerSetIndex": 3,
       "StaticIndex": 4436,
@@ -973,7 +973,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 11.96,
-      "PowerIndex": 6447,
+      "PowerIndex": 6449,
       "PowerSetID": 3196,
       "PowerSetIndex": 4,
       "StaticIndex": 4437,

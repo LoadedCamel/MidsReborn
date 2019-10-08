@@ -4,7 +4,7 @@
   "FullName": "Pets.Defenders_Bastion_Proc",
   "ImageName": "",
   "Power": [
-    6223
+    6225
   ],
   "SetType": 8,
   "DisplayName": "Defender's Bastion",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6223,
+      "PowerIndex": 6225,
       "PowerSetID": 3067,
       "StaticIndex": 5603,
       "NGroupMembership": [],

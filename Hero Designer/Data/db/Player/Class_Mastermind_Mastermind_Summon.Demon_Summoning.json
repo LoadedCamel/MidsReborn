@@ -4,15 +4,15 @@
   "FullName": "Mastermind_Summon.Demon_Summoning",
   "ImageName": "DemonSummoning.png",
   "Power": [
-    6042,
-    6043,
     6044,
     6045,
     6046,
     6047,
     6048,
     6049,
-    6050
+    6050,
+    6051,
+    6052
   ],
   "SetType": 1,
   "DisplayName": "Demon Summoning",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.23,
       "ToggleCost": 6.5,
-      "PowerIndex": 6042,
+      "PowerIndex": 6044,
       "PowerSetID": 3001,
       "StaticIndex": 4248,
       "NGroupMembership": [],
@@ -685,7 +685,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 19.5,
-      "PowerIndex": 6043,
+      "PowerIndex": 6045,
       "PowerSetID": 3001,
       "PowerSetIndex": 1,
       "StaticIndex": 4249,
@@ -972,7 +972,7 @@
     {
       "CastTimeReal": 1.8,
       "ToggleCost": 10.66,
-      "PowerIndex": 6044,
+      "PowerIndex": 6046,
       "PowerSetID": 3001,
       "PowerSetIndex": 2,
       "StaticIndex": 4250,
@@ -1712,7 +1712,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 22.75,
-      "PowerIndex": 6045,
+      "PowerIndex": 6047,
       "PowerSetID": 3001,
       "PowerSetIndex": 3,
       "StaticIndex": 4251,
@@ -2517,7 +2517,7 @@
     {
       "CastTimeReal": 2.33,
       "ToggleCost": 17.94,
-      "PowerIndex": 6046,
+      "PowerIndex": 6048,
       "PowerSetID": 3001,
       "PowerSetIndex": 4,
       "StaticIndex": 4252,
@@ -3260,7 +3260,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 19.5,
-      "PowerIndex": 6047,
+      "PowerIndex": 6049,
       "PowerSetID": 3001,
       "PowerSetIndex": 5,
       "StaticIndex": 4253,
@@ -4068,7 +4068,7 @@
     {
       "CastTimeReal": 4.03,
       "ToggleCost": 16.25,
-      "PowerIndex": 6048,
+      "PowerIndex": 6050,
       "PowerSetID": 3001,
       "PowerSetIndex": 6,
       "StaticIndex": 4254,
@@ -5093,7 +5093,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 19.5,
-      "PowerIndex": 6049,
+      "PowerIndex": 6051,
       "PowerSetID": 3001,
       "PowerSetIndex": 7,
       "StaticIndex": 4255,
@@ -5274,7 +5274,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 22.75,
-      "PowerIndex": 6050,
+      "PowerIndex": 6052,
       "PowerSetID": 3001,
       "PowerSetIndex": 8,
       "StaticIndex": 4256,

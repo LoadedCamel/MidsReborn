@@ -4,7 +4,7 @@
   "FullName": "Pets.Liquefy",
   "ImageName": "",
   "Power": [
-    6345
+    6347
   ],
   "SetType": 8,
   "DisplayName": "Liquefy",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6345,
+      "PowerIndex": 6347,
       "PowerSetID": 3140,
       "StaticIndex": 1647,
       "NGroupMembership": [],

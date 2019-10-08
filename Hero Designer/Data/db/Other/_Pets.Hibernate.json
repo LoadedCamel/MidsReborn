@@ -4,7 +4,7 @@
   "FullName": "Pets.Hibernate",
   "ImageName": "",
   "Power": [
-    6293
+    6295
   ],
   "SetType": 8,
   "DisplayName": "Hibernate",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6293,
+      "PowerIndex": 6295,
       "PowerSetID": 3103,
       "StaticIndex": 1608,
       "NGroupMembership": [],

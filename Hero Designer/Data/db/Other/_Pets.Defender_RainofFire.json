@@ -4,8 +4,8 @@
   "FullName": "Pets.Defender_RainofFire",
   "ImageName": "",
   "Power": [
-    6245,
-    6246
+    6247,
+    6248
   ],
   "SetType": 8,
   "DisplayName": "Rain of Fire",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6245,
+      "PowerIndex": 6247,
       "PowerSetID": 3190,
       "StaticIndex": 5601,
       "NGroupMembership": [],
@@ -433,7 +433,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6246,
+      "PowerIndex": 6248,
       "PowerSetID": 3190,
       "PowerSetIndex": 1,
       "StaticIndex": 5602,

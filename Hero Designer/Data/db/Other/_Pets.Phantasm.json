@@ -4,12 +4,12 @@
   "FullName": "Pets.Phantasm",
   "ImageName": "",
   "Power": [
-    6386,
-    6387,
     6388,
     6389,
     6390,
-    6391
+    6391,
+    6392,
+    6393
   ],
   "SetType": 8,
   "DisplayName": "Phantasm",
@@ -27,7 +27,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6386,
+      "PowerIndex": 6388,
       "PowerSetID": 3161,
       "StaticIndex": 1673,
       "NGroupMembership": [],
@@ -240,7 +240,7 @@
     },
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 6387,
+      "PowerIndex": 6389,
       "PowerSetID": 3161,
       "PowerSetIndex": 1,
       "StaticIndex": 1674,
@@ -312,6 +312,7 @@
           "MagPercent": -100.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -347,7 +348,7 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 6388,
+      "PowerIndex": 6390,
       "PowerSetID": 3161,
       "PowerSetIndex": 2,
       "StaticIndex": 1675,
@@ -562,7 +563,7 @@
       "AoEModifier": 2.37995839
     },
     {
-      "PowerIndex": 6389,
+      "PowerIndex": 6391,
       "PowerSetID": 3161,
       "PowerSetIndex": 3,
       "StaticIndex": 1676,
@@ -809,7 +810,7 @@
     },
     {
       "CastTimeReal": 1.716,
-      "PowerIndex": 6390,
+      "PowerIndex": 6392,
       "PowerSetID": 3161,
       "PowerSetIndex": 4,
       "StaticIndex": 1677,
@@ -859,7 +860,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6391,
+      "PowerIndex": 6393,
       "PowerSetID": 3161,
       "PowerSetIndex": 5,
       "StaticIndex": 1678,

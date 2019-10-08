@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.RainofArrows_Corruptor",
   "ImageName": "",
   "Power": [
-    10178,
-    10179
+    10180,
+    10181
   ],
   "SetType": 8,
   "DisplayName": "Rain of Arrows",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10178,
+      "PowerIndex": 10180,
       "PowerSetID": 3527,
       "StaticIndex": 4102,
       "NGroupMembership": [],
@@ -285,7 +285,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10179,
+      "PowerIndex": 10181,
       "PowerSetID": 3527,
       "PowerSetIndex": 1,
       "StaticIndex": 4103,

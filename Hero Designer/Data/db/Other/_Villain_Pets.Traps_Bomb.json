@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Traps_Bomb",
   "ImageName": "",
   "Power": [
-    10237
+    10239
   ],
   "SetType": 8,
   "DisplayName": "Bomb",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10237,
+      "PowerIndex": 10239,
       "PowerSetID": 3459,
       "StaticIndex": 3158,
       "NGroupMembership": [],
@@ -297,6 +297,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

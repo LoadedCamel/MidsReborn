@@ -4,7 +4,7 @@
   "FullName": "Pets.MonkeyGas",
   "ImageName": "",
   "Power": [
-    6361
+    6363
   ],
   "SetType": 8,
   "DisplayName": "Monkey Gas",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6361,
+      "PowerIndex": 6363,
       "PowerSetID": 3150,
       "StaticIndex": 1661,
       "NGroupMembership": [],

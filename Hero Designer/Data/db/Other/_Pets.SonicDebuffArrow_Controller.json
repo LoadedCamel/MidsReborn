@@ -4,7 +4,7 @@
   "FullName": "Pets.SonicDebuffArrow_Controller",
   "ImageName": "",
   "Power": [
-    6472
+    6474
   ],
   "SetType": 8,
   "DisplayName": "Disruption Arrow",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6472,
+      "PowerIndex": 6474,
       "PowerSetID": 3070,
       "StaticIndex": 1718,
       "NGroupMembership": [],

@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Traps_Acid_Mortar",
   "ImageName": "",
   "Power": [
-    10235,
-    10236
+    10237,
+    10238
   ],
   "SetType": 8,
   "DisplayName": "Acid Mortar",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10235,
+      "PowerIndex": 10237,
       "PowerSetID": 3454,
       "StaticIndex": 3156,
       "NGroupMembership": [],
@@ -591,7 +591,7 @@
       "AoEModifier": 2.2
     },
     {
-      "PowerIndex": 10236,
+      "PowerIndex": 10238,
       "PowerSetID": 3454,
       "PowerSetIndex": 1,
       "StaticIndex": 3157,

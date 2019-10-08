@@ -4,7 +4,7 @@
   "FullName": "Pets.Earthquake",
   "ImageName": "",
   "Power": [
-    6257
+    6259
   ],
   "SetType": 8,
   "DisplayName": "Earthquake",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6257,
+      "PowerIndex": 6259,
       "PowerSetID": 3072,
       "StaticIndex": 1589,
       "NGroupMembership": [],

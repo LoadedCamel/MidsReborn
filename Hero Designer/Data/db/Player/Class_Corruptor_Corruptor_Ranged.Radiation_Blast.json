@@ -1874,7 +1874,7 @@
           "nID": 5,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10048,
+          "nSummon": 10050,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -1892,7 +1892,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 6,
           "Override": "Villain_Pets.Corruptor_RadiationBlast_Snipe.Proton_Volley_Quick",
-          "nOverride": 10048
+          "nOverride": 10050
         },
         {
           "NewEffects": [
@@ -1923,7 +1923,7 @@
           "nID": 6,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10049,
+          "nSummon": 10051,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1940,7 +1940,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 7,
           "Override": "Villain_Pets.Corruptor_RadiationBlast_Snipe.Proton_Volley_Normal",
-          "nOverride": 10049
+          "nOverride": 10051
         }
       ],
       "HasPowerOverrideEffect": true,

@@ -2543,7 +2543,7 @@
           "nID": 4,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10032,
+          "nSummon": 10034,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -2561,7 +2561,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 5,
           "Override": "Villain_Pets.Corruptor_Archery_Snipe.Ranged_Shot_Quick",
-          "nOverride": 10032
+          "nOverride": 10034
         },
         {
           "NewEffects": [
@@ -2592,7 +2592,7 @@
           "nID": 5,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10033,
+          "nSummon": 10035,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2609,7 +2609,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 6,
           "Override": "Villain_Pets.Corruptor_Archery_Snipe.Ranged_Shot_Normal",
-          "nOverride": 10033
+          "nOverride": 10035
         }
       ],
       "HasPowerOverrideEffect": true,

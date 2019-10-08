@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Stalker_EpicMuMastery_Snipe",
   "ImageName": "",
   "Power": [
-    10208,
-    10209
+    10210,
+    10211
   ],
   "SetType": 8,
   "DisplayName": "Stalker_EpicMuMastery_Snipe",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 17.94,
-      "PowerIndex": 10208,
+      "PowerIndex": 10210,
       "PowerSetID": 3544,
       "StaticIndex": 9831,
       "NGroupMembership": [],
@@ -574,6 +574,7 @@
           "Probability": 0.3,
           "Mag": 8.97,
           "MagPercent": 8.97,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",
@@ -609,7 +610,7 @@
     {
       "CastTimeReal": 7.33,
       "ToggleCost": 17.94,
-      "PowerIndex": 10209,
+      "PowerIndex": 10211,
       "PowerSetID": 3544,
       "PowerSetIndex": 1,
       "StaticIndex": 9832,
@@ -1162,6 +1163,7 @@
           "Probability": 0.3,
           "Mag": 8.97,
           "MagPercent": 8.97,
+          "VariableModified": true,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Ones",

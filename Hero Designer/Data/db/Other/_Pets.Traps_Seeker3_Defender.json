@@ -4,9 +4,9 @@
   "FullName": "Pets.Traps_Seeker3_Defender",
   "ImageName": "",
   "Power": [
-    6574,
-    6575,
-    6576
+    6576,
+    6577,
+    6578
   ],
   "SetType": 8,
   "DisplayName": "Seeker 3",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6574,
+      "PowerIndex": 6576,
       "PowerSetID": 3207,
       "StaticIndex": 3552,
       "NGroupMembership": [],
@@ -809,7 +809,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 6575,
+      "PowerIndex": 6577,
       "PowerSetID": 3207,
       "PowerSetIndex": 1,
       "StaticIndex": 3554,
@@ -1008,7 +1008,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6576,
+      "PowerIndex": 6578,
       "PowerSetID": 3207,
       "PowerSetIndex": 2,
       "StaticIndex": 3553,
@@ -1122,6 +1122,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

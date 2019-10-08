@@ -1655,7 +1655,7 @@
           "nID": 2,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6227,
+          "nSummon": 6229,
           "Stacking": 1,
           "SpecialCase": 43,
           "UIDClassName": "",
@@ -1673,7 +1673,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 3,
           "Override": "Pets.Defender_AR_Snipe.Sniper_Rifle_Quick",
-          "nOverride": 6227
+          "nOverride": 6229
         },
         {
           "NewEffects": [
@@ -1705,7 +1705,7 @@
           "nID": 3,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6226,
+          "nSummon": 6228,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1722,7 +1722,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 4,
           "Override": "Pets.Defender_AR_Snipe.Sniper_Rifle_Normal",
-          "nOverride": 6226
+          "nOverride": 6228
         },
         {
           "NewEffects": [

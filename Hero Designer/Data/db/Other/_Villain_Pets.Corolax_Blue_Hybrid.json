@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Corolax_Blue_Hybrid",
   "ImageName": "",
   "Power": [
-    10017,
-    10018,
     10019,
     10020,
     10021,
     10022,
     10023,
-    10024
+    10024,
+    10025,
+    10026
   ],
   "SetType": 8,
   "DisplayName": "Coralax Blue Hybrid",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10017,
+      "PowerIndex": 10019,
       "PowerSetID": 3477,
       "StaticIndex": 3056,
       "NGroupMembership": [],
@@ -179,7 +179,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 2.34,
-      "PowerIndex": 10018,
+      "PowerIndex": 10020,
       "PowerSetID": 3477,
       "PowerSetIndex": 1,
       "StaticIndex": 3057,
@@ -295,7 +295,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 6.5,
-      "PowerIndex": 10019,
+      "PowerIndex": 10021,
       "PowerSetID": 3477,
       "PowerSetIndex": 2,
       "StaticIndex": 3058,
@@ -460,7 +460,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 10.66,
-      "PowerIndex": 10020,
+      "PowerIndex": 10022,
       "PowerSetID": 3477,
       "PowerSetIndex": 3,
       "StaticIndex": 3059,
@@ -626,7 +626,7 @@
       "AoEModifier": 1.45966136
     },
     {
-      "PowerIndex": 10021,
+      "PowerIndex": 10023,
       "PowerSetID": 3477,
       "PowerSetIndex": 4,
       "StaticIndex": 3060,
@@ -693,6 +693,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -726,7 +727,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 7.54,
-      "PowerIndex": 10022,
+      "PowerIndex": 10024,
       "PowerSetID": 3477,
       "PowerSetIndex": 5,
       "StaticIndex": 3061,
@@ -842,7 +843,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 10.66,
-      "PowerIndex": 10023,
+      "PowerIndex": 10025,
       "PowerSetID": 3477,
       "PowerSetIndex": 6,
       "StaticIndex": 3062,
@@ -961,7 +962,7 @@
     {
       "CastTimeReal": 0.9,
       "ToggleCost": 10.66,
-      "PowerIndex": 10024,
+      "PowerIndex": 10026,
       "PowerSetID": 3477,
       "PowerSetIndex": 7,
       "StaticIndex": 3063,

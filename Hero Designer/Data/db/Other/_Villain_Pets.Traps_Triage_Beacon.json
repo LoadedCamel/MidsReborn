@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Traps_Triage_Beacon",
   "ImageName": "",
   "Power": [
-    10259
+    10261
   ],
   "SetType": 8,
   "DisplayName": "Triage Beacon",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10259,
+      "PowerIndex": 10261,
       "PowerSetID": 3556,
       "StaticIndex": 3180,
       "NGroupMembership": [],

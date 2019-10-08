@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Noxious_Gas",
   "ImageName": "",
   "Power": [
-    10158
+    10160
   ],
   "SetType": 8,
   "DisplayName": "Noxious Gas",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10158,
+      "PowerIndex": 10160,
       "PowerSetID": 3519,
       "StaticIndex": 3138,
       "NGroupMembership": [],

@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Arachnobot_Disrupter",
   "ImageName": "",
   "Power": [
-    9960,
-    9961,
     9962,
     9963,
     9964,
     9965,
     9966,
-    9967
+    9967,
+    9968,
+    9969
   ],
   "SetType": 8,
   "DisplayName": "Arachnobot Disrupter",
@@ -30,7 +30,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 6.5,
-      "PowerIndex": 9960,
+      "PowerIndex": 9962,
       "PowerSetID": 3456,
       "StaticIndex": 3014,
       "NGroupMembership": [],
@@ -300,7 +300,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 2.34,
-      "PowerIndex": 9961,
+      "PowerIndex": 9963,
       "PowerSetID": 3456,
       "PowerSetIndex": 1,
       "StaticIndex": 3015,
@@ -416,7 +416,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 12.74,
-      "PowerIndex": 9962,
+      "PowerIndex": 9964,
       "PowerSetID": 3456,
       "PowerSetIndex": 2,
       "StaticIndex": 3016,
@@ -741,7 +741,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.58,
-      "PowerIndex": 9963,
+      "PowerIndex": 9965,
       "PowerSetID": 3456,
       "PowerSetIndex": 3,
       "StaticIndex": 3017,
@@ -1120,7 +1120,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9964,
+      "PowerIndex": 9966,
       "PowerSetID": 3456,
       "PowerSetIndex": 4,
       "StaticIndex": 3018,
@@ -1373,7 +1373,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9965,
+      "PowerIndex": 9967,
       "PowerSetID": 3456,
       "PowerSetIndex": 5,
       "StaticIndex": 3019,
@@ -1621,7 +1621,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9966,
+      "PowerIndex": 9968,
       "PowerSetID": 3456,
       "PowerSetIndex": 6,
       "StaticIndex": 3020,
@@ -1688,6 +1688,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -1721,7 +1722,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 9967,
+      "PowerIndex": 9969,
       "PowerSetID": 3456,
       "PowerSetIndex": 7,
       "StaticIndex": 3021,

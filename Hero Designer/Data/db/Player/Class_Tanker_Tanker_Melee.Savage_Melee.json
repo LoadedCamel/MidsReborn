@@ -4,15 +4,15 @@
   "FullName": "Tanker_Melee.Savage_Melee",
   "ImageName": "SavageMelee.png",
   "Power": [
-    8741,
-    8742,
     8743,
     8744,
     8745,
     8746,
     8747,
     8748,
-    8749
+    8749,
+    8750,
+    8751
   ],
   "SetType": 2,
   "DisplayName": "Savage Melee",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 0.8,
       "ToggleCost": 3.95,
-      "PowerIndex": 8741,
+      "PowerIndex": 8743,
       "PowerSetID": 3412,
       "StaticIndex": 10457,
       "NGroupMembership": [],
@@ -342,7 +342,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy",
-          "nSummon": 9789,
+          "nSummon": 9791,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1031,7 +1031,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 6.032,
-      "PowerIndex": 8742,
+      "PowerIndex": 8744,
       "PowerSetID": 3412,
       "PowerSetIndex": 1,
       "StaticIndex": 10456,
@@ -1343,7 +1343,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy",
-          "nSummon": 9789,
+          "nSummon": 9791,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1785,7 +1785,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 8.112,
-      "PowerIndex": 8743,
+      "PowerIndex": 8745,
       "PowerSetID": 3412,
       "PowerSetIndex": 2,
       "StaticIndex": 10458,
@@ -2243,7 +2243,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Exhausted",
-          "nSummon": 9791,
+          "nSummon": 9793,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -2530,7 +2530,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 8744,
+      "PowerIndex": 8746,
       "PowerSetID": 3412,
       "PowerSetIndex": 3,
       "StaticIndex": 10464,
@@ -2812,7 +2812,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 9.36,
-      "PowerIndex": 8745,
+      "PowerIndex": 8747,
       "PowerSetID": 3412,
       "PowerSetIndex": 4,
       "StaticIndex": 10686,
@@ -3226,7 +3226,7 @@
           "nID": 6,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy",
-          "nSummon": 9789,
+          "nSummon": 9791,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -3511,7 +3511,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 7.8,
-      "PowerIndex": 8746,
+      "PowerIndex": 8748,
       "PowerSetID": 3412,
       "PowerSetIndex": 5,
       "StaticIndex": 10461,
@@ -4046,7 +4046,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 13.52,
-      "PowerIndex": 8747,
+      "PowerIndex": 8749,
       "PowerSetID": 3412,
       "PowerSetIndex": 6,
       "StaticIndex": 10460,
@@ -4145,7 +4145,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6490,
+          "nSummon": 6492,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4162,7 +4162,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 1,
           "Override": "Pets.Tanker_Savage_Melee.Rending_Flurry_Large",
-          "nOverride": 6490
+          "nOverride": 6492
         },
         {
           "NewEffects": [
@@ -4194,7 +4194,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6489,
+          "nSummon": 6491,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4211,7 +4211,7 @@
           "Absorbed_EffectID": -1,
           "UniqueID": 2,
           "Override": "Pets.Tanker_Savage_Melee.Rending_Flurry_Normal",
-          "nOverride": 6489
+          "nOverride": 6491
         },
         {
           "NewEffects": [
@@ -4737,7 +4737,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 13.52,
-      "PowerIndex": 8748,
+      "PowerIndex": 8750,
       "PowerSetID": 3412,
       "PowerSetIndex": 7,
       "StaticIndex": 10462,
@@ -5189,7 +5189,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Exhausted",
-          "nSummon": 9791,
+          "nSummon": 9793,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -5477,7 +5477,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 17.58,
-      "PowerIndex": 8749,
+      "PowerIndex": 8751,
       "PowerSetID": 3412,
       "PowerSetIndex": 8,
       "StaticIndex": 10463,
@@ -5675,7 +5675,7 @@
           "nID": 2,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy",
-          "nSummon": 9789,
+          "nSummon": 9791,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

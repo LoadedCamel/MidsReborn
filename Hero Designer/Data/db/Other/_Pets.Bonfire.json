@@ -4,7 +4,7 @@
   "FullName": "Pets.Bonfire",
   "ImageName": "",
   "Power": [
-    6158
+    6160
   ],
   "SetType": 8,
   "DisplayName": "Bonfire",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6158,
+      "PowerIndex": 6160,
       "PowerSetID": 3039,
       "StaticIndex": 1551,
       "NGroupMembership": [],

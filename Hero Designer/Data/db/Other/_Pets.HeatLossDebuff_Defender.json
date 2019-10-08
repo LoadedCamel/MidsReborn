@@ -4,7 +4,7 @@
   "FullName": "Pets.HeatLossDebuff_Defender",
   "ImageName": "",
   "Power": [
-    6292
+    6294
   ],
   "SetType": 8,
   "DisplayName": "Heat Loss",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6292,
+      "PowerIndex": 6294,
       "PowerSetID": 3102,
       "StaticIndex": 1607,
       "NGroupMembership": [],
@@ -909,6 +909,7 @@
           "MagPercent": -100.0,
           "Duration": 2.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

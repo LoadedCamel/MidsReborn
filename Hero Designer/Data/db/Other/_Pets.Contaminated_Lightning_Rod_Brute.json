@@ -4,7 +4,7 @@
   "FullName": "Pets.Contaminated_Lightning_Rod_Brute",
   "ImageName": "",
   "Power": [
-    6183
+    6185
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6183,
+      "PowerIndex": 6185,
       "PowerSetID": 3082,
       "StaticIndex": 6221,
       "NGroupMembership": [],

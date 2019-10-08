@@ -4,15 +4,15 @@
   "FullName": "Scrapper_Defense.Regeneration",
   "ImageName": "Regeneration.png",
   "Power": [
-    6793,
-    6794,
     6795,
     6796,
     6797,
     6798,
     6799,
     6800,
-    6801
+    6801,
+    6802,
+    6803
   ],
   "SetType": 2,
   "DisplayName": "Regeneration",
@@ -29,7 +29,7 @@
   "GroupName": "Scrapper_Defense",
   "Powers": [
     {
-      "PowerIndex": 6793,
+      "PowerIndex": 6795,
       "PowerSetID": 3307,
       "StaticIndex": 1860,
       "NGroupMembership": [],
@@ -190,7 +190,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 10.4,
-      "PowerIndex": 6794,
+      "PowerIndex": 6796,
       "PowerSetID": 3307,
       "PowerSetIndex": 1,
       "StaticIndex": 1861,
@@ -360,7 +360,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6795,
+      "PowerIndex": 6797,
       "PowerSetID": 3307,
       "PowerSetIndex": 2,
       "StaticIndex": 1862,
@@ -471,7 +471,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 10.4,
-      "PowerIndex": 6796,
+      "PowerIndex": 6798,
       "PowerSetID": 3307,
       "PowerSetIndex": 3,
       "StaticIndex": 1863,
@@ -790,7 +790,7 @@
     {
       "CastTimeReal": 3.1,
       "ToggleCost": 0.26,
-      "PowerIndex": 6797,
+      "PowerIndex": 6799,
       "PowerSetID": 3307,
       "PowerSetIndex": 4,
       "StaticIndex": 1864,
@@ -2223,7 +2223,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6798,
+      "PowerIndex": 6800,
       "PowerSetID": 3307,
       "PowerSetIndex": 5,
       "StaticIndex": 1865,
@@ -2836,7 +2836,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 10.4,
-      "PowerIndex": 6799,
+      "PowerIndex": 6801,
       "PowerSetID": 3307,
       "PowerSetIndex": 6,
       "StaticIndex": 1866,
@@ -3103,7 +3103,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 6800,
+      "PowerIndex": 6802,
       "PowerSetID": 3307,
       "PowerSetIndex": 7,
       "StaticIndex": 1867,
@@ -3420,7 +3420,7 @@
     {
       "CastTimeReal": 2.57,
       "ToggleCost": 2.6,
-      "PowerIndex": 6801,
+      "PowerIndex": 6803,
       "PowerSetID": 3307,
       "PowerSetIndex": 8,
       "StaticIndex": 1868,

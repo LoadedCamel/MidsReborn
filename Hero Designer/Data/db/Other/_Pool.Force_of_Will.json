@@ -4,12 +4,12 @@
   "FullName": "Pool.Force_of_Will",
   "ImageName": "ForceofWill.png",
   "Power": [
-    6662,
-    6663,
     6664,
     6665,
     6666,
-    6667
+    6667,
+    6668,
+    6669
   ],
   "SetType": 5,
   "DisplayName": "Force of Will",
@@ -29,7 +29,7 @@
       "CastTimeReal": 2.1,
       "ToggleCost": 11.7,
       "IsEpic": true,
-      "PowerIndex": 6662,
+      "PowerIndex": 6664,
       "PowerSetID": 3290,
       "StaticIndex": 10654,
       "NGroupMembership": [],
@@ -52,7 +52,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6664,
+            6666,
             -1
           ]
         ],
@@ -195,7 +195,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 7.8,
-      "PowerIndex": 6663,
+      "PowerIndex": 6665,
       "PowerSetID": 3290,
       "PowerSetIndex": 1,
       "StaticIndex": 10355,
@@ -762,7 +762,7 @@
     },
     {
       "ToggleCost": 0.364,
-      "PowerIndex": 6664,
+      "PowerIndex": 6666,
       "PowerSetID": 3290,
       "PowerSetIndex": 2,
       "StaticIndex": 10356,
@@ -1275,7 +1275,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 6.032,
-      "PowerIndex": 6665,
+      "PowerIndex": 6667,
       "PowerSetID": 3290,
       "PowerSetIndex": 3,
       "StaticIndex": 10357,
@@ -3395,7 +3395,7 @@
       "CastTimeReal": 0.73,
       "ToggleCost": 2.6,
       "IsEpic": true,
-      "PowerIndex": 6666,
+      "PowerIndex": 6668,
       "PowerSetID": 3290,
       "PowerSetIndex": 4,
       "StaticIndex": 10358,
@@ -3427,16 +3427,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6663,
-            6665
+            6665,
+            6667
           ],
           [
-            6663,
-            6664
+            6665,
+            6666
           ],
           [
-            6664,
-            6665
+            6666,
+            6667
           ]
         ],
         "NPowerIDNot": []
@@ -4340,7 +4340,7 @@
       "CastTimeReal": 2.5,
       "ToggleCost": 14.352,
       "IsEpic": true,
-      "PowerIndex": 6667,
+      "PowerIndex": 6669,
       "PowerSetID": 3290,
       "PowerSetIndex": 5,
       "StaticIndex": 10359,
@@ -4372,16 +4372,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6663,
-            6665
+            6665,
+            6667
           ],
           [
-            6663,
-            6664
+            6665,
+            6666
           ],
           [
-            6664,
-            6665
+            6666,
+            6667
           ]
         ],
         "NPowerIDNot": []

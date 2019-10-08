@@ -4,11 +4,11 @@
   "FullName": "Villain_Pets.Water_Spout",
   "ImageName": "",
   "Power": [
-    10273,
-    10274,
     10275,
     10276,
-    10277
+    10277,
+    10278,
+    10279
   ],
   "SetType": 8,
   "DisplayName": "Water Spout",
@@ -25,7 +25,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10273,
+      "PowerIndex": 10275,
       "PowerSetID": 3563,
       "StaticIndex": 3184,
       "NGroupMembership": [],
@@ -354,7 +354,7 @@
       "AoEModifier": 2.05
     },
     {
-      "PowerIndex": 10274,
+      "PowerIndex": 10276,
       "PowerSetID": 3563,
       "PowerSetIndex": 1,
       "StaticIndex": 3185,
@@ -602,7 +602,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10275,
+      "PowerIndex": 10277,
       "PowerSetID": 3563,
       "PowerSetIndex": 2,
       "StaticIndex": 3186,
@@ -669,6 +669,7 @@
           "Probability": 1.0,
           "Mag": 1.0,
           "MagPercent": 1.0,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -700,7 +701,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10276,
+      "PowerIndex": 10278,
       "PowerSetID": 3563,
       "PowerSetIndex": 3,
       "StaticIndex": 3187,
@@ -802,7 +803,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10277,
+      "PowerIndex": 10279,
       "PowerSetID": 3563,
       "PowerSetIndex": 4,
       "StaticIndex": 3188,
