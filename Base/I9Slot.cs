@@ -313,7 +313,7 @@ public class I9Slot : ICloneable
                     int[] returnMask = new int[0];
                     for (int index1 = 0; index1 <= power.Effects.Length - 1; ++index1)
                     {
-                        if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower)
+                        if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
                         {
                             if (stringBuilder.Length > 0)
                                 stringBuilder.Append("\n");

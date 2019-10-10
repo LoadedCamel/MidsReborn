@@ -148,5 +148,7 @@ public interface IEffect : IComparable, ICloneable
 
     bool CanInclude();
 
+    bool CanGrantPower();
+
     bool PvXInclude();
 }

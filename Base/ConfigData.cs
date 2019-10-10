@@ -182,7 +182,7 @@ public class ConfigData
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             }
         }
         IntializeComponent();
@@ -197,7 +197,7 @@ public class ConfigData
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
         }
     }
 
@@ -432,7 +432,7 @@ public class ConfigData
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
         }
     }
 

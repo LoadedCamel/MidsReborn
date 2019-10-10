@@ -531,7 +531,7 @@ namespace Hero_Designer
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
-            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+            e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
             SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
             if (e.Index > -1)
@@ -580,7 +580,7 @@ namespace Hero_Designer
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
-            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+            e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
             SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
             IPowerset[] powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, SetType);
@@ -616,7 +616,7 @@ namespace Hero_Designer
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
-            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+            e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
             SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
             if (e.Index > -1)
@@ -971,8 +971,9 @@ namespace Hero_Designer
                     SetTitleBar();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                 FloatTop(true);
             }
         }

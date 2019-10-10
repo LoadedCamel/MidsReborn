@@ -20,7 +20,7 @@ public class Modifiers
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return false;
         }
         Modifier = new ModifierTable[0];
@@ -47,7 +47,7 @@ public class Modifiers
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return false;
         }
         string iLine2;
@@ -167,7 +167,7 @@ public class Modifiers
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return;
         }
         try
@@ -183,7 +183,7 @@ public class Modifiers
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
         }
         finally
         {

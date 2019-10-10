@@ -273,6 +273,7 @@ namespace Hero_Designer
                     break;
                 case "Gang War":
                     cbSelPets.Items.Add("Thug Posse");
+                    cbSelPets.SelectedIndex = 0;
                     break;
                 case "Call Bruiser":
                     cbSelPets.Items.Add("Thug Boss");

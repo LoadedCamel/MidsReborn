@@ -608,14 +608,20 @@ public static class DatabaseAPI
             writer.Write("BEGIN:ARCHETYPES");
             Database.ArchetypeVersion.StoreTo(writer);
             writer.Write(Database.Classes.Length - 1);
-            foreach (var index in Database.Classes)
-                index.StoreTo(ref writer);
+            for (int index = 0; index <= (Database.Classes.Length - 1); ++index)
+            {
+                Database.Classes[index].StoreTo(ref writer);
+            }
+            /*foreach (var index in Database.Classes)
+                index.StoreTo(ref writer);*/
 
             writer.Write("BEGIN:POWERSETS");
             Database.PowersetVersion.StoreTo(writer);
             writer.Write(Database.Powersets.Length - 1);
-            for (int index = 0; index <= Database.Powersets.Length - 1; ++index)
+            for (int index = 0; index <= (Database.Powersets.Length - 1); ++index)
+            {
                 Database.Powersets[index].StoreTo(ref writer);
+            }
 
             writer.Write("BEGIN:POWERS");
             Database.PowerVersion.StoreTo(writer);
@@ -623,16 +629,20 @@ public static class DatabaseAPI
             Database.PowerEffectVersion.StoreTo(writer);
             Database.IOAssignmentVersion.StoreTo(writer);
             writer.Write(Database.Power.Length - 1);
-            foreach (var index in Database.Power)
-                index.StoreTo(ref writer);
-
+            for (int index = 0; index <= (Database.Power.Length - 1); ++index)
+            {
+                Database.Power[index].StoreTo(ref writer);
+            }
+            /*foreach (var index in Database.Power)
+                index.StoreTo(ref writer);*/
             writer.Write("BEGIN:SUMMONS");
             Database.StoreEntities(writer);
             writer.Close();
             fileStream.Close();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             writer.Close();
             fileStream.Close();
         }
@@ -776,8 +786,9 @@ public static class DatabaseAPI
                         }
                         num1 = binaryReader.ReadSingle();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                         num1 = -1f;
                     }
                     binaryReader.Close();
@@ -800,7 +811,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error!");
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", "Error!");
             return false;
         }
         string[] strArray = FileIO.IOGrab(iStream);
@@ -831,7 +842,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", "Error!");
             return;
         }
         try
@@ -853,7 +864,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             streamReader.Close();
             return;
         }
@@ -1061,7 +1072,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return;
         }
         try
@@ -1078,7 +1089,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             writer.Close();
             fileStream.Close();
         }
@@ -1148,7 +1159,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return;
         }
         try
@@ -1162,7 +1173,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             writer.Close();
             fileStream.Close();
         }
@@ -1194,7 +1205,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return;
         }
         try
@@ -1212,7 +1223,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             writer.Close();
             fileStream.Close();
         }
@@ -1315,7 +1326,7 @@ public static class DatabaseAPI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                 streamReader.Close();
                 return false;
             }
@@ -1336,7 +1347,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return;
         }
         try
@@ -1389,7 +1400,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             streamReader.Close();
             return;
         }
@@ -1406,7 +1417,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return false;
         }
         try
@@ -1459,7 +1470,7 @@ public static class DatabaseAPI
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             streamReader.Close();
             return false;
         }

@@ -1532,6 +1532,226 @@ namespace Base.Data_Classes
             return false;
         }
 
+        public bool CanGrantPower()
+        {
+            if (MidsContext.Character == null)
+                return true;
+            switch (SpecialCase)
+            {
+                case Enums.eSpecialCase.None:
+                    return true;
+                case Enums.eSpecialCase.Hidden:
+                    if (MidsContext.Character.IsStalker || MidsContext.Character.IsArachnos)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Domination:
+                    if (MidsContext.Character.Domination)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Scourge:
+                    if (MidsContext.Character.Scourge)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.CriticalHit:
+                    if (MidsContext.Character.CriticalHits || MidsContext.Character.IsStalker)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.CriticalBoss:
+                    if (MidsContext.Character.CriticalHits)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Assassination:
+                    if (MidsContext.Character.IsStalker && MidsContext.Character.Assassination)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Containment:
+                    if (MidsContext.Character.Containment)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Defiance:
+                    if (MidsContext.Character.Defiance)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.TargetDroneActive:
+                    if (MidsContext.Character.IsBlaster && MidsContext.Character.TargetDroneActive)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotDisintegrated:
+                    if (!MidsContext.Character.DisintegrateActive)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Disintegrated:
+                    if (MidsContext.Character.DisintegrateActive)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotAccelerated:
+                    if (!MidsContext.Character.AcceleratedActive)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Accelerated:
+                    if (MidsContext.Character.AcceleratedActive)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotDelayed:
+                    if (!MidsContext.Character.DelayedActive)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Delayed:
+                    if (MidsContext.Character.DelayedActive)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.ComboLevel0:
+                    if (MidsContext.Character.ActiveComboLevel == 0)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.ComboLevel1:
+                    if (MidsContext.Character.ActiveComboLevel == 1)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.ComboLevel2:
+                    if (MidsContext.Character.ActiveComboLevel == 2)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.ComboLevel3:
+                    if (MidsContext.Character.ActiveComboLevel == 3)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.FastMode:
+                    if (MidsContext.Character.FastModeActive)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotAssassination:
+                    if (!MidsContext.Character.Assassination)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfBody0:
+                    if (MidsContext.Character.PerfectionOfBodyLevel == 0)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfBody1:
+                    if (MidsContext.Character.PerfectionOfBodyLevel == 1)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfBody2:
+                    if (MidsContext.Character.PerfectionOfBodyLevel == 2)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfBody3:
+                    if (MidsContext.Character.PerfectionOfBodyLevel == 3)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfMind0:
+                    if (MidsContext.Character.PerfectionOfMindLevel == 0)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfMind1:
+                    if (MidsContext.Character.PerfectionOfMindLevel == 1)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfMind2:
+                    if (MidsContext.Character.PerfectionOfMindLevel == 2)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfMind3:
+                    if (MidsContext.Character.PerfectionOfMindLevel == 3)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfSoul0:
+                    if (MidsContext.Character.PerfectionOfSoulLevel == 0)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfSoul1:
+                    if (MidsContext.Character.PerfectionOfSoulLevel == 1)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfSoul2:
+                    if (MidsContext.Character.PerfectionOfSoulLevel == 2)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PerfectionOfSoul3:
+                    if (MidsContext.Character.PerfectionOfSoulLevel == 3)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.TeamSize1:
+                    if (MidsContext.Config.TeamSize > 1)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.TeamSize2:
+                    if (MidsContext.Config.TeamSize > 2)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.TeamSize3:
+                    if (MidsContext.Config.TeamSize > 3)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotComboLevel3:
+                    if (MidsContext.Character.ActiveComboLevel != 3)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.ToHit97:
+                    if (MidsContext.Character.DisplayStats.BuffToHit >= 22.0)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.DefensiveAdaptation:
+                    if (MidsContext.Character.DefensiveAdaptation)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.EfficientAdaptation:
+                    if (MidsContext.Character.EfficientAdaptation)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.OffensiveAdaptation:
+                    if (MidsContext.Character.OffensiveAdaptation)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotDefensiveAdaptation:
+                    if (!MidsContext.Character.DefensiveAdaptation)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotDefensiveNorOffensiveAdaptation:
+                    if (!MidsContext.Character.OffensiveAdaptation && !MidsContext.Character.DefensiveAdaptation)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.BoxingBuff:
+                    if (MidsContext.Character.BoxingBuff)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.KickBuff:
+                    if (MidsContext.Character.KickBuff)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.Supremacy:
+                    if (MidsContext.Character.Supremacy)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PetTier2:
+                    if (MidsContext.Character.PetTier2 && !MidsContext.Character.PetBuffPwr)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PetTier3:
+                    if (MidsContext.Character.PetTier3)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PetBuffPwr:
+                    if (MidsContext.Character.PetBuffPwr)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotPetBuffPwr:
+                    if (!MidsContext.Character.PetBuffPwr)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PetT2AndBuffPwr:
+                    if (MidsContext.Character.PetTier2 && MidsContext.Character.PetBuffPwr)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.PetT3AndBuffPwr:
+                    if (MidsContext.Character.PetTier3 && MidsContext.Character.PetBuffPwr)
+                        return true;
+                    break;
+            }
+            return false;
+        }
+
         public bool PvXInclude()
         {
             return MidsContext.Archetype == null || (PvMode != Enums.ePvX.PvP && !MidsContext.Config.Inc.DisablePvE || PvMode != Enums.ePvX.PvE && MidsContext.Config.Inc.DisablePvE) && (nIDClassName == -1 || nIDClassName == MidsContext.Archetype.Idx);

@@ -2088,7 +2088,7 @@ namespace Base.Data_Classes
                 int[] array2 = new int[0];
                 for (int index = num2; index < Effects.Length; ++index)
                 {
-                    if (Effects[index].EffectType != Enums.eEffectType.GrantPower ||
+                    if (Effects[index].EffectType != Enums.eEffectType.GrantPower || !Effects[index].CanGrantPower() || 
                         Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
                         continue;
                     Array.Resize(ref array1, array1.Length + 1);

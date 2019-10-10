@@ -284,10 +284,8 @@ public class Build
 
                         break;
                     case Enums.eType.SetO:
-                        int levelMin2 = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet]
-                            .LevelMin;
-                        int num = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet]
-                            .LevelMax;
+                        int levelMin2 = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet].LevelMin;
+                        int num = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet].LevelMax;
                         if (num > 49)
                             num = 49;
                         if (newVal >= levelMin2 & newVal <= num)

@@ -311,7 +311,7 @@ public static class Enums
         Call_Thugs,
         Call_Enforcer,
         Gang_War,
-        Call_Brusier
+        Call_Bruiser
     }
 
     public enum eEnhance

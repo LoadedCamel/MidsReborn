@@ -2779,7 +2779,7 @@ namespace Hero_Designer
             PowerScaler.ColorMarkerInner = Color.Red;
             PowerScaler.ColorMarkerOuter = Color.Black;
             PowerScaler.Dual = false;
-            PowerScaler.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            PowerScaler.Font = new Font("Arial", 9f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             PowerScaler.ForcedMax = 0.0f;
             PowerScaler.ForeColor = Color.FromArgb(192, 192, byte.MaxValue);
             PowerScaler.Highlight = true;

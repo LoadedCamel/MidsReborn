@@ -735,6 +735,7 @@ namespace Hero_Designer
             }
             catch (Exception ex)
             {
+                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                 ProjectData.SetProjectError(ex);
                 int num = (int)MessageBox.Show(ex.Message);
                 ProjectData.ClearProjectError();

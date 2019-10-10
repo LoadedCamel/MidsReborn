@@ -63,10 +63,10 @@ namespace midsControls
         {
             InterfaceMode = 0;
             //VillainColor = false;
-            ScaleValue = 1f;
+            ScaleValue = 2f;
             Scaling = true;
-            vcCols = 4;
-            vcRowsPowers = 8;
+            vcCols = 6;
+            vcRowsPowers = 12;
             bxPower = new ExtendedBitmap[4];
             checked
             {
@@ -84,7 +84,7 @@ namespace midsControls
                 szBuffer = GetMaxDrawingArea();
                 Size size = new Size(szBuffer.Width, szBuffer.Height);
                 bxBuffer = new ExtendedBitmap(size);
-                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
@@ -96,9 +96,9 @@ namespace midsControls
                 gTarget.CompositingQuality = CompositingQuality.HighQuality;
                 gTarget.InterpolationMode = InterpolationMode.HighQualityBilinear;
                 gTarget.SmoothingMode = SmoothingMode.HighQuality;
-                gTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                gTarget.TextRenderingHint = TextRenderingHint.SystemDefault;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-                DefaultFont = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+                DefaultFont = new Font("Segoe UI", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
                 BackColor = iTarget.BackColor;
                 if (szBuffer.Height < cTarget.Height)
                 {
@@ -109,11 +109,11 @@ namespace midsControls
 
         void DrawSplit()
         {
-            Pen pen = new Pen(Color.Goldenrod, 1.5f);
+            Pen pen = new Pen(Color.Goldenrod, 2f);
             checked
             {
                 int iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 1;
-                bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 195), ScaleDown(iValue));
+                bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 400), ScaleDown(iValue));
             }
         }
 
@@ -232,7 +232,7 @@ namespace midsControls
             Pen pen2 = new Pen(Color.Black);
             Rectangle rectangle = default;
             //Font font = new Font(DefaultFont.FontFamily, FontScale(DefaultFont.SizeInPoints), DefaultFont.Style, GraphicsUnit.Point);
-            Font font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+            Font font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             int slotChk = MidsContext.Character.SlotCheck(iSlot);
             Enums.ePowerState ePowerState = iSlot.State;
             bool canPlaceSlot = MidsContext.Character.CanPlaceSlot;
@@ -277,7 +277,7 @@ namespace midsControls
                 rectangleF.Width = szSlot.Width;
                 stringFormat.Alignment = StringAlignment.Center;
                 stringFormat.LineAlignment = StringAlignment.Center;
-                bxBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bool grey;
                 ImageAttributes imageAttr;
                 if (toggling)
@@ -491,7 +491,7 @@ namespace midsControls
                             : string.Concat("(", Convert.ToString(iSlot.Level + 1), ") ", iSlot.Name, " ", text2);
                         break;
                     case Enums.ePowerState.Open:
-                        solidBrush = new SolidBrush(Color.Yellow);
+                        solidBrush = new SolidBrush(Color.WhiteSmoke);
                         text = "(" + Convert.ToString(iSlot.Level + 1) + ")";
                         break;
                 }
@@ -518,7 +518,7 @@ namespace midsControls
                     Graphics graphics5 = bxBuffer.Graphics;
                     graphics5.CompositingQuality = CompositingQuality.HighQuality;
                     graphics5.SmoothingMode = SmoothingMode.HighQuality;
-                    graphics5.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                    graphics5.TextRenderingHint = TextRenderingHint.SystemDefault;
                     graphics5.PageUnit = GraphicsUnit.Pixel;
                     graphics5.InterpolationMode = InterpolationMode.HighQualityBilinear;
                     DrawOutlineText(iStr4, bounds5, whiteSmoke, outline5, bFont5, outlineSpace5, graphics5, false, true);
@@ -849,7 +849,7 @@ namespace midsControls
             }
             else
             {
-                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
                 ScaleValue = 1f;
                 ResetTarget();
                 Scaling = false;
@@ -862,12 +862,12 @@ namespace midsControls
 
         void ResetTarget()
         {
-            bxBuffer.Graphics.TextRenderingHint = ScaleValue > 1.125 ? TextRenderingHint.ClearTypeGridFit : TextRenderingHint.ClearTypeGridFit;
+            bxBuffer.Graphics.TextRenderingHint = ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.SystemDefault;
             gTarget.Dispose();
             gTarget = cTarget.CreateGraphics();
             gTarget.CompositingQuality = CompositingQuality.HighQuality;
             gTarget.CompositingMode = CompositingMode.SourceCopy;
-            gTarget.PixelOffsetMode = PixelOffsetMode.None;
+            gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             gTarget.SmoothingMode = SmoothingMode.HighQuality;
         }
 
@@ -1182,43 +1182,43 @@ namespace midsControls
                 {
                     new[]
                     {
-                        0, 1, 2, 3
+                        0, 1, 2, 3, 4, 5
                     },
                     new[]
                     {
-                        4, 5, 6, 7
+                        6, 7, 8, 9, 10, 11
                     },
                     new[]
                     {
-                        8, 9, 10, 11
+                        12, 13, 14, 15, 16, 17
                     },
                     new[]
                     {
-                        12, 13, 14, 15
+                        18, 19, 20, 21, 22, 23
                     },
                     new[]
                     {
-                        16, 17, 18, 19
+                        24, 25, 26, 27, 28, 29
                     },
                     new[]
                     {
-                        20, 21, 22, 23
+                        30, 31, 32, 33, 34, 35
                     },
                     new[]
                     {
-                        24, 25, 26, 27
+                        36, 37, 38, 39, 40, 41
                     },
                     new[]
                     {
-                        28, 29, 30, 31
+                        42, 43, 44, 45, 46, 47
                     },
                     new[]
                     {
-                        32, 33, 34, 35
+                        48, 49, 50, 51, 52, 53
                     },
                     new[]
                     {
-                        36, 37, 38, 39
+                        54, 55, 56, 57, 58, 59
                     }
                 };
             }
@@ -1227,43 +1227,43 @@ namespace midsControls
             {
                 new[]
                 {
-                    0, 1, 2, 3
+                    0, 1, 2, 3, 4, 5
                 },
                 new[]
                 {
-                    4, 5, 6, 7
+                    6, 7, 8, 9, 10, 11
                 },
                 new[]
                 {
-                    8, 9, 10, 11
+                    12, 13, 14, 15, 16, 17
                 },
                 new[]
                 {
-                    12, 13, 14, 15
+                    18, 19, 20, 21, 22, 23
                 },
                 new[]
                 {
-                    16, 17, 18, 19
+                    24, 25, 26, 27, 28, 29
                 },
                 new[]
                 {
-                    20, 21, 22, 23
+                    30, 31, 32, 33, 34, 35
                 },
                 new[]
                 {
-                    24, 25, 26, 27
+                    36, 37, 38, 39, 40, 41
                 },
                 new[]
                 {
-                    28, 29, 30, 31
+                    42, 43, 44, 45, 46, 47
                 },
                 new[]
                 {
-                    32, 33, 34, 35
+                    48, 49, 50, 51, 52, 53
                 },
                 new[]
                 {
-                    36, 37, 38, 39
+                    54, 55, 56, 57, 58, 59
                 }
             };
         }
@@ -1300,43 +1300,43 @@ namespace midsControls
                             string setName = powerEntry.PowerSet.SetName;
                             if (Operators.CompareString(setName, "Alpha", false) == 0)
                             {
-                                displayLocation = 22;
+                                displayLocation = 4;
                             }
                             else if (Operators.CompareString(setName, "Judgement", false) == 0)
                             {
-                                displayLocation = 23;
+                                displayLocation = 5;
                             }
                             else if (Operators.CompareString(setName, "Interface", false) == 0)
                             {
-                                displayLocation = 26;
+                                displayLocation = 10;
                             }
                             else if (Operators.CompareString(setName, "Lore", false) == 0)
                             {
-                                displayLocation = 27;
+                                displayLocation = 11;
                             }
                             else if (Operators.CompareString(setName, "Destiny", false) == 0)
                             {
-                                displayLocation = 30;
+                                displayLocation = 16;
                             }
                             else if (Operators.CompareString(setName, "Hybrid", false) == 0)
                             {
-                                displayLocation = 31;
+                                displayLocation = 17;
                             }
                             else if (Operators.CompareString(setName, "Genesis", false) == 0)
                             {
-                                displayLocation = 34;
+                                displayLocation = 22;
                             }
                             else if (Operators.CompareString(setName, "Stance", false) == 0)
                             {
-                                displayLocation = 35;
+                                displayLocation = 23;
                             }
                             else if (Operators.CompareString(setName, "Vitae", false) == 0)
                             {
-                                displayLocation = 38;
+                                displayLocation = 28;
                             }
                             else if (Operators.CompareString(setName, "Omega", false) == 0)
                             {
-                                displayLocation = 39;
+                                displayLocation = 29;
                             }
                             else
                             {
@@ -1392,7 +1392,7 @@ namespace midsControls
                 if (iRow >= vcRowsPowers)
                 {
                     result.X = iCol * (SzPower.Width + 8);
-                    result.Y = 4 + iRow * (SzPower.Height + 20);
+                    result.Y = 6 + iRow * (SzPower.Height + 20);
                 }
                 else
                 {
@@ -1463,10 +1463,10 @@ namespace midsControls
         {
             if (cols == vcCols)
                 return;
-            if (cols < 2 | cols > 4)
+            if (cols < 2 | cols > 6)
                 return;
-            vcCols = cols;
-            vcRowsPowers = checked((int) Math.Round(24.0 / vcCols));
+            vcCols = 8;
+            vcRowsPowers = checked((int) Math.Round(36.0 / vcCols));
         }
 
         public Size GetRequiredDrawingArea()

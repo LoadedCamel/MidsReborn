@@ -1993,7 +1993,7 @@ namespace Hero_Designer
 
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Location = new Point(300, 50);
+            this.Location = new Point(10, 10);
             this.Text = "Hero Designer";
             this.MenuBar.ResumeLayout(false);
             this.MenuBar.PerformLayout();

@@ -489,50 +489,43 @@ namespace Base.Data_Classes
                             PetTier3 = true;
                         }
                         break;
-                    case "ENCHANT_DEMONS":
+                    case "ENCHANT_DEMON":
                         PetTier2 = true;
                         break;
                     case "ABYSSAL_EMPOWERMENT":
-                        PetTier2 = true;
                         PetTier3 = true;
                         break;
                     case "EQUIP_MERCENARY":
                         PetTier2 = true;
                         break;
                     case "TACTICAL_UPGRADE":
-                        PetTier2 = true;
                         PetTier3 = true;
                         break;
                     case "ENCHANT_UNDEAD":
                         PetTier2 = true;
                         break;
                     case "DARK_EMPOWERMENT":
-                        PetTier2 = true;
                         PetTier3 = true;
                         break;
                     case "TRAIN_NINJAS":
                         PetTier2 = true;
                         break;
                     case "KUJI_IN_ZEN":
-                        PetTier2 = true;
                         PetTier3 = true;
                         break;
                     case "EQUIP_ROBOT":
                         PetTier2 = true;
                         break;
                     case "UPGRADE_ROBOT":
-                        PetTier2 = true;
                         PetTier3 = true;
                         break;
                     case "EQUIP_THUGS":
                         PetTier2 = true;
                         break;
                     case "UPGRADE_EQUIPMENT":
-                        PetTier2 = true;
                         PetTier3 = true;
                         break;
                     case "PACK_MENTALITY":
-                        PetBuffPwr = true;
                         NotPetBuffPwr = false;
                         break;
                 }
