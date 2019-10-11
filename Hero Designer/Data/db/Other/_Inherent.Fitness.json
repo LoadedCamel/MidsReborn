@@ -221,7 +221,7 @@
       "DisplayLocation": 2
     },
     {
-      "LocationIndex": 10,
+      "LocationIndex": 14,
       "PowerIndex": 5433,
       "PowerSetID": 2884,
       "PowerSetIndex": 1,
@@ -415,10 +415,10 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 10
+      "DisplayLocation": 14
     },
     {
-      "LocationIndex": 6,
+      "LocationIndex": 8,
       "PowerIndex": 5434,
       "PowerSetID": 2884,
       "PowerSetIndex": 2,
@@ -610,10 +610,10 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 6
+      "DisplayLocation": 8
     },
     {
-      "LocationIndex": 14,
+      "LocationIndex": 20,
       "PowerIndex": 5435,
       "PowerSetID": 2884,
       "PowerSetIndex": 3,
@@ -757,7 +757,7 @@
       "CastTime": 0.132,
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 14
+      "DisplayLocation": 20
     }
   ]
 }

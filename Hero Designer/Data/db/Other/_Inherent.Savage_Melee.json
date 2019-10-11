@@ -22,7 +22,8 @@
   "Powers": [
     {
       "IsEpic": true,
-      "LocationIndex": 4,
+      "LocationIndex": 6,
+      "IsModified": true,
       "PowerIndex": 5602,
       "PowerSetID": 2882,
       "StaticIndex": 10085,
@@ -207,7 +208,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 25,
           "Summon": "",
           "nSummon": -1,
@@ -233,7 +233,7 @@
       "FullSetName": "Inherent.Savage_Melee",
       "CastTime": 0.132,
       "AoEModifier": 1.0,
-      "DisplayLocation": 4
+      "DisplayLocation": 6
     }
   ]
 }
