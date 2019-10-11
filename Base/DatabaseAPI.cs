@@ -348,23 +348,6 @@ public static class DatabaseAPI
 
     public static int GetEnhancementByName(string iName, string iSet)
     {
-        //var index = Database.EnhancementSets
-        //    .Where(es => string.Equals(es.ShortName, iSet, StringComparison.OrdinalIgnoreCase))
-        //    .SelectMany(es =>
-        //        es.Enhancements
-        //        .Where(enh =>
-        //            string.Equals(Database.Enhancements[es.Enhancements[enh]].ShortName, iName, StringComparison.OrdinalIgnoreCase)
-        //        ).Select(x => (int?)x))
-        //        .FirstOrDefault();
-        //return index ?? -1;
-        //return
-        //        (from es in Database.EnhancementSets
-        //        where string.Equals(es.ShortName, iSet, StringComparison.OrdinalIgnoreCase)
-        //        from enhSubId in es.Enhancements
-        //        let shortname = Database.Enhancements[es.Enhancements[enhSubId]].ShortName
-        //        where string.Equals(shortname, iName, StringComparison.OrdinalIgnoreCase)
-        //        select (int?)es.Enhancements[enhSubId] ).FirstOrDefault()
-        //        ?? -1;
         foreach (EnhancementSet enhancementSet in Database.EnhancementSets)
         {
             if (!string.Equals(enhancementSet.ShortName, iSet, StringComparison.OrdinalIgnoreCase))
