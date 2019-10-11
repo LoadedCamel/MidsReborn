@@ -526,6 +526,7 @@ namespace Base.Data_Classes
                         PetTier3 = true;
                         break;
                     case "PACK_MENTALITY":
+                        PetBuffPwr = true;
                         NotPetBuffPwr = false;
                         break;
                 }
