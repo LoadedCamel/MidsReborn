@@ -87,7 +87,7 @@ namespace midsControls
             set
             {
                 bxImage = new ExtendedBitmap(Width, Height);
-                bxImage.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                bxImage.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
                 bxImage.Graphics.DrawImage(value, 0, 0, bxImage.Size.Width, bxImage.Size.Height);
                 Redraw();
             }
@@ -100,7 +100,7 @@ namespace midsControls
             set
             {
                 bxAltImage = new ExtendedBitmap(Width, Height);
-                bxImage.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                bxImage.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
                 bxAltImage.Graphics.DrawImage(value, 0, 0, bxAltImage.Size.Width, bxAltImage.Size.Height);
                 Redraw();
             }
