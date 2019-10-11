@@ -15482,7 +15482,7 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Bio_Organic_Armor",
-    "Hash": 1585158307,
+    "Hash": -1977859617,
     "Length": 368098
   },
   {
@@ -15656,8 +15656,8 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Staff_Fighting",
-    "Hash": -1762006973,
-    "Length": 418795
+    "Hash": -275521745,
+    "Length": 418372
   },
   {
     "Archetype": "Class_Brute",
@@ -17294,14 +17294,14 @@
   {
     "Archetype": "",
     "Fullname": "Inherent.Savage_Melee",
-    "Hash": -1669580046,
-    "Length": 7141
+    "Hash": -23783137,
+    "Length": 7135
   },
   {
     "Archetype": "",
     "Fullname": "Inherent.Inherent",
-    "Hash": -1478581,
-    "Length": 1480882
+    "Hash": 707524915,
+    "Length": 1481324
   },
   {
     "Archetype": "",
@@ -19790,7 +19790,7 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Bio_Organic_Armor",
-    "Hash": 1865345670,
+    "Hash": -1800063482,
     "Length": 354776
   },
   {
@@ -19958,8 +19958,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Staff_Fighting",
-    "Hash": -1292773816,
-    "Length": 417822
+    "Hash": -2102055340,
+    "Length": 417399
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19982,7 +19982,7 @@
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Defense.Bio_Organic_Armor",
-    "Hash": -986513772,
+    "Hash": -576975684,
     "Length": 245868
   },
   {
@@ -20144,7 +20144,7 @@
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Defense.Bio_Organic_Armor",
-    "Hash": -1580133864,
+    "Hash": 1392750772,
     "Length": 332184
   },
   {
@@ -20324,7 +20324,7 @@
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Bio_Organic_Armor",
-    "Hash": 2055204767,
+    "Hash": -385689377,
     "Length": 368359
   },
   {
@@ -20486,8 +20486,8 @@
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Staff_Fighting",
-    "Hash": 1836890890,
-    "Length": 430997
+    "Hash": -1636661434,
+    "Length": 430574
   },
   {
     "Archetype": "Class_Tanker",

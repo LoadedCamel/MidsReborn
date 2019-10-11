@@ -34,7 +34,7 @@
     {
       "CastTimeReal": 1.0,
       "IsEpic": true,
-      "LocationIndex": 25,
+      "LocationIndex": 31,
       "PowerIndex": 7005,
       "PowerSetID": 3330,
       "StaticIndex": 10523,
@@ -645,12 +645,12 @@
       "FullSetName": "Sentinel_Defense.Bio_Organic_Armor",
       "CastTime": 1.188,
       "AoEModifier": 1.0,
-      "DisplayLocation": 25
+      "DisplayLocation": 31
     },
     {
       "CastTimeReal": 0.67,
       "IsEpic": true,
-      "LocationIndex": 29,
+      "LocationIndex": 37,
       "PowerIndex": 7006,
       "PowerSetID": 3330,
       "PowerSetIndex": 1,
@@ -815,12 +815,12 @@
       "FullSetName": "Sentinel_Defense.Bio_Organic_Armor",
       "CastTime": 0.924,
       "AoEModifier": 1.0,
-      "DisplayLocation": 29
+      "DisplayLocation": 37
     },
     {
       "CastTimeReal": 0.67,
       "IsEpic": true,
-      "LocationIndex": 33,
+      "LocationIndex": 43,
       "PowerIndex": 7007,
       "PowerSetID": 3330,
       "PowerSetIndex": 2,
@@ -1431,7 +1431,7 @@
       "FullSetName": "Sentinel_Defense.Bio_Organic_Armor",
       "CastTime": 0.924,
       "AoEModifier": 1.0,
-      "DisplayLocation": 33
+      "DisplayLocation": 43
     },
     {
       "CastTimeReal": 0.67,

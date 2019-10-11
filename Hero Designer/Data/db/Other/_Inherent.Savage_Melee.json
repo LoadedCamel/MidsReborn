@@ -23,7 +23,6 @@
     {
       "IsEpic": true,
       "LocationIndex": 6,
-      "IsModified": true,
       "PowerIndex": 5602,
       "PowerSetID": 2882,
       "StaticIndex": 10085,
@@ -208,6 +207,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 1,
           "EffectType": 25,
           "Summon": "",
           "nSummon": -1,
