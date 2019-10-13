@@ -1198,12 +1198,11 @@ public static class Enums
         BoxingBuff,
         KickBuff,
         Supremacy,
+        SupremacyAndBuffPwr,
         PetTier2,
         PetTier3,
         PetBuffPwr,
-        NotPetBuffPwr,
-        PetT2AndBuffPwr,
-        PetT3AndBuffPwr
+        NotPetBuffPwr
     }
 
     public enum eDDStyle

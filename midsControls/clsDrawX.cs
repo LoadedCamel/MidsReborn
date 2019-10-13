@@ -469,19 +469,19 @@ namespace midsControls
                         switch (iSlot.PowerSet.SetType)
                         {
                             case Enums.ePowerSetType.Primary:
-                                text2 = "(Pri)";
+                                text2 = "";
                                 break;
                             case Enums.ePowerSetType.Secondary:
-                                text2 = "(Sec)";
+                                text2 = "";
                                 break;
                             case Enums.ePowerSetType.Ancillary:
-                                text2 = "(Epic)";
+                                text2 = "";
                                 break;
                             case Enums.ePowerSetType.Inherent:
                                 text2 = "";
                                 break;
                             case Enums.ePowerSetType.Pool:
-                                text2 = "(Pool)";
+                                text2 = "";
                                 break;
                         }
 

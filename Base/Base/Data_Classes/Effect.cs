@@ -1501,11 +1501,15 @@ namespace Base.Data_Classes
                         return true;
                     break;
                 case Enums.eSpecialCase.Supremacy:
-                    if (MidsContext.Character.Supremacy)
+                    if (MidsContext.Character.Supremacy && !MidsContext.Character.PetBuffPwr)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.SupremacyAndBuffPwr:
+                    if (MidsContext.Character.Supremacy && MidsContext.Character.PetBuffPwr)
                         return true;
                     break;
                 case Enums.eSpecialCase.PetTier2:
-                    if (MidsContext.Character.PetTier2 && !MidsContext.Character.PetBuffPwr)
+                    if (MidsContext.Character.PetTier2)
                         return true;
                     break;
                 case Enums.eSpecialCase.PetTier3:
@@ -1518,14 +1522,6 @@ namespace Base.Data_Classes
                     break;
                 case Enums.eSpecialCase.NotPetBuffPwr:
                     if (!MidsContext.Character.PetBuffPwr)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PetT2AndBuffPwr:
-                    if (MidsContext.Character.PetTier2 && MidsContext.Character.PetBuffPwr)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PetT3AndBuffPwr:
-                    if (MidsContext.Character.PetTier3 && MidsContext.Character.PetBuffPwr)
                         return true;
                     break;
             }
@@ -1721,11 +1717,15 @@ namespace Base.Data_Classes
                         return true;
                     break;
                 case Enums.eSpecialCase.Supremacy:
-                    if (MidsContext.Character.Supremacy)
+                    if (MidsContext.Character.Supremacy && !MidsContext.Character.PetBuffPwr)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.SupremacyAndBuffPwr:
+                    if (MidsContext.Character.Supremacy && MidsContext.Character.PetBuffPwr)
                         return true;
                     break;
                 case Enums.eSpecialCase.PetTier2:
-                    if (MidsContext.Character.PetTier2 && !MidsContext.Character.PetBuffPwr)
+                    if (MidsContext.Character.PetTier2)
                         return true;
                     break;
                 case Enums.eSpecialCase.PetTier3:
@@ -1738,14 +1738,6 @@ namespace Base.Data_Classes
                     break;
                 case Enums.eSpecialCase.NotPetBuffPwr:
                     if (!MidsContext.Character.PetBuffPwr)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PetT2AndBuffPwr:
-                    if (MidsContext.Character.PetTier2 && MidsContext.Character.PetBuffPwr)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PetT3AndBuffPwr:
-                    if (MidsContext.Character.PetTier3 && MidsContext.Character.PetBuffPwr)
                         return true;
                     break;
             }

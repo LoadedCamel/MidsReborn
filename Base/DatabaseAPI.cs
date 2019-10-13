@@ -568,7 +568,7 @@ public static class DatabaseAPI
     public static void SaveMainDatabase(ISerialize serializer)
     {
         string path = Files.SelectDataFileSave(Files.MxdbFileDB);
-        SaveMainDbRaw(serializer, path, MainDbName);
+        //SaveMainDbRaw(serializer, path, MainDbName);
         FileStream fileStream;
         BinaryWriter writer;
         try
