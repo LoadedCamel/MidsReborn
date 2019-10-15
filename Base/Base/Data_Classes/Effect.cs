@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -592,7 +593,8 @@ namespace Base.Data_Classes
             }
             else if (Probability < 1.0)
             {
-                iValue1 = Probability < 0.975000023841858 ? (Probability * 100f).ToString("#0") + "% chance" : (Probability * 100f).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
+                //iValue1 = Probability < 0.975000023841858 ? (Probability * 100f).ToString("#0") + "% chance" : (Probability * 100f).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
+                iValue1 = Probability.ToString("P1").Replace(".0","") + " chance";
                 if (CancelOnMiss)
                     iValue1 += ", CancelOnMiss";
             }
@@ -1524,6 +1526,14 @@ namespace Base.Data_Classes
                     if (!MidsContext.Character.PetBuffPwr)
                         return true;
                     break;
+                case Enums.eSpecialCase.FastSnipe:
+                    if (MidsContext.Character.FastSnipe)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotFastSnipe:
+                    if (!MidsContext.Character.FastSnipe)
+                        return true;
+                    break;
             }
             return false;
         }
@@ -1738,6 +1748,14 @@ namespace Base.Data_Classes
                     break;
                 case Enums.eSpecialCase.NotPetBuffPwr:
                     if (!MidsContext.Character.PetBuffPwr)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.FastSnipe:
+                    if (MidsContext.Character.FastSnipe)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotFastSnipe:
+                    if (!MidsContext.Character.FastSnipe)
                         return true;
                     break;
             }

@@ -1202,7 +1202,9 @@ public static class Enums
         PetTier2,
         PetTier3,
         PetBuffPwr,
-        NotPetBuffPwr
+        NotPetBuffPwr,
+        FastSnipe,
+        NotFastSnipe
     }
 
     public enum eDDStyle

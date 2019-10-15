@@ -146,6 +146,10 @@ namespace Base.Data_Classes
         public bool PetBuffPwr { get; private set; }
         public bool NotPetBuffPwr { get; private set; }
 
+        //Sniper Attacks
+        public bool FastSnipe { get; private set; }
+        public bool NotFastSnipe { get; private set; }
+
         public Dictionary<string, float> ModifyEffects { get; protected set; }
 
         public TotalStatistics Totals { get; }
@@ -358,6 +362,8 @@ namespace Base.Data_Classes
             PetTier3 = false;
             PetBuffPwr = false;
             NotPetBuffPwr = true;
+            FastSnipe = false;
+            NotFastSnipe = true;
             Totals.Init();
             TotalsCapped.Init();
             RequestedLevel = -1;
@@ -392,6 +398,8 @@ namespace Base.Data_Classes
             PetTier3 = false;
             PetBuffPwr = false;
             NotPetBuffPwr = true;
+            FastSnipe = false;
+            NotFastSnipe = true;
 
             foreach (var power in CurrentBuild.Powers)
             {
@@ -510,6 +518,10 @@ namespace Base.Data_Classes
                     case "PACK_MENTALITY":
                         PetBuffPwr = true;
                         NotPetBuffPwr = false;
+                        break;
+                    case "FAST_SNIPE":
+                        FastSnipe = true;
+                        NotFastSnipe = false;
                         break;
                 }
             }
