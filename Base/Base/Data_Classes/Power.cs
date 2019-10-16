@@ -446,6 +446,9 @@ namespace Base.Data_Classes
             IgnoreStrength = reader.ReadBoolean();
             DescShort = reader.ReadString();
             DescLong = reader.ReadString();
+            Enhancements = new int[reader.ReadInt32() + 1];
+            for (int index = 0; index <= Enhancements.Length - 1; ++index)
+                Enhancements[index] = reader.ReadInt32();
             SetTypes = new Enums.eSetType[reader.ReadInt32() + 1];
             for (int index = 0; index <= SetTypes.Length - 1; ++index)
                 SetTypes[index] = (Enums.eSetType)reader.ReadInt32();
@@ -589,6 +592,9 @@ namespace Base.Data_Classes
             writer.Write(IgnoreStrength);
             writer.Write(DescShort);
             writer.Write(DescLong);
+            writer.Write(Enhancements.Length - 1);
+            for (int index = 0; index <= Enhancements.Length - 1; ++index)
+                writer.Write(Enhancements[index]);
             writer.Write(SetTypes.Length - 1);
             for (int index = 0; index <= SetTypes.Length - 1; ++index)
                 writer.Write((int)SetTypes[index]);

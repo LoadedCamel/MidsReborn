@@ -1721,6 +1721,7 @@ public static class DatabaseAPI
         }
     }
 
+
     public static void MatchEnhancementIDs()
     {
         for (int index1 = 0; index1 <= Database.Power.Length - 1; ++index1)
@@ -1732,7 +1733,16 @@ public static class DatabaseAPI
                 if (index3 > -1)
                     intList.Add(Database.EnhancementClasses[index3].ID);
             }
-            Database.Power[index1].Enhancements = intList.ToArray();
+
+            if (Database.Power[index1].Enhancements != null)
+            {
+                //do nothing
+            }
+            else
+            {
+                Database.Power[index1].Enhancements = intList.ToArray();
+            }
+                
         }
         for (int index = 0; index <= Database.EnhancementSets.Count - 1; ++index)
             Database.EnhancementSets[index].Enhancements = new int[0];
