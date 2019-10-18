@@ -143,8 +143,8 @@ namespace Base.Data_Classes
         public bool SupremacyAndBuffPwr { get; private set; }
         public bool PetTier2 { get; private set; }
         public bool PetTier3 { get; private set; }
-        public bool PetBuffPwr { get; private set; }
-        public bool NotPetBuffPwr { get; private set; }
+        public bool PackMentality { get; private set; }
+        public bool NotPackMentality { get; private set; }
 
         //Sniper Attacks
         public bool FastSnipe { get; private set; }
@@ -360,8 +360,8 @@ namespace Base.Data_Classes
             SupremacyAndBuffPwr = false;
             PetTier2 = false;
             PetTier3 = false;
-            PetBuffPwr = false;
-            NotPetBuffPwr = true;
+            PackMentality = false;
+            NotPackMentality = true;
             FastSnipe = false;
             NotFastSnipe = true;
             Totals.Init();
@@ -396,8 +396,8 @@ namespace Base.Data_Classes
             SupremacyAndBuffPwr = false;
             PetTier2 = false;
             PetTier3 = false;
-            PetBuffPwr = false;
-            NotPetBuffPwr = true;
+            PackMentality = false;
+            NotPackMentality = true;
             FastSnipe = false;
             NotFastSnipe = true;
 
@@ -516,8 +516,8 @@ namespace Base.Data_Classes
                         PetTier3 = true;
                         break;
                     case "PACK_MENTALITY":
-                        PetBuffPwr = true;
-                        NotPetBuffPwr = false;
+                        PackMentality = true;
+                        NotPackMentality = false;
                         break;
                     case "FAST_SNIPE":
                         FastSnipe = true;

@@ -1201,8 +1201,8 @@ public static class Enums
         SupremacyAndBuffPwr,
         PetTier2,
         PetTier3,
-        PetBuffPwr,
-        NotPetBuffPwr,
+        PackMentality,
+        NotPackMentality,
         FastSnipe,
         NotFastSnipe
     }

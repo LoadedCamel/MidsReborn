@@ -1503,11 +1503,11 @@ namespace Base.Data_Classes
                         return true;
                     break;
                 case Enums.eSpecialCase.Supremacy:
-                    if (MidsContext.Character.Supremacy && !MidsContext.Character.PetBuffPwr)
+                    if (MidsContext.Character.Supremacy && !MidsContext.Character.PackMentality)
                         return true;
                     break;
                 case Enums.eSpecialCase.SupremacyAndBuffPwr:
-                    if (MidsContext.Character.Supremacy && MidsContext.Character.PetBuffPwr)
+                    if (MidsContext.Character.Supremacy && MidsContext.Character.PackMentality)
                         return true;
                     break;
                 case Enums.eSpecialCase.PetTier2:
@@ -1518,12 +1518,12 @@ namespace Base.Data_Classes
                     if (MidsContext.Character.PetTier3)
                         return true;
                     break;
-                case Enums.eSpecialCase.PetBuffPwr:
-                    if (MidsContext.Character.PetBuffPwr)
+                case Enums.eSpecialCase.PackMentality:
+                    if (MidsContext.Character.PackMentality)
                         return true;
                     break;
-                case Enums.eSpecialCase.NotPetBuffPwr:
-                    if (!MidsContext.Character.PetBuffPwr)
+                case Enums.eSpecialCase.NotPackMentality:
+                    if (!MidsContext.Character.PackMentality)
                         return true;
                     break;
                 case Enums.eSpecialCase.FastSnipe:
@@ -1727,11 +1727,11 @@ namespace Base.Data_Classes
                         return true;
                     break;
                 case Enums.eSpecialCase.Supremacy:
-                    if (MidsContext.Character.Supremacy && !MidsContext.Character.PetBuffPwr)
+                    if (MidsContext.Character.Supremacy && !MidsContext.Character.PackMentality)
                         return true;
                     break;
                 case Enums.eSpecialCase.SupremacyAndBuffPwr:
-                    if (MidsContext.Character.Supremacy && MidsContext.Character.PetBuffPwr)
+                    if (MidsContext.Character.Supremacy && MidsContext.Character.PackMentality)
                         return true;
                     break;
                 case Enums.eSpecialCase.PetTier2:
@@ -1742,12 +1742,12 @@ namespace Base.Data_Classes
                     if (MidsContext.Character.PetTier3)
                         return true;
                     break;
-                case Enums.eSpecialCase.PetBuffPwr:
-                    if (MidsContext.Character.PetBuffPwr)
+                case Enums.eSpecialCase.PackMentality:
+                    if (MidsContext.Character.PackMentality)
                         return true;
                     break;
-                case Enums.eSpecialCase.NotPetBuffPwr:
-                    if (!MidsContext.Character.PetBuffPwr)
+                case Enums.eSpecialCase.NotPackMentality:
+                    if (!MidsContext.Character.PackMentality)
                         return true;
                     break;
                 case Enums.eSpecialCase.FastSnipe:

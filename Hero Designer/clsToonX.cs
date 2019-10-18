@@ -31,6 +31,8 @@ namespace Hero_Designer
         {
             if (!MidsContext.Config.Inc.DisablePvE)
             {
+                /*for (int i = 0; i <= Totals.Def.Length - 1; i++)
+                    Totals.Def(i) = CalculatePvpDr(Totals.Def(i), 1.2, 1.0);*/
             }
         }
 
