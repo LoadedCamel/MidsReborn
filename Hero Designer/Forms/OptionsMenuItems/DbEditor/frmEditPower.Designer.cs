@@ -1488,7 +1488,7 @@ namespace Hero_Designer
             this.pbEnhancements.Location = new System.Drawing.Point(24, 28);
             this.pbEnhancements.Name = "pbEnhancements";
 
-            this.pbEnhancements.Size = new System.Drawing.Size(416, 40);
+            this.pbEnhancements.Size = new System.Drawing.Size(780, 40);
             this.pbEnhancements.TabIndex = 43;
             this.pbEnhancements.TabStop = false;
             this.pbEnhancements.MouseDown += this.pbEnhancements_MouseDown;
@@ -1561,7 +1561,7 @@ namespace Hero_Designer
             this.pbInvSetUsed.Location = new System.Drawing.Point(24, 28);
             this.pbInvSetUsed.Name = "pbInvSetUsed";
 
-            this.pbInvSetUsed.Size = new System.Drawing.Size(316, 40);
+            this.pbInvSetUsed.Size = new System.Drawing.Size(780, 40);
             this.pbInvSetUsed.TabIndex = 90;
             this.pbInvSetUsed.TabStop = false;
             this.pbInvSetUsed.MouseDown += this.pbInvSetUsed_MouseDown;

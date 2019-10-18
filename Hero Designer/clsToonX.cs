@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -14,6 +15,8 @@ using Base.Master_Classes;
 using midsControls;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System.Text.RegularExpressions;
+using Base;
 
 namespace Hero_Designer
 {
@@ -523,6 +526,38 @@ namespace Hero_Designer
             TotalsCapped.Perception = Math.Min(TotalsCapped.Perception, Archetype.PerceptionCap);
         }
 
+        /* DO NOT USE **TESTING ONLY**
+        void CloneParentEnh(int iIndex)
+        {
+            try
+            {
+                int parentIndex = -1;
+                switch (CurrentBuild.Powers[iIndex].Power.FullName)
+                {
+                    case "Mastermind_Summon.Beast_Mastery.Summon_Wolves":
+                        parentIndex = iIndex;
+                        break;
+                    case "Mastermind_Summon.Beast_Mastery.Howler_Wolf_H":
+                        if (parentIndex != -1)
+                        {
+                            CurrentBuild.Powers[iIndex].Slots = CurrentBuild.Powers[parentIndex].Slots;
+                            CurrentBuild.Powers[iIndex].Power.Enhancements =
+                                CurrentBuild.Powers[parentIndex].Power.Enhancements;
+                            for (int i = 0; i <= CurrentBuild.Powers[parentIndex].Power.Effects.Length - 1; ++i)
+                            {
+                                CurrentBuild.Powers[iIndex].Power.Effects[i].Enhancement.Effect[i] =
+                                    CurrentBuild.Powers[parentIndex].Power.Effects[i].Enhancement.Effect[i];
+                            }
+                        }
+
+                        break;
+                }
+            }
+            catch
+            {
+            }
+        }*/
+
         bool GBPA_AddEnhFX(ref IPower iPower, int iIndex)
         {
             if (MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower == null)
@@ -872,7 +907,9 @@ namespace Hero_Designer
             for (int hIDX = 0; hIDX <= CurrentBuild.Powers.Count - 1; ++hIDX)
             {
                 if (CurrentBuild.Powers[hIDX].NIDPower > -1)
+                {
                     _mathPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX);
+                }
             }
 
             for (int index1 = 0; index1 <= CurrentBuild.Powers.Count - 1; ++index1)
