@@ -5061,11 +5061,41 @@ namespace Hero_Designer
 
         void tsUpdateCheck_Click(object sender, EventArgs e) => TryUpdate();
 
-        void tsView2Col_Click(object sender, EventArgs e) => setColumns(2);
+        void tsView2Col_Click(object sender, EventArgs e)
+        {
+            tsView3Col.Checked = false;
+            tsView4Col.Checked = false;
+            tsView6Col.Checked = false;
+            tsView2Col.Checked = true;
+            setColumns(2);
+        }
 
-        void tsView3Col_Click(object sender, EventArgs e) => setColumns(3);
+        void tsView3Col_Click(object sender, EventArgs e)
+        {
+            tsView2Col.Checked = false;
+            tsView4Col.Checked = false;
+            tsView6Col.Checked = false;
+            tsView3Col.Checked = true;
+            setColumns(3);
+        }
 
-        void tsView4Col_Click(object sender, EventArgs e) => setColumns(4);
+        void tsView4Col_Click(object sender, EventArgs e)
+        {
+            tsView2Col.Checked = false;
+            tsView3Col.Checked = false;
+            tsView6Col.Checked = false;
+            tsView4Col.Checked = true;
+            setColumns(4);
+        }
+
+        void tsView6Col_Click(object sender, EventArgs e)
+        {
+            tsView2Col.Checked = false;
+            tsView3Col.Checked = false;
+            tsView4Col.Checked = false;
+            tsView6Col.Checked = true;
+            setColumns(6);
+        }
 
         void tsViewActualDamage_New_Click(object sender, EventArgs e)
         {

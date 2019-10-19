@@ -41,7 +41,7 @@ namespace midsControls
             {
                 if (value == vcCols)
                     return;
-                if (value < 2 | value > 4)
+                if (value < 2 | value > 6)
                     return;
                 vcCols = value;
                 vcRowsPowers = checked((int) Math.Round(24.0 / vcCols));
@@ -65,7 +65,7 @@ namespace midsControls
             //VillainColor = false;
             ScaleValue = 2f;
             Scaling = true;
-            vcCols = 6;
+            vcCols = 4;
             vcRowsPowers = 12;
             bxPower = new ExtendedBitmap[4];
             checked
@@ -1175,50 +1175,566 @@ namespace midsControls
 
         int[][] GetInherentGrid()
         {
+            switch (vcCols)
+            {
+                case 2:
+                    if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
+                    {
+                        return new[]
+                        {
+                            new[]
+                            {
+                                0, 1
+                            },
+                            new[]
+                            {
+                                2, 3
+                            },
+                            new[]
+                            {
+                                4, 5
+                            },
+                            new[]
+                            {
+                                6, 7
+                            },
+                            new[]
+                            {
+                                8, 9
+                            },
+                            new[]
+                            {
+                                10, 11
+                            },
+                            new[]
+                            {
+                                12, 13
+                            },
+                            new[]
+                            {
+                                14, 15
+                            },
+                            new[]
+                            {
+                                16, 17
+                            },
+                            new[]
+                            {
+                                18, 19
+                            },
+                            new[]
+                            {
+                                20, 21
+                            },
+                            new[]
+                            {
+                                22, 23
+                            },
+                            new[]
+                            {
+                                24, 25
+                            },
+                            new[]
+                            {
+                                26, 27
+                            },
+                            new[]
+                            {
+                                28, 29
+                            },
+                            new[]
+                            {
+                                30, 31
+                            },
+                            new[]
+                            {
+                                32, 33
+                            },
+                            new[]
+                            {
+                                34, 35
+                            },
+                            new[]
+                            {
+                                36, 37
+                            },
+                            new[]
+                            {
+                                38, 39
+                            },
+                            new[]
+                            {
+                                40, 41
+                            },
+                            new[]
+                            {
+                                42, 43
+                            },
+                            new[]
+                            {
+                                44, 45
+                            },
+                            new[]
+                            {
+                                46, 47
+                            },
+                            new[]
+                            {
+                                48, 49
+                            },
+                            new[]
+                            {
+                                50, 51
+                            },
+                            new[]
+                            {
+                                52, 53
+                            },
+                            new[]
+                            {
+                                54, 55
+                            },
+                            new[]
+                            {
+                                56, 57
+                            },
+                            new[]
+                            {
+                                58, 59
+                            }
+                        };
+                    }
+
+                    return new[]
+                    {
+                        new[]
+                        {
+                            0, 1
+                        },
+                        new[]
+                        {
+                            2, 3
+                        },
+                        new[]
+                        {
+                            4, 5
+                        },
+                        new[]
+                        {
+                            6, 7
+                        },
+                        new[]
+                        {
+                            8, 9
+                        },
+                        new[]
+                        {
+                            10, 11
+                        },
+                        new[]
+                        {
+                            12, 13
+                        },
+                        new[]
+                        {
+                            14, 15
+                        },
+                        new[]
+                        {
+                            16, 17
+                        },
+                        new[]
+                        {
+                            18, 19
+                        },
+                        new[]
+                        {
+                            20, 21
+                        },
+                        new[]
+                        {
+                            22, 23
+                        },
+                        new[]
+                        {
+                            24, 25
+                        },
+                        new[]
+                        {
+                            26, 27
+                        },
+                        new[]
+                        {
+                            28, 29
+                        },
+                        new[]
+                        {
+                            30, 31
+                        },
+                        new[]
+                        {
+                            32, 33
+                        },
+                        new[]
+                        {
+                            34, 35
+                        },
+                        new[]
+                        {
+                            36, 37
+                        },
+                        new[]
+                        {
+                            38, 39
+                        },
+                        new[]
+                        {
+                            40, 41
+                        },
+                        new[]
+                        {
+                            42, 43
+                        },
+                        new[]
+                        {
+                            44, 45
+                        },
+                        new[]
+                        {
+                            46, 47
+                        },
+                        new[]
+                        {
+                            48, 49
+                        },
+                        new[]
+                        {
+                            50, 51
+                        },
+                        new[]
+                        {
+                            52, 53
+                        },
+                        new[]
+                        {
+                            54, 55
+                        },
+                        new[]
+                        {
+                            56, 57
+                        },
+                        new[]
+                        {
+                            58, 59
+                        }
+                    };
+                case 4:
+                    if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
+                    {
+                        return new[]
+                        {
+                            new[]
+                            {
+                                0, 1, 2, 3
+                            },
+                            new[]
+                            {
+                                4, 5, 6, 7
+                            },
+                            new[]
+                            {
+                                8, 9, 10, 11
+                            },
+                            new[]
+                            {
+                                12, 13, 14, 15
+                            },
+                            new[]
+                            {
+                                16, 17, 18, 19
+                            },
+                            new[]
+                            {
+                                20, 21, 22, 23
+                            },
+                            new[]
+                            {
+                                24, 25, 26, 27
+                            },
+                            new[]
+                            {
+                                28, 29, 30, 31
+                            },
+                            new[]
+                            {
+                                32, 33, 34, 35
+                            },
+                            new[]
+                            {
+                                36, 37, 38, 39
+                            },
+                            new[]
+                            {
+                                40, 41, 42, 43
+                            },
+                            new[]
+                            {
+                                44, 45, 46, 47
+                            },
+                            new[]
+                            {
+                                48, 49, 50, 51
+                            },
+                            new[]
+                            {
+                                52, 53, 54, 55
+                            },
+                            new[]
+                            {
+                                56, 57, 58, 59
+                            }
+                        };
+                    }
+
+                    return new[]
+                    {
+                        new[]
+                        {
+                            0, 1, 2, 3
+                        },
+                        new[]
+                        {
+                            4, 5, 6, 7
+                        },
+                        new[]
+                        {
+                            8, 9, 10, 11
+                        },
+                        new[]
+                        {
+                            12, 13, 14, 15
+                        },
+                        new[]
+                        {
+                            16, 17, 18, 19
+                        },
+                        new[]
+                        {
+                            20, 21, 22, 23
+                        },
+                        new[]
+                        {
+                            24, 25, 26, 27
+                        },
+                        new[]
+                        {
+                            28, 29, 30, 31
+                        },
+                        new[]
+                        {
+                            32, 33, 34, 35
+                        },
+                        new[]
+                        {
+                            36, 37, 38, 39
+                        },
+                        new[]
+                        {
+                            40, 41, 42, 43
+                        },
+                        new[]
+                        {
+                            44, 45, 46, 47
+                        },
+                        new[]
+                        {
+                            48, 49, 50, 51
+                        },
+                        new[]
+                        {
+                            52, 53, 54, 55
+                        },
+                        new[]
+                        {
+                            56, 57, 58, 59
+                        }
+                    };
+                case 6:
+                    if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
+                    {
+                        return new[]
+                        {
+                            new[]
+                            {
+                                0, 1, 2, 3, 4, 5
+                            },
+                            new[]
+                            {
+                                6, 7, 8, 9, 10, 11
+                            },
+                            new[]
+                            {
+                                12, 13, 14, 15, 16, 17
+                            },
+                            new[]
+                            {
+                                18, 19, 20, 21, 22, 23
+                            },
+                            new[]
+                            {
+                                24, 25, 26, 27, 28, 29
+                            },
+                            new[]
+                            {
+                                30, 31, 32, 33, 34, 35
+                            },
+                            new[]
+                            {
+                                36, 37, 38, 39, 40, 41
+                            },
+                            new[]
+                            {
+                                42, 43, 44, 45, 46, 47
+                            },
+                            new[]
+                            {
+                                48, 49, 50, 51, 52, 53
+                            },
+                            new[]
+                            {
+                                54, 55, 56, 57, 58, 59
+                            }
+                        };
+                    }
+
+                    return new[]
+                    {
+                        new[]
+                        {
+                            0, 1, 2, 3, 4, 5
+                        },
+                        new[]
+                        {
+                            6, 7, 8, 9, 10, 11
+                        },
+                        new[]
+                        {
+                            12, 13, 14, 15, 16, 17
+                        },
+                        new[]
+                        {
+                            18, 19, 20, 21, 22, 23
+                        },
+                        new[]
+                        {
+                            24, 25, 26, 27, 28, 29
+                        },
+                        new[]
+                        {
+                            30, 31, 32, 33, 34, 35
+                        },
+                        new[]
+                        {
+                            36, 37, 38, 39, 40, 41
+                        },
+                        new[]
+                        {
+                            42, 43, 44, 45, 46, 47
+                        },
+                        new[]
+                        {
+                            48, 49, 50, 51, 52, 53
+                        },
+                        new[]
+                        {
+                            54, 55, 56, 57, 58, 59
+                        }
+                    };
+            }
+
             if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
             {
-
                 return new[]
                 {
                     new[]
                     {
-                        0, 1, 2, 3, 4, 5
+                        0, 1, 2
                     },
                     new[]
                     {
-                        6, 7, 8, 9, 10, 11
+                        3, 4, 5
                     },
                     new[]
                     {
-                        12, 13, 14, 15, 16, 17
+                        6, 7, 8
                     },
                     new[]
                     {
-                        18, 19, 20, 21, 22, 23
+                        9, 10, 11
                     },
                     new[]
                     {
-                        24, 25, 26, 27, 28, 29
+                        12, 13, 14
                     },
                     new[]
                     {
-                        30, 31, 32, 33, 34, 35
+                        15, 16, 17
                     },
                     new[]
                     {
-                        36, 37, 38, 39, 40, 41
+                        18, 19, 20
                     },
                     new[]
                     {
-                        42, 43, 44, 45, 46, 47
+                        21, 22, 23
                     },
                     new[]
                     {
-                        48, 49, 50, 51, 52, 53
+                        24, 25, 26
                     },
                     new[]
                     {
-                        54, 55, 56, 57, 58, 59
+                        27, 28, 29
+                    },
+                    new[]
+                    {
+                        30, 31, 32
+                    },
+                    new[]
+                    {
+                        33, 34, 35
+                    },
+                    new[]
+                    {
+                        36, 37, 38
+                    },
+                    new[]
+                    {
+                        39, 40, 41
+                    },
+                    new[]
+                    {
+                        42, 43, 44
+                    },
+                    new[]
+                    {
+                        45, 46, 47
+                    },
+                    new[]
+                    {
+                        48, 49, 50
+                    },
+                    new[]
+                    {
+                        51, 52, 53
+                    },
+                    new[]
+                    {
+                        54, 55, 56
+                    },
+                    new[]
+                    {
+                        57, 58, 59
                     }
                 };
             }
@@ -1227,43 +1743,83 @@ namespace midsControls
             {
                 new[]
                 {
-                    0, 1, 2, 3, 4, 5
+                    0, 1, 2
                 },
                 new[]
                 {
-                    6, 7, 8, 9, 10, 11
+                    3, 4, 5
                 },
                 new[]
                 {
-                    12, 13, 14, 15, 16, 17
+                    6, 7, 8
                 },
                 new[]
                 {
-                    18, 19, 20, 21, 22, 23
+                    9, 10, 11
                 },
                 new[]
                 {
-                    24, 25, 26, 27, 28, 29
+                    12, 13, 14
                 },
                 new[]
                 {
-                    30, 31, 32, 33, 34, 35
+                    15, 16, 17
                 },
                 new[]
                 {
-                    36, 37, 38, 39, 40, 41
+                    18, 19, 20
                 },
                 new[]
                 {
-                    42, 43, 44, 45, 46, 47
+                    21, 22, 23
                 },
                 new[]
                 {
-                    48, 49, 50, 51, 52, 53
+                    24, 25, 26
                 },
                 new[]
                 {
-                    54, 55, 56, 57, 58, 59
+                    27, 28, 29
+                },
+                new[]
+                {
+                    30, 31, 32
+                },
+                new[]
+                {
+                    33, 34, 35
+                },
+                new[]
+                {
+                    36, 37, 38
+                },
+                new[]
+                {
+                    39, 40, 41
+                },
+                new[]
+                {
+                    42, 43, 44
+                },
+                new[]
+                {
+                    45, 46, 47
+                },
+                new[]
+                {
+                    48, 49, 50
+                },
+                new[]
+                {
+                    51, 52, 53
+                },
+                new[]
+                {
+                    54, 55, 56
+                },
+                new[]
+                {
+                    57, 58, 59
                 }
             };
         }
@@ -1435,7 +1991,7 @@ namespace midsControls
         Size GetMaxDrawingArea()
         {
             int cols = vcCols;
-            MiniSetCol(4);
+            MiniSetCol(6);
             Size result = (Size) PowerPosition(23);
             MiniSetCol(2);
             int[][] inherentGrid = GetInherentGrid();
@@ -1465,8 +2021,8 @@ namespace midsControls
                 return;
             if (cols < 2 | cols > 6)
                 return;
-            vcCols = 8;
-            vcRowsPowers = checked((int) Math.Round(36.0 / vcCols));
+            vcCols = cols;
+            vcRowsPowers = checked((int) Math.Round(24.0 / vcCols));
         }
 
         public Size GetRequiredDrawingArea()
