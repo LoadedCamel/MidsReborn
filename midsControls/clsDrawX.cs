@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Windows.Forms;
+using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
@@ -1847,61 +1848,454 @@ namespace midsControls
                 bool flag = false;
                 int iRow = 0;
                 int iCol = 0;
+                if (powerEntry.Chosen)
+                {
+                    if (displayLocation != -1 && powerEntry.Power != null)
+                    {
+                        switch (vcCols)
+                        {
+                            case 4:
+                                if (powerEntry.Power.GroupName.Equals("Inherent"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Brawl"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 8;
+                                    }
+                                    else if (powName.Equals("Sprint"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Rest"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("Swift"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 1;
+                                    }
+                                    else if (powName.Equals("Health"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 5;
+                                    }
+                                    else if (powName.Equals("Hurdle"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 9;
+                                    }
+                                    else if (powName.Equals("Stamina"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                else
+                                {
+                                    displayLocation = powerEntry.Power.DisplayLocation;
+                                }
+                                break;
+                            case 6:
+                                if (powerEntry.Power.GroupName.Equals("Inherent"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Brawl"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 1;
+                                    }
+                                    else if (powName.Equals("Sprint"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 7;
+                                    }
+                                    else if (powName.Equals("Rest"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("Swift"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 2;
+                                    }
+                                    else if (powName.Equals("Health"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 8;
+                                    }
+                                    else if (powName.Equals("Hurdle"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Stamina"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 21;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                else
+                                {
+                                    displayLocation = powerEntry.Power.DisplayLocation;
+                                }
+                                break;
+                        }
+                    }
+                }
                 if (!powerEntry.Chosen)
                 {
                     if (displayLocation == -1 && powerEntry.Power != null)
                     {
-                        if (Operators.CompareString(powerEntry.Power.GroupName, "Incarnate", false) == 0)
+                        switch (vcCols)
                         {
-                            string setName = powerEntry.PowerSet.SetName;
-                            if (Operators.CompareString(setName, "Alpha", false) == 0)
-                            {
-                                displayLocation = 4;
-                            }
-                            else if (Operators.CompareString(setName, "Judgement", false) == 0)
-                            {
-                                displayLocation = 5;
-                            }
-                            else if (Operators.CompareString(setName, "Interface", false) == 0)
-                            {
-                                displayLocation = 10;
-                            }
-                            else if (Operators.CompareString(setName, "Lore", false) == 0)
-                            {
-                                displayLocation = 11;
-                            }
-                            else if (Operators.CompareString(setName, "Destiny", false) == 0)
-                            {
-                                displayLocation = 16;
-                            }
-                            else if (Operators.CompareString(setName, "Hybrid", false) == 0)
-                            {
-                                displayLocation = 17;
-                            }
-                            else if (Operators.CompareString(setName, "Genesis", false) == 0)
-                            {
-                                displayLocation = 22;
-                            }
-                            else if (Operators.CompareString(setName, "Stance", false) == 0)
-                            {
-                                displayLocation = 23;
-                            }
-                            else if (Operators.CompareString(setName, "Vitae", false) == 0)
-                            {
-                                displayLocation = 28;
-                            }
-                            else if (Operators.CompareString(setName, "Omega", false) == 0)
-                            {
-                                displayLocation = 29;
-                            }
-                            else
-                            {
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                        }
-                        else
-                        {
-                            displayLocation = powerEntry.Power.DisplayLocation;
+                            case 3:
+                                if (powerEntry.Power.GroupName.Equals("Inherent"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Brawl"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else if (powName.Equals("Sprint"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 6;
+                                    }
+                                    else if (powName.Equals("Rest"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 9;
+                                    }
+                                    else if (powName.Equals("Swift"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 1;
+                                    }
+                                    else if (powName.Equals("Health"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 7;
+                                    }
+                                    else if (powName.Equals("Hurdle"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 4;
+                                    }
+                                    else if (powName.Equals("Stamina"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 10;
+                                    }
+                                    else if (powName.Equals("prestige_DVD_Glidep"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 2;
+                                    }
+                                    else if (powName.Equals("prestige_BestBuy_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 5;
+                                    }
+                                    else if (powName.Equals("prestige_EB_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 8;
+                                    }
+                                    else if (powName.Equals("prestige_generic_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 11;
+                                    }
+                                    else if (powName.Equals("prestige_Gamestop_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (Operators.CompareString(powerEntry.Power.GroupName, "Incarnate", false) == 0)
+                                {
+                                    string setName = powerEntry.PowerSet.SetName;
+                                    if (Operators.CompareString(setName, "Alpha", false) == 0)
+                                    {
+                                        displayLocation = 3;
+                                    }
+                                    else if (Operators.CompareString(setName, "Judgement", false) == 0)
+                                    {
+                                        displayLocation = 7;
+                                    }
+                                    else if (Operators.CompareString(setName, "Interface", false) == 0)
+                                    {
+                                        displayLocation = 11;
+                                    }
+                                    else if (Operators.CompareString(setName, "Lore", false) == 0)
+                                        {
+                                            displayLocation = 15;
+                                        }
+                                    else if (Operators.CompareString(setName, "Destiny", false) == 0)
+                                    {
+                                        displayLocation = 19;
+                                    }
+                                    else if (Operators.CompareString(setName, "Hybrid", false) == 0)
+                                    {
+                                        displayLocation = 19;
+                                    }
+                                    else if (Operators.CompareString(setName, "Genesis", false) == 0)
+                                    {
+                                        displayLocation = 23;
+                                    }
+                                    else if (Operators.CompareString(setName, "Stance", false) == 0)
+                                    {
+                                        displayLocation = 27;
+                                    }
+                                    else if (Operators.CompareString(setName, "Vitae", false) == 0)
+                                    {
+                                        displayLocation = 31;
+                                    }
+                                    else if (Operators.CompareString(setName, "Omega", false) == 0)
+                                    {
+                                        displayLocation = 35;
+                                    }
+                                    else
+                                    {
+                                        displayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                else
+                                {
+                                    displayLocation = powerEntry.Power.DisplayLocation;
+                                }
+                                break;
+                            case 4:
+                                if (powerEntry.Power.GroupName.Equals("Inherent"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Brawl"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 4;
+                                    }
+                                    else if (powName.Equals("Sprint"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 8;
+                                    }
+                                    else if (powName.Equals("Rest"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Swift"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 1;
+                                    }
+                                    else if (powName.Equals("Health"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 9;
+                                    }
+                                    else if (powName.Equals("Hurdle"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 5;
+                                    }
+                                    else if (powName.Equals("Stamina"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("prestige_DVD_Glidep"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 2;
+                                    }
+                                    else if (powName.Equals("prestige_BestBuy_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 6;
+                                    }
+                                    else if (powName.Equals("prestige_EB_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 10;
+                                    }
+                                    else if (powName.Equals("prestige_generic_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("prestige_Gamestop_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 18;
+                                    }
+                                    else if (powName.Equals("Fast_Snipe") && (MidsContext.Character.Powersets[0].FullName.Contains("Savage_Melee") || MidsContext.Character.Powersets[0].FullName.Contains("Titan_Weapons") || MidsContext.Character.Powersets[1].FullName.Contains("Savage_Melee") || MidsContext.Character.Powersets[1].FullName.Contains("Savage_Assault") || MidsContext.Character.Powersets[1].FullName.Contains("Titan_Weapons")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 7;
+                                    }
+                                    else if (powName.Equals("Fast_Snipe") && (!MidsContext.Character.Powersets[0].FullName.Contains("Savage_Melee") || !MidsContext.Character.Powersets[0].FullName.Contains("Titan_Weapons") || !MidsContext.Character.Powersets[1].FullName.Contains("Savage_Melee") || !MidsContext.Character.Powersets[1].FullName.Contains("Savage_Assault") || !MidsContext.Character.Powersets[1].FullName.Contains("Titan_Weapons")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else if (powName.Equals("Blood_Frenzy"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else if (powName.Equals("FAST_MODE"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (Operators.CompareString(powerEntry.Power.GroupName, "Incarnate", false) == 0)
+                                {
+                                    string setName = powerEntry.PowerSet.SetName;
+                                    if (Operators.CompareString(setName, "Alpha", false) == 0)
+                                    {
+                                        displayLocation = 3;
+                                    }
+                                    else if (Operators.CompareString(setName, "Judgement", false) == 0)
+                                    {
+                                        displayLocation = 7;
+                                    }
+                                    else if (Operators.CompareString(setName, "Interface", false) == 0)
+                                    {
+                                        displayLocation = 11;
+                                    }
+                                    else if (Operators.CompareString(setName, "Lore", false) == 0)
+                                        {
+                                            displayLocation = 15;
+                                        }
+                                    else if (Operators.CompareString(setName, "Destiny", false) == 0)
+                                    {
+                                        displayLocation = 19;
+                                    }
+                                    else if (Operators.CompareString(setName, "Hybrid", false) == 0)
+                                    {
+                                        displayLocation = 19;
+                                    }
+                                    else if (Operators.CompareString(setName, "Genesis", false) == 0)
+                                    {
+                                        displayLocation = 23;
+                                    }
+                                    else if (Operators.CompareString(setName, "Stance", false) == 0)
+                                    {
+                                        displayLocation = 27;
+                                    }
+                                    else if (Operators.CompareString(setName, "Vitae", false) == 0)
+                                    {
+                                        displayLocation = 31;
+                                    }
+                                    else if (Operators.CompareString(setName, "Omega", false) == 0)
+                                    {
+                                        displayLocation = 35;
+                                    }
+                                    else
+                                    {
+                                        displayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                else
+                                {
+                                    displayLocation = powerEntry.Power.DisplayLocation;
+                                }
+                                break;
+                            case 6:
+                                if (powerEntry.Power.GroupName.Equals("Inherent"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Brawl"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 1;
+                                    }
+                                    else if (powName.Equals("Sprint"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 7;
+                                    }
+                                    else if (powName.Equals("Rest"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("Swift"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 2;
+                                    }
+                                    else if (powName.Equals("Health"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Hurdle"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 8;
+                                    }
+                                    else if (powName.Equals("Stamina"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("prestige_DVD_Glidep"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else if (powName.Equals("prestige_BestBuy_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 9;
+                                    }
+                                    else if (powName.Equals("prestige_EB_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("prestige_generic_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 21;
+                                    }
+                                    else if (powName.Equals("prestige_Gamestop_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 27;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (Operators.CompareString(powerEntry.Power.GroupName, "Incarnate", false) == 0)
+                                {
+                                    string setName = powerEntry.PowerSet.SetName;
+                                    if (Operators.CompareString(setName, "Alpha", false) == 0)
+                                    {
+                                        displayLocation = 4;
+                                    }
+                                    else if (Operators.CompareString(setName, "Judgement", false) == 0)
+                                    {
+                                        displayLocation = 5;
+                                    }
+                                    else if (Operators.CompareString(setName, "Interface", false) == 0)
+                                    {
+                                        displayLocation = 10;
+                                    }
+                                    else if (Operators.CompareString(setName, "Lore", false) == 0)
+                                    {
+                                        displayLocation = 11;
+                                    }
+                                    else if (Operators.CompareString(setName, "Destiny", false) == 0)
+                                    {
+                                        displayLocation = 16;
+                                    }
+                                    else if (Operators.CompareString(setName, "Hybrid", false) == 0)
+                                    {
+                                        displayLocation = 17;
+                                    }
+                                    else if (Operators.CompareString(setName, "Genesis", false) == 0)
+                                    {
+                                        displayLocation = 22;
+                                    }
+                                    else if (Operators.CompareString(setName, "Stance", false) == 0)
+                                    {
+                                        displayLocation = 23;
+                                    }
+                                    else if (Operators.CompareString(setName, "Vitae", false) == 0)
+                                    {
+                                        displayLocation = 28;
+                                    }
+                                    else if (Operators.CompareString(setName, "Omega", false) == 0)
+                                    {
+                                        displayLocation = 29;
+                                    }
+                                    else
+                                    {
+                                        displayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                else
+                                {
+                                    displayLocation = powerEntry.Power.DisplayLocation;
+                                }
+                                break;
                         }
                     }
 

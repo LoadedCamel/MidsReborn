@@ -1117,8 +1117,8 @@ namespace Hero_Designer
             // 
             // tsView4Col
             //
-            this.tsView4Col.Checked = true;
-            this.tsView4Col.CheckState = System.Windows.Forms.CheckState.Checked;
+            //this.tsView4Col.Checked = true;
+            //this.tsView4Col.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsView4Col.Name = "tsView4Col";
             this.tsView4Col.Size = new System.Drawing.Size(282, 22);
             this.tsView4Col.Text = "&4 Columns";
