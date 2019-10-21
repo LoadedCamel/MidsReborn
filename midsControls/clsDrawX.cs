@@ -2154,54 +2154,7 @@ namespace midsControls
                                 else if (powerEntry.Power.GroupName.Equals("Incarnate") && !MidsContext.Archetype.ClassType.Equals(Enums.eClassType.HeroEpic))
                                 {
                                     string setName = powerEntry.PowerSet.SetName;
-                                    if (!MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting"))
-                                    {
-                                        if (setName.Equals("Alpha"))
-                                        {
-                                            displayLocation = 20;
-                                        }
-                                        else if (setName.Equals("Judgement"))
-                                        {
-                                            displayLocation = 21;
-                                        }
-                                        else if (setName.Equals("Interface"))
-                                        {
-                                            displayLocation = 22;
-                                        }
-                                        else if (setName.Equals("Lore"))
-                                        {
-                                            displayLocation = 23;
-                                        }
-                                        else if (setName.Equals("Destiny"))
-                                        {
-                                            displayLocation = 24;
-                                        }
-                                        else if (setName.Equals("Hybrid"))
-                                        {
-                                            displayLocation = 25;
-                                        }
-                                        else if (setName.Equals("Genesis"))
-                                        {
-                                            displayLocation = 26;
-                                        }
-                                        else if (setName.Equals("Stance"))
-                                        {
-                                            displayLocation = 27;
-                                        }
-                                        else if (setName.Equals("Vitae"))
-                                        {
-                                            displayLocation = 28;
-                                        }
-                                        else if (setName.Equals("Omega"))
-                                        {
-                                            displayLocation = 29;
-                                        }
-                                        else
-                                        {
-                                            displayLocation = powerEntry.Power.DisplayLocation;
-                                        }
-                                    }
-                                    else if (MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting"))
+                                    if (MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[1].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[1].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[0].FullName.Contains("Bio_Organic_Armor") || MidsContext.Character.Powersets[1].FullName.Contains("Bio_Organic_Armor"))
                                     {
                                         if (setName.Equals("Alpha"))
                                         {
@@ -2242,6 +2195,53 @@ namespace midsControls
                                         else if (setName.Equals("Omega"))
                                         {
                                             displayLocation = 32;
+                                        }
+                                        else
+                                        {
+                                            displayLocation = powerEntry.Power.DisplayLocation;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (setName.Equals("Alpha"))
+                                        {
+                                            displayLocation = 20;
+                                        }
+                                        else if (setName.Equals("Judgement"))
+                                        {
+                                            displayLocation = 21;
+                                        }
+                                        else if (setName.Equals("Interface"))
+                                        {
+                                            displayLocation = 22;
+                                        }
+                                        else if (setName.Equals("Lore"))
+                                        {
+                                            displayLocation = 23;
+                                        }
+                                        else if (setName.Equals("Destiny"))
+                                        {
+                                            displayLocation = 24;
+                                        }
+                                        else if (setName.Equals("Hybrid"))
+                                        {
+                                            displayLocation = 25;
+                                        }
+                                        else if (setName.Equals("Genesis"))
+                                        {
+                                            displayLocation = 26;
+                                        }
+                                        else if (setName.Equals("Stance"))
+                                        {
+                                            displayLocation = 27;
+                                        }
+                                        else if (setName.Equals("Vitae"))
+                                        {
+                                            displayLocation = 28;
+                                        }
+                                        else if (setName.Equals("Omega"))
+                                        {
+                                            displayLocation = 29;
                                         }
                                         else
                                         {
@@ -2645,54 +2645,7 @@ namespace midsControls
                                 else if (powerEntry.Power.GroupName.Equals("Incarnate") && !MidsContext.Archetype.ClassType.Equals(Enums.eClassType.HeroEpic))
                                 {
                                     string setName = powerEntry.PowerSet.SetName;
-                                    if (!MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting"))
-                                    {
-                                        if (setName.Equals("Alpha"))
-                                        {
-                                            displayLocation = 21;
-                                        }
-                                        else if (setName.Equals("Judgement"))
-                                        {
-                                            displayLocation = 22;
-                                        }
-                                        else if (setName.Equals("Interface"))
-                                        {
-                                            displayLocation = 23;
-                                        }
-                                        else if (setName.Equals("Lore"))
-                                        {
-                                            displayLocation = 24;
-                                        }
-                                        else if (setName.Equals("Destiny"))
-                                        {
-                                            displayLocation = 25;
-                                        }
-                                        else if (setName.Equals("Hybrid"))
-                                        {
-                                            displayLocation = 26;
-                                        }
-                                        else if (setName.Equals("Genesis"))
-                                        {
-                                            displayLocation = 27;
-                                        }
-                                        else if (setName.Equals("Stance"))
-                                        {
-                                            displayLocation = 28;
-                                        }
-                                        else if (setName.Equals("Vitae"))
-                                        {
-                                            displayLocation = 29;
-                                        }
-                                        else if (setName.Equals("Omega"))
-                                        {
-                                            displayLocation = 30;
-                                        }
-                                        else
-                                        {
-                                            displayLocation = powerEntry.Power.DisplayLocation;
-                                        }
-                                    }
-                                    else if (MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting"))
+                                    if (MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[1].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[1].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[0].FullName.Contains("Bio_Organic_Armor") || MidsContext.Character.Powersets[1].FullName.Contains("Bio_Organic_Armor"))
                                     {
                                         if (setName.Equals("Alpha"))
                                         {
@@ -2733,6 +2686,53 @@ namespace midsControls
                                         else if (setName.Equals("Omega"))
                                         {
                                             displayLocation = 35;
+                                        }
+                                        else
+                                        {
+                                            displayLocation = powerEntry.Power.DisplayLocation;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (setName.Equals("Alpha"))
+                                        {
+                                            displayLocation = 21;
+                                        }
+                                        else if (setName.Equals("Judgement"))
+                                        {
+                                            displayLocation = 22;
+                                        }
+                                        else if (setName.Equals("Interface"))
+                                        {
+                                            displayLocation = 23;
+                                        }
+                                        else if (setName.Equals("Lore"))
+                                        {
+                                            displayLocation = 24;
+                                        }
+                                        else if (setName.Equals("Destiny"))
+                                        {
+                                            displayLocation = 25;
+                                        }
+                                        else if (setName.Equals("Hybrid"))
+                                        {
+                                            displayLocation = 26;
+                                        }
+                                        else if (setName.Equals("Genesis"))
+                                        {
+                                            displayLocation = 27;
+                                        }
+                                        else if (setName.Equals("Stance"))
+                                        {
+                                            displayLocation = 28;
+                                        }
+                                        else if (setName.Equals("Vitae"))
+                                        {
+                                            displayLocation = 29;
+                                        }
+                                        else if (setName.Equals("Omega"))
+                                        {
+                                            displayLocation = 30;
                                         }
                                         else
                                         {
@@ -3137,49 +3137,99 @@ namespace midsControls
                                 else if (powerEntry.Power.GroupName.Equals("Incarnate") && !MidsContext.Archetype.ClassType.Equals(Enums.eClassType.HeroEpic))
                                 {
                                     string setName = powerEntry.PowerSet.SetName;
-                                    if (setName.Equals("Alpha"))
+                                    if (MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[1].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[1].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[0].FullName.Contains("Bio_Organic_Armor") || MidsContext.Character.Powersets[1].FullName.Contains("Bio_Organic_Armor"))
                                     {
-                                        displayLocation = 20;
-                                    }
-                                    else if (setName.Equals("Judgement"))
-                                    {
-                                        displayLocation = 21;
-                                    }
-                                    else if (setName.Equals("Interface"))
-                                    {
-                                        displayLocation = 24;
-                                    }
-                                    else if (setName.Equals("Lore"))
-                                    {
-                                        displayLocation = 25;
-                                    }
-                                    else if (setName.Equals("Destiny"))
-                                    {
-                                        displayLocation = 28;
-                                    }
-                                    else if (setName.Equals("Hybrid"))
-                                    {
-                                        displayLocation = 29;
-                                    }
-                                    else if (setName.Equals("Genesis"))
-                                    {
-                                        displayLocation = 32;
-                                    }
-                                    else if (setName.Equals("Stance"))
-                                    {
-                                        displayLocation = 33;
-                                    }
-                                    else if (setName.Equals("Vitae"))
-                                    {
-                                        displayLocation = 36;
-                                    }
-                                    else if (setName.Equals("Omega"))
-                                    {
-                                        displayLocation = 37;
+                                        if (setName.Equals("Alpha"))
+                                        {
+                                            displayLocation = 20;
+                                        }
+                                        else if (setName.Equals("Judgement"))
+                                        {
+                                            displayLocation = 21;
+                                        }
+                                        else if (setName.Equals("Interface"))
+                                        {
+                                            displayLocation = 24;
+                                        }
+                                        else if (setName.Equals("Lore"))
+                                        {
+                                            displayLocation = 25;
+                                        }
+                                        else if (setName.Equals("Destiny"))
+                                        {
+                                            displayLocation = 28;
+                                        }
+                                        else if (setName.Equals("Hybrid"))
+                                        {
+                                            displayLocation = 29;
+                                        }
+                                        else if (setName.Equals("Genesis"))
+                                        {
+                                            displayLocation = 32;
+                                        }
+                                        else if (setName.Equals("Stance"))
+                                        {
+                                            displayLocation = 33;
+                                        }
+                                        else if (setName.Equals("Vitae"))
+                                        {
+                                            displayLocation = 36;
+                                        }
+                                        else if (setName.Equals("Omega"))
+                                        {
+                                            displayLocation = 37;
+                                        }
+                                        else
+                                        {
+                                            displayLocation = powerEntry.Power.DisplayLocation;
+                                        }
                                     }
                                     else
                                     {
-                                        displayLocation = powerEntry.Power.DisplayLocation;
+                                        if (setName.Equals("Alpha"))
+                                        {
+                                            displayLocation = 3;
+                                        }
+                                        else if (setName.Equals("Judgement"))
+                                        {
+                                            displayLocation = 7;
+                                        }
+                                        else if (setName.Equals("Interface"))
+                                        {
+                                            displayLocation = 11;
+                                        }
+                                        else if (setName.Equals("Lore"))
+                                        {
+                                            displayLocation = 15;
+                                        }
+                                        else if (setName.Equals("Destiny"))
+                                        {
+                                            displayLocation = 19;
+                                        }
+                                        else if (setName.Equals("Hybrid"))
+                                        {
+                                            displayLocation = 23;
+                                        }
+                                        else if (setName.Equals("Genesis"))
+                                        {
+                                            displayLocation = 27;
+                                        }
+                                        else if (setName.Equals("Stance"))
+                                        {
+                                            displayLocation = 31;
+                                        }
+                                        else if (setName.Equals("Vitae"))
+                                        {
+                                            displayLocation = 35;
+                                        }
+                                        else if (setName.Equals("Omega"))
+                                        {
+                                            displayLocation = 39;
+                                        }
+                                        else
+                                        {
+                                            displayLocation = powerEntry.Power.DisplayLocation;
+                                        }
                                     }
                                 }
                                 else
