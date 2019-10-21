@@ -125,7 +125,6 @@ namespace Hero_Designer
             this.ToolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.AutoArrangeAllSlotsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsView6Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView4Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView3Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView2Col = new System.Windows.Forms.ToolStripMenuItem();
@@ -1088,12 +1087,11 @@ namespace Hero_Designer
             // 
             // ViewToolStripMenuItem
             // 
-            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[12]
+            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[11]
             {
             (System.Windows.Forms.ToolStripItem) this.tsView2Col,
             (System.Windows.Forms.ToolStripItem) this.tsView3Col,
             (System.Windows.Forms.ToolStripItem) this.tsView4Col,
-            (System.Windows.Forms.ToolStripItem) this.tsView6Col,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator13,
             (System.Windows.Forms.ToolStripItem) this.tsViewIOLevels,
             (System.Windows.Forms.ToolStripItem) this.tsViewRelative,
@@ -1107,13 +1105,6 @@ namespace Hero_Designer
             this.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem";
             this.ViewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.ViewToolStripMenuItem.Text = "&View";
-            // 
-            // tsView6Col
-            // 
-            this.tsView6Col.Name = "tsView6Col";
-            this.tsView6Col.Size = new System.Drawing.Size(282, 22);
-            this.tsView6Col.Text = "&6 Columns";
-            this.tsView6Col.Click += new System.EventHandler(tsView6Col_Click);
             // 
             // tsView4Col
             //
@@ -2103,7 +2094,6 @@ namespace Hero_Designer
         ToolStripMenuItem tsView2Col;
         ToolStripMenuItem tsView3Col;
         ToolStripMenuItem tsView4Col;
-        ToolStripMenuItem tsView6Col;
         ToolStripMenuItem tsViewActualDamage_New;
         ToolStripMenuItem tsViewData;
         ToolStripMenuItem tsViewDPS_New;

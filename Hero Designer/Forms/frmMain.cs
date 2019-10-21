@@ -5075,9 +5075,6 @@ namespace Hero_Designer
                 case 4:
                     tsView4Col.Checked = true;
                     break;
-                case 6:
-                    tsView6Col.Checked = true;
-                    break;
             }
         }
 
@@ -5085,7 +5082,6 @@ namespace Hero_Designer
         {
             tsView3Col.Checked = false;
             tsView4Col.Checked = false;
-            tsView6Col.Checked = false;
             tsView2Col.Checked = true;
             setColumns(2);
         }
@@ -5094,7 +5090,6 @@ namespace Hero_Designer
         {
             tsView2Col.Checked = false;
             tsView4Col.Checked = false;
-            tsView6Col.Checked = false;
             tsView3Col.Checked = true;
             setColumns(3);
         }
@@ -5103,18 +5098,8 @@ namespace Hero_Designer
         {
             tsView2Col.Checked = false;
             tsView3Col.Checked = false;
-            tsView6Col.Checked = false;
             tsView4Col.Checked = true;
             setColumns(4);
-        }
-
-        void tsView6Col_Click(object sender, EventArgs e)
-        {
-            tsView2Col.Checked = false;
-            tsView3Col.Checked = false;
-            tsView4Col.Checked = false;
-            tsView6Col.Checked = true;
-            setColumns(6);
         }
 
         void tsViewActualDamage_New_Click(object sender, EventArgs e)
