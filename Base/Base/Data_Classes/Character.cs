@@ -562,6 +562,9 @@ namespace Base.Data_Classes
                 case Enums.ePowerSetType.Secondary:
                     powersetType = Enums.PowersetType.Primary;
                     break;
+                case Enums.ePowerSetType.Ancillary:
+                    powersetType = Enums.PowersetType.Ancillary;
+                    break;
                 default:
                     return false;
             }

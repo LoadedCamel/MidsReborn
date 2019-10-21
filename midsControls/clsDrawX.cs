@@ -2059,7 +2059,115 @@ namespace midsControls
                                 }
                                 break;
                             case 4:
-                                if (powerEntry.Power.GroupName.Equals("Inherent"))
+                                if (powerEntry.Power.GroupName.Equals("Inherent") && (MidsContext.Archetype.ClassType == Enums.eClassType.HeroEpic))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Brawl"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 4;
+                                    }
+                                    else if (powName.Equals("Sprint"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 8;
+                                    }
+                                    else if (powName.Equals("Rest"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Swift"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 1;
+                                    }
+                                    else if (powName.Equals("Health"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 9;
+                                    }
+                                    else if (powName.Equals("Hurdle"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 5;
+                                    }
+                                    else if (powName.Equals("Stamina"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("prestige_DVD_Glidep"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("prestige_BestBuy_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 17;
+                                    }
+                                    else if (powName.Equals("prestige_EB_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("prestige_generic_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 21;
+                                    }
+                                    else if (powName.Equals("prestige_Gamestop_Sprintp"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 24;
+                                    }
+                                    else if (powName.Equals("Prestige_Ninja_Run"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 25;
+                                    }
+                                    else if (powName.Equals("Shadow_Step"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 2;
+                                    }
+                                    else if (powName.Equals("Shadow_Recall"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 6;
+                                    }
+                                    else if (powName.Equals("Dark_Nova_Bolt"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 10;
+                                    }
+                                    else if (powName.Equals("Dark_Nova_Blast"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Dark_Nova_Emanation"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 18;
+                                    }
+                                    else if (powName.Equals("Dark_Nova_Detonation"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 22;
+                                    }
+                                    else if (powName.Equals("Black_Dwarf_Strike"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else if (powName.Equals("Black_Dwarf_Smite"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 7;
+                                    }
+                                    else if (powName.Equals("Black_Dwarf_Mire"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 11;
+                                    }
+                                    else if (powName.Equals("Black_Dwarf_Drain"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Black_Dwarf_Step"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 19;
+                                    }
+                                    else if (powName.Equals("Black_Dwarf_Antagonize"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 23;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                if (powerEntry.Power.GroupName.Equals("Inherent") && !(MidsContext.Archetype.ClassType == Enums.eClassType.HeroEpic))
                                 {
                                     string powName = powerEntry.Power.PowerName;
                                     if (powName.Equals("Brawl"))
@@ -2110,21 +2218,33 @@ namespace midsControls
                                     {
                                         powerEntry.Power.DisplayLocation = 18;
                                     }
-                                    else if (powName.Equals("Fast_Snipe") && (MidsContext.Character.Powersets[0].FullName.Contains("Savage_Melee") || MidsContext.Character.Powersets[0].FullName.Contains("Titan_Weapons") || MidsContext.Character.Powersets[1].FullName.Contains("Savage_Melee") || MidsContext.Character.Powersets[1].FullName.Contains("Savage_Assault") || MidsContext.Character.Powersets[1].FullName.Contains("Titan_Weapons")))
+                                    else if (powName.Equals("Fast_Snipe"))
                                     {
-                                        powerEntry.Power.DisplayLocation = 7;
-                                    }
-                                    else if (powName.Equals("Fast_Snipe") && (!MidsContext.Character.Powersets[0].FullName.Contains("Savage_Melee") || !MidsContext.Character.Powersets[0].FullName.Contains("Titan_Weapons") || !MidsContext.Character.Powersets[1].FullName.Contains("Savage_Melee") || !MidsContext.Character.Powersets[1].FullName.Contains("Savage_Assault") || !MidsContext.Character.Powersets[1].FullName.Contains("Titan_Weapons")))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 3;
+                                        powerEntry.Power.DisplayLocation = 17;
                                     }
                                     else if (powName.Equals("Blood_Frenzy"))
                                     {
-                                        powerEntry.Power.DisplayLocation = 3;
+                                        powerEntry.Power.DisplayLocation = 16;
                                     }
                                     else if (powName.Equals("FAST_MODE"))
                                     {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("COMBO_LEVEL_1"))
+                                    {
                                         powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else if (powName.Equals("COMBO_LEVEL_2"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 7;
+                                    }
+                                    else if (powName.Equals("COMBO_LEVEL_3"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 11;
+                                    }
+                                    else if (powName.Equals("Prestige_Ninja_Run"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 22;
                                     }
                                     else
                                     {
@@ -2132,159 +2252,207 @@ namespace midsControls
                                     }
                                 }
 
-                                if (Operators.CompareString(powerEntry.Power.GroupName, "Incarnate", false) == 0)
+                                if (powerEntry.PowerSet.SetType == Enums.ePowerSetType.Ancillary && !(MidsContext.Archetype.ClassType == Enums.eClassType.HeroEpic))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Fast_Snipe"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 17;
+                                    }
+                                    else if (powName.Equals("Stomp") && (!MidsContext.Character.Powersets[2].SetName.Equals("Sorcery") || !MidsContext.Character.Powersets[3].SetName.Equals("Sorcery") || !MidsContext.Character.Powersets[4].SetName.Equals("Sorcery") || !MidsContext.Character.Powersets[5].SetName.Equals("Sorcery")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 26;
+                                    }
+                                    else if (powName.Equals("Stomp") && (MidsContext.Character.Powersets[2].SetName.Equals("Sorcery") || MidsContext.Character.Powersets[3].SetName.Equals("Sorcery") || MidsContext.Character.Powersets[4].SetName.Equals("Sorcery") || MidsContext.Character.Powersets[5].SetName.Equals("Sorcery")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 30;
+                                    }
+                                    else if (powName.Equals("Translocation"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 26;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Dual_Pistols"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Chemical_Ammunition"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else if (powName.Equals("Cryo_Ammunition"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 7;
+                                    }
+                                    else if (powName.Equals("Incendiary_Ammunition"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 11;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Staff_Fighting"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Form_of_the_Body"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Form_of_the_Mind"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 19;
+                                    }
+                                    else if (powName.Equals("Form_of_the_Soul"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 23;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Bio_Organic_Armor"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Defensive_Adaptation") && (MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[1].FullName.Contains("Staff_Fighting")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 27;
+                                    }
+                                    else if (powName.Equals("Efficient_Adaptation") && (MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[1].FullName.Contains("Staff_Fighting")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 31;
+                                    }
+                                    else if (powName.Equals("Offensive_Adaptation") && (MidsContext.Character.Powersets[0].FullName.Contains("Staff_Fighting") || MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || MidsContext.Character.Powersets[1].FullName.Contains("Staff_Fighting")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 35;
+                                    }
+                                    else if (powName.Equals("Defensive_Adaptation") && (MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Brawling")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Efficient_Adaptation") && (MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Brawling")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 19;
+                                    }
+                                    else if (powName.Equals("Offensive_Adaptation") && (MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || MidsContext.Character.Powersets[1].FullName.Contains("Brawling")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 23;
+                                    }
+                                    else if (powName.Equals("Defensive_Adaptation") && (!MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || !MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || !MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || !MidsContext.Character.Powersets[0].FullName.Contains("Staff_Mastery") || !MidsContext.Character.Powersets[1].FullName.Contains("Brawling") || !MidsContext.Character.Powersets[1].FullName.Contains("Staff_Mastery")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 3;
+                                    }
+                                    else if (powName.Equals("Efficient_Adaptation") && (!MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || !MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || !MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || !MidsContext.Character.Powersets[0].FullName.Contains("Staff_Mastery") || !MidsContext.Character.Powersets[1].FullName.Contains("Brawling") || !MidsContext.Character.Powersets[1].FullName.Contains("Staff_Mastery")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 7;
+                                    }
+                                    else if (powName.Equals("Offensive_Adaptation") && (!MidsContext.Character.Powersets[0].FullName.Contains("Brawling") || !MidsContext.Character.Powersets[0].FullName.Contains("Water_Blast") || !MidsContext.Character.Powersets[0].FullName.Contains("Dual_Pistols") || !MidsContext.Character.Powersets[0].FullName.Contains("Staff_Mastery") || !MidsContext.Character.Powersets[1].FullName.Contains("Brawling") || !MidsContext.Character.Powersets[1].FullName.Contains("Staff_Mastery")))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 11;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                if (powerEntry.Power.GroupName.Equals("Incarnate") && (MidsContext.Archetype.ClassType.Equals(Enums.eClassType.HeroEpic)))
                                 {
                                     string setName = powerEntry.PowerSet.SetName;
-                                    if (Operators.CompareString(setName, "Alpha", false) == 0)
+                                    if (setName.Equals("Alpha"))
                                     {
-                                        displayLocation = 3;
+                                        displayLocation = 26;
                                     }
-                                    else if (Operators.CompareString(setName, "Judgement", false) == 0)
-                                    {
-                                        displayLocation = 7;
-                                    }
-                                    else if (Operators.CompareString(setName, "Interface", false) == 0)
-                                    {
-                                        displayLocation = 11;
-                                    }
-                                    else if (Operators.CompareString(setName, "Lore", false) == 0)
-                                        {
-                                            displayLocation = 15;
-                                        }
-                                    else if (Operators.CompareString(setName, "Destiny", false) == 0)
-                                    {
-                                        displayLocation = 19;
-                                    }
-                                    else if (Operators.CompareString(setName, "Hybrid", false) == 0)
-                                    {
-                                        displayLocation = 19;
-                                    }
-                                    else if (Operators.CompareString(setName, "Genesis", false) == 0)
-                                    {
-                                        displayLocation = 23;
-                                    }
-                                    else if (Operators.CompareString(setName, "Stance", false) == 0)
+                                    else if (setName.Equals("Judgement"))
                                     {
                                         displayLocation = 27;
                                     }
-                                    else if (Operators.CompareString(setName, "Vitae", false) == 0)
+                                    else if (setName.Equals("Interface"))
+                                    {
+                                        displayLocation = 30;
+                                    }
+                                    else if (setName.Equals("Lore"))
                                     {
                                         displayLocation = 31;
                                     }
-                                    else if (Operators.CompareString(setName, "Omega", false) == 0)
+                                    else if (setName.Equals("Destiny"))
+                                    {
+                                        displayLocation = 34;
+                                    }
+                                    else if (setName.Equals("Hybrid"))
                                     {
                                         displayLocation = 35;
+                                    }
+                                    else if (setName.Equals("Genesis"))
+                                    {
+                                        displayLocation = 28;
+                                    }
+                                    else if (setName.Equals("Stance"))
+                                    {
+                                        displayLocation = 29;
+                                    }
+                                    else if (setName.Equals("Vitae"))
+                                    {
+                                        displayLocation = 32;
+                                    }
+                                    else if (setName.Equals("Omega"))
+                                    {
+                                        displayLocation = 33;
                                     }
                                     else
                                     {
                                         displayLocation = powerEntry.Power.DisplayLocation;
                                     }
                                 }
-                                else
-                                {
-                                    displayLocation = powerEntry.Power.DisplayLocation;
-                                }
-                                break;
-                            case 6:
-                                if (powerEntry.Power.GroupName.Equals("Inherent"))
-                                {
-                                    string powName = powerEntry.Power.PowerName;
-                                    if (powName.Equals("Brawl"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 1;
-                                    }
-                                    else if (powName.Equals("Sprint"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 7;
-                                    }
-                                    else if (powName.Equals("Rest"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 13;
-                                    }
-                                    else if (powName.Equals("Swift"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 2;
-                                    }
-                                    else if (powName.Equals("Health"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 14;
-                                    }
-                                    else if (powName.Equals("Hurdle"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 8;
-                                    }
-                                    else if (powName.Equals("Stamina"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 20;
-                                    }
-                                    else if (powName.Equals("prestige_DVD_Glidep"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 3;
-                                    }
-                                    else if (powName.Equals("prestige_BestBuy_Sprintp"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 9;
-                                    }
-                                    else if (powName.Equals("prestige_EB_Sprintp"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 15;
-                                    }
-                                    else if (powName.Equals("prestige_generic_Sprintp"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 21;
-                                    }
-                                    else if (powName.Equals("prestige_Gamestop_Sprintp"))
-                                    {
-                                        powerEntry.Power.DisplayLocation = 27;
-                                    }
-                                    else
-                                    {
-                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
-                                    }
-                                }
-
-                                if (Operators.CompareString(powerEntry.Power.GroupName, "Incarnate", false) == 0)
+                                else if (powerEntry.Power.GroupName.Equals("Incarnate") && (!MidsContext.Archetype.ClassType.Equals(Enums.eClassType.HeroEpic)))
                                 {
                                     string setName = powerEntry.PowerSet.SetName;
-                                    if (Operators.CompareString(setName, "Alpha", false) == 0)
+                                    if (setName.Equals("Alpha"))
                                     {
-                                        displayLocation = 4;
+                                        displayLocation = 20;
                                     }
-                                    else if (Operators.CompareString(setName, "Judgement", false) == 0)
+                                    else if (setName.Equals("Judgement"))
                                     {
-                                        displayLocation = 5;
+                                        displayLocation = 21;
                                     }
-                                    else if (Operators.CompareString(setName, "Interface", false) == 0)
+                                    else if (setName.Equals("Interface"))
                                     {
-                                        displayLocation = 10;
+                                        displayLocation = 24;
                                     }
-                                    else if (Operators.CompareString(setName, "Lore", false) == 0)
+                                    else if (setName.Equals("Lore"))
                                     {
-                                        displayLocation = 11;
+                                        displayLocation = 25;
                                     }
-                                    else if (Operators.CompareString(setName, "Destiny", false) == 0)
-                                    {
-                                        displayLocation = 16;
-                                    }
-                                    else if (Operators.CompareString(setName, "Hybrid", false) == 0)
-                                    {
-                                        displayLocation = 17;
-                                    }
-                                    else if (Operators.CompareString(setName, "Genesis", false) == 0)
-                                    {
-                                        displayLocation = 22;
-                                    }
-                                    else if (Operators.CompareString(setName, "Stance", false) == 0)
-                                    {
-                                        displayLocation = 23;
-                                    }
-                                    else if (Operators.CompareString(setName, "Vitae", false) == 0)
+                                    else if (setName.Equals("Destiny"))
                                     {
                                         displayLocation = 28;
                                     }
-                                    else if (Operators.CompareString(setName, "Omega", false) == 0)
+                                    else if (setName.Equals("Hybrid"))
                                     {
                                         displayLocation = 29;
+                                    }
+                                    else if (setName.Equals("Genesis"))
+                                    {
+                                        displayLocation = 32;
+                                    }
+                                    else if (setName.Equals("Stance"))
+                                    {
+                                        displayLocation = 33;
+                                    }
+                                    else if (setName.Equals("Vitae"))
+                                    {
+                                        displayLocation = 36;
+                                    }
+                                    else if (setName.Equals("Omega"))
+                                    {
+                                        displayLocation = 37;
                                     }
                                     else
                                     {
