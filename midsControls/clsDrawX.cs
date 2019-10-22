@@ -2017,6 +2017,180 @@ namespace midsControls
                                     }
                                 }
 
+                                if (powerEntry.PowerSet.SetName.Equals("Beast_Mastery"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Pack_Mentality"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Howler_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Alpha_Howler_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("Lioness_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 17;
+                                    }
+                                    else if (powName.Equals("Dire_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 18;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Demon_Summoning"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Cold_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Fiery_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Hellfire_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("Ember_Demon_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 17;
+                                    }
+                                    else if (powName.Equals("Hellfire_Gargoyle_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 18;
+                                    }
+                                    else if (powName.Equals("Demon_Prince_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 19;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Mercenaries"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Soldier_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Medic_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Spec_Ops_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("Commando_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 17;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Necromancy"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Zombie_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Grave_Knight_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Lich_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Ninjas"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Genin_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Jounin_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Oni_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                if (powerEntry.PowerSet.SetName.Equals("Robotics"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Battle_Drone_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Protector_Bot_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Assault_Bot_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Thugs"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Punk_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 14;
+                                    }
+                                    else if (powName.Equals("Arsonist_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Enforcer_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("Bruiser_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 17;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
                                 if (powerEntry.PowerSet.SetName.Equals("Dual_Pistols"))
                                 {
                                     string powName = powerEntry.Power.PowerName;
@@ -2501,6 +2675,180 @@ namespace midsControls
                                     if (powName.Equals("Fast_Snipe"))
                                     {
                                         powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Beast_Mastery"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Pack_Mentality"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Howler_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Alpha_Howler_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("Lioness_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 18;
+                                    }
+                                    else if (powName.Equals("Dire_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 19;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Demon_Summoning"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Cold_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Fiery_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("Hellfire_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Ember_Demon_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("Hellfire_Gargoyle_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 18;
+                                    }
+                                    else if (powName.Equals("Demon_Prince_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 19;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Mercenaries"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Soldier_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Medic_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("Spec_Ops_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Commando_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Necromancy"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Zombie_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Grave_Knight_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("Lich_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Ninjas"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Genin_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Jounin_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("Oni_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                if (powerEntry.PowerSet.SetName.Equals("Robotics"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Battle_Drone_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Protector_Bot_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("Assault_Bot_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Thugs"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Punk_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 12;
+                                    }
+                                    else if (powName.Equals("Arsonist_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 13;
+                                    }
+                                    else if (powName.Equals("Enforcer_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 15;
+                                    }
+                                    else if (powName.Equals("Bruiser_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
                                     }
                                     else
                                     {
@@ -2993,6 +3341,180 @@ namespace midsControls
                                     if (powName.Equals("Fast_Snipe"))
                                     {
                                         powerEntry.Power.DisplayLocation = 17;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Beast_Mastery"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Pack_Mentality"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 16;
+                                    }
+                                    else if (powName.Equals("Howler_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("Alpha_Howler_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 24;
+                                    }
+                                    else if (powName.Equals("Lioness_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 21;
+                                    }
+                                    else if (powName.Equals("Dire_Wolf_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 25;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Demon_Summoning"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Cold_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("Fiery_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 24;
+                                    }
+                                    else if (powName.Equals("Hellfire_Demonling_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 28;
+                                    }
+                                    else if (powName.Equals("Ember_Demon_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 21;
+                                    }
+                                    else if (powName.Equals("Hellfire_Gargoyle_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 25;
+                                    }
+                                    else if (powName.Equals("Demon_Prince_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 29;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Mercenaries"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Soldier_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("Medic_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 24;
+                                    }
+                                    else if (powName.Equals("Spec_Ops_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 21;
+                                    }
+                                    else if (powName.Equals("Commando_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 25;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Necromancy"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Zombie_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("Grave_Knight_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 24;
+                                    }
+                                    else if (powName.Equals("Lich_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 28;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Ninjas"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Genin_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("Jounin_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 24;
+                                    }
+                                    else if (powName.Equals("Oni_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 28;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+                                if (powerEntry.PowerSet.SetName.Equals("Robotics"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Battle_Drone_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("Protector_Bot_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 24;
+                                    }
+                                    else if (powName.Equals("Assault_Bot_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 28;
+                                    }
+                                    else
+                                    {
+                                        powerEntry.Power.DisplayLocation = powerEntry.Power.DisplayLocation;
+                                    }
+                                }
+
+                                if (powerEntry.PowerSet.SetName.Equals("Thugs"))
+                                {
+                                    string powName = powerEntry.Power.PowerName;
+                                    if (powName.Equals("Punk_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 20;
+                                    }
+                                    else if (powName.Equals("Arsonist_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 24;
+                                    }
+                                    else if (powName.Equals("Enforcer_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 21;
+                                    }
+                                    else if (powName.Equals("Bruiser_H"))
+                                    {
+                                        powerEntry.Power.DisplayLocation = 25;
                                     }
                                     else
                                     {
