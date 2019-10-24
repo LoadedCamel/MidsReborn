@@ -62,7 +62,7 @@ namespace Hero_Designer
                     + formatCode[idFormatA].SizeOn
                     + formatCode[idFormatA].UnderlineOn == "";
             string str2 = MidsContext.Character.Alignment.ToString();
-            string str3 = str1 + formatColor(formatBold(str2 + " Plan by Mids' Reborn : Hero Designer " + MidsContext.AppAssemblyVersion), ExportConfig.Element.Heading) + LineBreak() + formatColor(formatBold(@"https://github.com/ImaginaryDevelopment/imaginary-hero-designer"), ExportConfig.Element.Heading) + LineBreak();
+            string str3 = str1 + formatColor(formatBold(str2 + " Plan by Mids' Reborn : Hero Designer " + MidsContext.AppAssemblyVersion), ExportConfig.Element.Heading) + LineBreak() + formatColor(formatBold(@"https://github.com/Crytilis/mids-reborn-hero-designer"), ExportConfig.Element.Heading) + LineBreak();
             if (iDataLink != "" && !Plain)
                 str3 = str3 + LineBreak() + formatColor(formatUnderline(formatBold(iDataLink)), ExportConfig.Element.Title) + LineBreak();
             string str4 = str3 + LineBreak();
