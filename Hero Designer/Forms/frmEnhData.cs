@@ -99,7 +99,7 @@ namespace Hero_Designer
             names2[18] = "ResDam";
             names3[2] = "Hold";
             names4[2] = "Hold";
-            if (myEnh.TypeID == Enums.eType.SetO & myEnh.nIDSet > -1 & myEnh.nIDSet < DatabaseAPI.Database.EnhancementSets.Count - 1)
+            if (myEnh.TypeID == Enums.eType.SetO & myEnh.nIDSet > -1 & myEnh.nIDSet <= DatabaseAPI.Database.EnhancementSets.Count - 1)
                 myEnh.UID = DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].DisplayName.Replace(" ", "_") + "_";
             int num1 = 0;
             int num2 = myEnh.Effect.Length - 1;
@@ -128,6 +128,8 @@ namespace Hero_Designer
                     myEnh.ShortName += names4[myEnh.Effect[index].Enhance.SubID];
                 }
             }
+            myEnh.UID += myEnh.Name.Replace("/", "_");
+
             float num3 = 1f;
             switch (num1)
             {
