@@ -25,7 +25,7 @@ namespace Hero_Designer
         protected bool Loading;
         public IEnhancement myEnh;
 
-        public frmEnhData(ref IEnhancement iEnh)
+        public frmEnhData(ref IEnhancement iEnh, int newStaticIndex)
         {
             Load += frmEnhData_Load;
             ClassSize = 15;
@@ -48,6 +48,8 @@ namespace Hero_Designer
             Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
             Name = nameof(frmEnhData);
             myEnh = new Enhancement(iEnh);
+            if (newStaticIndex > 0)
+                myEnh.StaticIndex = newStaticIndex;
             ClassSize = 22;
         }
 

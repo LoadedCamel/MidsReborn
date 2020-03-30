@@ -27,6 +27,7 @@ namespace Hero_Designer
         public IPower myPower;
         bool ReqChanging;
         bool Updating;
+        bool cancelClose;
 
         public frmEditPower(IPower iPower)
         {
@@ -227,10 +228,12 @@ namespace Hero_Designer
             if (power.GroupName == "" | power.SetName == "" | power.PowerName == "")
             {
                 Interaction.MsgBox(("Power name '" + power.FullName + " is invalid."), MsgBoxStyle.Exclamation, "No Can Do");
+                this.DialogResult = DialogResult.None;
             }
             else if (!PowerFullNameIsUnique(Convert.ToString(power.PowerIndex)))
             {
                 Interaction.MsgBox(("Power name '" + power.FullName + " already exists, please enter a unique name."), MsgBoxStyle.Exclamation, "No Can Do");
+                this.DialogResult = DialogResult.None;
             }
             else
             {

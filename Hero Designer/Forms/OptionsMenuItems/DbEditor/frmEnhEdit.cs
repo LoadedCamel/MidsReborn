@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
@@ -62,15 +63,21 @@ namespace Hero_Designer
         void btnAdd_Click(object sender, EventArgs e)
         {
             IEnhancement iEnh = new Enhancement();
-            frmEnhData frmEnhData = new frmEnhData(ref iEnh);
+            frmEnhData frmEnhData = new frmEnhData(ref iEnh, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
             int num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
             IDatabase database = DatabaseAPI.Database;
             IEnhancement[] enhancementArray = (IEnhancement[])Utils.CopyArray(database.Enhancements, new IEnhancement[DatabaseAPI.Database.Enhancements.Length + 1]);
             database.Enhancements = enhancementArray;
-            DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1] =
-                new Enhancement(frmEnhData.myEnh) {IsNew = true, StaticIndex = -1};
+            Enhancement newEnhancement = new Enhancement(frmEnhData.myEnh) { IsNew = true };
+            DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1] = newEnhancement;
+            if (newEnhancement.nIDSet > 0)
+            {
+                EnhancementSet es = DatabaseAPI.Database.EnhancementSets[newEnhancement.nIDSet];
+                Array.Resize(ref es.Enhancements, es.Enhancements.Length + 1);
+                es.Enhancements[es.Enhancements.Length - 1] = newEnhancement.StaticIndex;
+            }
             ImageUpdate();
             AddListItem(DatabaseAPI.Database.Enhancements.Length - 1);
         }
@@ -84,7 +91,8 @@ namespace Hero_Designer
         {
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
-            frmEnhData frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[lvEnh.SelectedIndices[0]]);
+            IEnhancement oldEnhancement = DatabaseAPI.Database.Enhancements[lvEnh.SelectedIndices[0]];
+            frmEnhData frmEnhData = new frmEnhData(ref oldEnhancement, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
             int num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
@@ -105,6 +113,19 @@ namespace Hero_Designer
             int selectedIndex = lvEnh.SelectedIndices[0];
             int index1 = 0;
             int num1 = DatabaseAPI.Database.Enhancements.Length - 1;
+            IEnhancement enh = DatabaseAPI.Database.Enhancements[selectedIndex];
+            if (enh.nIDSet > -1)
+            {
+                //Remove it from the enhancement set too.
+                List<int> newEnhancementSet = new List<int>();
+                for (int i = 0; i < DatabaseAPI.Database.EnhancementSets[enh.nIDSet].Enhancements.Length; i++)
+                {
+                    int staticIndex = DatabaseAPI.Database.EnhancementSets[enh.nIDSet].Enhancements[i];
+                    if (staticIndex != enh.StaticIndex)
+                        newEnhancementSet.Add(staticIndex);
+                }
+                DatabaseAPI.Database.EnhancementSets[enh.nIDSet].Enhancements = newEnhancementSet.ToArray();
+            }
             for (int index2 = 0; index2 <= num1; ++index2)
             {
                 if (index2 == selectedIndex)
@@ -116,6 +137,7 @@ namespace Hero_Designer
             int num2 = DatabaseAPI.Database.Enhancements.Length - 1;
             for (int index2 = 0; index2 <= num2; ++index2)
                 DatabaseAPI.Database.Enhancements[index2] = new Enhancement(enhancementArray[index2]);
+
             DisplayList();
             if (lvEnh.Items.Count <= 0)
                 return;
@@ -154,12 +176,12 @@ namespace Hero_Designer
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
             int selectedIndex = lvEnh.SelectedIndices[0];
-            frmEnhData frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[lvEnh.SelectedIndices[0]]);
+            frmEnhData frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[lvEnh.SelectedIndices[0]], 0);
             int num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
-            DatabaseAPI.Database.Enhancements[lvEnh.SelectedIndices[0]] =
-                new Enhancement(frmEnhData.myEnh) {IsModified = true};
+            Enhancement newEnhancement = new Enhancement(frmEnhData.myEnh) { IsModified = true };
+            DatabaseAPI.Database.Enhancements[lvEnh.SelectedIndices[0]] = newEnhancement;
             ImageUpdate();
             UpdateListItem(selectedIndex);
         }
