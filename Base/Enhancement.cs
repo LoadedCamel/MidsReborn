@@ -404,7 +404,7 @@ public class Enhancement : IEnhancement
     }
 
     public string GetSpecialName()
-        => ((int)SubTypeID) + " Origin";
+        => (SubTypeID) + " Origin";
 
     public static float ApplyED(Enums.eSchedule iSched, float iVal)
     {
