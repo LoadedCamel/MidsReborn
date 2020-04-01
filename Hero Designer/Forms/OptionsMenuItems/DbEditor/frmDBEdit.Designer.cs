@@ -501,6 +501,7 @@ namespace Hero_Designer
             this.btnJsonImporter.TabIndex = 27;
             this.btnJsonImporter.Text = "JSON Importer";
             this.btnJsonImporter.UseVisualStyleBackColor = true;
+            this.btnJsonImporter.Click += new System.EventHandler(this.btnJsonImporter_Click);
             // 
             // frmDBEdit
             // 
