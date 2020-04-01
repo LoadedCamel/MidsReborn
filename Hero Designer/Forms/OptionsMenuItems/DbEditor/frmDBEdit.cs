@@ -184,6 +184,8 @@ namespace Hero_Designer
             txtDBVer.Enabled = MidsContext.Config.MasterMode;
             UdIssue.Enabled = MidsContext.Config.MasterMode;
             btnFileReport.Visible = MidsContext.Config.MasterMode;
+            btnExportJSON.Visible = MidsContext.Config.MasterMode;
+            btnJsonImporter.Visible = MidsContext.Config.MasterMode;
             DisplayInfo();
         }
 
@@ -207,6 +209,12 @@ namespace Hero_Designer
             if (!MainModule.MidsController.IsAppInitialized || !Initialized)
                 return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
+        }
+
+        private void btnExportJSON_Click(object sender, EventArgs e)
+        {
+            var serializer = My.MyApplication.GetSerializer();
+            DatabaseAPI.SaveJSONDatabase(serializer);
         }
     }
 }
