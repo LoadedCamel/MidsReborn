@@ -255,13 +255,15 @@ namespace Hero_Designer
         void btnPowerClone_Click(object sender, EventArgs e)
         {
             IPower iPower = new Power();
-            if (DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text) < 0)
+            int index = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
+            if (index < 0)
             {
                 Interaction.MsgBox("Unknown error caused an invalid PowerIndex return value.", MsgBoxStyle.Exclamation, "Wha?");
             }
             else
             {
-                iPower.DisplayName = "New Power";
+                iPower = DatabaseAPI.Database.Power[index];
+                iPower.StaticIndex = 0;
                 iPower.FullName += "_Clone";
                 iPower.DisplayName += " (Clone)";
                 frmEditPower frmEditPower = new frmEditPower(iPower);
