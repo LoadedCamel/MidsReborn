@@ -242,6 +242,10 @@ namespace Hero_Designer
                     iPower.FullName = DatabaseAPI.Database.Classes[lvGroup.SelectedIndices[0]].PrimaryGroup + lvSet.SelectedItems[0].SubItems[0].Text + ".New_Power";
                     break;
             }
+            IPowerset iPowerset = DatabaseAPI.GetPowersetByName(lvPower.SelectedItems[0].SubItems[3].Text);
+            iPower.GroupName = iPowerset.GroupName;
+            iPower.PowerSetID = iPowerset.nID;
+            iPower.SetName = iPowerset.SetName;
             iPower.DisplayName = "New Power";
             frmEditPower frmEditPower = new frmEditPower(iPower);
             if (frmEditPower.ShowDialog() != DialogResult.OK)
@@ -249,9 +253,19 @@ namespace Hero_Designer
             IDatabase database = DatabaseAPI.Database;
             IPower[] powerArray = (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
             database.Power = powerArray;
-            DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] =
-                new Power(frmEditPower.myPower) {IsNew = true};
-            UpdateLists();
+            IPower newPower = new Power(frmEditPower.myPower);
+            newPower.IsNew = true;
+            newPower.PowerIndex = DatabaseAPI.Database.Power.Length-1;
+            DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] = newPower;
+            //Add the power to the power set otherwise we'll get issues later when upting the UI.
+            if (newPower.PowerSetID > -1)
+            {
+                IPowerset powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
+                powerArray = (IPower[])Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
+                powerSet.Powers = powerArray;
+                powerArray[powerSet.Powers.Length - 1] = newPower;
+            }
+            UpdateLists(this.lvGroup.SelectedIndices[0], this.lvSet.SelectedIndices[0]);
         }
 
         void btnPowerClone_Click(object sender, EventArgs e)
@@ -283,11 +297,12 @@ namespace Hero_Designer
                 database.Power = powerArray;
                 DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] = newPower;
                 //Add the power to the power set otherwise we'll get issues later when upting the UI.
-                IPowerset powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
-                powerArray = (IPower[])Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
-                powerSet.Powers = powerArray;
-                powerArray[powerSet.Powers.Length-1] = newPower;
-
+                if (newPower.PowerSetID > -1) { 
+                    IPowerset powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
+                    powerArray = (IPower[])Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
+                    powerSet.Powers = powerArray;
+                    powerArray[powerSet.Powers.Length-1] = newPower;
+                }
                 UpdateLists(this.lvGroup.SelectedIndices[0], this.lvSet.SelectedIndices[0]);
             }
         }
