@@ -57,23 +57,23 @@ public static class I9Gfx
         Powersets.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
         Powersets.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
         Powersets.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-        Parallel.For(0, DatabaseAPI.Database.Powersets.Length-1, index =>
-        {
-            int x = index * 16;
-            string str = GetPowersetsPath() + DatabaseAPI.Database.Powersets[index].ImageName;
-            if (!File.Exists(str))
-                str = ImagePath() + "Unknown.png";
-            using (ExtendedBitmap extendedBitmap = new ExtendedBitmap(str))
-            {
-                lock (Powersets.Graphics)
-                {
-                    if (extendedBitmap.Size.Height > 16 | extendedBitmap.Size.Width > 16)
-                        Powersets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, 16, 16);
-                    else
-                        Powersets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
-            }
-        });
+        Parallel.For(0, DatabaseAPI.Database.Powersets.Length - 1, index =>
+          {
+              int x = index * 16;
+              string str = GetPowersetsPath() + DatabaseAPI.Database.Powersets[index].ImageName;
+              if (!File.Exists(str))
+                  str = ImagePath() + "Unknown.png";
+              using (ExtendedBitmap extendedBitmap = new ExtendedBitmap(str))
+              {
+                  lock (Powersets.Graphics)
+                  {
+                      if (extendedBitmap.Size.Height > 16 | extendedBitmap.Size.Width > 16)
+                          Powersets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, 16, 16);
+                      else
+                          Powersets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
+                  }
+              }
+          });
     }
 
     public static void LoadOriginImages()
@@ -106,23 +106,23 @@ public static class I9Gfx
         Archetypes.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
         Archetypes.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
         Archetypes.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-        Parallel.For(0, DatabaseAPI.Database.Classes.Length-1, index =>
-        {
-            int x = index * 16;
-            string str = GetOriginsPath() + DatabaseAPI.Database.Classes[index].ClassName + ".png";
-            if (!File.Exists(str))
-                str = ImagePath() + "Unknown.png";
-            using (ExtendedBitmap extendedBitmap = new ExtendedBitmap(str))
-            {
-                lock (Archetypes.Graphics)
-                {
-                    if (extendedBitmap.Size.Height > 16 | extendedBitmap.Size.Width > 16)
-                        Archetypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, 16, 16);
-                    else
-                        Archetypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
-            }
-        });
+        Parallel.For(0, DatabaseAPI.Database.Classes.Length - 1, index =>
+          {
+              int x = index * 16;
+              string str = GetOriginsPath() + DatabaseAPI.Database.Classes[index].ClassName + ".png";
+              if (!File.Exists(str))
+                  str = ImagePath() + "Unknown.png";
+              using (ExtendedBitmap extendedBitmap = new ExtendedBitmap(str))
+              {
+                  lock (Archetypes.Graphics)
+                  {
+                      if (extendedBitmap.Size.Height > 16 | extendedBitmap.Size.Width > 16)
+                          Archetypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, 16, 16);
+                      else
+                          Archetypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
+                  }
+              }
+          });
     }
 
     public static Origin.Grade ToGfxGrade(Enums.eType iType)
@@ -195,21 +195,21 @@ public static class I9Gfx
         Classes.Graphics.SmoothingMode = SmoothingMode.HighQuality;
         using (ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(ImagePath() + "Overlay\\Class.png"))
         {
-            Parallel.For(0, DatabaseAPI.Database.EnhancementClasses.Length-1, index =>
-            {
-                int x = index * 30;
-                using (ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(ImagePath() + "Classes\\" + DatabaseAPI.Database.EnhancementClasses[index].ID + ".png"))
-                {
-                    lock (Classes.Graphics)
-                    {
-                        Classes.Graphics.DrawImageUnscaled(extendedBitmap1.Bitmap, x, 0);
-                        if (extendedBitmap2.Size.Height > 30 | extendedBitmap2.Size.Width > 30)
-                            Classes.Graphics.DrawImage(extendedBitmap2.Bitmap, x, 0, 30, 30);
-                        else
-                            Classes.Graphics.DrawImage(extendedBitmap2.Bitmap, x, 0);
-                    }
-                }
-            });
+            Parallel.For(0, DatabaseAPI.Database.EnhancementClasses.Length - 1, index =>
+              {
+                  int x = index * 30;
+                  using (ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(ImagePath() + "Classes\\" + DatabaseAPI.Database.EnhancementClasses[index].ID + ".png"))
+                  {
+                      lock (Classes.Graphics)
+                      {
+                          Classes.Graphics.DrawImageUnscaled(extendedBitmap1.Bitmap, x, 0);
+                          if (extendedBitmap2.Size.Height > 30 | extendedBitmap2.Size.Width > 30)
+                              Classes.Graphics.DrawImage(extendedBitmap2.Bitmap, x, 0, 30, 30);
+                          else
+                              Classes.Graphics.DrawImage(extendedBitmap2.Bitmap, x, 0);
+                      }
+                  }
+              });
         }
         GC.Collect();
     }
@@ -217,7 +217,7 @@ public static class I9Gfx
     public static void LoadEnhancements()
     {
         Enhancements = new Bitmap[DatabaseAPI.Database.Enhancements.Length];
-        for (int index = 0; index <= DatabaseAPI.Database.Enhancements.Length - 1; ++index)
+        Parallel.For(0, DatabaseAPI.Database.Enhancements.Length - 1, index =>
         {
             if (DatabaseAPI.Database.Enhancements[index].Image != string.Empty)
             {
@@ -239,7 +239,7 @@ public static class I9Gfx
             }
             if (index % 5 == 0)
                 Application.DoEvents();
-        }
+        });
     }
 
     public static void LoadSets()
