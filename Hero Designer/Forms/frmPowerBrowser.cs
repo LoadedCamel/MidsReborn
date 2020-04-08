@@ -370,9 +370,14 @@ namespace Hero_Designer
                 frmEditPower frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
-                DatabaseAPI.Database.Power[index1] = new Power(frmEditPower.myPower) {IsModified = true};
+                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
+                DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
                     return;
+                //Update the full power name in the powerset array
+                if (newPower.PowerSetID > -1)
+                    DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName = newPower.FullName;
+
                 int num2 = DatabaseAPI.Database.Power[index1].Effects.Length - 1;
                 for (int index2 = 0; index2 <= num2; ++index2)
                     DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
