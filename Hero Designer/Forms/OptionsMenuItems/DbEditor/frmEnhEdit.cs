@@ -220,8 +220,13 @@ namespace Hero_Designer
             lvEnh.BeginUpdate();
             lvEnh.Items.Clear();
             int num = DatabaseAPI.Database.Enhancements.Length - 1;
-            for (int Index = 0; Index <= num; ++Index)
-                AddListItem(Index);
+            for (int Index = 0; Index <= num; ++Index) { 
+                if ((string.IsNullOrEmpty(this.txtFilter.Text)) || (DatabaseAPI.Database.Enhancements[Index].Name.Contains(this.txtFilter.Text)))
+                    AddListItem(Index);
+                if (DatabaseAPI.Database.Enhancements[Index].nIDSet > -1)
+                    if (DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[Index].nIDSet].DisplayName.Contains(this.txtFilter.Text)) 
+                        AddListItem(Index);
+            }
             if (lvEnh.Items.Count > 0)
             {
                 lvEnh.Items[0].Selected = true;
@@ -331,6 +336,11 @@ namespace Hero_Designer
             lvEnh.Items[Index].ImageIndex = Index;
             lvEnh.Items[Index].EnsureVisible();
             lvEnh.Refresh();
+        }
+
+        private void txtFilter_TextChanged(object sender, EventArgs e)
+        {
+            DisplayList();
         }
     }
 }
