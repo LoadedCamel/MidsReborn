@@ -172,8 +172,11 @@ namespace Base.Display
       }
       else
       {
-        _bits = new Bitmap(fileName);
-        _surface = Graphics.FromImage(_bits);
+        using(MemoryStream ms = new MemoryStream(File.ReadAllBytes(fileName)))
+        {
+            _bits = new Bitmap(ms);
+            _surface = Graphics.FromImage(_bits);
+        }
         Cache.Update(ref _bits);
         _surface.Clip = new Region(Cache.Bounds);
         Cache.Update(ref _surface);

@@ -9,8 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -127,6 +125,8 @@ namespace Hero_Designer
 
         internal clsDrawX Drawing => drawing;
 
+        internal bool loading;
+
         public frmMain()
         {
             if (!Debugger.IsAttached || !this.IsInDesignMode() ||
@@ -212,6 +212,7 @@ namespace Hero_Designer
 
         void frmMain_Load(object sender, EventArgs e)
         {
+            this.loading = true;
             try
             {
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
@@ -251,9 +252,26 @@ namespace Hero_Designer
                 if (args.IndexOf("MASTERMODE=YES", StringComparison.OrdinalIgnoreCase) > -1)
                     MidsContext.Config.MasterMode = true;
                 MainModule.MidsController.LoadData(ref iFrm);
+                iFrm?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
-                NewToon();
+                var loadedFromArgs = false;
+                if (!string.IsNullOrEmpty(args))
+                {
+                    string str3 = args.Replace("\"", string.Empty);
+                    if (File.Exists(str3.Trim()) && !DoOpen(str3.Trim()))
+                    {
+                        loadedFromArgs = true;
+                        PowerModified(markModified: false);
+                    }
+                }
+                bool toonLoaded = DoOpen(MidsContext.Config.LastFileName);
+                if (!toonLoaded)
+                    NewToon(true, true);
+
+                if (!loadedFromArgs && !MidsContext.Config.DisableLoadLastFileOnStart && !toonLoaded)
+                    PowerModified(markModified: true);
+                
                 dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
                 lblATLocked.Location = cbAT.Location;
@@ -294,15 +312,15 @@ namespace Hero_Designer
                 else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
                 {
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
-                }
-
+                }                
                 Size = new Size(width1, height1);
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 tsViewSelected();
                 tsIODefault.Text = "Default (" + (MidsContext.Config.I9.DefaultIOLevel + 1) + ")";
                 SetDamageMenuCheckMarks();
-                ReArrange(true);
+                //Procat: Removed during performance optimization.
+                //ReArrange(true);
                 GetBestDamageValues();
                 dvAnchored.SetFontData();
                 DlgSave.InitialDirectory = MidsContext.Config.GetSaveFolder();
@@ -312,7 +330,7 @@ namespace Hero_Designer
                 ibSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 ibPopup.Checked = !MidsContext.Config.DisableShowPopup;
-                ibRecipe.Checked = MidsContext.Config.PopupRecipes;
+                ibRecipe.Checked = MidsContext.Config.PopupRecipes;                
                 string rtfRelPath = Path.Combine(Files.FPathAppData, Files.PatchRtf);
                 if (File.Exists(rtfRelPath))
                 {
@@ -328,26 +346,11 @@ namespace Hero_Designer
                         File.Delete(patchNotesTgt);
                     File.Move(Path.Combine(Files.FPathAppData, Files.PatchRtf), patchNotesTgt);
                 }
-
-                var loadedFromArgs = false;
-                if (!string.IsNullOrEmpty(args))
-                {
-                    string str3 = args.Replace("\"", string.Empty);
-                    if (File.Exists(str3.Trim()) && !DoOpen(str3.Trim()))
-                    {
-                        loadedFromArgs = true;
-                        PowerModified(markModified: false);
-                    }
-                }
-
-                if (!loadedFromArgs && !MidsContext.Config.DisableLoadLastFileOnStart && !DoOpen(MidsContext.Config.LastFileName))
-                    PowerModified(markModified: true);
                 if (MidsContext.Config.MasterMode)
                 {
                     tsAdvFreshInstall.Visible = true;
                     tsAdvResetTips.Visible = true;
                 }
-
                 Show();
                 iFrm.Hide();
                 iFrm.Close();
@@ -363,16 +366,20 @@ namespace Hero_Designer
                 local = new Point(left, y);
                 dvAnchored.SetLocation(iLocation, true);
                 PriSec_ExpandChanged(true);
+                this.loading = false;
+                UpdateControls(true);
                 if (this.IsInDesignMode())
                     return;
                 if (MidsContext.Config.CheckForUpdates)
                     TryUpdate();
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("An error has occurred when loading the main form. Error: " + ex.Message, "OMIGODHAX");
                 throw;
             }
+            this.loading = false;
         }
 
         I9Picker I9Picker
@@ -5225,6 +5232,9 @@ namespace Hero_Designer
 
         void UpdateControls(bool ForceComplete = false)
         {
+            if (this.loading)
+                return;
+
             NoUpdate = true;
             Archetype[] all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
             var cbAT = new ComboBoxT<Archetype>(this.cbAT);
