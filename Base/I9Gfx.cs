@@ -217,13 +217,14 @@ public static class I9Gfx
     public static void LoadEnhancements()
     {
         Enhancements = new Bitmap[DatabaseAPI.Database.Enhancements.Length];
-        Parallel.For(0, DatabaseAPI.Database.Enhancements.Length - 1, index =>
+        Parallel.For(0, DatabaseAPI.Database.Enhancements.Length, index =>
         {
             if (DatabaseAPI.Database.Enhancements[index].Image != string.Empty)
             {
                 try
                 {
                     Enhancements[index] = new Bitmap(GetEnhancementsPath() + DatabaseAPI.Database.Enhancements[index].Image);
+
                 }
                 catch (Exception ex)
                 {
