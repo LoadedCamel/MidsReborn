@@ -605,7 +605,7 @@ namespace Hero_Designer
             chkStatBold.Checked = config.RtFont.PairedBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
             dcNickName.Text = config.DNickName;
-            dcChannel.Text = config.DChannel;
+            dcChannel.Text = config.DChannel;            
             foreach (var item in config.DServers.Append(config.DSelServer).Where(item => !string.IsNullOrWhiteSpace(item) && !dcExList.Items.Contains(config.DSelServer)).Distinct())
                 dcExList.Items.Add(item);
             if (!string.IsNullOrWhiteSpace(config.DSelServer))
@@ -621,6 +621,7 @@ namespace Hero_Designer
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
             chkUseArcanaTime.Checked = config.UseArcanaTime;
+            cbUpdateURL.Text = config.UpdatePath;
             TeamSize.Value = new decimal(config.TeamSize);
             int index = 0;
             do
@@ -628,7 +629,7 @@ namespace Hero_Designer
                 defActs[index] = config.DragDropScenarioAction[index];
                 ++index;
             }
-            while (index <= 19);
+            while (index <= 19);            
         }
 
         void setupScenarios()
@@ -808,6 +809,7 @@ namespace Hero_Designer
             config.DisableAlphaPopup = !chkShowAlphaPopup.Checked;
             config.UseArcanaTime = chkUseArcanaTime.Checked;
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
+            config.UpdatePath = cbUpdateURL.Text;
             int index = 0;
             do
             {

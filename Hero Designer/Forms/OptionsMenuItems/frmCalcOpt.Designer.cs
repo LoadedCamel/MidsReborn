@@ -190,6 +190,7 @@ namespace Hero_Designer
             this.csAdd = new System.Windows.Forms.Button();
             this.csList = new System.Windows.Forms.ListBox();
             this.TabPage5 = new System.Windows.Forms.TabPage();
+            this.lblUpdateURL = new System.Windows.Forms.Label();
             this.btnSaveFolderReset = new System.Windows.Forms.Button();
             this.lblSaveFolder = new System.Windows.Forms.Label();
             this.btnSaveFolder = new System.Windows.Forms.Button();
@@ -214,6 +215,7 @@ namespace Hero_Designer
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
+            this.cbUpdateURL = new System.Windows.Forms.ComboBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.GroupBox17.SuspendLayout();
@@ -2019,6 +2021,8 @@ namespace Hero_Designer
             // 
             // TabPage5
             // 
+            this.TabPage5.Controls.Add(this.cbUpdateURL);
+            this.TabPage5.Controls.Add(this.lblUpdateURL);
             this.TabPage5.Controls.Add(this.btnSaveFolderReset);
             this.TabPage5.Controls.Add(this.lblSaveFolder);
             this.TabPage5.Controls.Add(this.btnSaveFolder);
@@ -2032,6 +2036,15 @@ namespace Hero_Designer
             this.TabPage5.TabIndex = 4;
             this.TabPage5.Text = "Updates & Paths";
             this.TabPage5.UseVisualStyleBackColor = true;
+            // 
+            // lblUpdateURL
+            // 
+            this.lblUpdateURL.Location = new System.Drawing.Point(8, 175);
+            this.lblUpdateURL.Name = "lblUpdateURL";
+            this.lblUpdateURL.Size = new System.Drawing.Size(168, 24);
+            this.lblUpdateURL.TabIndex = 65;
+            this.lblUpdateURL.Text = "Update URL:";
+            this.lblUpdateURL.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnSaveFolderReset
             // 
@@ -2265,6 +2278,22 @@ namespace Hero_Designer
             // cPicker
             // 
             this.cPicker.FullOpen = true;
+            // 
+            // cbUpdateURL
+            // 
+            this.cbUpdateURL.AutoCompleteCustomSource.AddRange(new string[] {
+            "http://midsreborn.com/mids_updates/update.xml",
+            "http://keepers.dk/mids/update.xml"});
+            this.cbUpdateURL.FormattingEnabled = true;
+            this.cbUpdateURL.Items.AddRange(new object[] {
+            "http://midsreborn.com/mids_updates/update.xml",
+            "http://keepers.dk/mids/update.xml",
+            "http://keepers.dk/mids/update_beta.xml",
+            "http://keepers.dk/mids/update_dev.xml"});
+            this.cbUpdateURL.Location = new System.Drawing.Point(17, 200);
+            this.cbUpdateURL.Name = "cbUpdateURL";
+            this.cbUpdateURL.Size = new System.Drawing.Size(593, 22);
+            this.cbUpdateURL.TabIndex = 67;
             // 
             // frmCalcOpt
             // 
@@ -2520,5 +2549,7 @@ namespace Hero_Designer
         private CheckBox checkBox11;
         private Label label41;
         private CheckBox checkBox24;
+        private Label lblUpdateURL;
+        private ComboBox cbUpdateURL;
     }
 }

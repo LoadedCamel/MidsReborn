@@ -5055,8 +5055,8 @@ namespace Hero_Designer
         void TryUpdate()
         {
             try
-            {
-                var path = ConfigData.UpdatePath;
+            {                
+                var path = MidsContext.Config.UpdatePath;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     MessageBox.Show("Unable to check for updates, no update path found");
