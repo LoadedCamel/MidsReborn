@@ -265,13 +265,19 @@ namespace Hero_Designer
                         PowerModified(markModified: false);
                     }
                 }
-                bool toonLoaded = DoOpen(MidsContext.Config.LastFileName);
+                bool toonLoaded = false;
+                if (!MidsContext.Config.DisableLoadLastFileOnStart)
+                    toonLoaded = DoOpen(MidsContext.Config.LastFileName);
+
                 if (!toonLoaded)
-                    NewToon(true, true);
+                {
+                    NewToon(true, false);
+                    PowerModified(markModified: true);
+                }
 
                 if (!loadedFromArgs && !MidsContext.Config.DisableLoadLastFileOnStart && !toonLoaded)
                     PowerModified(markModified: true);
-                
+                    
                 dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
                 lblATLocked.Location = cbAT.Location;
@@ -1005,6 +1011,7 @@ namespace Hero_Designer
             PowerModified(markModified: false);
             FileModified = false;
             SetTitleBar();
+            DoRedraw();
             myDataView.Clear();
         }
 
@@ -2512,11 +2519,12 @@ namespace Hero_Designer
                 petsButton.Enabled = true;
             }
             NewDraw(skipDraw);
-            UpdateControls();
+            UpdateControls(true);
             SetTitleBar(MidsContext.Character.IsHero());
             UpdateColours();
             info_Totals();
             FileModified = false;
+            DoRedraw();
         }
 
         void pbDynMode_Click(object sender, EventArgs e)
