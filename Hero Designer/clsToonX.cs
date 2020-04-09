@@ -473,7 +473,7 @@ namespace Hero_Designer
             Totals.HPRegen = _selfBuffs.Effect[27];
             Totals.EndRec = _selfBuffs.Effect[26];
 
-            Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[11], -0.9f) * Statistics.MaxFlySpeed;
+            Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[11], -0.9f) * Statistics.BaseFlySpeed;
             // this number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
             Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[51] * Statistics.BaseFlySpeed;
             if (Totals.MaxFlySpd > 128.990005493164)
