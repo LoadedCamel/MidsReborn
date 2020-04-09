@@ -36,25 +36,22 @@ namespace Hero_Designer.Forms.JsonImport
             string json = File.ReadAllText(fileName);
             List<Class> classes = JsonConvert.DeserializeObject<List<Class>>(json);
 
+            int classId = -1;
             foreach (Class c in classes)
             {
-                for (int i = 0; i < DatabaseAPI.Database.AttribMods.Modifier[0].Table.Length - 1; i++)
+                classId = DatabaseAPI.Database.Classes.FirstOrDefault(cls => string.Equals(c.Name, cls.ClassName, StringComparison.OrdinalIgnoreCase)).Column;
+                for (int i = 0; i < c.ModTables.Select(s => s.Name).Count() - 1; i++)
                 {
-                    for (int j = 0; j < DatabaseAPI.Database.Classes.Length - 1; j++)
+                    for (int k = 0; k < c.ModTables[i].Values.Count - 1; k++)
                     {
-                        for(int k = 0; k < c.ModTables[0].Values.Count -1; k++) { 
-                            if (j < c.ModTables[0].Values.Count - 1)
-                            {
-                                //Console.WriteLine("Old value {0}, new value {1}", DatabaseAPI.Database.AttribMods.Modifier[0].Table[i][j], c.ModTables[0].Values[j]);
-                                int tableId = DatabaseAPI.NidFromUidAttribMod(c.ModTables[k].Name);
-                                if (tableId > 0)
-                                    DatabaseAPI.Database.AttribMods.Modifier[tableId].Table[i][j] = c.ModTables[k].Values[j];
-                            }
-                        }
+                        int tableId = DatabaseAPI.NidFromUidAttribMod(c.ModTables[i].Name);
+                        if (tableId > -1)
+                            DatabaseAPI.Database.AttribMods.Modifier[tableId].Table[k][classId] = c.ModTables[i].Values[k];
                     }
                 }
             }
             DatabaseAPI.Database.AttribMods.Store(My.MyApplication.GetSerializer());
+            DatabaseAPI.SaveJSONDatabase(My.MyApplication.GetSerializer());
             MessageBox.Show("Import completed");
         }
     }
