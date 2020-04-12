@@ -191,9 +191,7 @@ public class ConfigData
     void IntializeComponent()
     {
         if (string.IsNullOrEmpty(this.UpdatePath))
-            this.UpdatePath = "http://keepers.dk/mids/update.xml";
-        //this.UpdatePath = "http://midsreborn.com/mids_updates/update.xml";
-
+            this.UpdatePath = "http://midsreborn.com/mids_updates/update.xml";
 
         RelocateSaveFolder(false);
         try
