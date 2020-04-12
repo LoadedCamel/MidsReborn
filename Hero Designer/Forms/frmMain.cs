@@ -4997,7 +4997,7 @@ namespace Hero_Designer
         {
             if (args != null)
             {
-                if (args.IsUpdateAvailable)
+                if (args.IsUpdateAvailable || args.UpdateMode == Mode.ForcedDownload)
                 {
                     DialogResult dialogResult;
                     if (args.Mandatory)
@@ -5076,6 +5076,33 @@ namespace Hero_Designer
         }
 
         void tsUpdateCheck_Click(object sender, EventArgs e) => TryUpdate();
+
+        private void ForceReinstall()
+        {
+            try
+            {
+                var path = MidsContext.Config.UpdatePath;
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    MessageBox.Show("Unable to check for updates, no update path found");
+                    return;
+                }
+
+                // prove it is also a valid URI
+                if (Uri.TryCreate(path, UriKind.Absolute, out var _)) {
+                    AutoUpdater.Mandatory = true;
+                    AutoUpdater.UpdateMode = Mode.ForcedDownload;
+                    AutoUpdater.Start(path);
+                } else
+                    MessageBox.Show("Unable to check for updates, bad update path found : " + path);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        void tsForceReinstall_Click(object sender, EventArgs e) => ForceReinstall();
 
         void tsViewSelected()
         {
