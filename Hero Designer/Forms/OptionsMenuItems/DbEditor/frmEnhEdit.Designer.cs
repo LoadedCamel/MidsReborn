@@ -69,7 +69,7 @@ namespace Hero_Designer
             this.lvEnh.Location = new System.Drawing.Point(8, 8);
             this.lvEnh.MultiSelect = false;
             this.lvEnh.Name = "lvEnh";
-            this.lvEnh.Size = new System.Drawing.Size(740, 556);
+            this.lvEnh.Size = new System.Drawing.Size(734, 556);
             this.lvEnh.SmallImageList = this.ilEnh;
             this.lvEnh.TabIndex = 0;
             this.lvEnh.UseCompatibleStateImageBehavior = false;
@@ -110,9 +110,9 @@ namespace Hero_Designer
             // 
             this.btnUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnUp.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUp.Location = new System.Drawing.Point(756, 28);
+            this.btnUp.Location = new System.Drawing.Point(748, 28);
             this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(75, 23);
+            this.btnUp.Size = new System.Drawing.Size(83, 23);
             this.btnUp.TabIndex = 1;
             this.btnUp.Text = "Move Up";
             this.btnUp.UseVisualStyleBackColor = true;
@@ -122,9 +122,9 @@ namespace Hero_Designer
             // 
             this.btnDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnDown.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDown.Location = new System.Drawing.Point(756, 56);
+            this.btnDown.Location = new System.Drawing.Point(748, 56);
             this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(75, 23);
+            this.btnDown.Size = new System.Drawing.Size(83, 23);
             this.btnDown.TabIndex = 2;
             this.btnDown.Text = "Move Down";
             this.btnDown.UseVisualStyleBackColor = true;
@@ -134,9 +134,9 @@ namespace Hero_Designer
             // 
             this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnAdd.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.Location = new System.Drawing.Point(756, 104);
+            this.btnAdd.Location = new System.Drawing.Point(748, 104);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnAdd.Size = new System.Drawing.Size(83, 23);
             this.btnAdd.TabIndex = 3;
             this.btnAdd.Text = "Add...";
             this.btnAdd.UseVisualStyleBackColor = true;
@@ -146,9 +146,9 @@ namespace Hero_Designer
             // 
             this.btnDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnDelete.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDelete.Location = new System.Drawing.Point(756, 224);
+            this.btnDelete.Location = new System.Drawing.Point(748, 224);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnDelete.Size = new System.Drawing.Size(83, 23);
             this.btnDelete.TabIndex = 4;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
@@ -158,9 +158,9 @@ namespace Hero_Designer
             // 
             this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnEdit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEdit.Location = new System.Drawing.Point(756, 184);
+            this.btnEdit.Location = new System.Drawing.Point(748, 184);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(75, 23);
+            this.btnEdit.Size = new System.Drawing.Size(83, 23);
             this.btnEdit.TabIndex = 5;
             this.btnEdit.Text = "Edit...";
             this.btnEdit.UseVisualStyleBackColor = true;
@@ -196,9 +196,9 @@ namespace Hero_Designer
             // 
             this.btnClone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnClone.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClone.Location = new System.Drawing.Point(756, 144);
+            this.btnClone.Location = new System.Drawing.Point(748, 144);
             this.btnClone.Name = "btnClone";
-            this.btnClone.Size = new System.Drawing.Size(75, 23);
+            this.btnClone.Size = new System.Drawing.Size(83, 23);
             this.btnClone.TabIndex = 24;
             this.btnClone.Text = "Clone...";
             this.btnClone.UseVisualStyleBackColor = true;
