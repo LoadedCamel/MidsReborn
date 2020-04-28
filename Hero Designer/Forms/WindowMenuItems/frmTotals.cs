@@ -435,7 +435,7 @@ namespace Hero_Designer
                 if (!(dType != 9 & dType != 7))
                     continue;
                 string iTip = Strings.Format(displayStats.Defense(dType), "##0.##") + "% " + names1[dType] + " defense";
-                graphDef.AddItem(names1[dType] + ":|" + Strings.Format(displayStats.Defense(dType), "##0.#") + "%",
+                graphDef.AddItem(names1[dType] + ":|" + Strings.Format(displayStats.Defense(dType), "##0.##") + "%",
                     displayStats.Defense(dType), 0.0f, iTip);
             }
 
@@ -456,7 +456,7 @@ namespace Hero_Designer
                     else
                         iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0.##") + "% " + names1[dType1] +
                                " resistance. (" + str1 + ")";
-                    graphRes.AddItem(names1[dType1] + ":|" + Strings.Format(displayStats.DamageResistance(dType1, false), "##0.#") + "%",
+                    graphRes.AddItem(names1[dType1] + ":|" + Strings.Format(displayStats.DamageResistance(dType1, false), "##0.##") + "%",
                         displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
                 }
 
@@ -518,8 +518,8 @@ namespace Hero_Designer
             string iTip5 = "Base HitPoints: " + Convert.ToString(MidsContext.Character.Archetype.Hitpoints) + "\r\nCurrent HitPoints: " +
                            Convert.ToString(displayStats.HealthHitpointsNumeric(false));
             if (Math.Abs(displayStats.HealthHitpointsNumeric(false) - displayStats.HealthHitpointsNumeric(true)) > 0.01)
-                iTip5 = iTip5 + "\r\n(Capped from a total of: " + Strings.Format(displayStats.HealthHitpointsNumeric(true), "###0.#") + ")";
-            graphHP.AddItem("Max HP:|" + Strings.Format(displayStats.HealthHitpointsPercentage, "###0.#") + "%",
+                iTip5 = iTip5 + "\r\n(Capped from a total of: " + Strings.Format(displayStats.HealthHitpointsNumeric(true), "###0.##") + ")";
+            graphHP.AddItem("Max HP:|" + Strings.Format(displayStats.HealthHitpointsPercentage, "###0.##") + "%",
                 displayStats.HealthHitpointsPercentage, displayStats.HealthHitpointsPercentage, iTip5);
             graphHP.Max = (float) (MidsContext.Character.Archetype.HPCap / (double) MidsContext.Character.Archetype.Hitpoints * 100.0);
             graphHP.MarkerValue = 100f;
@@ -576,12 +576,12 @@ namespace Hero_Designer
 
             AddGrphMovement("Run:|", displayStats.MovementRunSpeed, iTip8);
             AddGrphMovement("Jump:|", displayStats.MovementJumpSpeed, jumpTip);
-            //this.graphMovement.AddItem("Run:|" + Strings.Format(displayStats.MovementRunSpeed(speedFormat, false), "##0.#") + rateDisp, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), iTip8);
-            //this.graphMovement.AddItem("Jump:|" + Strings.Format(displayStats.MovementJumpSpeed(speedFormat, false), "##0.#") + rateDisp, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), jumpTip);
-            graphMovement.AddItem("Jump Height:|" + Strings.Format(displayStats.MovementJumpHeight(speedFormat), "##0.#") + lengthDisp,
+            //this.graphMovement.AddItem("Run:|" + Strings.Format(displayStats.MovementRunSpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), iTip8);
+            //this.graphMovement.AddItem("Jump:|" + Strings.Format(displayStats.MovementJumpSpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), jumpTip);
+            graphMovement.AddItem("Jump Height:|" + Strings.Format(displayStats.MovementJumpHeight(speedFormat), "##0.##") + lengthDisp,
                 displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
                 displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
-            //this.graphMovement.AddItem("Fly:|" + Strings.Format(displayStats.MovementFlySpeed(speedFormat, false), "##0.#") + rateDisp, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, true), fltTip);
+            //this.graphMovement.AddItem("Fly:|" + Strings.Format(displayStats.MovementFlySpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, true), fltTip);
 
             //AddGrphMovement("Jump Height:|", (x,_) => displayStats.MovementJumpHeight(x), jmpHtTip);
             AddGrphMovement("Fly:|", displayStats.MovementFlySpeed, fltTip);
@@ -589,12 +589,12 @@ namespace Hero_Designer
             graphMovement.ForcedMax = displayStats.Speed(200f, Enums.eSpeedMeasure.FeetPerSecond);
             graphMovement.Draw();
             graphToHit.Clear();
-            graphToHit.AddItem("ToHit:|" + PM(displayStats.BuffToHit, "##0.#", "%"), displayStats.BuffToHit, 0.0f,
+            graphToHit.AddItem("ToHit:|" + PM(displayStats.BuffToHit, "##0.##", "%"), displayStats.BuffToHit, 0.0f,
                 "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
             graphToHit.Max = 100f;
             graphToHit.Draw();
             graphAcc.Clear();
-            graphAcc.AddItem("Accuracy:|" + PM(displayStats.BuffAccuracy, "##0.#", "%"), displayStats.BuffAccuracy, 0.0f,
+            graphAcc.AddItem("Accuracy:|" + PM(displayStats.BuffAccuracy, "##0.##", "%"), displayStats.BuffAccuracy, 0.0f,
                 "This effect increases the accuracy of all your powers.\r\nAccuracy buffs are usually applied as invention set bonuses.");
             graphAcc.Max = 100f;
             graphAcc.Draw();
@@ -603,7 +603,7 @@ namespace Hero_Designer
             if (A_GT_B(displayStats.BuffDamage(true), displayStats.BuffDamage(false)))
                 str7 = "\r\n\r\nDamage Capped from " + Convert.ToString(displayStats.BuffDamage(true)) + "% to " +
                        Convert.ToString(displayStats.BuffDamage(false)) + "%";
-            graphDam.AddItem("Damage:|" + PM(displayStats.BuffDamage(false) - 100f, "##0.#", "%"), displayStats.BuffDamage(false),
+            graphDam.AddItem("Damage:|" + PM(displayStats.BuffDamage(false) - 100f, "##0.##", "%"), displayStats.BuffDamage(false),
                 displayStats.BuffDamage(true),
                 "This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included." +
                 str7);
@@ -624,7 +624,7 @@ namespace Hero_Designer
             graphHaste.Max = haste <= 380.0 ? (haste <= 280.0 ? 300f : 400f) : 500f;
             graphHaste.Draw();
             graphEndRdx.Clear();
-            graphEndRdx.AddItem("EndRdx:|" + PM(displayStats.BuffEndRdx, "##0.#", "%"), displayStats.BuffEndRdx, displayStats.BuffEndRdx,
+            graphEndRdx.AddItem("EndRdx:|" + PM(displayStats.BuffEndRdx, "##0.##", "%"), displayStats.BuffEndRdx, displayStats.BuffEndRdx,
                 "This effect is applied to powers in addition to endurance reduction enhancements.");
             graphEndRdx.Max = 200f;
             graphEndRdx.Draw();
@@ -712,7 +712,7 @@ namespace Hero_Designer
                 else
                     iTip12 = "You have " + Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.##") + "% resistance to " +
                              names3[(int) eMezArray[index]] + " effects." + str11;
-                graphSRes.AddItem(names2[(int) eMezArray[index]] + ":|" + Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.#") + "%",
+                graphSRes.AddItem(names2[(int) eMezArray[index]] + ":|" + Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.##") + "%",
                     totals.MezRes[(int) eMezArray[index]], 0.0f, iTip12);
             }
 
@@ -737,7 +737,7 @@ namespace Hero_Designer
                              Enums.GetEffectName(eEffectTypeArray[index]) + " debuffs.";
                 graphSDeb.AddItem(
                     Enums.GetEffectName(eEffectTypeArray[index]) + ":|" +
-                    Strings.Format(totals.DebuffRes[(int) eEffectTypeArray[index]], "##0.#") + "%",
+                    Strings.Format(totals.DebuffRes[(int) eEffectTypeArray[index]], "##0.##") + "%",
                     totals.DebuffRes[(int) eEffectTypeArray[index]], 0.0f, iTip11);
             }
 
