@@ -6,10 +6,16 @@ In early 2019 with the re-emergence of _City of Heroes_ thanks to the _Homecomin
 
  
 
-With all 3 working together in joint development, the project has been reborn once more! This time with a new name, some new features, and a new team!
+The project has been reborn once more! This time with a new name, some new features, and a new team!
 
-#### Development Team
+#### Active Development Team Members
 - Crytilis
+- Bopper
+- Feles Noctis
+- Procat
+- Zed
+
+#### In-Active Development Team Members
 - Maslow
 - Pine
 
