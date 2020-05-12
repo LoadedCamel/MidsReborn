@@ -4192,14 +4192,13 @@ namespace Hero_Designer
                 str2 = str2.Replace(nameof(Hero), "Villain");
             if (MidsContext.Config.MasterMode)
             {
-                Text = str2 + " (Master Mode) v" + MidsContext.AppAssemblyVersion + " (DB: I" + DatabaseAPI.Database.Issue + " - Updated: " +
-                       DatabaseAPI.Database.Date.ToString(" MMM / dd / yyyy @ hh:mm tt") + ")";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version} Updated: {DatabaseAPI.Database.Date:MMM / dd / yyyy @ hh:mm tt})";
             }
             else
             {
                 //this.Text = str2 + " v" + MidsContext.AppAssemblyVersion + " (Database Issue: " + DatabaseAPI.Database.Issue + " - Updated: " + DatabaseAPI.Database.Date.ToString("dd/MM/yy") + ")";
                 Text =
-                    $@"{str2} v{MidsContext.AppAssemblyVersion} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version.ToString()})";
+                    $@"{str2} v{MidsContext.AppAssemblyVersion} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
             }
         }
 

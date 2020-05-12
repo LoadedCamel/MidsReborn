@@ -26,7 +26,7 @@ public class ConfigData
     public Size LastSize { get => _lastSize; set => _lastSize = value; }
 
     public float BaseAcc { get; set; } = 0.75f;
-    public string UpdatePath { get; set; }
+    public const string UpdatePath = "http://midsreborn.com/mids_updates/update.xml";
     public bool DoNotUpdateFileAssociation { get; set; }
     public int ExempHigh { get; set; } = 50;
     public int TeamSize { get; set; } = 1;
@@ -340,7 +340,7 @@ public class ConfigData
                     //this.UpdatePath =
                     reader.ReadString();
                     //if (string.IsNullOrEmpty(this.UpdatePath))
-                    //    this.UpdatePath = "http://midsreborn.com/mids_updates/";
+                    //    this.UpdatePath = "https://midsreborn.com/mids_updates/";
                 }
                 if (version >= 1.25)
                 {

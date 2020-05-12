@@ -40,9 +40,9 @@ namespace Hero_Designer
         }*/
 
         public static void BugReportCrytilis() => LaunchBrowser("https://github.com/Crytilis/mids-reborn-hero-designer/issues");
-        public static void BugReportImaginary() => LaunchBrowser("https://github.com/ImaginaryDevelopment/imaginary-hero-designer/issues");
+        //public static void BugReportImaginary() => LaunchBrowser("https://github.com/ImaginaryDevelopment/imaginary-hero-designer/issues");
 
-        public static void DownloadFromDomain() => LaunchBrowser("http://midsreborn.com/download/MRB_Setup.exe");
+        public static void DownloadFromDomain() => LaunchBrowser("https://midsreborn.com/download/MRB_Setup.exe");
 
         public static void KoFi()
         {
@@ -56,7 +56,7 @@ namespace Hero_Designer
 
         public static void GoToGitHubCrytilis() => LaunchBrowser("https://github.com/Crytilis/mids-reborn-hero-designer");
 
-        public static void GoToGitHubImaginary() => LaunchBrowser("https://github.com/ImaginaryDevelopment/imaginary-hero-designer");
+        //public static void GoToGitHubImaginary() => LaunchBrowser("https://github.com/ImaginaryDevelopment/imaginary-hero-designer");
 
         public static void GoToForums()
         {
@@ -76,7 +76,7 @@ namespace Hero_Designer
                 ProjectData.ClearProjectError();
             }
         }
-        const string readmeUrl = "https://raw.githubusercontent.com/ImaginaryDevelopment/imaginary-hero-designer/master/README.md";
+        const string readmeUrl = "https://raw.githubusercontent.com/Crytilis/mids-reborn-hero-designer/master/README.md";
 
         public (eCheckResponse, string) UpdateCheck()
         {

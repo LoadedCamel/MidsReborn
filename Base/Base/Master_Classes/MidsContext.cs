@@ -22,7 +22,7 @@ namespace Base.Master_Classes
         public static void AssertVersioning()
         {
             if (AppAssemblyVersion != $"{AppMajorVersion}.{AppMinorVersion}.{AppBuildVersion}.{AppRevisionVersion}")
-                throw new InvalidOperationException("Program assembly versioning is not internally consistent");
+                throw new InvalidOperationException("Program assembly version is not internally consistent");
             if (AppVersion.CompareTo(new Version(AppAssemblyVersion)) != 0)
                 throw new InvalidOperationException("Program app version is not internally consistent, failing startup");
         }

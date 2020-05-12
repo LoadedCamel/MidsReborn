@@ -204,7 +204,7 @@ namespace Hero_Designer
             }*/
 
             byte[] data = Convert.FromBase64String("aHR0cDovL2hvb2tzLm1pZHNyZWJvcm4uY29tOjMwMDAvYXBpP3Rva2VuPVVtUWhUNGtEclMwZ0E1TUY1YUdsaTh6YllDVW1RaFQ0a0RyUzBnQTVNRjVhR2xpOHpiWUM=");
-            //byte[] data = Convert.FromBase64String("aHR0cDovL2hvb2tzLm1pZHNyZWJvcm4uY29tOjMwMDEvYXBpP3Rva2VuPVVtUWhUNGtEclMwZ0E1TUY1YUdsaTh6YllDVW1RaFQ0a0RyUzBnQTVNRjVhR2xpOHpiWUM=");
+            //byte[] data = Convert.FromBase64String("aHR0cHM6Ly9ob29rcy5taWRzcmVib3JuLmNvbTozMDAwL2FwaT90b2tlbj1VbVFoVDRrRHJTMGdBNU1GNWFHbGk4emJZQ1VtUWhUNGtEclMwZ0E1TUY1YUdsaTh6YllD");
             string wString = Encoding.UTF8.GetString(data);
 
             //Send the data to the API Server and retrieve response
