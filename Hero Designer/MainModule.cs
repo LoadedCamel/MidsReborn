@@ -1,6 +1,7 @@
 
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -58,22 +59,27 @@ namespace Hero_Designer
                 iFrm?.SetMessage("Loading Enhancement Database...");
                 if (!DatabaseAPI.LoadEnhancementClasses())
                     ProjectData.EndApp();
-                I9Gfx.LoadClasses();
                 DatabaseAPI.LoadEnhancementDb();
-                I9Gfx.LoadEnhancements();
-                I9Gfx.LoadSets();
                 DatabaseAPI.LoadOrigins();
-                I9Gfx.LoadBorders();
                 DatabaseAPI.LoadSetTypeStrings();
-                iFrm?.SetMessage("Loading Recipe Database...");
+
+                iFrm?.SetMessage("Loading Recipe Database...");               
                 DatabaseAPI.LoadSalvage();
                 DatabaseAPI.LoadRecipes();
+
                 iFrm?.SetMessage("Loading Graphics...");
-                I9Gfx.LoadSetTypes();
-                I9Gfx.LoadEnhTypes();
-                I9Gfx.LoadOriginImages();
-                I9Gfx.LoadArchetypeImages();
-                I9Gfx.LoadPowersetImages();
+                Task[] taskArray = new Task[9];
+                taskArray[0] = Task.Run(() => { I9Gfx.LoadOriginImages(); });
+                taskArray[1] = Task.Run(() => { I9Gfx.LoadArchetypeImages(); });
+                taskArray[2] = Task.Run(() => { I9Gfx.LoadPowersetImages(); });
+                taskArray[3] = Task.Run(() => { I9Gfx.LoadEnhancements(); });
+                taskArray[4] = Task.Run(() => { I9Gfx.LoadSets(); });
+                taskArray[5] = Task.Run(() => { I9Gfx.LoadBorders(); });
+                taskArray[6] = Task.Run(() => { I9Gfx.LoadSetTypes(); });
+                taskArray[7] = Task.Run(() => { I9Gfx.LoadEnhTypes(); });
+                taskArray[8] = Task.Run(() => { I9Gfx.LoadClasses(); });                
+                Task.WaitAll(taskArray);
+
                 MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate));
                 if (iFrm != null)
                 {
@@ -83,7 +89,6 @@ namespace Hero_Designer
                     DatabaseAPI.AssignSetBonusIndexes();
                     iFrm?.SetMessage("Matching Recipe IDs...");
                 }
-
                 DatabaseAPI.AssignRecipeIDs();
                 GC.Collect();
             }

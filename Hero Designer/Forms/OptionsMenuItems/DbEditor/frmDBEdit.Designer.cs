@@ -69,6 +69,8 @@ namespace Hero_Designer
             this.btnFileReport = new System.Windows.Forms.Button();
             this.exportIndexes = new System.Windows.Forms.Button();
             this.btnEditIOSetPvP = new System.Windows.Forms.Button();
+            this.btnExportJSON = new System.Windows.Forms.Button();
+            this.btnJsonImporter = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             this.GroupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -90,8 +92,8 @@ namespace Hero_Designer
             0,
             0,
             0});
-            this.udIssue.KeyPress += new KeyPressEventHandler(udIssue_KeyPress);
-            this.udIssue.ValueChanged += new EventHandler(udIssue_ValueChanged);
+            this.udIssue.ValueChanged += new System.EventHandler(this.udIssue_ValueChanged);
+            this.udIssue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udIssue_KeyPress);
             // 
             // Label1
             // 
@@ -475,11 +477,39 @@ namespace Hero_Designer
             this.btnEditIOSetPvP.UseVisualStyleBackColor = true;
             this.btnEditIOSetPvP.Click += new System.EventHandler(this.btnEditIOSetPvP_Click);
             // 
+            // btnExportJSON
+            // 
+            this.btnExportJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnExportJSON.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportJSON.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnExportJSON.Location = new System.Drawing.Point(48, 353);
+            this.btnExportJSON.Name = "btnExportJSON";
+            this.btnExportJSON.Size = new System.Drawing.Size(160, 24);
+            this.btnExportJSON.TabIndex = 26;
+            this.btnExportJSON.Text = "JSON Export";
+            this.btnExportJSON.UseVisualStyleBackColor = true;
+            this.btnExportJSON.Click += new System.EventHandler(this.btnExportJSON_Click);
+            // 
+            // btnJsonImporter
+            // 
+            this.btnJsonImporter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnJsonImporter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnJsonImporter.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnJsonImporter.Location = new System.Drawing.Point(48, 383);
+            this.btnJsonImporter.Name = "btnJsonImporter";
+            this.btnJsonImporter.Size = new System.Drawing.Size(160, 24);
+            this.btnJsonImporter.TabIndex = 27;
+            this.btnJsonImporter.Text = "JSON Importer";
+            this.btnJsonImporter.UseVisualStyleBackColor = true;
+            this.btnJsonImporter.Click += new System.EventHandler(this.btnJsonImporter_Click);
+            // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(416, 359);
+            this.ClientSize = new System.Drawing.Size(416, 422);
+            this.Controls.Add(this.btnJsonImporter);
+            this.Controls.Add(this.btnExportJSON);
             this.Controls.Add(this.btnFileReport);
             this.Controls.Add(this.Label3);
             this.Controls.Add(this.txtDBVer);
@@ -518,5 +548,7 @@ namespace Hero_Designer
         System.Windows.Forms.NumericUpDown udIssue;
         #endregion
 
+        private Button btnExportJSON;
+        private Button btnJsonImporter;
     }
 }

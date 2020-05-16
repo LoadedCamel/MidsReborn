@@ -26,7 +26,7 @@ public class ConfigData
     public Size LastSize { get => _lastSize; set => _lastSize = value; }
 
     public float BaseAcc { get; set; } = 0.75f;
-    public const string UpdatePath = "http://midsreborn.com/mids_updates/update.xml";
+    public string UpdatePath { get; set; }
     public bool DoNotUpdateFileAssociation { get; set; }
     public int ExempHigh { get; set; } = 50;
     public int TeamSize { get; set; } = 1;
@@ -190,6 +190,9 @@ public class ConfigData
 
     void IntializeComponent()
     {
+        if (string.IsNullOrEmpty(this.UpdatePath))
+            this.UpdatePath = "http://midsreborn.com/mids_updates/update.xml";
+
         RelocateSaveFolder(false);
         try
         {
@@ -335,7 +338,7 @@ public class ConfigData
                     BuildMode = (Enums.dmModes)reader.ReadInt32();
                     BuildOption = (Enums.dmItem)reader.ReadInt32();
                     //this.UpdatePath =
-                        reader.ReadString();
+                    reader.ReadString();
                     //if (string.IsNullOrEmpty(this.UpdatePath))
                     //    this.UpdatePath = "http://midsreborn.com/mids_updates/";
                 }

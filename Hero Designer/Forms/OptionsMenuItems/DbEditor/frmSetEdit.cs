@@ -377,10 +377,13 @@ namespace Hero_Designer
                 if (DatabaseAPI.Database.Power[SetBonusList[index]].Effects.Length > 0)
                     items[1] = DatabaseAPI.Database.Power[SetBonusList[index]].Effects[0].BuildEffectStringShort(false, true, false);
                 items[0] = DatabaseAPI.Database.Power[SetBonusList[index]].PowerName;
-                lvBonusList.Items.Add(new ListViewItem(items)
+                if (items[0].ToUpper().Contains(this.txtBonusFilter.Text.ToUpper()))
                 {
-                    Tag = SetBonusList[index]
-                });
+                    lvBonusList.Items.Add(new ListViewItem(items)
+                    {
+                        Tag = SetBonusList[index]
+                    });
+                }
             }
             lvBonusList.Sort();
             lvBonusList.EndUpdate();
@@ -530,6 +533,7 @@ namespace Hero_Designer
                     mySet.Bonus[BonusID()].Index = (int[])Utils.CopyArray(mySet.Bonus[BonusID()].Index, (Array)new int[mySet.Bonus[BonusID()].Index.Length + 1]);
                     mySet.Bonus[BonusID()].Name[mySet.Bonus[BonusID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     mySet.Bonus[BonusID()].Index[mySet.Bonus[BonusID()].Index.Length - 1] = index;
+                    mySet.Bonus[BonusID()].Slotted = cbSlotCount.SelectedIndex+2;                                        
                 }
                 else if (isSpecial())
                 {
@@ -631,6 +635,11 @@ namespace Hero_Designer
                 return;
             mySet.LevelMin = Convert.ToInt32(Decimal.Subtract(udMinLevel.Value, new Decimal(1)));
             udMaxLevel.Minimum = udMinLevel.Value;
+        }
+
+        private void TxtBonusFilter_TextChanged(object sender, EventArgs e)
+        {
+            FillBonusList();
         }
     }
 }

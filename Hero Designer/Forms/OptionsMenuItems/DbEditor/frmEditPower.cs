@@ -27,6 +27,7 @@ namespace Hero_Designer
         public IPower myPower;
         bool ReqChanging;
         bool Updating;
+        bool cancelClose;
 
         public frmEditPower(IPower iPower)
         {
@@ -227,10 +228,12 @@ namespace Hero_Designer
             if (power.GroupName == "" | power.SetName == "" | power.PowerName == "")
             {
                 Interaction.MsgBox(("Power name '" + power.FullName + " is invalid."), MsgBoxStyle.Exclamation, "No Can Do");
+                this.DialogResult = DialogResult.None;
             }
             else if (!PowerFullNameIsUnique(Convert.ToString(power.PowerIndex)))
             {
                 Interaction.MsgBox(("Power name '" + power.FullName + " already exists, please enter a unique name."), MsgBoxStyle.Exclamation, "No Can Do");
+                this.DialogResult = DialogResult.None;
             }
             else
             {
@@ -448,6 +451,7 @@ namespace Hero_Designer
             if (Updating)
                 return;
             DisplayNameData();
+            FillComboNameSet();
         }
 
         void cbNameGroup_SelectedIndexChanged(object sender, EventArgs e)
@@ -976,13 +980,7 @@ namespace Hero_Designer
             foreach (string key in DatabaseAPI.Database.PowersetGroups.Keys)
                 cbNameGroup.Items.Add(key);
             cbNameGroup.EndUpdate();
-            cbNameSet.BeginUpdate();
-            cbNameSet.Items.Clear();
-            int[] indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(myPower.GroupName);
-            int num1 = indexesByGroupName.Length - 1;
-            for (int index = 0; index <= num1; ++index)
-                cbNameSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
-            cbNameSet.EndUpdate();
+            FillComboNameSet();
             cbForcedClass.BeginUpdate();
             cbForcedClass.Items.Clear();
             cbForcedClass.Items.Add("None");
@@ -1004,6 +1002,17 @@ namespace Hero_Designer
             lvDisablePass4.Items.Clear();
             lvDisablePass4.Items.AddRange(Enum.GetNames(eEnhance.GetType()));
             lvDisablePass4.EndUpdate();
+        }
+
+        void FillComboNameSet()
+        {
+            cbNameSet.BeginUpdate();
+            cbNameSet.Items.Clear();
+            int[] indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(myPower.GroupName);
+            int num1 = indexesByGroupName.Length - 1;
+            for (int index = 0; index <= num1; ++index)
+                cbNameSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
+            cbNameSet.EndUpdate();
         }
 
         void FillTab_Attribs()

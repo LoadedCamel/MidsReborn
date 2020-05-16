@@ -48,6 +48,7 @@ namespace Hero_Designer
             this.txtNameShort = new System.Windows.Forms.TextBox();
             this.Label3 = new System.Windows.Forms.Label();
             this.txtNameFull = new System.Windows.Forms.TextBox();
+            this.txtBonusFilter = new System.Windows.Forms.TextBox();          
             this.Label2 = new System.Windows.Forms.Label();
             this.btnImage = new System.Windows.Forms.Button();
             this.GroupBox2 = new System.Windows.Forms.GroupBox();
@@ -312,6 +313,7 @@ namespace Hero_Designer
             this.GroupBox3.Controls.Add((System.Windows.Forms.Control) this.Label16);
             this.GroupBox3.Controls.Add((System.Windows.Forms.Control) this.cbSlotCount);
             this.GroupBox3.Controls.Add((System.Windows.Forms.Control) this.rtbBonus);
+            this.GroupBox3.Controls.Add((System.Windows.Forms.Control) this.txtBonusFilter);
 
             this.GroupBox3.Location = new System.Drawing.Point(348, 8);
             this.GroupBox3.Name = "GroupBox3";
@@ -348,7 +350,7 @@ namespace Hero_Designer
             this.lvBonusList.MultiSelect = false;
             this.lvBonusList.Name = "lvBonusList";
 
-            this.lvBonusList.Size = new System.Drawing.Size(339, 407);
+            this.lvBonusList.Size = new System.Drawing.Size(339, 378);
             this.lvBonusList.TabIndex = 17;
             this.lvBonusList.UseCompatibleStateImageBehavior = false;
             this.lvBonusList.View = System.Windows.Forms.View.Details;
@@ -432,6 +434,14 @@ namespace Hero_Designer
             this.rbIfAny.TabIndex = 103;
             this.rbIfAny.TabStop = true;
             this.rbIfAny.Text = "Any";
+
+            this.txtBonusFilter.Location = new System.Drawing.Point(284, 406);
+            this.txtBonusFilter.Multiline = true;
+            this.txtBonusFilter.Name = "txtBonusFilter";
+
+            this.txtBonusFilter.Size = new System.Drawing.Size(339, 20);
+            this.txtBonusFilter.TextChanged += new System.EventHandler(TxtBonusFilter_TextChanged);
+
             this.AcceptButton = (System.Windows.Forms.IButtonControl) this.btnOK;
 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -505,6 +515,7 @@ namespace Hero_Designer
         TextBox txtInternal;
         TextBox txtNameFull;
         TextBox txtNameShort;
+        TextBox txtBonusFilter;
         NumericUpDown _udMaxLevel;
         NumericUpDown _udMinLevel;
     }

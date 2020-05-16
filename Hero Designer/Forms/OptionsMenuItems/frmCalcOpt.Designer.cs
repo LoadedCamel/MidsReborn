@@ -190,13 +190,14 @@ namespace Hero_Designer
             this.csAdd = new System.Windows.Forms.Button();
             this.csList = new System.Windows.Forms.ListBox();
             this.TabPage5 = new System.Windows.Forms.TabPage();
+            this.cbUpdateURL = new System.Windows.Forms.ComboBox();
+            this.lblUpdateURL = new System.Windows.Forms.Label();
             this.btnSaveFolderReset = new System.Windows.Forms.Button();
             this.lblSaveFolder = new System.Windows.Forms.Label();
             this.btnSaveFolder = new System.Windows.Forms.Button();
             this.chkLoadLastFile = new System.Windows.Forms.CheckBox();
             this.Label1 = new System.Windows.Forms.Label();
             this.GroupBox16 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.Label19 = new System.Windows.Forms.Label();
             this.GroupBox1 = new System.Windows.Forms.GroupBox();
             this.Label37 = new System.Windows.Forms.Label();
@@ -2019,6 +2020,8 @@ namespace Hero_Designer
             // 
             // TabPage5
             // 
+            this.TabPage5.Controls.Add(this.cbUpdateURL);
+            this.TabPage5.Controls.Add(this.lblUpdateURL);
             this.TabPage5.Controls.Add(this.btnSaveFolderReset);
             this.TabPage5.Controls.Add(this.lblSaveFolder);
             this.TabPage5.Controls.Add(this.btnSaveFolder);
@@ -2032,6 +2035,31 @@ namespace Hero_Designer
             this.TabPage5.TabIndex = 4;
             this.TabPage5.Text = "Updates & Paths";
             this.TabPage5.UseVisualStyleBackColor = true;
+            // 
+            // cbUpdateURL
+            // 
+            this.cbUpdateURL.AutoCompleteCustomSource.AddRange(new string[] {
+            "http://midsreborn.com/mids_updates/update.xml",
+            "http://keepers.dk/mids/update.xml"});
+            this.cbUpdateURL.FormattingEnabled = true;
+            this.cbUpdateURL.Items.AddRange(new object[] {
+            "http://midsreborn.com/mids_updates/update.xml",
+            "http://keepers.dk/mids/update.xml",
+            "http://keepers.dk/mids/update_beta.xml",
+            "http://keepers.dk/mids/update_dev.xml"});
+            this.cbUpdateURL.Location = new System.Drawing.Point(17, 200);
+            this.cbUpdateURL.Name = "cbUpdateURL";
+            this.cbUpdateURL.Size = new System.Drawing.Size(593, 22);
+            this.cbUpdateURL.TabIndex = 67;
+            // 
+            // lblUpdateURL
+            // 
+            this.lblUpdateURL.Location = new System.Drawing.Point(8, 175);
+            this.lblUpdateURL.Name = "lblUpdateURL";
+            this.lblUpdateURL.Size = new System.Drawing.Size(168, 24);
+            this.lblUpdateURL.TabIndex = 65;
+            this.lblUpdateURL.Text = "Update URL:";
+            this.lblUpdateURL.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnSaveFolderReset
             // 
@@ -2082,7 +2110,6 @@ namespace Hero_Designer
             // 
             // GroupBox16
             // 
-            this.GroupBox16.Controls.Add(this.button1);
             this.GroupBox16.Controls.Add(this.Label19);
             this.GroupBox16.Location = new System.Drawing.Point(417, 3);
             this.GroupBox16.Name = "GroupBox16";
@@ -2091,17 +2118,6 @@ namespace Hero_Designer
             this.GroupBox16.TabStop = false;
             this.GroupBox16.Text = "Panic Button:";
             this.GroupBox16.Visible = false;
-            // 
-            // button1
-            // 
-            this.button1.Enabled = false;
-            this.button1.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(124, 115);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(80, 23);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "PANIC!";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // Label19
             // 
@@ -2486,7 +2502,6 @@ namespace Hero_Designer
         NumericUpDown udIOLevel;
         NumericUpDown udRTFSize;
         NumericUpDown udStatSize;
-        private Button button1;
         private GroupBox groupBox21;
         private CheckBox checkBox10;
         private CheckBox checkBox9;
@@ -2520,5 +2535,7 @@ namespace Hero_Designer
         private CheckBox checkBox11;
         private Label label41;
         private CheckBox checkBox24;
+        private Label lblUpdateURL;
+        private ComboBox cbUpdateURL;
     }
 }

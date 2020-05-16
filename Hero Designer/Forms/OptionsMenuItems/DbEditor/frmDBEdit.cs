@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Base.Master_Classes;
+using Hero_Designer.Forms.JsonImport;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -184,6 +185,8 @@ namespace Hero_Designer
             txtDBVer.Enabled = MidsContext.Config.MasterMode;
             UdIssue.Enabled = MidsContext.Config.MasterMode;
             btnFileReport.Visible = MidsContext.Config.MasterMode;
+            btnExportJSON.Visible = MidsContext.Config.MasterMode;
+            btnJsonImporter.Visible = MidsContext.Config.MasterMode;
             DisplayInfo();
         }
 
@@ -207,6 +210,17 @@ namespace Hero_Designer
             if (!MainModule.MidsController.IsAppInitialized || !Initialized)
                 return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
+        }
+
+        private void btnExportJSON_Click(object sender, EventArgs e)
+        {
+            var serializer = My.MyApplication.GetSerializer();
+            DatabaseAPI.SaveJSONDatabase(serializer);
+        }
+
+        private void btnJsonImporter_Click(object sender, EventArgs e)
+        {
+            new frmJsonImportMain().ShowDialog();
         }
     }
 }

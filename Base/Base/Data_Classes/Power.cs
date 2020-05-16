@@ -2251,5 +2251,22 @@ namespace Base.Data_Classes
         }
         public override string ToString()
             => DisplayName;
+
+        public bool AllowedForClass(int classId)
+        {
+            //If a power neither requires a class nor excludes one, just return true.
+            if ((this.Requires.NClassName.Length == 0) && (this.Requires.NClassNameNot.Length == 0))
+                return true;
+
+            //Check if the power has a class requirement.
+            if (this.Requires.NClassName.Length > 0)
+                return (this.Requires.NClassName.Contains(classId));
+
+            //Check if the power has a class exclusion.
+            if (this.Requires.NClassNameNot.Length > 0)
+                return (!this.Requires.NClassNameNot.Contains(classId));
+
+            return true;
+        }
     }
 }

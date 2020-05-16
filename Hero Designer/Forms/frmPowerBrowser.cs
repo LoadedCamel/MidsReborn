@@ -1,9 +1,11 @@
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
@@ -240,6 +242,10 @@ namespace Hero_Designer
                     iPower.FullName = DatabaseAPI.Database.Classes[lvGroup.SelectedIndices[0]].PrimaryGroup + lvSet.SelectedItems[0].SubItems[0].Text + ".New_Power";
                     break;
             }
+            IPowerset iPowerset = DatabaseAPI.GetPowersetByName(lvPower.SelectedItems[0].SubItems[3].Text);
+            iPower.GroupName = iPowerset.GroupName;
+            iPower.PowerSetID = iPowerset.nID;
+            iPower.SetName = iPowerset.SetName;
             iPower.DisplayName = "New Power";
             frmEditPower frmEditPower = new frmEditPower(iPower);
             if (frmEditPower.ShowDialog() != DialogResult.OK)
@@ -247,32 +253,57 @@ namespace Hero_Designer
             IDatabase database = DatabaseAPI.Database;
             IPower[] powerArray = (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
             database.Power = powerArray;
-            DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] =
-                new Power(frmEditPower.myPower) {IsNew = true};
-            UpdateLists();
+            IPower newPower = new Power(frmEditPower.myPower);
+            newPower.IsNew = true;
+            newPower.PowerIndex = DatabaseAPI.Database.Power.Length-1;
+            DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] = newPower;
+            //Add the power to the power set otherwise we'll get issues later when upting the UI.
+            if (newPower.PowerSetID > -1)
+            {
+                IPowerset powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
+                powerArray = (IPower[])Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
+                powerSet.Powers = powerArray;
+                powerArray[powerSet.Powers.Length - 1] = newPower;
+            }
+            UpdateLists(this.lvGroup.SelectedIndices[0], this.lvSet.SelectedIndices[0]);
         }
 
         void btnPowerClone_Click(object sender, EventArgs e)
-        {
-            IPower iPower = new Power();
-            if (DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text) < 0)
+        {            
+            int index = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
+            if (index < 0)
             {
                 Interaction.MsgBox("Unknown error caused an invalid PowerIndex return value.", MsgBoxStyle.Exclamation, "Wha?");
             }
             else
             {
-                iPower.DisplayName = "New Power";
-                iPower.FullName += "_Clone";
-                iPower.DisplayName += " (Clone)";
-                frmEditPower frmEditPower = new frmEditPower(iPower);
+                IPower newPower = new Power(DatabaseAPI.Database.Power[index]);
+                //Get the StaticIndex from the last power and add 1
+                List<IPower> powerList = new List<IPower>(DatabaseAPI.Database.Power);
+                int newStaticIndex = powerList.Max(x => x.StaticIndex) + 1;
+                newPower.StaticIndex = newStaticIndex;
+                newPower.FullName += "_Clone";
+                newPower.DisplayName += " (Clone)";
+                newPower.PowerName += "_Clone";
+                newPower.IsNew = true;
+                newPower.PowerIndex = DatabaseAPI.Database.Power.Length;
+
+                frmEditPower frmEditPower = new frmEditPower(newPower);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
+                newPower = frmEditPower.myPower;
                 IDatabase database = DatabaseAPI.Database;
                 IPower[] powerArray = (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
                 database.Power = powerArray;
-                DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] =
-                    new Power(frmEditPower.myPower) {IsNew = true};
-                UpdateLists();
+                DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] = newPower;
+                //Add the power to the power set otherwise we'll get issues later when upting the UI.
+                if (newPower.PowerSetID > -1) { 
+                    IPowerset powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
+                    powerArray = (IPower[])Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
+                    powerSet.Powers = powerArray;
+                    powerArray[powerSet.Powers.Length-1] = newPower;
+                }
+                UpdateLists(this.lvGroup.SelectedIndices[0], this.lvSet.SelectedIndices[0]);
             }
         }
 
@@ -354,9 +385,14 @@ namespace Hero_Designer
                 frmEditPower frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
-                DatabaseAPI.Database.Power[index1] = new Power(frmEditPower.myPower) {IsModified = true};
+                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
+                DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
                     return;
+                //Update the full power name in the powerset array
+                if (newPower.PowerSetID > -1)
+                    DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName = newPower.FullName;
+
                 int num2 = DatabaseAPI.Database.Power[index1].Effects.Length - 1;
                 for (int index2 = 0; index2 <= num2; ++index2)
                     DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName = DatabaseAPI.Database.Power[index1].FullName;

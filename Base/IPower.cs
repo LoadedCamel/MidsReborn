@@ -272,4 +272,6 @@ public interface IPower : IComparable
     bool IsEnhancementValid(int iEnh);
 
     void AbsorbPetEffects(int hIdx = -1);
+
+    bool AllowedForClass(int classId);
 }

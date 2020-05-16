@@ -88,6 +88,13 @@ namespace Hero_Designer
             if (lvSets.SelectedIndices.Count <= 0 || Interaction.MsgBox(("Really delete set: " + lvSets.SelectedItems[0].Text + "?"), MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                 return;
             int selectedIndex = lvSets.SelectedIndices[0];
+            if (DatabaseAPI.Database.EnhancementSets[selectedIndex].Enhancements.Length > 0)
+            {
+                MessageBox.Show("You need to remove all enhancements from this set before you can delete the set!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+  
             DatabaseAPI.Database.EnhancementSets.RemoveAt(selectedIndex);
             DatabaseAPI.MatchEnhancementIDs();
             DisplayList();
