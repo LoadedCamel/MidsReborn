@@ -115,18 +115,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HeroDesigner.Schema\HeroDesigner.Schema.fsproj">
-      <Project>{7b1c2fff-0399-4a7a-82ef-126660356121}</Project>
-      <Name>HeroDesigner.Schema</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="FSharp.Core">
       <Version>4.7.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HeroDesigner.Schema\HeroDesigner.Schema.fsproj">
+      <Project>{7b1c2fff-0399-4a7a-82ef-126660356121}</Project>
+      <Name>HeroDesigner.Schema</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

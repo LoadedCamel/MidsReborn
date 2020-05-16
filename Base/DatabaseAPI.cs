@@ -181,7 +181,7 @@ public static class DatabaseAPI
         return powerset2.Concat(powerset1).ToArray();
     }
 
-    public static void SaveJSONDatabase(ISerialize serializer)
+    public static void SaveJsonDatabase(ISerialize serializer)
     {
         JsonSerializer jsonSerializer = new JsonSerializer();
 

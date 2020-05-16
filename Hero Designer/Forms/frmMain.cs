@@ -4653,7 +4653,6 @@ namespace Hero_Designer
         void tsKoFi_Click(object sender, EventArgs e) => clsXMLUpdate.KoFi();
         void tsPatreon_Click(object sender, EventArgs e) => clsXMLUpdate.Patreon();
         void tsBugReportCrytilis_Click(object sender, EventArgs e) => clsXMLUpdate.BugReportCrytilis();
-        void tsBugReportImaginary_Click(object sender, EventArgs e) => clsXMLUpdate.BugReportImaginary();
 
         void tsDynamic_Click(object sender, EventArgs e)
         {
@@ -4982,9 +4981,6 @@ namespace Hero_Designer
         void tsCrytilisLink(object sender, EventArgs e)
             => clsXMLUpdate.GoToGitHubCrytilis();
 
-        void tsImaginaryLink(object sender, EventArgs e)
-            => clsXMLUpdate.GoToGitHubImaginary();
-
         private void AutoUpdater_ApplicationExitEvent()
         {
             Text = @"Closing application...";
@@ -5051,7 +5047,7 @@ namespace Hero_Designer
             }
         }
 
-        void TryUpdate()
+        static void TryUpdate()
         {
             try
             {                
