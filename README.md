@@ -37,6 +37,8 @@ https://twitter.com/midsreborn
    * [Wine](https://www.winehq.org/)  
    * [Winetricks](https://brewformulas.org/Winetricks)  
    * .NET 4.7.2 "Install with Winetricks"  
+   
+   **Catilina is NOT supported at this time**
 
 #### Linux
 
