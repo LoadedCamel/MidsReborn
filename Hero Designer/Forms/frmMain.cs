@@ -12,7 +12,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using AutoUpdaterDotNET;
 using Base;
 using Base.Data_Classes;
 using Base.Display;
@@ -166,6 +165,15 @@ namespace Hero_Designer
             }
 
             InitializeComponent();
+            Application.EnableVisualStyles();
+            foreach (var backup in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.bak"))
+            {
+                File.Delete(backup);
+            }
+            if (MidsContext.Config.CheckForUpdates)
+            {
+                clsXMLUpdate.CheckUpdate();
+            }
 
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
@@ -212,7 +220,7 @@ namespace Hero_Designer
 
         void frmMain_Load(object sender, EventArgs e)
         {
-            this.loading = true;
+            loading = true;
             try
             {
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
@@ -225,8 +233,9 @@ namespace Hero_Designer
                 myDataView = dvAnchored;
                 pnlGFX.BackColor = BackColor;
                 NoUpdate = true;
-                AutoUpdater.ApplicationExitEvent += AutoUpdater_ApplicationExitEvent;
-                AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
+                
+                //AutoUpdater.ApplicationExitEvent += AutoUpdater_ApplicationExitEvent;
+                //AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
                 if (!this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
                 {
                     MidsContext.Config.CheckForUpdates = false;
@@ -237,7 +246,7 @@ namespace Hero_Designer
                     MidsContext.Config.CreateDefaultSaveFolder();
                     MidsContext.Config.IsInitialized = true;
                 }
-
+                
                 string args = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
                 if (args.IndexOf("RECOVERY", StringComparison.OrdinalIgnoreCase) > -1)
                 {
@@ -338,7 +347,7 @@ namespace Hero_Designer
                 ibPopup.Checked = !MidsContext.Config.DisableShowPopup;
                 ibRecipe.Checked = MidsContext.Config.PopupRecipes;                
                 string rtfRelPath = Path.Combine(Files.FPathAppData, Files.PatchRtf);
-                if (File.Exists(rtfRelPath))
+                /*if (File.Exists(rtfRelPath))
                 {
                     new frmReadme(rtfRelPath)
                     {
@@ -351,7 +360,7 @@ namespace Hero_Designer
                     if (File.Exists(patchNotesTgt))
                         File.Delete(patchNotesTgt);
                     File.Move(Path.Combine(Files.FPathAppData, Files.PatchRtf), patchNotesTgt);
-                }
+                }*/
                 if (MidsContext.Config.MasterMode)
                 {
                     tsAdvFreshInstall.Visible = true;
@@ -376,8 +385,8 @@ namespace Hero_Designer
                 UpdateControls(true);
                 if (this.IsInDesignMode())
                     return;
-                if (MidsContext.Config.CheckForUpdates)
-                    TryUpdate();
+                /*if (MidsContext.Config.CheckForUpdates)
+                    clsXMLUpdate.CheckUpdate();*/
 
             }
             catch (Exception ex)
@@ -4979,7 +4988,7 @@ namespace Hero_Designer
             => clsXMLUpdate.GoToForums();
 
         void tsCrytilisLink(object sender, EventArgs e)
-            => clsXMLUpdate.GoToGitHubCrytilis();
+            => clsXMLUpdate.GoToGitHub();
 
         private void AutoUpdater_ApplicationExitEvent()
         {
@@ -4988,91 +4997,9 @@ namespace Hero_Designer
             Application.Exit();
         }
 
-        private void AutoUpdaterOnCheckForUpdateEvent(UpdateInfoEventArgs args)
-        {
-            if (args != null)
-            {
-                if (args.IsUpdateAvailable || args.UpdateMode == Mode.ForcedDownload)
-                {
-                    DialogResult dialogResult;
-                    if (args.Mandatory)
-                    {
-                        dialogResult =
-                            MessageBox.Show(
-                                $@"Update Detected! Version {args.CurrentVersion}. You are using version {
-                                        args.InstalledVersion
-                                    }. This is a mandatory update. Press OK to begin the update.",
-                                @"Update Available",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        dialogResult =
-                            MessageBox.Show(
-                                $@"Update Detected! Version {args.CurrentVersion} is available. You are using version {
-                                        args.InstalledVersion
-                                    }. Would you like to update now?", @"Update Available",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Information);
-                    }
+        void tsUpdateCheck_Click(object sender, EventArgs e) => clsXMLUpdate.CheckUpdate();
 
-
-                    if (!dialogResult.Equals(DialogResult.Yes) && !dialogResult.Equals(DialogResult.OK))
-                        return;
-                    try
-                    {
-                        if (AutoUpdater.DownloadUpdate())
-                        {
-                            Application.Exit();
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show(exception.Message, exception.GetType().ToString(), MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(@"There aren't any update(s) available at this time. Please try again later.", @"Update Unavailable",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            else
-            {
-                MessageBox.Show(
-                    @"There was a problem attempting to reach the update server. Please check your internet connection and try again later.",
-                    @"Update Check Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        static void TryUpdate()
-        {
-            try
-            {                
-                var path = MidsContext.Config.UpdatePath;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    MessageBox.Show("Unable to check for updates, no update path found");
-                    return;
-                }
-
-                // prove it is also a valid URI
-                if (Uri.TryCreate(path, UriKind.Absolute, out var _))
-                    AutoUpdater.Start(path);
-                else
-                    MessageBox.Show("Unable to check for updates, bad update path found : " + path);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        void tsUpdateCheck_Click(object sender, EventArgs e) => TryUpdate();
-
-        private void ForceReinstall()
+        /*private void ForceReinstall()
         {
             try
             {
@@ -5095,9 +5022,9 @@ namespace Hero_Designer
             {
                 MessageBox.Show(ex.Message);
             }
-        }
+        }*/
 
-        void tsForceReinstall_Click(object sender, EventArgs e) => ForceReinstall();
+        //void tsForceReinstall_Click(object sender, EventArgs e) => ForceReinstall();
 
         void tsViewSelected()
         {

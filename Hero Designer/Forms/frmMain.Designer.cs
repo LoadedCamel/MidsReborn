@@ -786,7 +786,7 @@ namespace Hero_Designer
             this.tsForceReinstall.Name = "tsForceReinstall";
             this.tsForceReinstall.Size = new System.Drawing.Size(199, 22);
             this.tsForceReinstall.Text = "Force reinstall";
-            this.tsForceReinstall.Click += new System.EventHandler(tsForceReinstall_Click);
+            //this.tsForceReinstall.Click += new System.EventHandler(tsForceReinstall_Click);
             // 
             // ToolStripSeparator22
             // 

@@ -7,7 +7,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Hero_Designer</RootNamespace>
     <AssemblyName>Hero Designer</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -27,9 +27,10 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
@@ -74,8 +75,15 @@
   <PropertyGroup />
   <PropertyGroup />
   <ItemGroup>
+    <Compile Include="clsZip.cs" />
     <Compile Include="clsHook.cs" />
     <Compile Include="FileAssocation.cs" />
+    <Compile Include="Forms\frmUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmUpdate.Designer.cs">
+      <DependentUpon>frmUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmSetListingPvP.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2039,6 +2047,9 @@
     <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
+    <EmbeddedResource Include="Forms\frmUpdate.resx">
+      <DependentUpon>frmUpdate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSetListingPvP.resx">
       <DependentUpon>frmSetListingPvP.cs</DependentUpon>
     </EmbeddedResource>
@@ -2061,6 +2072,8 @@
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
@@ -2492,11 +2505,8 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autoupdater.NET.Official">
-      <Version>1.5.8</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>2.9.8</Version>
+      <Version>3.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
