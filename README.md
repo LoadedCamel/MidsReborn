@@ -29,14 +29,14 @@ https://twitter.com/midsreborn
 
 #### Windows
 
-   * [.NET 4.7.2](https://dotnet.microsoft.com/download/thank-you/net472)
+   * [.NET 4.7.2](https://dotnet.microsoft.com/download/thank-you/net48)
 
 #### MacOS
 
    * [Homebrew](https://brew.sh/)  
    * [Wine](https://www.winehq.org/)  
    * [Winetricks](https://brewformulas.org/Winetricks)  
-   * .NET 4.7.2 "Install with Winetricks"  
+   * .NET 4.8 "Install with Winetricks"  
    
    **Catilina is NOT supported at this time**
 
@@ -44,4 +44,4 @@ https://twitter.com/midsreborn
 
    * [Wine](https://www.winehq.org/)  
    * [Winetricks](https://github.com/Winetricks/winetricks)  
-   * .NET 4.7.2 "Install with Winetricks"    
+   * .NET 4.8 "Install with Winetricks"    
