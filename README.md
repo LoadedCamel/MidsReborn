@@ -29,7 +29,7 @@ https://twitter.com/midsreborn
 
 #### Windows
 
-   * [.NET 4.7.2](https://dotnet.microsoft.com/download/thank-you/net48)
+   * [.NET 4.8](https://dotnet.microsoft.com/download/thank-you/net48)
 
 #### MacOS
 
