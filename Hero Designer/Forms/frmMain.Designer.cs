@@ -85,7 +85,6 @@ namespace Hero_Designer
             this.tsConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.tsUpdateCheck = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsForceReinstall = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.tsLevelUp = new System.Windows.Forms.ToolStripMenuItem();
             this.tsDynamic = new System.Windows.Forms.ToolStripMenuItem();
@@ -142,7 +141,6 @@ namespace Hero_Designer
             this.tsPatchNotes = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsBugCrytilis = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsBugImaginary = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHCMRBForum = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.tsKoFi = new System.Windows.Forms.ToolStripMenuItem();
@@ -150,7 +148,6 @@ namespace Hero_Designer
             this.tsPatreon = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.tsGitHubCrytilis = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsGitHubImaginary = new System.Windows.Forms.ToolStripMenuItem();
             this.WindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSets = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewGraphs = new System.Windows.Forms.ToolStripMenuItem();
@@ -745,12 +742,11 @@ namespace Hero_Designer
             // OptionsToolStripMenuItem
             // 
             this.OptionsToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[9]
+            this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[8]
             {
             this.tsConfig,
             this.ToolStripSeparator14,
             this.tsUpdateCheck,
-            this.tsForceReinstall,
             this.ToolStripSeparator22,
             this.tsLevelUp,
             this.tsDynamic,
@@ -780,13 +776,6 @@ namespace Hero_Designer
             this.tsUpdateCheck.Size = new System.Drawing.Size(199, 22);
             this.tsUpdateCheck.Text = "Check for &Updates Now";
             this.tsUpdateCheck.Click += new System.EventHandler(tsUpdateCheck_Click);
-            // 
-            // tsUpdateCheck
-            // 
-            this.tsForceReinstall.Name = "tsForceReinstall";
-            this.tsForceReinstall.Size = new System.Drawing.Size(199, 22);
-            this.tsForceReinstall.Text = "Force reinstall";
-            this.tsForceReinstall.Click += new System.EventHandler(tsForceReinstall_Click);
             // 
             // ToolStripSeparator22
             // 
@@ -1192,13 +1181,12 @@ namespace Hero_Designer
             // HelpToolStripMenuItem1
             // 
             this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[13]
+            this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[11]
             {
             (System.Windows.Forms.ToolStripItem) this.tsHelp,
             (System.Windows.Forms.ToolStripItem) this.tsPatchNotes,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator10,
             (System.Windows.Forms.ToolStripItem) this.tsBugCrytilis,
-            (System.Windows.Forms.ToolStripItem) this.tsBugImaginary,
             (System.Windows.Forms.ToolStripItem) this.tsHCMRBForum,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator23,
             (System.Windows.Forms.ToolStripItem) this.tsKoFi,
@@ -1206,7 +1194,6 @@ namespace Hero_Designer
             (System.Windows.Forms.ToolStripItem) this.tsPatreon,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator24,
             (System.Windows.Forms.ToolStripItem) this.tsGitHubCrytilis,
-            (System.Windows.Forms.ToolStripItem) this.tsGitHubImaginary
             });
             this.HelpToolStripMenuItem1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpToolStripMenuItem1.Name = "HelpToolStripMenuItem1";
@@ -1240,14 +1227,6 @@ namespace Hero_Designer
             this.tsBugCrytilis.Text = "F&ile Bug Report (Crytilis)";
             this.tsBugCrytilis.Visible = true;
             this.tsBugCrytilis.Click += new System.EventHandler(tsBugReportCrytilis_Click);
-            // 
-            // tsBug
-            // 
-            this.tsBugImaginary.Name = "tsBugImaginary";
-            this.tsBugImaginary.Size = new System.Drawing.Size(258, 22);
-            this.tsBugImaginary.Text = "F&ile Bug Report (Imaginary)";
-            this.tsBugImaginary.Visible = true;
-            this.tsBugImaginary.Click += new System.EventHandler(tsBugReportImaginary_Click);
             // 
             // tsTitanForum
             // 
@@ -1291,13 +1270,6 @@ namespace Hero_Designer
             this.tsGitHubCrytilis.Size = new System.Drawing.Size(258, 22);
             this.tsGitHubCrytilis.Text = "MRB &GitHub (Crytilis)";
             this.tsGitHubCrytilis.Click += new System.EventHandler(tsCrytilisLink);
-            // 
-            // tsGitHunImaginary
-            // 
-            this.tsGitHubImaginary.Name = "tsGitHubImaginary";
-            this.tsGitHubImaginary.Size = new System.Drawing.Size(258, 22);
-            this.tsGitHubImaginary.Text = "MRB &GitHub (Imaginary)";
-            this.tsGitHubImaginary.Click += new System.EventHandler(tsImaginaryLink);
             // 
             // WindowToolStripMenuItem
             // 
@@ -2050,7 +2022,6 @@ namespace Hero_Designer
         ToolStripMenuItem tsAdvFreshInstall;
         ToolStripMenuItem tsAdvResetTips;
         ToolStripMenuItem tsBugCrytilis;
-        ToolStripMenuItem tsBugImaginary;
         ToolStripMenuItem tsClearAllEnh;
         ToolStripMenuItem tsConfig;
         ToolStripMenuItem tsKoFi;
@@ -2098,9 +2069,7 @@ namespace Hero_Designer
         ToolStripMenuItem tsSetFind;
         ToolStripMenuItem tsHCMRBForum;
         ToolStripMenuItem tsGitHubCrytilis;
-        ToolStripMenuItem tsGitHubImaginary;
         ToolStripMenuItem tsUpdateCheck;
-        ToolStripMenuItem tsForceReinstall;
         ToolStripMenuItem tsView2Col;
         ToolStripMenuItem tsView3Col;
         ToolStripMenuItem tsView4Col;

@@ -2039,14 +2039,10 @@ namespace Hero_Designer
             // cbUpdateURL
             // 
             this.cbUpdateURL.AutoCompleteCustomSource.AddRange(new string[] {
-            "http://midsreborn.com/mids_updates/update.xml",
-            "http://keepers.dk/mids/update.xml"});
+            "https://midsreborn.com/mids_updates/update.xml"});
             this.cbUpdateURL.FormattingEnabled = true;
             this.cbUpdateURL.Items.AddRange(new object[] {
-            "http://midsreborn.com/mids_updates/update.xml",
-            "http://keepers.dk/mids/update.xml",
-            "http://keepers.dk/mids/update_beta.xml",
-            "http://keepers.dk/mids/update_dev.xml"});
+            "https://midsreborn.com/mids_updates/update.xml"});
             this.cbUpdateURL.Location = new System.Drawing.Point(17, 200);
             this.cbUpdateURL.Name = "cbUpdateURL";
             this.cbUpdateURL.Size = new System.Drawing.Size(593, 22);

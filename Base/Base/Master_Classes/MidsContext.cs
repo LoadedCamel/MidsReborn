@@ -10,15 +10,13 @@ namespace Base.Master_Classes
         public const string AppName = "Mids' Reborn";
         public const int AppMajorVersion = 2;
         public const int AppMinorVersion = 6;
-        public const int AppBuildVersion = 0;
-        public const int AppRevisionVersion = 7;
-        public const string AppAssemblyVersion = "2.6.0.7";
+        public const int AppBuildVersion = 1;
+        public const int AppRevisionVersion = 25;
+        public const string AppAssemblyVersion = "2.6.1.25";
         public static readonly Version AppVersion = new Version(major: AppMajorVersion, minor: AppMinorVersion, build: AppBuildVersion, revision: AppRevisionVersion);
         public const string Title = "Mids' Reborn : Hero Designer";
         public const string AssemblyName = "Hero Designer.exe";
-/*
-        public const string DownloadUrl = "https://github.com/ImaginaryDevelopment/imaginary-hero-designer/releases";
-*/
+
         public static Archetype Archetype;
         public static Character Character;
         public static void AssertVersioning()
