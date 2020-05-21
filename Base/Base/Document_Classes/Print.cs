@@ -287,6 +287,7 @@ namespace Base.Document_Classes
             int pgIdx = -1;
             var font = new Font("Arial", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             bool isEnd = false;
+            int levelVar = 0;
             for (int pIndex = _pIndex; pIndex <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++pIndex)
             {
                 bool include = false;
@@ -313,7 +314,8 @@ namespace Base.Document_Classes
                     include = false;
                 if (!include)
                     continue;
-                string s1 = "Level " + MidsContext.Character.CurrentBuild.Powers[pIndex].Level + 1 + ":";
+                levelVar = MidsContext.Character.CurrentBuild.Powers[pIndex].Level + 1;
+                string s1 = "Level " + levelVar + ":";
                 string s2 = MidsContext.Character.CurrentBuild.Powers[pIndex].Power != null ? MidsContext.Character.CurrentBuild.Powers[pIndex].Power.DisplayName : "[No Power]";
                 string s3 = "";
                 if (vPos - (double)bounds.Top + (MidsContext.Character.CurrentBuild.Powers[pIndex].Slots.Length + 1) * fontSize * 1.25 > bounds.Height)
@@ -330,7 +332,8 @@ namespace Base.Document_Classes
                     if (index == 0)
                         str1 = s3 + "(A) ";
                     else
-                        str1 = s3 + "(" + MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Level + 1 + ") ";
+                        levelVar = MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Level + 1;
+                    str1 = s3 + "(" + levelVar + ") ";
                     if (MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Enhancement.Enh > -1)
                     {
                         IEnhancement enhancement = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Enhancement.Enh];
@@ -367,23 +370,29 @@ namespace Base.Document_Classes
                         switch (enhancement.TypeID)
                         {
                             case Enums.eType.InventO:
-                                s3 = s3 + " - IO:" + MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Enhancement.IOLevel + 1;
+                                levelVar = MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Enhancement.IOLevel + 1;
+                                s3 = s3 + " - IO:" + levelVar;
                                 continue;
                             case Enums.eType.SetO:
-                                s3 = s3 + " - IO:" + MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Enhancement.IOLevel + 1;
+                                levelVar = MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Enhancement.IOLevel + 1;
+                                s3 = s3 + " - IO:" + levelVar;
                                 continue;
                             case Enums.eType.None:
                                 break;
                             case Enums.eType.Normal:
                                 break;
                             case Enums.eType.SpecialO:
+                                //s3 = s3.Remove(0,11);
                                 break;
                             default:
                                 continue;
                         }
                     }
+                    else
+                    {
 
-                    s3 = str1 + "[Empty]";
+                        s3 = str1 + "[Empty]";
+                    }
                 }
 
                 if (string.IsNullOrEmpty(s1) && string.IsNullOrEmpty(s2) && string.IsNullOrEmpty(s3))
