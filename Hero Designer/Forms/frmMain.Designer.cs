@@ -139,7 +139,6 @@ namespace Hero_Designer
             this.tlsDPA = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsPatchNotes = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.tsBugCrytilis = new System.Windows.Forms.ToolStripMenuItem();
             //this.tsBugImaginary = new System.Windows.Forms.ToolStripMenuItem();
@@ -1192,13 +1191,11 @@ namespace Hero_Designer
             // HelpToolStripMenuItem1
             // 
             this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[11]
+            this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[10]
             {
             (System.Windows.Forms.ToolStripItem) this.tsHelp,
-            (System.Windows.Forms.ToolStripItem) this.tsPatchNotes,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator10,
             (System.Windows.Forms.ToolStripItem) this.tsBugCrytilis,
-            //(System.Windows.Forms.ToolStripItem) this.tsBugImaginary,
             (System.Windows.Forms.ToolStripItem) this.tsHCMRBForum,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator23,
             (System.Windows.Forms.ToolStripItem) this.tsKoFi,
@@ -1206,27 +1203,11 @@ namespace Hero_Designer
             (System.Windows.Forms.ToolStripItem) this.tsPatreon,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator24,
             (System.Windows.Forms.ToolStripItem) this.tsGitHubCrytilis,
-            //(System.Windows.Forms.ToolStripItem) this.tsGitHubImaginary
             });
             this.HelpToolStripMenuItem1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpToolStripMenuItem1.Name = "HelpToolStripMenuItem1";
             this.HelpToolStripMenuItem1.Size = new System.Drawing.Size(102, 20);
             this.HelpToolStripMenuItem1.Text = "&Help && Support";
-            // 
-            // tsHelp
-            // 
-            this.tsHelp.Name = "tsHelp";
-            this.tsHelp.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.tsHelp.Size = new System.Drawing.Size(258, 22);
-            this.tsHelp.Text = "&Read Me - Instructions";
-            this.tsHelp.Click += new System.EventHandler(tsHelp_Click);
-            // 
-            // tsPatchNotes
-            // 
-            this.tsPatchNotes.Name = "tsPatchNotes";
-            this.tsPatchNotes.Size = new System.Drawing.Size(258, 22);
-            this.tsPatchNotes.Text = "Read &Latest Patch Notes...";
-            this.tsPatchNotes.Click += new System.EventHandler(tsPatchNotes_Click);
             // 
             // ToolStripSeparator10
             // 
@@ -2091,7 +2072,6 @@ namespace Hero_Designer
         ToolStripMenuItem tsIOMax;
         ToolStripMenuItem tsIOMin;
         ToolStripMenuItem tsLevelUp;
-        ToolStripMenuItem tsPatchNotes;
         ToolStripMenuItem tsRecipeViewer;
         ToolStripMenuItem tsDPSCalc;
         ToolStripMenuItem tsRemoveAllSlots;

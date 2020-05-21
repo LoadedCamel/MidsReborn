@@ -178,8 +178,6 @@ namespace Hero_Designer
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
-            tsPatchNotes.Visible = false;
-            tsPatchNotes.Enabled = false;
             //enable menus
             tsKoFi.Visible = true;
             tsKoFi.Enabled = true;
@@ -346,21 +344,6 @@ namespace Hero_Designer
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 ibPopup.Checked = !MidsContext.Config.DisableShowPopup;
                 ibRecipe.Checked = MidsContext.Config.PopupRecipes;                
-                string rtfRelPath = Path.Combine(Files.FPathAppData, Files.PatchRtf);
-                /*if (File.Exists(rtfRelPath))
-                {
-                    new frmReadme(rtfRelPath)
-                    {
-                        BtnClose =
-                        {
-                            IA = drawing.pImageAttributes, ImageOff = drawing.bxPower[2].Bitmap, ImageOn = drawing.bxPower[3].Bitmap
-                        }
-                    }.ShowDialog();
-                    var patchNotesTgt = Path.Combine(Files.FPathAppData, "patchnotes.rtf");
-                    if (File.Exists(patchNotesTgt))
-                        File.Delete(patchNotesTgt);
-                    File.Move(Path.Combine(Files.FPathAppData, Files.PatchRtf), patchNotesTgt);
-                }*/
                 if (MidsContext.Config.MasterMode)
                 {
                     tsAdvFreshInstall.Visible = true;
@@ -4927,30 +4910,6 @@ namespace Hero_Designer
             MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
             MidsContext.Character.ResetLevel();
             PowerModified(markModified: true);
-        }
-
-        void tsPatchNotes_Click(object sender, EventArgs e)
-        {
-            string str = OS.GetApplicationPath() + "Data\\patch.rtf";
-            if (File.Exists(str))
-            {
-                frmReadme frmReadme = new frmReadme(str)
-                {
-                    BtnClose =
-                    {
-                        IA = drawing.pImageAttributes, ImageOff = drawing.bxPower[2].Bitmap, ImageOn = drawing.bxPower[3].Bitmap
-                    }
-                };
-                FloatTop(false);
-                frmReadme.ShowDialog(this);
-                FloatTop(true);
-            }
-            else
-            {
-                FloatTop(false);
-                MessageBox.Show("No recent patches have been installed.", "No Notes", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                FloatTop(true);
-            }
         }
 
         void tsRecipeViewer_Click(object sender, EventArgs e) => FloatRecipe(true);
