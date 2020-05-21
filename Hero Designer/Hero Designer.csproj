@@ -2044,8 +2044,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\reborn_wicon.ico" />
-    <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optSO.Image.png" />
+    <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
     <EmbeddedResource Include="Forms\frmUpdate.resx">
       <DependentUpon>frmUpdate.cs</DependentUpon>
