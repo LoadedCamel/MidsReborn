@@ -135,8 +135,8 @@ namespace Base.Data_Classes
         //Cross Punch
 
         public bool BoxingBuff { get; private set; }
-
         public bool KickBuff { get; private set; }
+        public bool CrossPunchBuff { get; private set; }
 
         //Mastermind 
         public bool Supremacy { get; private set; }
@@ -356,6 +356,7 @@ namespace Base.Data_Classes
             PerfectionType = string.Empty;
             BoxingBuff = false;
             KickBuff = false;
+            CrossPunchBuff = false;
             Supremacy = false;
             SupremacyAndBuffPwr = false;
             PetTier2 = false;
@@ -392,6 +393,7 @@ namespace Base.Data_Classes
             PerfectionType = string.Empty;
             BoxingBuff = false;
             KickBuff = false;
+            CrossPunchBuff = false;
             Supremacy = false;
             SupremacyAndBuffPwr = false;
             PetTier2 = false;
@@ -528,7 +530,7 @@ namespace Base.Data_Classes
 
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power == null || power.Power == null) continue;
+                if (power?.Power == null) continue;
                 switch (power.Power.PowerName.ToUpper())
                 {
                     case "BOXING":
@@ -536,6 +538,9 @@ namespace Base.Data_Classes
                         break;
                     case "KICK":
                         KickBuff = true;
+                        break;
+                    case "CROSS_PUNCH":
+                        CrossPunchBuff = true;
                         break;
                 }
             }

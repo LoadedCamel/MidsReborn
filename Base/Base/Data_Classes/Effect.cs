@@ -1146,7 +1146,7 @@ namespace Base.Data_Classes
                                 }
                             }
                         }
-                    label_77:
+                        label_77:
                         if (SpecialCase == Enums.eSpecialCase.None)
                         {
                             string str = lower;
@@ -1182,7 +1182,7 @@ namespace Base.Data_Classes
                                 SpecialCase = Enums.eSpecialCase.Combo;
                         }
                     }
-                label_101:
+                    label_101:
                     if (lower.Contains("Electronic target.HasTag?".ToLower()))
                         SpecialCase = Enums.eSpecialCase.Robot;
                     if (lower.IndexOf("source.TeamSize> 1", StringComparison.OrdinalIgnoreCase) > -1)
@@ -1500,6 +1500,10 @@ namespace Base.Data_Classes
                     break;
                 case Enums.eSpecialCase.KickBuff:
                     if (MidsContext.Character.KickBuff)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.CrossPunchBuff:
+                    if (MidsContext.Character.CrossPunchBuff)
                         return true;
                     break;
                 case Enums.eSpecialCase.Supremacy:
