@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
@@ -175,7 +176,9 @@ public static class I9Gfx
     public static string ImagePath()
     {
         //Debug.WriteLine($"{Directory.GetCurrentDirectory()}\\Images\\");
-        return $"{Directory.GetCurrentDirectory()}\\Images\\";
+        var asmLOC = Assembly.GetExecutingAssembly().Location;
+        var dirLOC = Directory.GetParent(asmLOC);
+        return $"{dirLOC}\\Images\\";
     }
 
     public static void LoadClasses()
