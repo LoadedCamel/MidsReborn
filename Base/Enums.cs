@@ -1204,7 +1204,8 @@ public static class Enums
         PackMentality,
         NotPackMentality,
         FastSnipe,
-        NotFastSnipe
+        NotFastSnipe,
+        CrossPunchBuff
     }
 
     public enum eDDStyle
