@@ -48,6 +48,9 @@ namespace Base.Data_Classes
                         case Enums.ePowerType.Toggle:
                             num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Toggle ? procsPerMinute * 10 / (60f * num2): procsPerMinute * 10) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                             break;
+                        case Enums.ePowerType.GlobalBoost:
+                            num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.GlobalBoost ? procsPerMinute * 10 / (60f * num2) : procsPerMinute * 10) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                            break;
                     }
                     //num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 }

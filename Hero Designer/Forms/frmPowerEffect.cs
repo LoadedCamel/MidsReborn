@@ -23,7 +23,7 @@ namespace Hero_Designer
             Load += frmPowerEffect_Load;
             ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
             Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
-            myFX = (IEffect)iFX.Clone();
+            if (iFX != null) myFX = (IEffect) iFX.Clone();
         }
 
         void btnCancel_Click(object sender, EventArgs e)
@@ -187,6 +187,7 @@ namespace Hero_Designer
             txtOverride.Text = fx.Override;
             txtFXDelay.Text = Strings.Format(fx.DelayedTime, Style);
             txtFXProb.Text = Strings.Format(fx.BaseProbability, Style);
+            txtPPM.Text = Strings.Format(fx.ProcsPerMinute, Style);
             lblProb.Text = "(" + Strings.Format((float)(fx.BaseProbability * 100.0), "####0") + "%)";
             cbAttribute.SelectedIndex = (int)fx.AttribType;
             cbAspect.SelectedIndex = (int)fx.Aspect;
@@ -414,7 +415,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtFXDelay.Text = Convert.ToString(myFX.DelayedTime);
+            txtFXDelay.Text = myFX.DelayedTime.ToString(CultureInfo.InvariantCulture);
             UpdateFXText();
         }
 
@@ -452,7 +453,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtFXMag.Text = Convert.ToString(myFX.nMagnitude);
+            txtFXMag.Text = myFX.nMagnitude.ToString(CultureInfo.InvariantCulture);
             UpdateFXText();
         }
 
@@ -462,7 +463,7 @@ namespace Hero_Designer
                 return;
             IEffect fx = myFX;
             string InputStr = txtFXMag.Text;
-            if (InputStr.EndsWith("%"))
+            if (InputStr.EndsWith("%", StringComparison.InvariantCulture))
                 InputStr = InputStr.Substring(0, InputStr.Length - 1);
             float num = (float)Conversion.Val(InputStr);
             if (num >= -2147483904.0 & num <= 2147483904.0)
@@ -474,7 +475,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtFXProb.Text = Convert.ToString(myFX.BaseProbability);
+            txtFXProb.Text = myFX.BaseProbability.ToString(CultureInfo.InvariantCulture);
             UpdateFXText();
         }
 
@@ -508,7 +509,7 @@ namespace Hero_Designer
                 return;
             IEffect fx = myFX;
             string fxScaleRaw = txtFXScale.Text;
-            if (fxScaleRaw.EndsWith("%"))
+            if (fxScaleRaw.EndsWith("%", StringComparison.InvariantCulture))
                 fxScaleRaw = fxScaleRaw.Substring(0, fxScaleRaw.Length - 1);
             float fxScale = (float)Conversion.Val(fxScaleRaw);
             if (fxScale >= -2147483904.0 & fxScale <= 2147483904.0)
@@ -547,7 +548,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtPPM.Text = Convert.ToString(myFX.ProcsPerMinute);
+            txtPPM.Text = myFX.ProcsPerMinute.ToString(CultureInfo.InvariantCulture);
         }
 
         void txtPPM_TextChanged(object sender, EventArgs e)
