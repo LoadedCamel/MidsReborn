@@ -45,6 +45,7 @@
       <DependentUpon>ZStatus.cs</DependentUpon>
     </Compile>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -121,7 +122,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FSharp.Core">
-      <Version>4.7.0</Version>
+      <Version>4.7.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

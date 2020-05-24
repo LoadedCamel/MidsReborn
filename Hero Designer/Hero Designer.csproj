@@ -82,6 +82,12 @@
     <Compile Include="Forms\frmSetListingPvP.Designer.cs">
       <DependentUpon>frmSetListingPvP.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\JsonImport\frmJsonImportMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\JsonImport\frmJsonImportMain.Designer.cs">
+      <DependentUpon>frmJsonImportMain.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainUILogic.cs" />
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.cs">
       <SubType>Form</SubType>
@@ -2036,6 +2042,9 @@
     <EmbeddedResource Include="Forms\frmSetListingPvP.resx">
       <DependentUpon>frmSetListingPvP.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
+      <DependentUpon>frmJsonImportMain.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.resx">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
     </EmbeddedResource>
@@ -2484,10 +2493,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official">
-      <Version>1.5.7</Version>
+      <Version>1.5.8</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.2</Version>
+      <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -474,7 +474,7 @@ namespace Hero_Designer
                 if (Powerset.Powers != null)
                     for (int iIDXPower = 0; iIDXPower <= Powerset.Powers.Length - 1; ++iIDXPower)
                     {
-                        if (Powerset.Powers[iIDXPower].Level <= 0)
+                        if ((Powerset.Powers[iIDXPower].Level <= 0) || (!Powerset.Powers[iIDXPower].AllowedForClass(MidsContext.Character.Archetype.Idx)))
                             continue;
                         message = "";
                         var targetPs =

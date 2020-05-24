@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using Base;
 using Base.Data_Classes;
 using Base.IO_Classes;
 using Base.Master_Classes;
 using HeroDesigner.Schema;
+using Newtonsoft.Json;
 
 public static class DatabaseAPI
 {
@@ -176,6 +179,40 @@ public static class DatabaseAPI
         int[] powerset1 = NidPowersAtLevel(iLevel, nIDPowerset);
         int[] powerset2 = NidPowersAtLevel(iLevel, Database.Powersets[nIDPowerset].nIDTrunkSet);
         return powerset2.Concat(powerset1).ToArray();
+    }
+
+    public static void SaveJSONDatabase(ISerialize serializer)
+    {
+        JsonSerializer jsonSerializer = new JsonSerializer();
+
+        var zipContent = new MemoryStream();
+        var archive = new ZipArchive(zipContent, ZipArchiveMode.Create);
+        AddZipFileEntry("Database.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database)), archive);
+        AddZipFileEntry("Archetypes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Classes)), archive);
+        AddZipFileEntry("AttribMods.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.AttribMods)), archive);
+        AddZipFileEntry("Enhancement.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Enhancements)), archive);
+        AddZipFileEntry("EnhancementClasses.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.EnhancementClasses)), archive);
+        AddZipFileEntry("Entities.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Entities)), archive);
+        AddZipFileEntry("Levels.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Levels)), archive);
+        AddZipFileEntry("Powers.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Power)), archive);
+        AddZipFileEntry("PowerSets.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Powersets)), archive);
+        AddZipFileEntry("PowerSetGroups.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.PowersetGroups)), archive);
+        AddZipFileEntry("Recipes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Recipes)), archive);
+        AddZipFileEntry("Salvage.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Salvage)), archive);
+        archive.Dispose();
+        File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Data\Mids.zip"), zipContent.ToArray());
+
+        MessageBox.Show("Export completed.");
+    }
+
+
+    private static void AddZipFileEntry(string fileName, byte[] fileContent, ZipArchive archive)
+    {
+        var entry = archive.CreateEntry(fileName);
+        using (var stream = entry.Open())
+        {
+            stream.Write(fileContent, 0, fileContent.Length);
+        }
     }
 
     public static string[] UidMutexAll()

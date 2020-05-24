@@ -533,6 +533,7 @@ namespace Hero_Designer
                     mySet.Bonus[BonusID()].Index = (int[])Utils.CopyArray(mySet.Bonus[BonusID()].Index, (Array)new int[mySet.Bonus[BonusID()].Index.Length + 1]);
                     mySet.Bonus[BonusID()].Name[mySet.Bonus[BonusID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     mySet.Bonus[BonusID()].Index[mySet.Bonus[BonusID()].Index.Length - 1] = index;
+                    mySet.Bonus[BonusID()].Slotted = cbSlotCount.SelectedIndex+2;                                        
                 }
                 else if (isSpecial())
                 {

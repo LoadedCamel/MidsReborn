@@ -548,8 +548,8 @@ namespace Hero_Designer
                     break;
             }
 
-            string formatSpeed(float iSpeed) => Strings.Format(displayStats.Speed(iSpeed, speedFormat), "##0.#") + rateDisp + ".";
-            string formatDistance(float iSpeed) => Strings.Format(displayStats.Distance(iSpeed, speedFormat), "##0.#");
+            string formatSpeed(float iSpeed) => Strings.Format(displayStats.Speed(iSpeed, speedFormat), "##0.##") + rateDisp + ".";
+            string formatDistance(float iSpeed) => Strings.Format(displayStats.Distance(iSpeed, speedFormat), "##0.##");
 
             string strCap = "This has been capped at the maximum in-game speed.\r\nUncapped speed: ";
             string fltTip = "Base Flight Speed: " + formatSpeed(31.5f);
@@ -558,7 +558,7 @@ namespace Hero_Designer
 
             if (A_GT_B(displayStats.MovementFlySpeed(speedFormat, true), displayStats.MovementFlySpeed(speedFormat, false)))
                 fltTip = fltTip + "\r\n" + strCap +
-                         Strings.Format(displayStats.Speed(MidsContext.Character.Totals.FlySpd, speedFormat), "##0.#") + rateDisp + ".";
+                         Strings.Format(displayStats.Speed(MidsContext.Character.Totals.FlySpd, speedFormat), "##0.##") + rateDisp + ".";
             else if (Math.Abs(displayStats.MovementFlySpeed(speedFormat, false)) < float.Epsilon)
                 fltTip += "\r\nYou have no active flight powers.";
             string jumpTip = "Base Jump Speed: " + formatSpeed(21f);
@@ -571,7 +571,7 @@ namespace Hero_Designer
                 : jmpTip2 + " ft.";
 
             void AddGrphMovement(string title, Func<Enums.eSpeedMeasure, bool, float> dispStatsF, string tip) =>
-                graphMovement.AddItem(title + Strings.Format(dispStatsF(speedFormat, false), "##0.#") + rateDisp,
+                graphMovement.AddItem(title + Strings.Format(dispStatsF(speedFormat, false), "##0.##") + rateDisp,
                     dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, false), dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, true), tip);
 
             AddGrphMovement("Run:|", displayStats.MovementRunSpeed, iTip8);
