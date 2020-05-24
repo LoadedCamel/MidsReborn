@@ -1126,7 +1126,7 @@ namespace Hero_Designer
                         powerMath.Range += _selfEnhance.Effect[index1];
                         break;
                     case Enums.eEffectType.RechargeTime:
-                        if (!okRecharge)
+                        if (okRecharge)
                         {
                             powerMath.RechargeTime += _selfEnhance.Effect[index1];
                         }
