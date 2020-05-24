@@ -215,7 +215,7 @@ namespace Hero_Designer
         private void btnExportJSON_Click(object sender, EventArgs e)
         {
             var serializer = My.MyApplication.GetSerializer();
-            DatabaseAPI.SaveJSONDatabase(serializer);
+            DatabaseAPI.SaveJsonDatabase(serializer);
         }
 
         private void btnJsonImporter_Click(object sender, EventArgs e)

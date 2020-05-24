@@ -621,7 +621,7 @@ namespace Hero_Designer
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
             chkUseArcanaTime.Checked = config.UseArcanaTime;
-            cbUpdateURL.Text = config.UpdatePath;
+            cbUpdateURL.Text = MidsContext.Config.UpdatePath;
             TeamSize.Value = new decimal(config.TeamSize);
             int index = 0;
             do

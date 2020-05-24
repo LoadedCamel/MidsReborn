@@ -51,6 +51,7 @@ namespace Hero_Designer.Forms.JsonImport
                 }
             }
             DatabaseAPI.Database.AttribMods.Store(My.MyApplication.GetSerializer());
+            DatabaseAPI.SaveJSONDatabase(My.MyApplication.GetSerializer());
             MessageBox.Show("Import completed");
         }
     }
