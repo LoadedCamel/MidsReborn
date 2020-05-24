@@ -97,6 +97,7 @@ namespace Hero_Designer
                     MessageBox.Show($"{e.Message}\n{e.StackTrace}", "Error");
                 }
             }
+            var cDbVersion = DatabaseAPI.Database.Version;
             if (AppVersion > MidsContext.AppVersion)
             {
                 if (!Mandatory)
@@ -113,8 +114,7 @@ namespace Hero_Designer
                     Update(UpdateType.App, AppVersion.ToString(), ChangeLog);
                 }
             }
-            var cDbVersion = DatabaseAPI.Database.Version;
-            if (DbVersion > cDbVersion && AppVersion < MidsContext.AppVersion)
+            else if (DbVersion > cDbVersion && AppVersion < MidsContext.AppVersion)
             {
                 if (!Mandatory)
                 {
@@ -128,6 +128,10 @@ namespace Hero_Designer
                 {
                     Update(UpdateType.Database, DbVersion.ToString(CultureInfo.InvariantCulture), ChangeLog);
                 }
+            }
+            else
+            {
+                MessageBox.Show($@"No update is available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

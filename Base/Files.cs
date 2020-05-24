@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 public static class Files
@@ -61,8 +62,10 @@ public static class Files
     {
         get
         {
-            var fp = Path.Combine(Application.StartupPath, Path.Combine("Data", JsonFileConfig));
-            return Debugger.IsAttached ? SearchUp("Data", fp) : fp;
+            var asmLOC = Assembly.GetExecutingAssembly().Location;
+            var dirLOC = $"{Directory.GetParent(asmLOC)}\\Data\\";
+            //var fp = Path.Combine(Application.StartupPath, Path.Combine("Data", JsonFileConfig));
+            return $"{dirLOC}{JsonFileConfig}";
 
         }
     }
@@ -102,10 +105,12 @@ public static class Files
     {
         try
         {
+            var asmLOC = Assembly.GetExecutingAssembly().Location;
+            var dirLOC = $"{Directory.GetParent(asmLOC)}\\Data\\";
             if (!forceMhd && File.Exists(FNameJsonConfig)) return FNameJsonConfig;
-            if (File.Exists(FNameConfig) || !File.Exists(OS.GetApplicationPath() + "Data\\Config.mhd"))
+            if (File.Exists(FNameConfig) || !File.Exists(dirLOC + "Config.mhd"))
                 return FNameConfig;
-            return OS.GetApplicationPath() + "Data\\Config.mhd";
+            return $"{dirLOC}Config.mhd";
         }
         catch
         {

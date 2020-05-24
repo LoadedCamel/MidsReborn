@@ -101,12 +101,14 @@ namespace Hero_Designer.Forms
         }
         public void InstallUpdate(string updateType)
         {
+            var asmLOC = Assembly.GetExecutingAssembly().Location;
+            var dirLOC = $"{Directory.GetParent(asmLOC)}";
             ctlProgressBar2.Value = 0;
             switch (updateType)
             {
                 case "App":
                     ctlProgressBar2.StatusText = $"Installing: Mids {VersionText}";
-                    foreach (var filename in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.dll"))
+                    foreach (var filename in Directory.GetFiles(dirLOC, "*.dll"))
                     {
                         File.Move(filename, $"{filename}.bak");
                     }
@@ -137,11 +139,13 @@ namespace Hero_Designer.Forms
         {
             ZProgress = new Progress<ZipProgress>();
             ZProgress.ProgressChanged += Report;
-            TempFile = $"{Path.GetTempPath()}\\MidsTemp\\{VersionText}.zip";
+            TempFile = $"{Path.GetTempPath()}MidsTemp\\{VersionText}.zip";
             var loc = Assembly.GetExecutingAssembly().Location;
-            var dirloc = Directory.GetParent(loc);
+            var dirLOC = Directory.GetParent(loc);
+            var dirTmp = $"{Path.GetTempPath()}MidsTemp\\";
             using ZipArchive zip = ZipFile.OpenRead(TempFile);
-            zip.ExtractToDirectory(dirloc.ToString(), ZProgress, true);
+            zip.ExtractToDirectory(dirTmp, ZProgress, true);
+            zip.ExtractToDirectory(dirLOC.ToString(), null, true);
         }
 
         private void Report(object sender, ZipProgress zipProgress)
@@ -162,8 +166,30 @@ namespace Hero_Designer.Forms
             ctlProgressBar2.Text = $@"{ctlProgressBar2.StatusText}";
         }
 
+        public static void TransferFiles(string sourcePath, string destinationPath)
+        {
+            foreach (var file in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+            {
+                var dirInfo = new DirectoryInfo(file);
+                var fileInfo = new FileInfo(file);
+                var parentDir = dirInfo.Parent?.Name;
+                if (parentDir == "MidsTemp")
+                {
+                    var destFile = $"{destinationPath}\\{fileInfo.Name}";
+                    File.Copy(fileInfo.FullName, destFile, true);
+                }
+                /*else
+                {
+                    var subPath = $"{destinationPath}\\{parentDir}\\{fileInfo.Name}";
+                    File.Copy(fileInfo.FullName, subPath, true);
+                }*/
+            }
+        }
+
         private void zipExtractor_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            var asmLOC = Assembly.GetExecutingAssembly().Location;
+            var dirLOC = $"{Directory.GetParent(asmLOC)}";
             ctlProgressBar2.Value = ctlProgressBar2.Maximum;
             ctlProgressBar2.Text = "Installation Complete!";
             ctlProgressBar2.StatusText = "Install Complete!";
@@ -171,8 +197,10 @@ namespace Hero_Designer.Forms
                 @"Update Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (completed == DialogResult.OK)
             {
-                File.Delete(TempFile);
-                Directory.Delete($"{Path.GetTempPath()}\\MidsTemp\\");
+                TransferFiles($"{Path.GetTempPath()}MidsTemp\\", dirLOC);
+                Thread.Sleep(2000);
+                Directory.Delete($"{Path.GetTempPath()}MidsTemp\\", true);
+                File.Delete($"{dirLOC}\\{VersionText}.zip");
                 Application.Restart();
             }
         }

@@ -10,9 +10,9 @@ namespace Base.Master_Classes
         public const string AppName = "Mids' Reborn";
         public const int AppMajorVersion = 2;
         public const int AppMinorVersion = 7;
-        public const int AppBuildVersion = 1;
-        public const int AppRevisionVersion = 20;
-        public const string AppAssemblyVersion = "2.7.1.20";
+        public const int AppBuildVersion = 2;
+        public const int AppRevisionVersion = 10;
+        public const string AppAssemblyVersion = "2.7.2.10";
         public static readonly Version AppVersion = new Version(major: AppMajorVersion, minor: AppMinorVersion, build: AppBuildVersion, revision: AppRevisionVersion);
         
         public const string Title = "Mids' Reborn : Hero Designer";

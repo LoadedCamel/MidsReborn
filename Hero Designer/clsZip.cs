@@ -23,10 +23,10 @@ namespace Hero_Designer
 
     public static class MyZipFileExtensions
     {
-        public static void ExtractToDirectory(this ZipArchive source, string destinationDirectoryName, IProgress<ZipProgress> progress)
+        /*public static void ExtractToDirectory(this ZipArchive source, string destinationDirectoryName, IProgress<ZipProgress> progress)
         {
             ExtractToDirectory(source, destinationDirectoryName, progress, overwrite: false);
-        }
+        }*/
 
         public static void ExtractToDirectory(this ZipArchive source, string destinationDirectoryName, IProgress<ZipProgress> progress, bool overwrite)
         {
@@ -53,7 +53,7 @@ namespace Hero_Designer
                     throw new IOException("File is extracting to outside of the folder specified.");
 
                 var zipProgress = new ZipProgress(source.Entries.Count, count, entry.FullName);
-                progress.Report(zipProgress);
+                progress?.Report(zipProgress);
 
                 if (Path.GetFileName(fileDestinationPath).Length == 0)
                 {
@@ -69,7 +69,7 @@ namespace Hero_Designer
                     // If it is a file:
                     // Create containing directory:
                     Directory.CreateDirectory(Path.GetDirectoryName(fileDestinationPath));
-                    entry.ExtractToFile(fileDestinationPath, overwrite: overwrite);
+                    entry.ExtractToFile(fileDestinationPath, overwrite);
                 }
             }
         }
