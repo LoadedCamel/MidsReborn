@@ -37,20 +37,12 @@ namespace Base.Data_Classes
                     float procsPerMinute = ProcsPerMinute;
                     var Global_Recharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
                     var rechargeval = power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - Global_Recharge);
-                    switch (power.PowerType)
-                    {
-                        case Enums.ePowerType.Click:
-                            num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * power.ActivatePeriod / (60f * num2): procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                            break;
-                        case Enums.ePowerType.Auto_:
-                            num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Auto_ ? procsPerMinute * 10 / (60f * num2): procsPerMinute * 10) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                            break;
-                        case Enums.ePowerType.Toggle:
-                            num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Toggle ? procsPerMinute * 10 / (60f * num2): procsPerMinute * 10) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                            break;
-                    }
-                    //num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                    if (power.PowerType == Enums.ePowerType.Click)
+                        num1 = Math.Min(Math.Max((procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                    else
+                        num1 = Math.Min(Math.Max((procsPerMinute * 10) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 }
+                //num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
                     num1 += MidsContext.Character.ModifyEffects[EffectId];
                 if (num1 > 1.0)
