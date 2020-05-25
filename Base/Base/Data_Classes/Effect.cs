@@ -1490,12 +1490,24 @@ namespace Base.Data_Classes
                     if (MidsContext.Character.BoxingBuff)
                         return true;
                     break;
+                case Enums.eSpecialCase.NotBoxingBuff:
+                    if (MidsContext.Character.NotBoxingBuff)
+                        return true;
+                    break;
                 case Enums.eSpecialCase.KickBuff:
                     if (MidsContext.Character.KickBuff)
                         return true;
                     break;
+                case Enums.eSpecialCase.NotKickBuff:
+                    if (MidsContext.Character.NotKickBuff)
+                        return true;
+                    break;
                 case Enums.eSpecialCase.CrossPunchBuff:
                     if (MidsContext.Character.CrossPunchBuff)
+                        return true;
+                    break;
+                case Enums.eSpecialCase.NotCrossPunchBuff:
+                    if (MidsContext.Character.NotCrossPunchBuff)
                         return true;
                     break;
                 case Enums.eSpecialCase.Supremacy:

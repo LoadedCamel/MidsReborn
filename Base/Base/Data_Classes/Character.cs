@@ -132,11 +132,14 @@ namespace Base.Data_Classes
 
         public bool NotDefensiveNorOffensiveAdaptation { get; private set; }
 
-        //Cross Punch
+        //Fighting Pool Synergy
 
         public bool BoxingBuff { get; private set; }
+        public bool NotBoxingBuff { get; private set; }
         public bool KickBuff { get; private set; }
+        public bool NotKickBuff { get; private set; }
         public bool CrossPunchBuff { get; private set; }
+        public bool NotCrossPunchBuff { get; private set; }
 
         //Mastermind 
         public bool Supremacy { get; private set; }
@@ -355,8 +358,11 @@ namespace Base.Data_Classes
             NotDefensiveNorOffensiveAdaptation = true;
             PerfectionType = string.Empty;
             BoxingBuff = false;
+            NotBoxingBuff = true;
             KickBuff = false;
+            NotKickBuff = true;
             CrossPunchBuff = false;
+            NotCrossPunchBuff = true;
             Supremacy = false;
             SupremacyAndBuffPwr = false;
             PetTier2 = false;
@@ -392,8 +398,11 @@ namespace Base.Data_Classes
             NotDefensiveNorOffensiveAdaptation = true;
             PerfectionType = string.Empty;
             BoxingBuff = false;
+            NotBoxingBuff = true;
             KickBuff = false;
+            NotKickBuff = true;
             CrossPunchBuff = false;
+            NotCrossPunchBuff = true;
             Supremacy = false;
             SupremacyAndBuffPwr = false;
             PetTier2 = false;
@@ -535,12 +544,15 @@ namespace Base.Data_Classes
                 {
                     case "BOXING":
                         BoxingBuff = true;
+                        NotBoxingBuff = false;
                         break;
                     case "KICK":
                         KickBuff = true;
+                        NotKickBuff = false;
                         break;
                     case "CROSS_PUNCH":
                         CrossPunchBuff = true;
+                        NotCrossPunchBuff = false;
                         break;
                 }
             }
