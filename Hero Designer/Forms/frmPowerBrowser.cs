@@ -235,37 +235,25 @@ namespace Hero_Designer
                 case 0:
                 {
                     if (lvGroup.SelectedItems.Count > 0 & lvSet.SelectedItems.Count > 0)
-                        iPower.FullName = lvGroup.SelectedItems[0].SubItems[0].Text + lvSet.SelectedItems[0].SubItems[0].Text + ".New_Power";
+                        iPower.FullName = $"{lvGroup.SelectedItems[0].SubItems[0].Text}{lvSet.SelectedItems[0].SubItems[0].Text}.New_Power";
                     break;
                 }
                 case 1 when lvGroup.SelectedItems.Count > 0 & lvSet.SelectedItems.Count > 0:
-                    iPower.FullName = DatabaseAPI.Database.Classes[lvGroup.SelectedIndices[0]].PrimaryGroup + lvSet.SelectedItems[0].SubItems[0].Text + ".New_Power";
+                    iPower.FullName = $"{DatabaseAPI.Database.Classes[lvGroup.SelectedIndices[0]].PrimaryGroup}{lvSet.SelectedItems[0].SubItems[0].Text}.New_Power";
                     break;
             }
-            IPowerset iPowerset = DatabaseAPI.GetPowersetByName(lvPower.SelectedItems[0].SubItems[3].Text);
-            iPower.GroupName = iPowerset.GroupName;
-            iPower.PowerSetID = iPowerset.nID;
-            iPower.SetName = iPowerset.SetName;
+
             iPower.DisplayName = "New Power";
             frmEditPower frmEditPower = new frmEditPower(iPower);
             if (frmEditPower.ShowDialog() != DialogResult.OK)
                 return;
             IDatabase database = DatabaseAPI.Database;
-            IPower[] powerArray = (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
+            IPower[] powerArray =
+                (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
             database.Power = powerArray;
-            IPower newPower = new Power(frmEditPower.myPower);
-            newPower.IsNew = true;
-            newPower.PowerIndex = DatabaseAPI.Database.Power.Length-1;
-            DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] = newPower;
-            //Add the power to the power set otherwise we'll get issues later when upting the UI.
-            if (newPower.PowerSetID > -1)
-            {
-                IPowerset powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
-                powerArray = (IPower[])Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
-                powerSet.Powers = powerArray;
-                powerArray[powerSet.Powers.Length - 1] = newPower;
-            }
-            UpdateLists(this.lvGroup.SelectedIndices[0], this.lvSet.SelectedIndices[0]);
+            DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] =
+                new Power(frmEditPower.myPower) { IsNew = true };
+            UpdateLists();
         }
 
         void btnPowerClone_Click(object sender, EventArgs e)
