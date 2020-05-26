@@ -85,7 +85,6 @@ namespace Hero_Designer
             this.tsConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.tsUpdateCheck = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsForceReinstall = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.tsLevelUp = new System.Windows.Forms.ToolStripMenuItem();
             this.tsDynamic = new System.Windows.Forms.ToolStripMenuItem();
@@ -744,12 +743,11 @@ namespace Hero_Designer
             // OptionsToolStripMenuItem
             // 
             this.OptionsToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[9]
+            this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[8]
             {
             this.tsConfig,
             this.ToolStripSeparator14,
             this.tsUpdateCheck,
-            this.tsForceReinstall,
             this.ToolStripSeparator22,
             this.tsLevelUp,
             this.tsDynamic,
@@ -779,13 +777,6 @@ namespace Hero_Designer
             this.tsUpdateCheck.Size = new System.Drawing.Size(199, 22);
             this.tsUpdateCheck.Text = "Check for &Updates Now";
             this.tsUpdateCheck.Click += new System.EventHandler(tsUpdateCheck_Click);
-            // 
-            // tsUpdateCheck
-            // 
-            this.tsForceReinstall.Name = "tsForceReinstall";
-            this.tsForceReinstall.Size = new System.Drawing.Size(199, 22);
-            this.tsForceReinstall.Text = "Force reinstall";
-            //this.tsForceReinstall.Click += new System.EventHandler(tsForceReinstall_Click);
             // 
             // ToolStripSeparator22
             // 
@@ -2080,7 +2071,6 @@ namespace Hero_Designer
         ToolStripMenuItem tsGitHubCrytilis;
         //ToolStripMenuItem tsGitHubImaginary;
         ToolStripMenuItem tsUpdateCheck;
-        ToolStripMenuItem tsForceReinstall;
         ToolStripMenuItem tsView2Col;
         ToolStripMenuItem tsView3Col;
         ToolStripMenuItem tsView4Col;
