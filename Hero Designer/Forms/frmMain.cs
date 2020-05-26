@@ -4184,7 +4184,7 @@ namespace Hero_Designer
                 str2 = str2.Replace(nameof(Hero), "Villain");
             if (MidsContext.Config.MasterMode)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version} Updated: {DatabaseAPI.Database.Date:MMM / dd / yyyy @ hh:mm tt})";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
             }
             else
             {
