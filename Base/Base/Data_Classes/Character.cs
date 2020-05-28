@@ -10,10 +10,22 @@ using Base.Master_Classes;
 
 namespace Base.Data_Classes
 {
+    public class PowerEnhancements
+    {
+        public string PowerName { get; set; }
+        public string EnhancementSet { get; set; }
+        public int EnhancementSlot { get; set; }
+    }
     public class Character
     {
         Archetype _archetype;
         bool? _completeCache;
+
+        public List<PowerEnhancements> powerEnhancements { get; set; }
+
+        public string setName { get; set; }
+        public HashSet<string> setSlotted = new HashSet<string>();
+        public Dictionary<string, int> SetSlotLoc = new Dictionary<string, int>();
 
         public string Name { get; set; }
 
@@ -377,8 +389,8 @@ namespace Base.Data_Classes
         }
 
         void RefreshActiveSpecial()
-
         {
+            powerEnhancements = new List<PowerEnhancements>();
             ActiveComboLevel = 0;
             AcceleratedActive = false;
             DelayedActive = false;
@@ -414,7 +426,7 @@ namespace Base.Data_Classes
 
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power == null || power.Power == null || !power.StatInclude) continue;
+                if (power?.Power == null || !power.StatInclude) continue;
                 
                 switch (power.Power.PowerName.ToUpper())
                 {
@@ -555,9 +567,48 @@ namespace Base.Data_Classes
                         NotCrossPunchBuff = false;
                         break;
                 }
+
+                for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
+                {
+                    var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
+                    if (pSlotEnh > -1)
+                    {
+                        IEnhancement enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
+                        powerEnhancements.Add(new PowerEnhancements{PowerName = power.Name, EnhancementSet = GetEnhSetName(enhancement.LongName), EnhancementSlot = slotIndex});
+
+                    }
+                    else
+                    {
+                        var index = slotIndex;
+                        var toRem = powerEnhancements.FindIndex(x => x.PowerName.Equals(power.Name) && x.EnhancementSlot == index);
+                        if (toRem != -1)
+                        {
+                            powerEnhancements.RemoveAt(toRem);
+                        }
+                    }
+                }
             }
 
             //MessageBox.Show(EquipRobot.ToString());
+        }
+
+        public string GetEnhSetName(string longName)
+        {
+            var enhSet = string.Empty;
+            var setCount = DatabaseAPI.Database.EnhancementSets.Count;
+            for (var setIndex = 0; setIndex < setCount; setIndex++)
+            {
+                foreach (var enh in DatabaseAPI.Database.EnhancementSets[setIndex].Enhancements)
+                {
+                    IEnhancement enhancement = DatabaseAPI.Database.Enhancements[enh];
+                    if (enhancement.LongName == longName)
+                    {
+                        enhSet = DatabaseAPI.Database.EnhancementSets[setIndex].DisplayName;
+                    }
+                }
+            }
+
+            return enhSet;
         }
 
         public void Validate()

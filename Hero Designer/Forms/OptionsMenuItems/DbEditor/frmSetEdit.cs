@@ -279,21 +279,21 @@ namespace Hero_Designer
 
         void DisplayIcon()
         {
-            if (mySet.Image != "")
+            if (!string.IsNullOrWhiteSpace(mySet.Image))
             {
-                ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + mySet.Image);
-                ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
-                extendedBitmap2.Graphics.DrawImage((Image)I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), System.Drawing.GraphicsUnit.Pixel);
-                extendedBitmap2.Graphics.DrawImage((Image)extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, System.Drawing.GraphicsUnit.Pixel);
-                btnImage.Image = (Image)new Bitmap((Image)extendedBitmap2.Bitmap);
+                using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap($"{I9Gfx.GetEnhancementsPath()}{mySet.Image}");
+                using ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
+                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), System.Drawing.GraphicsUnit.Pixel);
+                extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, System.Drawing.GraphicsUnit.Pixel);
+                btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
                 btnImage.Text = mySet.Image;
             }
             else
             {
-                ExtendedBitmap extendedBitmap = new ExtendedBitmap(30, 30);
-                extendedBitmap.Graphics.DrawImage((Image)I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), System.Drawing.GraphicsUnit.Pixel);
-                btnImage.Image = (Image)new Bitmap((Image)extendedBitmap.Bitmap);
-                btnImage.Text = "Select Image";
+                using ExtendedBitmap extendedBitmap = new ExtendedBitmap(30, 30);
+                extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), System.Drawing.GraphicsUnit.Pixel);
+                btnImage.Image = new Bitmap(extendedBitmap.Bitmap);
+                btnImage.Text = @"Select Image";
             }
         }
 

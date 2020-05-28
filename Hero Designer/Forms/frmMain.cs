@@ -1383,7 +1383,7 @@ namespace Hero_Designer
             int num1 = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length - 1;
             for (int index = 0; index <= num1; ++index)
                 iPowers.Add(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
-            frmAccolade frmAccolade = new frmAccolade(this, iPowers)
+            using frmAccolade frmAccolade = new frmAccolade(this, iPowers)
             {
                 Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower]
                     .DisplayName

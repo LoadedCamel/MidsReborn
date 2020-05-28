@@ -550,18 +550,14 @@ namespace Hero_Designer
                         IntPtr index2;
                         (strArray2 = strArray1)[(int) (index2 = (IntPtr) num3)] = strArray2[(int) index2] + ",";
                     }
-
                     string[] strArray3 = items;
                     int num4 = 1;
                     string[] strArray4;
                     IntPtr index3;
-                    (strArray4 = strArray3)[(int) (index3 = (IntPtr) num4)] =
-                        strArray4[(int) index3] + DatabaseAPI.Database.EnhancementClasses[enhancement.ClassID[index1]].ShortName;
+                    (strArray4 = strArray3)[(int) (index3 = (IntPtr) num4)] = strArray4[(int) index3] + DatabaseAPI.Database.EnhancementClasses[enhancement.ClassID[index1]].ShortName;
                 }
-
                 lvEnh.Items.Add(new ListViewItem(items, imageIndex));
             }
-
             lvEnh.EndUpdate();
         }
 

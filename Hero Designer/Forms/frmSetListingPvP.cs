@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Display;
+using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -51,7 +52,7 @@ namespace Hero_Designer
 
         {
             EnhancementSet iSet = new EnhancementSet();
-            frmSetEditPvP frmSetEditPvP = new frmSetEditPvP(ref iSet);
+            using frmSetEditPvPNEW frmSetEditPvP = new frmSetEditPvPNEW(ref iSet);
             int num = (int)frmSetEditPvP.ShowDialog();
             if (frmSetEditPvP.DialogResult != DialogResult.OK)
                 return;
@@ -73,7 +74,7 @@ namespace Hero_Designer
                 return;
             EnhancementSet iSet = new EnhancementSet(DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]]);
             iSet.DisplayName += " Copy";
-            frmSetEditPvP frmSetEditPvP = new frmSetEditPvP(ref iSet);
+            using frmSetEditPvPNEW frmSetEditPvP = new frmSetEditPvPNEW(ref iSet);
             int num = (int)frmSetEditPvP.ShowDialog();
             if (frmSetEditPvP.DialogResult != DialogResult.OK)
                 return;
@@ -136,7 +137,7 @@ namespace Hero_Designer
             var setNameIndex = enhancementSets.FindIndex(x => x.DisplayName == setName);*/
             EnhancementSet iSet = enhancementSets[selectedIndex2];
             enhancementSets[selectedIndex2] = iSet;
-            frmSetEditPvP frmSetEditPvP = new frmSetEditPvP(ref iSet);
+            using frmSetEditPvPNEW frmSetEditPvP = new frmSetEditPvPNEW(ref iSet);
             int num = (int)frmSetEditPvP.ShowDialog();
             if (frmSetEditPvP.DialogResult != DialogResult.OK)
                 return;

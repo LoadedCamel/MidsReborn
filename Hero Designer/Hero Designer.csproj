@@ -97,6 +97,18 @@
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainUILogic.cs" />
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.Designer.cs">
+      <DependentUpon>frmSetEditPvPNEW.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.Designer.cs">
+      <DependentUpon>frmSetEditNEW.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2071,6 +2083,12 @@
     <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.resx">
+      <DependentUpon>frmSetEditPvPNEW.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditNEW.resx">
+      <DependentUpon>frmSetEditNEW.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.resx">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
     </EmbeddedResource>
@@ -2419,6 +2437,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEdit.resx">
       <DependentUpon>frmSetEdit.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSetFind.resx">
       <DependentUpon>frmSetFind.cs</DependentUpon>
