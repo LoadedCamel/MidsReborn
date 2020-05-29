@@ -50,7 +50,7 @@ namespace Hero_Designer
 
         static void ShowPrettyError(string title, string text, Action onLabelClick = null)
         {
-            var frm = new frmLoading {Label1 = {Text = text}, Text = title};
+            using frmLoading frm = new frmLoading {Label1 = {Text = text}, Text = title};
             if (onLabelClick != null)
             {
                 frm.Label1.Font = new Font(frm.Label1.Font.Name, frm.Label1.Font.SizeInPoints, FontStyle.Underline);

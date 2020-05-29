@@ -267,8 +267,8 @@ namespace Hero_Designer
 
         public static string FixSpelling(string iString)
         {
-            iString = iString.Replace("Armour", "Armor");
-            iString = iString.Replace("Electric Mastery", "Electrical Mastery");
+            iString = iString?.Replace("Armour", "Armor");
+            iString = iString?.Replace("Electric Mastery", "Electrical Mastery");
             return iString;
         }
 
@@ -2303,8 +2303,8 @@ namespace Hero_Designer
             int outSize = (int) Math.Round(Conversion.Val(strArray[1]));
             int num1 = (int) Math.Round(Conversion.Val(strArray[2]));
             int num2 = (int) Math.Round(Conversion.Val(strArray[3]));
-            MemoryStream memoryStream = new MemoryStream();
-            BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
+            using MemoryStream memoryStream = new MemoryStream();
+            using BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
             byte[] iBytes =
                 (byte[]) Utils.CopyArray(
                     Zlib.UUDecodeBytes((byte[]) Utils.CopyArray(asciiEncoding.GetBytes(Zlib.UnbreakString(iStream.ReadToEnd())),
@@ -2312,7 +2312,8 @@ namespace Hero_Designer
             iBytes = Zlib.UncompressChunk(ref iBytes, outSize);
             binaryWriter.Write(iBytes);
             memoryStream.Seek(0L, SeekOrigin.Begin);
-            if (ReadInternalDataUC(new StreamReader(memoryStream)))
+            using StreamReader reader = new StreamReader(memoryStream);
+            if (ReadInternalDataUC(reader))
             {
                 binaryWriter.Close();
                 memoryStream.Close();
@@ -2465,7 +2466,7 @@ namespace Hero_Designer
             StreamWriter streamWriter;
             try
             {
-                streamWriter = new StreamWriter(iFileName, false);
+               streamWriter = new StreamWriter(iFileName, false);
             }
             catch (Exception ex)
             {
@@ -2524,8 +2525,8 @@ namespace Hero_Designer
         public bool StringToInternalData(string iString)
         {
             bool flag1;
-            if (iString.IndexOf(Files.Headers.Save.Compressed, StringComparison.Ordinal) == -1 &
-                iString.IndexOf(Files.Headers.Save.Uncompressed, StringComparison.Ordinal) == -1)
+            if (iString?.IndexOf(Files.Headers.Save.Compressed, StringComparison.Ordinal) == -1 &
+                iString?.IndexOf(Files.Headers.Save.Uncompressed, StringComparison.Ordinal) == -1)
             {
                 if (iString.IndexOf("Primary", StringComparison.Ordinal) > -1 & iString.IndexOf("Secondary", StringComparison.Ordinal) > -1)
                 {

@@ -92,7 +92,7 @@ namespace Hero_Designer
                         }
                     }
                 }
-                catch (Exception e)
+                catch (XmlException e)
                 {
                     MessageBox.Show($"{e.Message}\n{e.StackTrace}", "Error");
                 }
@@ -140,25 +140,24 @@ namespace Hero_Designer
             try
             {
 
-                StreamReader reader = null;
-                WebClient client = new WebClient();
+                using WebClient client = new WebClient();
                 Stream stream = client.OpenRead(changeLog);
                 if (stream != null)
                 {
-                    reader = new StreamReader(stream);
+                    using StreamReader reader = new StreamReader(stream);
+
+                    var content = reader?.ReadToEnd();
+
+                    using var updateForm = new frmUpdate
+                    {
+                        Type = type?.ToString(),
+                        VersionText = updateVersion,
+                        RichText = content,
+                        ctlProgressBar1 = {StatusText = $"Downloading: {type} {updateVersion}"},
+                        ctlProgressBar2 = {StatusText = "", Text = ""}
+                    };
+                    updateForm.ShowDialog();
                 }
-
-                var content = reader?.ReadToEnd();
-
-                using var updateForm = new frmUpdate
-                {
-                    Type = type?.ToString(),
-                    VersionText = updateVersion,
-                    RichText = content,
-                    ctlProgressBar1 = {StatusText = $"Downloading: {type} {updateVersion}"},
-                    ctlProgressBar2 = {StatusText = "", Text = ""}
-                };
-                updateForm.ShowDialog();
             }
             catch (ArgumentException e)
             {

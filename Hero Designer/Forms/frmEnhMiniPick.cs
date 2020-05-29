@@ -17,7 +17,7 @@ namespace Hero_Designer
         public static int MezPicker(int startIndex)
         {
             Enums.eMez eMez = Enums.eMez.None;
-            frmEnhMiniPick frmEnhMiniPick = new frmEnhMiniPick();
+            using frmEnhMiniPick frmEnhMiniPick = new frmEnhMiniPick();
             string[] names = Enum.GetNames(eMez.GetType());
             int num1 = names.Length - 1;
             for (int index = 1; index <= num1; ++index)

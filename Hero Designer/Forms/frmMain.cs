@@ -226,8 +226,9 @@ namespace Hero_Designer
                 int height1 = 0;
                 int width1 = 0;
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
-                frmLoading iFrm = new frmLoading();
-                iFrm.Show();
+                using frmLoading iFrm = new frmLoading();
+                _frmLoading = iFrm;
+                _frmLoading.Show();
                 myDataView = dvAnchored;
                 pnlGFX.BackColor = BackColor;
                 NoUpdate = true;
@@ -258,8 +259,8 @@ namespace Hero_Designer
 
                 if (args.IndexOf("MASTERMODE=YES", StringComparison.OrdinalIgnoreCase) > -1)
                     MidsContext.Config.MasterMode = true;
-                MainModule.MidsController.LoadData(ref iFrm);
-                iFrm?.SetMessage("Setting up UI...");
+                MainModule.MidsController.LoadData(ref _frmLoading);
+                _frmLoading?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
                 var loadedFromArgs = false;
@@ -350,8 +351,8 @@ namespace Hero_Designer
                     tsAdvResetTips.Visible = true;
                 }
                 Show();
-                iFrm.Hide();
-                iFrm.Close();
+                _frmLoading.Hide();
+                _frmLoading.Close();
                 Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 Point iLocation = new Point();
@@ -364,7 +365,7 @@ namespace Hero_Designer
                 local = new Point(left, y);
                 dvAnchored.SetLocation(iLocation, true);
                 PriSec_ExpandChanged(true);
-                this.loading = false;
+                loading = false;
                 UpdateControls(true);
                 if (this.IsInDesignMode())
                     return;
@@ -377,7 +378,7 @@ namespace Hero_Designer
                 MessageBox.Show("An error has occurred when loading the main form. Error: " + ex.Message, "OMIGODHAX");
                 throw;
             }
-            this.loading = false;
+            loading = false;
         }
 
         I9Picker I9Picker
@@ -394,30 +395,30 @@ namespace Hero_Designer
         internal void ChildRequestedRedraw()
             => DoRedraw();
 
-        void accoladeButton_ButtonClicked() => this.PowerModified(markModified: false);
+        void accoladeButton_ButtonClicked() => PowerModified(markModified: false);
 
         void accoladeButton_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Clicks != 2)
                 return;
-            this.accoladeButton.Checked = false;
-            if (this.fAccolade == null || this.fAccolade.IsDisposed)
+            accoladeButton.Checked = false;
+            if (fAccolade == null || fAccolade.IsDisposed)
             {
                 IPower power = !MainModule.MidsController.Toon.IsHero() ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)] : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
                 List<IPower> iPowers = new List<IPower>();
                 int num = power.NIDSubPower.Length - 1;
                 for (int index = 0; index <= num; ++index)
                     iPowers.Add(DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
-                this.fAccolade = new frmAccolade(this, iPowers) { Text = "Accolades" };
+                fAccolade = new frmAccolade(this, iPowers) { Text = "Accolades" };
             }
-            if (!this.fAccolade.Visible)
-                this.fAccolade.Show(this);
+            if (!fAccolade.Visible)
+                fAccolade.Show(this);
         }
 
         void AccoladesWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.accoladeButton_MouseDown(RuntimeHelpers.GetObjectValue(sender), new MouseEventArgs(MouseButtons.Left, 2, 0, 0, 0));
-            this.accoladeButton.Checked = true;
+            accoladeButton_MouseDown(RuntimeHelpers.GetObjectValue(sender), new MouseEventArgs(MouseButtons.Left, 2, 0, 0, 0));
+            accoladeButton.Checked = true;
         }
 
         static int ArchetypeIndirectToIndex(int iIndirect)
@@ -4743,6 +4744,7 @@ namespace Hero_Designer
         }
 
         bool exportDiscordInProgress;
+        private frmLoading _frmLoading;
 
         public async void tsExportDiscord_Click(object sender, EventArgs e)
         {
@@ -5148,7 +5150,7 @@ namespace Hero_Designer
 
         void UpdateControls(bool ForceComplete = false)
         {
-            if (this.loading)
+            if (loading)
                 return;
 
             NoUpdate = true;
@@ -5366,7 +5368,7 @@ namespace Hero_Designer
 
         void UpdateOtherFormsFonts()
         {
-            if (this.fIncarnate != null)
+            if (fIncarnate != null)
             {
                 frmIncarnate fIncarnate = this.fIncarnate;
                 if (fIncarnate.Visible)
@@ -5402,7 +5404,7 @@ namespace Hero_Designer
                 }
             }
 
-            if (this.fTemp != null)
+            if (fTemp != null)
             {
                 frmTemp fTemp = this.fTemp;
                 if (fTemp.Visible)
@@ -5439,9 +5441,9 @@ namespace Hero_Designer
         void UpdatePowerLists()
         {
             bool noPrimary = false;
-            if (this.llPrimary.Items.Length == 0)
+            if (llPrimary.Items.Length == 0)
                 noPrimary = true;
-            else if (this.llPrimary.Items[this.llPrimary.Items.Length - 1].nIDSet != MidsContext.Character.Powersets[0].nID)
+            else if (llPrimary.Items[llPrimary.Items.Length - 1].nIDSet != MidsContext.Character.Powersets[0].nID)
                 noPrimary = true;
             if (llSecondary.Items.Length == 0)
                 noPrimary = true;

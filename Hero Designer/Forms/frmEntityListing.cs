@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Hero_Designer.My;
@@ -30,14 +31,14 @@ namespace Hero_Designer
             Load += frmEntityListing_Load;
             InitializeComponent();
             ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmEntityListing));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon)componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
             Name = nameof(frmEntityListing);
         }
 
         void btnAdd_Click(object sender, EventArgs e)
         {
             var iEntity = SummonedEntity.AddEntity();
-            frmEntityEdit frmEntityEdit = new frmEntityEdit(iEntity);
+            using frmEntityEdit frmEntityEdit = new frmEntityEdit(iEntity);
             frmEntityEdit.ShowDialog();
             if (frmEntityEdit.DialogResult != DialogResult.OK)
                 return;
@@ -61,7 +62,7 @@ namespace Hero_Designer
         {
             if (lvEntity.SelectedIndices.Count <= 0)
                 return;
-            frmEntityEdit frmEntityEdit = new frmEntityEdit(new SummonedEntity(DatabaseAPI.Database.Entities[lvEntity.SelectedIndices[0]], DatabaseAPI.Database.Entities.Length));
+            using frmEntityEdit frmEntityEdit = new frmEntityEdit(new SummonedEntity(DatabaseAPI.Database.Entities[lvEntity.SelectedIndices[0]], DatabaseAPI.Database.Entities.Length));
             if (frmEntityEdit.ShowDialog() != DialogResult.OK)
                 return;
             IDatabase database = DatabaseAPI.Database;
@@ -122,7 +123,7 @@ namespace Hero_Designer
             if (lvEntity.SelectedIndices.Count <= 0)
                 return;
             int selectedIndex = lvEntity.SelectedIndices[0];
-            frmEntityEdit frmEntityEdit = new frmEntityEdit(DatabaseAPI.Database.Entities[lvEntity.SelectedIndices[0]]);
+            using frmEntityEdit frmEntityEdit = new frmEntityEdit(DatabaseAPI.Database.Entities[lvEntity.SelectedIndices[0]]);
             if (frmEntityEdit.ShowDialog() != DialogResult.OK)
                 return;
             DatabaseAPI.Database.Entities[selectedIndex] = new SummonedEntity(frmEntityEdit.myEntity);

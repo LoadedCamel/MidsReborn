@@ -33,13 +33,15 @@ namespace Hero_Designer
 
         void at_Import_Click(object sender, EventArgs e)
         {
-            new frmImport_Archetype().ShowDialog();
+            using frmImport_Archetype frmImportArchetype = new frmImport_Archetype();
+            frmImportArchetype.ShowDialog();
             DisplayInfo();
         }
 
         void btnBonusLookup_Click(object sender, EventArgs e)
         {
-            new frmImport_SetBonusAssignment().ShowDialog();
+            using frmImport_SetBonusAssignment frmImportSetBonusAssignment = new frmImport_SetBonusAssignment();
+            frmImportSetBonusAssignment.ShowDialog();
             DisplayInfo();
         }
 
@@ -85,19 +87,22 @@ namespace Hero_Designer
 
         void btnEnhEffects_Click(object sender, EventArgs e)
         {
-            new frmImport_EnhancementEffects().ShowDialog();
+            using frmImport_EnhancementEffects frmImportEnhancementEffects = new frmImport_EnhancementEffects();
+            frmImportEnhancementEffects.ShowDialog();
             DisplayInfo();
         }
 
         void btnEntities_Click(object sender, EventArgs e)
         {
-            new frmImport_Entities().ShowDialog();
+            using frmImport_Entities frmImportEntities = new frmImport_Entities();
+            frmImportEntities.ShowDialog();
             DisplayInfo();
         }
 
         void btnImportRecipes_Click(object sender, EventArgs e)
         {
-            new frmImport_Recipe().ShowDialog();
+            using frmImport_Recipe frmImportRecipe = new frmImport_Recipe();
+            frmImportRecipe.ShowDialog();
             DisplayInfo();
         }
 
