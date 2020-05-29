@@ -31,8 +31,7 @@ namespace Hero_Designer
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
-
+            this.components = new System.ComponentModel.Container();
             this.gbBasic = new System.Windows.Forms.GroupBox();
             this.txtInternal = new System.Windows.Forms.TextBox();
             this.Label9 = new System.Windows.Forms.Label();
@@ -100,650 +99,746 @@ namespace Hero_Designer
             this.StaticIndex = new System.Windows.Forms.TextBox();
             this.Label11 = new System.Windows.Forms.Label();
             this.gbBasic.SuspendLayout();
-            this.udMinLevel.BeginInit();
-            this.udMaxLevel.BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMinLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxLevel)).BeginInit();
             this.gbType.SuspendLayout();
             this.gbSet.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)this.pbSet).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSet)).BeginInit();
             this.gbEffects.SuspendLayout();
             this.gbMod.SuspendLayout();
             this.gbClass.SuspendLayout();
             this.SuspendLayout();
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.txtInternal);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.Label9);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.Label7);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.Label6);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.udMinLevel);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.udMaxLevel);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.txtDesc);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.Label4);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.txtNameShort);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.Label3);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.txtNameFull);
-            this.gbBasic.Controls.Add((System.Windows.Forms.Control)this.Label2);
-
+            // 
+            // gbBasic
+            // 
+            this.gbBasic.Controls.Add(this.txtInternal);
+            this.gbBasic.Controls.Add(this.Label9);
+            this.gbBasic.Controls.Add(this.Label7);
+            this.gbBasic.Controls.Add(this.Label6);
+            this.gbBasic.Controls.Add(this.udMinLevel);
+            this.gbBasic.Controls.Add(this.udMaxLevel);
+            this.gbBasic.Controls.Add(this.txtDesc);
+            this.gbBasic.Controls.Add(this.Label4);
+            this.gbBasic.Controls.Add(this.txtNameShort);
+            this.gbBasic.Controls.Add(this.Label3);
+            this.gbBasic.Controls.Add(this.txtNameFull);
+            this.gbBasic.Controls.Add(this.Label2);
             this.gbBasic.Location = new System.Drawing.Point(96, 8);
             this.gbBasic.Name = "gbBasic";
-
             this.gbBasic.Size = new System.Drawing.Size(248, 169);
             this.gbBasic.TabIndex = 11;
             this.gbBasic.TabStop = false;
             this.gbBasic.Text = "Basic:";
-
+            // 
+            // txtInternal
+            // 
             this.txtInternal.Location = new System.Drawing.Point(84, 68);
             this.txtInternal.Name = "txtInternal";
-
             this.txtInternal.Size = new System.Drawing.Size(156, 20);
             this.txtInternal.TabIndex = 21;
-            this.txtInternal.TextChanged += new System.EventHandler(txtInternal_TextChanged);
-
+            this.txtInternal.TextChanged += new System.EventHandler(this.txtInternal_TextChanged);
+            // 
+            // Label9
+            // 
             this.Label9.Location = new System.Drawing.Point(8, 68);
             this.Label9.Name = "Label9";
-
             this.Label9.Size = new System.Drawing.Size(72, 20);
             this.Label9.TabIndex = 20;
             this.Label9.Text = "Internal:";
             this.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
+            // Label7
+            // 
             this.Label7.Location = new System.Drawing.Point(134, 140);
             this.Label7.Name = "Label7";
-
             this.Label7.Size = new System.Drawing.Size(56, 20);
             this.Label7.TabIndex = 19;
             this.Label7.Text = "to";
             this.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
+            // Label6
+            // 
             this.Label6.Location = new System.Drawing.Point(6, 140);
             this.Label6.Name = "Label6";
-
             this.Label6.Size = new System.Drawing.Size(74, 20);
             this.Label6.TabIndex = 18;
             this.Label6.Text = "Level range:";
             this.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
+            // udMinLevel
+            // 
             this.udMinLevel.Location = new System.Drawing.Point(84, 140);
-            this.udMinLevel.Maximum = new System.Decimal(new int[4] { 53, 0, 0, 0 });
-            this.udMinLevel.Minimum = new System.Decimal(new int[4] { 1, 0, 0, 0 });
+            this.udMinLevel.Maximum = new decimal(new int[] {
+            53,
+            0,
+            0,
+            0});
+            this.udMinLevel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.udMinLevel.Name = "udMinLevel";
-
             this.udMinLevel.Size = new System.Drawing.Size(44, 20);
             this.udMinLevel.TabIndex = 17;
-            this.udMinLevel.Value = new System.Decimal(new int[4] { 1, 0, 0, 0 });
-            this.udMinLevel.Leave += new System.EventHandler(udMinLevel_Leave);
-            this.udMinLevel.ValueChanged += new System.EventHandler(udMinLevel_ValueChanged);
-
+            this.udMinLevel.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.udMinLevel.ValueChanged += new System.EventHandler(this.udMinLevel_ValueChanged);
+            this.udMinLevel.Leave += new System.EventHandler(this.udMinLevel_Leave);
+            // 
+            // udMaxLevel
+            // 
             this.udMaxLevel.Location = new System.Drawing.Point(196, 140);
-            this.udMaxLevel.Maximum = new System.Decimal(new int[4] { 53, 0, 0, 0 });
-            this.udMaxLevel.Minimum = new System.Decimal(new int[4] { 1, 0, 0, 0 });
+            this.udMaxLevel.Maximum = new decimal(new int[] {
+            53,
+            0,
+            0,
+            0});
+            this.udMaxLevel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.udMaxLevel.Name = "udMaxLevel";
-
             this.udMaxLevel.Size = new System.Drawing.Size(44, 20);
             this.udMaxLevel.TabIndex = 16;
-            this.udMaxLevel.Value = new System.Decimal(new int[4] { 53, 0, 0, 0 });
-            this.udMaxLevel.Leave += new System.EventHandler(udMaxLevel_Leave);
-            this.udMaxLevel.ValueChanged += new System.EventHandler(udMaxLevel_ValueChanged);
-
+            this.udMaxLevel.Value = new decimal(new int[] {
+            53,
+            0,
+            0,
+            0});
+            this.udMaxLevel.ValueChanged += new System.EventHandler(this.udMaxLevel_ValueChanged);
+            this.udMaxLevel.Leave += new System.EventHandler(this.udMaxLevel_Leave);
+            // 
+            // txtDesc
+            // 
             this.txtDesc.Location = new System.Drawing.Point(84, 94);
             this.txtDesc.Multiline = true;
             this.txtDesc.Name = "txtDesc";
-
             this.txtDesc.Size = new System.Drawing.Size(156, 40);
             this.txtDesc.TabIndex = 15;
-            this.txtDesc.TextChanged += new System.EventHandler(txtDesc_TextChanged);
-
+            this.txtDesc.TextChanged += new System.EventHandler(this.txtDesc_TextChanged);
+            // 
+            // Label4
+            // 
             this.Label4.Location = new System.Drawing.Point(8, 98);
             this.Label4.Name = "Label4";
-
             this.Label4.Size = new System.Drawing.Size(72, 20);
             this.Label4.TabIndex = 14;
             this.Label4.Text = "Description:";
             this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
+            // txtNameShort
+            // 
             this.txtNameShort.Location = new System.Drawing.Point(84, 42);
             this.txtNameShort.Name = "txtNameShort";
-
             this.txtNameShort.Size = new System.Drawing.Size(156, 20);
             this.txtNameShort.TabIndex = 13;
-            this.txtNameShort.TextChanged += new System.EventHandler(txtNameShort_TextChanged);
-
+            this.txtNameShort.TextChanged += new System.EventHandler(this.txtNameShort_TextChanged);
+            // 
+            // Label3
+            // 
             this.Label3.Location = new System.Drawing.Point(8, 42);
             this.Label3.Name = "Label3";
-
             this.Label3.Size = new System.Drawing.Size(72, 20);
             this.Label3.TabIndex = 12;
             this.Label3.Text = "Short Name:";
             this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
+            // txtNameFull
+            // 
             this.txtNameFull.Location = new System.Drawing.Point(84, 16);
             this.txtNameFull.Name = "txtNameFull";
-
             this.txtNameFull.Size = new System.Drawing.Size(156, 20);
             this.txtNameFull.TabIndex = 11;
-            this.txtNameFull.TextChanged += new System.EventHandler(txtNameFull_TextChanged);
-
+            this.txtNameFull.TextChanged += new System.EventHandler(this.txtNameFull_TextChanged);
+            // 
+            // Label2
+            // 
             this.Label2.Location = new System.Drawing.Point(8, 16);
             this.Label2.Name = "Label2";
-
             this.Label2.Size = new System.Drawing.Size(72, 20);
             this.Label2.TabIndex = 10;
             this.Label2.Text = "Full Name:";
             this.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnImage
+            // 
             this.btnImage.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-
             this.btnImage.Location = new System.Drawing.Point(8, 12);
             this.btnImage.Name = "btnImage";
-
             this.btnImage.Size = new System.Drawing.Size(80, 68);
             this.btnImage.TabIndex = 9;
             this.btnImage.Text = "ImageName";
             this.btnImage.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnImage.Click += new System.EventHandler(btnImage_Click);
-            this.gbType.Controls.Add((System.Windows.Forms.Control)this.cbSubType);
-            this.gbType.Controls.Add((System.Windows.Forms.Control)this.typeSet);
-            this.gbType.Controls.Add((System.Windows.Forms.Control)this.typeIO);
-            this.gbType.Controls.Add((System.Windows.Forms.Control)this.typeRegular);
-            this.gbType.Controls.Add((System.Windows.Forms.Control)this.typeHO);
-
+            this.btnImage.Click += new System.EventHandler(this.btnImage_Click);
+            // 
+            // gbType
+            // 
+            this.gbType.Controls.Add(this.cbSubType);
+            this.gbType.Controls.Add(this.typeSet);
+            this.gbType.Controls.Add(this.typeIO);
+            this.gbType.Controls.Add(this.typeRegular);
+            this.gbType.Controls.Add(this.typeHO);
             this.gbType.Location = new System.Drawing.Point(352, 8);
             this.gbType.Name = "gbType";
-
             this.gbType.Size = new System.Drawing.Size(140, 169);
             this.gbType.TabIndex = 2;
             this.gbType.TabStop = false;
             this.gbType.Text = "Enhancement Type:";
+            // 
+            // cbSubType
+            // 
             this.cbSubType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-
             this.cbSubType.Location = new System.Drawing.Point(8, 138);
             this.cbSubType.Name = "cbSubType";
-
             this.cbSubType.Size = new System.Drawing.Size(124, 22);
             this.cbSubType.TabIndex = 54;
-            this.cbSubType.SelectedIndexChanged += new System.EventHandler(cbSubType_SelectedIndexChanged);
-            this.tTip.SetToolTip((System.Windows.Forms.Control)this.cbSubType, "(Currently only apllicable to Stealth IOs");
+            this.tTip.SetToolTip(this.cbSubType, "(Currently only apllicable to Stealth IOs");
+            this.cbSubType.SelectedIndexChanged += new System.EventHandler(this.cbSubType_SelectedIndexChanged);
+            // 
+            // typeSet
+            // 
             this.typeSet.Appearance = System.Windows.Forms.Appearance.Button;
             this.typeSet.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
             this.typeSet.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-
             this.typeSet.Location = new System.Drawing.Point(72, 76);
             this.typeSet.Name = "typeSet";
-
             this.typeSet.Size = new System.Drawing.Size(60, 56);
             this.typeSet.TabIndex = 53;
             this.typeSet.Text = "IO Set";
             this.typeSet.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.typeSet.CheckedChanged += new System.EventHandler(type_CheckedChanged);
+            this.typeSet.CheckedChanged += new System.EventHandler(this.type_CheckedChanged);
+            // 
+            // typeIO
+            // 
             this.typeIO.Appearance = System.Windows.Forms.Appearance.Button;
             this.typeIO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
             this.typeIO.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-
             this.typeIO.Location = new System.Drawing.Point(72, 16);
             this.typeIO.Name = "typeIO";
-
             this.typeIO.Size = new System.Drawing.Size(60, 56);
             this.typeIO.TabIndex = 52;
             this.typeIO.Text = "Invention";
             this.typeIO.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.typeIO.CheckedChanged += new System.EventHandler(type_CheckedChanged);
+            this.typeIO.CheckedChanged += new System.EventHandler(this.type_CheckedChanged);
+            // 
+            // typeRegular
+            // 
             this.typeRegular.Appearance = System.Windows.Forms.Appearance.Button;
             this.typeRegular.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
             this.typeRegular.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-
             this.typeRegular.Location = new System.Drawing.Point(8, 16);
             this.typeRegular.Name = "typeRegular";
-
             this.typeRegular.Size = new System.Drawing.Size(60, 56);
             this.typeRegular.TabIndex = 50;
             this.typeRegular.Text = "Regular";
             this.typeRegular.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.typeRegular.CheckedChanged += new System.EventHandler(type_CheckedChanged);
+            this.typeRegular.CheckedChanged += new System.EventHandler(this.type_CheckedChanged);
+            // 
+            // typeHO
+            // 
             this.typeHO.Appearance = System.Windows.Forms.Appearance.Button;
             this.typeHO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
             this.typeHO.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-
             this.typeHO.Location = new System.Drawing.Point(8, 76);
             this.typeHO.Name = "typeHO";
-
             this.typeHO.Size = new System.Drawing.Size(60, 56);
             this.typeHO.TabIndex = 51;
             this.typeHO.Text = "Special";
             this.typeHO.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.typeHO.CheckedChanged += new System.EventHandler(type_CheckedChanged);
+            this.typeHO.CheckedChanged += new System.EventHandler(this.type_CheckedChanged);
+            // 
+            // cbSet
+            // 
+            this.cbSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSet.Location = new System.Drawing.Point(8, 20);
             this.cbSet.Name = "cbSet";
-
             this.cbSet.Size = new System.Drawing.Size(168, 22);
             this.cbSet.TabIndex = 13;
-            this.cbSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSet.SelectedIndexChanged += new System.EventHandler(cbSet_SelectedIndexChanged);
-
-            this.gbSet.Controls.Add((System.Windows.Forms.Control)this.chkSuperior);
-            this.gbSet.Controls.Add((System.Windows.Forms.Control)this.pbSet);
-            this.gbSet.Controls.Add((System.Windows.Forms.Control)this.cbSet);
-            this.gbSet.Controls.Add((System.Windows.Forms.Control)this.chkUnique);
-
+            this.cbSet.SelectedIndexChanged += new System.EventHandler(this.cbSet_SelectedIndexChanged);
+            // 
+            // gbSet
+            // 
+            this.gbSet.Controls.Add(this.chkSuperior);
+            this.gbSet.Controls.Add(this.pbSet);
+            this.gbSet.Controls.Add(this.cbSet);
+            this.gbSet.Controls.Add(this.chkUnique);
             this.gbSet.Location = new System.Drawing.Point(496, 8);
             this.gbSet.Name = "gbSet";
-
             this.gbSet.Size = new System.Drawing.Size(184, 119);
             this.gbSet.TabIndex = 14;
             this.gbSet.TabStop = false;
             this.gbSet.Text = "Invention Origin Set:";
-
+            // 
+            // chkSuperior
+            // 
             this.chkSuperior.Location = new System.Drawing.Point(60, 94);
             this.chkSuperior.Name = "chkSuperior";
-
             this.chkSuperior.Size = new System.Drawing.Size(84, 16);
             this.chkSuperior.TabIndex = 21;
             this.chkSuperior.Text = "Superior";
-            this.chkSuperior.CheckedChanged += new System.EventHandler(chkSuperior_CheckedChanged);
-
-
+            this.chkSuperior.CheckedChanged += new System.EventHandler(this.chkSuperior_CheckedChanged);
+            // 
+            // pbSet
+            // 
             this.pbSet.Location = new System.Drawing.Point(12, 52);
             this.pbSet.Name = "pbSet";
-
             this.pbSet.Size = new System.Drawing.Size(30, 30);
             this.pbSet.TabIndex = 14;
             this.pbSet.TabStop = false;
-
+            // 
+            // chkUnique
+            // 
             this.chkUnique.Location = new System.Drawing.Point(60, 60);
             this.chkUnique.Name = "chkUnique";
-
             this.chkUnique.Size = new System.Drawing.Size(84, 16);
             this.chkUnique.TabIndex = 20;
             this.chkUnique.Text = "Unique";
-            this.chkUnique.CheckedChanged += new System.EventHandler(chkUnique_CheckedChanged);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.btnDown);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.btnUp);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.rbBoth);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.rbDebuff);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.rbBuff);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.btnAutoFill);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.Label5);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.txtProb);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.Label1);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.btnEdit);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.btnAddFX);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.btnRemove);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.btnAdd);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.gbMod);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.lstSelected);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.lstAvailable);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.cbSched);
-            this.gbEffects.Controls.Add((System.Windows.Forms.Control)this.lblSched);
-
+            this.chkUnique.CheckedChanged += new System.EventHandler(this.chkUnique_CheckedChanged);
+            // 
+            // gbEffects
+            // 
+            this.gbEffects.Controls.Add(this.btnDown);
+            this.gbEffects.Controls.Add(this.btnUp);
+            this.gbEffects.Controls.Add(this.rbBoth);
+            this.gbEffects.Controls.Add(this.rbDebuff);
+            this.gbEffects.Controls.Add(this.rbBuff);
+            this.gbEffects.Controls.Add(this.btnAutoFill);
+            this.gbEffects.Controls.Add(this.Label5);
+            this.gbEffects.Controls.Add(this.txtProb);
+            this.gbEffects.Controls.Add(this.Label1);
+            this.gbEffects.Controls.Add(this.btnEdit);
+            this.gbEffects.Controls.Add(this.btnAddFX);
+            this.gbEffects.Controls.Add(this.btnRemove);
+            this.gbEffects.Controls.Add(this.btnAdd);
+            this.gbEffects.Controls.Add(this.gbMod);
+            this.gbEffects.Controls.Add(this.lstSelected);
+            this.gbEffects.Controls.Add(this.lstAvailable);
+            this.gbEffects.Controls.Add(this.cbSched);
+            this.gbEffects.Controls.Add(this.lblSched);
             this.gbEffects.Location = new System.Drawing.Point(4, 210);
             this.gbEffects.Name = "gbEffects";
-
             this.gbEffects.Size = new System.Drawing.Size(584, 284);
             this.gbEffects.TabIndex = 15;
             this.gbEffects.TabStop = false;
             this.gbEffects.Text = "Effects:";
-
+            // 
+            // btnDown
+            // 
             this.btnDown.Location = new System.Drawing.Point(188, 172);
             this.btnDown.Name = "btnDown";
-
             this.btnDown.Size = new System.Drawing.Size(48, 20);
             this.btnDown.TabIndex = 32;
             this.btnDown.Text = "Down";
-            this.btnDown.Click += new System.EventHandler(btnDown_Click);
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+            // 
+            // btnUp
+            // 
             this.btnUp.Location = new System.Drawing.Point(188, 148);
             this.btnUp.Name = "btnUp";
-
             this.btnUp.Size = new System.Drawing.Size(48, 20);
             this.btnUp.TabIndex = 31;
             this.btnUp.Text = "Up";
-            this.btnUp.Click += new System.EventHandler(btnUp_Click);
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
+            // 
+            // rbBoth
+            // 
             this.rbBoth.Checked = true;
-
             this.rbBoth.Location = new System.Drawing.Point(428, 228);
             this.rbBoth.Name = "rbBoth";
-
             this.rbBoth.Size = new System.Drawing.Size(148, 16);
             this.rbBoth.TabIndex = 30;
             this.rbBoth.TabStop = true;
             this.rbBoth.Text = "Buff/Debuff Effects";
-            this.rbBoth.CheckedChanged += new System.EventHandler(rbBuffDebuff_CheckedChanged);
-
-            this.tTip.SetToolTip((System.Windows.Forms.Control)this.rbBoth, "Apply to effects regardles of whether the Mag is positive or negative");
-
+            this.tTip.SetToolTip(this.rbBoth, "Apply to effects regardles of whether the Mag is positive or negative");
+            this.rbBoth.CheckedChanged += new System.EventHandler(this.rbBuffDebuff_CheckedChanged);
+            // 
+            // rbDebuff
+            // 
             this.rbDebuff.Location = new System.Drawing.Point(428, 212);
             this.rbDebuff.Name = "rbDebuff";
-
             this.rbDebuff.Size = new System.Drawing.Size(148, 16);
             this.rbDebuff.TabIndex = 29;
             this.rbDebuff.Text = "Debuff Effects";
-            this.rbDebuff.CheckedChanged += new System.EventHandler(rbBuffDebuff_CheckedChanged);
-            this.tTip.SetToolTip((System.Windows.Forms.Control)this.rbDebuff, "Apply only to effects with a negative Mag");
-
+            this.tTip.SetToolTip(this.rbDebuff, "Apply only to effects with a negative Mag");
+            this.rbDebuff.CheckedChanged += new System.EventHandler(this.rbBuffDebuff_CheckedChanged);
+            // 
+            // rbBuff
+            // 
             this.rbBuff.Location = new System.Drawing.Point(428, 196);
             this.rbBuff.Name = "rbBuff";
-
             this.rbBuff.Size = new System.Drawing.Size(148, 16);
             this.rbBuff.TabIndex = 28;
             this.rbBuff.Text = "Buff Effects";
-            this.rbBuff.CheckedChanged += new System.EventHandler(rbBuffDebuff_CheckedChanged);
-            this.tTip.SetToolTip((System.Windows.Forms.Control)this.rbBuff, "Apply only to effects with a positive Mag");
-
+            this.tTip.SetToolTip(this.rbBuff, "Apply only to effects with a positive Mag");
+            this.rbBuff.CheckedChanged += new System.EventHandler(this.rbBuffDebuff_CheckedChanged);
+            // 
+            // btnAutoFill
+            // 
             this.btnAutoFill.Location = new System.Drawing.Point(128, 24);
             this.btnAutoFill.Name = "btnAutoFill";
-
             this.btnAutoFill.Size = new System.Drawing.Size(108, 32);
             this.btnAutoFill.TabIndex = 27;
             this.btnAutoFill.Text = "AutoFill Names";
-            this.btnAutoFill.Click += new System.EventHandler(btnAutoFill_Click);
+            this.btnAutoFill.Click += new System.EventHandler(this.btnAutoFill_Click);
+            // 
+            // Label5
+            // 
             this.Label5.Location = new System.Drawing.Point(196, 244);
             this.Label5.Name = "Label5";
-
             this.Label5.Size = new System.Drawing.Size(28, 20);
             this.Label5.TabIndex = 26;
             this.Label5.Text = "(0-1)";
             this.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
+            // 
+            // txtProb
+            // 
             this.txtProb.Location = new System.Drawing.Point(156, 244);
             this.txtProb.Name = "txtProb";
-
             this.txtProb.Size = new System.Drawing.Size(36, 20);
             this.txtProb.TabIndex = 25;
             this.txtProb.Text = "1";
-            this.txtProb.Leave += new System.EventHandler(txtProb_Leave);
-            this.txtProb.TextChanged += new System.EventHandler(txtProb_TextChanged);
-
+            this.txtProb.TextChanged += new System.EventHandler(this.txtProb_TextChanged);
+            this.txtProb.Leave += new System.EventHandler(this.txtProb_Leave);
+            // 
+            // Label1
+            // 
             this.Label1.Location = new System.Drawing.Point(8, 244);
             this.Label1.Name = "Label1";
-
             this.Label1.Size = new System.Drawing.Size(148, 20);
             this.Label1.TabIndex = 24;
             this.Label1.Text = "Special Effect Probability:";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
-
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEdit.Location = new System.Drawing.Point(424, 248);
             this.btnEdit.Name = "btnEdit";
-
             this.btnEdit.Size = new System.Drawing.Size(152, 28);
             this.btnEdit.TabIndex = 23;
             this.btnEdit.Text = "Edit Selected...";
-            this.btnEdit.Click += new System.EventHandler(btnEdit_Click);
-            this.btnAddFX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
-
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnAddFX
+            // 
+            this.btnAddFX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddFX.Location = new System.Drawing.Point(8, 208);
             this.btnAddFX.Name = "btnAddFX";
-
             this.btnAddFX.Size = new System.Drawing.Size(228, 28);
             this.btnAddFX.TabIndex = 22;
             this.btnAddFX.Text = "Add Special Effect... ->";
-            this.btnAddFX.Click += new System.EventHandler(btnAddFX_Click);
-            this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
-
+            this.btnAddFX.Click += new System.EventHandler(this.btnAddFX_Click);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRemove.Location = new System.Drawing.Point(240, 248);
             this.btnRemove.Name = "btnRemove";
-
             this.btnRemove.Size = new System.Drawing.Size(176, 28);
             this.btnRemove.TabIndex = 21;
             this.btnRemove.Text = "Remove Selected";
-            this.btnRemove.Click += new System.EventHandler(btnRemove_Click);
-            this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
-
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdd.Location = new System.Drawing.Point(128, 100);
             this.btnAdd.Name = "btnAdd";
-
             this.btnAdd.Size = new System.Drawing.Size(108, 28);
             this.btnAdd.TabIndex = 20;
             this.btnAdd.Text = "Add ->";
-            this.btnAdd.Click += new System.EventHandler(btnAdd_Click);
-            this.gbMod.Controls.Add((System.Windows.Forms.Control)this.rbMod4);
-            this.gbMod.Controls.Add((System.Windows.Forms.Control)this.txtModOther);
-            this.gbMod.Controls.Add((System.Windows.Forms.Control)this.rbModOther);
-            this.gbMod.Controls.Add((System.Windows.Forms.Control)this.rbMod3);
-            this.gbMod.Controls.Add((System.Windows.Forms.Control)this.rbMod2);
-            this.gbMod.Controls.Add((System.Windows.Forms.Control)this.rbMod1);
-
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // gbMod
+            // 
+            this.gbMod.Controls.Add(this.rbMod4);
+            this.gbMod.Controls.Add(this.txtModOther);
+            this.gbMod.Controls.Add(this.rbModOther);
+            this.gbMod.Controls.Add(this.rbMod3);
+            this.gbMod.Controls.Add(this.rbMod2);
+            this.gbMod.Controls.Add(this.rbMod1);
             this.gbMod.Location = new System.Drawing.Point(424, 44);
             this.gbMod.Name = "gbMod";
-
             this.gbMod.Size = new System.Drawing.Size(152, 148);
             this.gbMod.TabIndex = 19;
             this.gbMod.TabStop = false;
             this.gbMod.Text = "Effect Modifier:";
-
+            // 
+            // rbMod4
+            // 
             this.rbMod4.Location = new System.Drawing.Point(12, 80);
             this.rbMod4.Name = "rbMod4";
-
             this.rbMod4.Size = new System.Drawing.Size(128, 20);
             this.rbMod4.TabIndex = 5;
             this.rbMod4.Text = "0.4375 (4-Effect IO)";
-            this.rbMod4.CheckedChanged += new System.EventHandler(rbMod_CheckedChanged);
+            this.rbMod4.CheckedChanged += new System.EventHandler(this.rbMod_CheckedChanged);
+            // 
+            // txtModOther
+            // 
             this.txtModOther.Enabled = false;
-
             this.txtModOther.Location = new System.Drawing.Point(28, 120);
             this.txtModOther.Name = "txtModOther";
-
             this.txtModOther.Size = new System.Drawing.Size(112, 20);
             this.txtModOther.TabIndex = 4;
-            this.txtModOther.TextChanged += new System.EventHandler(txtModOther_TextChanged);
-
+            this.txtModOther.TextChanged += new System.EventHandler(this.txtModOther_TextChanged);
+            // 
+            // rbModOther
+            // 
             this.rbModOther.Location = new System.Drawing.Point(12, 100);
             this.rbModOther.Name = "rbModOther";
-
             this.rbModOther.Size = new System.Drawing.Size(128, 20);
             this.rbModOther.TabIndex = 3;
             this.rbModOther.Text = "Other";
-            this.rbModOther.CheckedChanged += new System.EventHandler(rbMod_CheckedChanged);
-
-
+            this.rbModOther.CheckedChanged += new System.EventHandler(this.rbMod_CheckedChanged);
+            // 
+            // rbMod3
+            // 
             this.rbMod3.Location = new System.Drawing.Point(12, 60);
             this.rbMod3.Name = "rbMod3";
-
             this.rbMod3.Size = new System.Drawing.Size(128, 20);
             this.rbMod3.TabIndex = 2;
             this.rbMod3.Text = "0.5 (3-Effect IO)";
-            this.rbMod3.CheckedChanged += new System.EventHandler(rbMod_CheckedChanged);
+            this.rbMod3.CheckedChanged += new System.EventHandler(this.rbMod_CheckedChanged);
+            // 
+            // rbMod2
+            // 
             this.rbMod2.Location = new System.Drawing.Point(12, 40);
             this.rbMod2.Name = "rbMod2";
-
             this.rbMod2.Size = new System.Drawing.Size(128, 20);
             this.rbMod2.TabIndex = 1;
             this.rbMod2.Text = "0.625 (2-Effect IO)";
-            this.rbMod2.CheckedChanged += new System.EventHandler(rbMod_CheckedChanged);
+            this.rbMod2.CheckedChanged += new System.EventHandler(this.rbMod_CheckedChanged);
+            // 
+            // rbMod1
+            // 
             this.rbMod1.Checked = true;
-
             this.rbMod1.Location = new System.Drawing.Point(12, 20);
             this.rbMod1.Name = "rbMod1";
-
             this.rbMod1.Size = new System.Drawing.Size(128, 20);
             this.rbMod1.TabIndex = 0;
             this.rbMod1.TabStop = true;
             this.rbMod1.Text = "1.0 (No modifier)";
-            this.rbMod1.CheckedChanged += new System.EventHandler(rbMod_CheckedChanged);
-            this.lstSelected.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.rbMod1.CheckedChanged += new System.EventHandler(this.rbMod_CheckedChanged);
+            // 
+            // lstSelected
+            // 
+            this.lstSelected.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstSelected.ItemHeight = 14;
-
             this.lstSelected.Location = new System.Drawing.Point(240, 20);
             this.lstSelected.Name = "lstSelected";
-
             this.lstSelected.Size = new System.Drawing.Size(176, 214);
             this.lstSelected.TabIndex = 16;
-            this.lstSelected.SelectedIndexChanged += new System.EventHandler(lstSelected_SelectedIndexChanged);
-            this.lstAvailable.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.lstSelected.SelectedIndexChanged += new System.EventHandler(this.lstSelected_SelectedIndexChanged);
+            // 
+            // lstAvailable
+            // 
+            this.lstAvailable.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstAvailable.ItemHeight = 14;
-
             this.lstAvailable.Location = new System.Drawing.Point(8, 20);
             this.lstAvailable.Name = "lstAvailable";
-
             this.lstAvailable.Size = new System.Drawing.Size(116, 172);
             this.lstAvailable.TabIndex = 15;
-            this.lstAvailable.DoubleClick += new System.EventHandler(lstAvailable_DoubleClick);
+            this.lstAvailable.DoubleClick += new System.EventHandler(this.lstAvailable_DoubleClick);
+            // 
+            // cbSched
+            // 
             this.cbSched.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-
             this.cbSched.Location = new System.Drawing.Point(488, 20);
             this.cbSched.Name = "cbSched";
-
             this.cbSched.Size = new System.Drawing.Size(88, 22);
             this.cbSched.TabIndex = 14;
-            this.cbSched.SelectedIndexChanged += new System.EventHandler(cbSched_SelectedIndexChanged);
-
+            this.cbSched.SelectedIndexChanged += new System.EventHandler(this.cbSched_SelectedIndexChanged);
+            // 
+            // lblSched
+            // 
             this.lblSched.Location = new System.Drawing.Point(424, 20);
             this.lblSched.Name = "lblSched";
-
             this.lblSched.Size = new System.Drawing.Size(64, 20);
             this.lblSched.TabIndex = 3;
             this.lblSched.Text = "Schedule:";
             this.lblSched.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnOK
+            // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-
             this.btnOK.Location = new System.Drawing.Point(596, 434);
             this.btnOK.Name = "btnOK";
-
             this.btnOK.Size = new System.Drawing.Size(84, 28);
             this.btnOK.TabIndex = 16;
             this.btnOK.Text = "OK";
-            this.btnOK.Click += new System.EventHandler(btnOK_Click);
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            // 
+            // btnCancel
+            // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-
             this.btnCancel.Location = new System.Drawing.Point(596, 466);
             this.btnCancel.Name = "btnCancel";
-
             this.btnCancel.Size = new System.Drawing.Size(84, 28);
             this.btnCancel.TabIndex = 17;
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.Click += new System.EventHandler(btnCancel_Click);
-            this.gbClass.Controls.Add((System.Windows.Forms.Control)this.lblClass);
-            this.gbClass.Controls.Add((System.Windows.Forms.Control)this.pnlClassList);
-            this.gbClass.Controls.Add((System.Windows.Forms.Control)this.pnlClass);
-
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // gbClass
+            // 
+            this.gbClass.Controls.Add(this.lblClass);
+            this.gbClass.Controls.Add(this.pnlClassList);
+            this.gbClass.Controls.Add(this.pnlClass);
             this.gbClass.Location = new System.Drawing.Point(596, 178);
             this.gbClass.Name = "gbClass";
-
             this.gbClass.Size = new System.Drawing.Size(84, 252);
             this.gbClass.TabIndex = 18;
             this.gbClass.TabStop = false;
             this.gbClass.Text = "Class(es):";
-
+            // 
+            // lblClass
+            // 
             this.lblClass.Location = new System.Drawing.Point(8, 232);
             this.lblClass.Name = "lblClass";
-
             this.lblClass.Size = new System.Drawing.Size(68, 16);
             this.lblClass.TabIndex = 2;
+            // 
+            // pnlClassList
+            // 
             this.pnlClassList.BackColor = System.Drawing.Color.Black;
-
             this.pnlClassList.Location = new System.Drawing.Point(84, 16);
             this.pnlClassList.Name = "pnlClassList";
-
             this.pnlClassList.Size = new System.Drawing.Size(180, 212);
             this.pnlClassList.TabIndex = 1;
+            // 
+            // pnlClass
+            // 
             this.pnlClass.BackColor = System.Drawing.Color.Black;
-
             this.pnlClass.Location = new System.Drawing.Point(8, 16);
             this.pnlClass.Name = "pnlClass";
-
             this.pnlClass.Size = new System.Drawing.Size(68, 212);
             this.pnlClass.TabIndex = 0;
+            // 
+            // ImagePicker
+            // 
             this.ImagePicker.Filter = "PNG Images|*.png";
             this.ImagePicker.Title = "Select Image File";
-
+            // 
+            // btnNoImage
+            // 
             this.btnNoImage.Location = new System.Drawing.Point(8, 84);
             this.btnNoImage.Name = "btnNoImage";
-
             this.btnNoImage.Size = new System.Drawing.Size(80, 20);
             this.btnNoImage.TabIndex = 19;
             this.btnNoImage.Text = "Clear Image";
-            this.btnNoImage.Click += new System.EventHandler(btnNoImage_Click);
+            this.btnNoImage.Click += new System.EventHandler(this.btnNoImage_Click);
+            // 
+            // tTip
+            // 
             this.tTip.AutoPopDelay = 10000;
             this.tTip.InitialDelay = 250;
             this.tTip.ReshowDelay = 100;
+            // 
+            // cbMutEx
+            // 
             this.cbMutEx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-
             this.cbMutEx.Location = new System.Drawing.Point(504, 146);
             this.cbMutEx.Name = "cbMutEx";
-
             this.cbMutEx.Size = new System.Drawing.Size(168, 22);
             this.cbMutEx.TabIndex = 21;
-            this.cbMutEx.SelectedIndexChanged += new System.EventHandler(cbMutEx_SelectedIndexChanged);
-            this.tTip.SetToolTip((System.Windows.Forms.Control)this.cbMutEx, "(Currently only apllicable to Stealth IOs");
+            this.tTip.SetToolTip(this.cbMutEx, "(Currently only apllicable to Stealth IOs");
+            this.cbMutEx.SelectedIndexChanged += new System.EventHandler(this.cbMutEx_SelectedIndexChanged);
+            // 
+            // cbRecipe
+            // 
             this.cbRecipe.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-
             this.cbRecipe.Location = new System.Drawing.Point(96, 183);
             this.cbRecipe.Name = "cbRecipe";
-
             this.cbRecipe.Size = new System.Drawing.Size(248, 22);
             this.cbRecipe.TabIndex = 23;
-            this.cbRecipe.SelectedIndexChanged += new System.EventHandler(cbRecipe_SelectedIndexChanged);
-            this.tTip.SetToolTip((System.Windows.Forms.Control)this.cbRecipe, "(Currently only apllicable to Stealth IOs");
-
+            this.tTip.SetToolTip(this.cbRecipe, "(Currently only apllicable to Stealth IOs");
+            this.cbRecipe.SelectedIndexChanged += new System.EventHandler(this.cbRecipe_SelectedIndexChanged);
+            // 
+            // Label8
+            // 
             this.Label8.Location = new System.Drawing.Point(496, 130);
             this.Label8.Name = "Label8";
-
             this.Label8.Size = new System.Drawing.Size(80, 16);
             this.Label8.TabIndex = 22;
             this.Label8.Text = "MutEx Group:";
-
+            // 
+            // Label10
+            // 
             this.Label10.Location = new System.Drawing.Point(10, 183);
             this.Label10.Name = "Label10";
-
             this.Label10.Size = new System.Drawing.Size(80, 22);
             this.Label10.TabIndex = 24;
             this.Label10.Text = "Recipe:";
             this.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
+            // btnEditPowerData
+            // 
             this.btnEditPowerData.Location = new System.Drawing.Point(352, 183);
             this.btnEditPowerData.Name = "btnEditPowerData";
-
             this.btnEditPowerData.Size = new System.Drawing.Size(236, 22);
             this.btnEditPowerData.TabIndex = 25;
-            this.btnEditPowerData.Text = "Edit Power_Mode Data";
+            this.btnEditPowerData.Text = "Edit Power Data";
             this.btnEditPowerData.UseVisualStyleBackColor = true;
-            this.btnEditPowerData.Click += new System.EventHandler(btnEditPowerData_Click);
-
+            this.btnEditPowerData.Click += new System.EventHandler(this.btnEditPowerData_Click);
+            // 
+            // StaticIndex
+            // 
             this.StaticIndex.Location = new System.Drawing.Point(8, 146);
             this.StaticIndex.Name = "StaticIndex";
-
             this.StaticIndex.Size = new System.Drawing.Size(82, 20);
             this.StaticIndex.TabIndex = 26;
-            this.StaticIndex.TextChanged += new System.EventHandler(StaticIndex_TextChanged);
+            this.StaticIndex.TextChanged += new System.EventHandler(this.StaticIndex_TextChanged);
+            // 
+            // Label11
+            // 
             this.Label11.AutoSize = true;
-
             this.Label11.Location = new System.Drawing.Point(8, 126);
             this.Label11.Name = "Label11";
-
             this.Label11.Size = new System.Drawing.Size(63, 14);
             this.Label11.TabIndex = 27;
             this.Label11.Text = "Static Index";
-            this.AcceptButton = (System.Windows.Forms.IButtonControl)this.btnOK;
-
+            // 
+            // frmEnhData
+            // 
+            this.AcceptButton = this.btnOK;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.CancelButton = (System.Windows.Forms.IButtonControl)this.btnCancel;
-
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(686, 501);
-            this.Controls.Add((System.Windows.Forms.Control)this.Label11);
-            this.Controls.Add((System.Windows.Forms.Control)this.StaticIndex);
-            this.Controls.Add((System.Windows.Forms.Control)this.btnEditPowerData);
-            this.Controls.Add((System.Windows.Forms.Control)this.Label10);
-            this.Controls.Add((System.Windows.Forms.Control)this.cbRecipe);
-            this.Controls.Add((System.Windows.Forms.Control)this.Label8);
-            this.Controls.Add((System.Windows.Forms.Control)this.btnNoImage);
-            this.Controls.Add((System.Windows.Forms.Control)this.gbClass);
-            this.Controls.Add((System.Windows.Forms.Control)this.btnCancel);
-            this.Controls.Add((System.Windows.Forms.Control)this.btnOK);
-            this.Controls.Add((System.Windows.Forms.Control)this.gbEffects);
-            this.Controls.Add((System.Windows.Forms.Control)this.gbSet);
-            this.Controls.Add((System.Windows.Forms.Control)this.gbBasic);
-            this.Controls.Add((System.Windows.Forms.Control)this.gbType);
-            this.Controls.Add((System.Windows.Forms.Control)this.btnImage);
-            this.Controls.Add((System.Windows.Forms.Control)this.cbMutEx);
-            this.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.Controls.Add(this.Label11);
+            this.Controls.Add(this.StaticIndex);
+            this.Controls.Add(this.btnEditPowerData);
+            this.Controls.Add(this.Label10);
+            this.Controls.Add(this.cbRecipe);
+            this.Controls.Add(this.Label8);
+            this.Controls.Add(this.btnNoImage);
+            this.Controls.Add(this.gbClass);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.gbEffects);
+            this.Controls.Add(this.gbSet);
+            this.Controls.Add(this.gbBasic);
+            this.Controls.Add(this.gbType);
+            this.Controls.Add(this.btnImage);
+            this.Controls.Add(this.cbMutEx);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.Name = "frmEnhData";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit [EnhancementName]";
             this.gbBasic.ResumeLayout(false);
             this.gbBasic.PerformLayout();
-            this.udMinLevel.EndInit();
-            this.udMaxLevel.EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMinLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxLevel)).EndInit();
             this.gbType.ResumeLayout(false);
             this.gbSet.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)this.pbSet).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSet)).EndInit();
             this.gbEffects.ResumeLayout(false);
             this.gbEffects.PerformLayout();
             this.gbMod.ResumeLayout(false);
@@ -751,6 +846,7 @@ namespace Hero_Designer
             this.gbClass.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

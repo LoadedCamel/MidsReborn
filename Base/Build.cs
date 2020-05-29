@@ -884,7 +884,6 @@ Note: Normal and Special enhancements cannot go above +3, and Inventions cannot 
             if (!allowedSet)
                 return false;
         }
-        var flagOn = false;
         for (int powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
         {
             setName = GetEnhSetName(enhancement.LongName);

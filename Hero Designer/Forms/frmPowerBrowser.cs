@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -40,7 +41,7 @@ namespace Hero_Designer
             InitializeComponent();
             Name = nameof(frmPowerBrowser);
             var componentResourceManager = new ComponentResourceManager(typeof(frmPowerBrowser));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon)componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
         }
 
         void btnCancel_Click(object sender, EventArgs e)
@@ -61,7 +62,7 @@ namespace Hero_Designer
                 ClassName = "Class_New",
                 DisplayName = "New Class"
             };
-            frmEditArchetype frmEditArchetype = new frmEditArchetype(ref iAT);
+            using frmEditArchetype frmEditArchetype = new frmEditArchetype(ref iAT);
             int num = (int)frmEditArchetype.ShowDialog();
             if (frmEditArchetype.DialogResult != DialogResult.OK)
                 return;
@@ -88,7 +89,7 @@ namespace Hero_Designer
                 Archetype iAT = new Archetype(DatabaseAPI.Database.Classes[index]);
                 iAT.ClassName += "_Clone";
                 iAT.DisplayName += " (Clone)";
-                frmEditArchetype frmEditArchetype = new frmEditArchetype(ref iAT);
+                using frmEditArchetype frmEditArchetype = new frmEditArchetype(ref iAT);
                 int num2 = (int)frmEditArchetype.ShowDialog();
                 if (frmEditArchetype.DialogResult != DialogResult.OK)
                     return;
@@ -173,7 +174,7 @@ namespace Hero_Designer
             else
             {
                 string className = DatabaseAPI.Database.Classes[index].ClassName;
-                frmEditArchetype frmEditArchetype = new frmEditArchetype(ref DatabaseAPI.Database.Classes[index]);
+                using frmEditArchetype frmEditArchetype = new frmEditArchetype(ref DatabaseAPI.Database.Classes[index]);
                 if (frmEditArchetype.ShowDialog() != DialogResult.OK)
                     return;
                 DatabaseAPI.Database.Classes[index] = new Archetype(frmEditArchetype.MyAT) {IsModified = true};
@@ -244,7 +245,7 @@ namespace Hero_Designer
             }
 
             iPower.DisplayName = "New Power";
-            frmEditPower frmEditPower = new frmEditPower(iPower);
+            using frmEditPower frmEditPower = new frmEditPower(iPower);
             if (frmEditPower.ShowDialog() != DialogResult.OK)
                 return;
             IDatabase database = DatabaseAPI.Database;
@@ -276,7 +277,7 @@ namespace Hero_Designer
                 newPower.IsNew = true;
                 newPower.PowerIndex = DatabaseAPI.Database.Power.Length;
 
-                frmEditPower frmEditPower = new frmEditPower(newPower);
+                using frmEditPower frmEditPower = new frmEditPower(newPower);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
                 newPower = frmEditPower.myPower;
@@ -370,7 +371,7 @@ namespace Hero_Designer
             }
             else
             {
-                frmEditPower frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
+                using frmEditPower frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
                 IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
@@ -503,7 +504,7 @@ namespace Hero_Designer
                     break;
             }
             iSet.DisplayName = "New Set";
-            frmEditPowerset frmEditPowerset = new frmEditPowerset(ref iSet);
+            using frmEditPowerset frmEditPowerset = new frmEditPowerset(ref iSet);
             int num = (int)frmEditPowerset.ShowDialog();
             if (frmEditPowerset.DialogResult != DialogResult.OK)
                 return;
@@ -576,7 +577,7 @@ namespace Hero_Designer
             {
                 IPowerset powerset = DatabaseAPI.Database.Powersets[Powerset];
                 string fullName = powerset.FullName;
-                frmEditPowerset frmEditPowerset = new frmEditPowerset(ref powerset);
+                using frmEditPowerset frmEditPowerset = new frmEditPowerset(ref powerset);
                 if (frmEditPowerset.ShowDialog() != DialogResult.OK)
                     return;
                 DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.myPS) {IsModified = true};
@@ -608,8 +609,11 @@ namespace Hero_Designer
             {
                 string str = I9Gfx.GetOriginsPath() + DatabaseAPI.Database.Classes[index].ClassName + ".png";
                 if (!File.Exists(str))
+                {
                     str = I9Gfx.ImagePath() + "Unknown.png";
-                ilAT.Images.Add(new Bitmap(new ExtendedBitmap(str).Bitmap));
+                }
+                using ExtendedBitmap extendedBitmap = new ExtendedBitmap(str);
+                ilAT.Images.Add(new Bitmap(extendedBitmap.Bitmap));
             }
         }
 
@@ -621,16 +625,16 @@ namespace Hero_Designer
             int width = imageSize.Width;
             imageSize = ilPS.ImageSize;
             int height = imageSize.Height;
-            ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(width, height);
-            SolidBrush solidBrush1 = new SolidBrush(Color.Black);
-            SolidBrush solidBrush2 = new SolidBrush(Color.White);
-            SolidBrush solidBrush3 = new SolidBrush(Color.Transparent);
-            StringFormat format = new StringFormat(StringFormatFlags.NoWrap)
+            using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(width, height);
+            using SolidBrush solidBrush1 = new SolidBrush(Color.Black);
+            using SolidBrush solidBrush2 = new SolidBrush(Color.White);
+            using SolidBrush solidBrush3 = new SolidBrush(Color.Transparent);
+            using StringFormat format = new StringFormat(StringFormatFlags.NoWrap)
             {
                 LineAlignment = StringAlignment.Center,
                 Alignment = StringAlignment.Center
             };
-            Font font = new Font(Font, FontStyle.Bold);
+            using Font font = new Font(Font, FontStyle.Bold);
             RectangleF layoutRectangle = new RectangleF(17f, 0.0f, 16f, 18f);
             int num = iSets.Length - 1;
             for (int index = 0; index <= num; ++index)
@@ -638,7 +642,7 @@ namespace Hero_Designer
                 string str = I9Gfx.GetPowersetsPath() + DatabaseAPI.Database.Powersets[iSets[index]].ImageName;
                 if (!File.Exists(str))
                     str = I9Gfx.ImagePath() + "Unknown.png";
-                ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(str);
+                using ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(str);
                 string s;
                 SolidBrush solidBrush4;
                 switch (DatabaseAPI.Database.Powersets[iSets[index]].SetType)
@@ -707,11 +711,8 @@ namespace Hero_Designer
         void BusyMsg(string sMessage)
 
         {
-            if (bFrm == null)
-            {
-                bFrm = new frmBusy();
-                bFrm.Show(this);
-            }
+            using frmBusy bFrm = new frmBusy();
+            bFrm.Show(this);
             bFrm.SetMessage(sMessage);
         }
 
@@ -723,18 +724,23 @@ namespace Hero_Designer
             UpdateLists();
         }
 
-        public int[] ConcatArray(int[] iArray1, int[] iArray2)
+        public static int[] ConcatArray(int[] iArray1, int[] iArray2)
         {
-            int length = iArray1.Length;
-            int[] numArray = new int[iArray1.Length + iArray2.Length - 1 + 1];
-            int num1 = length - 1;
-            for (int index = 0; index <= num1; ++index)
-                numArray[index] = iArray1[index];
-            int num2 = iArray2.Length - 1;
-            for (int index = 0; index <= num2; ++index)
-                numArray[length + index] = iArray2[index];
+            int[] numArray = Array.Empty<int>();
+            if (iArray1 != null && iArray2 != null)
+            {
+                var length = iArray1.Length;
+                numArray = new int[iArray1.Length + iArray2.Length - 1 + 1];
+                int num1 = length - 1;
+                for (int index = 0; index <= num1; ++index)
+                    numArray[index] = iArray1[index];
+                int num2 = iArray2.Length - 1;
+                for (int index = 0; index <= num2; ++index)
+                    numArray[length + index] = iArray2[index];
+            }
+
             return numArray;
-        }
+            }
 
         public void FillFilter()
         {
@@ -846,7 +852,7 @@ namespace Hero_Designer
                     continue;
                 items[0] = !DisplayFullName ? DatabaseAPI.Database.Power[iPowers[index]].PowerName : DatabaseAPI.Database.Power[iPowers[index]].FullName;
                 items[1] = DatabaseAPI.Database.Power[iPowers[index]].DisplayName;
-                items[2] = Convert.ToString(DatabaseAPI.Database.Power[iPowers[index]].Level);
+                items[2] = Convert.ToString(DatabaseAPI.Database.Power[iPowers[index]].Level, CultureInfo.InvariantCulture);
                 items[3] = DatabaseAPI.Database.Power[iPowers[index]].FullName;
                 lvPower.Items.Add(new ListViewItem(items)
                 {
@@ -868,7 +874,7 @@ namespace Hero_Designer
                     continue;
                 items[0] = !DisplayFullName ? DatabaseAPI.Database.Power[index2].PowerName : DatabaseAPI.Database.Power[index2].FullName;
                 items[1] = DatabaseAPI.Database.Power[index2].DisplayName;
-                items[2] = Convert.ToString(DatabaseAPI.Database.Power[index2].Level);
+                items[2] = Convert.ToString(DatabaseAPI.Database.Power[index2].Level, CultureInfo.InvariantCulture);
                 items[3] = DatabaseAPI.Database.Power[index2].FullName;
                 lvPower.Items.Add(new ListViewItem(items));
             }
@@ -876,8 +882,8 @@ namespace Hero_Designer
 
         public void List_Powers(int SelIDX)
         {
-            int[] iPowers1 = new int[0];
-            string[] iPowers2 = new string[0];
+            int[] iPowers1 = Array.Empty<int>();
+            string[] iPowers2 = Array.Empty<string>();
             bool DisplayFullName = false;
             switch (cbFilter.SelectedIndex)
             {
@@ -976,8 +982,8 @@ namespace Hero_Designer
 
         public void List_Sets(int SelIDX)
         {
-            int[] numArray1 = new int[0];
-            int[] numArray2 = new int[0];
+            int[] numArray1 = Array.Empty<int>();
+            int[] numArray2 = Array.Empty<int>();
             if (lvGroup.SelectedItems.Count == 0 & (cbFilter.SelectedIndex == 0 | cbFilter.SelectedIndex == 1))
                 return;
             Updating = true;
@@ -1001,7 +1007,7 @@ namespace Hero_Designer
             {
                 case 4:
                 {
-                    int[] numArray3 = new int[0];
+                    int[] numArray3 = Array.Empty<int>();
                     int num = DatabaseAPI.Database.Powersets.Length - 1;
                     for (int index = 0; index <= num; ++index)
                     {

@@ -40,12 +40,12 @@ namespace Hero_Designer
             pnlClassList.Paint += pnlClassList_Paint;
             pnlClassList.MouseDown += pnlClassList_MouseDown;
             var componentResourceManager = new ComponentResourceManager(typeof(frmEnhData));
-            btnImage.Image = (Image)componentResourceManager.GetObject("btnImage.Image");
-            typeSet.Image = (Image)componentResourceManager.GetObject("typeSet.Image");
-            typeIO.Image = (Image)componentResourceManager.GetObject("typeIO.Image");
-            typeRegular.Image = (Image)componentResourceManager.GetObject("typeRegular.Image");
-            typeHO.Image = (Image)componentResourceManager.GetObject("typeHO.Image");
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            btnImage.Image = (Image)componentResourceManager.GetObject("btnImage.Image", CultureInfo.InvariantCulture);
+            typeSet.Image = (Image)componentResourceManager.GetObject("typeSet.Image", CultureInfo.InvariantCulture);
+            typeIO.Image = (Image)componentResourceManager.GetObject("typeIO.Image", CultureInfo.InvariantCulture);
+            typeRegular.Image = (Image)componentResourceManager.GetObject("typeRegular.Image", CultureInfo.InvariantCulture);
+            typeHO.Image = (Image)componentResourceManager.GetObject("typeHO.Image", CultureInfo.InvariantCulture);
+            Icon = (Icon)componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
             Name = nameof(frmEnhData);
             myEnh = new Enhancement(iEnh);
             if (newStaticIndex > 0)
@@ -63,7 +63,7 @@ namespace Hero_Designer
 
         {
             IEffect iFX = new Effect();
-            frmPowerEffect frmPowerEffect = new frmPowerEffect(iFX);
+            using frmPowerEffect frmPowerEffect = new frmPowerEffect(iFX);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             IEnhancement enh = myEnh;
@@ -113,19 +113,19 @@ namespace Hero_Designer
                 Enums.eEnhance id = (Enums.eEnhance)myEnh.Effect[index].Enhance.ID;
                 if (id != Enums.eEnhance.Mez)
                 {
-                    if (myEnh.Name != "")
+                    if (!string.IsNullOrWhiteSpace(myEnh.Name))
                         myEnh.Name += "/";
                     myEnh.Name += names1[(int)id];
-                    if (myEnh.ShortName != "")
+                    if (!string.IsNullOrWhiteSpace(myEnh.ShortName))
                         myEnh.ShortName += "/";
                     myEnh.ShortName += names2[(int)id];
                 }
                 else
                 {
-                    if (myEnh.Name != "")
+                    if (!string.IsNullOrWhiteSpace(myEnh.Name))
                         myEnh.Name += "/";
                     myEnh.Name += names3[myEnh.Effect[index].Enhance.SubID];
-                    if (myEnh.ShortName != "")
+                    if (!string.IsNullOrWhiteSpace(myEnh.ShortName))
                         myEnh.ShortName += "/";
                     myEnh.ShortName += names4[myEnh.Effect[index].Enhance.SubID];
                 }
@@ -186,11 +186,57 @@ namespace Hero_Designer
         }
 
         void btnEditPowerData_Click(object sender, EventArgs e)
+        {
+            IEnhancement enh = myEnh;
+            IPower power = enh.GetPower();
+            string text = power.FullName;
+            int index1 = DatabaseAPI.NidFromUidPower(power.FullName);
+            if (index1 < 0)
+            {
+                int num1 = (int) Interaction.MsgBox("Unknown error caused an invalid PowerIndex return value.",
+                    MsgBoxStyle.Exclamation, "Wha?");
+            }
+            else
+            {
+                using frmEditPower frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
+                if (frmEditPower.ShowDialog() != DialogResult.OK)
+                    return;
+                IPower newPower = new Power(frmEditPower.myPower) {IsModified = true};
+                DatabaseAPI.Database.Power[index1] = newPower;
+                if (text == DatabaseAPI.Database.Power[index1].FullName)
+                    return;
+                //Update the full power name in the powerset array
+                if (newPower.PowerSetID > -1)
+                    DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName =
+                        newPower.FullName;
+
+                int num2 = DatabaseAPI.Database.Power[index1].Effects.Length - 1;
+                for (int index2 = 0; index2 <= num2; ++index2)
+                    DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName =
+                        DatabaseAPI.Database.Power[index1].FullName;
+                string[] strArray =
+                    DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
+                string str1 = "";
+                int num3 = strArray.Length - 1;
+                for (int index2 = 0; index2 <= num3; ++index2)
+                    str1 = str1 + strArray[index2] + "\r\n";
+                if (strArray.Length > 0)
+                {
+                    string str2 = "Power: " + text + " changed to " + DatabaseAPI.Database.Power[index1].FullName +
+                                  "\r\nThe following powers referenced this power and were updated:\r\n" + str1 +
+                                  "\r\n\r\nThis list has been placed on the clipboard.";
+                    Clipboard.SetDataObject(str2, true);
+                    int num4 = (int) Interaction.MsgBox(str2);
+                }
+            }
+        }
+
+        void btnEditPowerData3_Click(object sender, EventArgs e)
 
         {
             IEnhancement enh = myEnh;
             IPower power = enh.GetPower();
-            frmEditPower frmEditPower = new frmEditPower(power);
+            using frmEditPower frmEditPower = new frmEditPower(power);
             if (frmEditPower.ShowDialog() != DialogResult.OK)
                 return;
             power = new Power(frmEditPower.myPower) {IsModified = true};
@@ -363,9 +409,9 @@ namespace Hero_Designer
             txtNameFull.Text = myEnh.Name;
             txtNameShort.Text = myEnh.ShortName;
             txtDesc.Text = myEnh.Desc;
-            txtProb.Text = Convert.ToString(myEnh.EffectChance);
+            txtProb.Text = Convert.ToString(myEnh.EffectChance, CultureInfo.InvariantCulture);
             txtInternal.Text = myEnh.UID;
-            StaticIndex.Text = Convert.ToString(myEnh.StaticIndex);
+            StaticIndex.Text = Convert.ToString(myEnh.StaticIndex, CultureInfo.InvariantCulture);
             SetMinLevel(myEnh.LevelMin + 1);
             SetMaxLevel(myEnh.LevelMax + 1);
             udMaxLevel.Minimum = udMinLevel.Value;
@@ -461,7 +507,7 @@ namespace Hero_Designer
                             txtModOther.Enabled = false;
                             break;
                         default:
-                            txtModOther.Text = Convert.ToString(myEnh.Effect[selectedIndex].Multiplier);
+                            txtModOther.Text = Convert.ToString(myEnh.Effect[selectedIndex].Multiplier, CultureInfo.InvariantCulture);
                             rbModOther.Checked = true;
                             txtModOther.Enabled = true;
                             break;
@@ -485,10 +531,10 @@ namespace Hero_Designer
 
         public void DisplayIcon()
         {
-            if (myEnh.Image != string.Empty)
+            if (!string.IsNullOrWhiteSpace(myEnh.Image))
             {
-                ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
-                ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
+                using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
+                using ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
                 extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(myEnh.TypeID)), GraphicsUnit.Pixel);
                 extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
@@ -529,17 +575,17 @@ namespace Hero_Designer
                 myEnh.Image = DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image;
                 DisplayIcon();
                 SetTypeIcons();
-                if (DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image != "")
+                if (!string.IsNullOrWhiteSpace(DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image))
                 {
-                    ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image);
-                    ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
+                    using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image);
+                    using ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
                     extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
                     extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                     pbSet.Image = new Bitmap(extendedBitmap2.Bitmap);
                 }
                 else
                 {
-                    ExtendedBitmap extendedBitmap = new ExtendedBitmap(30, 30);
+                    using ExtendedBitmap extendedBitmap = new ExtendedBitmap(30, 30);
                     extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
                     pbSet.Image = new Bitmap(extendedBitmap.Bitmap);
                 }
@@ -554,7 +600,8 @@ namespace Hero_Designer
             int enhPadding1 = EnhPadding;
             int enhPadding2 = EnhPadding;
             int num1 = 0;
-            bxClass.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 0)), bxClass.ClipRect);
+            using SolidBrush solidBrush = new SolidBrush(Color.FromArgb(0,0,0));
+            bxClass.Graphics.FillRectangle(solidBrush, bxClass.ClipRect);
             int num2 = myEnh.ClassID.Length - 1;
             for (int index = 0; index <= num2; ++index)
             {
@@ -573,11 +620,12 @@ namespace Hero_Designer
 
         public void DrawClassList()
         {
-            bxClassList = new ExtendedBitmap(pnlClassList.Width, pnlClassList.Height);
+            using ExtendedBitmap bxClassList = new ExtendedBitmap(pnlClassList.Width, pnlClassList.Height);
             int enhPadding1 = EnhPadding;
             int enhPadding2 = EnhPadding;
             int num1 = 0;
-            bxClassList.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 0)), bxClassList.ClipRect);
+            using SolidBrush solidBrush = new SolidBrush(Color.FromArgb(0, 0, 0));
+            bxClassList.Graphics.FillRectangle(solidBrush, bxClassList.ClipRect);
             int num2 = DatabaseAPI.Database.EnhancementClasses.Length - 1;
             for (int index = 0; index <= num2; ++index)
             {
@@ -627,7 +675,7 @@ namespace Hero_Designer
             }
             else
             {
-                frmPowerEffect frmPowerEffect = new frmPowerEffect(myEnh.Effect[selectedIndex].FX);
+                using frmPowerEffect frmPowerEffect = new frmPowerEffect(myEnh.Effect[selectedIndex].FX);
                 if (frmPowerEffect.ShowDialog() == DialogResult.OK)
                 {
                     Enums.sEffect[] effect = myEnh.Effect;
@@ -651,7 +699,7 @@ namespace Hero_Designer
             Enums.eEnhance eEnhance = Enums.eEnhance.None;
             bool flag = true;
             int tSub = -1;
-            Enums.eEnhance integer = (Enums.eEnhance)Convert.ToInt32(Enum.Parse(eEnhance.GetType(), Convert.ToString(lstAvailable.Items[lstAvailable.SelectedIndex])));
+            Enums.eEnhance integer = (Enums.eEnhance)Convert.ToInt32(Enum.Parse(eEnhance.GetType(), lstAvailable.Items[lstAvailable.SelectedIndex].ToString()), CultureInfo.InvariantCulture);
             if (integer == Enums.eEnhance.Mez)
             {
                 tSub = MezPicker();
@@ -814,10 +862,10 @@ namespace Hero_Designer
 
         {
             DisplayEnhanceData();
-            tTip.SetToolTip(lstSelected, Convert.ToString(lstSelected.SelectedItem));
+            tTip.SetToolTip(lstSelected, Convert.ToString(lstSelected.SelectedItem, CultureInfo.InvariantCulture));
         }
 
-        public int MezPicker(int index = 1)
+        public static int MezPicker(int index = 1)
         => frmEnhMiniPick.MezPicker(index);
 
         void PickerExpand()
@@ -1073,8 +1121,8 @@ namespace Hero_Designer
 
         public void SetTypeIcons()
         {
-            ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(30, 30);
-            ExtendedBitmap extendedBitmap2 = myEnh.Image == "" ? new ExtendedBitmap(30, 30) : new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
+            using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(30, 30);
+            using ExtendedBitmap extendedBitmap2 = string.IsNullOrWhiteSpace(myEnh.Image) ? new ExtendedBitmap(30, 30) : new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
             extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.Normal)), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
@@ -1096,7 +1144,7 @@ namespace Hero_Designer
         void StaticIndex_TextChanged(object sender, EventArgs e)
 
         {
-            myEnh.StaticIndex = Convert.ToInt32(StaticIndex.Text);
+            myEnh.StaticIndex = Convert.ToInt32(StaticIndex.Text, CultureInfo.InvariantCulture);
         }
 
         void txtDesc_TextChanged(object sender, EventArgs e)
@@ -1147,7 +1195,7 @@ namespace Hero_Designer
         {
             if (Loading)
                 return;
-            txtProb.Text = Convert.ToString(myEnh.EffectChance);
+            txtProb.Text = Convert.ToString(myEnh.EffectChance, CultureInfo.InvariantCulture);
         }
 
         void txtProb_TextChanged(object sender, EventArgs e)

@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Display;
 using Hero_Designer.My;
@@ -20,22 +22,22 @@ namespace Hero_Designer
             InitializeComponent();
             Name = nameof(frmEnhEdit);
             ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmEnhEdit));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon)componentResourceManager.GetObject("$this.icon", CultureInfo.InvariantCulture);
         }
 
         void AddListItem(int Index)
         {
             string[] items = new string[6];
             IEnhancement enhancement = DatabaseAPI.Database.Enhancements[Index];
-            items[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Convert.ToString(enhancement.StaticIndex);
+            items[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Convert.ToString(enhancement.StaticIndex, CultureInfo.InvariantCulture);
             items[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
-            items[2] = Convert.ToString(enhancement.Effect.Length);
+            items[2] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
             items[3] = "";
             items[5] = enhancement.UID;
             int num1 = enhancement.ClassID.Length - 1;
             for (int index1 = 0; index1 <= num1; ++index1)
             {
-                if (items[3] != "")
+                if (!string.IsNullOrWhiteSpace(items[3]))
                 {
                     string[] strArray1 = items;
                     int num2 = 3;
@@ -64,7 +66,7 @@ namespace Hero_Designer
         void btnAdd_Click(object sender, EventArgs e)
         {
             IEnhancement iEnh = new Enhancement();
-            frmEnhData frmEnhData = new frmEnhData(ref iEnh, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
+            using frmEnhData frmEnhData = new frmEnhData(ref iEnh, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
             int num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
@@ -93,7 +95,7 @@ namespace Hero_Designer
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
             IEnhancement oldEnhancement = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text)];
-            frmEnhData frmEnhData = new frmEnhData(ref oldEnhancement, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
+            using frmEnhData frmEnhData = new frmEnhData(ref oldEnhancement, DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Enhancements.Length - 1].StaticIndex + 1);
             int num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
@@ -108,7 +110,7 @@ namespace Hero_Designer
 
         void btnDelete_Click(object sender, EventArgs e)
         {
-            if (lvEnh.SelectedIndices.Count <= 0 || Interaction.MsgBox(("Really delete enhancement: " + lvEnh.SelectedItems[0].Text + "?"), MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (lvEnh.SelectedIndices.Count <= 0 || Interaction.MsgBox("Really delete enhancement: " + lvEnh.SelectedItems[0].Text + "?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                 return;
             Enhancement[] enhancementArray = new Enhancement[DatabaseAPI.Database.Enhancements.Length - 1 + 1];
             int selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
@@ -178,7 +180,7 @@ namespace Hero_Designer
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
             int selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
-            frmEnhData frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[selectedIndex], 0);
+            using frmEnhData frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[selectedIndex], 0);
             int num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
@@ -188,13 +190,37 @@ namespace Hero_Designer
             UpdateListItem(selectedIndex);
         }
 
+        private static void BusyHide()
+        {
+            using frmBusy bFrm = new frmBusy();
+            bFrm.Close();
+        }
+
+        void BusyMsg(string sMessage)
+        {
+            using frmBusy bFrm = new frmBusy();
+            bFrm.Show(this);
+            bFrm.SetMessage(sMessage);
+        }
+
         void btnSave_Click(object sender, EventArgs e)
         {
+            BusyMsg("Saving please wait...");
             I9Gfx.LoadEnhancements();
+            foreach (var power in DatabaseAPI.Database.Power)
+            {
+                power.BaseRechargeTime = power.RechargeTime;
+            }
+            Array.Sort(DatabaseAPI.Database.Power);
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);
             DatabaseAPI.AssignRecipeIDs();
             DatabaseAPI.SaveEnhancementDb(serializer);
+            DatabaseAPI.MatchAllIDs();
+            Task.Delay(1000).Wait();
+            DatabaseAPI.SaveMainDatabase(serializer);
+            BusyHide();
+            DialogResult = DialogResult.OK;
             Hide();
         }
 
@@ -224,12 +250,12 @@ namespace Hero_Designer
             lvEnh.Items.Clear();
             int num = DatabaseAPI.Database.Enhancements.Length - 1;
             for (int Index = 0; Index <= num; ++Index) { 
-                if ((string.IsNullOrEmpty(this.txtFilter.Text)) || (DatabaseAPI.Database.Enhancements[Index].Name.ToUpper().Contains(this.txtFilter.Text.ToUpper()))) { 
+                if (string.IsNullOrEmpty(txtFilter.Text) || DatabaseAPI.Database.Enhancements[Index].Name.ToUpper(CultureInfo.InvariantCulture).Contains(txtFilter.Text.ToUpper(CultureInfo.InvariantCulture))) { 
                     AddListItem(Index);
                     continue;
                 }
                 if (DatabaseAPI.Database.Enhancements[Index].nIDSet > -1)
-                    if (DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[Index].nIDSet].DisplayName.ToUpper().Contains(this.txtFilter.Text.ToUpper())) 
+                    if (DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[Index].nIDSet].DisplayName.ToUpper(CultureInfo.InvariantCulture).Contains(txtFilter.Text.ToUpper(CultureInfo.InvariantCulture))) 
                         AddListItem(Index);
             }
             if (lvEnh.Items.Count > 0)
@@ -246,7 +272,7 @@ namespace Hero_Designer
             int width1 = imageSize1.Width;
             imageSize1 = ilEnh.ImageSize;
             int height1 = imageSize1.Height;
-            ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
             ilEnh.Images.Clear();
             int num = DatabaseAPI.Database.Enhancements.Length - 1;
             for (int index = 0; index <= num; ++index)
@@ -307,15 +333,15 @@ namespace Hero_Designer
         {
             string[] strArray1 = new string[6];
             IEnhancement enhancement = DatabaseAPI.Database.Enhancements[Index];
-            strArray1[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Convert.ToString(enhancement.StaticIndex);
+            strArray1[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Convert.ToString(enhancement.StaticIndex, CultureInfo.InvariantCulture);
             strArray1[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
-            strArray1[2] = Convert.ToString(enhancement.Effect.Length);
+            strArray1[2] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
             strArray1[3] = "";
             strArray1[5] = enhancement.UID;
             int num1 = enhancement.ClassID.Length - 1;
             for (int index1 = 0; index1 <= num1; ++index1)
             {
-                if (strArray1[3] != "")
+                if (!string.IsNullOrWhiteSpace(strArray1[3]))
                 {
                     string[] strArray2 = strArray1;
                     int num2 = 3;
@@ -347,8 +373,8 @@ namespace Hero_Designer
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
             DisplayList();
-            this.btnUp.Enabled = String.IsNullOrEmpty(this.txtFilter.Text);
-            this.btnDown.Enabled = String.IsNullOrEmpty(this.txtFilter.Text);
+            btnUp.Enabled = String.IsNullOrEmpty(txtFilter.Text);
+            btnDown.Enabled = String.IsNullOrEmpty(txtFilter.Text);
         }
     }
 }

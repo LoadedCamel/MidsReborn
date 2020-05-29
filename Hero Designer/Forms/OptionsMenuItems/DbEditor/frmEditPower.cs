@@ -38,7 +38,7 @@ namespace Hero_Designer
             ReqChanging = false;
             InitializeComponent();
             ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmEditPower));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon)componentResourceManager.GetObject("$this.icon", CultureInfo.InvariantCulture);
             Name = nameof(frmEditPower);
             myPower = new Power(iPower);
             backup_Requires = new Requirement(myPower.Requires);
@@ -53,7 +53,7 @@ namespace Hero_Designer
         void btnCSVImport_Click(object sender, EventArgs e)
         {
             string str = Clipboard.GetDataObject()?.GetData("System.String", true).ToString();
-            if (str == "")
+            if (!string.IsNullOrWhiteSpace(str))
                 return;
             if (new PowerData(str.Replace("\t", ",")).IsValid)
             {
@@ -101,7 +101,7 @@ namespace Hero_Designer
         void btnFXAdd_Click(object sender, EventArgs e)
         {
             IEffect iFX = new Effect();
-            frmPowerEffect frmPowerEffect = new frmPowerEffect(iFX);
+            using frmPowerEffect frmPowerEffect = new frmPowerEffect(iFX);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             IPower power1 = myPower;
@@ -135,7 +135,7 @@ namespace Hero_Designer
             if (lvFX.SelectedIndices.Count <= 0)
                 return;
             IEffect iFX = (IEffect)myPower.Effects[lvFX.SelectedIndices[0]].Clone();
-            frmPowerEffect frmPowerEffect = new frmPowerEffect(iFX);
+            using frmPowerEffect frmPowerEffect = new frmPowerEffect(iFX);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             IPower power1 = myPower;
@@ -153,7 +153,7 @@ namespace Hero_Designer
                 return;
             int selectedIndex = lvFX.SelectedIndices[0];
             IEffect iFX = (IEffect)myPower.Effects[selectedIndex].Clone();
-            frmPowerEffect frmPowerEffect = new frmPowerEffect(iFX);
+            using frmPowerEffect frmPowerEffect = new frmPowerEffect(iFX);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             myPower.Effects[selectedIndex] = (IEffect)frmPowerEffect.myFX.Clone();
@@ -224,13 +224,13 @@ namespace Hero_Designer
         void btnOK_Click(object sender, EventArgs e)
         {
             IPower power = myPower;
-            lblNameFull.Text = power.GroupName + "." + power.SetName + "." + power.PowerName;
-            if (power.GroupName == "" | power.SetName == "" | power.PowerName == "")
+            lblNameFull.Text = $@"{power.GroupName}.{power.SetName}.{power.PowerName}";
+            if (!string.IsNullOrWhiteSpace(power.GroupName) | !string.IsNullOrWhiteSpace(power.SetName) | !string.IsNullOrWhiteSpace(power.PowerName))
             {
                 Interaction.MsgBox(("Power name '" + power.FullName + " is invalid."), MsgBoxStyle.Exclamation, "No Can Do");
                 this.DialogResult = DialogResult.None;
             }
-            else if (!PowerFullNameIsUnique(Convert.ToString(power.PowerIndex)))
+            else if (!PowerFullNameIsUnique(Convert.ToString(power.PowerIndex, CultureInfo.InvariantCulture)))
             {
                 Interaction.MsgBox(("Power name '" + power.FullName + " already exists, please enter a unique name."), MsgBoxStyle.Exclamation, "No Can Do");
                 this.DialogResult = DialogResult.None;
@@ -256,7 +256,7 @@ namespace Hero_Designer
                 int checkedMutexCount = clbMutex.CheckedItems.Count - 1;
                 for (int index = 0; index <= checkedMutexCount; ++index)
                 {
-                    myPower.GroupMembership[index] = Convert.ToString(clbMutex.CheckedItems[index]);
+                    myPower.GroupMembership[index] = Convert.ToString(clbMutex.CheckedItems[index], CultureInfo.InvariantCulture);
                     myPower.NGroupMembership[index] = clbMutex.CheckedIndices[index];
                 }
                 DialogResult = DialogResult.OK;
@@ -321,7 +321,7 @@ namespace Hero_Designer
                 return;
             if (rbPrPowerA.Checked)
             {
-                if (myPower.Requires.PowerID[lvPrListing.SelectedIndices[0]][1] != "")
+                if (!string.IsNullOrWhiteSpace(myPower.Requires.PowerID[lvPrListing.SelectedIndices[0]][1]))
                 {
                     myPower.Requires.PowerID[lvPrListing.SelectedIndices[0]][0] = myPower.Requires.PowerID[lvPrListing.SelectedIndices[0]][1];
                     myPower.Requires.PowerID[lvPrListing.SelectedIndices[0]][1] = "";
@@ -381,7 +381,7 @@ namespace Hero_Designer
         {
             if (lvSPPower.SelectedItems.Count < 1)
                 return;
-            string b = Convert.ToString(lvSPPower.SelectedItems[0].Tag);
+            string b = Convert.ToString(lvSPPower.SelectedItems[0].Tag, CultureInfo.InvariantCulture);
             int num = myPower.UIDSubPower.Length - 1;
             for (int index = 0; index <= num; ++index)
             {
@@ -731,13 +731,13 @@ namespace Hero_Designer
         void DisplayNameData()
         {
             IPower power = myPower;
-            lblNameFull.Text = power.GroupName + "." + power.SetName + "." + power.PowerName;
-            if (power.GroupName == "" | power.SetName == "" | power.PowerName == "")
-                lblNameUnique.Text = "This name is invalid.";
-            else if (PowerFullNameIsUnique(Convert.ToString(power.PowerIndex)))
-                lblNameUnique.Text = "This name is unique.";
+            lblNameFull.Text = $@"{power.GroupName}.{power.SetName}.{power.PowerName}";
+            if (!string.IsNullOrWhiteSpace(power.GroupName) | !string.IsNullOrWhiteSpace(power.SetName) | !string.IsNullOrWhiteSpace(power.PowerName))
+                lblNameUnique.Text = @"This name is invalid.";
+            else if (PowerFullNameIsUnique(Convert.ToString(power.PowerIndex, CultureInfo.InvariantCulture)))
+                lblNameUnique.Text = @"This name is unique.";
             else
-                lblNameUnique.Text = "This name is NOT unique.";
+                lblNameUnique.Text = @"This name is NOT unique.";
         }
 
         void DrawAcceptedSets()
@@ -745,13 +745,14 @@ namespace Hero_Designer
             bxSet = new ExtendedBitmap(pbInvSetUsed.Width, pbInvSetUsed.Height);
             int enhPadding1 = enhPadding;
             int enhPadding2 = enhPadding;
-            Font font = new Font(Font, FontStyle.Bold);
-            StringFormat format = new StringFormat(StringFormatFlags.NoWrap);
-            SolidBrush solidBrush1 = new SolidBrush(Color.Black);
-            SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(0, byte.MaxValue, 0));
+            using Font font = new Font(Font, FontStyle.Bold);
+            using StringFormat format = new StringFormat(StringFormatFlags.NoWrap);
+            using SolidBrush solidBrush1 = new SolidBrush(Color.Black);
+            using SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(0, byte.MaxValue, 0));
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
-            bxSet.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 0)), bxSet.ClipRect);
+            using SolidBrush solidBrush3 = new SolidBrush(Color.FromArgb(0, 0, 0));
+            bxSet.Graphics.FillRectangle(solidBrush3, bxSet.ClipRect);
             int num = myPower.SetTypes.Length - 1;
             for (int index = 0; index <= num; ++index)
             {
@@ -810,14 +811,15 @@ namespace Hero_Designer
             int enhPadding1 = enhPadding;
             int enhPadding2 = enhPadding;
             int num1 = 0;
-            Font font = new Font(Font, FontStyle.Bold);
-            StringFormat format = new StringFormat(StringFormatFlags.NoWrap);
-            SolidBrush solidBrush1 = new SolidBrush(Color.Black);
-            SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(0, byte.MaxValue, 0));
+            using Font font = new Font(Font, FontStyle.Bold);
+            using StringFormat format = new StringFormat(StringFormatFlags.NoWrap);
+            using SolidBrush solidBrush1 = new SolidBrush(Color.Black);
+            using SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(0, byte.MaxValue, 0));
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
             string[] names = Enum.GetNames(eSetType.GetType());
-            bxSetList.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 0)), bxSetList.ClipRect);
+            using SolidBrush solidBrush3 = new SolidBrush(Color.FromArgb(0,0,0));
+            bxSetList.Graphics.FillRectangle(solidBrush3, bxSetList.ClipRect);
             int num2 = names.Length - 1;
             for (int index = 0; index <= num2; ++index)
             {
@@ -1019,7 +1021,7 @@ namespace Hero_Designer
         {
             IPower power = myPower;
             string Style = "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###";
-            txtLevel.Text = Convert.ToString(power.Level);
+            txtLevel.Text = Convert.ToString(power.Level, CultureInfo.InvariantCulture);
             txtAcc.Text = Strings.Format(power.Accuracy, Style);
             txtInterrupt.Text = Strings.Format(power.InterruptTime, Style);
             txtCastTime.Text = Strings.Format(power.CastTimeReal, Style);
@@ -1028,18 +1030,18 @@ namespace Hero_Designer
             txtEndCost.Text = Strings.Format(power.EndCost, Style);
             txtRange.Text = Strings.Format(power.Range, Style);
             txtRangeSec.Text = Strings.Format(power.RangeSecondary, Style);
-            txtRadius.Text = Convert.ToString(power.Radius);
-            txtArc.Text = Convert.ToString(power.Arc);
-            txtMaxTargets.Text = Convert.ToString(power.MaxTargets);
+            txtRadius.Text = Convert.ToString(power.Radius, CultureInfo.InvariantCulture);
+            txtArc.Text = Convert.ToString(power.Arc, CultureInfo.InvariantCulture);
+            txtMaxTargets.Text = Convert.ToString(power.MaxTargets, CultureInfo.InvariantCulture);
             cbPowerType.SelectedIndex = (int)power.PowerType;
             cbEffectArea.SelectedIndex = (int)power.EffectArea;
             cbNotify.SelectedIndex = (int)power.AIReport;
             chkLos.Checked = power.TargetLoS;
             chkIgnoreStrength.Checked = power.IgnoreStrength;
-            txtNumCharges.Text = Convert.ToString(power.NumCharges);
-            txtUseageTime.Text = Convert.ToString(power.UsageTime);
-            txtLifeTimeGame.Text = Convert.ToString(power.LifeTimeInGame);
-            txtLifeTimeReal.Text = Convert.ToString(power.LifeTime);
+            txtNumCharges.Text = Convert.ToString(power.NumCharges, CultureInfo.InvariantCulture);
+            txtUseageTime.Text = Convert.ToString(power.UsageTime, CultureInfo.InvariantCulture);
+            txtLifeTimeGame.Text = Convert.ToString(power.LifeTimeInGame, CultureInfo.InvariantCulture);
+            txtLifeTimeReal.Text = Convert.ToString(power.LifeTime, CultureInfo.InvariantCulture);
             rbFlagAutoHit.Checked = true;
             FillAdvAtrList();
         }
@@ -1064,7 +1066,7 @@ namespace Hero_Designer
             chkAltSub.Checked = power.SubIsAltColour;
             chkSubInclude.Checked = power.IncludeFlag;
             chkSortOverride.Checked = power.SortOverride;
-            txtVisualLocation.Text = Convert.ToString(power.DisplayLocation);
+            txtVisualLocation.Text = Convert.ToString(power.DisplayLocation, CultureInfo.InvariantCulture);
             chkSummonStealEffects.Checked = power.AbsorbSummonEffects;
             chkSummonStealAttributes.Checked = power.AbsorbSummonAttributes;
             chkSummonDisplayEntity.Checked = power.ShowSummonAnyway;
@@ -1140,7 +1142,7 @@ namespace Hero_Designer
                 if (myPower.Requires.PowerID[index].Length <= 0)
                     continue;
                 items[0] = myPower.Requires.PowerID[index][0];
-                if (myPower.Requires.PowerID[index][1] != "")
+                if (!string.IsNullOrWhiteSpace(myPower.Requires.PowerID[index][1]))
                 {
                     items[1] = "AND";
                     items[2] = myPower.Requires.PowerID[index][1];
@@ -1157,7 +1159,7 @@ namespace Hero_Designer
                 if (myPower.Requires.PowerIDNot[index].Length <= 0)
                     continue;
                 items[0] = "NOT " + myPower.Requires.PowerIDNot[index][0];
-                if (myPower.Requires.PowerIDNot[index][1] != "")
+                if (!string.IsNullOrWhiteSpace(myPower.Requires.PowerIDNot[index][1]))
                 {
                     items[1] = "AND";
                     items[2] = "NOT " + myPower.Requires.PowerIDNot[index][1];
@@ -1296,17 +1298,22 @@ namespace Hero_Designer
 
         void lblStaticIndex_Click(object sender, EventArgs e)
         {
-            string s = Interaction.InputBox("Insert new static index for this power.", "", Convert.ToString(myPower.StaticIndex));
+            string s = Interaction.InputBox("Insert new static index for this power.", "", Convert.ToString(myPower.StaticIndex, CultureInfo.InvariantCulture));
             try
-            {
-                int num1 = int.Parse(s);
+            {   
+                var num1 = 1;
+                if (s != null)
+                {
+                    num1 = int.Parse(s, CultureInfo.InvariantCulture);
+                }
+
                 if (num1 < 0)
                 {
                     Interaction.MsgBox("The static index cannot be a negative number.", MsgBoxStyle.Exclamation);
                 }
                 else
                 {
-                    lblStaticIndex.Text = Convert.ToString(num1);
+                    lblStaticIndex.Text = Convert.ToString(num1, CultureInfo.InvariantCulture);
                     myPower.StaticIndex = num1;
                 }
             }
@@ -1714,9 +1721,10 @@ namespace Hero_Designer
             bxEnhPicked = new ExtendedBitmap(pbEnhancements.Width, pbEnhancements.Height);
             int enhPadding1 = enhPadding;
             int enhPadding2 = enhPadding;
-            bxEnhPicked.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 0)), bxEnhPicked.ClipRect);
+            using SolidBrush solidBrush = new SolidBrush(Color.FromArgb(0,0,0));
+            bxEnhPicked.Graphics.FillRectangle(solidBrush, bxEnhPicked.ClipRect);
             Graphics graphics = bxEnhPicked.Graphics;
-            Pen pen = new Pen(Color.FromArgb(0, 0, byte.MaxValue), 1f);
+            using Pen pen = new Pen(Color.FromArgb(0, 0, byte.MaxValue), 1f);
             Size size = bxEnhPicked.Size;
             int width = size.Width - 1;
             size = bxEnhPicked.Size;
@@ -1740,9 +1748,10 @@ namespace Hero_Designer
             int enhPadding1 = enhPadding;
             int enhPadding2 = enhPadding;
             int num1 = 0;
-            bxEnhPicker.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 0)), bxEnhPicker.ClipRect);
+            using SolidBrush solidBrush = new SolidBrush(Color.FromArgb(0,0,0));
+            bxEnhPicker.Graphics.FillRectangle(solidBrush, bxEnhPicker.ClipRect);
             Graphics graphics = bxEnhPicker.Graphics;
-            Pen pen = new Pen(Color.FromArgb(0, 0, byte.MaxValue), 1f);
+            using Pen pen = new Pen(Color.FromArgb(0, 0, byte.MaxValue), 1f);
             Size size = bxEnhPicker.Size;
             int width = size.Width - 1;
             size = bxEnhPicker.Size;
@@ -1767,7 +1776,7 @@ namespace Hero_Designer
         void refresh_PowerData()
         {
             Text = "Edit Power (" + myPower.FullName + ")";
-            lblStaticIndex.Text = Convert.ToString(myPower.StaticIndex);
+            lblStaticIndex.Text = Convert.ToString(myPower.StaticIndex, CultureInfo.InvariantCulture);
             FillCombo_Basic();
             FillTab_Basic();
             FillCombo_Attribs();
@@ -1824,7 +1833,7 @@ namespace Hero_Designer
             }
             else
             {
-                int index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvPrSet.SelectedItems[0].Tag));
+                int index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvPrSet.SelectedItems[0].Tag, CultureInfo.InvariantCulture));
                 if (index1 > -1)
                 {
                     int num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;
@@ -1972,7 +1981,7 @@ namespace Hero_Designer
             }
             else
             {
-                int index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvSPSet.SelectedItems[0].Tag));
+                int index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvSPSet.SelectedItems[0].Tag, CultureInfo.InvariantCulture));
                 if (index1 > -1)
                 {
                     int num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;
@@ -2035,7 +2044,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtAcc.Text = Convert.ToString(myPower.Accuracy);
+            txtAcc.Text = Convert.ToString(myPower.Accuracy, CultureInfo.InvariantCulture);
         }
 
         void txtAcc_TextChanged(object sender, EventArgs e)
@@ -2052,7 +2061,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtActivate.Text = Convert.ToString(myPower.ActivatePeriod);
+            txtActivate.Text = Convert.ToString(myPower.ActivatePeriod, CultureInfo.InvariantCulture);
         }
 
         void txtActivate_TextChanged(object sender, EventArgs e)
@@ -2069,7 +2078,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtArc.Text = Convert.ToString(myPower.Arc);
+            txtArc.Text = Convert.ToString(myPower.Arc, CultureInfo.InvariantCulture);
         }
 
         void txtArc_TextChanged(object sender, EventArgs e)
@@ -2086,7 +2095,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtCastTime.Text = Convert.ToString(myPower.CastTimeReal);
+            txtCastTime.Text = Convert.ToString(myPower.CastTimeReal, CultureInfo.InvariantCulture);
         }
 
         void txtCastTime_TextChanged(object sender, EventArgs e)
@@ -2117,7 +2126,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtEndCost.Text = Convert.ToString(myPower.EndCost);
+            txtEndCost.Text = Convert.ToString(myPower.EndCost, CultureInfo.InvariantCulture);
         }
 
         void txtEndCost_TextChanged(object sender, EventArgs e)
@@ -2134,7 +2143,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtInterrupt.Text = Convert.ToString(myPower.InterruptTime);
+            txtInterrupt.Text = Convert.ToString(myPower.InterruptTime, CultureInfo.InvariantCulture);
         }
 
         void txtInterrupt_TextChanged(object sender, EventArgs e)
@@ -2151,7 +2160,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtLevel.Text = Convert.ToString(myPower.Level);
+            txtLevel.Text = Convert.ToString(myPower.Level, CultureInfo.InvariantCulture);
         }
 
         void txtLevel_TextChanged(object sender, EventArgs e)
@@ -2168,7 +2177,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtLifeTimeGame.Text = Convert.ToString(myPower.LifeTimeInGame);
+            txtLifeTimeGame.Text = Convert.ToString(myPower.LifeTimeInGame, CultureInfo.InvariantCulture);
         }
 
         void txtLifeTimeGame_TextChanged(object sender, EventArgs e)
@@ -2185,7 +2194,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtLifeTimeReal.Text = Convert.ToString(myPower.LifeTime);
+            txtLifeTimeReal.Text = Convert.ToString(myPower.LifeTime, CultureInfo.InvariantCulture);
         }
 
         void txtLifeTimeReal_TextChanged(object sender, EventArgs e)
@@ -2202,7 +2211,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtMaxTargets.Text = Convert.ToString(myPower.MaxTargets);
+            txtMaxTargets.Text = Convert.ToString(myPower.MaxTargets, CultureInfo.InvariantCulture);
         }
 
         void txtMaxTargets_TextChanged(object sender, EventArgs e)
@@ -2234,7 +2243,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtNumCharges.Text = Convert.ToString(myPower.NumCharges);
+            txtNumCharges.Text = Convert.ToString(myPower.NumCharges, CultureInfo.InvariantCulture);
         }
 
         void txtNumCharges_TextChanged(object sender, EventArgs e)
@@ -2258,7 +2267,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtRadius.Text = Convert.ToString(myPower.Radius);
+            txtRadius.Text = Convert.ToString(myPower.Radius, CultureInfo.InvariantCulture);
         }
 
         void txtRadius_TextChanged(object sender, EventArgs e)
@@ -2275,7 +2284,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtRange.Text = Convert.ToString(myPower.Range);
+            txtRange.Text = Convert.ToString(myPower.Range, CultureInfo.InvariantCulture);
         }
 
         void txtRange_TextChanged(object sender, EventArgs e)
@@ -2292,7 +2301,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtRangeSec.Text = Convert.ToString(myPower.RangeSecondary);
+            txtRangeSec.Text = Convert.ToString(myPower.RangeSecondary, CultureInfo.InvariantCulture);
         }
 
         void txtRangeSec_TextChanged(object sender, EventArgs e)
@@ -2309,7 +2318,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtRechargeTime.Text = Convert.ToString(myPower.RechargeTime);
+            txtRechargeTime.Text = Convert.ToString(myPower.RechargeTime, CultureInfo.InvariantCulture);
         }
 
         void txtRechargeTime_TextChanged(object sender, EventArgs e)
@@ -2336,7 +2345,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtUseageTime.Text = Convert.ToString(myPower.UsageTime);
+            txtUseageTime.Text = Convert.ToString(myPower.UsageTime, CultureInfo.InvariantCulture);
         }
 
         void txtUseageTime_TextChanged(object sender, EventArgs e)
@@ -2353,7 +2362,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            txtVisualLocation.Text = Convert.ToString(myPower.DisplayLocation);
+            txtVisualLocation.Text = Convert.ToString(myPower.DisplayLocation, CultureInfo.InvariantCulture);
         }
 
         void txtVisualLocation_TextChanged(object sender, EventArgs e)

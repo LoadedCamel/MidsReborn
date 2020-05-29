@@ -1216,11 +1216,45 @@ public static class DatabaseAPI
     {
         string path = Files.SelectDataFileSave(Files.MxdbFileEnhDB);
         SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
+        using FileStream fileStream = new FileStream(path, FileMode.Create);
+        using BinaryWriter writer = new BinaryWriter(fileStream, Encoding.UTF8);
+        try
+        {
+            writer.Write(EnhancementDbName);
+            writer.Write(Database.VersionEnhDb);
+            writer.Write(Database.Enhancements.Length - 1);
+
+            for (int index = 0; index <= Database.Enhancements.Length - 1; ++index)
+            {
+                Database.Enhancements[index].StoreTo(writer);
+            }
+
+            writer.Write(Database.EnhancementSets.Count - 1);
+            for (int index = 0; index <= Database.EnhancementSets.Count - 1; ++index)
+            {
+                Database.EnhancementSets[index].StoreTo(writer);
+            }
+
+            writer.Close();
+            fileStream.Close();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Message: {ex.Message}\r\n\nTrace: {ex.StackTrace}");
+            writer.Close();
+            fileStream.Close();
+        }
+    }
+
+    /*public static void SaveEnhancementDb(ISerialize serializer)
+    {
+        string path = Files.SelectDataFileSave(Files.MxdbFileEnhDB);
+        //SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
         FileStream fileStream;
         BinaryWriter writer;
         try
         {
-            fileStream = new FileStream(path, FileMode.Create);
+            fileStream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite);
             writer = new BinaryWriter(fileStream);
         }
         catch (Exception ex)
@@ -1247,7 +1281,7 @@ public static class DatabaseAPI
             writer.Close();
             fileStream.Close();
         }
-    }
+    }*/
 
     public static void LoadEnhancementDb()
     {
