@@ -216,6 +216,37 @@ namespace Hero_Designer
             Name = nameof(frmMain);
         }
 
+        // [Zed 06/01/20]
+        // Input: argv: string[] Command line parameters, value: argument value to look for, caseSensitive: bool, perform case (in)sensitive lookup
+        // Output: bool, target value has (not) been found
+        bool findCommandLineParameter(string[] argv, string value, bool caseSensitive=true)
+        {
+            // Only inspect first 10 arguments,
+            // skip first argument (aka %0), since it is the executable path.
+            for (int i=1; i<Math.Min(10, argv.Length); i++)
+            {
+                if (caseSensitive)
+                {
+                    if (argv[i] == value) return true;
+                }
+                else
+                {
+                    if (argv[i].ToLower() == value.ToLower()) return true;
+                }
+            }
+            return false;
+        }
+
+        // [Zed 06/01/20]
+        // Input: clFilename: string, filename passed as command line argument
+        // Output: Usable filename (trimmed out of quotes)
+        // Note: not checked here, but a valid file name should be either a local path name (X:\...) or a UNC resource name (\\server\share\...)
+        // Integrate Environment.GetCommandLineArgs().Skip(1); directly here?
+        string formatFilenameFromParameter(string clFilename)
+        {
+            return clFilename.Replace("\"", string.Empty);
+        }
+
         void frmMain_Load(object sender, EventArgs e)
         {
             loading = true;
@@ -245,8 +276,8 @@ namespace Hero_Designer
                     MidsContext.Config.IsInitialized = true;
                 }
                 
-                string args = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-                if (args.IndexOf("RECOVERY", StringComparison.OrdinalIgnoreCase) > -1)
+                string[] args = Environment.GetCommandLineArgs();
+                if (findCommandLineParameter(args, "RECOVERY"))
                 {
                     MessageBox.Show(
                         "As recovery mode has been invoked, you will be redirected to the download site for the most recent full install package.",
@@ -256,16 +287,17 @@ namespace Hero_Designer
                     return;
                 }
 
-                if (args.IndexOf("MASTERMODE=YES", StringComparison.OrdinalIgnoreCase) > -1)
+                if (findCommandLineParameter(args, "MASTERMODE=YES"))
                     MidsContext.Config.MasterMode = true;
                 MainModule.MidsController.LoadData(ref iFrm);
                 iFrm?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
                 var loadedFromArgs = false;
-                if (!string.IsNullOrEmpty(args))
+                if (args.Length > 0)
                 {
-                    string str3 = args.Replace("\"", string.Empty);
+                    // [Zed] variable name change: str3 --> clFilename
+                    string clFilename = formatFilenameFromParameter(args[1]);
                     if (File.Exists(str3.Trim()) && !DoOpen(str3.Trim()))
                     {
                         loadedFromArgs = true;
