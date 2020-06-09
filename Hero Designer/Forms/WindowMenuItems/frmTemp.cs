@@ -19,8 +19,8 @@ namespace Hero_Designer
         ImageButton ibClose;
 
         Label lblLock;
-        ListLabelV2 llLeft;
-        ListLabelV2 llRight;
+        ListLabelV3 llLeft;
+        ListLabelV3 llRight;
 
         bool _locked;
 
@@ -55,17 +55,17 @@ namespace Hero_Designer
             llRight.SuspendRedraw = true;
             llLeft.Font = font;
             llRight.Font = font;
-            llLeft.UpdateTextColors(ListLabelV2.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            llLeft.UpdateTextColors(ListLabelV2.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            llLeft.UpdateTextColors(ListLabelV2.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
-            llLeft.UpdateTextColors(ListLabelV2.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
-            llLeft.UpdateTextColors(ListLabelV2.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+            llLeft.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            llLeft.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            llLeft.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
+            llLeft.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
+            llLeft.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
             llLeft.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlight;
-            llRight.UpdateTextColors(ListLabelV2.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            llRight.UpdateTextColors(ListLabelV2.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            llRight.UpdateTextColors(ListLabelV2.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
-            llRight.UpdateTextColors(ListLabelV2.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
-            llRight.UpdateTextColors(ListLabelV2.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+            llRight.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            llRight.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            llRight.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
+            llRight.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
+            llRight.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
             llRight.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlight;
             for (int index = 0; index <= llLeft.Items.Length - 1; ++index)
                 llLeft.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
@@ -94,8 +94,8 @@ namespace Hero_Designer
             int num = _myPowers.Count - 1;
             for (int index = 0; index <= num; ++index)
             {
-                ListLabelV2.LLItemState iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]) ? (!(_myPowers[index].PowerType != Enums.ePowerType.Click | _myPowers[index].ClickBuff) ? (!_myPowers[index].SubIsAltColour ? ListLabelV2.LLItemState.Disabled : ListLabelV2.LLItemState.Invalid) : ListLabelV2.LLItemState.Enabled) : ListLabelV2.LLItemState.Selected;
-                ListLabelV2.ListLabelItemV2 iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV2.ListLabelItemV2(_myPowers[index].DisplayName, iState) : new ListLabelV2.ListLabelItemV2(_myPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV2.LLFontFlags.Bold);
+                ListLabelV3.LLItemState iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]) ? (!(_myPowers[index].PowerType != Enums.ePowerType.Click | _myPowers[index].ClickBuff) ? (!_myPowers[index].SubIsAltColour ? ListLabelV3.LLItemState.Disabled : ListLabelV3.LLItemState.Invalid) : ListLabelV3.LLItemState.Enabled) : ListLabelV3.LLItemState.Selected;
+                ListLabelV3.ListLabelItemV3 iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV3.ListLabelItemV3(_myPowers[index].DisplayName, iState) : new ListLabelV3.ListLabelItemV3(_myPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV3.LLFontFlags.Bold);
                 if (index >= _myPowers.Count / 2.0)
                     llRight.AddItem(iItem);
                 else
@@ -111,10 +111,10 @@ namespace Hero_Designer
         {
             BackColor = _myParent.BackColor;
             PopInfo.ForeColor = BackColor;
-            ListLabelV2 llLeft = this.llLeft;
+            ListLabelV3 llLeft = this.llLeft;
             UpdateLlColours(ref llLeft);
             this.llLeft = llLeft;
-            ListLabelV2 llRight = this.llRight;
+            ListLabelV3 llRight = this.llRight;
             UpdateLlColours(ref llRight);
             this.llRight = llRight;
             ibClose.IA = _myParent.Drawing.pImageAttributes;
@@ -140,7 +140,7 @@ namespace Hero_Designer
             lblLock.Visible = false;
         }
 
-        void llLeft_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llLeft_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Button == MouseButtons.Right)
             {
@@ -151,24 +151,24 @@ namespace Hero_Designer
             }
             else
             {
-                if (Item.ItemState == ListLabelV2.LLItemState.Disabled)
+                if (Item.ItemState == ListLabelV3.LLItemState.Disabled)
                     return;
                 if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[Item.Index]))
                 {
                     MidsContext.Character.CurrentBuild.RemovePower(_myPowers[Item.Index]);
-                    Item.ItemState = ListLabelV2.LLItemState.Enabled;
+                    Item.ItemState = ListLabelV3.LLItemState.Enabled;
                 }
                 else
                 {
                     MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index]).StatInclude = true;
-                    Item.ItemState = ListLabelV2.LLItemState.Selected;
+                    Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
                 llLeft.Refresh();
                 _myParent.PowerModified(markModified: false);
             }
         }
 
-        void llLeft_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llLeft_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             MiniPowerInfo(Item.Index);
         }
@@ -180,7 +180,7 @@ namespace Hero_Designer
             Panel2.Focus();
         }
 
-        void llRight_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llRight_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             int pIDX = Item.Index + llLeft.Items.Length;
             if (Button == MouseButtons.Right)
@@ -192,24 +192,24 @@ namespace Hero_Designer
             }
             else
             {
-                if (Item.ItemState == ListLabelV2.LLItemState.Disabled)
+                if (Item.ItemState == ListLabelV3.LLItemState.Disabled)
                     return;
                 if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[pIDX]))
                 {
                     MidsContext.Character.CurrentBuild.RemovePower(_myPowers[pIDX]);
-                    Item.ItemState = ListLabelV2.LLItemState.Enabled;
+                    Item.ItemState = ListLabelV3.LLItemState.Enabled;
                 }
                 else
                 {
                     MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX]).StatInclude = true;
-                    Item.ItemState = ListLabelV2.LLItemState.Selected;
+                    Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
                 llRight.Refresh();
                 _myParent.PowerModified(markModified: false);
             }
         }
 
-        void llRight_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llRight_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             MiniPowerInfo(Item.Index + llLeft.Items.Length);
         }
@@ -322,13 +322,13 @@ namespace Hero_Designer
             }
         }
 
-        static void UpdateLlColours(ref ListLabelV2 iList)
+        static void UpdateLlColours(ref ListLabelV3 iList)
         {
-            iList.UpdateTextColors(ListLabelV2.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            iList.UpdateTextColors(ListLabelV2.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(ListLabelV2.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
-            iList.UpdateTextColors(ListLabelV2.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
-            iList.UpdateTextColors(ListLabelV2.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
             iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlight;
             iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
         }

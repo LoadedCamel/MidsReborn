@@ -89,9 +89,6 @@
     <Compile Include="ImageButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ListLabelV2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="My\MyApplication.cs" />
     <Compile Include="My\MyComputer.cs" />
     <Compile Include="My\MyProject.cs" />
@@ -109,6 +106,12 @@
     <Compile Include="ctlProgressBar.Designer.cs">
       <DependentUpon>ctlProgressBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="ListLabelV3.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ListLabelV3.Designer.cs">
+      <DependentUpon>ListLabelV3.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ctlDamageDisplay.resources" />
@@ -118,7 +121,6 @@
     <EmbeddedResource Include="GFXLabel.resources" />
     <EmbeddedResource Include="I9Picker.resources" />
     <EmbeddedResource Include="ImageButton.resources" />
-    <EmbeddedResource Include="ListLabelV2.resources" />
     <EmbeddedResource Include="Resources.resources" />
   </ItemGroup>
   <ItemGroup>

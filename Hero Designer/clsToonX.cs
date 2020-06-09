@@ -1835,7 +1835,7 @@ namespace Hero_Designer
                 }
 
                 string empty = string.Empty;
-                if (PowerState(CurrentBuild.Powers[hIDX].NIDPower, ref empty) != ListLabelV2.LLItemState.Invalid || empty == "")
+                if (PowerState(CurrentBuild.Powers[hIDX].NIDPower, ref empty) != ListLabelV3.LLItemState.Invalid || empty == "")
                     return popupData;
                 {
                     int index2 = popupData.Add();
@@ -2161,10 +2161,10 @@ namespace Hero_Designer
             return section;
         }
 
-        public ListLabelV2.LLItemState PowerState(int nIDPower, ref string message)
+        public ListLabelV3.LLItemState PowerState(int nIDPower, ref string message)
         {
             if (nIDPower < 0)
-                return ListLabelV2.LLItemState.Disabled;
+                return ListLabelV3.LLItemState.Disabled;
             IPower power = DatabaseAPI.Database.Power[nIDPower];
             int inToonHistory = CurrentBuild.FindInToonHistory(nIDPower);
             bool flag1 = inToonHistory > -1;
@@ -2179,7 +2179,7 @@ namespace Hero_Designer
             if (PowersetMutexClash(nIDPower))
             {
                 message = "You cannot take the " + Powersets[0].DisplayName + " and " + Powersets[1].DisplayName + " sets together.";
-                return ListLabelV2.LLItemState.Heading;
+                return ListLabelV3.LLItemState.Heading;
             }
 
             if (flag1)
@@ -2230,7 +2230,7 @@ namespace Hero_Designer
                 message = "This power has been placed in a way that is not possible in-game. One of the " +
                           Convert.ToString(numArray.Length) + " level 1 powers from your " +
                           Enum.GetName(powersetType.GetType(), powersetType) + " set must be taken at level 1.";
-                return ListLabelV2.LLItemState.Invalid;
+                return ListLabelV3.LLItemState.Invalid;
                 label_23:
                 if (!flag2)
                 {
@@ -2254,17 +2254,17 @@ namespace Hero_Designer
                         message =
                             "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
 
-                    return ListLabelV2.LLItemState.Invalid;
+                    return ListLabelV3.LLItemState.Invalid;
                 }
 
                 if (num1 <= power.Level - 1)
-                    return ListLabelV2.LLItemState.SelectedDisabled;
-                return num1 <= power.Level - 1 ? ListLabelV2.LLItemState.Enabled : ListLabelV2.LLItemState.Selected;
+                    return ListLabelV3.LLItemState.SelectedDisabled;
+                return num1 <= power.Level - 1 ? ListLabelV3.LLItemState.Enabled : ListLabelV3.LLItemState.Selected;
             }
 
             if (flag2 && num1 >= power.Level - 1)
-                return ListLabelV2.LLItemState.Enabled;
-            return ListLabelV2.LLItemState.Disabled;
+                return ListLabelV3.LLItemState.Enabled;
+            return ListLabelV3.LLItemState.Disabled;
         }
 
         bool ReadInternalData(StreamReader iStream)
@@ -2622,7 +2622,7 @@ namespace Hero_Designer
             if (CurrentBuild.FindInToonHistory(nIDPower) > -1)
                 return false;
             string message = "";
-            return PowerState(nIDPower, ref message) == ListLabelV2.LLItemState.Enabled;
+            return PowerState(nIDPower, ref message) == ListLabelV3.LLItemState.Enabled;
         }
     }
 }

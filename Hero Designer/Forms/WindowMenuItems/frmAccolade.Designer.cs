@@ -38,8 +38,8 @@ namespace Hero_Designer
             this.lblLock = new System.Windows.Forms.Label();
             this.ibClose = new midsControls.ImageButton();
             this.Panel2 = new frmIncarnate.CustomPanel();
-            this.llRight = new midsControls.ListLabelV2();
-            this.llLeft = new midsControls.ListLabelV2();
+            this.llRight = new midsControls.ListLabelV3();
+            this.llLeft = new midsControls.ListLabelV3();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             this.SuspendLayout();
@@ -136,8 +136,8 @@ namespace Hero_Designer
             this.llRight.SizeNormal = new System.Drawing.Size(190, 120);
             this.llRight.SuspendRedraw = false;
             this.llRight.TabIndex = 111;
-            this.llRight.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llRight_ItemHover);
-            this.llRight.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llRight_ItemClick);
+            this.llRight.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llRight_ItemHover);
+            this.llRight.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llRight_ItemClick);
             this.llRight.MouseEnter += new System.EventHandler(llRight_MouseEnter);
             this.llLeft.AutoSize = true;
             this.llLeft.Expandable = false;
@@ -161,8 +161,8 @@ namespace Hero_Designer
             this.llLeft.SuspendRedraw = false;
             this.llLeft.TabIndex = 110;
             this.llLeft.MouseEnter += new System.EventHandler(llLeft_MouseEnter);
-            this.llLeft.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llLeft_ItemHover);
-            this.llLeft.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llLeft_ItemClick);
+            this.llLeft.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llLeft_ItemHover);
+            this.llLeft.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llLeft_ItemClick);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
 

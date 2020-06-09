@@ -37,8 +37,8 @@ namespace Hero_Designer
             this.PopInfo = new midsControls.ctlPopUp();
             this.lblLock = new System.Windows.Forms.Label();
             this.Panel2 = new frmIncarnate.CustomPanel();
-            this.LLRight = new midsControls.ListLabelV2();
-            this.LLLeft = new midsControls.ListLabelV2();
+            this.LLRight = new midsControls.ListLabelV3();
+            this.LLLeft = new midsControls.ListLabelV3();
             this.OmegaButton = new midsControls.ImageButton();
             this.VitaeButton = new midsControls.ImageButton();
             this.StanceButton = new midsControls.ImageButton();

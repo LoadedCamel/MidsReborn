@@ -61,7 +61,7 @@ namespace Hero_Designer
             this.Label10 = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
             this.Label2 = new System.Windows.Forms.Label();
-            this.Listlabel1 = new midsControls.ListLabelV2();
+            this.Listlabel1 = new midsControls.ListLabelV3();
             this.SuspendLayout();
 
             this.rtPreview.Location = new System.Drawing.Point(218, 49);
@@ -312,7 +312,7 @@ namespace Hero_Designer
             this.Listlabel1.SizeNormal = new System.Drawing.Size(197, 91);
             this.Listlabel1.SuspendRedraw = false;
             this.Listlabel1.TabIndex = 111;
-            this.Listlabel1.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(Listlabel1_ItemClick);
+            this.Listlabel1.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(Listlabel1_ItemClick);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 
             this.ClientSize = new System.Drawing.Size(436, 406);

@@ -12,7 +12,7 @@ namespace Hero_Designer
     public partial class frmColourSettings : Form
     {
 
-        ListLabelV2 Listlabel1;
+        ListLabelV3 Listlabel1;
 
         private readonly ConfigData.FontSettings myFS = new ConfigData.FontSettings();
 
@@ -148,7 +148,7 @@ namespace Hero_Designer
 
         [DebuggerStepThrough]
 
-        void Listlabel1_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void Listlabel1_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
 
         {
             switch (Item.Index)
@@ -213,16 +213,16 @@ namespace Hero_Designer
             rtPreview.Rtf = RTF.StartRTF() + RTF.Color(RTF.ElementID.Invention) + RTF.Underline("Invention Name") + RTF.Crlf() + RTF.Color(RTF.ElementID.Enhancement) + RTF.Italic("Enhancement Text") + RTF.Color(RTF.ElementID.Warning) + " (Alert)" + RTF.Crlf() + RTF.Color(RTF.ElementID.Text) + "  Regular Text" + RTF.Crlf() + RTF.Color(RTF.ElementID.Text) + "  Regular Text" + RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "  Faded Text" + RTF.Crlf() + RTF.Crlf() + RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") + RTF.Color(RTF.ElementID.Text) + "Normal Text" + RTF.Crlf() + RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") + RTF.Color(RTF.ElementID.BackgroundVillain) + "Special Case" + RTF.Crlf() + RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") + RTF.Color(RTF.ElementID.Enhancement) + "Enahnced value" + RTF.Crlf() + RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") + RTF.Color(RTF.ElementID.Invention) + "Invention Effect" + RTF.Crlf() + RTF.EndRTF();
             Listlabel1.SuspendRedraw = true;
             Listlabel1.ClearItems();
-            Listlabel1.AddItem(new ListLabelV2.ListLabelItemV2("Available Power", ListLabelV2.LLItemState.Enabled));
-            Listlabel1.AddItem(new ListLabelV2.ListLabelItemV2("Taken Power", ListLabelV2.LLItemState.Selected));
-            Listlabel1.AddItem(new ListLabelV2.ListLabelItemV2("Taken Power (Dark)", ListLabelV2.LLItemState.SelectedDisabled));
-            Listlabel1.AddItem(new ListLabelV2.ListLabelItemV2("Unavailable Power", ListLabelV2.LLItemState.Disabled));
-            Listlabel1.AddItem(new ListLabelV2.ListLabelItemV2("Highlight Colour", ListLabelV2.LLItemState.Enabled));
+            Listlabel1.AddItem(new ListLabelV3.ListLabelItemV3("Available Power", ListLabelV3.LLItemState.Enabled));
+            Listlabel1.AddItem(new ListLabelV3.ListLabelItemV3("Taken Power", ListLabelV3.LLItemState.Selected));
+            Listlabel1.AddItem(new ListLabelV3.ListLabelItemV3("Taken Power (Dark)", ListLabelV3.LLItemState.SelectedDisabled));
+            Listlabel1.AddItem(new ListLabelV3.ListLabelItemV3("Unavailable Power", ListLabelV3.LLItemState.Disabled));
+            Listlabel1.AddItem(new ListLabelV3.ListLabelItemV3("Highlight Colour", ListLabelV3.LLItemState.Enabled));
             Listlabel1.HoverColor = myFS.ColorPowerHighlight;
-            Listlabel1.UpdateTextColors(ListLabelV2.LLItemState.Enabled, myFS.ColorPowerAvailable);
-            Listlabel1.UpdateTextColors(ListLabelV2.LLItemState.Selected, myFS.ColorPowerTaken);
-            Listlabel1.UpdateTextColors(ListLabelV2.LLItemState.SelectedDisabled, myFS.ColorPowerTakenDark);
-            Listlabel1.UpdateTextColors(ListLabelV2.LLItemState.Disabled, myFS.ColorPowerDisabled);
+            Listlabel1.UpdateTextColors(ListLabelV3.LLItemState.Enabled, myFS.ColorPowerAvailable);
+            Listlabel1.UpdateTextColors(ListLabelV3.LLItemState.Selected, myFS.ColorPowerTaken);
+            Listlabel1.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, myFS.ColorPowerTakenDark);
+            Listlabel1.UpdateTextColors(ListLabelV3.LLItemState.Disabled, myFS.ColorPowerDisabled);
             Listlabel1.Font = new Font(Listlabel1.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
             int num = Listlabel1.Items.Length - 1;
             for (int index = 0; index <= num; ++index)

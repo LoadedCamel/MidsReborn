@@ -20,7 +20,7 @@ namespace Hero_Designer
         ComboBox cbSelPetPower;
         ComboBox cbSelPets;
 
-        ListLabelV2 llPrimary;
+        ListLabelV3 llPrimary;
         Label lblPrimary;
         FlowLayoutPanel pnlGFXFlow;
         PictureBox pnlGFX;

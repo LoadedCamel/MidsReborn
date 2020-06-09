@@ -436,7 +436,7 @@ namespace Hero_Designer
             return 0;
         }
 
-        void AssemblePowerList(ListLabelV2 llPower, IPowerset Powerset)
+        void AssemblePowerList(ListLabelV3 llPower, IPowerset Powerset)
         {
             if (Powerset == null || Powerset.Powers?.Length < 1)
             {
@@ -452,28 +452,28 @@ namespace Hero_Designer
                 if (Powerset.nIDTrunkSet > -1)
                 {
                     IPowerset powerset = DatabaseAPI.Database.Powersets[Powerset.nIDTrunkSet];
-                    var iItem1 = new ListLabelV2.ListLabelItemV2(powerset.DisplayName, ListLabelV2.LLItemState.Heading, Powerset.nIDTrunkSet,
-                        -1, -1, "", ListLabelV2.LLFontFlags.Bold, ListLabelV2.LLTextAlign.Center);
+                    var iItem1 = new ListLabelV3.ListLabelItemV3(powerset.DisplayName, ListLabelV3.LLItemState.Heading, Powerset.nIDTrunkSet,
+                        -1, -1, "", ListLabelV3.LLFontFlags.Bold, ListLabelV3.LLTextAlign.Center);
                     llPower.AddItem(iItem1);
                     for (int iIDXPower = 0; iIDXPower <= powerset.Powers.Length - 1; ++iIDXPower)
                     {
                         if (powerset.Powers[iIDXPower].Level <= 0)
                             continue;
                         message = "";
-                        var iItem2 = new ListLabelV2.ListLabelItemV2(powerset.Powers[iIDXPower].DisplayName,
+                        var iItem2 = new ListLabelV3.ListLabelItemV3(powerset.Powers[iIDXPower].DisplayName,
                             MainModule.MidsController.Toon.PowerState(powerset.Powers[iIDXPower].PowerIndex,
                                 ref message), Powerset.nIDTrunkSet, iIDXPower, powerset.Powers[iIDXPower].PowerIndex, "",
-                            ListLabelV2.LLFontFlags.Bold)
+                            ListLabelV3.LLFontFlags.Bold)
                         {
                             Bold = MidsContext.Config.RtFont.PairedBold
                         };
-                        if (iItem2.ItemState == ListLabelV2.LLItemState.Invalid)
+                        if (iItem2.ItemState == ListLabelV3.LLItemState.Invalid)
                             iItem2.Italic = true;
                         llPower.AddItem(iItem2);
                     }
 
-                    var iItem = new ListLabelV2.ListLabelItemV2(Powerset.DisplayName, ListLabelV2.LLItemState.Heading, Powerset.nID, -1, -1,
-                        "", ListLabelV2.LLFontFlags.Bold, ListLabelV2.LLTextAlign.Center);
+                    var iItem = new ListLabelV3.ListLabelItemV3(Powerset.DisplayName, ListLabelV3.LLItemState.Heading, Powerset.nID, -1, -1,
+                        "", ListLabelV3.LLFontFlags.Bold, ListLabelV3.LLTextAlign.Center);
                     llPower.AddItem(iItem);
                 }
 
@@ -487,16 +487,16 @@ namespace Hero_Designer
                             MainModule.MidsController.Toon.PowerState(Powerset.Powers[iIDXPower].PowerIndex,
                                 ref message);
                         var power = Powerset.Powers[iIDXPower];
-                        var iItem = new ListLabelV2.ListLabelItemV2(
+                        var iItem = new ListLabelV3.ListLabelItemV3(
                             Powerset.Powers[iIDXPower].DisplayName,
                             targetPs,
                             Powerset.nID,
                             iIDXPower,
-                            power.PowerIndex, "", ListLabelV2.LLFontFlags.Bold)
+                            power.PowerIndex, "", ListLabelV3.LLFontFlags.Bold)
                         {
                             Bold = MidsContext.Config.RtFont.PairedBold
                         };
-                        if (iItem.ItemState == ListLabelV2.LLItemState.Invalid)
+                        if (iItem.ItemState == ListLabelV3.LLItemState.Invalid)
                             iItem.Italic = true;
                         llPower.AddItem(iItem);
                     }
@@ -2257,9 +2257,9 @@ namespace Hero_Designer
 
         void llALL_MouseLeave(object sender, EventArgs e) => HidePopup();
 
-        void llAncillary_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llAncillary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
-            if (Item.ItemState == ListLabelV2.LLItemState.Heading)
+            if (Item.ItemState == ListLabelV3.LLItemState.Heading)
                 return;
             switch (Button)
             {
@@ -2272,11 +2272,11 @@ namespace Hero_Designer
             }
         }
 
-        void llAncillary_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llAncillary_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
-            if (Item.ItemState == ListLabelV2.LLItemState.Heading)
+            if (Item.ItemState == ListLabelV3.LLItemState.Heading)
             {
                 ShowPopup(Item.nIDSet, -1, llAncillary.Bounds, string.Empty);
             }
@@ -2287,7 +2287,7 @@ namespace Hero_Designer
             }
         }
 
-        void llPool0_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llPool0_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Button == MouseButtons.Left)
             {
@@ -2301,7 +2301,7 @@ namespace Hero_Designer
             }
         }
 
-        void llPool0_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llPool0_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -2309,7 +2309,7 @@ namespace Hero_Designer
             ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool0.Bounds);
         }
 
-        void llPool1_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llPool1_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Button == MouseButtons.Left)
             {
@@ -2323,7 +2323,7 @@ namespace Hero_Designer
             }
         }
 
-        void llPool1_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llPool1_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -2331,7 +2331,7 @@ namespace Hero_Designer
             ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool1.Bounds);
         }
 
-        void llPool2_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llPool2_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Button == MouseButtons.Left)
             {
@@ -2345,7 +2345,7 @@ namespace Hero_Designer
             }
         }
 
-        void llPool2_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llPool2_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -2353,7 +2353,7 @@ namespace Hero_Designer
             ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool2.Bounds);
         }
 
-        void llPool3_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llPool3_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
             if (Button == MouseButtons.Left)
             {
@@ -2367,7 +2367,7 @@ namespace Hero_Designer
             }
         }
 
-        void llPool3_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llPool3_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -2375,9 +2375,9 @@ namespace Hero_Designer
             ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool3.Bounds);
         }
 
-        void llPrimary_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llPrimary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
-            if (Item.ItemState == ListLabelV2.LLItemState.Heading)
+            if (Item.ItemState == ListLabelV3.LLItemState.Heading)
                 return;
             switch (Button)
             {
@@ -2390,11 +2390,11 @@ namespace Hero_Designer
             }
         }
 
-        void llPrimary_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llPrimary_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
-            if (Item.ItemState == ListLabelV2.LLItemState.Heading)
+            if (Item.ItemState == ListLabelV3.LLItemState.Heading)
             {
                 ShowPopup(Item.nIDSet, -1, llPrimary.Bounds, string.Empty);
             }
@@ -2405,9 +2405,9 @@ namespace Hero_Designer
             }
         }
 
-        void llSecondary_ItemClick(ListLabelV2.ListLabelItemV2 Item, MouseButtons Button)
+        void llSecondary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
-            if (Item.ItemState == ListLabelV2.LLItemState.Heading)
+            if (Item.ItemState == ListLabelV3.LLItemState.Heading)
                 return;
             switch (Button)
             {
@@ -2420,11 +2420,11 @@ namespace Hero_Designer
             }
         }
 
-        void llSecondary_ItemHover(ListLabelV2.ListLabelItemV2 Item)
+        void llSecondary_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
-            if (Item.ItemState == ListLabelV2.LLItemState.Heading)
+            if (Item.ItemState == ListLabelV3.LLItemState.Heading)
             {
                 ShowPopup(Item.nIDSet, -1, llSecondary.Bounds, string.Empty);
             }
@@ -3547,7 +3547,7 @@ namespace Hero_Designer
         Rectangle raGetPoolRect(int Index)
         {
             Label label;
-            ListLabelV2 ll;
+            ListLabelV3 ll;
             switch (Index)
             {
                 case 0:
@@ -3589,7 +3589,7 @@ namespace Hero_Designer
             Label label1;
             ComboBox comboBox;
             Label label2;
-            ListLabelV2 ll;
+            ListLabelV3 ll;
             switch (Index)
             {
                 case 0:
@@ -5115,7 +5115,7 @@ namespace Hero_Designer
             foreach (var colorItem in toColor)
             {
                 colorItem.BackColor = BackColor;
-                if (!(colorItem is ListLabelV2 ll))
+                if (!(colorItem is ListLabelV3 ll))
                     continue;
                 UpdateLLColours(ll);
                 ll.Font = font;
@@ -5351,13 +5351,13 @@ namespace Hero_Designer
                 : "Dynamic";
         }
 
-        void UpdateLLColours(ListLabelV2 iList)
+        void UpdateLLColours(ListLabelV3 iList)
         {
-            iList.UpdateTextColors(ListLabelV2.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            iList.UpdateTextColors(ListLabelV2.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(ListLabelV2.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
-            iList.UpdateTextColors(ListLabelV2.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
-            iList.UpdateTextColors(ListLabelV2.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
             iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlight;
 
             iList.ScrollBarColor = Color.FromArgb(64, 64, byte.MaxValue);
@@ -5376,19 +5376,19 @@ namespace Hero_Designer
                     fIncarnate.LLRight.SuspendRedraw = true;
                     fIncarnate.LLLeft.Font = llPrimary.Font;
                     fIncarnate.LLRight.Font = llPrimary.Font;
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV2.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV2.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV2.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV2.LLItemState.SelectedDisabled,
+                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
+                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled,
                         MidsContext.Config.RtFont.ColorPowerTakenDark);
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV2.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
                     fIncarnate.LLLeft.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlight;
-                    fIncarnate.LLRight.UpdateTextColors(ListLabelV2.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-                    fIncarnate.LLRight.UpdateTextColors(ListLabelV2.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-                    fIncarnate.LLRight.UpdateTextColors(ListLabelV2.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
-                    fIncarnate.LLRight.UpdateTextColors(ListLabelV2.LLItemState.SelectedDisabled,
+                    fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+                    fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+                    fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
+                    fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled,
                         MidsContext.Config.RtFont.ColorPowerTakenDark);
-                    fIncarnate.LLRight.UpdateTextColors(ListLabelV2.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+                    fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
                     fIncarnate.LLRight.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlight;
                     int num1 = fIncarnate.LLLeft.Items.Length - 1;
                     for (int index = 0; index <= num1; ++index)
@@ -5417,21 +5417,21 @@ namespace Hero_Designer
                 fAccolade.UpdateFonts(llPrimary.Font);
         }
 
-        void UpdatePowerList(ListLabelV2 llPower)
+        void UpdatePowerList(ListLabelV3 llPower)
         {
             llPower.SuspendRedraw = true;
             if (llPower.Items.Length == 0)
-                llPower.AddItem(new ListLabelV2.ListLabelItemV2("Nothing", ListLabelV2.LLItemState.Disabled, -1, -1, -1, string.Empty));
+                llPower.AddItem(new ListLabelV3.ListLabelItemV3("Nothing", ListLabelV3.LLItemState.Disabled, -1, -1, -1, string.Empty));
             int num = llPower.Items.Length - 1;
             for (int index = 0; index <= num; ++index)
             {
-                ListLabelV2.ListLabelItemV2 listLabelItemV2 = llPower.Items[index];
-                if (!(listLabelItemV2.nIDSet > -1 & listLabelItemV2.IDXPower > -1))
+                ListLabelV3.ListLabelItemV3 ListLabelItemV3 = llPower.Items[index];
+                if (!(ListLabelItemV3.nIDSet > -1 & ListLabelItemV3.IDXPower > -1))
                     continue;
                 string message = string.Empty;
-                listLabelItemV2.ItemState = MainModule.MidsController.Toon.PowerState(listLabelItemV2.nIDPower, ref message);
-                listLabelItemV2.Italic = listLabelItemV2.ItemState == ListLabelV2.LLItemState.Invalid;
-                listLabelItemV2.Bold = MidsContext.Config.RtFont.PairedBold;
+                ListLabelItemV3.ItemState = MainModule.MidsController.Toon.PowerState(ListLabelItemV3.nIDPower, ref message);
+                ListLabelItemV3.Italic = ListLabelItemV3.ItemState == ListLabelV3.LLItemState.Invalid;
+                ListLabelItemV3.Bold = MidsContext.Config.RtFont.PairedBold;
             }
 
             llPower.SuspendRedraw = false;
@@ -5455,7 +5455,7 @@ namespace Hero_Designer
                 noAncillary = true;
             if (noPrimary)
             {
-                ListLabelV2 llPrimary = this.llPrimary;
+                ListLabelV3 llPrimary = this.llPrimary;
                 AssemblePowerList(llPrimary, MidsContext.Character.Powersets[0]);
                 this.llPrimary = llPrimary;
                 AssemblePowerList(llSecondary, MidsContext.Character.Powersets[1]);
