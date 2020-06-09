@@ -14,9 +14,9 @@ namespace Hero_Designer
         Button OK_Button;
         TableLayoutPanel TableLayoutPanel1;
 
-        internal bool? remember => chkRemember?.Checked;
+        private bool? remember => chkRemember?.Checked;
 
-        public frmOptionListDlg()
+        private frmOptionListDlg()
         {
             InitializeComponent();
             Name = nameof(frmOptionListDlg);

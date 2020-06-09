@@ -29,7 +29,7 @@ namespace Hero_Designer
         RichTextBox rtxtFX;
         RichTextBox rtxtInfo;
 
-        protected frmMain myParent;
+        private readonly frmMain myParent;
 
         public frmSetViewer(frmMain iParent)
         {
@@ -81,7 +81,7 @@ namespace Hero_Designer
             TopMost = chkOnTop.Checked;
         }
 
-        public void DisplayList()
+        private void DisplayList()
         {
             string[] items = new string[3];
             lstSets.BeginUpdate();

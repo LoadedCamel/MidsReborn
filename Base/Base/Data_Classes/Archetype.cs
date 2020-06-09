@@ -53,9 +53,9 @@ namespace Base.Data_Classes
 
         public string SecondaryGroup { get; set; }
 
-        public string EpicGroup { get; set; }
+        public string EpicGroup { get; }
 
-        public string PoolGroup { get; set; }
+        private string PoolGroup { get; set; }
 
         public bool Playable { get; set; }
 
@@ -223,8 +223,8 @@ namespace Base.Data_Classes
         {
             PopUp.PopupData popupData = new PopUp.PopupData();
             int index1 = popupData.Add();
-            popupData.Sections[index1].Add(DisplayName, PopUp.Colors.Title, 1.25f, FontStyle.Bold, 0);
-            popupData.Sections[index1].Add(DescShort, PopUp.Colors.Effect, 1f, FontStyle.Bold, 0);
+            popupData.Sections[index1].Add(DisplayName, PopUp.Colors.Title, 1.25f);
+            popupData.Sections[index1].Add(DescShort, PopUp.Colors.Effect);
             popupData.Sections[index1].Add(DescLong, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
             int index2 = popupData.Add();
             popupData.Sections[index2].Add("You can't change archetype once a build has been started.\nIf you want to pick a different archetype, you need to clear the current build and start a new one.", PopUp.Colors.Effect, 0.9f);

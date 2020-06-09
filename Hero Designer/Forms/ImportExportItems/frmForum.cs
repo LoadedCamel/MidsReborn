@@ -11,8 +11,7 @@ namespace Hero_Designer
 {
     public partial class frmForum : Form
     {
-
-        public clsOutput Exporter;
+        private clsOutput Exporter;
         Point mouse_offset;
 
         internal ImageButton IBCancel { get; private set; }
@@ -181,7 +180,7 @@ namespace Hero_Designer
             frmForum_MouseMove(RuntimeHelpers.GetObjectValue(sender), e);
         }
 
-        public void SetTips()
+        private void SetTips()
         {
             ToolTip1.SetToolTip(chkDataChunk, "Enable this to include a data chunk which can be copied by other forum users and imported into the Hero Designer.\r\nIf your build contains Inventions or Invention Sets, you should enable this option, as the import filter\r\ncan't interpret those from the human-readable part of a build post.");
         }

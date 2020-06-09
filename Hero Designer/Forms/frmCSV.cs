@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Base.Data_Classes;
@@ -124,8 +125,8 @@ namespace Hero_Designer
 
         static void btnStaticExport_Click(object sender, EventArgs e)
         {
-            string str1 = "Static Indexes, App version " + MidsContext.AppVersion + ", database version " + Convert.ToString(DatabaseAPI.Database.Version) + ":\r\n";
-            str1 = (from Power power in DatabaseAPI.Database.Power where power.GetPowerSet().SetType != Enums.ePowerSetType.Boost select Convert.ToString(power.StaticIndex) + "\t" + power.FullName + "\r\n").Aggregate(str1, (current, str2) => current + str2);
+            string str1 = "Static Indexes, App version " + MidsContext.AppVersion + ", database version " + Convert.ToString(DatabaseAPI.Database.Version, CultureInfo.InvariantCulture) + ":\r\n";
+            str1 = (from Power power in DatabaseAPI.Database.Power where power.GetPowerSet().SetType != Enums.ePowerSetType.Boost select Convert.ToString(power.StaticIndex, CultureInfo.InvariantCulture) + "\t" + power.FullName + "\r\n").Aggregate(str1, (current, str2) => current + str2);
             string text = str1 + "Enhancements\r\n";
             foreach (var enhancement1 in DatabaseAPI.Database.Enhancements)
             {
@@ -133,9 +134,9 @@ namespace Hero_Designer
                 string str2;
                 var power = enhancement.GetPower();
                 if (power != null)
-                    str2 = Convert.ToString(enhancement.StaticIndex) + "\t" + power.FullName + "\r\n";
+                    str2 = Convert.ToString(enhancement.StaticIndex, CultureInfo.InvariantCulture) + "\t" + power.FullName + "\r\n";
                 else
-                    str2 = "THIS ONE IS NULL  " + Convert.ToString(enhancement.StaticIndex) + "\t" + enhancement.Name + "\r\n";
+                    str2 = "THIS ONE IS NULL  " + Convert.ToString(enhancement.StaticIndex, CultureInfo.InvariantCulture) + "\t" + enhancement.Name + "\r\n";
                 text += str2;
             }
             Clipboard.SetText(text);

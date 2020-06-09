@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Master_Classes;
@@ -33,14 +34,14 @@ namespace Hero_Designer
         TrackBar tbScaleX;
         ToolTip tTip;
 
-        protected IPower[] BaseArray;
-        protected bool BaseOverride;
+        private IPower[] BaseArray;
+        private bool BaseOverride;
 
-        protected IPower[] EnhArray;
-        protected float GraphMax;
+        private IPower[] EnhArray;
+        private float GraphMax;
         bool Loaded;
 
-        protected frmMain myParent;
+        private readonly frmMain myParent;
 
         public frmStats(ref frmMain iParent)
         {
@@ -101,7 +102,7 @@ namespace Hero_Designer
             TopMost = chkOnTop.Checked;
         }
 
-        public void DisplayGraph()
+        private void DisplayGraph()
         {
             if (MainModule.MidsController.Toon == null | !MainModule.MidsController.IsAppInitialized)
                 return;
@@ -278,12 +279,12 @@ namespace Hero_Designer
         {
         }
 
-        public void GetPowerArray()
+        private void GetPowerArray()
         {
             if (MainModule.MidsController.Toon == null | !MainModule.MidsController.IsAppInitialized)
                 return;
-            BaseArray = new IPower[0];
-            EnhArray = new IPower[0];
+            BaseArray = Array.Empty<IPower>();
+            EnhArray = Array.Empty<IPower>();
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
             if (cbSet.SelectedIndex <= -1)
                 return;
@@ -388,7 +389,7 @@ namespace Hero_Designer
             }
         }
 
-        public void GetSetArray(Enums.PowersetType SetType, Enums.ePowerType iType)
+        private void GetSetArray(Enums.PowersetType SetType, Enums.ePowerType iType)
         {
             if (MidsContext.Character.Powersets[(int) SetType] == null)
                 return;
@@ -448,7 +449,7 @@ namespace Hero_Designer
             }
         }
 
-        public int GrabPlaced(int iSet, int iPower)
+        private int GrabPlaced(int iSet, int iPower)
         {
             if (!MainModule.MidsController.Toon.Locked)
                 return -1;
@@ -463,7 +464,7 @@ namespace Hero_Designer
             return -1;
         }
 
-        public void Graph_Acc()
+        private void Graph_Acc()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -521,7 +522,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_Damage()
+        private void Graph_Damage()
         {
             float num1 = 1f;
             ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
@@ -560,7 +561,7 @@ namespace Hero_Designer
                 if (Math.Abs(nBase - (double) nEnh) > float.Epsilon)
                     iTip = iTip + " (" + Strings.Format(nBase, "##0.##") + ")";
                 if (BaseArray[index].PowerType == Enums.ePowerType.Toggle)
-                    iTip = iTip + "\r\n(Applied every " + Convert.ToString(BaseArray[index].ActivatePeriod) + "s)";
+                    iTip = iTip + "\r\n(Applied every " + Convert.ToString(BaseArray[index].ActivatePeriod, CultureInfo.InvariantCulture) + "s)";
                 if (BaseOverride)
                 {
                     float num3 = nBase;
@@ -575,7 +576,7 @@ namespace Hero_Designer
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        public void Graph_DPA()
+        private void Graph_DPA()
         {
             float num1 = 1f;
             ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
@@ -628,7 +629,7 @@ namespace Hero_Designer
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        public void Graph_DPE()
+        private void Graph_DPE()
         {
             float num1 = 1f;
             ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
@@ -696,7 +697,7 @@ namespace Hero_Designer
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        public void Graph_DPS()
+        private void Graph_DPS()
         {
             float num1 = 1f;
             ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
@@ -749,7 +750,7 @@ namespace Hero_Designer
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        public void Graph_Duration()
+        private void Graph_Duration()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -800,7 +801,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_End()
+        private void Graph_End()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -842,7 +843,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_EPS()
+        private void Graph_EPS()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -902,7 +903,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_Heal()
+        private void Graph_Heal()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -947,7 +948,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_HealPE()
+        private void Graph_HealPE()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -1000,7 +1001,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_HealPS()
+        private void Graph_HealPS()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -1064,7 +1065,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_Range()
+        private void Graph_Range()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -1116,7 +1117,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_Recharge()
+        private void Graph_Recharge()
         {
             float num1 = 1f;
             int num2 = BaseArray.Length - 1;
@@ -1156,7 +1157,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Graph_Regen()
+        private void Graph_Regen()
         {
             float num1 = 1f;
             float num2 = MidsContext.Character.DisplayStats.HealthHitpointsNumeric(false);
@@ -1239,7 +1240,7 @@ namespace Hero_Designer
             cbSet.EndUpdate();
         }
 
-        public void SetGraphMetrics()
+        private void SetGraphMetrics()
         {
             if (Graph.ItemCount < 13.5)
             {
@@ -1273,7 +1274,7 @@ namespace Hero_Designer
             }
         }
 
-        public void SetGraphType()
+        private void SetGraphType()
         {
             if (cbStyle.SelectedIndex > -1 & cbStyle.SelectedIndex < cbStyle.Items.Count - 2)
             {
@@ -1334,9 +1335,9 @@ namespace Hero_Designer
             Width = rectangle.Width;
         }
 
-        public void SetScaleLabel()
+        private void SetScaleLabel()
         {
-            lblScale.Text = "Scale: 0 - " + Convert.ToString(Graph.ScaleValue);
+            lblScale.Text = "Scale: 0 - " + Convert.ToString(Graph.ScaleValue, CultureInfo.InvariantCulture);
         }
 
         void StoreLocation()

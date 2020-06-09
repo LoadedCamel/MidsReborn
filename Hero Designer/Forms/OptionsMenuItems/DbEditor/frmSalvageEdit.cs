@@ -12,8 +12,7 @@ namespace Hero_Designer
 {
     public partial class frmSalvageEdit : Form
     {
-
-        public bool Updating;
+        private bool Updating;
 
         public frmSalvageEdit()
         {
@@ -25,7 +24,7 @@ namespace Hero_Designer
             Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
         }
 
-        protected void AddListItem(int Index)
+        private void AddListItem(int Index)
         {
             string[] items = new string[4];
             if (Index > DatabaseAPI.Database.Salvage.Length - 1 | Index < 0)
@@ -171,7 +170,7 @@ namespace Hero_Designer
             UpdateListItem(selectedIndex);
         }
 
-        protected void DisplayItem(int Index)
+        private void DisplayItem(int Index)
         {
             if (Index > DatabaseAPI.Database.Salvage.Length - 1 | Index < 0)
                 return;
@@ -190,7 +189,7 @@ namespace Hero_Designer
             Updating = false;
         }
 
-        protected void FillList()
+        private void FillList()
         {
             lvSalvage.BeginUpdate();
             lvSalvage.Items.Clear();
@@ -243,7 +242,7 @@ namespace Hero_Designer
             UpdateListItem(selectedIndex);
         }
 
-        protected void UpdateListItem(int Index)
+        private void UpdateListItem(int Index)
         {
             if (Index > DatabaseAPI.Database.Salvage.Length - 1 | Index < 0)
                 return;

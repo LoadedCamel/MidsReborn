@@ -46,7 +46,7 @@ namespace Hero_Designer
         Panel Panel2;
         ToolTip ToolTip1;
 
-        protected ExtendedBitmap bxRecipe;
+        private ExtendedBitmap bxRecipe;
 
         readonly frmMain myParent;
         PowerList[] GlobalPowerList;
@@ -609,7 +609,7 @@ namespace Hero_Designer
             public int Count;
         }
 
-        public struct PowerList
+        private struct PowerList
         {
             public string PowerName;
             public float baseDamage;

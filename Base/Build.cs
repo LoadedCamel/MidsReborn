@@ -16,7 +16,7 @@ public class Build
     public readonly List<PowerEntry> Powers;
     public readonly List<I9SetData> SetBonus;
     public EnhancementSet MySet;
-    public string setName { get; set; }
+    private string setName { get; set; }
     public static HashSet<string> setSlotted = new HashSet<string>();
 
     IPower _setBonusVirtualPower;
@@ -208,22 +208,14 @@ public class Build
 
     public bool SetEnhGrades(Enums.eEnhGrade newVal)
     {
-        string str = string.Empty;
-        switch (newVal)
+        var str = newVal switch
         {
-            case Enums.eEnhGrade.None:
-                str = "This value should never be passed to the function!";
-                break;
-            case Enums.eEnhGrade.TrainingO:
-                str = "Training";
-                break;
-            case Enums.eEnhGrade.DualO:
-                str = "Dual";
-                break;
-            case Enums.eEnhGrade.SingleO:
-                str = "Single";
-                break;
-        }
+            Enums.eEnhGrade.None => "This value should never be passed to the function!",
+            Enums.eEnhGrade.TrainingO => "Training",
+            Enums.eEnhGrade.DualO => "Dual",
+            Enums.eEnhGrade.SingleO => "Single",
+            _ => string.Empty
+        };
 
         if (MessageBox.Show(
                 $@"Really set all placed Regular enhancements to {str} Origin?\n\nThis will not affect any Invention or Special enhancements.",
@@ -424,7 +416,7 @@ public class Build
         PopUp.PopupData popupData = new PopUp.PopupData();
         HistoryMap[] historyMapArray = BuildHistoryMap(true);
         int index1 = popupData.Add();
-        popupData.Sections[index1].Add("Respec to level: " + (iLevel + 1), PopUp.Colors.Effect, 1.25f, FontStyle.Bold, 0);
+        popupData.Sections[index1].Add("Respec to level: " + (iLevel + 1), PopUp.Colors.Effect, 1.25f);
         foreach (HistoryMap historyMap in historyMapArray)
         {
             if (historyMap.HID <= -1 || DatabaseAPI.Database.Levels[historyMap.Level].Powers <= 0 || historyMap.Level > iLevel)
@@ -438,7 +430,7 @@ public class Build
                 iText1 = "Level " + (historyMap.Level + 1) + ": " + power.Power.DisplayName;
             else
                 iText1 = "Level " + (historyMap.Level + 1) + ": [Empty]";
-            popupData.Sections[index2].Add(iText1, PopUp.Colors.Text, 1f, FontStyle.Bold, 0);
+            popupData.Sections[index2].Add(iText1, PopUp.Colors.Text);
             int slots = SlotsAtLevel(historyMap.HID, iLevel);
             if (slots <= 0)
                 continue;
@@ -471,7 +463,7 @@ public class Build
         PopUp.PopupData popupData = new PopUp.PopupData();
         HistoryMap[] historyMapArray = BuildHistoryMap(true);
         int index = popupData.Add();
-        popupData.Sections[index].Add("Respec to level: " + (iLevel + 1), PopUp.Colors.Effect, 1.25f, FontStyle.Bold, 0);
+        popupData.Sections[index].Add("Respec to level: " + (iLevel + 1), PopUp.Colors.Effect, 1.25f);
         int histLvl = 0;
         foreach (HistoryMap historyMap in historyMapArray)
         {
@@ -490,7 +482,7 @@ public class Build
                     iText1 = "Level " + (historyMap.Level + 1) + ": " + power.Power.DisplayName;
                 else
                     iText1 = "Level " + (historyMap.Level + 1) + ": [Empty]";
-                popupData.Sections[index].Add(iText1, PopUp.Colors.Text, 1f, FontStyle.Bold, 0);
+                popupData.Sections[index].Add(iText1, PopUp.Colors.Text);
                 if (!longFormat)
                     continue;
                 string empty = string.Empty;
@@ -513,7 +505,7 @@ public class Build
                     ? "Level " + (historyMap.Level + 1) + ": Added Slot To "
                     : "Level " + (historyMap.Level + 1) + ": Received Slot - ";
                 string iText1 = power.Power == null ? str + "[Empty]" : str + power.Power.DisplayName;
-                popupData.Sections[index].Add(iText1, PopUp.Colors.Effect, 1f, FontStyle.Bold, 0);
+                popupData.Sections[index].Add(iText1, PopUp.Colors.Effect);
                 if (!longFormat)
                     continue;
                 string iText2;
@@ -536,42 +528,20 @@ public class Build
 
     public bool SetEnhRelativelevels(Enums.eEnhRelative newVal)
     {
-        string display;
-        switch (newVal)
+        var display = newVal switch
         {
-            case Enums.eEnhRelative.None:
-                display = "None (Enhancements will have no effect)";
-                break;
-            case Enums.eEnhRelative.MinusThree:
-                display = "-3";
-                break;
-            case Enums.eEnhRelative.MinusTwo:
-                display = "-2";
-                break;
-            case Enums.eEnhRelative.MinusOne:
-                display = "-1";
-                break;
-            case Enums.eEnhRelative.Even:
-                display = "Even (+/- 0)";
-                break;
-            case Enums.eEnhRelative.PlusOne:
-                display = "+1";
-                break;
-            case Enums.eEnhRelative.PlusTwo:
-                display = "+2";
-                break;
-            case Enums.eEnhRelative.PlusThree:
-                display = "+3";
-                break;
-            case Enums.eEnhRelative.PlusFour:
-                display = "+4";
-                break;
-            case Enums.eEnhRelative.PlusFive:
-                display = "+5";
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(newVal), newVal, null);
-        }
+            Enums.eEnhRelative.None => "None (Enhancements will have no effect)",
+            Enums.eEnhRelative.MinusThree => "-3",
+            Enums.eEnhRelative.MinusTwo => "-2",
+            Enums.eEnhRelative.MinusOne => "-1",
+            Enums.eEnhRelative.Even => "Even (+/- 0)",
+            Enums.eEnhRelative.PlusOne => "+1",
+            Enums.eEnhRelative.PlusTwo => "+2",
+            Enums.eEnhRelative.PlusThree => "+3",
+            Enums.eEnhRelative.PlusFour => "+4",
+            Enums.eEnhRelative.PlusFive => "+5",
+            _ => throw new ArgumentOutOfRangeException(nameof(newVal), newVal, null)
+        };
 
         if (MessageBox.Show(
                 $@"Really set all placed enhancements to a relative level of {display}?
@@ -840,7 +810,7 @@ Note: Normal and Special enhancements cannot go above +3, and Inventions cannot 
         }
     }
 
-    public string GetEnhSetName(string longName)
+    private string GetEnhSetName(string longName)
     {
         var enhSet = string.Empty;
         var setCount = DatabaseAPI.Database.EnhancementSets.Count;
@@ -1028,7 +998,7 @@ Note: Normal and Special enhancements cannot go above +3, and Inventions cannot 
         IPower power1 = new Power();
         if (MidsContext.Config.I9.IgnoreSetBonusFX)
             return power1;
-        var nidPowers = DatabaseAPI.NidPowers("set_bonus", "");
+        var nidPowers = DatabaseAPI.NidPowers("set_bonus");
         int[] setCount = new int[nidPowers.Length];
         for (int index = 0; index < setCount.Length; ++index)
             setCount[index] = 0;

@@ -86,6 +86,7 @@ namespace Hero_Designer
 
         public Rectangle SnapLocation;
         public int TabPage;
+
         //bool VillainColour;
 
         public event FloatChangeEventHandler FloatChange;
@@ -145,7 +146,7 @@ namespace Hero_Designer
         {
             get;
             [MethodImpl(MethodImplOptions.Synchronized)]
-            set;
+            private set;
         }
 
         public bool IsDocked => SnapLocation.X == Location.X & SnapLocation.Y == Location.Y;
@@ -741,7 +742,7 @@ namespace Hero_Designer
                     pBase.Effects[durationEffectId].Probability < 1.0, pBase.Effects[durationEffectId].SpecialCase != Enums.eSpecialCase.None,
                     durationEffectId));
                 bool iAlternate = Math.Abs(pBase.Effects[durationEffectId].Mag - (double) pEnh.Effects[durationEffectId].Mag) > float.Epsilon;
-                info_DataList.AddItem(new ctlPairedList.ItemPair("Mag:", Convert.ToString(pEnh.Effects[durationEffectId].Mag), iAlternate,
+                info_DataList.AddItem(new ctlPairedList.ItemPair("Mag:", Convert.ToString(pEnh.Effects[durationEffectId].Mag, CultureInfo.InvariantCulture), iAlternate,
                     pBase.Effects[durationEffectId].Probability < 1.0));
                 num3 -= 2;
             }
@@ -1502,7 +1503,7 @@ namespace Hero_Designer
                 if (sFXCheck(effectMagSum4))
                     iList.SetUnique();
                 if (effectMagSum6.Present)
-                    iList.AddItem(new ctlPairedList.ItemPair("Stealth", Convert.ToString(effectMagSum6.Sum) + "ft", false, false, false,
+                    iList.AddItem(new ctlPairedList.ItemPair("Stealth", Convert.ToString(effectMagSum6.Sum, CultureInfo.InvariantCulture) + "ft", false, false, false,
                         pEnh.Effects[effectMagSum7.Index[0]].BuildEffectString(false, "Stealth Radius")));
                 if (sFXCheck(effectMagSum6))
                     iList.SetUnique();
@@ -1535,7 +1536,7 @@ namespace Hero_Designer
                     }
                     else
                     {
-                        iList.AddItem(new ctlPairedList.ItemPair("Res(Multi):", Convert.ToString(effectMagSum8.Value[0]) + "%", false,
+                        iList.AddItem(new ctlPairedList.ItemPair("Res(Multi):", Convert.ToString(effectMagSum8.Value[0], CultureInfo.InvariantCulture) + "%", false,
                             false, false, effectMagSum8));
                         if (sFXCheck(effectMagSum8))
                             iList.SetUnique();
@@ -1572,7 +1573,7 @@ namespace Hero_Designer
                                 if (str4.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) > -1)
                                     continue;
                                 iList.AddItem(new ctlPairedList.ItemPair("+" + str4 + ":",
-                                    Convert.ToString(effectMagSum10.Value[index]) + "%" + str5, false, false, false,
+                                    Convert.ToString(effectMagSum10.Value[index], CultureInfo.InvariantCulture) + "%" + str5, false, false, false,
                                     pEnh.Effects[effectMagSum10.Index[index]].BuildEffectString()));
                                 if (pEnh.Effects[effectMagSum10.Index[index]].isEnhancementEffect)
                                     iList.SetUnique();
@@ -1594,7 +1595,7 @@ namespace Hero_Designer
                                     if (pEnh.Effects[effectMagSum10.Index[iIndex]].ToWho == Enums.eToWho.Self)
                                         str4 = " (Self)";
                                     iList.AddItem(new ctlPairedList.ItemPair("+RechRdx:",
-                                        Convert.ToString(effectMagSum10.Value[iIndex]) + "%" + str4, false, false, false,
+                                        Convert.ToString(effectMagSum10.Value[iIndex], CultureInfo.InvariantCulture) + "%" + str4, false, false, false,
                                         pEnh.Effects[effectMagSum10.Index[iIndex]].BuildEffectString()));
                                     if (pEnh.Effects[effectMagSum10.Index[iIndex]].isEnhancementEffect)
                                         iList.SetUnique();
@@ -1635,7 +1636,7 @@ namespace Hero_Designer
                     }
                     else if (str2.IndexOf("Jump", StringComparison.OrdinalIgnoreCase) < 0)
                     {
-                        iList.AddItem(new ctlPairedList.ItemPair("+" + str2 + ":", Convert.ToString(effectMagSum10.Value[0]) + "%", false,
+                        iList.AddItem(new ctlPairedList.ItemPair("+" + str2 + ":", Convert.ToString(effectMagSum10.Value[0], CultureInfo.InvariantCulture) + "%", false,
                             false, false, effectMagSum10));
                         if (sFXCheck(effectMagSum10))
                             iList.SetUnique();
@@ -1838,7 +1839,7 @@ namespace Hero_Designer
                 if (!(pBase.Effects[index].EffectType == Enums.eEffectType.GlobalChanceMod & pBase.Effects[index].Probability > 0.0))
                     continue;
                 string iTip = string.Empty + pEnh.Effects[index].BuildEffectString();
-                string iValue = Convert.ToString(pBase.Effects[index].MagPercent) + "%";
+                string iValue = Convert.ToString(pBase.Effects[index].MagPercent, CultureInfo.InvariantCulture) + "%";
                 if ((pBase.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                     iValue = "(suppressed)";
                 ctlPairedList.ItemPair iItem = new ctlPairedList.ItemPair(pBase.Effects[index].Reward + ":", iValue, false,
@@ -2006,7 +2007,7 @@ namespace Hero_Designer
                     }
                     else if (pBase.Effects[iTagID].MezType == Enums.eMez.ToggleDrop & pBase.Effects[iTagID].Probability > 0.0)
                     {
-                        string iValue = Convert.ToString(pBase.Effects[iTagID].Probability * 100f) + "%";
+                        string iValue = Convert.ToString(pBase.Effects[iTagID].Probability * 100f, CultureInfo.InvariantCulture) + "%";
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                             iValue = "0%";
                         ctlPairedList.ItemPair iItem = new ctlPairedList.ItemPair(
@@ -2050,7 +2051,7 @@ namespace Hero_Designer
                     string str = (double) pEnh.Effects[iTagID].Duration >= 15.0
                         ? " - " + Utilities.FixDP(pEnh.Effects[iTagID].Duration) + "s"
                         : string.Empty;
-                    string iValue = Convert.ToString(pBase.Effects[iTagID].MagPercent) + "%" + str;
+                    string iValue = Convert.ToString(pBase.Effects[iTagID].MagPercent, CultureInfo.InvariantCulture) + "%" + str;
                     if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                         iValue = "0%";
                     ctlPairedList.ItemPair iItem = new ctlPairedList.ItemPair(
@@ -3746,8 +3747,8 @@ namespace Hero_Designer
             }
 
             if (!(pBase.PowerType == Enums.ePowerType.Toggle & num1 == -1 & num2 == -1) &&
-                pBase.PowerType == Enums.ePowerType.Toggle & num2 > -1 && iTip != string.Empty)
-                iTip = "Applied every " + Convert.ToString(pBase.ActivatePeriod) + "s:\r\n" + iTip;
+                pBase.PowerType == Enums.ePowerType.Toggle & num2 > -1 && !string.IsNullOrEmpty(iTip))
+                iTip = "Applied every " + Convert.ToString(pBase.ActivatePeriod, CultureInfo.InvariantCulture) + "s:\r\n" + iTip;
             Info_Damage.SetTip(iTip);
         }
 

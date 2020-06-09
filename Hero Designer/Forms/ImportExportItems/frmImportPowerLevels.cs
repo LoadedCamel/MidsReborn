@@ -72,7 +72,7 @@ namespace Hero_Designer
             bFrm.SetMessage(sMessage);
         }
 
-        public void DisplayInfo()
+        private void DisplayInfo()
         {
             lblFile.Text = FileIO.StripPath(FullFileName);
             lblDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.PowerLevelVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");

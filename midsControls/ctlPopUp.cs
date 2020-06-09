@@ -326,7 +326,7 @@ namespace midsControls
 		}
 
 		// Token: 0x04000082 RID: 130
-		public IContainer components;
+		private IContainer components;
 
 		// Token: 0x04000083 RID: 131
 		private ExtendedBitmap myBX;

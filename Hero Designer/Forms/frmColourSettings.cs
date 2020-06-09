@@ -14,7 +14,7 @@ namespace Hero_Designer
 
         ListLabelV2 Listlabel1;
 
-        protected ConfigData.FontSettings myFS = new ConfigData.FontSettings();
+        private readonly ConfigData.FontSettings myFS = new ConfigData.FontSettings();
 
         public frmColourSettings()
         {
@@ -192,7 +192,7 @@ namespace Hero_Designer
             updateColours();
         }
 
-        public void updateColours()
+        private void updateColours()
         {
             ConfigData.FontSettings iFs = new ConfigData.FontSettings();
             csHero.BackColor = myFS.ColorBackgroundHero;

@@ -106,7 +106,7 @@ namespace Hero_Designer
             myScheme.SchemeName = txtName.Text;
         }
 
-        public void updateColours()
+        private void updateColours()
         {
             csTitle.BackColor = myScheme.Title;
             csHeading.BackColor = myScheme.Heading;

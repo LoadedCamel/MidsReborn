@@ -81,7 +81,7 @@ namespace Base
         }
         // model after F#, both indexes are inclusive, unlike substring which is (index, count), this is (index, index)
         // in F# this would be x.[start..stop]
-        public static string GetRange(this string x, int start, int stop) => x.Substring(start, stop - start + 1);
+        private static string GetRange(this string x, int start, int stop) => x.Substring(start, stop - start + 1);
 
         public static string GetLine(this string x, int lineIndex)
         {

@@ -16,9 +16,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmSetEditNEW : Form
     {
-        protected bool Loading;
-        public EnhancementSet mySet;
-        protected int[] SetBonusList;
+        private bool Loading;
+        public readonly EnhancementSet mySet;
+        private int[] SetBonusList;
 
         public frmSetEditNEW(ref EnhancementSet iSet)
         {
@@ -33,7 +33,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             mySet = new EnhancementSet(iSet);
         }
 
-        public int BonusID()
+        private int BonusID()
         {
             return cbSlotCount.SelectedIndex;
         }
@@ -254,7 +254,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        public void SetMaxLevel(int iValue)
+        private void SetMaxLevel(int iValue)
         {
             if (decimal.Compare(new decimal(iValue), udMaxLevel.Minimum) < 0)
                 iValue = Convert.ToInt32(udMaxLevel.Minimum);
@@ -263,7 +263,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             udMaxLevel.Value = new decimal(iValue);
         }
 
-        public void SetMinLevel(int iValue)
+        private void SetMinLevel(int iValue)
         {
             if (decimal.Compare(new decimal(iValue), udMinLevel.Minimum) < 0)
                 iValue = Convert.ToInt32(udMinLevel.Minimum);
@@ -272,12 +272,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             udMinLevel.Value = new decimal(iValue);
         }
 
-        public int SpecialID()
+        private int SpecialID()
         {
             return cbSlotCount.SelectedIndex - (mySet.Enhancements.Length - 1);
         }
 
-        public void DisplayBonus()
+        private void DisplayBonus()
         {
             try
             {
@@ -312,7 +312,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        public void DisplayBonusText()
+        private void DisplayBonusText()
         {
             string str1 = RTF.StartRTF();
             int num1 = mySet.Bonus.Length - 1;
@@ -334,7 +334,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 }
 
                 if (mySet.Bonus[index1].Index.Length > 0)
-                    str1 = str1 + RTF.Crlf() + "   " + RTF.Italic(mySet.GetEffectString(index1, false, false));
+                    str1 = str1 + RTF.Crlf() + "   " + RTF.Italic(mySet.GetEffectString(index1, false));
                 if (mySet.Bonus[index1].PvMode == Enums.ePvX.PvP)
                     str1 += "(PvP)";
                 if (mySet.Bonus[index1].Index.Length > 0)
@@ -364,7 +364,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                         }
                     }
 
-                    str1 = str3 + RTF.Crlf() + "   " + RTF.Italic(mySet.GetEffectString(index1, true, false)) +
+                    str1 = str3 + RTF.Crlf() + "   " + RTF.Italic(mySet.GetEffectString(index1, true)) +
                            RTF.Crlf();
                 }
 
@@ -395,7 +395,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        public void DisplaySetData()
+        private void DisplaySetData()
         {
             DisplaySetIcons();
             DisplayIcon();
@@ -413,7 +413,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             DisplayBonus();
         }
 
-        public void DisplaySetIcons()
+        private void DisplaySetIcons()
         {
             FillImageList();
             string[] items = new string[2];
@@ -448,7 +448,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lvEnh.EndUpdate();
         }
 
-        public void FillBonusCombos()
+        private void FillBonusCombos()
         {
             cbSlotCount.BeginUpdate();
             cbSlotCount.Items.Clear();
@@ -463,7 +463,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             cbSlotCount.EndUpdate();
         }
 
-        public void FillBonusList()
+        private void FillBonusList()
         {
             lvBonusList.BeginUpdate();
             lvBonusList.Items.Clear();
@@ -473,7 +473,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             {
                 items[1] = "";
                 if (DatabaseAPI.Database.Power[SetBonusList[index]].Effects.Length > 0)
-                    items[1] = DatabaseAPI.Database.Power[SetBonusList[index]].Effects[0].BuildEffectStringShort(false, true, false);
+                    items[1] = DatabaseAPI.Database.Power[SetBonusList[index]].Effects[0].BuildEffectStringShort(false, true);
                 items[0] = DatabaseAPI.Database.Power[SetBonusList[index]].PowerName;
                 if (items[0].ToUpper(CultureInfo.InvariantCulture).Contains(txtBonusFilter.Text.ToUpper(CultureInfo.InvariantCulture)))
                 {
@@ -487,7 +487,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lvBonusList.EndUpdate();
         }
 
-        public void FillComboBoxes()
+        private void FillComboBoxes()
         {
             string[] names = Enum.GetNames(Enums.eSetType.Untyped.GetType());
             cbSetType.BeginUpdate();
@@ -496,7 +496,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             cbSetType.EndUpdate();
         }
 
-        public void FillImageList()
+        private void FillImageList()
         {
             Size imageSize1 = ilEnh.ImageSize;
             int width1 = imageSize1.Width;
@@ -531,7 +531,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         void frmSetEdit_Load(object sender, EventArgs e)
         {
-            SetBonusList = DatabaseAPI.NidPowers("set_bonus.set_bonus", "");
+            SetBonusList = DatabaseAPI.NidPowers("set_bonus.set_bonus");
             if (mySet.Bonus.Length < 1)
                 mySet.InitBonus();
             FillComboBoxes();
@@ -542,12 +542,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             DisplayBonus();
         }
 
-        public bool isBonus()
+        private bool isBonus()
         {
             return cbSlotCount.SelectedIndex > -1 & cbSlotCount.SelectedIndex < mySet.Enhancements.Length - 1;
         }
 
-        public bool isSpecial()
+        private bool isSpecial()
         {
             return cbSlotCount.SelectedIndex >= mySet.Enhancements.Length - 1 & cbSlotCount.SelectedIndex < mySet.Enhancements.Length + mySet.Enhancements.Length - 1;
         }

@@ -36,7 +36,7 @@ namespace Hero_Designer
         public void EndUpdate() => Value.EndUpdate();
         public bool Enabled { get => Value.Enabled; set => Value.Enabled = value; }
         public int SelectedIndex { get => Value.SelectedIndex; set => Value.SelectedIndex = value; }
-        public ComboBox Value { get; }
+        private ComboBox Value { get; }
 
         public T this[int x]
         {
@@ -49,7 +49,7 @@ namespace Hero_Designer
     {
         public static void EventHandlerWithCatch(this IComponent _, Action f, string titlingOpt = null, string captionOpt = null) => ExecuteWithCatchMessage(f, titlingOpt, captionOpt);
         // execute immediately with a catch
-        public static void ExecuteWithCatchMessage(this Action f, string titlingOpt = null, string captionOpt = null)
+        private static void ExecuteWithCatchMessage(this Action f, string titlingOpt = null, string captionOpt = null)
         {
             try
             {

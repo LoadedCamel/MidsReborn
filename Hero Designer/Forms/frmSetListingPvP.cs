@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -23,18 +24,18 @@ namespace Hero_Designer
             InitializeComponent();
             Name = nameof(frmSetListingPvP);
             var componentResourceManager = new ComponentResourceManager(typeof(frmSetListingPvP));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon)componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
         }
 
-        public void AddListItem(int Index)
+        private void AddListItem(int Index)
         {
             string[] items = new string[6];
             EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[Index];
             items[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
             items[1] = Enum.GetName(enhancementSet.SetType.GetType(), enhancementSet.SetType);
-            items[2] = Convert.ToString(enhancementSet.LevelMin + 1);
-            items[3] = Convert.ToString(enhancementSet.LevelMax + 1);
-            items[4] = Convert.ToString(enhancementSet.Enhancements.Length);
+            items[2] = Convert.ToString(enhancementSet.LevelMin + 1, CultureInfo.InvariantCulture);
+            items[3] = Convert.ToString(enhancementSet.LevelMax + 1, CultureInfo.InvariantCulture);
+            items[4] = Convert.ToString(enhancementSet.Enhancements.Length, CultureInfo.InvariantCulture);
             int num1 = 0;
             int num2 = enhancementSet.Bonus.Length - 1;
             for (int index = 0; index <= num2; ++index)
@@ -185,7 +186,7 @@ namespace Hero_Designer
             lvSets.Items[selectedIndex - 1].EnsureVisible();
         }
 
-        public void DisplayList()
+        private void DisplayList()
         {
             lvSets.BeginUpdate();
             lvSets.Items.Clear();
@@ -201,13 +202,13 @@ namespace Hero_Designer
             lvSets.EndUpdate();
         }
 
-        public void FillImageList()
+        private void FillImageList()
         {
             Size imageSize1 = ilSets.ImageSize;
             int width1 = imageSize1.Width;
             imageSize1 = ilSets.ImageSize;
             int height1 = imageSize1.Height;
-            ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
             ilSets.Images.Clear();
             int num = DatabaseAPI.Database.EnhancementSets.Count - 1;
             for (int index = 0; index <= num; ++index)
@@ -238,7 +239,7 @@ namespace Hero_Designer
             DisplayList();
         }
 
-        public void ImageUpdate()
+        private void ImageUpdate()
         {
             if (NoReload.Checked)
                 return;
@@ -276,15 +277,15 @@ namespace Hero_Designer
             }
         }
 
-        public void UpdateListItem(int Index)
+        private void UpdateListItem(int Index)
         {
             string[] strArray = new string[6];
             EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[Index];
             strArray[0] = enhancementSet.DisplayName + " (" + enhancementSet.ShortName + ")";
             strArray[1] = Enum.GetName(enhancementSet.SetType.GetType(), enhancementSet.SetType);
-            strArray[2] = Convert.ToString(enhancementSet.LevelMin + 1);
-            strArray[3] = Convert.ToString(enhancementSet.LevelMax + 1);
-            strArray[4] = Convert.ToString(enhancementSet.Enhancements.Length);
+            strArray[2] = Convert.ToString(enhancementSet.LevelMin + 1, CultureInfo.InvariantCulture);
+            strArray[3] = Convert.ToString(enhancementSet.LevelMax + 1, CultureInfo.InvariantCulture);
+            strArray[4] = Convert.ToString(enhancementSet.Enhancements.Length, CultureInfo.InvariantCulture);
             int num1 = 0;
             int num2 = enhancementSet.Bonus.Length - 1;
             for (int index = 0; index <= num2; ++index)

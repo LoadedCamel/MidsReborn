@@ -287,7 +287,6 @@ namespace Base.Document_Classes
             int pgIdx = -1;
             var font = new Font("Arial", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             bool isEnd = false;
-            int levelVar = 0;
             for (int pIndex = _pIndex; pIndex <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++pIndex)
             {
                 bool include = false;
@@ -314,7 +313,7 @@ namespace Base.Document_Classes
                     include = false;
                 if (!include)
                     continue;
-                levelVar = MidsContext.Character.CurrentBuild.Powers[pIndex].Level + 1;
+                var levelVar = MidsContext.Character.CurrentBuild.Powers[pIndex].Level + 1;
                 string s1 = "Level " + levelVar + ":";
                 string s2 = MidsContext.Character.CurrentBuild.Powers[pIndex].Power != null ? MidsContext.Character.CurrentBuild.Powers[pIndex].Power.DisplayName : "[No Power]";
                 string s3 = "";

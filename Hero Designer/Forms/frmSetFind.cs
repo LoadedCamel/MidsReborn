@@ -66,10 +66,10 @@ namespace Hero_Designer
             lvSet.Items[lvSet.Items.Count - 1].Tag = nIDSet;
         }
 
-        public void FillEffectList()
+        private void FillEffectList()
         {
-            string[] List = new string[0];
-            int[] nIDList = new int[0];
+            string[] List = Array.Empty<string>();
+            int[] nIDList = Array.Empty<int>();
             lvBonus.BeginUpdate();
             lvBonus.Items.Clear();
             int num1 = setBonusList.Length - 1;
@@ -88,13 +88,13 @@ namespace Hero_Designer
             lvBonus.EndUpdate();
         }
 
-        public void FillImageList()
+        private void FillImageList()
         {
             Size imageSize1 = ilSets.ImageSize;
             int width1 = imageSize1.Width;
             imageSize1 = ilSets.ImageSize;
             int height1 = imageSize1.Height;
-            ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
             ilSets.Images.Clear();
             int num = DatabaseAPI.Database.EnhancementSets.Count - 1;
             for (int index = 0; index <= num; ++index)
@@ -119,7 +119,7 @@ namespace Hero_Designer
             }
         }
 
-        public void FillMagList()
+        private void FillMagList()
         {
             if (lvBonus.SelectedItems.Count < 1)
             {
@@ -127,8 +127,8 @@ namespace Hero_Designer
             }
             else
             {
-                string[] List = new string[0];
-                int[] nIDList = new int[0];
+                string[] List = Array.Empty<string>();
+                int[] nIDList = Array.Empty<int>();
                 string text = lvBonus.SelectedItems[0].Text;
                 int num1 = setBonusList.Length - 1;
                 for (int index = 0; index <= num1; ++index)

@@ -9,7 +9,7 @@ namespace Hero_Designer
 {
     public class clsUniversalImport
     {
-        public static int IndexOf;
+        private static int IndexOf;
         public const string MarkerA = "Primary";
         public const string MarkerB = "Secondary";
 

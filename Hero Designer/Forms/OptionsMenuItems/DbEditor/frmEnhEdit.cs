@@ -266,7 +266,7 @@ namespace Hero_Designer
             lvEnh.EndUpdate();
         }
 
-        public void FillImageList()
+        private void FillImageList()
         {
             Size imageSize1 = ilEnh.ImageSize;
             int width1 = imageSize1.Width;
@@ -307,7 +307,7 @@ namespace Hero_Designer
             lvEnh.Select();
         }
 
-        public void ImageUpdate()
+        private void ImageUpdate()
         {
             if (NoReload.Checked)
                 return;

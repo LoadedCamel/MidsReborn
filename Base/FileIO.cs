@@ -7,7 +7,7 @@ public static class FileIO
 {
     public static string AddSlash(string iPath) => iPath.EndsWith("\\") ? iPath : iPath + "\\";
 
-    public static string StripSlash(string iPath) => iPath.EndsWith("\\") ? iPath.Substring(0, iPath.Length - 1) : iPath;
+    private static string StripSlash(string iPath) => iPath.EndsWith("\\") ? iPath.Substring(0, iPath.Length - 1) : iPath;
 
     public static string StripPath(string iFileName)
     {

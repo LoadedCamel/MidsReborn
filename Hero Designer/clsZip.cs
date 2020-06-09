@@ -18,7 +18,7 @@ namespace Hero_Designer
         }
         public int Total { get; }
         public int Processed { get; }
-        public string CurrentItem { get; }
+        private string CurrentItem { get; }
     }
 
     public static class MyZipFileExtensions

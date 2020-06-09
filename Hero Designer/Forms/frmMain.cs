@@ -107,7 +107,7 @@ namespace Hero_Designer
 
         public bool petWindowFlag { get; set; }
 
-        public List<string> MMPets { get; set; } = new List<string>();
+        private List<string> MMPets { get; } = new List<string>();
 
         ComboBoxT<string> GetCbOrigin() => new ComboBoxT<string>(cbOrigin);
 
@@ -124,7 +124,7 @@ namespace Hero_Designer
 
         internal clsDrawX Drawing => drawing;
 
-        internal bool loading;
+        private bool loading;
 
         public frmMain()
         {
@@ -813,7 +813,7 @@ namespace Hero_Designer
             tp[pwrIdx].StatInclude = false;
         }
 
-        internal bool CloseCommand()
+        private bool CloseCommand()
         {
             if (MainModule.MidsController.Toon == null)
             {
@@ -3899,7 +3899,7 @@ namespace Hero_Designer
             lblLockedAncillary.Refresh();
         }
 
-        internal void RefreshInfo()
+        private void RefreshInfo()
         {
             info_Totals();
             if (dvLastPower <= -1)
@@ -4746,7 +4746,7 @@ namespace Hero_Designer
         bool exportDiscordInProgress;
         private frmLoading _frmLoading;
 
-        public async void tsExportDiscord_Click(object sender, EventArgs e)
+        private async void tsExportDiscord_Click(object sender, EventArgs e)
         {
             void ShowConfigError(string field)
                 => MessageBox.Show($"{field} must be filled out in configuration before discord exports will function",
@@ -5097,8 +5097,7 @@ namespace Hero_Designer
         void UpdateColours(bool skipDraw = false)
         {
             //myDataView.DrawVillain = !MidsContext.Character.IsHero();
-            bool draw;
-            draw = I9Picker.ForeColor.R != 96;
+            var draw = I9Picker.ForeColor.R != 96;
                 BackColor = Color.FromArgb(0, 0, 0);
                 lblATLocked.BackColor = Color.FromArgb(128, 128, byte.MaxValue);
                 I9Picker.ForeColor = Color.FromArgb(96, 48, byte.MaxValue);

@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Base.Data_Classes;
@@ -48,9 +49,9 @@ namespace Hero_Designer
         readonly ImageButton[] buttonArray;
 
         bool Locked;
-        frmMain myParent;
-        public IPower[] myPowers;
-        internal CustomPanel Panel2;
+        readonly frmMain myParent;
+        private IPower[] myPowers;
+        private CustomPanel Panel2;
 
         internal ListLabelV2 LLLeft;
 
@@ -137,7 +138,7 @@ namespace Hero_Designer
             this.destinyBtn = destinyBtn;
         }
 
-        public void FillLists()
+        private void FillLists()
         {
             LLLeft.SuspendRedraw = true;
             LLRight.SuspendRedraw = true;
@@ -211,8 +212,8 @@ namespace Hero_Designer
             ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             PopUp.PopupData iPopup = new PopUp.PopupData();
             int index = iPopup.Add();
-            iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
-            iPopup.Sections[index].Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 0);
+            iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);
+            iPopup.Sections[index].Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.", PopUp.Colors.Text, 0.9f);
             PopInfo.SetPopup(iPopup);
             ChangedScrollFrameContents();
             FillLists();
@@ -382,7 +383,7 @@ namespace Hero_Designer
             this.loreBtn = loreBtn;
         }
 
-        public void miniPowerInfo(int pIDX)
+        private void miniPowerInfo(int pIDX)
         {
             if (Locked)
                 return;
@@ -414,8 +415,8 @@ namespace Hero_Designer
                         str1 = "(Toggle)";
                         break;
                 }
-                iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
-                iPopup.Sections[index1].Add(str1 + " " + power1.DescShort, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 0);
+                iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title);
+                iPopup.Sections[index1].Add(str1 + " " + power1.DescShort, PopUp.Colors.Text, 0.9f);
                 string str2 = power1.DescLong.Replace("<br>", "\r\n");
                 iPopup.Sections[index1].Add(str1 + " " + str2, PopUp.Colors.Common, 1f, FontStyle.Regular);
                 int index2 = iPopup.Add();
@@ -441,13 +442,13 @@ namespace Hero_Designer
                 if (power1.Arc > 0)
                     iPopup.Sections[index2].Add("Arc:", PopUp.Colors.Title, Convert.ToString(power1.Arc) + "°", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 else if (power1.Radius > 0.0)
-                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Title, Convert.ToString(power1.Radius) + "ft", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Title, Convert.ToString(power1.Radius, CultureInfo.InvariantCulture) + "ft", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 if (power1.CastTime > 0.0)
                     iPopup.Sections[index2].Add("Cast Time:", PopUp.Colors.Title, Utilities.FixDP(power1.CastTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 IPower power2 = power1;
                 if (power2.Effects.Length > 0)
                 {
-                    iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title);
                     char[] chArray = { '^' };
                     int num1 = power2.Effects.Length - 1;
                     for (int index3 = 0; index3 <= num1; ++index3)
@@ -520,7 +521,7 @@ namespace Hero_Designer
             StanceButton = stanceButton;
         }
 
-        protected void UpdateLLColours(ref ListLabelV2 iList)
+        private void UpdateLLColours(ref ListLabelV2 iList)
         {
             iList.UpdateTextColors(ListLabelV2.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(ListLabelV2.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);

@@ -36,23 +36,35 @@ namespace Hero_Designer.Forms.JsonImport
             string json = File.ReadAllText(fileName);
             List<Class> classes = JsonConvert.DeserializeObject<List<Class>>(json);
 
-            int classId = -1;
             foreach (Class c in classes)
             {
-                classId = DatabaseAPI.Database.Classes.FirstOrDefault(cls => string.Equals(c.Name, cls.ClassName, StringComparison.OrdinalIgnoreCase)).Column;
-                for (int i = 0; i < c.ModTables.Select(s => s.Name).Count() - 1; i++)
+                Archetype first = null;
+                foreach (var cls in DatabaseAPI.Database.Classes)
                 {
-                    for (int k = 0; k < c.ModTables[i].Values.Count - 1; k++)
+                    if (string.Equals(c.Name, cls.ClassName, StringComparison.OrdinalIgnoreCase))
                     {
-                        int tableId = DatabaseAPI.NidFromUidAttribMod(c.ModTables[i].Name);
-                        if (tableId > -1)
-                            DatabaseAPI.Database.AttribMods.Modifier[tableId].Table[k][classId] = c.ModTables[i].Values[k];
+                        first = cls;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    var classId = first.Column;
+                    for (int i = 0; i < c.ModTables.Select(s => s.Name).Count() - 1; i++)
+                    {
+                        for (int k = 0; k < c.ModTables[i].Values.Count - 1; k++)
+                        {
+                            int tableId = DatabaseAPI.NidFromUidAttribMod(c.ModTables[i].Name);
+                            if (tableId > -1)
+                                DatabaseAPI.Database.AttribMods.Modifier[tableId].Table[k][classId] = c.ModTables[i].Values[k];
+                        }
                     }
                 }
             }
             DatabaseAPI.Database.AttribMods.Store(My.MyApplication.GetSerializer());
             DatabaseAPI.SaveJsonDatabase(My.MyApplication.GetSerializer());
-            MessageBox.Show("Import completed");
+            _ = MessageBox.Show(@"Import completed");
         }
     }
 

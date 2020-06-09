@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -18,10 +19,10 @@ namespace Hero_Designer
 {
     public partial class frmSetEditPvP : Form
     {
-        protected bool Loading;
-        public EnhancementSet mySet;
-        protected int[] SetBonusList;
-        protected int[] SetBonusListPVP;
+        private bool Loading;
+        private readonly EnhancementSet mySet;
+        private int[] SetBonusList;
+        private int[] SetBonusListPVP;
 
         ListView lvBonusList
         {
@@ -100,7 +101,7 @@ namespace Hero_Designer
             mySet = new EnhancementSet(iSet);
         }
 
-        public int BonusID()
+        private int BonusID()
         {
             return cbSlotCount.SelectedIndex;
         }
@@ -123,8 +124,8 @@ namespace Hero_Designer
             if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
             {
                 int num = (int) Interaction.MsgBox(
-                    ("You must select an image from the " + I9Gfx.GetEnhancementsPath() +
-                     " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it."),
+                    "You must select an image from the " + I9Gfx.GetEnhancementsPath() +
+                     " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.",
                     MsgBoxStyle.Information, "Ah...");
             }
             else
@@ -142,8 +143,8 @@ namespace Hero_Designer
 
         void btnOK_Click(object sender, EventArgs e)
         {
-            mySet.LevelMin = Convert.ToInt32(Decimal.Subtract(udMinLevel.Value, new Decimal(1)));
-            mySet.LevelMax = Convert.ToInt32(Decimal.Subtract(udMaxLevel.Value, new Decimal(1)));
+            mySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
+            mySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
             DialogResult = DialogResult.OK;
             Hide();
         }
@@ -222,7 +223,7 @@ namespace Hero_Designer
             DisplayBonusText2();
         }
 
-        public void DisplayBonus2()
+        private void DisplayBonus2()
         {
             try
             {
@@ -256,7 +257,7 @@ namespace Hero_Designer
             }
         }
 
-        public void DisplayBonusText2()
+        private void DisplayBonusText2()
         {
             string str1 = RTF.StartRTF();
             int num1 = mySet.Bonus.Length - 1;
@@ -264,7 +265,7 @@ namespace Hero_Designer
             {
                 if (mySet.Bonus[index1].Index.Length > 0)
                     str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                           RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                           RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                 int num2 = mySet.Bonus[index1].Index.Length - 1;
                 for (int index2 = 0; index2 <= num2; ++index2)
                 {
@@ -330,7 +331,7 @@ namespace Hero_Designer
             DisplayBonusText();
         }
 
-        public void DisplayBonus()
+        private void DisplayBonus()
         {
             try
             {
@@ -365,7 +366,7 @@ namespace Hero_Designer
             }
         }
 
-        public void DisplayBonusText()
+        private void DisplayBonusText()
         {
             string str1 = RTF.StartRTF();
             int num1 = mySet.Bonus.Length - 1;
@@ -377,61 +378,61 @@ namespace Hero_Designer
                         mySet.Bonus[index1].Slotted = 2;
                     if (mySet.Bonus[index1].Index.Length > 0)
                         str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                               RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                               RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                     break;
                     case 1:
                         mySet.Bonus[index1].Slotted = 2;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                     case 2:
                         mySet.Bonus[index1].Slotted = 3;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                     case 3:
                         mySet.Bonus[index1].Slotted = 3;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                     case 4:
                         mySet.Bonus[index1].Slotted = 4;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                     case 5:
                         mySet.Bonus[index1].Slotted = 4;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                     case 6:
                         mySet.Bonus[index1].Slotted = 5;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                     case 7:
                         mySet.Bonus[index1].Slotted = 5;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                     case 8:
                         mySet.Bonus[index1].Slotted = 6;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                     case 9:
                         mySet.Bonus[index1].Slotted = 6;
                         if (mySet.Bonus[index1].Index.Length > 0)
                             str1 = str1 + RTF.Color(RTF.ElementID.Black) +
-                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted) + " Enhancements: ");
+                                   RTF.Bold(Convert.ToString(mySet.Bonus[index1].Slotted, CultureInfo.InvariantCulture) + " Enhancements: ");
                         break;
                 }
 
@@ -487,10 +488,10 @@ namespace Hero_Designer
 
         void DisplayIcon()
         {
-            if (mySet.Image != "")
+            if (!string.IsNullOrEmpty(mySet.Image))
             {
-                ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + mySet.Image);
-                ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
+                using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + mySet.Image);
+                using ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
                 extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO),
                     GraphicsUnit.Pixel);
                 extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect,
@@ -500,7 +501,7 @@ namespace Hero_Designer
             }
             else
             {
-                ExtendedBitmap extendedBitmap = new ExtendedBitmap(30, 30);
+                using ExtendedBitmap extendedBitmap = new ExtendedBitmap(30, 30);
                 extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO),
                     GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap.Bitmap);
@@ -508,7 +509,7 @@ namespace Hero_Designer
             }
         }
 
-        public void DisplaySetData()
+        private void DisplaySetData()
         {
             DisplaySetIcons();
             DisplayIcon();
@@ -526,7 +527,7 @@ namespace Hero_Designer
             DisplayBonus();
         }
 
-        public void DisplaySetIcons()
+        private void DisplaySetIcons()
         {
             FillImageList();
             string[] items = new string[2];
@@ -561,7 +562,7 @@ namespace Hero_Designer
             lvEnh.EndUpdate();
         }
 
-        public void FillBonusCombos()
+        private void FillBonusCombos()
         {
             cbSlotCount.BeginUpdate();
             cbSlotCount.Items.Clear();
@@ -572,34 +573,34 @@ namespace Hero_Designer
                 switch (index)
                 {
                     case 2:
-                        cbSlotCount.Items.Add((Convert.ToString(index) + " Enhancements"));
+                        cbSlotCount.Items.Add(Convert.ToString(index, CultureInfo.InvariantCulture) + " Enhancements");
                         break;
                     case 3:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 1) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 1, CultureInfo.InvariantCulture) + " Enhancements (PVP Effect)");
                         break;
                     case 4:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 1) + " Enhancements"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 1, CultureInfo.InvariantCulture) + " Enhancements");
                         break;
                     case 5:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 2) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 2, CultureInfo.InvariantCulture) + " Enhancements (PVP Effect)");
                         break;
                     case 6:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 2) + " Enhancements"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 2, CultureInfo.InvariantCulture) + " Enhancements");
                         break;
                     case 7:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 3) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 3, CultureInfo.InvariantCulture) + " Enhancements (PVP Effect)");
                         break;
                     case 8:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 3) + " Enhancements"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 3, CultureInfo.InvariantCulture) + " Enhancements");
                         break;
                     case 9:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 4) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 4, CultureInfo.InvariantCulture) + " Enhancements (PVP Effect)");
                         break;
                     case 10:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 4) + " Enhancements"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 4, CultureInfo.InvariantCulture) + " Enhancements");
                         break;
                     case 11:
-                        cbSlotCount.Items.Add((Convert.ToString(index - 5) + " Enhancements (PVP Effect)"));
+                        cbSlotCount.Items.Add(Convert.ToString(index - 5, CultureInfo.InvariantCulture) + " Enhancements (PVP Effect)");
                         break;
                 }
             }
@@ -612,7 +613,7 @@ namespace Hero_Designer
             cbSlotCount.EndUpdate();
         }
 
-        public void FillBonusList()
+        private void FillBonusList()
         {
             lvBonusList.BeginUpdate();
             lvBonusList.Items.Clear();
@@ -647,7 +648,7 @@ namespace Hero_Designer
             lvBonusList.EndUpdate();
         }
 
-        public void FillComboBoxes()
+        private void FillComboBoxes()
         {
             string[] names = Enum.GetNames(Enums.eSetType.Untyped.GetType());
             cbSetType.BeginUpdate();
@@ -656,13 +657,13 @@ namespace Hero_Designer
             cbSetType.EndUpdate();
         }
 
-        public void FillImageList()
+        private void FillImageList()
         {
             Size imageSize1 = ilEnh.ImageSize;
             int width1 = imageSize1.Width;
             imageSize1 = ilEnh.ImageSize;
             int height1 = imageSize1.Height;
-            ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
             ilEnh.Images.Clear();
             int num = mySet.Enhancements.Length - 1;
             for (int index = 0; index <= num; ++index)
@@ -715,14 +716,14 @@ namespace Hero_Designer
             return cbSlotCount.SelectedIndex >= mySet.Enhancements.Length - 1 & cbSlotCount.SelectedIndex < mySet.Enhancements.Length + mySet.Enhancements.Length - 1;
         }*/
 
-        public bool isBonus()
+        private bool isBonus()
         {
             var num0 = mySet.Enhancements.Length;
             var num1 = num0 + num0 - 2;
             return cbSlotCount.SelectedIndex > -1 & cbSlotCount.SelectedIndex < num1;
         }
 
-        public bool isSpecial()
+        private bool isSpecial()
         {
             var num0 = mySet.Enhancements.Length;
             var num1 = num0 + num0 - 1;
@@ -831,25 +832,25 @@ namespace Hero_Designer
             }
         }
 
-        public void SetMaxLevel(int iValue)
+        private void SetMaxLevel(int iValue)
         {
-            if (Decimal.Compare(new Decimal(iValue), udMaxLevel.Minimum) < 0)
+            if (decimal.Compare(new decimal(iValue), udMaxLevel.Minimum) < 0)
                 iValue = Convert.ToInt32(udMaxLevel.Minimum);
-            if (Decimal.Compare(new Decimal(iValue), udMaxLevel.Maximum) > 0)
+            if (decimal.Compare(new decimal(iValue), udMaxLevel.Maximum) > 0)
                 iValue = Convert.ToInt32(udMaxLevel.Maximum);
-            udMaxLevel.Value = new Decimal(iValue);
+            udMaxLevel.Value = new decimal(iValue);
         }
 
-        public void SetMinLevel(int iValue)
+        private void SetMinLevel(int iValue)
         {
-            if (Decimal.Compare(new Decimal(iValue), udMinLevel.Minimum) < 0)
+            if (decimal.Compare(new decimal(iValue), udMinLevel.Minimum) < 0)
                 iValue = Convert.ToInt32(udMinLevel.Minimum);
-            if (Decimal.Compare(new Decimal(iValue), udMinLevel.Maximum) > 0)
+            if (decimal.Compare(new decimal(iValue), udMinLevel.Maximum) > 0)
                 iValue = Convert.ToInt32(udMinLevel.Maximum);
-            udMinLevel.Value = new Decimal(iValue);
+            udMinLevel.Value = new decimal(iValue);
         }
 
-        public int SpecialID()
+        private int SpecialID()
         {
             var num1 = mySet.Enhancements.Length;
             var num2 = num1 + num1 - 2;
@@ -897,28 +898,28 @@ namespace Hero_Designer
         void udMaxLevel_Leave(object sender, EventArgs e)
         {
             SetMaxLevel((int) Math.Round(Conversion.Val(udMaxLevel.Text)));
-            mySet.LevelMax = Convert.ToInt32(Decimal.Subtract(udMaxLevel.Value, new Decimal(1)));
+            mySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
         }
 
         void udMaxLevel_ValueChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            mySet.LevelMax = Convert.ToInt32(Decimal.Subtract(udMaxLevel.Value, new Decimal(1)));
+            mySet.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
             udMinLevel.Maximum = udMaxLevel.Value;
         }
 
         void udMinLevel_Leave(object sender, EventArgs e)
         {
             SetMinLevel((int) Math.Round(Conversion.Val(udMinLevel.Text)));
-            mySet.LevelMin = Convert.ToInt32(Decimal.Subtract(udMinLevel.Value, new Decimal(1)));
+            mySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
         }
 
         void udMinLevel_ValueChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            mySet.LevelMin = Convert.ToInt32(Decimal.Subtract(udMinLevel.Value, new Decimal(1)));
+            mySet.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
             udMaxLevel.Minimum = udMinLevel.Value;
         }
     }

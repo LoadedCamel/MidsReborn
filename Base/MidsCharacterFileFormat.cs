@@ -7,14 +7,15 @@ using Base.Master_Classes;
 
 public static class MidsCharacterFileFormat
 {
-    public static readonly byte[] MagicNumber = {
+    private static readonly byte[] MagicNumber = {
         Convert.ToByte('M'),
         Convert.ToByte('x'),
         Convert.ToByte('D'),
         Convert.ToByte(12)
     };
-    public const string MagicCompressed = "MxDz";
-    public const string MagicUncompressed = "MxDu";
+
+    private const string MagicCompressed = "MxDz";
+    private const string MagicUncompressed = "MxDu";
     const float SaveVersion = 1.01f;
 
     const int DataLinkMaxLength = 2048;
@@ -511,7 +512,7 @@ public static class MidsCharacterFileFormat
         return eLoadReturnCode;
     }
 
-    public static void WriteSlotData(ref BinaryWriter writer, ref I9Slot slot)
+    private static void WriteSlotData(ref BinaryWriter writer, ref I9Slot slot)
     {
         if (slot.Enh < 0)
         {

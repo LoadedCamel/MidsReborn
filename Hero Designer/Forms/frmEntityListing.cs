@@ -174,7 +174,7 @@ namespace Hero_Designer
             bFrm.SetMessage(sMessage);
         }
 
-        public void DisplayList()
+        private void DisplayList()
         {
             lvEntity.BeginUpdate();
             lvEntity.Items.Clear();
@@ -194,7 +194,7 @@ namespace Hero_Designer
             DisplayList();
         }
 
-        public void ListAddItem(int Index)
+        private void ListAddItem(int Index)
         {
             lvEntity.Items.Add(new ListViewItem(new[]
             {
@@ -206,7 +206,7 @@ namespace Hero_Designer
             lvEntity.Items[lvEntity.Items.Count - 1].EnsureVisible();
         }
 
-        public void ListUpdateItem(int Index)
+        private void ListUpdateItem(int Index)
         {
             string[] strArray = {
                 DatabaseAPI.Database.Entities[Index].UID,

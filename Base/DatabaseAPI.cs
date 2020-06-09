@@ -103,7 +103,7 @@ public static class DatabaseAPI
     public static int NidFromUidEntity(string uidEntity)
         => Database.Entities.TryFindIndex(se => string.Equals(se.UID, uidEntity, StringComparison.OrdinalIgnoreCase));
 
-    public static int[] NidSets(PowersetGroup group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
+    private static int[] NidSets(PowersetGroup group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
     {
         if ((nType == Enums.ePowerSetType.Inherent || nType == Enums.ePowerSetType.Pool) && nIDClass > -1 && !Database.Classes[nIDClass].Playable)
             return Array.Empty<int>();
@@ -304,19 +304,13 @@ public static class DatabaseAPI
         List<string> stringList = new List<string>();
         if (iSet != Enums.ePowerSetType.Pool && iSet != Enums.ePowerSetType.Inherent)
         {
-            int[] numArray = Array.Empty<int>();
-            switch (iSet)
+            var numArray = iSet switch
             {
-                case Enums.ePowerSetType.Primary:
-                    numArray = Database.Classes[iAT].Primary;
-                    break;
-                case Enums.ePowerSetType.Secondary:
-                    numArray = Database.Classes[iAT].Secondary;
-                    break;
-                case Enums.ePowerSetType.Ancillary:
-                    numArray = Database.Classes[iAT].Ancillary;
-                    break;
-            }
+                Enums.ePowerSetType.Primary => Database.Classes[iAT].Primary,
+                Enums.ePowerSetType.Secondary => Database.Classes[iAT].Secondary,
+                Enums.ePowerSetType.Ancillary => Database.Classes[iAT].Ancillary,
+                _ => Array.Empty<int>()
+            };
 
             stringList.AddRange(numArray.Select(index => Database.Powersets[index].DisplayName));
         }
@@ -328,7 +322,7 @@ public static class DatabaseAPI
         return stringList.Count > 0 ? stringList.ToArray() : new[] { "No " + Enum.GetName(iSet.GetType(), iSet) };
     }
 
-    public static int[] GetPowersetIndexesByGroup(PowersetGroup group)
+    private static int[] GetPowersetIndexesByGroup(PowersetGroup group)
     {
         return group.Powersets.Select(powerset => powerset.Value.nID).ToArray();
     }
@@ -419,7 +413,7 @@ public static class DatabaseAPI
         return -1;
     }
     //Pine
-    public static int GetRecipeIdxByName(string iName)
+    private static int GetRecipeIdxByName(string iName)
     {
         for (int index = 0; index <= Database.Recipes.Length - 1; ++index)
         {
@@ -920,22 +914,15 @@ public static class DatabaseAPI
         }
         else
         {
-            switch (Database.Enhancements[iEnh].TypeID)
+            str = Database.Enhancements[iEnh].TypeID switch
             {
-                case Enums.eType.Normal:
-                case Enums.eType.SpecialO:
-                    str = Database.Enhancements[iEnh].ShortName;
-                    break;
-                case Enums.eType.InventO:
-                    str = "Invention: " + Database.Enhancements[iEnh].ShortName;
-                    break;
-                case Enums.eType.SetO:
-                    str = Database.EnhancementSets[Database.Enhancements[iEnh].nIDSet].DisplayName + ": " + Database.Enhancements[iEnh].ShortName;
-                    break;
-                default:
-                    str = string.Empty;
-                    break;
-            }
+                Enums.eType.Normal => Database.Enhancements[iEnh].ShortName,
+                Enums.eType.SpecialO => Database.Enhancements[iEnh].ShortName,
+                Enums.eType.InventO => ("Invention: " + Database.Enhancements[iEnh].ShortName),
+                Enums.eType.SetO => (Database.EnhancementSets[Database.Enhancements[iEnh].nIDSet].DisplayName + ": " +
+                                     Database.Enhancements[iEnh].ShortName),
+                _ => string.Empty
+            };
         }
         return str;
     }

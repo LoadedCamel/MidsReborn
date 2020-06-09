@@ -15,15 +15,14 @@ namespace Hero_Designer
 {
     public partial class frmEnhData : Form
     {
+        private ExtendedBitmap bxClass;
+        private ExtendedBitmap bxClassList;
+        private readonly int ClassSize;
 
-        protected ExtendedBitmap bxClass;
-        protected ExtendedBitmap bxClassList;
-        protected int ClassSize;
-
-        protected int EnhAcross;
-        protected int EnhPadding;
-        protected bool Loading;
-        public IEnhancement myEnh;
+        private readonly int EnhAcross;
+        private readonly int EnhPadding;
+        private bool Loading;
+        public readonly IEnhancement myEnh;
 
         public frmEnhData(ref IEnhancement iEnh, int newStaticIndex)
         {
@@ -132,19 +131,13 @@ namespace Hero_Designer
             }
             myEnh.UID += myEnh.Name.Replace("/", "_");
 
-            float num3 = 1f;
-            switch (num1)
+            var num3 = num1 switch
             {
-                case 2:
-                    num3 = 0.625f;
-                    break;
-                case 3:
-                    num3 = 0.5f;
-                    break;
-                case 4:
-                    num3 = 7f / 16f;
-                    break;
-            }
+                2 => 0.625f,
+                3 => 0.5f,
+                4 => (7f / 16f),
+                _ => 1f
+            };
             int num4 = myEnh.Effect.Length - 1;
             for (int index = 0; index <= num4; ++index)
             {
@@ -404,7 +397,7 @@ namespace Hero_Designer
             myEnh.Unique = chkUnique.Checked;
         }
 
-        public void DisplayAll()
+        private void DisplayAll()
         {
             txtNameFull.Text = myEnh.Name;
             txtNameShort.Text = myEnh.ShortName;
@@ -465,7 +458,7 @@ namespace Hero_Designer
             DisplayEnhanceData();
         }
 
-        public void DisplayEnhanceData()
+        private void DisplayEnhanceData()
         {
             if (lstSelected.SelectedIndex <= -1)
             {
@@ -529,7 +522,7 @@ namespace Hero_Designer
             }
         }
 
-        public void DisplayIcon()
+        private void DisplayIcon()
         {
             if (!string.IsNullOrWhiteSpace(myEnh.Image))
             {
@@ -542,33 +535,26 @@ namespace Hero_Designer
             }
             else
             {
-                switch (myEnh.TypeID)
+                btnImage.Image = myEnh.TypeID switch
                 {
-                    case Enums.eType.Normal:
-                        btnImage.Image = typeRegular.Image;
-                        break;
-                    case Enums.eType.InventO:
-                        btnImage.Image = typeIO.Image;
-                        break;
-                    case Enums.eType.SpecialO:
-                        btnImage.Image = typeHO.Image;
-                        break;
-                    case Enums.eType.SetO:
-                        btnImage.Image = typeSet.Image;
-                        break;
-                }
+                    Enums.eType.Normal => typeRegular.Image,
+                    Enums.eType.InventO => typeIO.Image,
+                    Enums.eType.SpecialO => typeHO.Image,
+                    Enums.eType.SetO => typeSet.Image,
+                    _ => btnImage.Image
+                };
                 btnImage.Text = "Select Image";
             }
         }
 
-        public void DisplaySet()
+        private void DisplaySet()
         {
             gbSet.Enabled = myEnh.TypeID == Enums.eType.SetO;
             cbSet.SelectedIndex = myEnh.nIDSet + 1;
             DisplaySetImage();
         }
 
-        public void DisplaySetImage()
+        private void DisplaySetImage()
         {
             if (myEnh.nIDSet > -1)
             {
@@ -594,7 +580,7 @@ namespace Hero_Designer
                 pbSet.Image = new Bitmap(pbSet.Width, pbSet.Height);
         }
 
-        public void DrawClasses()
+        private void DrawClasses()
         {
             bxClass = new ExtendedBitmap(pnlClass.Width, pnlClass.Height);
             int enhPadding1 = EnhPadding;
@@ -618,7 +604,7 @@ namespace Hero_Designer
             pnlClass.CreateGraphics().DrawImageUnscaled(bxClass.Bitmap, 0, 0);
         }
 
-        public void DrawClassList()
+        private void DrawClassList()
         {
             using ExtendedBitmap bxClassList = new ExtendedBitmap(pnlClassList.Width, pnlClassList.Height);
             int enhPadding1 = EnhPadding;
@@ -642,7 +628,7 @@ namespace Hero_Designer
             pnlClassList.CreateGraphics().DrawImageUnscaled(bxClassList.Bitmap, 0, 0);
         }
 
-        public void EditClick()
+        private void EditClick()
         {
             bool flag = true;
             int num1 = -1;
@@ -692,10 +678,13 @@ namespace Hero_Designer
             lstSelected.SelectedIndex = selectedIndex;
         }
 
-        public void EffectList_Add()
-        {
+        private void EffectList_Add()
+        { 
             if (lstAvailable.SelectedIndex <= -1)
+            {
                 return;
+            }
+
             Enums.eEnhance eEnhance = Enums.eEnhance.None;
             bool flag = true;
             int tSub = -1;
@@ -734,7 +723,7 @@ namespace Hero_Designer
             }
         }
 
-        public void FillEffectList()
+        private void FillEffectList()
         {
             Enums.eEnhance eEnhance1 = Enums.eEnhance.None;
             lstAvailable.BeginUpdate();
@@ -758,7 +747,7 @@ namespace Hero_Designer
             lstAvailable.EndUpdate();
         }
 
-        public void FillMutExList()
+        private void FillMutExList()
         {
             string[] names = Enum.GetNames(Enums.eEnhMutex.None.GetType());
             cbMutEx.BeginUpdate();
@@ -767,7 +756,7 @@ namespace Hero_Designer
             cbMutEx.EndUpdate();
         }
 
-        public void FillRecipeList()
+        private void FillRecipeList()
         {
             cbRecipe.BeginUpdate();
             cbRecipe.Items.Clear();
@@ -778,7 +767,7 @@ namespace Hero_Designer
             cbRecipe.EndUpdate();
         }
 
-        public void FillSchedules()
+        private void FillSchedules()
         {
             cbSched.BeginUpdate();
             cbSched.Items.Clear();
@@ -790,7 +779,7 @@ namespace Hero_Designer
             cbSched.EndUpdate();
         }
 
-        public void FillSetList()
+        private void FillSetList()
         {
             cbSet.BeginUpdate();
             cbSet.Items.Clear();
@@ -801,7 +790,7 @@ namespace Hero_Designer
             cbSet.EndUpdate();
         }
 
-        public void FillSubTypeList()
+        private void FillSubTypeList()
         {
             string[] names = Enum.GetNames(Enums.eSubtype.None.GetType());
             cbSubType.BeginUpdate();
@@ -827,8 +816,7 @@ namespace Hero_Designer
         }
 
         [DebuggerStepThrough]
-
-        public void ListSelectedEffects()
+        private void ListSelectedEffects()
         {
             Enums.eEnhance eEnhance = Enums.eEnhance.None;
             Enums.eMez eMez = Enums.eMez.None;
@@ -865,7 +853,7 @@ namespace Hero_Designer
             tTip.SetToolTip(lstSelected, Convert.ToString(lstSelected.SelectedItem, CultureInfo.InvariantCulture));
         }
 
-        public static int MezPicker(int index = 1)
+        private static int MezPicker(int index = 1)
         => frmEnhMiniPick.MezPicker(index);
 
         void PickerExpand()
@@ -1101,7 +1089,7 @@ namespace Hero_Designer
                 myEnh.Effect[selectedIndex].Multiplier = 7f / 16f;
         }
 
-        public void SetMaxLevel(int iValue)
+        private void SetMaxLevel(int iValue)
         {
             if (Decimal.Compare(new Decimal(iValue), udMaxLevel.Minimum) < 0)
                 iValue = Convert.ToInt32(udMaxLevel.Minimum);
@@ -1110,7 +1098,7 @@ namespace Hero_Designer
             udMaxLevel.Value = new Decimal(iValue);
         }
 
-        public void SetMinLevel(int iValue)
+        private void SetMinLevel(int iValue)
         {
             if (Decimal.Compare(new Decimal(iValue), udMinLevel.Minimum) < 0)
                 iValue = Convert.ToInt32(udMinLevel.Minimum);
@@ -1119,7 +1107,7 @@ namespace Hero_Designer
             udMinLevel.Value = new Decimal(iValue);
         }
 
-        public void SetTypeIcons()
+        private void SetTypeIcons()
         {
             using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap(30, 30);
             using ExtendedBitmap extendedBitmap2 = string.IsNullOrWhiteSpace(myEnh.Image) ? new ExtendedBitmap(30, 30) : new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + myEnh.Image);
@@ -1289,25 +1277,18 @@ namespace Hero_Designer
             udMaxLevel.Minimum = udMinLevel.Value;
         }
 
-        public void UpdateTitle()
+        private void UpdateTitle()
         {
             string str1 = "Edit ";
-            string str2;
-            switch (myEnh.TypeID)
+            var str2 = myEnh.TypeID switch
             {
-                case Enums.eType.InventO:
-                    str2 = str1 + "Invention: ";
-                    break;
-                case Enums.eType.SpecialO:
-                    str2 = str1 + "HO: ";
-                    break;
-                case Enums.eType.SetO:
-                    str2 = myEnh.nIDSet > -1 ? str1 + DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].DisplayName + ": " : str1 + "Set Invention: ";
-                    break;
-                default:
-                    str2 = str1 + "Enhancement: ";
-                    break;
-            }
+                Enums.eType.InventO => (str1 + "Invention: "),
+                Enums.eType.SpecialO => (str1 + "HO: "),
+                Enums.eType.SetO => (myEnh.nIDSet > -1
+                    ? str1 + DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].DisplayName + ": "
+                    : str1 + "Set Invention: "),
+                _ => (str1 + "Enhancement: ")
+            };
             Text = str2 + myEnh.Name;
         }
     }

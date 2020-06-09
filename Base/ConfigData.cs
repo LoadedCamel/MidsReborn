@@ -34,7 +34,7 @@ public class ConfigData
     public int ForceLevel { get; set; } = 50;
     public int ExportScheme { get; set; } = 1;
     public int ExportTarget { get; set; } = 1;
-    public bool DisableDataDamageGraph { get; set; }
+    public bool DisableDataDamageGraph { get; private set; }
     public bool DisableVillainColours { get; set; }
     public bool IsInitialized { get; set; }
     public int Columns { get; set; } = 3;
@@ -50,7 +50,7 @@ public class ConfigData
     public Enums.CompOverride[] CompOverride { get; set; }
 
     public string DNickName { get; set; }
-    public List<string> DServers { get; set; } = new List<string>();
+    public List<string> DServers { get; } = new List<string>();
     public string DSelServer { get; set; }
     public string DChannel { get; set; }
     public List<string> CheckedStatBoxes { get; set; } = new List<string>();
@@ -71,7 +71,7 @@ public class ConfigData
     public bool ExportBonusTotals { get; set; }
     public bool ExportBonusList { get; set; }
     public bool NoToolTips { get; set; }
-    public bool DataDamageGraphPercentageOnly { get; set; }
+    public bool DataDamageGraphPercentageOnly { get; private set; }
     public bool CheckForUpdates { get; set; }
     public Enums.eVisibleSize DvState { get; set; }
     public Enums.eSuppress Suppression { get; set; }

@@ -7,8 +7,7 @@ namespace Hero_Designer
 {
     public partial class frmEnhMiniPick : Form
     {
-
-        public frmEnhMiniPick()
+        private frmEnhMiniPick()
         {
             InitializeComponent();
             Name = nameof(frmEnhMiniPick);

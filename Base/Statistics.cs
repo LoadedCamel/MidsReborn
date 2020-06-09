@@ -81,49 +81,27 @@ public class Statistics
 
     public float Speed(float iSpeed, Enums.eSpeedMeasure unit)
     {
-        float num;
-        switch (unit)
+        var num = unit switch
         {
-            case Enums.eSpeedMeasure.FeetPerSecond:
-                num = iSpeed;
-                break;
-            case Enums.eSpeedMeasure.MetersPerSecond:
-                num = iSpeed * 0.3048f;
-                break;
-            case Enums.eSpeedMeasure.MilesPerHour:
-                num = iSpeed * 0.6818182f;
-                break;
-            case Enums.eSpeedMeasure.KilometersPerHour:
-                num = iSpeed * 1.09728f;
-                break;
-            default:
-                num = iSpeed;
-                break;
-        }
+            Enums.eSpeedMeasure.FeetPerSecond => iSpeed,
+            Enums.eSpeedMeasure.MetersPerSecond => (iSpeed * 0.3048f),
+            Enums.eSpeedMeasure.MilesPerHour => (iSpeed * 0.6818182f),
+            Enums.eSpeedMeasure.KilometersPerHour => (iSpeed * 1.09728f),
+            _ => iSpeed
+        };
         return num;
     }
 
     public float Distance(float iDist, Enums.eSpeedMeasure unit)
     {
-        float num;
-        switch (unit)
+        var num = unit switch
         {
-            case Enums.eSpeedMeasure.FeetPerSecond:
-                num = iDist;
-                break;
-            case Enums.eSpeedMeasure.MetersPerSecond:
-                num = iDist * 0.3048f;
-                break;
-            case Enums.eSpeedMeasure.MilesPerHour:
-                num = iDist;
-                break;
-            case Enums.eSpeedMeasure.KilometersPerHour:
-                num = iDist * 0.3048f;
-                break;
-            default:
-                num = iDist;
-                break;
-        }
+            Enums.eSpeedMeasure.FeetPerSecond => iDist,
+            Enums.eSpeedMeasure.MetersPerSecond => (iDist * 0.3048f),
+            Enums.eSpeedMeasure.MilesPerHour => iDist,
+            Enums.eSpeedMeasure.KilometersPerHour => (iDist * 0.3048f),
+            _ => iDist
+        };
         return num;
     }
 

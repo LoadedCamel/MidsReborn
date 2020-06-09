@@ -38,7 +38,7 @@ namespace Hero_Designer
             Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
         }
 
-        protected void AddSetType(int nIDPower, Enums.eSetType nSetType)
+        private void AddSetType(int nIDPower, Enums.eSetType nSetType)
         {
             if (!(nIDPower > -1 & nIDPower < DatabaseAPI.Database.Power.Length))
                 return;
@@ -99,7 +99,7 @@ namespace Hero_Designer
             bFrm.SetMessage(sMessage);
         }
 
-        public void DisplayInfo()
+        private void DisplayInfo()
         {
             lblFile.Text = FileIO.StripPath(FullFileName);
             lblDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.IOAssignmentVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");

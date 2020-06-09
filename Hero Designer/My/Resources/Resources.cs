@@ -22,13 +22,12 @@ namespace Hero_Designer.My.Resources
 
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        internal static CultureInfo Culture { get; set; }
+        private static CultureInfo Culture { get; set; }
 
         internal static Bitmap Gradient => (Bitmap) RuntimeHelpers.GetObjectValue(ResourceManager.GetObject(nameof(Gradient), Culture));
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        internal static ResourceManager ResourceManager =>
-            resourceMan ??
-            (resourceMan = new ResourceManager("Hero_Designer.Resources", typeof(Resources).Assembly));
+        private static ResourceManager ResourceManager =>
+            resourceMan ??= new ResourceManager("Hero_Designer.Resources", typeof(Resources).Assembly);
     }
 }

@@ -38,9 +38,9 @@ namespace Base.Data_Classes
                     var Global_Recharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
                     var rechargeval = power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - Global_Recharge);
                     if (power.PowerType == Enums.ePowerType.Click)
-                        num1 = Math.Min(Math.Max((procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                        num1 = Math.Min(Math.Max(procsPerMinute * (rechargeval + power.CastTimeReal) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                     else
-                        num1 = Math.Min(Math.Max((procsPerMinute * 10) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                        num1 = Math.Min(Math.Max(procsPerMinute * 10 / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 }
                 //num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
@@ -96,19 +96,16 @@ namespace Base.Data_Classes
         {
             get
             {
-                float num;
-                switch (AttribType)
+                var num = AttribType switch
                 {
-                    case Enums.eAttribType.Magnitude:
-                        num = (double)Math.Abs(Math_Duration - 0.0f) > 0.01 ? Math_Duration : nDuration;
-                        break;
-                    case Enums.eAttribType.Duration:
-                        num = (double)Math.Abs(Math_Duration - 0.0f) <= 0.01 ? Scale * DatabaseAPI.GetModifier(this) : Math_Duration;
-                        break;
-                    default:
-                        num = 0.0f;
-                        break;
-                }
+                    Enums.eAttribType.Magnitude => Math.Abs(Math_Duration - 0.0f) > 0.01
+                        ? Math_Duration
+                        : nDuration,
+                    Enums.eAttribType.Duration => Math.Abs(Math_Duration - 0.0f) <= 0.01
+                        ? Scale * DatabaseAPI.GetModifier(this)
+                        : Math_Duration,
+                    _ => 0.0f
+                };
                 return num;
             }
         }
@@ -135,7 +132,7 @@ namespace Base.Data_Classes
                         switch (Aspect)
                         {
                             case Enums.eAspect.Max:
-                                if (EffectType == Enums.eEffectType.HitPoints || EffectType == Enums.eEffectType.Endurance || (EffectType == Enums.eEffectType.SpeedRunning || EffectType == Enums.eEffectType.SpeedJumping) || EffectType == Enums.eEffectType.SpeedFlying)
+                                if (EffectType == Enums.eEffectType.HitPoints || EffectType == Enums.eEffectType.Endurance || EffectType == Enums.eEffectType.SpeedRunning || EffectType == Enums.eEffectType.SpeedJumping || EffectType == Enums.eEffectType.SpeedFlying)
                                     return false;
                                 break;
                             case Enums.eAspect.Abs:
@@ -208,7 +205,7 @@ namespace Base.Data_Classes
             }
         }
 
-        public bool InherentSpecial => SpecialCase == Enums.eSpecialCase.Assassination || SpecialCase == Enums.eSpecialCase.Hidden || (SpecialCase == Enums.eSpecialCase.Containment || SpecialCase == Enums.eSpecialCase.CriticalHit) || SpecialCase == Enums.eSpecialCase.Domination || SpecialCase == Enums.eSpecialCase.Scourge || SpecialCase == Enums.eSpecialCase.Supremacy;
+        public bool InherentSpecial => SpecialCase == Enums.eSpecialCase.Assassination || SpecialCase == Enums.eSpecialCase.Hidden || SpecialCase == Enums.eSpecialCase.Containment || SpecialCase == Enums.eSpecialCase.CriticalHit || SpecialCase == Enums.eSpecialCase.Domination || SpecialCase == Enums.eSpecialCase.Scourge || SpecialCase == Enums.eSpecialCase.Supremacy;
 
         public float BaseProbability { get; set; }
 
@@ -341,7 +338,7 @@ namespace Base.Data_Classes
 
         public bool isDamage()
         {
-            return EffectType == Enums.eEffectType.Defense || EffectType == Enums.eEffectType.DamageBuff || (EffectType == Enums.eEffectType.Resistance || EffectType == Enums.eEffectType.Damage) || EffectType == Enums.eEffectType.Elusivity;
+            return EffectType == Enums.eEffectType.Defense || EffectType == Enums.eEffectType.DamageBuff || EffectType == Enums.eEffectType.Resistance || EffectType == Enums.eEffectType.Damage || EffectType == Enums.eEffectType.Elusivity;
         }
 
         public string BuildEffectStringShort(bool noMag = false, bool simple = false, bool useBaseProbability = false)
@@ -356,15 +353,12 @@ namespace Base.Data_Classes
                 str4 = " (V)";
             if (!simple)
             {
-                switch (ToWho)
+                str3 = ToWho switch
                 {
-                    case Enums.eToWho.Target:
-                        str3 = " to Tgt";
-                        break;
-                    case Enums.eToWho.Self:
-                        str3 = " to Slf";
-                        break;
-                }
+                    Enums.eToWho.Target => " to Tgt",
+                    Enums.eToWho.Self => " to Slf",
+                    _ => str3
+                };
             }
             if (useBaseProbability)
             {
@@ -581,7 +575,7 @@ namespace Base.Data_Classes
             else if (useBaseProbability)
             {
                 if (BaseProbability < 1.0)
-                    iValue1 = (double)BaseProbability < 0.975000023841858 ? (BaseProbability * 100f).ToString("#0") + "% chance" : (BaseProbability * 100f).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
+                    iValue1 = BaseProbability < 0.975000023841858 ? (BaseProbability * 100f).ToString("#0") + "% chance" : (BaseProbability * 100f).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
             }
             else if (Probability < 1.0)
             {
@@ -628,16 +622,12 @@ namespace Base.Data_Classes
                 str6 = Enum.GetName(SpecialCase.GetType(), SpecialCase);
             if (!simple || Scale > 0.0 && EffectType == Enums.eEffectType.Mez)
             {
-                string strMez = " for ";
-                switch (EffectType)
+                var strMez = EffectType switch
                 {
-                    case Enums.eEffectType.Damage:
-                        strMez = " over ";
-                        break;
-                    case Enums.eEffectType.SilentKill:
-                        strMez = " in ";
-                        break;
-                }
+                    Enums.eEffectType.Damage => " over ",
+                    Enums.eEffectType.SilentKill => " in ",
+                    _ => " for "
+                };
                 str2 = !(Duration > 0.0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0)) ? (!(Absorbed_Duration > 0.0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0)) ? string.Empty + " " : string.Empty + strMez + Utilities.FixDP(Absorbed_Duration) + " seconds") : string.Empty + strMez + Utilities.FixDP(Duration) + " seconds";
                 if (Absorbed_Interval > 0.0 && Absorbed_Interval < 900.0)
                     str2 = str2 + " every " + Utilities.FixDP(Absorbed_Interval) + " seconds";
@@ -655,7 +645,7 @@ namespace Base.Data_Classes
                     strCondition += "\n  Suppressed when Hit.";
                 if ((Suppression & Enums.eSuppress.MissionObjectClick) == Enums.eSuppress.MissionObjectClick)
                     strCondition += "\n  Suppressed when MissionObjectClick.";
-                if ((Suppression & Enums.eSuppress.Held) == Enums.eSuppress.Held || (Suppression & Enums.eSuppress.Immobilized) == Enums.eSuppress.Immobilized || ((Suppression & Enums.eSuppress.Sleep) == Enums.eSuppress.Sleep || (Suppression & Enums.eSuppress.Stunned) == Enums.eSuppress.Stunned) || (Suppression & Enums.eSuppress.Terrorized) == Enums.eSuppress.Terrorized)
+                if ((Suppression & Enums.eSuppress.Held) == Enums.eSuppress.Held || (Suppression & Enums.eSuppress.Immobilized) == Enums.eSuppress.Immobilized || (Suppression & Enums.eSuppress.Sleep) == Enums.eSuppress.Sleep || (Suppression & Enums.eSuppress.Stunned) == Enums.eSuppress.Stunned || (Suppression & Enums.eSuppress.Terrorized) == Enums.eSuppress.Terrorized)
                     strCondition += "\n  Suppressed when Mezzed.";
                 if ((Suppression & Enums.eSuppress.Knocked) == Enums.eSuppress.Knocked)
                     strCondition += "\n  Suppressed when Knocked.";
@@ -791,7 +781,7 @@ namespace Base.Data_Classes
                     iValue4 = string.Empty;
                     int index = DatabaseAPI.NidFromUidEntity(Summon);
                     string str15 = index <= -1 ? " " + Summon : " " + DatabaseAPI.Database.Entities[index].DisplayName;
-                    str10 = (double)Duration <= 9999.0 ? effectName + str15 + str3 + str2 : effectName + str15 + str3;
+                    str10 = Duration <= 9999.0 ? effectName + str15 + str3 + str2 : effectName + str15 + str3;
                     break;
                 case Enums.eEffectType.GlobalChanceMod:
                     str10 = str1 + " " + effectName + " " + Reward + str3 + str2;
@@ -815,7 +805,7 @@ namespace Base.Data_Classes
             return str8 + str10 + iStr1 + str5 + str7 + str4 + strCondition;
         }
 
-        public List<string> NewEffects = new List<string>()
+        private readonly List<string> NewEffects = new List<string>()
         {
             "TrainBeasts",
             "TameBeasts",
@@ -995,15 +985,13 @@ namespace Base.Data_Classes
                                 break;
                         }
                     }
-                    switch (EffectType)
+
+                    Summon = EffectType switch
                     {
-                        case Enums.eEffectType.GrantPower:
-                            Summon = Reward;
-                            break;
-                        case Enums.eEffectType.EntCreate:
-                            Summon = array[13];
-                            break;
-                    }
+                        Enums.eEffectType.GrantPower => Reward,
+                        Enums.eEffectType.EntCreate => array[13],
+                        _ => Summon
+                    };
                     nDuration = float.Parse(array[16]);
                     ModifierTable = array[1];
                     nMagnitude = float.Parse(array[17]);
@@ -1281,7 +1269,7 @@ namespace Base.Data_Classes
                                     if (EffectType == Enums.eEffectType.DamageBuff & Scale < 1.0 && Scale > 0.0 && ToWho == Enums.eToWho.Self && SpecialCase == Enums.eSpecialCase.None)
                                         SpecialCase = Enums.eSpecialCase.Defiance;
                                 }
-                                else if (ps.SetType == Enums.ePowerSetType.Inherent && EffectType == Enums.eEffectType.DamageBuff && (AttribType == Enums.eAttribType.Expression & Math.Abs(Scale - 0.0f) < 0.01 && power.Requires.ClassName.Length > 0) && string.Equals(power.Requires.ClassName[0], "CLASS_BRUTE", StringComparison.OrdinalIgnoreCase))
+                                else if (ps.SetType == Enums.ePowerSetType.Inherent && EffectType == Enums.eEffectType.DamageBuff && AttribType == Enums.eAttribType.Expression & Math.Abs(Scale - 0.0f) < 0.01 && power.Requires.ClassName.Length > 0 && string.Equals(power.Requires.ClassName[0], "CLASS_BRUTE", StringComparison.OrdinalIgnoreCase))
                                 {
                                     Stacking = Enums.eStacking.Yes;
                                     AttribType = Enums.eAttribType.Magnitude;
@@ -1814,7 +1802,7 @@ namespace Base.Data_Classes
                     else if (Suppression > effect.Suppression)
                         num2 = -1;
                 }
-                num1 = !(effect.EffectType == Enums.eEffectType.None & EffectType != Enums.eEffectType.None) ? (!(effect.EffectType != Enums.eEffectType.None & EffectType == Enums.eEffectType.None) ? (EffectType <= effect.EffectType ? (EffectType >= effect.EffectType ? (!IgnoreED || effect.IgnoreED ? (IgnoreED || !effect.IgnoreED ? EffectId == effect.EffectId ? (Reward == effect.Reward ? (MagnitudeExpression == effect.MagnitudeExpression ? (!effect.isDamage() ? (effect.EffectType != Enums.eEffectType.ResEffect ? (effect.EffectType != Enums.eEffectType.Mez && effect.EffectType != Enums.eEffectType.MezResist ? (effect.EffectType != Enums.eEffectType.Enhancement ? (effect.EffectType != Enums.eEffectType.None ? num2 : string.CompareOrdinal(Special, effect.Special)) : (ETModifies <= effect.ETModifies ? (ETModifies >= effect.ETModifies ? ((double)Mag <= (double)effect.Mag ? ((double)Mag >= (double)effect.Mag ? ((double)Duration <= (double)effect.Duration ? ((double)Duration >= (double)effect.Duration ? num2 : -1) : 1) : -1) : 1) : 1) : 1)) : (MezType <= effect.MezType ? (MezType >= effect.MezType ? ((double)Mag <= (double)effect.Mag ? ((double)Mag >= (double)effect.Mag ? ((double)Duration <= (double)effect.Duration ? ((double)Duration >= (double)effect.Duration ? num2 : -1) : 1) : -1) : 1) : -1) : 1)) : (ETModifies <= effect.ETModifies ? (ETModifies >= effect.ETModifies ? ((double)Mag <= (double)effect.Mag ? ((double)Mag >= (double)effect.Mag ? num2 : -1) : 1) : -1) : 1)) : (DamageType <= effect.DamageType ? (DamageType >= effect.DamageType ? ((double)Mag <= (double)effect.Mag ? ((double)Mag >= (double)effect.Mag ? num2 : -1) : 1) : -1) : 1)) : string.CompareOrdinal(MagnitudeExpression, effect.MagnitudeExpression)) : string.CompareOrdinal(Reward, effect.Reward)) : string.CompareOrdinal(EffectId, effect.EffectId) : -1) : 1) : -1) : 1) : 1) : -1;
+                num1 = !(effect.EffectType == Enums.eEffectType.None & EffectType != Enums.eEffectType.None) ? (!(effect.EffectType != Enums.eEffectType.None & EffectType == Enums.eEffectType.None) ? (EffectType <= effect.EffectType ? (EffectType >= effect.EffectType ? (!IgnoreED || effect.IgnoreED ? (IgnoreED || !effect.IgnoreED ? EffectId == effect.EffectId ? (Reward == effect.Reward ? (MagnitudeExpression == effect.MagnitudeExpression ? (!effect.isDamage() ? (effect.EffectType != Enums.eEffectType.ResEffect ? (effect.EffectType != Enums.eEffectType.Mez && effect.EffectType != Enums.eEffectType.MezResist ? (effect.EffectType != Enums.eEffectType.Enhancement ? (effect.EffectType != Enums.eEffectType.None ? num2 : string.CompareOrdinal(Special, effect.Special)) : (ETModifies <= effect.ETModifies ? (ETModifies >= effect.ETModifies ? (Mag <= (double)effect.Mag ? (Mag >= (double)effect.Mag ? (Duration <= (double)effect.Duration ? (Duration >= (double)effect.Duration ? num2 : -1) : 1) : -1) : 1) : 1) : 1)) : (MezType <= effect.MezType ? (MezType >= effect.MezType ? (Mag <= (double)effect.Mag ? (Mag >= (double)effect.Mag ? (Duration <= (double)effect.Duration ? (Duration >= (double)effect.Duration ? num2 : -1) : 1) : -1) : 1) : -1) : 1)) : (ETModifies <= effect.ETModifies ? (ETModifies >= effect.ETModifies ? (Mag <= (double)effect.Mag ? (Mag >= (double)effect.Mag ? num2 : -1) : 1) : -1) : 1)) : (DamageType <= effect.DamageType ? (DamageType >= effect.DamageType ? (Mag <= (double)effect.Mag ? (Mag >= (double)effect.Mag ? num2 : -1) : 1) : -1) : 1)) : string.CompareOrdinal(MagnitudeExpression, effect.MagnitudeExpression)) : string.CompareOrdinal(Reward, effect.Reward)) : string.CompareOrdinal(EffectId, effect.EffectId) : -1) : 1) : -1) : 1) : 1) : -1;
             }
             return num1;
         }

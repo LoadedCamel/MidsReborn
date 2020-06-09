@@ -49,7 +49,7 @@ namespace midsControls
             }
         }
 
-        public Size SzPower { get; set; }
+        public Size SzPower { get; }
 
         public void ReInit(Control iTarget)
         {
@@ -3950,7 +3950,7 @@ namespace midsControls
 
         public ExtendedBitmap bxBuffer;
 
-        public ExtendedBitmap[] bxPower;
+        public readonly ExtendedBitmap[] bxPower;
 
         readonly ExtendedBitmap bxNewSlot;
 

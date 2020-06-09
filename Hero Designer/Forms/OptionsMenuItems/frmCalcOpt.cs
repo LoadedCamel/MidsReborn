@@ -16,11 +16,11 @@ namespace Hero_Designer
     {
         readonly short[] defActs;
 
-        protected bool fcNoUpdate;
+        private bool fcNoUpdate;
         readonly frmMain myParent;
         readonly string[][] scenActs;
         //public List<bool> checkStats = new List<bool>();
-        public List<string> useStats = new List<string>();
+        private readonly List<string> useStats = new List<string>();
 
         readonly string[] scenarioExample;
 
@@ -435,7 +435,7 @@ namespace Hero_Designer
             MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].Space = !fcWSSpace.Checked ? ExportConfig.WhiteSpace.Tab : ExportConfig.WhiteSpace.Space;
         }
 
-        protected void ForumCodeDown()
+        private void ForumCodeDown()
         {
             int selectedIndex = fcList.SelectedIndex;
             if (selectedIndex >= fcList.Items.Count - 1)
@@ -452,7 +452,7 @@ namespace Hero_Designer
                 fcList.SelectedIndex = 0;
         }
 
-        protected void forumCodeUp()
+        private void forumCodeUp()
         {
             int selectedIndex = fcList.SelectedIndex;
             if (selectedIndex < 1)
@@ -469,7 +469,7 @@ namespace Hero_Designer
                 fcList.SelectedIndex = 0;
         }
 
-        protected void ForumColorDown()
+        private void ForumColorDown()
         {
             int selectedIndex = csList.SelectedIndex;
             if (selectedIndex >= csList.Items.Count - 1)
@@ -486,7 +486,7 @@ namespace Hero_Designer
                 csList.SelectedIndex = 0;
         }
 
-        protected void forumColorUp()
+        private void forumColorUp()
         {
             int selectedIndex = csList.SelectedIndex;
             if (selectedIndex < 1)

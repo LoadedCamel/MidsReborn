@@ -27,11 +27,11 @@ namespace Hero_Designer.Forms
     {
         public string VersionText { get; set; }
         public string Type { get; set; }
-        public static Uri UpdateFile { get; set; }
-        public static string TempFile { get; set; }
+        private static Uri UpdateFile { get; set; }
+        private static string TempFile { get; set; }
 
         private Progress<ZipProgress> ZProgress;
-        public Thread thread { get; set; }
+        private Thread thread { get; set; }
 
         private bool DLComplete;
 
@@ -50,7 +50,7 @@ namespace Hero_Designer.Forms
             DownloadUpdate();
         }
 
-        public void DownloadUpdate()
+        private void DownloadUpdate()
         {
             thread = new Thread(() =>
             {
@@ -92,14 +92,15 @@ namespace Hero_Designer.Forms
             });
         }
 
-        public void BeginInstall()
+        private void BeginInstall()
         {
             if (DLComplete)
             {
                 InstallUpdate(Type);
             }
         }
-        public void InstallUpdate(string updateType)
+
+        private void InstallUpdate(string updateType)
         {
             var asmLOC = Assembly.GetExecutingAssembly().Location;
             var dirLOC = $"{Directory.GetParent(asmLOC)}";
@@ -124,7 +125,7 @@ namespace Hero_Designer.Forms
             RunZipExtractor();
         }
 
-        public void RunZipExtractor()
+        private void RunZipExtractor()
         {
             ctlProgressBar2.Maximum = 100;
             zipExtractor = new BackgroundWorker();
@@ -166,7 +167,7 @@ namespace Hero_Designer.Forms
             ctlProgressBar2.Text = $@"{ctlProgressBar2.StatusText}";
         }
 
-        public static void TransferFiles(string sourcePath, string destinationPath)
+        private static void TransferFiles(string sourcePath, string destinationPath)
         {
             foreach (var file in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
             {

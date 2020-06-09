@@ -19,10 +19,10 @@ namespace Hero_Designer
 {
     public class clsXMLUpdate
     {
-        public static bool Mandatory { get; set; }
-        public static Version AppVersion { get; set; }
-        public static float DbVersion { get; set; }
-        public static string ChangeLog { get; set; }
+        private static bool Mandatory { get; set; }
+        private static Version AppVersion { get; set; }
+        private static float DbVersion { get; set; }
+        private static string ChangeLog { get; set; }
 
         public bool RestartNeeded = false;
 
@@ -135,7 +135,7 @@ namespace Hero_Designer
             }
         }
 
-        public static void Update(Enum type, string updateVersion, string changeLog)
+        private static void Update(Enum type, string updateVersion, string changeLog)
         {
             try
             {
@@ -220,7 +220,7 @@ namespace Hero_Designer
             }
         }*/
 
-        protected enum UpdateType
+        private enum UpdateType
         {
             None,
             App,

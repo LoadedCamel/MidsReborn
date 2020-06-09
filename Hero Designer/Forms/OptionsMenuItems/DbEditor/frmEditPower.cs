@@ -505,7 +505,7 @@ namespace Hero_Designer
             myPower.PowerType = (Enums.ePowerType)cbPowerType.SelectedIndex;
         }
 
-        public void CheckScaleValues()
+        private void CheckScaleValues()
         {
             if (Conversion.Val(udScaleMin.Text) >= Conversion.Val(udScaleMax.Text))
             {
@@ -756,28 +756,15 @@ namespace Hero_Designer
             {
                 Rectangle destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
                 bxSet.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect, I9Gfx.GetImageRect((int)myPower.SetTypes[index]), GraphicsUnit.Pixel);
-                string s;
-                switch (myPower.SetTypes[index])
+                var s = myPower.SetTypes[index] switch
                 {
-                    case Enums.eSetType.MeleeST:
-                        s = "M\r\nST";
-                        break;
-                    case Enums.eSetType.RangedST:
-                        s = "R\r\nST";
-                        break;
-                    case Enums.eSetType.RangedAoE:
-                        s = "R\r\nAoE";
-                        break;
-                    case Enums.eSetType.MeleeAoE:
-                        s = "M\r\nAoE";
-                        break;
-                    case Enums.eSetType.Snipe:
-                        s = "S";
-                        break;
-                    default:
-                        s = "";
-                        break;
-                }
+                    Enums.eSetType.MeleeST => "M\r\nST",
+                    Enums.eSetType.RangedST => "R\r\nST",
+                    Enums.eSetType.RangedAoE => "R\r\nAoE",
+                    Enums.eSetType.MeleeAoE => "M\r\nAoE",
+                    Enums.eSetType.Snipe => "S",
+                    _ => ""
+                };
                 RectangleF layoutRectangle = new RectangleF(destRect.X, destRect.Y, destRect.Width, destRect.Height);
                 --layoutRectangle.X;
                 bxSet.Graphics.DrawString(s, font, solidBrush1, layoutRectangle, format);
@@ -823,31 +810,16 @@ namespace Hero_Designer
             {
                 Rectangle destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
                 bxSetList.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, destRect, I9Gfx.GetImageRect(index), GraphicsUnit.Pixel);
-                string s;
-                switch ((Enums.eSetType)index)
+                var s = (Enums.eSetType) index switch
                 {
-                    case Enums.eSetType.MeleeST:
-                        s = "M\r\nST";
-                        break;
-                    case Enums.eSetType.RangedST:
-                        s = "R\r\nST";
-                        break;
-                    case Enums.eSetType.RangedAoE:
-                        s = "R\r\nAoE";
-                        break;
-                    case Enums.eSetType.MeleeAoE:
-                        s = "M\r\nAoE";
-                        break;
-                    case Enums.eSetType.Snipe:
-                        s = "S";
-                        break;
-                    case Enums.eSetType.UniversalDamage:
-                        s = "Dmg";
-                        break;
-                    default:
-                        s = "";
-                        break;
-                }
+                    Enums.eSetType.MeleeST => "M\r\nST",
+                    Enums.eSetType.RangedST => "R\r\nST",
+                    Enums.eSetType.RangedAoE => "R\r\nAoE",
+                    Enums.eSetType.MeleeAoE => "M\r\nAoE",
+                    Enums.eSetType.Snipe => "S",
+                    Enums.eSetType.UniversalDamage => "Dmg",
+                    _ => ""
+                };
                 RectangleF layoutRectangle = new RectangleF(destRect.X, destRect.Y, destRect.Width, destRect.Height);
                 --layoutRectangle.X;
                 bxSetList.Graphics.DrawString(s, font, solidBrush1, layoutRectangle, format);

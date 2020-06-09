@@ -18,9 +18,9 @@ namespace Base.Display
     bool _isNew;
 
     bool _isInitialised;
+        private Bitmap bitmap;
 
-
-    public Graphics Graphics
+        public Graphics Graphics
     {
       get
       {
@@ -217,7 +217,12 @@ namespace Base.Display
       Initialise(fileName);
     }
 
-    protected class PropertyCache
+        public ExtendedBitmap(Bitmap bitmap)
+        {
+            this.bitmap = bitmap;
+        }
+
+        protected class PropertyCache
     {
       public PixelFormat BitDepth = PixelFormat.Format32bppArgb;
       public Size Size;

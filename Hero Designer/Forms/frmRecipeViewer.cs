@@ -149,12 +149,12 @@ namespace Hero_Designer
                                     MidsContext.Character.CurrentBuild
                                         .Powers[Convert.ToInt32(lvPower.CheckedItems[0].Tag)].NIDPower]
                                 .DisplayName
-                            : "All Powers", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                            : "All Powers", PopUp.Colors.Title);
                 }
                 else
-                    popupData.Sections[index3].Add(Convert.ToString(lvPower.CheckedIndices.Count) + " Powers", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    popupData.Sections[index3].Add(Convert.ToString(lvPower.CheckedIndices.Count) + " Powers", PopUp.Colors.Title);
                 if (!chkRecipe.Checked)
-                    popupData.Sections[index3].Add(Convert.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    popupData.Sections[index3].Add(Convert.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:", PopUp.Colors.Title);
                 if (Mini)
                 {
                     string str = "Buy:";
@@ -195,7 +195,7 @@ namespace Hero_Designer
                 {
                     RecipeInfo.ColumnPosition = 0.75f;
                     int index1 = popupData.Add();
-                    popupData.Sections[index1].Add(Convert.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    popupData.Sections[index1].Add(Convert.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:", PopUp.Colors.Title);
                     int num7 = numArray2.Length - 1;
                     for (int index2 = 0; index2 <= num7; ++index2)
                     {
@@ -204,22 +204,13 @@ namespace Hero_Designer
                         {
                             if (numArray2[index2][index4] <= 0)
                                 continue;
-                            Color color;
-                            switch (DatabaseAPI.Database.Recipes[index2].Rarity)
+                            var color = DatabaseAPI.Database.Recipes[index2].Rarity switch
                             {
-                                case Recipe.RecipeRarity.Uncommon:
-                                    color = PopUp.Colors.Uncommon;
-                                    break;
-                                case Recipe.RecipeRarity.Rare:
-                                    color = PopUp.Colors.Rare;
-                                    break;
-                                case Recipe.RecipeRarity.UltraRare:
-                                    color = PopUp.Colors.UltraRare;
-                                    break;
-                                default:
-                                    color = PopUp.Colors.Text;
-                                    break;
-                            }
+                                Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
+                                Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                                Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
+                                _ => PopUp.Colors.Text
+                            };
                             if (Mini)
                                 popupData.Sections[index1].Add(" " + Convert.ToString(numArray2[index2][index4]) + " x", color, DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[index2].EnhIdx) + " (" + Convert.ToString(DatabaseAPI.Database.Recipes[index2].Item[index4].Level + 1) + ")", color, 0.9f, FontStyle.Bold, iIndent);
                             else
@@ -237,27 +228,21 @@ namespace Hero_Designer
                 }
                 int index5 = popupData.Add();
                 string iText1 = !Mini ? Convert.ToString(num4) + " Salvage Items:" : Convert.ToString(num4) + " Items:";
-                popupData.Sections[index5].Add(iText1, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                popupData.Sections[index5].Add(iText1, PopUp.Colors.Title);
                 int num9 = numArray1.Length - 1;
                 for (int index1 = 0; index1 <= num9; ++index1)
                 {
                     if (numArray1[index1] <= 0)
                         continue;
-                    Color color = Color.White;
-                    switch (DatabaseAPI.Database.Salvage[index1].Rarity)
+                    var color = DatabaseAPI.Database.Salvage[index1].Rarity switch
                     {
-                        case Recipe.RecipeRarity.Common:
-                            color = PopUp.Colors.Common;
-                            break;
-                        case Recipe.RecipeRarity.Uncommon:
-                            color = PopUp.Colors.Uncommon;
-                            break;
-                        case Recipe.RecipeRarity.Rare:
-                            color = PopUp.Colors.Rare;
-                            break;
-                    }
+                        Recipe.RecipeRarity.Common => PopUp.Colors.Common,
+                        Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
+                        Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                        _ => Color.White
+                    };
                     if (Mini)
-                        popupData.Sections[index5].Add(" " + Convert.ToString(numArray1[index1]) + " x", color, DatabaseAPI.Database.Salvage[index1].ExternalName, color, 0.9f, FontStyle.Bold, 0);
+                        popupData.Sections[index5].Add(" " + Convert.ToString(numArray1[index1]) + " x", color, DatabaseAPI.Database.Salvage[index1].ExternalName, color, 0.9f);
                     else
                         popupData.Sections[index5].Add(DatabaseAPI.Database.Salvage[index1].ExternalName, color, Convert.ToString(numArray1[index1]), color, 0.9f, FontStyle.Bold, 1);
                 }
@@ -267,13 +252,13 @@ namespace Hero_Designer
                 {
                     int index1 = popupData.Add();
                     string iText2 = !Mini ? Convert.ToString(nonRecipeCount - 1) + " Non-Crafted Enhancements:" : Convert.ToString(nonRecipeCount - 1) + " Enhs:";
-                    popupData.Sections[index1].Add(iText2, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    popupData.Sections[index1].Add(iText2, PopUp.Colors.Title);
                     int num7 = tl.Length - 1;
                     for (int index2 = 0; index2 <= num7; ++index2)
                     {
                         Color common = PopUp.Colors.Common;
                         if (Mini)
-                            popupData.Sections[index1].Add(" " + Convert.ToString(tl[index2].Count) + " x", common, tl[index2].Text, common, 0.9f, FontStyle.Bold, 0);
+                            popupData.Sections[index1].Add(" " + Convert.ToString(tl[index2].Count) + " x", common, tl[index2].Text, common, 0.9f);
                         else
                             popupData.Sections[index1].Add(tl[index2].Text, common, Convert.ToString(tl[index2].Count), common, 0.9f, FontStyle.Bold, 1);
                     }
@@ -737,15 +722,12 @@ namespace Hero_Designer
                 for (int index2 = 0; index2 <= num3; ++index2)
                 {
                     flag = true;
-                    switch (colorSortMode)
+                    num1 = colorSortMode switch
                     {
-                        case 1:
-                            num1 = colorRarityCompare(inStrs[numArray[index2]].tColor, inStrs[index1].tColor);
-                            break;
-                        case 2:
-                            num1 = colorRarityCompareB(inStrs[numArray[index2]].tColor, inStrs[index1].tColor);
-                            break;
-                    }
+                        1 => colorRarityCompare(inStrs[numArray[index2]].tColor, inStrs[index1].tColor),
+                        2 => colorRarityCompareB(inStrs[numArray[index2]].tColor, inStrs[index1].tColor),
+                        _ => num1
+                    };
 
                     if ((num1 != 0 || string.CompareOrdinal(
                              Convert.ToString(Interaction.IIf(Mini, inStrs[index1].TextColumn, inStrs[index1].Text)),

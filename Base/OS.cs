@@ -59,19 +59,13 @@ public static class OS
     {
         //TODO: this isn't being used, but if we find a reason to use it, the app name needs to be updated
         string str1 = "In order for installation and updates to function correctly," + '\n' + "you may need to set the application's shortcut to run as an adminstrator." + '\n' + '\n' + "To do this, right-click on the shortcut to Mids' Hero Designer and select Properties->Compatability->Always run as Administrator.";
-        string str2;
-        switch (GetWindowsVersion())
+        var str2 = GetWindowsVersion() switch
         {
-            case WindowsVersion.Vista:
-                str2 = 20 + "IMPORTANT: You are running Windows Vista! " + str1;
-                break;
-            case WindowsVersion.NewerThanVista:
-                str2 = 20 + "IMPORTANT: You are running an unidentified version of Windows! " + str1;
-                break;
-            default:
-                str2 = "";
-                break;
-        }
+            WindowsVersion.Vista => (20 + "IMPORTANT: You are running Windows Vista! " + str1),
+            WindowsVersion.NewerThanVista => (20 + "IMPORTANT: You are running an unidentified version of Windows! " +
+                                              str1),
+            _ => ""
+        };
         return str2;
     }
 

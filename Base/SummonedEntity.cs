@@ -26,11 +26,11 @@ public class SummonedEntity
     public int GetNClassId() => _nClassID;
 
 
-    public SummonedEntity()
+    private SummonedEntity()
     {
     }
 
-    public SummonedEntity(int nID) : this()
+    private SummonedEntity(int nID) : this()
     {
         _nID = nID;
     }

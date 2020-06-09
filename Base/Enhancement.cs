@@ -115,23 +115,14 @@ public class Enhancement : IEnhancement
     {
         get
         {
-            string str;
-            switch (TypeID)
+            var str = TypeID switch
             {
-                case Enums.eType.Normal:
-                case Enums.eType.SpecialO:
-                    str = Name;
-                    break;
-                case Enums.eType.InventO:
-                    str = "Invention: " + Name;
-                    break;
-                case Enums.eType.SetO:
-                    str = DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName + ": " + Name;
-                    break;
-                default:
-                    str = string.Empty;
-                    break;
-            }
+                Enums.eType.Normal => Name,
+                Enums.eType.SpecialO => Name,
+                Enums.eType.InventO => ("Invention: " + Name),
+                Enums.eType.SetO => (DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName + ": " + Name),
+                _ => string.Empty
+            };
             return str;
         }
     }

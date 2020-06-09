@@ -315,7 +315,7 @@ namespace midsControls
         }
 
         // Token: 0x060001BF RID: 447 RVA: 0x00010E10 File Offset: 0x0000F010
-        public void DrawOutlineText(string iStr, RectangleF bounds, Color text, Color outline, Font bFont, float outlineSpace, ref Graphics target, bool smallMode = false, bool leftAlign = false)
+        private void DrawOutlineText(string iStr, RectangleF bounds, Color text, Color outline, Font bFont, float outlineSpace, ref Graphics target, bool smallMode = false, bool leftAlign = false)
         {
             StringFormat stringFormat = new StringFormat(StringFormatFlags.NoWrap)
             {
@@ -439,7 +439,7 @@ namespace midsControls
         }
 
         // Token: 0x040000CA RID: 202
-        public IContainer Components { get; }
+        private IContainer Components { get; }
 
         // Token: 0x040000CB RID: 203
         private ExtendedBitmap bxImage;

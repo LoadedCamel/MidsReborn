@@ -9,10 +9,9 @@ namespace Hero_Designer
 {
     public partial class frmEntityEdit : Form
     {
-
-        protected bool loading;
-        public SummonedEntity myEntity;
-        protected bool Updating;
+        private bool loading;
+        public readonly SummonedEntity myEntity;
+        private bool Updating;
 
         public frmEntityEdit(SummonedEntity iEntity)
         {
@@ -176,7 +175,7 @@ namespace Hero_Designer
             myEntity.EntityType = (Enums.eSummonEntity)cbEntType.SelectedIndex;
         }
 
-        protected void DisplayInfo()
+        private void DisplayInfo()
         {
             PS_FillList();
             UG_FillList();

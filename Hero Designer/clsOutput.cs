@@ -11,7 +11,7 @@ namespace Hero_Designer
     {
         readonly string[] BBWhite = { " ", "\t" };
 
-        public bool HTML;
+        public readonly bool HTML;
         public int idFormat = MidsContext.Config.ExportTarget;
         readonly int idScheme = MidsContext.Config.ExportScheme;
 
@@ -259,7 +259,7 @@ namespace Hero_Designer
 
         {
             string str1 = formatColor(formatUnderline(formatBold("Set Bonuses:")), ExportConfig.Element.Heading) + LineBreak();
-            int[] numArray = new int[DatabaseAPI.NidPowers("set_bonus", "").Length - 1 + 1];
+            int[] numArray = new int[DatabaseAPI.NidPowers("set_bonus").Length - 1 + 1];
             int num1 = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
             for (int index1 = 0; index1 <= num1; ++index1)
             {
@@ -341,37 +341,18 @@ namespace Hero_Designer
             }
             else
             {
-                Color color;
-                switch (iElement)
+                var color = iElement switch
                 {
-                    case ExportConfig.Element.Title:
-                        color = MidsContext.Config.Export.ColorSchemes[idScheme].Title;
-                        break;
-                    case ExportConfig.Element.Heading:
-                        color = MidsContext.Config.Export.ColorSchemes[idScheme].Heading;
-                        break;
-                    case ExportConfig.Element.Level:
-                        color = MidsContext.Config.Export.ColorSchemes[idScheme].Level;
-                        break;
-                    case ExportConfig.Element.Power:
-                        color = MidsContext.Config.Export.ColorSchemes[idScheme].Power;
-                        break;
-                    case ExportConfig.Element.Slots:
-                        color = MidsContext.Config.Export.ColorSchemes[idScheme].Slots;
-                        break;
-                    case ExportConfig.Element.IO:
-                        color = MidsContext.Config.Export.ColorSchemes[idScheme].IOColor;
-                        break;
-                    case ExportConfig.Element.SetO:
-                        color = MidsContext.Config.Export.ColorSchemes[idScheme].SetColor;
-                        break;
-                    case ExportConfig.Element.HO:
-                        color = MidsContext.Config.Export.ColorSchemes[idScheme].HOColor;
-                        break;
-                    default:
-                        color = Color.Black;
-                        break;
-                }
+                    ExportConfig.Element.Title => MidsContext.Config.Export.ColorSchemes[idScheme].Title,
+                    ExportConfig.Element.Heading => MidsContext.Config.Export.ColorSchemes[idScheme].Heading,
+                    ExportConfig.Element.Level => MidsContext.Config.Export.ColorSchemes[idScheme].Level,
+                    ExportConfig.Element.Power => MidsContext.Config.Export.ColorSchemes[idScheme].Power,
+                    ExportConfig.Element.Slots => MidsContext.Config.Export.ColorSchemes[idScheme].Slots,
+                    ExportConfig.Element.IO => MidsContext.Config.Export.ColorSchemes[idScheme].IOColor,
+                    ExportConfig.Element.SetO => MidsContext.Config.Export.ColorSchemes[idScheme].SetColor,
+                    ExportConfig.Element.HO => MidsContext.Config.Export.ColorSchemes[idScheme].HOColor,
+                    _ => Color.Black
+                };
                 string str2 = Conversion.Hex(color.R);
                 string str3 = Conversion.Hex(color.G);
                 string str4 = Conversion.Hex(color.B);

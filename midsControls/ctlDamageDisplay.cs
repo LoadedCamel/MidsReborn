@@ -300,7 +300,7 @@ namespace midsControls
         }
 
         // Token: 0x06000071 RID: 113 RVA: 0x00006A8F File Offset: 0x00004C8F
-        public void FullUpdate()
+        private void FullUpdate()
         {
             myGFX = CreateGraphics();
             bxBuffer = new ExtendedBitmap(Width, Height);
@@ -335,7 +335,7 @@ namespace midsControls
         }
 
         // Token: 0x06000076 RID: 118 RVA: 0x00006B20 File Offset: 0x00004D20
-        public void DrawGraph()
+        private void DrawGraph()
         {
             float height = Font.GetHeight(bxBuffer.Graphics);
             Rectangle rectangle = new Rectangle(0, 0, Width, Height);
@@ -483,7 +483,7 @@ namespace midsControls
         }
 
         // Token: 0x06000077 RID: 119 RVA: 0x00007244 File Offset: 0x00005444
-        public void DrawText(Rectangle bounds)
+        private void DrawText(Rectangle bounds)
         {
             RectangleF layoutRectangle = new RectangleF(0f, 0f, 0f, 0f);
             StringFormat stringFormat = new StringFormat();
@@ -502,18 +502,13 @@ namespace midsControls
             layoutRectangle.Width = checked(bounds.Width - phPadding * 2);
             layoutRectangle.Height = bounds.Height;
             Brush brush = new SolidBrush(pTextColor);
-            switch (pAlign)
+            stringFormat.Alignment = pAlign switch
             {
-                case Enums.eDDAlign.Left:
-                    stringFormat.Alignment = StringAlignment.Near;
-                    break;
-                case Enums.eDDAlign.Center:
-                    stringFormat.Alignment = StringAlignment.Center;
-                    break;
-                case Enums.eDDAlign.Right:
-                    stringFormat.Alignment = StringAlignment.Far;
-                    break;
-            }
+                Enums.eDDAlign.Left => StringAlignment.Near,
+                Enums.eDDAlign.Center => StringAlignment.Center,
+                Enums.eDDAlign.Right => StringAlignment.Far,
+                _ => stringFormat.Alignment
+            };
 
             Enums.eDDText eDdText = pText;
             if (eDdText == 0)
@@ -574,66 +569,66 @@ namespace midsControls
         [AccessedThroughProperty("myTip")] private ToolTip myTip;
 
         // Token: 0x04000027 RID: 39
-        protected ExtendedBitmap bxBuffer;
+        private ExtendedBitmap bxBuffer;
 
         // Token: 0x04000028 RID: 40
-        protected Graphics myGFX;
+        private Graphics myGFX;
 
         // Token: 0x04000029 RID: 41
-        protected Enums.eDDStyle pStyle;
+        private Enums.eDDStyle pStyle;
 
         // Token: 0x0400002A RID: 42
-        protected Enums.eDDText pText;
+        private readonly Enums.eDDText pText;
 
         // Token: 0x0400002B RID: 43
-        protected Enums.eDDGraph pGraph;
+        private Enums.eDDGraph pGraph;
 
         // Token: 0x0400002C RID: 44
-        protected Color pFadeBackStart;
+        private Color pFadeBackStart;
 
         // Token: 0x0400002D RID: 45
-        protected Color pFadeBackEnd;
+        private Color pFadeBackEnd;
 
         // Token: 0x0400002E RID: 46
-        protected Color pFadeBaseStart;
+        private Color pFadeBaseStart;
 
         // Token: 0x0400002F RID: 47
-        protected Color pFadeBaseEnd;
+        private Color pFadeBaseEnd;
 
         // Token: 0x04000030 RID: 48
-        protected Color pFadeEnhStart;
+        private Color pFadeEnhStart;
 
         // Token: 0x04000031 RID: 49
-        protected Color pFadeEnhEnd;
+        private Color pFadeEnhEnd;
 
         // Token: 0x04000032 RID: 50
-        protected Color pTextColor;
+        private Color pTextColor;
 
         // Token: 0x04000033 RID: 51
-        protected int pvPadding;
+        private int pvPadding;
 
         // Token: 0x04000034 RID: 52
-        protected int phPadding;
+        private int phPadding;
 
         // Token: 0x04000035 RID: 53
-        protected Enums.eDDAlign pAlign;
+        private Enums.eDDAlign pAlign;
 
         // Token: 0x04000036 RID: 54
-        protected float nBase;
+        private float nBase;
 
         // Token: 0x04000037 RID: 55
-        protected float nEnhanced;
+        private float nEnhanced;
 
         // Token: 0x04000038 RID: 56
-        protected float nMaxEnhanced;
+        private float nMaxEnhanced;
 
         // Token: 0x04000039 RID: 57
-        protected float nHighestBase;
+        private float nHighestBase;
 
         // Token: 0x0400003A RID: 58
-        protected float nHighestEnhanced;
+        private float nHighestEnhanced;
 
         // Token: 0x0400003B RID: 59
-        protected string pString;
+        private string pString;
     }
 }

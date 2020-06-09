@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Hero_Designer.My;
@@ -98,12 +99,12 @@ namespace Hero_Designer
             bFrm.SetMessage(sMessage);
         }
 
-        public void DisplayInfo()
+        private void DisplayInfo()
         {
             lblFile.Text = FileIO.StripPath(FullFileName);
             lblDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.PowersetVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
             udRevision.Value = new Decimal(DatabaseAPI.Database.PowersetVersion.Revision);
-            lblCount.Text = "Records: " + Convert.ToString(DatabaseAPI.Database.Powersets.Length);
+            lblCount.Text = "Records: " + Convert.ToString(DatabaseAPI.Database.Powersets.Length, CultureInfo.InvariantCulture);
         }
 
         void FillListView()

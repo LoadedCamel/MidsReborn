@@ -27,7 +27,7 @@ namespace midsControls
         // (get) Token: 0x060000DA RID: 218 RVA: 0x000095E0 File Offset: 0x000077E0
         // (set) Token: 0x060000DB RID: 219 RVA: 0x000095F8 File Offset: 0x000077F8
         [field: AccessedThroughProperty("myTip")]
-        public virtual ToolTip myTip
+        protected virtual ToolTip myTip
         {
             get;
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -240,7 +240,7 @@ namespace midsControls
         }
 
         // Token: 0x060000FA RID: 250 RVA: 0x00009ADA File Offset: 0x00007CDA
-        public void FullUpdate()
+        private void FullUpdate()
         {
             SetLineHeight();
             myGFX = CreateGraphics();
@@ -535,58 +535,58 @@ namespace midsControls
         }
 
         // Token: 0x04000064 RID: 100
-        protected ItemPair[] MyItems;
+        private ItemPair[] MyItems;
 
         // Token: 0x04000065 RID: 101
         private int LineHeight;
 
         // Token: 0x04000066 RID: 102
-        protected ExtendedBitmap bxBuffer;
+        private ExtendedBitmap bxBuffer;
 
         // Token: 0x04000067 RID: 103
-        protected Graphics myGFX;
+        private Graphics myGFX;
 
         // Token: 0x04000068 RID: 104
-        protected Color NameColour;
+        private Color NameColour;
 
         // Token: 0x04000069 RID: 105
-        protected Color ValueColor;
+        private Color ValueColor;
 
         // Token: 0x0400006A RID: 106
-        protected Color ValueColorA;
+        private Color ValueColorA;
 
         // Token: 0x0400006B RID: 107
-        protected Color ValueColorB;
+        private Color ValueColorB;
 
         // Token: 0x0400006C RID: 108
-        protected Color ValueColorC;
+        private Color ValueColorC;
 
         // Token: 0x0400006D RID: 109
         public Color ValueColorD;
 
         // Token: 0x0400006E RID: 110
-        protected Color myHighlightColor;
+        private Color myHighlightColor;
 
         // Token: 0x0400006F RID: 111
-        protected Color myHighlightTextColor;
+        private Color myHighlightTextColor;
 
         // Token: 0x04000070 RID: 112
-        protected int myColumns;
+        private int myColumns;
 
         // Token: 0x04000071 RID: 113
-        protected int LinePadding;
+        private readonly int LinePadding;
 
         // Token: 0x04000072 RID: 114
-        protected int myValueWidth;
+        private int myValueWidth;
 
         // Token: 0x04000073 RID: 115
-        protected bool Highlightable;
+        private bool Highlightable;
 
         // Token: 0x04000074 RID: 116
-        protected int CurrentHighlight;
+        private int CurrentHighlight;
 
         // Token: 0x04000075 RID: 117
-        protected bool myForceBold;
+        private bool myForceBold;
 
         // Token: 0x04000076 RID: 118
         private IContainer components;
@@ -652,13 +652,13 @@ namespace midsControls
             public string Value;
 
             // Token: 0x0400007C RID: 124
-            public bool AlternateColour;
+            public readonly bool AlternateColour;
 
             // Token: 0x0400007D RID: 125
-            public bool ProbColour;
+            public readonly bool ProbColour;
 
             // Token: 0x0400007E RID: 126
-            public bool VerySpecialColour;
+            public readonly bool VerySpecialColour;
 
             // Token: 0x0400007F RID: 127
             public bool UniqueColour;
@@ -667,7 +667,7 @@ namespace midsControls
             public Enums.ShortFX TagID;
 
             // Token: 0x04000081 RID: 129
-            public string SpecialTip;
+            private readonly string SpecialTip;
         }
 
         // Token: 0x02000011 RID: 17

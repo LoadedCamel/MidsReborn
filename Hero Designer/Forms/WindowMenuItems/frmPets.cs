@@ -30,11 +30,11 @@ namespace Hero_Designer
         DataView myDataView;
         frmFloatingStats FloatingDataForm;
 
-        frmMain _myParent;
+        readonly frmMain _myParent;
 
         List<IPower> _myPowers;
 
-        public List<string> PetPowers { get; set; }
+        private List<string> PetPowers { get; }
 
         public frmPets(frmMain iParent, List<string> PetPowersList)
         {
@@ -73,7 +73,7 @@ namespace Hero_Designer
             UpdatePetsListCombo();
         }
 
-        public void UpdatePetPowersCombo(List<string> pPowersList)
+        private void UpdatePetPowersCombo(List<string> pPowersList)
         {
             foreach (var power in pPowersList)
             {
@@ -83,7 +83,7 @@ namespace Hero_Designer
             cbSelPetPower.SelectedIndex = 0;
         }
 
-        public void UpdatePetsListCombo()
+        private void UpdatePetsListCombo()
         {
             cbSelPets.Items.Clear();
             var SelectedPet = cbSelPetPower.SelectedItem.ToString();

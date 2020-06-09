@@ -5,7 +5,7 @@ namespace Hero_Designer.My
 {
     internal class MyApplication
     {
-        public class Serializer : ISerialize
+        private class Serializer : ISerialize
         {
             readonly Func<object, string> _serializeFunc;
             public string Extension { get; }

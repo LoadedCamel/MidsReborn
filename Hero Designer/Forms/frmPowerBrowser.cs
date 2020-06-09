@@ -32,7 +32,7 @@ namespace Hero_Designer
 
         frmBusy bFrm;
 
-        protected bool Updating;
+        private bool Updating;
 
         public frmPowerBrowser()
         {
@@ -724,7 +724,7 @@ namespace Hero_Designer
             UpdateLists();
         }
 
-        public static int[] ConcatArray(int[] iArray1, int[] iArray2)
+        private static int[] ConcatArray(int[] iArray1, int[] iArray2)
         {
             int[] numArray = Array.Empty<int>();
             if (iArray1 != null && iArray2 != null)
@@ -742,7 +742,7 @@ namespace Hero_Designer
             return numArray;
             }
 
-        public void FillFilter()
+        private void FillFilter()
         {
             cbFilter.BeginUpdate();
             cbFilter.Items.Clear();
@@ -773,8 +773,7 @@ namespace Hero_Designer
         }
 
         [DebuggerStepThrough]
-
-        public void List_Groups(int SelIDX)
+        private void List_Groups(int SelIDX)
         {
             Updating = true;
             lvGroup.BeginUpdate();
@@ -840,7 +839,7 @@ namespace Hero_Designer
             Updating = false;
         }
 
-        public void List_Power_AddBlock(int[] iPowers, bool DisplayFullName)
+        private void List_Power_AddBlock(int[] iPowers, bool DisplayFullName)
         {
             string[] items = new string[4];
             if (iPowers.Length < 1)
@@ -861,7 +860,7 @@ namespace Hero_Designer
             }
         }
 
-        public void List_Power_AddBlock(string[] iPowers, bool DisplayFullName)
+        private void List_Power_AddBlock(string[] iPowers, bool DisplayFullName)
         {
             string[] items = new string[4];
             if (iPowers.Length < 1)
@@ -880,7 +879,7 @@ namespace Hero_Designer
             }
         }
 
-        public void List_Powers(int SelIDX)
+        private void List_Powers(int SelIDX)
         {
             int[] iPowers1 = Array.Empty<int>();
             string[] iPowers2 = Array.Empty<string>();
@@ -980,7 +979,7 @@ namespace Hero_Designer
             pnlPower.Enabled = lvPower.Enabled;
         }
 
-        public void List_Sets(int SelIDX)
+        private void List_Sets(int SelIDX)
         {
             int[] numArray1 = Array.Empty<int>();
             int[] numArray2 = Array.Empty<int>();
@@ -1054,7 +1053,7 @@ namespace Hero_Designer
             Updating = false;
         }
 
-        public void List_Sets_AddBlock(int[] iSets)
+        private void List_Sets_AddBlock(int[] iSets)
         {
             string[] items = new string[5];
             if (iSets.Length < 1)
@@ -1066,30 +1065,16 @@ namespace Hero_Designer
                     continue;
                 items[0] = DatabaseAPI.Database.Powersets[iSets[imageIndex]].SetName;
                 items[1] = DatabaseAPI.Database.Powersets[iSets[imageIndex]].DisplayName;
-                switch (DatabaseAPI.Database.Powersets[iSets[imageIndex]].SetType)
+                items[2] = DatabaseAPI.Database.Powersets[iSets[imageIndex]].SetType switch
                 {
-                    case Enums.ePowerSetType.Primary:
-                        items[2] = "Pri";
-                        break;
-                    case Enums.ePowerSetType.Secondary:
-                        items[2] = "Sec";
-                        break;
-                    case Enums.ePowerSetType.Ancillary:
-                        items[2] = "Epic";
-                        break;
-                    case Enums.ePowerSetType.Inherent:
-                        items[2] = "Inh";
-                        break;
-                    case Enums.ePowerSetType.Pool:
-                        items[2] = "Pool";
-                        break;
-                    case Enums.ePowerSetType.Accolade:
-                        items[2] = "Acc";
-                        break;
-                    default:
-                        items[2] = "";
-                        break;
-                }
+                    Enums.ePowerSetType.Primary => "Pri",
+                    Enums.ePowerSetType.Secondary => "Sec",
+                    Enums.ePowerSetType.Ancillary => "Epic",
+                    Enums.ePowerSetType.Inherent => "Inh",
+                    Enums.ePowerSetType.Pool => "Pool",
+                    Enums.ePowerSetType.Accolade => "Acc",
+                    _ => ""
+                };
                 items[3] = DatabaseAPI.Database.Powersets[iSets[imageIndex]].FullName;
                 items[4] = Convert.ToString(iSets[imageIndex]);
                 lvSet.Items.Add(new ListViewItem(items, imageIndex));

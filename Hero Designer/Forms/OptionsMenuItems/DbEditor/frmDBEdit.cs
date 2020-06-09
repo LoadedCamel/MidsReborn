@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Base.Master_Classes;
@@ -152,18 +153,18 @@ namespace Hero_Designer
             new frmSalvageEdit().ShowDialog();
         }
 
-        public void DisplayInfo()
+        private void DisplayInfo()
         {
             if (MainModule.MidsController.Toon == null)
                 return;
             lblDate.Text = Strings.Format(DatabaseAPI.Database.Date, "dd/MM/yyyy");
             UdIssue.Value = Convert.ToDecimal(DatabaseAPI.Database.Issue);
-            lblCountAT.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length);
+            lblCountAT.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length, CultureInfo.InvariantCulture);
             lblCountEnh.Text = Strings.Format(DatabaseAPI.Database.Enhancements.Length, "#,###,##0");
             lblCountIOSet.Text = Strings.Format(DatabaseAPI.Database.EnhancementSets.Count, "#,###,##0");
             lblCountPS.Text = Strings.Format(DatabaseAPI.Database.Powersets.Length, "#,###,##0");
             lblCountPwr.Text = Strings.Format(DatabaseAPI.Database.Power.Length, "#,###,##0");
-            txtDBVer.Text = Convert.ToString(DatabaseAPI.Database.Version);
+            txtDBVer.Text = Convert.ToString(DatabaseAPI.Database.Version, CultureInfo.InvariantCulture);
             int num1 = 0;
             int num2 = DatabaseAPI.Database.Power.Length - 1;
             for (int index = 0; index <= num2; ++index)

@@ -120,12 +120,12 @@ namespace Base.Display
       public void Init()
       {
         int index1 = Add();
-        Sections[index1].Add("Popup Information", Colors.Title, 1.25f, FontStyle.Bold, 0);
-        Sections[index1].Add("This is just an example string. It should wrap around if it gets too long, and not cause too many issues.", Colors.Text, 1f, FontStyle.Bold, 0);
-        Sections[index1].Add("This is a second string added as an additional content structure within the section.", Colors.Disabled, 1f, FontStyle.Bold, 0);
+        Sections[index1].Add("Popup Information", Colors.Title, 1.25f);
+        Sections[index1].Add("This is just an example string. It should wrap around if it gets too long, and not cause too many issues.", Colors.Text);
+        Sections[index1].Add("This is a second string added as an additional content structure within the section.", Colors.Disabled);
         int index2 = Add();
-        Sections[index2].Add("Second Section", Colors.Title, 1f, FontStyle.Bold, 0);
-        Sections[index2].Add("Columns follow this item:", Colors.Text, 1f, FontStyle.Bold, 0);
+        Sections[index2].Add("Second Section", Colors.Title);
+        Sections[index2].Add("Columns follow this item:", Colors.Text);
         Sections[index2].Add("Column 1", Colors.Text, "Column 2", Colors.Invention, 0.9f, FontStyle.Bold, 1);
         Sections[index2].Add("Column 1a", Colors.Text, "Column 2a", Colors.Invention, 0.9f, FontStyle.Bold, 1);
         Sections[index2].Add("Column 1b", Colors.Text, "Column 2b", Colors.Invention, 0.9f, FontStyle.Bold, 1);

@@ -60,7 +60,7 @@ namespace midsControls
             Draw();
         }
 
-        public ListLabelItemV2 Item
+        private ListLabelItemV2 Item
         {
             // ReSharper disable once FunctionRecursiveOnAllPaths
             get
@@ -133,7 +133,7 @@ namespace midsControls
             }
         }
 
-        public int HoverID => HoverIndex;
+        private int HoverID => HoverIndex;
 
         public bool SuspendRedraw
         {
@@ -561,7 +561,7 @@ namespace midsControls
             }
         }
 
-        protected void DrawItem(int Index)
+        private void DrawItem(int Index)
         {
             checked
             {
@@ -603,18 +603,13 @@ namespace midsControls
 
                 Rectangle rectangle = new Rectangle(TextArea.Left, num, TextArea.Width, height);
                 StringFormat stringFormat = new StringFormat();
-                switch (Items[Index].TextAlign)
+                stringFormat.Alignment = Items[Index].TextAlign switch
                 {
-                    case LLTextAlign.Left:
-                        stringFormat.Alignment = StringAlignment.Near;
-                        break;
-                    case LLTextAlign.Center:
-                        stringFormat.Alignment = StringAlignment.Center;
-                        break;
-                    case LLTextAlign.Right:
-                        stringFormat.Alignment = StringAlignment.Far;
-                        break;
-                }
+                    LLTextAlign.Left => StringAlignment.Near,
+                    LLTextAlign.Center => StringAlignment.Center,
+                    LLTextAlign.Right => StringAlignment.Far,
+                    _ => stringFormat.Alignment
+                };
 
                 FontStyle fontStyle = FontStyle.Regular;
                 if (Items[Index].Bold)
@@ -1290,7 +1285,7 @@ namespace midsControls
         }
 
         // Token: 0x040000D7 RID: 215
-        public IContainer Components { get; }
+        private IContainer Components { get; }
 
         // Token: 0x040000D8 RID: 216
         ExtendedBitmap bxBuffer;
@@ -1299,76 +1294,76 @@ namespace midsControls
         public ListLabelItemV2[] Items;
 
         // Token: 0x040000DA RID: 218
-        protected Color[] Colours;
+        private readonly Color[] Colours;
 
         // Token: 0x040000DB RID: 219
-        protected Cursor[] Cursors;
+        private readonly Cursor[] Cursors;
 
         // Token: 0x040000DC RID: 220
-        protected bool[] HighlightOn;
+        private readonly bool[] HighlightOn;
 
         // Token: 0x040000DD RID: 221
-        protected Color bgColor;
+        private Color bgColor;
 
         // Token: 0x040000DE RID: 222
-        protected Color hvrColor;
+        private Color hvrColor;
 
         // Token: 0x040000DF RID: 223
-        protected bool TextOutline;
+        private bool TextOutline;
 
         // Token: 0x040000E0 RID: 224
-        protected int xPadding;
+        private int xPadding;
 
         // Token: 0x040000E1 RID: 225
-        protected int yPadding;
+        private int yPadding;
 
         // Token: 0x040000E2 RID: 226
-        protected int LineHeight;
+        private int LineHeight;
 
         // Token: 0x040000E3 RID: 227
-        protected int HoverIndex;
+        private int HoverIndex;
 
         // Token: 0x040000E4 RID: 228
-        protected bool DisableRedraw;
+        private bool DisableRedraw;
 
         // Token: 0x040000E5 RID: 229
-        protected bool DisableEvents;
+        private bool DisableEvents;
 
         // Token: 0x040000E6 RID: 230
-        protected bool canScroll;
+        private bool canScroll;
 
         // Token: 0x040000E7 RID: 231
-        protected int ScrollOffset;
+        private int ScrollOffset;
 
         // Token: 0x040000E8 RID: 232
-        protected bool canExpand;
+        private bool canExpand;
 
         // Token: 0x040000E9 RID: 233
-        protected bool Expanded;
+        private bool Expanded;
 
         // Token: 0x040000EA RID: 234
-        protected Size szNormal;
+        private Size szNormal;
 
         // Token: 0x040000EB RID: 235
-        protected int expandMaxY;
+        private int expandMaxY;
 
         // Token: 0x040000EC RID: 236
-        protected Rectangle TextArea;
+        private Rectangle TextArea;
 
         // Token: 0x040000ED RID: 237
-        protected int ScrollWidth;
+        private int ScrollWidth;
 
         // Token: 0x040000EE RID: 238
-        protected Color scBarColor;
+        private Color scBarColor;
 
         // Token: 0x040000EF RID: 239
-        protected Color scButtonColor;
+        private Color scButtonColor;
 
         // Token: 0x040000F0 RID: 240
-        protected int ScrollSteps;
+        private int ScrollSteps;
 
         // Token: 0x040000F1 RID: 241
-        protected bool DragMode;
+        private bool DragMode;
 
         // Token: 0x040000F2 RID: 242
         eMouseTarget LastMouseMovetarget;
@@ -1660,31 +1655,31 @@ namespace midsControls
             }
 
             // Token: 0x04000112 RID: 274
-            protected string Txt;
+            private string Txt;
 
             // Token: 0x04000113 RID: 275
             public string WrappedText;
 
             // Token: 0x04000114 RID: 276
-            protected LLItemState State;
+            private LLItemState State;
 
             // Token: 0x04000115 RID: 277
             public LLFontFlags FontFlags;
 
             // Token: 0x04000116 RID: 278
-            protected LLTextAlign Alignment;
+            private LLTextAlign Alignment;
 
             // Token: 0x04000117 RID: 279
-            public int nIDSet;
+            public readonly int nIDSet;
 
             // Token: 0x04000118 RID: 280
-            public int IDXPower;
+            public readonly int IDXPower;
 
             // Token: 0x04000119 RID: 281
-            public int nIDPower;
+            public readonly int nIDPower;
 
             // Token: 0x0400011A RID: 282
-            protected string sTag;
+            private readonly string sTag;
 
             // Token: 0x0400011B RID: 283
             public int LineCount;

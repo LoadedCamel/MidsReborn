@@ -5,12 +5,12 @@ namespace Import
 {
   public class EnhSetData
   {
-    public readonly int Index = -1;
+    private readonly int Index = -1;
     public readonly bool IsValid = true;
     readonly string _csvString = string.Empty;
 
     public readonly EnhancementSet Data;
-    public bool IsNew;
+    public readonly bool IsNew;
 
     public EnhSetData(string iString)
     {

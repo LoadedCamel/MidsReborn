@@ -8,10 +8,10 @@ namespace Base.Master_Classes
         public static int MathLevelBase = 49;
         public static int MathLevelExemp = -1;
         public const string AppName = "Mids' Reborn";
-        public const int AppMajorVersion = 2;
-        public const int AppMinorVersion = 7;
-        public const int AppBuildVersion = 2;
-        public const int AppRevisionVersion = 10;
+        private const int AppMajorVersion = 2;
+        private const int AppMinorVersion = 7;
+        private const int AppBuildVersion = 2;
+        private const int AppRevisionVersion = 10;
         public const string AppAssemblyVersion = "2.7.2.10";
         public static readonly Version AppVersion = new Version(major: AppMajorVersion, minor: AppMinorVersion, build: AppBuildVersion, revision: AppRevisionVersion);
         

@@ -27,7 +27,7 @@ namespace Hero_Designer
             Refresh();
         }
 
-        public void SetText1(string text)
+        private void SetText1(string text)
         {
             if (lblStatus1.InvokeRequired)
                 Invoke(new SetTextCallback(SetText1), text);
@@ -43,6 +43,6 @@ namespace Hero_Designer
                 lblStatus2.Text = text;
         }
 
-        public delegate void SetTextCallback(string text);
+        private delegate void SetTextCallback(string text);
     }
 }

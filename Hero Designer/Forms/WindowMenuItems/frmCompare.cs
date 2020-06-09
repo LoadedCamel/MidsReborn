@@ -38,7 +38,7 @@ namespace Hero_Designer
         readonly string[] DisplayValueStrings;
         float GraphMax;
         bool Loaded;
-        public Enums.CompMap Map;
+        private Enums.CompMap Map;
         bool Matching;
         readonly frmMain myParent;
         readonly IPower[][] Powers;
@@ -158,7 +158,7 @@ namespace Hero_Designer
             TopMost = chkOnTop.Checked;
         }
 
-        public void DisplayGraph()
+        private void DisplayGraph()
         {
             if (lstDisplay.SelectedIndex < 0)
                 return;
@@ -344,15 +344,15 @@ namespace Hero_Designer
 
         int getAT(int idx)
         {
-            switch (idx)
+            return idx switch
             {
-                case 0: return cbAT1.SelectedIndex;
-                case 1: return cbAT2.SelectedIndex;
-                default: return 0;
-            }
+                0 => cbAT1.SelectedIndex,
+                1 => cbAT2.SelectedIndex,
+                _ => 0
+            };
         }
 
-        public int getMax(int iVal1, int ival2)
+        private int getMax(int iVal1, int ival2)
             => iVal1 <= ival2 ? ival2 : iVal1;
 
         int GetNextFreeSlot()
@@ -367,7 +367,7 @@ namespace Hero_Designer
             return index;
         }
 
-        public void GetPowers()
+        private void GetPowers()
         {
             int[] numArray = new int[2];
             int Index = 0;
@@ -425,22 +425,14 @@ namespace Hero_Designer
                 default:
                     return Enums.ePowerSetType.Primary;
             }
-            Enums.ePowerSetType ePowerSetType;
-            switch (comboBox.SelectedIndex)
+
+            var ePowerSetType = comboBox.SelectedIndex switch
             {
-                case 0:
-                    ePowerSetType = Enums.ePowerSetType.Primary;
-                    break;
-                case 1:
-                    ePowerSetType = Enums.ePowerSetType.Secondary;
-                    break;
-                case 2:
-                    ePowerSetType = Enums.ePowerSetType.Ancillary;
-                    break;
-                default:
-                    ePowerSetType = Enums.ePowerSetType.Primary;
-                    break;
-            }
+                0 => Enums.ePowerSetType.Primary,
+                1 => Enums.ePowerSetType.Secondary,
+                2 => Enums.ePowerSetType.Ancillary,
+                _ => Enums.ePowerSetType.Primary
+            };
             return ePowerSetType;
         }
 
@@ -508,7 +500,7 @@ namespace Hero_Designer
             cbAT2.EndUpdate();
         }
 
-        public void List_Sets(int Index)
+        private void List_Sets(int Index)
         {
             Enums.ePowerSetType iSet = Enums.ePowerSetType.None;
             ComboBox comboBox1;
@@ -526,18 +518,14 @@ namespace Hero_Designer
                 comboBox2 = cbType2;
                 selectedIndex = cbAT2.SelectedIndex;
             }
-            switch (comboBox2.SelectedIndex)
+
+            iSet = comboBox2.SelectedIndex switch
             {
-                case 0:
-                    iSet = Enums.ePowerSetType.Primary;
-                    break;
-                case 1:
-                    iSet = Enums.ePowerSetType.Secondary;
-                    break;
-                case 2:
-                    iSet = Enums.ePowerSetType.Ancillary;
-                    break;
-            }
+                0 => Enums.ePowerSetType.Primary,
+                1 => Enums.ePowerSetType.Secondary,
+                2 => Enums.ePowerSetType.Ancillary,
+                _ => iSet
+            };
             comboBox1.BeginUpdate();
             comboBox1.Items.Clear();
             IPowerset[] powersetIndexes = DatabaseAPI.GetPowersetIndexes(selectedIndex, iSet);
@@ -549,7 +537,7 @@ namespace Hero_Designer
             comboBox1.EndUpdate();
         }
 
-        public void list_Type()
+        private void list_Type()
         {
             cbType1.BeginUpdate();
             cbType1.Items.Clear();
@@ -790,7 +778,7 @@ namespace Hero_Designer
             }
         }
 
-        public void map_Simple()
+        private void map_Simple()
         {
             Map.Init();
             int Index = 0;
@@ -814,7 +802,7 @@ namespace Hero_Designer
             }
         }
 
-        public int mapDescString(string[] iStrings, ref bool[] placed)
+        private int mapDescString(string[] iStrings, ref bool[] placed)
         {
             int num1 = 0;
             for (int powerIdx = 0; powerIdx <= Powers[1].Length - 1; ++powerIdx)
@@ -898,7 +886,7 @@ namespace Hero_Designer
 
         void SetScaleLabel()
         {
-            lblScale.Text = "Scale: 0 - " + Convert.ToString(Graph.ScaleValue);
+            lblScale.Text = "Scale: 0 - " + Convert.ToString(Graph.ScaleValue, CultureInfo.InvariantCulture);
         }
 
         void StoreLocation()
@@ -1009,7 +997,7 @@ namespace Hero_Designer
                         string[][] tips2 = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips2[index3][index4] = tips2[index3][index4] + "\r\n  (Applied every " + Convert.ToString(Powers[index1][index2].ActivatePeriod) + "s)";
+                        tips2[index3][index4] = tips2[index3][index4] + "\r\n  (Applied every " + Convert.ToString(Powers[index1][index2].ActivatePeriod, CultureInfo.InvariantCulture) + "s)";
                     }
                 }
                 ++index1;
@@ -1082,7 +1070,7 @@ namespace Hero_Designer
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        public void values_DPS()
+        private void values_DPS()
         {
             float num1 = 1f;
             ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
@@ -1118,7 +1106,7 @@ namespace Hero_Designer
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        public void values_Duration()
+        private void values_Duration()
         {
             float num1 = 1f;
             int index1 = 0;
@@ -1154,7 +1142,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void values_End()
+        private void values_End()
         {
             float num1 = 1f;
             int index1 = 0;
@@ -1194,7 +1182,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void values_EPS()
+        private void values_EPS()
         {
             float num1 = 1f;
             int index1 = 0;
@@ -1243,7 +1231,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void values_Heal()
+        private void values_Heal()
         {
             Archetype archetype = MidsContext.Archetype;
             float num1 = 1f;
@@ -1280,7 +1268,7 @@ namespace Hero_Designer
             MidsContext.Archetype = archetype;
         }
 
-        public void values_HPE()
+        private void values_HPE()
         {
             Archetype archetype = MidsContext.Archetype;
             float num1 = 1f;
@@ -1319,7 +1307,7 @@ namespace Hero_Designer
             MidsContext.Archetype = archetype;
         }
 
-        public void values_HPS()
+        private void values_HPS()
         {
             Archetype archetype = MidsContext.Archetype;
             float num1 = 1f;
@@ -1358,7 +1346,7 @@ namespace Hero_Designer
             MidsContext.Archetype = archetype;
         }
 
-        public void values_MaxTargets()
+        private void values_MaxTargets()
         {
             float num1 = 1f;
             int index1 = 0;
@@ -1383,14 +1371,14 @@ namespace Hero_Designer
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Convert.ToString(Values[index1][index2]) + " Targets Max.";
+                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Convert.ToString(Values[index1][index2], CultureInfo.InvariantCulture) + " Targets Max.";
                     }
                     else
                     {
                         string[][] tips = Tips;
                         int index3 = index1;
                         int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Convert.ToString(Values[index1][index2]) + " Target Max.";
+                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Convert.ToString(Values[index1][index2], CultureInfo.InvariantCulture) + " Target Max.";
                     }
                     if (num1 < (double)Values[index1][index2])
                         num1 = Values[index1][index2];
@@ -1401,7 +1389,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void values_Range()
+        private void values_Range()
         {
             float num1 = 1f;
             int index1 = 0;
@@ -1414,34 +1402,34 @@ namespace Hero_Designer
                     switch (Powers[index1][index2].EffectArea)
                     {
                         case Enums.eEffectArea.Character:
-                            str = Convert.ToString(Powers[index1][index2].Range) + "ft range.";
+                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range.";
                             Values[index1][index2] = Powers[index1][index2].Range;
                             break;
                         case Enums.eEffectArea.Sphere:
                             Values[index1][index2] = Powers[index1][index2].Radius;
                             if (Powers[index1][index2].Range > 0.0)
                             {
-                                str = Convert.ToString(Powers[index1][index2].Range) + "ft range, ";
+                                str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range, ";
                                 Values[index1][index2] = Powers[index1][index2].Range;
                             }
-                            str = str + Convert.ToString(Powers[index1][index2].Radius) + "ft radius.";
+                            str = str + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) + "ft radius.";
                             break;
                         case Enums.eEffectArea.Cone:
                             Values[index1][index2] = Powers[index1][index2].Range;
-                            str = Convert.ToString(Powers[index1][index2].Range) + "ft range, " + Convert.ToString(Powers[index1][index2].Arc) + " degree cone.";
+                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range, " + Convert.ToString(Powers[index1][index2].Arc) + " degree cone.";
                             break;
                         case Enums.eEffectArea.Location:
                             Values[index1][index2] = Powers[index1][index2].Range;
-                            str = Convert.ToString(Powers[index1][index2].Range) + "ft range, " + Convert.ToString(Powers[index1][index2].Radius) + "ft radius.";
+                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range, " + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) + "ft radius.";
                             break;
                         case Enums.eEffectArea.Volume:
                             Values[index1][index2] = Powers[index1][index2].Radius;
                             if (Powers[index1][index2].Range > 0.0)
                             {
-                                str = Convert.ToString(Powers[index1][index2].Range) + "ft range, ";
+                                str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range, ";
                                 Values[index1][index2] = Powers[index1][index2].Range;
                             }
-                            str = str + Convert.ToString(Powers[index1][index2].Radius) + "ft radius.";
+                            str = str + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) + "ft radius.";
                             break;
                     }
 
@@ -1468,7 +1456,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void values_Recharge()
+        private void values_Recharge()
         {
             float num1 = 1f;
             int index1 = 0;
@@ -1501,7 +1489,7 @@ namespace Hero_Designer
             GraphMax = num1 * 1.025f;
         }
 
-        public void Values_Universal(Enums.eEffectType iEffectType, bool Sum, bool Debuff)
+        private void Values_Universal(Enums.eEffectType iEffectType, bool Sum, bool Debuff)
         {
             Archetype archetype = MidsContext.Archetype;
             float num1 = 1f;

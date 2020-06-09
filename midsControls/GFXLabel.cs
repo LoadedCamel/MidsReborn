@@ -68,7 +68,7 @@ namespace midsControls
 		}
 
 		// Token: 0x06000135 RID: 309 RVA: 0x0000B08C File Offset: 0x0000928C
-		protected override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
@@ -233,7 +233,7 @@ namespace midsControls
 		}
 
 		// Token: 0x04000090 RID: 144
-		public IContainer Components { get; }
+		private IContainer Components { get; }
 
 		// Token: 0x04000091 RID: 145
 		private string myText;

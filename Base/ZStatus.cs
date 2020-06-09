@@ -3,10 +3,9 @@ using System.Windows.Forms;
 
 public partial class ZStatus : Form
 {
-
-    internal Label lblStatus2;
-    internal Label lblStatus1;
-    internal Label lblTitle;
+    private Label lblStatus2;
+    private Label lblStatus1;
+    private Label lblTitle;
 
     public string StatusText1
     {

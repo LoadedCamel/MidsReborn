@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Base.Data_Classes;
@@ -26,13 +27,13 @@ namespace Hero_Designer
 
         bool _locked;
 
-        frmMain _myParent;
+        readonly frmMain _myParent;
 
         List<IPower> _myPetPowers;
         List<IPower> _myPowers;
 
 
-        public List<string> PetPowers { get; set; }
+        private List<string> PetPowers { get; }
 
         Panel Panel1;
 
@@ -40,7 +41,7 @@ namespace Hero_Designer
 
         VScrollBar VScrollBar1;
 
-        internal frmIncarnate.CustomPanel Panel2;
+        private frmIncarnate.CustomPanel Panel2;
 
         public frmMMPowers(frmMain iParent, List<string> PetPowersList)
         {
@@ -150,8 +151,8 @@ namespace Hero_Designer
             ibClose.ImageOn = _myParent.Drawing.bxPower[3].Bitmap;
             PopUp.PopupData iPopup = new PopUp.PopupData();
             int index = iPopup.Add();
-            iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
-            iPopup.Sections[index].Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 0);
+            iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);
+            iPopup.Sections[index].Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.", PopUp.Colors.Text, 0.9f);
             PopInfo.SetPopup(iPopup);
             //ChangedScrollFrameContents();
             UpdatePetPowersCombo(PetPowers);
@@ -159,7 +160,7 @@ namespace Hero_Designer
             //FillLists();
         }
 
-        public void UpdatePetPowersCombo(List<string> pPowersList)
+        private void UpdatePetPowersCombo(List<string> pPowersList)
         {
             //_myPowers = new List<IPower>();
             
@@ -171,7 +172,7 @@ namespace Hero_Designer
             cbSelPetPower.SelectedIndex = 0;
         }
 
-        public void UpdatePetsListCombo()
+        private void UpdatePetsListCombo()
         {
             cbSelPets.Items.Clear();
             var SelectedPet = cbSelPetPower.SelectedItem.ToString();
@@ -433,8 +434,8 @@ namespace Hero_Designer
                         str = "(Toggle)";
                         break;
                 }
-                iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
-                iPopup.Sections[index1].Add(str + " " + power1.DescShort, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 0);
+                iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title);
+                iPopup.Sections[index1].Add(str + " " + power1.DescShort, PopUp.Colors.Text, 0.9f);
                 int index2 = iPopup.Add();
                 if (power1.EndCost > 0.0)
                 {
@@ -458,13 +459,13 @@ namespace Hero_Designer
                 if (power1.Arc > 0)
                     iPopup.Sections[index2].Add("Arc:", PopUp.Colors.Title, Convert.ToString(power1.Arc) + "°", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 else if (power1.Radius > 0.0)
-                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Title, Convert.ToString(power1.Radius) + "ft", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Title, Convert.ToString(power1.Radius, CultureInfo.InvariantCulture) + "ft", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 if (power1.CastTime > 0.0)
                     iPopup.Sections[index2].Add("Cast Time:", PopUp.Colors.Title, Utilities.FixDP(power1.CastTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 IPower power2 = power1;
                 if (power2.Effects.Length > 0)
                 {
-                    iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                    iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title);
                     char[] chArray = { '^' };
                     int num1 = power2.Effects.Length - 1;
                     for (int index3 = 0; index3 <= num1; ++index3)

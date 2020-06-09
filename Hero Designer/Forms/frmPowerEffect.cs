@@ -174,7 +174,7 @@ namespace Hero_Designer
             UpdateFXText();
         }
 
-        public void DisplayEffectData()
+        private void DisplayEffectData()
         {
             string Style = "####0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0##";
             IEffect fx = myFX;
@@ -560,7 +560,7 @@ namespace Hero_Designer
                 myFX.ProcsPerMinute = ppm;
         }
 
-        public void UpdateEffectSubAttribList()
+        private void UpdateEffectSubAttribList()
         {
             int index1 = 0;
             lvSubAttribute.BeginUpdate();
@@ -662,7 +662,7 @@ namespace Hero_Designer
             lblEffectDescription.Text = myFX.BuildEffectString();
         }
 
-        public void UpdateSubSubList()
+        private void UpdateSubSubList()
         {
             int index1 = 0;
             lvSubSub.BeginUpdate();

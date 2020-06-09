@@ -21,7 +21,7 @@ namespace Base.Data_Classes
         Archetype _archetype;
         bool? _completeCache;
 
-        public List<PowerEnhancements> powerEnhancements { get; set; }
+        public List<PowerEnhancements> powerEnhancements { get; private set; }
 
         public string setName { get; set; }
         public HashSet<string> setSlotted = new HashSet<string>();
@@ -83,9 +83,9 @@ namespace Base.Data_Classes
 
         public IPowerset[] Powersets { get; private set; }
 
-        public bool[] PoolLocked { get; set; }
+        public bool[] PoolLocked { get; private set; }
 
-        protected int LevelCache { get; set; }
+        private int LevelCache { get; set; }
 
         public bool Locked { get; set; }
 
@@ -592,7 +592,7 @@ namespace Base.Data_Classes
             //MessageBox.Show(EquipRobot.ToString());
         }
 
-        public string GetEnhSetName(string longName)
+        private string GetEnhSetName(string longName)
         {
             var enhSet = string.Empty;
             var setCount = DatabaseAPI.Database.EnhancementSets.Count;
@@ -712,9 +712,9 @@ namespace Base.Data_Classes
             PopUp.PopupData popupData2;
             if (iSlot.Enh < 0)
             {
-                popupData1.Sections[index1].Add("Empty Slot", PopUp.Colors.Disabled, 1.25f, FontStyle.Bold, 0);
+                popupData1.Sections[index1].Add("Empty Slot", PopUp.Colors.Disabled, 1.25f);
                 if (iLevel > -1)
-                    popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text, 1f, FontStyle.Bold, 0);
+                    popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
                 int index2 = popupData1.Add();
                 popupData1.Sections[index2].Add("Right-Click to place an enhancement.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
                 popupData1.Sections[index2].Add("Shift-Click to move this slot.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
@@ -726,55 +726,50 @@ namespace Base.Data_Classes
                 switch (enhancement.TypeID)
                 {
                     case Enums.eType.Normal:
-                        popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f, FontStyle.Bold, 0);
+                        popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f);
                         break;
                     case Enums.eType.InventO:
-                        popupData1.Sections[index1].Add("Invention: " + enhancement.Name, PopUp.Colors.Title, 1.25f, FontStyle.Bold, 0);
+                        popupData1.Sections[index1].Add("Invention: " + enhancement.Name, PopUp.Colors.Title, 1.25f);
                         break;
                     case Enums.eType.SpecialO:
-                        popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f, FontStyle.Bold, 0);
+                        popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f);
                         break;
                     case Enums.eType.SetO:
                         Color iColor = PopUp.Colors.Title;
                         if (enhancement.RecipeIDX > -1)
                         {
-                            switch (DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity)
+                            iColor = DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity switch
                             {
-                                case Recipe.RecipeRarity.Uncommon:
-                                    iColor = PopUp.Colors.Uncommon;
-                                    break;
-                                case Recipe.RecipeRarity.Rare:
-                                    iColor = PopUp.Colors.Rare;
-                                    break;
-                                case Recipe.RecipeRarity.UltraRare:
-                                    iColor = PopUp.Colors.UltraRare;
-                                    break;
-                            }
+                                Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
+                                Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                                Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
+                                _ => iColor
+                            };
                         }
-                        popupData1.Sections[index1].Add(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " + enhancement.Name, iColor, 1.25f, FontStyle.Bold, 0);
+                        popupData1.Sections[index1].Add(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " + enhancement.Name, iColor, 1.25f);
                         break;
                 }
                 switch (enhancement.TypeID)
                 {
                     case Enums.eType.Normal:
-                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(0, byte.MaxValue, 0), 1f, FontStyle.Bold, 0);
+                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(0, byte.MaxValue, 0));
                         break;
                     case Enums.eType.InventO:
-                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false) + " - " + iSlot.GetEnhancementString(), PopUp.Colors.Invention, 1f, FontStyle.Bold, 0);
+                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false) + " - " + iSlot.GetEnhancementString(), PopUp.Colors.Invention);
                         break;
                     case Enums.eType.SpecialO:
-                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(byte.MaxValue, byte.MaxValue, 0), 1f, FontStyle.Bold, 0);
+                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(byte.MaxValue, byte.MaxValue, 0));
                         break;
                     case Enums.eType.SetO:
-                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false), PopUp.Colors.Invention, 1f, FontStyle.Bold, 0);
+                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false), PopUp.Colors.Invention);
                         break;
                 }
                 if (iLevel > -1)
-                    popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text, 1f, FontStyle.Bold, 0);
+                    popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
                 if (enhancement.Unique)
                 {
                     index1 = popupData1.Add();
-                    popupData1.Sections[index1].Add("This enhancement is Unique. No more than one enhancement of this type can be slotted by a character.", PopUp.Colors.Text, 0.9f, FontStyle.Bold, 0);
+                    popupData1.Sections[index1].Add("This enhancement is Unique. No more than one enhancement of this type can be slotted by a character.", PopUp.Colors.Text, 0.9f);
                 }
                 switch (enhancement.TypeID)
                 {
@@ -796,14 +791,14 @@ namespace Base.Data_Classes
                     case Enums.eType.SpecialO:
                     case Enums.eType.SetO:
                         if (!string.IsNullOrEmpty(enhancement.Desc))
-                            popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                            popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title);
                         int index4 = popupData1.Add();
                         string[] strArray3 = BreakByNewLine(iSlot.GetEnhancementStringLong());
                         for (int index3 = 0; index3 <= strArray3.Length - 1; ++index3)
                         {
                             var strArray2 = !enhancement.HasPowerEffect ? BreakByBracket(strArray3[index3]) : new[] { strArray3[index3], string.Empty };
                             string[] strArray4 = strArray2;
-                            popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0), strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f, FontStyle.Bold, 0);
+                            popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0), strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
                         }
                         break;
                 }
@@ -812,8 +807,8 @@ namespace Base.Data_Classes
                     if (enhancement.TypeID == Enums.eType.SetO)
                     {
                         int index3 = popupData1.Add();
-                        popupData1.Sections[index3].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType], PopUp.Colors.Invention, 1f, FontStyle.Bold, 0);
-                        popupData1.Sections[index3].Add("Set Level Range: " + (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMin + 1) + " to " + (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMax + 1), PopUp.Colors.Text, 1f, FontStyle.Bold, 0);
+                        popupData1.Sections[index3].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType], PopUp.Colors.Invention);
+                        popupData1.Sections[index3].Add("Set Level Range: " + (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMin + 1) + " to " + (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMax + 1), PopUp.Colors.Text);
                         popupData1.Add(PopSetEnhList(enhancement.nIDSet, powerEntry));
                         popupData1.Add(PopSetBonusListing(enhancement.nIDSet, powerEntry));
                     }
@@ -917,7 +912,7 @@ namespace Base.Data_Classes
         static PopUp.Section PopSetBonusListing(int sIdx, PowerEntry power)
         {
             var section1 = new PopUp.Section();
-            section1.Add("Set Bonus:", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+            section1.Add("Set Bonus:", PopUp.Colors.Title);
             int num = 0;
             if (power != null)
             {
@@ -941,11 +936,11 @@ namespace Base.Data_Classes
                 if (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP)
                     effectString += " (PvP)";
                 if (num >= enhancementSet.Bonus[index].Slotted & (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any))
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 0);
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f);
                 else if (power == null)
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 0);
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f);
                 else
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Disabled, 0.9f, FontStyle.Bold, 0);
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Disabled, 0.9f);
             }
             for (int index = 0; index <= enhancementSet.SpecialBonus.Length - 1; ++index)
             {
@@ -962,11 +957,11 @@ namespace Base.Data_Classes
                     }
                 }
                 if (flag)
-                    section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 0);
+                    section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f);
                 else if (power == null)
-                    section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 0);
+                    section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f);
                 else
-                    section1.Add("(Enh) " + effectString, PopUp.Colors.Disabled, 0.9f, FontStyle.Bold, 0);
+                    section1.Add("(Enh) " + effectString, PopUp.Colors.Disabled, 0.9f);
             }
             return section1;
         }
@@ -996,7 +991,7 @@ namespace Base.Data_Classes
             }
             if (index1 < 0)
             {
-                iLevel = Enhancement.GranularLevelZb(iLevel, 0, 49, 5);
+                iLevel = Enhancement.GranularLevelZb(iLevel, 0, 49);
                 for (int index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
                 {
                     if (recipe.Item[index2].Level != iLevel)
@@ -1014,7 +1009,7 @@ namespace Base.Data_Classes
             string str = string.Empty;
             if (recipe.EnhIdx > -1)
                 str = " - " + DatabaseAPI.Database.Enhancements[recipe.EnhIdx].LongName;
-            section1.Add("Recipe" + str, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+            section1.Add("Recipe" + str, PopUp.Colors.Title);
             if (recipeEntry.BuyCost > 0)
                 section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
             if (recipeEntry.CraftCost > 0)
@@ -1025,25 +1020,15 @@ namespace Base.Data_Classes
             {
                 if (recipeEntry.SalvageIdx[index2] < 0)
                     continue;
-                Color iColor;
                 string empty = string.Empty;
-                switch (DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].Rarity)
+                var iColor = DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].Rarity switch
                 {
-                    case Recipe.RecipeRarity.Common:
-                        iColor = PopUp.Colors.Common;
-                        break;
-                    case Recipe.RecipeRarity.Uncommon:
-                        iColor = PopUp.Colors.Uncommon;
-                        break;
-                    case Recipe.RecipeRarity.Rare:
-                        iColor = PopUp.Colors.Rare;
-                        break;
-                    case Recipe.RecipeRarity.UltraRare:
-                        iColor = PopUp.Colors.UltraRare;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                    Recipe.RecipeRarity.Common => PopUp.Colors.Common,
+                    Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
+                    Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                    Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
                 if (recipeEntry.Count[index2] > 0)
                     section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName + empty, iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
             }
@@ -1081,10 +1066,10 @@ namespace Base.Data_Classes
                 }
                 PopUp.PopupData popupData1 = new PopUp.PopupData();
                 int index1 = popupData1.Add();
-                popupData1.Sections[index1].Add(enhancementSet.DisplayName, iColor, 1.25f, FontStyle.Bold, 0);
-                popupData1.Sections[index1].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)enhancementSet.SetType], PopUp.Colors.Invention, 1f, FontStyle.Bold, 0);
+                popupData1.Sections[index1].Add(enhancementSet.DisplayName, iColor, 1.25f);
+                popupData1.Sections[index1].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)enhancementSet.SetType], PopUp.Colors.Invention);
                 string str = enhancementSet.LevelMin != enhancementSet.LevelMax ? (enhancementSet.LevelMin + 1) + " to " + (enhancementSet.LevelMax + 1) : (enhancementSet.LevelMin + 1).ToString(CultureInfo.InvariantCulture);
-                popupData1.Sections[index1].Add("Level Range: " + str, PopUp.Colors.Text, 1f, FontStyle.Bold, 0);
+                popupData1.Sections[index1].Add("Level Range: " + str, PopUp.Colors.Text);
                 popupData1.Add(PopSetEnhList(sIdx, powerEntry));
                 popupData1.Add(PopSetBonusListing(sIdx, powerEntry));
                 return popupData1;
@@ -1119,7 +1104,7 @@ namespace Base.Data_Classes
             }
             var section1 = new PopUp.Section();
             if (power != null)
-                section1.Add("Set: " + enhancementSet.DisplayName + " (" + num + "/" + enhancementSet.Enhancements.Length + ")", PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+                section1.Add("Set: " + enhancementSet.DisplayName + " (" + num + "/" + enhancementSet.Enhancements.Length + ")", PopUp.Colors.Title);
             for (int index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
             {
                 string iText = enhancementSet.DisplayName + ": " + DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]].Name;
@@ -1322,11 +1307,11 @@ namespace Base.Data_Classes
 
         public class TotalStatistics
         {
-            public float[] Def { get; set; }
-            public float[] Res { get; set; }
-            public float[] Mez { get; set; }
-            public float[] MezRes { get; set; }
-            public float[] DebuffRes { get; set; }
+            public float[] Def { get; private set; }
+            public float[] Res { get; private set; }
+            public float[] Mez { get; private set; }
+            public float[] MezRes { get; private set; }
+            public float[] DebuffRes { get; private set; }
             public float Elusivity { get; set; }
             public float HPRegen { get; set; }
             public float HPMax { get; set; }

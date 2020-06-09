@@ -65,7 +65,7 @@ namespace Hero_Designer
             bFrm.SetMessage(sMessage);
         }
 
-        public void DisplayInfo()
+        private void DisplayInfo()
         {
             lblFile.Text = FileIO.StripPath(FullFileName);
         }

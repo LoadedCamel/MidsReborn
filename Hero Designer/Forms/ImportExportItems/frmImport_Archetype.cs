@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Hero_Designer.My;
@@ -55,12 +56,12 @@ namespace Hero_Designer
             ProcessImport();
         }
 
-        public void DisplayInfo()
+        private void DisplayInfo()
         {
             lblATFile.Text = FileIO.StripPath(FullFileName);
             lblATDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.ArchetypeVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
             udATRevision.Value = new Decimal(DatabaseAPI.Database.ArchetypeVersion.Revision);
-            lblATCount.Text = "Classes: " + Convert.ToString(DatabaseAPI.Database.Classes.Length);
+            lblATCount.Text = "Classes: " + Convert.ToString(DatabaseAPI.Database.Classes.Length, CultureInfo.InvariantCulture);
         }
 
         void FillListView()

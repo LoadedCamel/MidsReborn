@@ -402,7 +402,7 @@ public class PowerEntry : ICloneable
       Color enabledColor)
     {
         PopUp.Section section = new PopUp.Section();
-        section.Add(sTitle, PopUp.Colors.Title, 1f, FontStyle.Bold, 0);
+        section.Add(sTitle, PopUp.Colors.Title);
         foreach (PowerSubEntry subPower in SubPowers)
         {
             if (subPower.nIDPower > -1)

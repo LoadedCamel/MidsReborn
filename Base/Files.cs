@@ -72,7 +72,7 @@ public static class Files
 
     static string FNameConfig => SelectDataFileLoad(MxdbFileConfig);
 
-    public static string FPathAppData => Path.Combine(Application.StartupPath, "Data");
+    private static string FPathAppData => Path.Combine(Application.StartupPath, "Data");
 
     public static string SelectDataFileLoad(string iDataFile)
     {

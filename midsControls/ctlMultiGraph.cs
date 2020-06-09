@@ -25,7 +25,7 @@ namespace midsControls
         // (get) Token: 0x0600007D RID: 125 RVA: 0x00007554 File Offset: 0x00005754
         // (set) Token: 0x0600007E RID: 126 RVA: 0x0000756C File Offset: 0x0000576C
         [field: AccessedThroughProperty("tTip")]
-        internal virtual ToolTip tTip
+        protected virtual ToolTip tTip
         {
             get;
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -577,7 +577,7 @@ namespace midsControls
         }
 
         // Token: 0x060000BA RID: 186 RVA: 0x00008310 File Offset: 0x00006510
-        public void Draw_Highlight(Rectangle bounds)
+        private void Draw_Highlight(Rectangle bounds)
         {
             checked
             {
@@ -594,7 +594,7 @@ namespace midsControls
         }
 
         // Token: 0x060000BB RID: 187 RVA: 0x000083D4 File Offset: 0x000065D4
-        public void Draw_Scale(ref Rectangle Bounds)
+        private void Draw_Scale(ref Rectangle Bounds)
         {
             checked
             {
@@ -658,7 +658,7 @@ namespace midsControls
         }
 
         // Token: 0x060000BC RID: 188 RVA: 0x000086F8 File Offset: 0x000068F8
-        public void DrawBase(int Index, Rectangle Bounds, int nY)
+        private void DrawBase(int Index, Rectangle Bounds, int nY)
         {
             SolidBrush brush = new SolidBrush(pBaseColor);
             Pen pen = new Pen(pLineColor, 1f);
@@ -713,7 +713,7 @@ namespace midsControls
         }
 
         // Token: 0x060000BD RID: 189 RVA: 0x00008A7C File Offset: 0x00006C7C
-        public void DrawEnh(int index, Rectangle bounds, int nY)
+        private void DrawEnh(int index, Rectangle bounds, int nY)
         {
             SolidBrush brush = new SolidBrush(pEnhColor);
             Pen pen = new Pen(pLineColor, 1f);
@@ -876,7 +876,7 @@ namespace midsControls
         }
 
         // Token: 0x060000C8 RID: 200 RVA: 0x0000906C File Offset: 0x0000726C
-        public void FillScales()
+        private void FillScales()
         {
             Scales = new float[0];
             AddScale(1f);
@@ -899,7 +899,7 @@ namespace midsControls
         }
 
         // Token: 0x060000C9 RID: 201 RVA: 0x00009152 File Offset: 0x00007352
-        protected void AddScale(float iValue)
+        private void AddScale(float iValue)
         {
             checked
             {
@@ -945,7 +945,7 @@ namespace midsControls
         }
 
         // Token: 0x060000CB RID: 203 RVA: 0x00009250 File Offset: 0x00007450
-        protected void SetBestScale(float iValue)
+        private void SetBestScale(float iValue)
         {
             checked
             {
@@ -971,7 +971,7 @@ namespace midsControls
         }
 
         // Token: 0x060000CC RID: 204 RVA: 0x000092D8 File Offset: 0x000074D8
-        protected int WhichScale(float iVal)
+        private int WhichScale(float iVal)
         {
             int num = 0;
             checked
@@ -999,7 +999,7 @@ namespace midsControls
         }
 
         // Token: 0x060000CE RID: 206 RVA: 0x0000938C File Offset: 0x0000758C
-        protected float GetValueAtXY(int iX, int iY)
+        private float GetValueAtXY(int iX, int iY)
         {
             checked
             {
@@ -1050,103 +1050,103 @@ namespace midsControls
         // Token: 0x0400003D RID: 61
 
         // Token: 0x0400003E RID: 62
-        protected float[] Scales;
+        private float[] Scales;
 
         // Token: 0x0400003F RID: 63
-        public GraphItem[] Items;
+        private GraphItem[] Items;
 
         // Token: 0x04000040 RID: 64
-        protected ExtendedBitmap bxBuffer;
+        private ExtendedBitmap bxBuffer;
 
         // Token: 0x04000041 RID: 65
-        protected Graphics myGFX;
+        private Graphics myGFX;
 
         // Token: 0x04000042 RID: 66
-        protected Color pBaseColor;
+        private Color pBaseColor;
 
         // Token: 0x04000043 RID: 67
-        protected Color pEnhColor;
+        private Color pEnhColor;
 
         // Token: 0x04000044 RID: 68
-        protected Color pBlendColor1;
+        private Color pBlendColor1;
 
         // Token: 0x04000045 RID: 69
-        protected Color pBlendColor2;
+        private Color pBlendColor2;
 
         // Token: 0x04000046 RID: 70
-        protected Color pLineColor;
+        private Color pLineColor;
 
         // Token: 0x04000047 RID: 71
-        protected Enums.GraphStyle pStyle;
+        private Enums.GraphStyle pStyle;
 
         // Token: 0x04000048 RID: 72
-        protected bool pDrawLines;
+        private bool pDrawLines;
 
         // Token: 0x04000049 RID: 73
-        protected bool pBorder;
+        private bool pBorder;
 
         // Token: 0x0400004A RID: 74
-        protected float pMaxValue;
+        private float pMaxValue;
 
         // Token: 0x0400004B RID: 75
-        protected int yPadding;
+        private int yPadding;
 
         // Token: 0x0400004C RID: 76
-        protected int xPadding;
+        private int xPadding;
 
         // Token: 0x0400004D RID: 77
-        protected int oldMouseX;
+        private int oldMouseX;
 
         // Token: 0x0400004E RID: 78
-        protected int oldMouseY;
+        private int oldMouseY;
 
         // Token: 0x0400004F RID: 79
-        protected int pItemHeight;
+        private int pItemHeight;
 
         // Token: 0x04000050 RID: 80
-        protected int nameWidth;
+        private int nameWidth;
 
         // Token: 0x04000051 RID: 81
-        protected bool Loaded;
+        private bool Loaded;
 
         // Token: 0x04000052 RID: 82
-        protected bool pShowScale;
+        private bool pShowScale;
 
         // Token: 0x04000053 RID: 83
-        protected int pScaleHeight;
+        private int pScaleHeight;
 
         // Token: 0x04000054 RID: 84
-        protected bool pShowHighlight;
+        private bool pShowHighlight;
 
         // Token: 0x04000055 RID: 85
-        protected int pHighlight;
+        private int pHighlight;
 
         // Token: 0x04000056 RID: 86
-        protected Color pHighlightColor;
+        private Color pHighlightColor;
 
         // Token: 0x04000057 RID: 87
-        protected bool NoDraw;
+        private bool NoDraw;
 
         // Token: 0x04000058 RID: 88
-        protected bool DualName;
+        private bool DualName;
 
         // Token: 0x04000059 RID: 89
-        protected float pMarkerValue;
+        private float pMarkerValue;
 
         // Token: 0x0400005A RID: 90
-        protected Color pMarkerColor;
+        private Color pMarkerColor;
 
         // Token: 0x0400005B RID: 91
-        protected Color pMarkerColor2;
+        private Color pMarkerColor2;
 
         // Token: 0x0400005C RID: 92
-        protected int pForcedMax;
+        private int pForcedMax;
 
         // Token: 0x0400005D RID: 93
-        protected bool pClickable;
+        private bool pClickable;
 
         // Token: 0x0200000D RID: 13
-        public class GraphItem
+        private class GraphItem
         {
             // Token: 0x060000D0 RID: 208 RVA: 0x00009514 File Offset: 0x00007714
             public GraphItem(string iName, float Base, float Enh, string iTip = "")
@@ -1169,19 +1169,19 @@ namespace midsControls
             }
 
             // Token: 0x0400005F RID: 95
-            public float valueBase;
+            public readonly float valueBase;
 
             // Token: 0x04000060 RID: 96
-            public float valueEnh;
+            public readonly float valueEnh;
 
             // Token: 0x04000061 RID: 97
-            public string Name;
+            public readonly string Name;
 
             // Token: 0x04000062 RID: 98
-            public string Name2;
+            public readonly string Name2;
 
             // Token: 0x04000063 RID: 99
-            public string Tip;
+            public readonly string Tip;
         }
 
         // Token: 0x0200000E RID: 14

@@ -286,43 +286,20 @@ namespace midsControls
 
         static string GetRelativeString(Enums.eEnhRelative iRel)
         {
-            string result;
-            switch (iRel)
+            var result = iRel switch
             {
-                case 0:
-                    result = "X";
-                    break;
-                case Enums.eEnhRelative.MinusThree:
-                    result = "-3";
-                    break;
-                case Enums.eEnhRelative.MinusTwo:
-                    result = "-2";
-                    break;
-                case Enums.eEnhRelative.MinusOne:
-                    result = "-1";
-                    break;
-                case Enums.eEnhRelative.Even:
-                    result = "+/-";
-                    break;
-                case Enums.eEnhRelative.PlusOne:
-                    result = "+1";
-                    break;
-                case Enums.eEnhRelative.PlusTwo:
-                    result = "+2";
-                    break;
-                case Enums.eEnhRelative.PlusThree:
-                    result = "+3";
-                    break;
-                case Enums.eEnhRelative.PlusFour:
-                    result = "+4";
-                    break;
-                case Enums.eEnhRelative.PlusFive:
-                    result = "+5";
-                    break;
-                default:
-                    result = "!";
-                    break;
-            }
+                0 => "X",
+                Enums.eEnhRelative.MinusThree => "-3",
+                Enums.eEnhRelative.MinusTwo => "-2",
+                Enums.eEnhRelative.MinusOne => "-1",
+                Enums.eEnhRelative.Even => "+/-",
+                Enums.eEnhRelative.PlusOne => "+1",
+                Enums.eEnhRelative.PlusTwo => "+2",
+                Enums.eEnhRelative.PlusThree => "+3",
+                Enums.eEnhRelative.PlusFour => "+4",
+                Enums.eEnhRelative.PlusFive => "+5",
+                _ => "!"
+            };
 
             return result;
         }
@@ -436,22 +413,13 @@ namespace midsControls
                         int num3 = UI.NO.Length - 1;
                         for (int i = num2; i <= num3; i++)
                         {
-                            Origin.Grade grade;
-                            switch (UI.View.GradeID)
+                            var grade = UI.View.GradeID switch
                             {
-                                case Enums.eEnhGrade.TrainingO:
-                                    grade = 0;
-                                    break;
-                                case Enums.eEnhGrade.DualO:
-                                    grade = Origin.Grade.DualO;
-                                    break;
-                                case Enums.eEnhGrade.SingleO:
-                                    grade = Origin.Grade.SingleO;
-                                    break;
-                                default:
-                                    grade = Origin.Grade.SingleO;
-                                    break;
-                            }
+                                Enums.eEnhGrade.TrainingO => (Origin.Grade) 0,
+                                Enums.eEnhGrade.DualO => Origin.Grade.DualO,
+                                Enums.eEnhGrade.SingleO => Origin.Grade.SingleO,
+                                _ => Origin.Grade.SingleO
+                            };
 
                             Graphics graphics = _myBx.Graphics;
                             I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXY(i)), UI.NO[i], grade);
@@ -689,19 +657,13 @@ namespace midsControls
                         return;
                 }
 
-                Rectangle rectangle = default;
-                switch (UI.View.TabID)
+                var rectangle = UI.View.TabID switch
                 {
-                    case Enums.eType.Normal:
-                        rectangle = GetRectBounds(4, Reverse((int) UI.View.GradeID));
-                        break;
-                    case Enums.eType.SpecialO:
-                        rectangle = GetRectBounds(4, (int) UI.View.SpecialID);
-                        break;
-                    case Enums.eType.SetO:
-                        rectangle = GetRectBounds(4, UI.View.SetTypeID + 1);
-                        break;
-                }
+                    Enums.eType.Normal => GetRectBounds(4, Reverse((int) UI.View.GradeID)),
+                    Enums.eType.SpecialO => GetRectBounds(4, (int) UI.View.SpecialID),
+                    Enums.eType.SetO => GetRectBounds(4, UI.View.SetTypeID + 1),
+                    _ => default
+                };
 
                 int ly = (int) Math.Round(rectangle.Y + rectangle.Height / 2.0);
                 int x = rectangle.X - 2;
@@ -934,15 +896,12 @@ namespace midsControls
 
         static int Reverse(int iValue)
         {
-            switch (iValue)
+            return iValue switch
             {
-                case 3:
-                    return 1;
-                case 1:
-                    return 3;
-                default:
-                    return iValue;
-            }
+                3 => 1,
+                1 => 3,
+                _ => iValue
+            };
         }
 
         bool CellSetTypeSelect(Point cell)
@@ -1138,31 +1097,21 @@ namespace midsControls
                                 {
                                     string message = "";
                                     int num = cell.Y;
-                                    switch (num)
+                                    num = num switch
                                     {
-                                        case 1:
-                                            num = 3;
-                                            break;
-                                        case 3:
-                                            num = 1;
-                                            break;
-                                    }
+                                        1 => 3,
+                                        3 => 1,
+                                        _ => num
+                                    };
 
-                                    switch (num)
+                                    message = num switch
                                     {
-                                        case 0:
-                                            message = "This is not an enhancement grade!";
-                                            break;
-                                        case 1:
-                                            message = "This is the weakest type of enhancement.";
-                                            break;
-                                        case 2:
-                                            message = "Half as efective as Single Origin.";
-                                            break;
-                                        case 3:
-                                            message = "The most effective regular enhancement.";
-                                            break;
-                                    }
+                                        0 => "This is not an enhancement grade!",
+                                        1 => "This is the weakest type of enhancement.",
+                                        2 => "Half as efective as Single Origin.",
+                                        3 => "The most effective regular enhancement.",
+                                        _ => message
+                                    };
 
                                     SetInfoStrings(DatabaseAPI.Database.EnhGradeStringLong[UI.NOGrades[num]], message);
                                     hlOk = true;
@@ -1172,22 +1121,14 @@ namespace midsControls
                             case Enums.eType.SpecialO:
                                 if (cell.Y < UI.SpecialTypes.Length)
                                 {
-                                    string message2 = "";
-                                    switch (cell.Y)
+                                    var message2 = cell.Y switch
                                     {
-                                        case 0:
-                                            message2 = "This is not an enhancement subtype!";
-                                            break;
-                                        case 1:
-                                            message2 = "Hamidon/Synthetic Hamidon enhancements.";
-                                            break;
-                                        case 2:
-                                            message2 = "Rewards from the Sewer Trial.";
-                                            break;
-                                        case 3:
-                                            message2 = "Rewards from the Eden Trial.";
-                                            break;
-                                    }
+                                        0 => "This is not an enhancement subtype!",
+                                        1 => "Hamidon/Synthetic Hamidon enhancements.",
+                                        2 => "Rewards from the Sewer Trial.",
+                                        3 => "Rewards from the Eden Trial.",
+                                        _ => ""
+                                    };
 
                                     SetInfoStrings(DatabaseAPI.Database.SpecialEnhStringLong[UI.SpecialTypes[cell.Y]], message2);
                                     hlOk = true;
@@ -1551,22 +1492,14 @@ namespace midsControls
 
         int GetPickerIndex(int index, Enums.eType iType)
         {
-            int[] array = Array.Empty<int>();
-            switch (iType)
+            var array = iType switch
             {
-                case Enums.eType.Normal:
-                    array = UI.NO;
-                    break;
-                case Enums.eType.InventO:
-                    array = UI.IO;
-                    break;
-                case Enums.eType.SpecialO:
-                    array = UI.SpecialO;
-                    break;
-                case Enums.eType.SetO:
-                    array = UI.SetO;
-                    break;
-            }
+                Enums.eType.Normal => UI.NO,
+                Enums.eType.InventO => UI.IO,
+                Enums.eType.SpecialO => UI.SpecialO,
+                Enums.eType.SetO => UI.SetO,
+                _ => Array.Empty<int>()
+            };
 
             checked
             {

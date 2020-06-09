@@ -10,7 +10,7 @@ namespace Base.Data_Classes
 {
     public class Power : IPower, IComparable
     {
-        public bool Contains;
+        private bool Contains;
         public IPowerset GetPowerSet() => !(PowerSetID < 0 | PowerSetID > DatabaseAPI.Database.Powersets.Length) ? DatabaseAPI.Database.Powersets[PowerSetID] : null;
 
         public float CastTimeReal { get; set; }

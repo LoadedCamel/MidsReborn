@@ -71,10 +71,10 @@ namespace Hero_Designer
         NumericUpDown udColumn;
         NumericUpDown udThreat;
 
-        public bool Loading;
-        public Archetype MyAT;
-        protected bool ONDuplicate;
-        protected string OriginalName;
+        private bool Loading;
+        public readonly Archetype MyAT;
+        private readonly bool ONDuplicate;
+        private readonly string OriginalName;
 
         public frmEditArchetype(ref Archetype iAT)
         {
@@ -226,16 +226,16 @@ namespace Hero_Designer
             udColumn.Value = !(Decimal.Compare(new Decimal(MyAT.Column + 2), udColumn.Maximum) <= 0 & Decimal.Compare(new Decimal(MyAT.Column), udColumn.Minimum) >= 0) ? udColumn.Minimum : new Decimal(MyAT.Column);
             udThreat.Value = !(MyAT.BaseThreat > (double)Convert.ToSingle(udThreat.Maximum) | MyAT.BaseThreat < (double)Convert.ToSingle(udThreat.Minimum)) ? new Decimal(MyAT.BaseThreat) : new Decimal(0);
             chkPlayable.Checked = MyAT.Playable;
-            txtHP.Text = Convert.ToString(MyAT.Hitpoints);
-            txtHPCap.Text = Convert.ToString(MyAT.HPCap);
-            txtResCap.Text = Convert.ToString(MyAT.ResCap * 100f);
-            txtDamCap.Text = Convert.ToString(MyAT.DamageCap * 100f);
-            txtRechargeCap.Text = Convert.ToString(MyAT.RechargeCap * 100f);
-            txtRecCap.Text = Convert.ToString(MyAT.RecoveryCap * 100f);
-            txtRegCap.Text = Convert.ToString(MyAT.RegenCap * 100f);
+            txtHP.Text = Convert.ToString(MyAT.Hitpoints, CultureInfo.InvariantCulture);
+            txtHPCap.Text = Convert.ToString(MyAT.HPCap, CultureInfo.InvariantCulture);
+            txtResCap.Text = Convert.ToString(MyAT.ResCap * 100f, CultureInfo.InvariantCulture);
+            txtDamCap.Text = Convert.ToString(MyAT.DamageCap * 100f, CultureInfo.InvariantCulture);
+            txtRechargeCap.Text = Convert.ToString(MyAT.RechargeCap * 100f, CultureInfo.InvariantCulture);
+            txtRecCap.Text = Convert.ToString(MyAT.RecoveryCap * 100f, CultureInfo.InvariantCulture);
+            txtRegCap.Text = Convert.ToString(MyAT.RegenCap * 100f, CultureInfo.InvariantCulture);
             txtBaseRec.Text = Strings.Format(MyAT.BaseRecovery, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00##");
             txtBaseRegen.Text = Strings.Format(MyAT.BaseRegen, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00##");
-            txtPerceptionCap.Text = Convert.ToString(MyAT.PerceptionCap);
+            txtPerceptionCap.Text = Convert.ToString(MyAT.PerceptionCap, CultureInfo.InvariantCulture);
             cbPriGroup.BeginUpdate();
             cbSecGroup.BeginUpdate();
             cbPriGroup.Items.Clear();

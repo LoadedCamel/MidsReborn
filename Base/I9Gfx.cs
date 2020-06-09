@@ -119,28 +119,15 @@ public static class I9Gfx
 
     public static Origin.Grade ToGfxGrade(Enums.eType iType)
     {
-        Origin.Grade grade;
-        switch (iType)
+        var grade = iType switch
         {
-            case Enums.eType.None:
-                grade = Origin.Grade.None;
-                break;
-            case Enums.eType.Normal:
-                grade = Origin.Grade.TrainingO;
-                break;
-            case Enums.eType.InventO:
-                grade = Origin.Grade.IO;
-                break;
-            case Enums.eType.SpecialO:
-                grade = Origin.Grade.HO;
-                break;
-            case Enums.eType.SetO:
-                grade = Origin.Grade.SetO;
-                break;
-            default:
-                grade = Origin.Grade.None;
-                break;
-        }
+            Enums.eType.None => Origin.Grade.None,
+            Enums.eType.Normal => Origin.Grade.TrainingO,
+            Enums.eType.InventO => Origin.Grade.IO,
+            Enums.eType.SpecialO => Origin.Grade.HO,
+            Enums.eType.SetO => Origin.Grade.SetO,
+            _ => Origin.Grade.None
+        };
         return grade;
     }
 

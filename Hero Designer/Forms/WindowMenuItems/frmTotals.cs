@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
@@ -59,7 +60,7 @@ namespace Hero_Designer
             _myParent = iParent;
         }
 
-        public bool A_GT_B(float A, float B)
+        private bool A_GT_B(float A, float B)
         {
             double num = Math.Abs(A - B);
             return num >= 1.0000000116861E-07 && num > 0.0;
@@ -516,7 +517,7 @@ namespace Hero_Designer
             graphRegen.Draw();
             graphHP.Clear();
             string iTip5 = "Base HitPoints: " + Convert.ToString(MidsContext.Character.Archetype.Hitpoints) + "\r\nCurrent HitPoints: " +
-                           Convert.ToString(displayStats.HealthHitpointsNumeric(false));
+                           Convert.ToString(displayStats.HealthHitpointsNumeric(false), CultureInfo.InvariantCulture);
             if (Math.Abs(displayStats.HealthHitpointsNumeric(false) - displayStats.HealthHitpointsNumeric(true)) > 0.01)
                 iTip5 = iTip5 + "\r\n(Capped from a total of: " + Strings.Format(displayStats.HealthHitpointsNumeric(true), "###0.##") + ")";
             graphHP.AddItem("Max HP:|" + Strings.Format(displayStats.HealthHitpointsPercentage, "###0.##") + "%",
@@ -601,8 +602,8 @@ namespace Hero_Designer
             graphDam.Clear();
             string str7 = "";
             if (A_GT_B(displayStats.BuffDamage(true), displayStats.BuffDamage(false)))
-                str7 = "\r\n\r\nDamage Capped from " + Convert.ToString(displayStats.BuffDamage(true)) + "% to " +
-                       Convert.ToString(displayStats.BuffDamage(false)) + "%";
+                str7 = "\r\n\r\nDamage Capped from " + Convert.ToString(displayStats.BuffDamage(true), CultureInfo.InvariantCulture) + "% to " +
+                       Convert.ToString(displayStats.BuffDamage(false), CultureInfo.InvariantCulture) + "%";
             graphDam.AddItem("Damage:|" + PM(displayStats.BuffDamage(false) - 100f, "##0.##", "%"), displayStats.BuffDamage(false),
                 displayStats.BuffDamage(true),
                 "This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included." +
@@ -613,8 +614,8 @@ namespace Hero_Designer
             graphHaste.Clear();
             string str8 = "";
             if (A_GT_B(displayStats.BuffHaste(true), displayStats.BuffHaste(false)))
-                str8 = "\r\n\r\nRecharge Speed Capped from " + Convert.ToString(displayStats.BuffHaste(true)) + "% to " +
-                       Convert.ToString(displayStats.BuffHaste(false)) + "%";
+                str8 = "\r\n\r\nRecharge Speed Capped from " + Convert.ToString(displayStats.BuffHaste(true), CultureInfo.InvariantCulture) + "% to " +
+                       Convert.ToString(displayStats.BuffHaste(false), CultureInfo.InvariantCulture) + "%";
             graphHaste.AddItem("Haste:|" + PM(displayStats.BuffHaste(false) - 100f, "##0.##", "%"), displayStats.BuffHaste(false),
                 displayStats.BuffHaste(true),
                 "This effect alters the recharge speed of all your powers.\r\nThe higher the value, the faster the recharge.\r\nAs some powers can slow your recharge, this bar starts with your base recharge (100%) included." +

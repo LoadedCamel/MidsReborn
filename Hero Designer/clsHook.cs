@@ -23,48 +23,48 @@ namespace Hero_Designer
         public static string DFileName;
         public static string DExt;
 
-        public static string Mids_Version { get; set; }
+        private static string Mids_Version { get; set; }
 
-        public static string Discord_Server { get; set; }
-        public static string Discord_Channel { get; set; }
-        public static string Discord_Nickname { get; set; }
+        private static string Discord_Server { get; set; }
+        private static string Discord_Channel { get; set; }
+        private static string Discord_Nickname { get; set; }
 
-        public static string Character_Name { get; set; }
-        public static string Character_Level { get; set; }
-        public static string Character_Archetype { get; set; }
-        public static string Character_Primary_Power { get; set; }
-        public static string Character_Secondary_Power { get; set; }
+        private static string Character_Name { get; set; }
+        private static string Character_Level { get; set; }
+        private static string Character_Archetype { get; set; }
+        private static string Character_Primary_Power { get; set; }
+        private static string Character_Secondary_Power { get; set; }
 
-        public static string Embed_Link { get; set; }
+        private static string Embed_Link { get; set; }
 
-        public static string Smashing_Defense { get; set; }
-        public static string Lethal_Defense { get; set; }
-        public static string Fire_Defense { get; set; }
-        public static string Cold_Defense { get; set; }
-        public static string Energy_Defense { get; set; }
-        public static string Negative_Defense { get; set; }
-        public static string Psionic_Defense { get; set; }
-        public static string Melee_Defense { get; set; }
-        public static string Ranged_Defense { get; set; }
-        public static string AOE_Defense { get; set; }
+        private static string Smashing_Defense { get; set; }
+        private static string Lethal_Defense { get; set; }
+        private static string Fire_Defense { get; set; }
+        private static string Cold_Defense { get; set; }
+        private static string Energy_Defense { get; set; }
+        private static string Negative_Defense { get; set; }
+        private static string Psionic_Defense { get; set; }
+        private static string Melee_Defense { get; set; }
+        private static string Ranged_Defense { get; set; }
+        private static string AOE_Defense { get; set; }
 
-        public static string Resistance_Cap { get; set; }
+        private static string Resistance_Cap { get; set; }
 
-        public static string Smashing_Resistance { get; set; }
-        public static string Lethal_Resistance { get; set; }
-        public static string Fire_Resistance { get; set; }
-        public static string Cold_Resistance { get; set; }
-        public static string Energy_Resistance { get; set; }
-        public static string Negative_Resistance { get; set; }
-        public static string Toxic_Resistance { get; set; }
-        public static string Psionic_Resistance { get; set; }
+        private static string Smashing_Resistance { get; set; }
+        private static string Lethal_Resistance { get; set; }
+        private static string Fire_Resistance { get; set; }
+        private static string Cold_Resistance { get; set; }
+        private static string Energy_Resistance { get; set; }
+        private static string Negative_Resistance { get; set; }
+        private static string Toxic_Resistance { get; set; }
+        private static string Psionic_Resistance { get; set; }
 
-        public static string Damage_Buff { get; set; }
-        public static string Endurance_Usage { get; set; }
-        public static string Global_Recharge { get; set; }
-        public static string Recovery { get; set; }
-        public static string Regen { get; set; }
-        public static string ToHit { get; set; }
+        private static string Damage_Buff { get; set; }
+        private static string Endurance_Usage { get; set; }
+        private static string Global_Recharge { get; set; }
+        private static string Recovery { get; set; }
+        private static string Regen { get; set; }
+        private static string ToHit { get; set; }
 
         public static string ShrinkTheDatalink(string strUrl)
         {
@@ -72,21 +72,19 @@ namespace Hero_Designer
 
             var objWebRequest = (HttpWebRequest)WebRequest.Create(url);
             objWebRequest.Method = "GET";
-            using (var objWebResponse = (HttpWebResponse)objWebRequest.GetResponse())
-            {
-                var srReader = new StreamReader(objWebResponse.GetResponseStream() ?? throw new InvalidOperationException());
+            using var objWebResponse = (HttpWebResponse)objWebRequest.GetResponse();
+            var srReader = new StreamReader(objWebResponse.GetResponseStream() ?? throw new InvalidOperationException());
 
-                var strHtml = srReader.ReadToEnd();
+            var strHtml = srReader.ReadToEnd();
 
-                srReader.Close();
-                objWebResponse.Close();
-                objWebRequest.Abort();
+            srReader.Close();
+            objWebResponse.Close();
+            objWebRequest.Abort();
 
-                return (strHtml);
-            }
+            return strHtml;
         }
 
-        public object this[string propertyName] => GetType().GetProperty(propertyName)?.GetValue(this, null);
+        private object this[string propertyName] => GetType().GetProperty(propertyName)?.GetValue(this, null);
 
         internal static async Task DiscordExport()
         {
@@ -205,7 +203,7 @@ namespace Hero_Designer
 
             byte[] data = Convert.FromBase64String("aHR0cDovL2hvb2tzLm1pZHNyZWJvcm4uY29tOjMwMDAvYXBpP3Rva2VuPVVtUWhUNGtEclMwZ0E1TUY1YUdsaTh6YllDVW1RaFQ0a0RyUzBnQTVNRjVhR2xpOHpiWUM=");
             //byte[] data = Convert.FromBase64String("aHR0cHM6Ly9ob29rcy5taWRzcmVib3JuLmNvbTozMDAwL2FwaT90b2tlbj1VbVFoVDRrRHJTMGdBNU1GNWFHbGk4emJZQ1VtUWhUNGtEclMwZ0E1TUY1YUdsaTh6YllD");
-            string wString = Encoding.UTF8.GetString(data);
+            Uri wString = new Uri(Encoding.UTF8.GetString(data));
 
             //Send the data to the API Server and retrieve response
 
@@ -214,17 +212,19 @@ namespace Hero_Designer
             httpWebRequest.Method = "POST";
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                var ExportedValues = new Dictionary<string, string>();
-                ExportedValues.Add(nameof(Mids_Version), Mids_Version);
-                ExportedValues.Add(nameof(Discord_Server), Discord_Server);
-                ExportedValues.Add(nameof(Discord_Channel), Discord_Channel);
-                ExportedValues.Add(nameof(Discord_Nickname), Discord_Nickname);
-                ExportedValues.Add(nameof(Character_Name), Character_Name);
-                ExportedValues.Add(nameof(Character_Level), Character_Level);
-                ExportedValues.Add(nameof(Character_Archetype), Character_Archetype);
-                ExportedValues.Add(nameof(Character_Primary_Power), Character_Primary_Power);
-                ExportedValues.Add(nameof(Character_Secondary_Power), Character_Secondary_Power);
-                ExportedValues.Add(nameof(Embed_Link), Embed_Link);
+                var ExportedValues = new Dictionary<string, string>
+                {
+                    { nameof(Mids_Version), Mids_Version },
+                    { nameof(Discord_Server), Discord_Server },
+                    { nameof(Discord_Channel), Discord_Channel },
+                    { nameof(Discord_Nickname), Discord_Nickname },
+                    { nameof(Character_Name), Character_Name },
+                    { nameof(Character_Level), Character_Level },
+                    { nameof(Character_Archetype), Character_Archetype },
+                    { nameof(Character_Primary_Power), Character_Primary_Power },
+                    { nameof(Character_Secondary_Power), Character_Secondary_Power },
+                    { nameof(Embed_Link), Embed_Link }
+                };
                 foreach (var stat in MidsContext.Config.CheckedStats)
                 {
                     Clshook val = new Clshook();
@@ -238,51 +238,49 @@ namespace Hero_Designer
                 streamWriter.Write(json);
             }
 
-            var httpResponse = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
+            var httpResponse = (HttpWebResponse)await httpWebRequest.GetResponseAsync().ConfigureAwait(true);
+            using var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException());
+            var result = streamReader.ReadToEnd();
+            switch (result)
             {
-                var result = streamReader.ReadToEnd();
-                switch (result)
+                case "Nickname not found in discord":
                 {
-                    case "Nickname not found in discord":
-                        {
-                            string message = $"Submission Failed: Your discord nickname '{Discord_Nickname}' was not found in the {Discord_Server} discord server.";
-                            string title = "Discord Export";
-                            MessageBox.Show(message, title);
-                            break;
-                        }
+                    string message = $"Submission Failed: Your discord nickname '{Discord_Nickname}' was not found in the {Discord_Server} discord server.";
+                    string title = "Discord Export";
+                    MessageBox.Show(message, title);
+                    break;
+                }
 
-                    case "Export Successful":
-                        {
-                            string message = $"Submission Successful!! Your build should now be posted in {Discord_Channel} on the {Discord_Server} server.";
-                            string title = "Discord Export";
-                            MessageBox.Show(message, title);
-                            break;
-                        }
+                case "Export Successful":
+                {
+                    string message = $"Submission Successful!! Your build should now be posted in {Discord_Channel} on the {Discord_Server} server.";
+                    string title = "Discord Export";
+                    MessageBox.Show(message, title);
+                    break;
+                }
 
-                    case "Export Failed":
-                        {
-                            string message = "Submission Failed: Please check your discord export settings and make sure you have the latest version of Mids' Reborn : Hero Designer.";
-                            string title = "Discord Export";
-                            MessageBox.Show(message, title);
-                            break;
-                        }
+                case "Export Failed":
+                {
+                    string message = "Submission Failed: Please check your discord export settings and make sure you have the latest version of Mids' Reborn : Hero Designer.";
+                    string title = "Discord Export";
+                    MessageBox.Show(message, title);
+                    break;
+                }
 
-                    case "Failed to add export to queue":
-                        {
-                            string message = "Submission Failed: Possible server error, please contact the RebornTeam.";
-                            string title = "Discord Export";
-                            MessageBox.Show(message, title);
-                            break;
-                        }
+                case "Failed to add export to queue":
+                {
+                    string message = "Submission Failed: Possible server error, please contact the RebornTeam.";
+                    string title = "Discord Export";
+                    MessageBox.Show(message, title);
+                    break;
+                }
 
-                    case "RebornBot is not in the discord server":
-                        {
-                            string message = $"Submission Failed: MidsBot was not found in the {Discord_Server}.";
-                            string title = "Discord Export";
-                            MessageBox.Show(message, title);
-                            break;
-                        }
+                case "RebornBot is not in the discord server":
+                {
+                    string message = $"Submission Failed: MidsBot was not found in the {Discord_Server}.";
+                    string title = "Discord Export";
+                    MessageBox.Show(message, title);
+                    break;
                 }
             }
         }

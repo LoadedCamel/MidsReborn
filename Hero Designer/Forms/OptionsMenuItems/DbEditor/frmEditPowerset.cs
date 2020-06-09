@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Base.Display;
@@ -12,9 +13,8 @@ namespace Hero_Designer
 {
     public partial class frmEditPowerset : Form
     {
-
-        protected bool Loading;
-        public IPowerset myPS;
+        private bool Loading;
+        public readonly IPowerset myPS;
 
 
         public frmEditPowerset(ref IPowerset iSet)
@@ -23,16 +23,16 @@ namespace Hero_Designer
             Loading = true;
             InitializeComponent();
             ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmEditPowerset));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon)componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
             Name = nameof(frmEditPowerset);
             myPS = new Powerset(iSet);
         }
 
-        public void AddListItem(int Index)
+        private void AddListItem(int Index)
         {
             lvPowers.Items.Add(new ListViewItem(new[]
             {
-                Convert.ToString(DatabaseAPI.Database.Power[myPS.Power[Index]].Level),
+                Convert.ToString(DatabaseAPI.Database.Power[myPS.Power[Index]].Level,CultureInfo.InvariantCulture),
                 DatabaseAPI.Database.Power[myPS.Power[Index]].DisplayName,
                 DatabaseAPI.Database.Power[myPS.Power[Index]].DescShort
             }));
@@ -221,16 +221,18 @@ namespace Hero_Designer
             cbTrunkSet_SelectedIndexChanged(this, new EventArgs());
         }
 
-        public void DisplayIcon()
+        private void DisplayIcon()
         {
-            if (myPS.ImageName != "")
+            if (!string.IsNullOrEmpty(myPS.ImageName))
             {
-                picIcon.Image = new Bitmap(new ExtendedBitmap(I9Gfx.GetPowersetsPath() + myPS.ImageName).Bitmap);
+                using ExtendedBitmap extendedBitmap = new ExtendedBitmap(I9Gfx.GetPowersetsPath() + myPS.ImageName);
+                picIcon.Image = new Bitmap(extendedBitmap.Bitmap);
                 btnIcon.Text = myPS.ImageName;
             }
             else
             {
-                picIcon.Image = new Bitmap(new ExtendedBitmap(30, 30).Bitmap);
+                using ExtendedBitmap extendedBitmap = new ExtendedBitmap(30,30);
+                picIcon.Image = new Bitmap(extendedBitmap.Bitmap);
                 btnIcon.Text = "Select Icon";
             }
         }
@@ -239,12 +241,18 @@ namespace Hero_Designer
         {
             IPowerset ps = myPS;
             lblNameFull.Text = BuildFullName();
-            if (ps.GroupName == "" | ps.SetName == "")
+            if (string.IsNullOrEmpty(ps.GroupName) | string.IsNullOrEmpty(ps.SetName))
+            {
                 lblNameUnique.Text = "This name is invalid.";
-            else if (PowersetFullNameIsUnique(Convert.ToString(ps.nID)))
+            }
+            else if (PowersetFullNameIsUnique(Convert.ToString(ps.nID, CultureInfo.InvariantCulture)))
+            {
                 lblNameUnique.Text = "This name is unique.";
+            }
             else
+            {
                 lblNameUnique.Text = "This name is NOT unique.";
+            }
         }
 
         void FillLinkGroupCombo()
@@ -403,7 +411,7 @@ namespace Hero_Designer
             lvMutexSets.EndUpdate();
         }
 
-        public void ListPowers()
+        private void ListPowers()
         {
             lvPowers.BeginUpdate();
             lvPowers.Items.Clear();

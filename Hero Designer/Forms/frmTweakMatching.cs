@@ -152,12 +152,12 @@ namespace Hero_Designer
             Loaded = true;
         }
 
-        public int getAT()
+        private int getAT()
         {
             return cbAT1.SelectedIndex;
         }
 
-        public void GetPowers()
+        private void GetPowers()
         {
             int index1 = 0;
             int[] numArray = new int[2];
@@ -171,35 +171,25 @@ namespace Hero_Designer
             cbPower.EndUpdate();
         }
 
-        public int getSetIndex()
+        private int getSetIndex()
         {
             return DatabaseAPI.GetPowersetIndexes(getAT(), getSetType())[cbSet1.SelectedIndex].nID;
         }
 
-        public Enums.ePowerSetType getSetType()
+        private Enums.ePowerSetType getSetType()
         {
-            Enums.ePowerSetType ePowerSetType;
-            switch (cbType1.SelectedIndex)
+            var ePowerSetType = cbType1.SelectedIndex switch
             {
-                case 0:
-                    ePowerSetType = Enums.ePowerSetType.Primary;
-                    break;
-                case 1:
-                    ePowerSetType = Enums.ePowerSetType.Secondary;
-                    break;
-                case 2:
-                    ePowerSetType = Enums.ePowerSetType.Ancillary;
-                    break;
-                default:
-                    ePowerSetType = Enums.ePowerSetType.Primary;
-                    break;
-            }
+                0 => Enums.ePowerSetType.Primary,
+                1 => Enums.ePowerSetType.Secondary,
+                2 => Enums.ePowerSetType.Ancillary,
+                _ => Enums.ePowerSetType.Primary
+            };
             return ePowerSetType;
         }
 
         [DebuggerStepThrough]
-
-        public void list_AT()
+        private void list_AT()
         {
             cbAT1.BeginUpdate();
             cbAT1.Items.Clear();
@@ -210,24 +200,19 @@ namespace Hero_Designer
             cbAT1.EndUpdate();
         }
 
-        public void List_Sets()
+        private void List_Sets()
         {
             Enums.ePowerSetType iSet = Enums.ePowerSetType.None;
             ComboBox cbSet1 = this.cbSet1;
             ComboBox cbType1 = this.cbType1;
             int selectedIndex = cbAT1.SelectedIndex;
-            switch (cbType1.SelectedIndex)
+            iSet = cbType1.SelectedIndex switch
             {
-                case 0:
-                    iSet = Enums.ePowerSetType.Primary;
-                    break;
-                case 1:
-                    iSet = Enums.ePowerSetType.Secondary;
-                    break;
-                case 2:
-                    iSet = Enums.ePowerSetType.Ancillary;
-                    break;
-            }
+                0 => Enums.ePowerSetType.Primary,
+                1 => Enums.ePowerSetType.Secondary,
+                2 => Enums.ePowerSetType.Ancillary,
+                _ => iSet
+            };
             cbSet1.BeginUpdate();
             cbSet1.Items.Clear();
             IPowerset[] powersetIndexes = DatabaseAPI.GetPowersetIndexes(selectedIndex, iSet);
@@ -239,7 +224,7 @@ namespace Hero_Designer
             cbSet1.EndUpdate();
         }
 
-        public void list_Type()
+        private void list_Type()
         {
             cbType1.BeginUpdate();
             cbType1.Items.Clear();
@@ -250,7 +235,7 @@ namespace Hero_Designer
             cbType1.EndUpdate();
         }
 
-        public void listOverrides()
+        private void listOverrides()
         {
             lstTweaks.BeginUpdate();
             lstTweaks.Items.Clear();

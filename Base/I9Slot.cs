@@ -69,21 +69,14 @@ public class I9Slot : ICloneable
             switch (iType)
             {
                 case Enums.eType.Normal:
-                    switch (Grade)
+                    num1 = Grade switch
                     {
-                        case Enums.eEnhGrade.None:
-                            num1 = 0.0f;
-                            break;
-                        case Enums.eEnhGrade.TrainingO:
-                            num1 = DatabaseAPI.Database.MultTO[0][(int)iSched];
-                            break;
-                        case Enums.eEnhGrade.DualO:
-                            num1 = DatabaseAPI.Database.MultDO[0][(int)iSched];
-                            break;
-                        case Enums.eEnhGrade.SingleO:
-                            num1 = DatabaseAPI.Database.MultSO[0][(int)iSched];
-                            break;
-                    }
+                        Enums.eEnhGrade.None => 0.0f,
+                        Enums.eEnhGrade.TrainingO => DatabaseAPI.Database.MultTO[0][(int) iSched],
+                        Enums.eEnhGrade.DualO => DatabaseAPI.Database.MultDO[0][(int) iSched],
+                        Enums.eEnhGrade.SingleO => DatabaseAPI.Database.MultSO[0][(int) iSched],
+                        _ => num1
+                    };
                     break;
                 case Enums.eType.InventO:
                     num1 = DatabaseAPI.Database.MultIO[IOLevel][(int)iSched];
