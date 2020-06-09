@@ -225,15 +225,13 @@ namespace Hero_Designer
         {
             IPower power = myPower;
             lblNameFull.Text = $@"{power.GroupName}.{power.SetName}.{power.PowerName}";
-            if (!string.IsNullOrWhiteSpace(power.GroupName) | !string.IsNullOrWhiteSpace(power.SetName) | !string.IsNullOrWhiteSpace(power.PowerName))
+            if (string.IsNullOrWhiteSpace(power.GroupName) | string.IsNullOrWhiteSpace(power.SetName) | string.IsNullOrWhiteSpace(power.PowerName))
             {
-                Interaction.MsgBox(("Power name '" + power.FullName + " is invalid."), MsgBoxStyle.Exclamation, "No Can Do");
-                this.DialogResult = DialogResult.None;
+                _ = MessageBox.Show(@$"Power name ({power.FullName}) is invalid.", @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (!PowerFullNameIsUnique(Convert.ToString(power.PowerIndex, CultureInfo.InvariantCulture)))
             {
-                Interaction.MsgBox(("Power name '" + power.FullName + " already exists, please enter a unique name."), MsgBoxStyle.Exclamation, "No Can Do");
-                this.DialogResult = DialogResult.None;
+                _ = MessageBox.Show(@$"Power name ({power.FullName}) already exists. Please enter a unique name.", @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
