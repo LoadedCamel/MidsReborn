@@ -529,10 +529,10 @@ namespace Hero_Designer
 
         {
             ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibTopmost.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibTopmost.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             RecipeInfo.SetPopup(new PopUp.PopupData());
             ChangedRecipeInfoElements();
@@ -766,16 +766,16 @@ namespace Hero_Designer
         {
             BackColor = myParent.BackColor;
             ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibTopmost.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibTopmost.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibClipboard.IA = myParent.Drawing.pImageAttributes;
-            ibClipboard.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibClipboard.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClipboard.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibMiniList.IA = myParent.Drawing.pImageAttributes;
-            ibMiniList.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibMiniList.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibMiniList.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             FillPowerList();
         }

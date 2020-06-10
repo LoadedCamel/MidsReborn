@@ -147,7 +147,7 @@ namespace Hero_Designer
             UpdateLlColours(ref llRight);
             this.llRight = llRight;
             ibClose.IA = _myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = _myParent.Drawing.bxPower[2].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = _myParent.Drawing.bxPower[3].Bitmap;
             PopUp.PopupData iPopup = new PopUp.PopupData();
             int index = iPopup.Add();

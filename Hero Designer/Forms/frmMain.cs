@@ -192,7 +192,7 @@ namespace Hero_Designer
             dvAnchored = new DataView();
             Controls.Add(dvAnchored);
             dvAnchored.BackColor = Color.Black;
-            //dvAnchored.DrawVillain = false;
+            dvAnchored.DrawVillain = false;
             dvAnchored.Floating = false;
             dvAnchored.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
 
@@ -375,8 +375,9 @@ namespace Hero_Designer
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error has occurred when loading the main form. Error: " + ex.Message, "OMIGODHAX");
-                throw;
+                /*MessageBox.Show("An error has occurred when loading the main form. Error: " + ex.Message, "OMIGODHAX");
+                throw;*/
+                MessageBox.Show($"{ex.Message}\r\n\n{ex.StackTrace}");
             }
             loading = false;
         }
@@ -1075,7 +1076,7 @@ namespace Hero_Designer
             I9Slot i9Slot1 = null;
             I9Slot i9Slot2 = null;
             ImageAttributes recolourIa = clsDrawX.GetRecolourIa(MainModule.MidsController.Toon.IsHero());
-            SolidBrush solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
+            using SolidBrush solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             int num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;
             for (int i = 0; i <= num1; ++i)
@@ -1205,7 +1206,7 @@ namespace Hero_Designer
             SetTitleBar();
             Application.DoEvents();
             GetBestDamageValues();
-            //UpdateColours();
+            UpdateColours();
             FloatUpdate(true);
             return true;
         }
@@ -1262,7 +1263,7 @@ namespace Hero_Designer
 
         bool doSave()
         {
-            if (LastFileName == string.Empty)
+            if (string.IsNullOrEmpty(LastFileName))
                 return doSaveAs();
             if (LastFileName.Length > 3 && LastFileName.ToUpper().EndsWith(".TXT"))
             {
@@ -1339,7 +1340,7 @@ namespace Hero_Designer
             FloatingDataForm.dvFloat.Init();
             FloatingDataForm.dvFloat.SetFontData();
             myDataView.BackColor = BackColor;
-            //myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero();
+            myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero();
             dvAnchored.Visible = false;
             pnlGFX.Select();
             FloatingDataForm.Show();
@@ -1923,25 +1924,34 @@ namespace Hero_Designer
 
         void heroVillain_ButtonClicked()
         {
-            MidsContext.Character.Alignment = !heroVillain.Checked ? Enums.Alignment.Hero : Enums.Alignment.Villain;
-            if (fAccolade != null)
+            try
             {
-                if (!fAccolade.IsDisposed)
-                    fAccolade.Dispose();
-                IPower power = MidsContext.Character.IsHero()
-                    ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]
-                    : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
-                for (int index = 0; index <= power.NIDSubPower.Length - 1; ++index)
+                MidsContext.Character.Alignment = !heroVillain.Checked ? Enums.Alignment.Hero : Enums.Alignment.Villain;
+                if (fAccolade != null)
                 {
-                    if (MidsContext.Character.CurrentBuild.PowerUsed(DatabaseAPI.Database.Power[power.NIDSubPower[index]]))
-                        MidsContext.Character.CurrentBuild.RemovePower(DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
+                    if (!fAccolade.IsDisposed)
+                        fAccolade.Dispose();
+                    IPower power = MidsContext.Character.IsHero()
+                        ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]
+                        : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
+                    for (int index = 0; index <= power.NIDSubPower.Length - 1; ++index)
+                    {
+                        if (MidsContext.Character.CurrentBuild.PowerUsed(
+                            DatabaseAPI.Database.Power[power.NIDSubPower[index]]))
+                            MidsContext.Character.CurrentBuild.RemovePower(
+                                DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
+                    }
                 }
-            }
 
-            drawing.ColourSwitch();
-            SetTitleBar();
-            UpdateColours();
-            DoRedraw();
+                drawing.ColourSwitch();
+                SetTitleBar();
+                UpdateColours();
+                DoRedraw();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\r\n\n{ex.StackTrace}");
+            }
         }
 
         void HidePopup()
@@ -4213,7 +4223,7 @@ namespace Hero_Designer
             myDataView = dvAnchored;
             myDataView.Init();
             myDataView.BackColor = BackColor;
-            //myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero();
+            myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero();
             dvAnchored.Visible = true;
             NoResizeEvent = true;
             OnResizeEnd(new EventArgs());
@@ -4720,16 +4730,20 @@ namespace Hero_Designer
         {
             FloatTop(false);
             MidsContext.Config.LongExport = false;
-            var frmForum1 = new frmForum
+            using frmForum frmForum1 = new frmForum
             {
                 BackColor = BackColor,
                 IBCancel =
                 {
-                    IA = drawing.pImageAttributes, ImageOff = drawing.bxPower[2].Bitmap, ImageOn = drawing.bxPower[3].Bitmap
+                    IA = drawing.pImageAttributes,
+                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
+                    ImageOn = drawing.bxPower[3].Bitmap
                 },
                 IBExport =
                 {
-                    IA = drawing.pImageAttributes, ImageOff = drawing.bxPower[2].Bitmap, ImageOn = drawing.bxPower[3].Bitmap
+                    IA = drawing.pImageAttributes,
+                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
+                    ImageOn = drawing.bxPower[3].Bitmap
                 }
             };
             frmForum1.ShowDialog(this);
@@ -4802,17 +4816,21 @@ namespace Hero_Designer
         void tsExportLong_Click(object sender, EventArgs e)
         {
             FloatTop(false);
-            MidsContext.Config.LongExport = true;
-            frmForum frmForum1 = new frmForum
+            MidsContext.Config.LongExport = true; 
+            using frmForum frmForum1 = new frmForum
             {
                 BackColor = BackColor,
                 IBCancel =
                 {
-                    IA = drawing.pImageAttributes, ImageOff = drawing.bxPower[2].Bitmap, ImageOn = drawing.bxPower[3].Bitmap
+                    IA = drawing.pImageAttributes,
+                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
+                    ImageOn = drawing.bxPower[3].Bitmap
                 },
                 IBExport =
                 {
-                    IA = drawing.pImageAttributes, ImageOff = drawing.bxPower[2].Bitmap, ImageOn = drawing.bxPower[3].Bitmap
+                    IA = drawing.pImageAttributes,
+                    ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
+                    ImageOn = drawing.bxPower[3].Bitmap
                 }
             };
             frmForum1.ShowDialog(this);
@@ -4841,7 +4859,10 @@ namespace Hero_Designer
         }
 
         void tsFilePrint_Click(object sender, EventArgs e)
-            => new frmPrint().ShowDialog(this);
+        {
+            using frmPrint frmPrint = new frmPrint();
+            frmPrint.Show();
+        }
 
         void tsFileQuit_Click(object sender, EventArgs e)
             => Close();
@@ -4862,11 +4883,11 @@ namespace Hero_Designer
 
         void tsHelp_Click(object sender, EventArgs e)
         {
-            frmReadme frmReadme = new frmReadme(OS.GetApplicationPath() + "readme.rtf")
+            using frmReadme frmReadme = new frmReadme(OS.GetApplicationPath() + "readme.rtf")
             {
                 BtnClose =
                 {
-                    IA = drawing.pImageAttributes, ImageOff = drawing.bxPower[2].Bitmap, ImageOn = drawing.bxPower[3].Bitmap
+                    IA = drawing.pImageAttributes, ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap, ImageOn = drawing.bxPower[3].Bitmap
                 }
             };
             FloatTop(false);
@@ -5096,18 +5117,28 @@ namespace Hero_Designer
 
         void UpdateColours(bool skipDraw = false)
         {
-            //myDataView.DrawVillain = !MidsContext.Character.IsHero();
+            myDataView.DrawVillain = !MidsContext.Character.IsHero();
             var draw = I9Picker.ForeColor.R != 96;
-                BackColor = Color.FromArgb(0, 0, 0);
-                lblATLocked.BackColor = Color.FromArgb(128, 128, byte.MaxValue);
-                I9Picker.ForeColor = Color.FromArgb(96, 48, byte.MaxValue);
+            BackColor = Color.FromArgb(0, 0, 0);
+            //lblATLocked.BackColor = Color.FromArgb(128, 128, byte.MaxValue);
+            //I9Picker.ForeColor = Color.FromArgb(96, 48, byte.MaxValue);
+            if (MidsContext.Character.IsHero())
+            {
+                lblATLocked.BackColor = Color.FromArgb(81, 120, 169);
+                I9Picker.ForeColor = Color.FromArgb(81, 120, 169);
+            }
+            else
+            {
+                lblATLocked.BackColor = Color.FromArgb(191, 74, 56);
+                I9Picker.ForeColor = Color.FromArgb(191, 74, 56);
+            }
 
             I9Picker.BackColor = BackColor;
             I9Popup.BackColor = Color.Black;
             I9Popup.ForeColor = I9Picker.ForeColor;
             myDataView.BackColor = BackColor;
             //var font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
-            var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            using Font font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             var toColor = new Control[]
             {
                 llPrimary, llSecondary, llPool0, llPool1, llPool2, llPool3, llAncillary, lblName, lblAT, lblOrigin, lblHero, pnlGFX
@@ -5123,7 +5154,7 @@ namespace Hero_Designer
 
             var toOtherColor = new Control[]
             {
-                lblLocked0, lblLocked1, lblLocked2, lblLocked3, lblLockedAncillary, lblLockedSecondary //, this.lblATLocked
+                lblLocked0, lblLocked1, lblLocked2, lblLocked3, lblLockedAncillary, lblLockedSecondary , lblATLocked
             };
             foreach (var colorItem in toOtherColor)
             {
@@ -5136,9 +5167,12 @@ namespace Hero_Designer
                 ibPopup, ibRecipe, ibAccolade
             };
             foreach (var ib in ibs)
-                ib.SetImages(drawing.pImageAttributes, drawing.bxPower[2].Bitmap, drawing.bxPower[3].Bitmap);
-
-
+            {
+                ib.SetImages(drawing.pImageAttributes,
+                    MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
+                    drawing.bxPower[3].Bitmap);
+            }
+            
             if (!draw)
                 return;
             if (!skipDraw)
@@ -5317,8 +5351,8 @@ namespace Hero_Designer
             int height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
             Rectangle destRect = new Rectangle(0, 0, pbDynMode.Width, pbDynMode.Height);
-            StringFormat stringFormat = new StringFormat();
-            Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Pixel);
+            using StringFormat stringFormat = new StringFormat();
+            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Pixel);
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
             if (ePowerState == Enums.ePowerState.Open)

@@ -136,19 +136,19 @@ namespace Hero_Designer
             string iStr = "Close";
             Rectangle rectangle = new Rectangle();
             ref Rectangle local = ref rectangle;
-            Size size = _myParent.Drawing.bxPower[2].Size;
+            Size size = MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Size : _myParent.Drawing.bxPower[4].Size;
             int width = size.Width;
-            size = _myParent.Drawing.bxPower[2].Size;
+            size = MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Size : _myParent.Drawing.bxPower[4].Size;
             int height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
             Rectangle destRect = new Rectangle(0, 0, tab0.Width, tab0.Height);
-            StringFormat stringFormat = new StringFormat();
-            Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            using StringFormat stringFormat = new StringFormat();
+            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-            ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
-            extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[2].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+            extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                 GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             float height2 = bFont.GetHeight(e.Graphics) + 2f;
             RectangleF Bounds = new RectangleF(0.0f, (float) ((tab0.Height - (double) height2) / 2.0), tab0.Width, height2);
@@ -175,11 +175,11 @@ namespace Hero_Designer
             Rectangle rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
                 _myParent.Drawing.bxPower[index].Size.Height);
             Rectangle destRect = new Rectangle(0, 0, tab0.Width, tab0.Height);
-            StringFormat stringFormat = new StringFormat();
-            Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            using StringFormat stringFormat = new StringFormat();
+            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-            ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             if (index == 3)
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
@@ -402,11 +402,11 @@ namespace Hero_Designer
             Rectangle rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
                 _myParent.Drawing.bxPower[index].Size.Height);
             Rectangle destRect = new Rectangle(0, 0, iTab.Width, iTab.Height);
-            StringFormat stringFormat = new StringFormat();
-            Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            using StringFormat stringFormat = new StringFormat();
+            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-            ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             if (index == 3)
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,

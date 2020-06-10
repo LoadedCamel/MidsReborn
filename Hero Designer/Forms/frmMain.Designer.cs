@@ -1940,7 +1940,7 @@ namespace Hero_Designer
             this.ibPopup.TextOn = "Pop-Up: On";
             this.ibPopup.Toggle = true;
             this.ibPopup.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibPopup_ButtonClicked);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1156, 772);
             this.Controls.Add(this.heroVillain);

@@ -906,10 +906,10 @@ namespace Hero_Designer
         public void UpdateData()
         {
             btnClose.IA = myParent.Drawing.pImageAttributes;
-            btnClose.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            btnClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             btnClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             chkOnTop.IA = myParent.Drawing.pImageAttributes;
-            chkOnTop.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            chkOnTop.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             chkOnTop.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             if (!Loaded)
                 return;

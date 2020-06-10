@@ -68,7 +68,7 @@ namespace midsControls
             Scaling = true;
             vcCols = 4;
             vcRowsPowers = 8;
-            bxPower = new ExtendedBitmap[4];
+            bxPower = new ExtendedBitmap[5];
             checked
             {
                 int num2 = bxPower.Length - 1;
@@ -194,7 +194,7 @@ namespace midsControls
                     Color color;
                     if (slot.Enhancement.RelativeLevel == 0)
                     {
-                        color = Color.Red;
+                        color = Color.FromArgb(172,67,50);
                     }
                     else if (slot.Enhancement.RelativeLevel < Enums.eEnhRelative.Even)
                     {
@@ -202,7 +202,8 @@ namespace midsControls
                     }
                     else if (slot.Enhancement.RelativeLevel > Enums.eEnhRelative.Even)
                     {
-                        color = Color.FromArgb(0, 255, 255);
+                        //color = Color.FromArgb(0, 255, 255);
+                        color = Color.FromArgb(81, 120, 169);
                     }
                     else
                     {
@@ -237,7 +238,7 @@ namespace midsControls
             int slotChk = MidsContext.Character.SlotCheck(iSlot);
             Enums.ePowerState ePowerState = iSlot.State;
             bool canPlaceSlot = MidsContext.Character.CanPlaceSlot;
-            bool drawNewSlot = iSlot.Power != null && (iSlot.State != Enums.ePowerState.Empty && canPlaceSlot) && iSlot.Slots.Length < 6 &&
+            bool drawNewSlot = iSlot.Power != null && iSlot.State != Enums.ePowerState.Empty && canPlaceSlot && iSlot.Slots.Length < 6 &&
                                singleDraw && iSlot.Power.Slottable & InterfaceMode != Enums.eInterfaceMode.PowerToggle;
             Point result = PowerPosition(iSlot);
             Point point = default;
@@ -296,7 +297,7 @@ namespace midsControls
                     }
                     else if (iSlot.CanIncludeForStats())
                     {
-                        grey = (iSlot.Level >= MidsContext.Config.ForceLevel);
+                        grey = iSlot.Level >= MidsContext.Config.ForceLevel;
                         imageAttr = GreySlot(grey);
                     }
                     else
@@ -307,7 +308,7 @@ namespace midsControls
                 }
                 else
                 {
-                    grey = (iSlot.Level >= MidsContext.Config.ForceLevel);
+                    grey = iSlot.Level >= MidsContext.Config.ForceLevel;
                     imageAttr = GreySlot(grey);
                 }
 
@@ -321,7 +322,7 @@ namespace midsControls
                     }
 
                     Graphics graphics2 = bxBuffer.Graphics;
-                    Image bitmap = bxPower[(int) ePowerState].Bitmap;
+                    Image bitmap = !MidsContext.Character.IsHero() ? bxPower[4].Bitmap : bxPower[(int)ePowerState].Bitmap;
                     Rectangle destRect = ScaleDown(iValue);
                     int srcX = 0;
                     int srcY = 0;
@@ -423,19 +424,19 @@ namespace midsControls
 
                         Graphics graphics5 = bxBuffer.Graphics;
                         DrawOutlineText(
-                            iStr: Convert.ToString(slot.Level + 1),
-                            bounds: ScaleDown(iValue2),
-                            textColor: Color.FromArgb(0, 255, 0),
-                            outlineColor: Color.FromArgb(192, 0, 0, 0),
-                            bFont: font,
-                            outlineSpace: 1f,
-                            g: graphics5);
+                            Convert.ToString(slot.Level + 1),
+                            ScaleDown(iValue2),
+                            Color.FromArgb(0, 255, 0),
+                            Color.FromArgb(192, 0, 0, 0),
+                            font,
+                            1f,
+                            graphics5);
                     }
                 }
 
-                if (slotChk > -1 && (ePowerState != Enums.ePowerState.Empty && drawNewSlot))
+                if (slotChk > -1 && ePowerState != Enums.ePowerState.Empty && drawNewSlot)
                 {
-                    Rectangle clipRect2 = new Rectangle(point.X + szSlot.Width * (iSlot.Slots.Length), point.Y, szSlot.Width, szSlot.Height);
+                    Rectangle clipRect2 = new Rectangle(point.X + szSlot.Width * iSlot.Slots.Length, point.Y, szSlot.Width, szSlot.Height);
                     RectangleF iValue2 = clipRect2;
                     bxBuffer.Graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(iValue2));
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
@@ -710,7 +711,7 @@ namespace midsControls
                         point = PowerPosition(i);
                     }
 
-                    if ((iX < point.X || iY < point.Y) || (iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + 17))
+                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + 17)
                         continue;
                     oPower = i;
                     break;
@@ -1166,7 +1167,7 @@ namespace midsControls
         public bool WithinPowerBar(Rectangle pBounds, Point e)
         {
             pBounds.Height = SzPower.Height + 5;
-            return (e.X >= pBounds.Left && e.X < pBounds.Right) && (e.Y >= pBounds.Top && e.Y < pBounds.Bottom);
+            return e.X >= pBounds.Left && e.X < pBounds.Right && e.Y >= pBounds.Top && e.Y < pBounds.Bottom;
         }
 
         Point PowerPosition(int powerEntryIdx)

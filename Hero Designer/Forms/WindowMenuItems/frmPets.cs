@@ -67,7 +67,7 @@ namespace Hero_Designer
         {
             BackColor = _myParent.BackColor;
             ibClose.IA = _myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = _myParent.Drawing.bxPower[2].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = _myParent.Drawing.bxPower[3].Bitmap;
             UpdatePetPowersCombo(PetPowers);
             UpdatePetsListCombo();

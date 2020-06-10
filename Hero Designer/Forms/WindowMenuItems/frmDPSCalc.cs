@@ -164,10 +164,10 @@ namespace Hero_Designer
         void frmDPSCalc_Load(object sender, EventArgs e)
         {
             ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibTopmost.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibTopmost.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
         }
 
@@ -352,16 +352,16 @@ namespace Hero_Designer
         {
             BackColor = myParent.BackColor;
             ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibTopmost.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibTopmost.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibClear.IA = myParent.Drawing.pImageAttributes;
-            ibClear.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibClear.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClear.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibAutoMode.IA = myParent.Drawing.pImageAttributes;
-            ibAutoMode.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibAutoMode.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibAutoMode.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             FillPowerList();
         }

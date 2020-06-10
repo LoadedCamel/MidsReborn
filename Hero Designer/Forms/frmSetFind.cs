@@ -238,10 +238,10 @@ namespace Hero_Designer
             setBonusList = DatabaseAPI.NidPowers("Set_Bonus.Set_Bonus");
             BackColor = myParent.BackColor;
             ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibTopmost.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibTopmost.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             SetInfo.SetPopup(new PopUp.PopupData());
             FillImageList();

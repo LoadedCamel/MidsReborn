@@ -196,7 +196,7 @@ namespace Hero_Designer
             foreach (ImageButton button in buttonArray)
             {
                 button.IA = myParent.Drawing.pImageAttributes;
-                button.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+                button.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
                 button.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             }
             BackColor = myParent.BackColor;
@@ -208,7 +208,7 @@ namespace Hero_Designer
             UpdateLLColours(ref llRight);
             LLRight = llRight;
             ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = myParent.Drawing.bxPower[2].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             PopUp.PopupData iPopup = new PopUp.PopupData();
             int index = iPopup.Add();

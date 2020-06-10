@@ -87,7 +87,7 @@ namespace Hero_Designer
         public Rectangle SnapLocation;
         public int TabPage;
 
-        //bool VillainColour;
+        bool VillainColour;
 
         public event FloatChangeEventHandler FloatChange;
 
@@ -103,7 +103,7 @@ namespace Hero_Designer
 
         public event Unlock_ClickEventHandler Unlock_Click;
 
-        /*public bool DrawVillain
+        public bool DrawVillain
         {
             get => VillainColour;
             set
@@ -114,7 +114,7 @@ namespace Hero_Designer
                 pnlInfo.BackColor = VillainColour ? Color.Maroon : Color.Navy;
                 DoPaint();
             }
-        }*/
+        }
 
         public bool Floating
         {
@@ -1028,7 +1028,7 @@ namespace Hero_Designer
                 bxFlip.Graphics.DrawString("Active Slotting:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
                 rectangle1.Y += rectangle1.Height;
                 bxFlip.Graphics.DrawString("Alternate:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
-                ImageAttributes recolourIa = clsDrawX.GetRecolourIa(MidsContext.Character.IsHero());
+                //ImageAttributes recolourIa = clsDrawX.GetRecolourIa(MidsContext.Character.IsHero());
                 SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                 int num2 = MidsContext.Character.CurrentBuild.Powers[inToonHistory].SlotCount - 1;
                 for (int index = 0; index <= num2; ++index)
@@ -1113,7 +1113,7 @@ namespace Hero_Designer
                     else
                     {
                         destRect = new Rectangle(iDest.X, iDest.Y, 30, 30);
-                        bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, destRect, 0, 0, 30, 30, GraphicsUnit.Pixel, recolourIa);
+                        bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, destRect, 0, 0, 30, 30, GraphicsUnit.Pixel);
                     }
 
                     if (MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index].FlippedEnhancement.Enh > -1)
@@ -1184,7 +1184,7 @@ namespace Hero_Designer
                     else
                     {
                         destRect = new Rectangle(rectangle2.X, rectangle2.Y, 30, 30);
-                        bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, destRect, 0, 0, 30, 30, GraphicsUnit.Pixel, recolourIa);
+                        bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, destRect, 0, 0, 30, 30, GraphicsUnit.Pixel);
                     }
 
                     rectangle2.Inflate(2, 2);
@@ -2460,7 +2460,7 @@ namespace Hero_Designer
             SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             if (PowerID != pBase.PowerIndex)
                 return;
-            ImageAttributes recolourIa = clsDrawX.GetRecolourIa(MidsContext.Character.IsHero());
+            //ImageAttributes recolourIa = clsDrawX.GetRecolourIa(MidsContext.Character.IsHero());
             Rectangle rectangle1 = new Rectangle();
             ref Rectangle local1 = ref rectangle1;
             Size size = bxFlip.Size;
@@ -2480,7 +2480,7 @@ namespace Hero_Designer
                     I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[Enh1].TypeID, Grade1));
             }
             else
-                bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30, GraphicsUnit.Pixel, recolourIa);
+                bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30, GraphicsUnit.Pixel);
 
             pnlEnhActive.CreateGraphics().DrawImage(bxFlip.Bitmap, destRect, rectangle1, GraphicsUnit.Pixel);
             ref Rectangle local2 = ref rectangle1;
@@ -2499,7 +2499,7 @@ namespace Hero_Designer
                     I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[Enh2].TypeID, Grade2));
             }
             else
-                bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30, GraphicsUnit.Pixel, recolourIa);
+                bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30, GraphicsUnit.Pixel);
 
             rectangle2.Inflate(2, 2);
             bxFlip.Graphics.FillEllipse(solidBrush2, rectangle2);
@@ -3339,7 +3339,7 @@ namespace Hero_Designer
             lblLock.TextAlign = ContentAlignment.MiddleCenter;
             dbTip.SetToolTip(lblLock,
                 "The info display is currently locked to display a specific power, click here to unlock it to display powers as you hover the mouse over them.");
-            AutoScaleMode = AutoScaleMode.None;
+            AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.FromArgb(0, 0, 32);
             Controls.Add(lblLock);
             Controls.Add(lblFloat);
