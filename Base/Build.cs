@@ -861,23 +861,40 @@ Note: Normal and Special enhancements cannot go above +3, and Inventions cannot 
             {
                 if (Powers[powerIdx].Slots[i].Enhancement.Enh > -1)
                 {
-                    if (enhancement.Superior)
+                    try
                     {
-                        var containsNonSuperior = MidsContext.Character.powerEnhancements.FirstOrDefault(x => x.PowerName == Powers[powerIdx].Name && x.EnhancementSet == GetEnhSetName(enhancement.LongName).Remove(0, 9));
-                        if (containsNonSuperior != null)
+                        if (!enhancement.Superior)
                         {
-                            MessageBox.Show($"You cannot slot both superior and non-superior versions of {setName.Remove(0,9)} in your build.\r\n\nIf you wish to use this set then you must first remove the other.", @"Unable To Slot Enhancement");
-                            return false;
+                            var containsSuperior = MidsContext.Character.powerEnhancements.FirstOrDefault(x =>
+                                x.PowerName == Powers[powerIdx].Name && x.EnhancementSet ==
+                                $"Superior {GetEnhSetName(enhancement.LongName)}");
+                            if (containsSuperior != null)
+                            {
+                                MessageBox.Show(
+                                    $"You cannot slot both superior and non-superior versions of {setName} in your build.\r\n\nIf you wish to use this set then you must first remove the other.",
+                                    @"Unable To Slot Enhancement");
+                                return false;
+                            }
+                        }
+                        else if (enhancement.Superior)
+                        {
+                            var enhSetName = GetEnhSetName(enhancement.LongName);
+                            if (enhSetName.Contains("Superior"))
+                            {
+                                var containsNonSuperior = MidsContext.Character.powerEnhancements.FirstOrDefault(x => x.PowerName == Powers[powerIdx].Name && x.EnhancementSet == GetEnhSetName(enhancement.LongName).Remove(0, 9));
+                                if (containsNonSuperior != null)
+                                {
+                                    MessageBox.Show(
+                                        $"You cannot slot both superior and non-superior versions of {setName.Remove(0, 9)} in your build.\r\n\nIf you wish to use this set then you must first remove the other.",
+                                        @"Unable To Slot Enhancement");
+                                    return false;
+                                }
+                            }
                         }
                     }
-                    else if (!enhancement.Superior)
+                    catch (Exception e)
                     {
-                        var containsSuperior = MidsContext.Character.powerEnhancements.FirstOrDefault(x => x.PowerName == Powers[powerIdx].Name && x.EnhancementSet == $"Superior {GetEnhSetName(enhancement.LongName)}");
-                        if (containsSuperior != null)
-                        {
-                            MessageBox.Show($"You cannot slot both superior and non-superior versions of {setName} in your build.\r\n\nIf you wish to use this set then you must first remove the other.", @"Unable To Slot Enhancement");
-                            return false;
-                        }
+                        MessageBox.Show($"{e.Message}\r\n\n{e.StackTrace}");
                     }
                 }
             }
