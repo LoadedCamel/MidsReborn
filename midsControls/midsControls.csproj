@@ -68,6 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsDrawX.cs" />
+    <Compile Include="ctlColorList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlColorList.Designer.cs">
+      <DependentUpon>ctlColorList.cs</DependentUpon>
+    </Compile>
     <Compile Include="ctlDamageDisplay.cs">
       <SubType>UserControl</SubType>
     </Compile>
