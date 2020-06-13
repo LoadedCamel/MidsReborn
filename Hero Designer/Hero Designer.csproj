@@ -294,9 +294,6 @@
     <Compile Include="Forms\frmCSV.Designer.cs">
       <DependentUpon>frmCSV.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmColorSettings.Designer.cs">
-      <DependentUpon>frmColorSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmBusy.Designer.cs">
       <DependentUpon>frmBusy.cs</DependentUpon>
     </Compile>
@@ -2082,6 +2079,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\reborn_wicon.ico" />
+    <None Include="Resources\%24this.icon.ico" />
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
@@ -2147,9 +2145,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\OptionsMenuItems\frmCalcOpt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmColorSettings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmCompare.cs">
@@ -2319,9 +2314,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\frmCalcOpt.resx">
       <DependentUpon>frmCalcOpt.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmColorSettings.resx">
-      <DependentUpon>frmColorSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmCompare.resx">
       <DependentUpon>frmCompare.cs</DependentUpon>

@@ -231,7 +231,7 @@ namespace Hero_Designer
                     {
                         if (index2 > 0)
                             str1 += ", ";
-                        str1 = str1 + RTF.Color(RTF.ElementID.InentionInvert) + DatabaseAPI.Database.Power[mySet.Bonus[index1].Index[index2]].PowerName;
+                        str1 = str1 + RTF.Color(RTF.ElementID.InventionInvert) + DatabaseAPI.Database.Power[mySet.Bonus[index1].Index[index2]].PowerName;
                     }
                 }
                 if (mySet.Bonus[index1].Index.Length > 0)
@@ -246,7 +246,7 @@ namespace Hero_Designer
             {
                 if (mySet.SpecialBonus[index1].Special > -1)
                 {
-                    string str2 = str1 + RTF.Color(RTF.ElementID.Black) + RTF.Bold("Special Case Enhancement: ") + RTF.Color(RTF.ElementID.InentionInvert);
+                    string str2 = str1 + RTF.Color(RTF.ElementID.Black) + RTF.Bold("Special Case Enhancement: ") + RTF.Color(RTF.ElementID.InventionInvert);
                     if (mySet.Enhancements[mySet.SpecialBonus[index1].Special] > -1)
                         str2 += DatabaseAPI.Database.Enhancements[mySet.Enhancements[mySet.SpecialBonus[index1].Special]].Name;
                     string str3 = str2 + RTF.Crlf();
@@ -257,7 +257,7 @@ namespace Hero_Designer
                         {
                             if (index2 > 0)
                                 str3 += ", ";
-                            str3 = str3 + RTF.Color(RTF.ElementID.InentionInvert) + DatabaseAPI.Database.Power[mySet.SpecialBonus[index1].Index[index2]].PowerName;
+                            str3 = str3 + RTF.Color(RTF.ElementID.InventionInvert) + DatabaseAPI.Database.Power[mySet.SpecialBonus[index1].Index[index2]].PowerName;
                         }
                     }
                     str1 = str3 + RTF.Crlf() + "   " + RTF.Italic(mySet.GetEffectString(index1, true)) + RTF.Crlf();

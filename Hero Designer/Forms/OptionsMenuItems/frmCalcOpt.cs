@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Base.Master_Classes;
+using Hero_Designer.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -54,7 +55,11 @@ namespace Hero_Designer
             Hide();
         }
 
-        void btnFontColor_Click(object sender, EventArgs e) => new frmColorSettings().ShowDialog();
+        void btnFontColor_Click(object sender, EventArgs e)
+        {
+            using frmColorOptions frmColorOptions = new frmColorOptions();
+            frmColorOptions.ShowDialog();
+        }
 
         void btnIOReset_Click(object sender, EventArgs e)
         {

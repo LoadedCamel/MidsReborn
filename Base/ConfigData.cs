@@ -602,6 +602,7 @@ public class ConfigData
         public Color ColorPowerTakenVillain { get; set; }
         public Color ColorPowerTakenDarkVillain { get; set; }
         public Color ColorPowerHighlightVillain { get; set; }
+        public List<Color> ColorList { get; set; }
         public bool PairedBold { get; set; }
         public float PairedBase { get; set; }
 
@@ -624,6 +625,13 @@ public class ConfigData
             ColorPowerTakenDark = iFs.ColorPowerTakenDark;
             ColorPowerHighlight = iFs.ColorPowerHighlight;
             ColorPowerDisabled = iFs.ColorPowerDisabled;
+            ColorPowerTakenHero = iFs.ColorPowerTakenHero;
+            ColorPowerTakenDarkHero = iFs.ColorPowerTakenDarkHero;
+            ColorPowerHighlightHero = iFs.ColorPowerHighlightHero;
+            ColorPowerTakenVillain = iFs.ColorPowerTakenVillain;
+            ColorPowerTakenDarkVillain = iFs.ColorPowerTakenDarkVillain;
+            ColorPowerHighlightVillain = iFs.ColorPowerHighlightVillain;
+            ColorList = iFs.ColorList;
             PairedBold = iFs.PairedBold;
             PairedBase = iFs.PairedBase;
         }
@@ -647,9 +655,13 @@ public class ConfigData
             ColorPowerTakenDark = Color.DodgerBlue;
             ColorPowerHighlight = Color.FromArgb(64, 64, 96);
             ColorPowerDisabled = Color.DimGray;
-            //ColorPowerTakenVillain = Color.FromArgb(191, 74, 56);
-            //ColorPowerTakenDarkVillain = Color.Maroon;
-            //ColorPowerHighlightVillain = Color.FromArgb(96,64,64);
+            ColorPowerTakenHero = Color.FromArgb(116, 168, 234);
+            ColorPowerTakenDarkHero = Color.Blue;
+            ColorPowerHighlightHero = Color.FromArgb(64, 64, 96);
+            ColorPowerTakenVillain = Color.FromArgb(191, 74, 56);
+            ColorPowerTakenDarkVillain = Color.Maroon;
+            ColorPowerHighlightVillain = Color.FromArgb(96,64,64);
+            ColorList = new List<Color> { ColorPowerTakenHero, ColorPowerTakenDarkHero, ColorPowerHighlightHero, ColorPowerTakenVillain, ColorPowerTakenDarkVillain, ColorPowerHighlightVillain };
             PairedBase = 8.25f;
             PairedBold = false;
         }

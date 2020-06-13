@@ -399,7 +399,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                         continue;
                     if (index2 > 0)
                         str1 += ", ";
-                    str1 = str1 + RTF.Color(RTF.ElementID.InentionInvert) +
+                    str1 = str1 + RTF.Color(RTF.ElementID.InventionInvert) +
                            DatabaseAPI.Database.Power[mySet.Bonus[index1].Index[index2]].PowerName;
                 }
 
@@ -417,7 +417,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 if (mySet.SpecialBonus[index1].Special > -1)
                 {
                     string str2 = str1 + RTF.Color(RTF.ElementID.Black) + RTF.Bold("Special Case Enhancement: ") +
-                                  RTF.Color(RTF.ElementID.InentionInvert);
+                                  RTF.Color(RTF.ElementID.InventionInvert);
                     if (mySet.Enhancements[mySet.SpecialBonus[index1].Special] > -1)
                         str2 += DatabaseAPI.Database.Enhancements[mySet.Enhancements[mySet.SpecialBonus[index1].Special]].Name;
                     string str3 = str2 + RTF.Crlf();
@@ -428,7 +428,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                             continue;
                         if (index2 > 0)
                             str3 += ", ";
-                        str3 = str3 + RTF.Color(RTF.ElementID.InentionInvert) +
+                        str3 = str3 + RTF.Color(RTF.ElementID.InventionInvert) +
                                DatabaseAPI.Database.Power[mySet.SpecialBonus[index1].Index[index2]].PowerName;
                     }
 

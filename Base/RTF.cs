@@ -146,7 +146,7 @@ public static class RTF
         Enhancement,
         Faded,
         Invention,
-        InentionInvert,
+        InventionInvert,
         Text,
         Warning,
         BackgroundHero,

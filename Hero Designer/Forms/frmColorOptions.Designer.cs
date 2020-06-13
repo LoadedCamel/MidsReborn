@@ -67,10 +67,10 @@
             this.BGColor = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.DefaultButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
-            this.OkayButton = new System.Windows.Forms.Button();
+            this.ButtonDefault = new System.Windows.Forms.Button();
+            this.ButtonCancel = new System.Windows.Forms.Button();
+            this.ButtonOkay = new System.Windows.Forms.Button();
+            this.ctlColorList1 = new midsControls.ctlColorList();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,7 +88,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Click on a color box below to change\r\nthe corresponding item\'s color.\r\n\r\n";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -102,8 +101,11 @@
             // 
             // richTextBox1
             // 
+            this.richTextBox1.HideSelection = false;
             this.richTextBox1.Location = new System.Drawing.Point(277, 51);
             this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.richTextBox1.Size = new System.Drawing.Size(205, 206);
             this.richTextBox1.TabIndex = 3;
             this.richTextBox1.Text = "";
@@ -129,7 +131,6 @@
             this.label4.Size = new System.Drawing.Size(30, 14);
             this.label4.TabIndex = 1;
             this.label4.Text = "Text:";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label5
             // 
@@ -547,62 +548,69 @@
             this.label18.TabIndex = 11;
             this.label18.Text = "Dark Taken Power (Villain)";
             // 
-            // richTextBox2
+            // ButtonDefault
             // 
-            this.richTextBox2.BackColor = System.Drawing.Color.Black;
-            this.richTextBox2.Location = new System.Drawing.Point(277, 263);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(205, 189);
-            this.richTextBox2.TabIndex = 10;
-            this.richTextBox2.Text = "";
+            this.ButtonDefault.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonDefault.Location = new System.Drawing.Point(121, 479);
+            this.ButtonDefault.Name = "ButtonDefault";
+            this.ButtonDefault.Size = new System.Drawing.Size(94, 23);
+            this.ButtonDefault.TabIndex = 11;
+            this.ButtonDefault.Text = "Set Defaults";
+            this.ButtonDefault.UseVisualStyleBackColor = true;
+            this.ButtonDefault.Click += new System.EventHandler(this.DefaultButton_Click);
             // 
-            // DefaultButton
+            // ButtonCancel
             // 
-            this.DefaultButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DefaultButton.Location = new System.Drawing.Point(121, 479);
-            this.DefaultButton.Name = "DefaultButton";
-            this.DefaultButton.Size = new System.Drawing.Size(94, 23);
-            this.DefaultButton.TabIndex = 11;
-            this.DefaultButton.Text = "Set Defaults";
-            this.DefaultButton.UseVisualStyleBackColor = true;
-            this.DefaultButton.Click += new System.EventHandler(this.DefaultButton_Click);
+            this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonCancel.Location = new System.Drawing.Point(221, 479);
+            this.ButtonCancel.Name = "ButtonCancel";
+            this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
+            this.ButtonCancel.TabIndex = 12;
+            this.ButtonCancel.Text = "Cancel";
+            this.ButtonCancel.UseVisualStyleBackColor = true;
+            this.ButtonCancel.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // CancelButton
+            // ButtonOkay
             // 
-            this.CancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CancelButton.Location = new System.Drawing.Point(221, 479);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 12;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.ButtonOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonOkay.Location = new System.Drawing.Point(302, 479);
+            this.ButtonOkay.Name = "ButtonOkay";
+            this.ButtonOkay.Size = new System.Drawing.Size(75, 23);
+            this.ButtonOkay.TabIndex = 13;
+            this.ButtonOkay.Text = "OK";
+            this.ButtonOkay.UseVisualStyleBackColor = true;
+            this.ButtonOkay.Click += new System.EventHandler(this.OkayButton_Click);
             // 
-            // OkayButton
+            // ctlColorList1
             // 
-            this.OkayButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkayButton.Location = new System.Drawing.Point(302, 479);
-            this.OkayButton.Name = "OkayButton";
-            this.OkayButton.Size = new System.Drawing.Size(75, 23);
-            this.OkayButton.TabIndex = 13;
-            this.OkayButton.Text = "OK";
-            this.OkayButton.UseVisualStyleBackColor = true;
-            this.OkayButton.Click += new System.EventHandler(this.OkayButton_Click);
+            this.ctlColorList1.BackColor = System.Drawing.Color.Black;
+            this.ctlColorList1.Colors = null;
+            this.ctlColorList1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.ctlColorList1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ctlColorList1.ForeColor = System.Drawing.Color.White;
+            this.ctlColorList1.FormattingEnabled = true;
+            this.ctlColorList1.Location = new System.Drawing.Point(277, 264);
+            this.ctlColorList1.Name = "ctlColorList1";
+            this.ctlColorList1.Size = new System.Drawing.Size(204, 186);
+            this.ctlColorList1.TabIndex = 14;
             // 
             // frmColorOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 507);
-            this.Controls.Add(this.OkayButton);
-            this.Controls.Add(this.CancelButton);
-            this.Controls.Add(this.DefaultButton);
-            this.Controls.Add(this.richTextBox2);
+            this.Controls.Add(this.ctlColorList1);
+            this.Controls.Add(this.ButtonOkay);
+            this.Controls.Add(this.ButtonCancel);
+            this.Controls.Add(this.ButtonDefault);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "frmColorOptions";
+            this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmColorOptions";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -652,9 +660,9 @@
         private System.Windows.Forms.Button BGColor;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.Button DefaultButton;
-        private System.Windows.Forms.Button CancelButton;
-        private System.Windows.Forms.Button OkayButton;
+        private System.Windows.Forms.Button ButtonDefault;
+        private System.Windows.Forms.Button ButtonCancel;
+        private System.Windows.Forms.Button ButtonOkay;
+        private midsControls.ctlColorList ctlColorList1;
     }
 }

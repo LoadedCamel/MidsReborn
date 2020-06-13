@@ -60,7 +60,7 @@ namespace Hero_Designer
         public frmIncarnate(ref frmMain iParent)
         {
             Load += frmIncarnate_Load;
-            myPowers = new IPower[0];
+            myPowers = Array.Empty<IPower>();
             Locked = false;
             buttonArray = new ImageButton[10];
             InitializeComponent();
@@ -525,10 +525,20 @@ namespace Hero_Designer
         {
             iList.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
-            iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
             iList.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlight;
+            if (MidsContext.Character.IsHero())
+            {
+                iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
+                iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
+                iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
+            }
+            else
+            {
+                
+                iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
+                iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+                iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
+            }
             //iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
             iList.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
         }
