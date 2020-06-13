@@ -362,7 +362,7 @@ namespace Hero_Designer
 
             this.chkAltSub.Size = new System.Drawing.Size(183, 22);
             this.chkAltSub.TabIndex = 3;
-            this.chkAltSub.Text = "Sub-Power Colour Flag (ToDo)";
+            this.chkAltSub.Text = "Sub-Power Color Flag (ToDo)";
             this.chkAltSub.UseVisualStyleBackColor = true;
             this.chkAltSub.CheckedChanged += new System.EventHandler(chkAltSub_CheckedChanged);
 

@@ -30,7 +30,6 @@ namespace Hero_Designer
         Rectangle ActivePopupBounds;
 
         bool DataViewLocked;
-
         // dragdrop scenario action
         readonly short[] dragdropScenarioAction;
         ExtendedBitmap dmBuffer;
@@ -974,7 +973,7 @@ namespace Hero_Designer
                     GetBestDamageValues();
                     if (drawing != null)
                         DoRedraw();
-                    UpdateColours();
+                    UpdateColors();
                     FloatTop(true);
                     SetTitleBar();
                 }
@@ -1075,7 +1074,7 @@ namespace Hero_Designer
             int Enh2 = -1;
             I9Slot i9Slot1 = null;
             I9Slot i9Slot2 = null;
-            ImageAttributes recolourIa = clsDrawX.GetRecolourIa(MainModule.MidsController.Toon.IsHero());
+            ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MainModule.MidsController.Toon.IsHero());
             using SolidBrush solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             int num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;
@@ -1143,7 +1142,7 @@ namespace Hero_Designer
                             I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[index].TypeID, i9Slot1.Grade));
                 }
                 else
-                    drawing.bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30, GraphicsUnit.Pixel, recolourIa);
+                    drawing.bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30, GraphicsUnit.Pixel, recolorIa);
 
                 if (MidsContext.Config.CalcEnhLevel == Enums.eEnhRelative.None | slot.Level >= MidsContext.Config.ForceLevel |
                     drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle & !powerEntry.StatInclude)
@@ -1206,7 +1205,7 @@ namespace Hero_Designer
             SetTitleBar();
             Application.DoEvents();
             GetBestDamageValues();
-            UpdateColours();
+            UpdateColors();
             FloatUpdate(true);
             return true;
         }
@@ -1838,7 +1837,7 @@ namespace Hero_Designer
                 Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, DataViewLocked);
             if (drawing != null)
                 DoRedraw();
-            UpdateColours();
+            UpdateColors();
         }
 
         void GetBestDamageValues()
@@ -1943,9 +1942,9 @@ namespace Hero_Designer
                     }
                 }
 
-                drawing.ColourSwitch();
+                drawing.ColorSwitch();
                 SetTitleBar();
-                UpdateColours();
+                UpdateColors();
                 DoRedraw();
             }
             catch (Exception ex)
@@ -2524,7 +2523,7 @@ namespace Hero_Designer
             NewDraw(skipDraw);
             UpdateControls(true);
             SetTitleBar(MidsContext.Character.IsHero());
-            UpdateColours();
+            UpdateColors();
             info_Totals();
             FileModified = false;
             DoRedraw();
@@ -4195,17 +4194,17 @@ namespace Hero_Designer
                 str2 = str2.Replace(nameof(Hero), "Villain");
             if (MidsContext.Config.MasterMode)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion} {MidsContext.AppVersionStatus} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
             }
             else
             {
                 //this.Text = str2 + " v" + MidsContext.AppAssemblyVersion + " (Database Issue: " + DatabaseAPI.Database.Issue + " - Updated: " + DatabaseAPI.Database.Date.ToString("dd/MM/yy") + ")";
                 Text =
-                    $@"{str2} v{MidsContext.AppAssemblyVersion} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                    $@"{str2} v{MidsContext.AppAssemblyVersion} {MidsContext.AppVersionStatus} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
             }
         }
 
-        void ShallowCopyPowerList(PowerEntry[] source)
+        static void ShallowCopyPowerList(PowerEntry[] source)
         {
             int num = MidsContext.Character.CurrentBuild.Powers.Count - 1;
             for (int index = 0; index <= num; ++index)
@@ -5115,7 +5114,7 @@ namespace Hero_Designer
             GC.Collect();
         }
 
-        void UpdateColours(bool skipDraw = false)
+        void UpdateColors(bool skipDraw = false)
         {
             myDataView.DrawVillain = !MidsContext.Character.IsHero();
             var draw = I9Picker.ForeColor.R != 96;
@@ -5124,15 +5123,15 @@ namespace Hero_Designer
             //I9Picker.ForeColor = Color.FromArgb(96, 48, byte.MaxValue);
             if (MidsContext.Character.IsHero())
             {
-                lblATLocked.BackColor = Color.FromArgb(81, 120, 169);
-                I9Picker.ForeColor = Color.FromArgb(81, 120, 169);
+                lblATLocked.BackColor = Color.FromArgb(116, 168, 234);
+                I9Picker.ForeColor = Color.FromArgb(116, 168, 234);
             }
             else
             {
                 lblATLocked.BackColor = Color.FromArgb(191, 74, 56);
                 I9Picker.ForeColor = Color.FromArgb(191, 74, 56);
             }
-
+            var ColorPowerTaken = MidsContext.Character.IsHero() ? Color.FromArgb(116, 168, 234) : Color.FromArgb(191, 74, 56);
             I9Picker.BackColor = BackColor;
             I9Popup.BackColor = Color.Black;
             I9Popup.ForeColor = I9Picker.ForeColor;
@@ -5148,7 +5147,7 @@ namespace Hero_Designer
                 colorItem.BackColor = BackColor;
                 if (!(colorItem is ListLabelV3 ll))
                     continue;
-                UpdateLLColours(ll);
+                UpdateLLColors(ll);
                 ll.Font = font;
             }
 
@@ -5172,7 +5171,14 @@ namespace Hero_Designer
                     MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
                     drawing.bxPower[3].Bitmap);
             }
-            
+            llPrimary.UpdateTextColors(ListLabelV3.LLItemState.Selected, ColorPowerTaken);
+            llSecondary.UpdateTextColors(ListLabelV3.LLItemState.Selected, ColorPowerTaken);
+            llPool0.UpdateTextColors(ListLabelV3.LLItemState.Selected, ColorPowerTaken);
+            llPool1.UpdateTextColors(ListLabelV3.LLItemState.Selected, ColorPowerTaken);
+            llPool2.UpdateTextColors(ListLabelV3.LLItemState.Selected, ColorPowerTaken);
+            llPool3.UpdateTextColors(ListLabelV3.LLItemState.Selected, ColorPowerTaken);
+            llAncillary.UpdateTextColors(ListLabelV3.LLItemState.Selected, ColorPowerTaken);
+
             if (!draw)
                 return;
             if (!skipDraw)
@@ -5385,7 +5391,7 @@ namespace Hero_Designer
                 : "Dynamic";
         }
 
-        void UpdateLLColours(ListLabelV3 iList)
+        void UpdateLLColors(ListLabelV3 iList)
         {
             iList.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
@@ -5413,8 +5419,7 @@ namespace Hero_Designer
                     fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
                     fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
                     fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTaken);
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled,
-                        MidsContext.Config.RtFont.ColorPowerTakenDark);
+                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDark);
                     fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
                     fIncarnate.LLLeft.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlight;
                     fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);

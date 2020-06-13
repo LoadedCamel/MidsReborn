@@ -20,7 +20,7 @@ namespace midsControls
 
         public ListLabelItemV3[] Items;
 
-        private readonly Color[] Colours;
+        private readonly Color[] Colors;
 
         private readonly Cursor[] Cursors;
 
@@ -162,7 +162,7 @@ namespace midsControls
                 }
                 else
                 {
-                    result = Colours[(int)Item.ItemState];
+                    result = Colors[(int)Item.ItemState];
                 }
 
                 return result;
@@ -171,7 +171,7 @@ namespace midsControls
             {
                 if (Item.ItemState < LLItemState.Enabled | Item.ItemState > LLItemState.Heading)
                     return;
-                Colours[(int)Item.ItemState] = value;
+                Colors[(int)Item.ItemState] = value;
                 Draw();
             }
         }
@@ -368,7 +368,7 @@ namespace midsControls
             MouseDown += ListLabelV3_MouseDown;
             bxBuffer = null;
             Items = new ListLabelItemV3[0];
-            Colours = new[]
+            Colors = new[]
             {
                 Color.LightBlue, Color.LightGreen, Color.LightGray, Color.DarkGreen, Color.Red, Color.Orange
             };
@@ -1020,7 +1020,7 @@ namespace midsControls
         {
             if (State < LLItemState.Enabled | State > LLItemState.Heading)
                 return;
-            Colours[(int)State] = color;
+            Colors[(int)State] = color;
             Draw();
         }
 
@@ -1166,7 +1166,7 @@ namespace midsControls
                     bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
                 }
 
-                brush2 = new SolidBrush(Colours[(int)Items[Index].ItemState]);
+                brush2 = new SolidBrush(Colors[(int)Items[Index].ItemState]);
                 bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, rectangle, stringFormat);
             }
         }

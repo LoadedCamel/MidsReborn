@@ -78,7 +78,7 @@ namespace midsControls
                                                     Strings.Trim(Convert.ToString(i)) + GfxFileExt);
                 }
 
-                ColourSwitch();
+                ColorSwitch();
                 InitColumns = MidsContext.Config.Columns;
                 SzPower = bxPower[0].Size;
                 szSlot = new Size(30, 30);
@@ -567,7 +567,7 @@ namespace midsControls
 
         public void FullRedraw()
         {
-            ColourSwitch();
+            ColorSwitch();
             BackColor = cTarget.BackColor;
             bxBuffer.Graphics.Clear(BackColor);
             DrawPowers();
@@ -1014,12 +1014,12 @@ namespace midsControls
             }
         };
 
-        public void ColourSwitch()
+        public void ColorSwitch()
         {
             /*bool useHeroColors = true;
             if (MidsContext.Character != null)
                 useHeroColors = MidsContext.Character.IsHero();
-            if (MidsContext.Config.DisableVillainColours)
+            if (MidsContext.Config.DisableVillainColors)
                 useHeroColors = true;
 
             VillainColor = !useHeroColors;*/
@@ -1029,7 +1029,7 @@ namespace midsControls
             pImageAttributes.SetColorMatrix(pColorMatrix);
         }
 
-        public static ImageAttributes GetRecolourIa(bool hero)
+        public static ImageAttributes GetRecolorIa(bool hero)
         {
             var colorMatrix = new ColorMatrix(heroMatrix);
             ImageAttributes imageAttributes = new ImageAttributes();

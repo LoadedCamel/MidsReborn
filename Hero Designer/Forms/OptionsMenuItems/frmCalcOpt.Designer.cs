@@ -45,9 +45,9 @@ namespace Hero_Designer
             this.Label36 = new System.Windows.Forms.Label();
             this.chkStatBold = new System.Windows.Forms.CheckBox();
             this.chkTextBold = new System.Windows.Forms.CheckBox();
-            this.btnFontColour = new System.Windows.Forms.Button();
+            this.btnFontColor = new System.Windows.Forms.Button();
             this.Label22 = new System.Windows.Forms.Label();
-            this.chkVillainColour = new System.Windows.Forms.CheckBox();
+            this.chkVillainColor = new System.Windows.Forms.CheckBox();
             this.Label21 = new System.Windows.Forms.Label();
             this.udStatSize = new System.Windows.Forms.NumericUpDown();
             this.udRTFSize = new System.Windows.Forms.NumericUpDown();
@@ -211,7 +211,7 @@ namespace Hero_Designer
             this.lblExample = new System.Windows.Forms.Label();
             this.GroupBox7 = new System.Windows.Forms.GroupBox();
             this.listScenarios = new System.Windows.Forms.ListBox();
-            this.chkColourPrint = new System.Windows.Forms.CheckBox();
+            this.chkColorPrint = new System.Windows.Forms.CheckBox();
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
@@ -338,9 +338,9 @@ namespace Hero_Designer
             this.GroupBox17.Controls.Add(this.Label36);
             this.GroupBox17.Controls.Add(this.chkStatBold);
             this.GroupBox17.Controls.Add(this.chkTextBold);
-            this.GroupBox17.Controls.Add(this.btnFontColour);
+            this.GroupBox17.Controls.Add(this.btnFontColor);
             this.GroupBox17.Controls.Add(this.Label22);
-            this.GroupBox17.Controls.Add(this.chkVillainColour);
+            this.GroupBox17.Controls.Add(this.chkVillainColor);
             this.GroupBox17.Controls.Add(this.Label21);
             this.GroupBox17.Controls.Add(this.udStatSize);
             this.GroupBox17.Controls.Add(this.udRTFSize);
@@ -399,15 +399,15 @@ namespace Hero_Designer
             this.chkTextBold.TabIndex = 62;
             this.chkTextBold.UseVisualStyleBackColor = true;
             // 
-            // btnFontColour
+            // btnFontColor
             // 
-            this.btnFontColour.Location = new System.Drawing.Point(312, 36);
-            this.btnFontColour.Name = "btnFontColour";
-            this.btnFontColour.Size = new System.Drawing.Size(172, 27);
-            this.btnFontColour.TabIndex = 61;
-            this.btnFontColour.Text = "Set Colors...";
-            this.btnFontColour.UseVisualStyleBackColor = true;
-            this.btnFontColour.Click += new System.EventHandler(this.btnFontColour_Click);
+            this.btnFontColor.Location = new System.Drawing.Point(312, 36);
+            this.btnFontColor.Name = "btnFontColor";
+            this.btnFontColor.Size = new System.Drawing.Size(172, 27);
+            this.btnFontColor.TabIndex = 61;
+            this.btnFontColor.Text = "Set Colors...";
+            this.btnFontColor.UseVisualStyleBackColor = true;
+            this.btnFontColor.Click += new System.EventHandler(this.btnFontColor_Click);
             // 
             // Label22
             // 
@@ -418,16 +418,16 @@ namespace Hero_Designer
             this.Label22.Text = "Stats/Powers:";
             this.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // chkVillainColour
+            // chkVillainColor
             // 
-            this.chkVillainColour.Enabled = false;
-            this.chkVillainColour.Location = new System.Drawing.Point(262, 117);
-            this.chkVillainColour.Name = "chkVillainColour";
-            this.chkVillainColour.Size = new System.Drawing.Size(222, 20);
-            this.chkVillainColour.TabIndex = 68;
-            this.chkVillainColour.Text = "Use alternate colors for villains";
-            this.myTip.SetToolTip(this.chkVillainColour, "Draws villain builds in red rather than blue.");
-            this.chkVillainColour.Visible = false;
+            this.chkVillainColor.Enabled = false;
+            this.chkVillainColor.Location = new System.Drawing.Point(262, 117);
+            this.chkVillainColor.Name = "chkVillainColor";
+            this.chkVillainColor.Size = new System.Drawing.Size(222, 20);
+            this.chkVillainColor.TabIndex = 68;
+            this.chkVillainColor.Text = "Use alternate colors for villains";
+            this.myTip.SetToolTip(this.chkVillainColor, "Draws villain builds in red rather than blue.");
+            this.chkVillainColor.Visible = false;
             // 
             // Label21
             // 
@@ -2263,14 +2263,14 @@ namespace Hero_Designer
             this.listScenarios.TabIndex = 0;
             this.listScenarios.SelectedIndexChanged += new System.EventHandler(this.listScenarios_SelectedIndexChanged);
             // 
-            // chkColourPrint
+            // chkColorPrint
             // 
-            this.chkColourPrint.Location = new System.Drawing.Point(246, 367);
-            this.chkColourPrint.Name = "chkColourPrint";
-            this.chkColourPrint.Size = new System.Drawing.Size(156, 16);
-            this.chkColourPrint.TabIndex = 2;
-            this.chkColourPrint.Text = "Print in color";
-            this.chkColourPrint.Visible = false;
+            this.chkColorPrint.Location = new System.Drawing.Point(246, 367);
+            this.chkColorPrint.Name = "chkColorPrint";
+            this.chkColorPrint.Size = new System.Drawing.Size(156, 16);
+            this.chkColorPrint.TabIndex = 2;
+            this.chkColorPrint.Text = "Print in color";
+            this.chkColorPrint.Visible = false;
             // 
             // myTip
             // 
@@ -2289,7 +2289,7 @@ namespace Hero_Designer
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(757, 392);
-            this.Controls.Add(this.chkColourPrint);
+            this.Controls.Add(this.chkColorPrint);
             this.Controls.Add(this.TabControl1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -2354,14 +2354,14 @@ namespace Hero_Designer
 
         Button btnBaseReset;
         Button btnCancel;
-        Button btnFontColour;
+        Button btnFontColor;
         Button btnIOReset;
         Button btnOK;
         Button btnSaveFolder;
         Button btnSaveFolderReset;
         ComboBox cbEnhLevel;
         CheckBox chkColorInherent;
-        CheckBox chkColourPrint;
+        CheckBox chkColorPrint;
         CheckBox chkHighVis;
         CheckBox chkIOEffects;
         CheckBox chkIOLevel;
@@ -2376,7 +2376,7 @@ namespace Hero_Designer
         CheckBox chkTextBold;
         CheckBox chkUpdates;
         CheckBox chkUseArcanaTime;
-        CheckBox chkVillainColour;
+        CheckBox chkVillainColor;
         CheckedListBox clbSuppression;
         ComboBox cmbAction;
         ColorDialog cPicker;

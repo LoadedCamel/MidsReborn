@@ -80,6 +80,12 @@
     <Compile Include="clsZip.cs" />
     <Compile Include="clsHook.cs" />
     <Compile Include="FileAssocation.cs" />
+    <Compile Include="Forms\frmColorOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmColorOptions.Designer.cs">
+      <DependentUpon>frmColorOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -288,8 +294,8 @@
     <Compile Include="Forms\frmCSV.Designer.cs">
       <DependentUpon>frmCSV.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmColourSettings.Designer.cs">
-      <DependentUpon>frmColourSettings.cs</DependentUpon>
+    <Compile Include="Forms\frmColorSettings.Designer.cs">
+      <DependentUpon>frmColorSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmBusy.Designer.cs">
       <DependentUpon>frmBusy.cs</DependentUpon>
@@ -2079,6 +2085,9 @@
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
+    <EmbeddedResource Include="Forms\frmColorOptions.resx">
+      <DependentUpon>frmColorOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmUpdate.resx">
       <DependentUpon>frmUpdate.cs</DependentUpon>
     </EmbeddedResource>
@@ -2140,7 +2149,7 @@
     <Compile Include="Forms\OptionsMenuItems\frmCalcOpt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmColourSettings.cs">
+    <Compile Include="Forms\frmColorSettings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmCompare.cs">
@@ -2311,8 +2320,8 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\frmCalcOpt.resx">
       <DependentUpon>frmCalcOpt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmColourSettings.resx">
-      <DependentUpon>frmColourSettings.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\frmColorSettings.resx">
+      <DependentUpon>frmColorSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmCompare.resx">
       <DependentUpon>frmCompare.cs</DependentUpon>

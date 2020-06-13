@@ -523,7 +523,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            myPower.SubIsAltColour = chkAltSub.Checked;
+            myPower.SubIsAltColor = chkAltSub.Checked;
         }
 
         void chkAlwaysToggle_CheckedChanged(object sender, EventArgs e)
@@ -1033,7 +1033,7 @@ namespace Hero_Designer
             chkBuffCycle.Checked = power.ClickBuff;
             chkAlwaysToggle.Checked = power.AlwaysToggle;
             chkGraphFix.Checked = myPower.SkipMax;
-            chkAltSub.Checked = power.SubIsAltColour;
+            chkAltSub.Checked = power.SubIsAltColor;
             chkSubInclude.Checked = power.IncludeFlag;
             chkSortOverride.Checked = power.SortOverride;
             txtVisualLocation.Text = Convert.ToString(power.DisplayLocation, CultureInfo.InvariantCulture);

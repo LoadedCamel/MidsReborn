@@ -54,7 +54,7 @@ namespace Hero_Designer
             Hide();
         }
 
-        void btnFontColour_Click(object sender, EventArgs e) => new frmColourSettings().ShowDialog();
+        void btnFontColor_Click(object sender, EventArgs e) => new frmColorSettings().ShowDialog();
 
         void btnIOReset_Click(object sender, EventArgs e)
         {
@@ -168,7 +168,7 @@ namespace Hero_Designer
 
         void csReset_Click(object sender, EventArgs e)
         {
-            if (Interaction.MsgBox("This will remove all of the colour schemes and replace them with the defaults. Are you sure?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (Interaction.MsgBox("This will remove all of the color schemes and replace them with the defaults. Are you sure?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                 return;
             MidsContext.Config.Export.ResetColorsToDefaults();
             csPopulateList();
@@ -198,14 +198,14 @@ namespace Hero_Designer
         {
             if (fcList.SelectedIndex < 0 | fcNoUpdate)
                 return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].ColourOff = fcColorOff.Text;
+            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].ColorOff = fcColorOff.Text;
         }
 
         void fcColorOn_TextChanged(object sender, EventArgs e)
         {
             if (fcList.SelectedIndex < 0 || fcNoUpdate)
                 return;
-            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].ColourOn = fcColorOn.Text;
+            MidsContext.Config.Export.FormatCode[fcList.SelectedIndex].ColorOn = fcColorOn.Text;
         }
 
         void fcDelete_Click(object sender, EventArgs e)
@@ -225,8 +225,8 @@ namespace Hero_Designer
                 int selectedIndex = fcList.SelectedIndex;
                 fcName.Text = formatCode[selectedIndex].Name;
                 fcNotes.Text = formatCode[selectedIndex].Notes;
-                fcColorOn.Text = formatCode[selectedIndex].ColourOn;
-                fcColorOff.Text = formatCode[selectedIndex].ColourOff;
+                fcColorOn.Text = formatCode[selectedIndex].ColorOn;
+                fcColorOff.Text = formatCode[selectedIndex].ColorOff;
                 fcTextOn.Text = formatCode[selectedIndex].SizeOn;
                 fcTextOff.Text = formatCode[selectedIndex].SizeOff;
                 fcBoldOn.Text = formatCode[selectedIndex].BoldOn;
@@ -590,7 +590,7 @@ namespace Hero_Designer
             rbChanceMax.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Max;
             rbChanceIgnore.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum;
             udBaseToHit.Value = new Decimal(config.BaseAcc * 100f);
-            chkVillainColour.Checked = !config.DisableVillainColours;
+            chkVillainColor.Checked = !config.DisableVillainColors;
             chkUpdates.Checked = config.CheckForUpdates;
             udIOLevel.Value = Decimal.Compare(new Decimal(config.I9.DefaultIOLevel + 1), udIOLevel.Maximum) <= 0 ? new Decimal(config.I9.DefaultIOLevel + 1) : udIOLevel.Maximum;
             chkIOLevel.Checked = !config.I9.HideIOLevels;
@@ -598,7 +598,7 @@ namespace Hero_Designer
             chkSetBonus.Checked = !config.I9.IgnoreSetBonusFX;
             chkRelSignOnly.Checked = config.ShowRelSymbols;
             chkIOPrintLevels.Checked = !config.I9.DisablePrintIOLevels;
-            chkColourPrint.Checked = config.PrintInColour;
+            chkColorPrint.Checked = config.PrintInColor;
             udRTFSize.Value = new decimal(config.RtFont.RTFBase / 2.0);
             udStatSize.Value = new decimal(config.RtFont.PairedBase);
             chkTextBold.Checked = config.RtFont.RTFBold;
@@ -778,7 +778,7 @@ namespace Hero_Designer
             else if (rbChanceIgnore.Checked)
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Minimum;
             config.BaseAcc = Convert.ToSingle(decimal.Divide(udBaseToHit.Value, new decimal(100)));
-            config.DisableVillainColours = !chkVillainColour.Checked;
+            config.DisableVillainColors = !chkVillainColor.Checked;
             config.CheckForUpdates = chkUpdates.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
             config.I9.HideIOLevels = !chkIOLevel.Checked;
@@ -786,7 +786,7 @@ namespace Hero_Designer
             config.I9.IgnoreSetBonusFX = !chkSetBonus.Checked;
             config.ShowRelSymbols = chkRelSignOnly.Checked;
             config.I9.DisablePrintIOLevels = !chkIOPrintLevels.Checked;
-            config.PrintInColour = chkColourPrint.Checked;
+            config.PrintInColor = chkColorPrint.Checked;
             config.RtFont.RTFBase = Convert.ToInt32(decimal.Multiply(udRTFSize.Value, new decimal(2)));
             config.RtFont.PairedBase = Convert.ToSingle(udStatSize.Value);
             config.RtFont.RTFBold = chkTextBold.Checked;

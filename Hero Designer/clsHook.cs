@@ -23,48 +23,48 @@ namespace Hero_Designer
         public static string DFileName;
         public static string DExt;
 
-        private static string Mids_Version { get; set; }
+        public static string Mids_Version { get; set; }
 
-        private static string Discord_Server { get; set; }
-        private static string Discord_Channel { get; set; }
-        private static string Discord_Nickname { get; set; }
+        public static string Discord_Server { get; set; }
+        public static string Discord_Channel { get; set; }
+        public static string Discord_Nickname { get; set; }
 
-        private static string Character_Name { get; set; }
-        private static string Character_Level { get; set; }
-        private static string Character_Archetype { get; set; }
-        private static string Character_Primary_Power { get; set; }
-        private static string Character_Secondary_Power { get; set; }
+        public static string Character_Name { get; set; }
+        public static string Character_Level { get; set; }
+        public static string Character_Archetype { get; set; }
+        public static string Character_Primary_Power { get; set; }
+        public static string Character_Secondary_Power { get; set; }
 
-        private static string Embed_Link { get; set; }
+        public static string Embed_Link { get; set; }
 
-        private static string Smashing_Defense { get; set; }
-        private static string Lethal_Defense { get; set; }
-        private static string Fire_Defense { get; set; }
-        private static string Cold_Defense { get; set; }
-        private static string Energy_Defense { get; set; }
-        private static string Negative_Defense { get; set; }
-        private static string Psionic_Defense { get; set; }
-        private static string Melee_Defense { get; set; }
-        private static string Ranged_Defense { get; set; }
-        private static string AOE_Defense { get; set; }
+        public static string Smashing_Defense { get; set; }
+        public static string Lethal_Defense { get; set; }
+        public static string Fire_Defense { get; set; }
+        public static string Cold_Defense { get; set; }
+        public static string Energy_Defense { get; set; }
+        public static string Negative_Defense { get; set; }
+        public static string Psionic_Defense { get; set; }
+        public static string Melee_Defense { get; set; }
+        public static string Ranged_Defense { get; set; }
+        public static string AOE_Defense { get; set; }
 
-        private static string Resistance_Cap { get; set; }
+        public static string Resistance_Cap { get; set; }
 
-        private static string Smashing_Resistance { get; set; }
-        private static string Lethal_Resistance { get; set; }
-        private static string Fire_Resistance { get; set; }
-        private static string Cold_Resistance { get; set; }
-        private static string Energy_Resistance { get; set; }
-        private static string Negative_Resistance { get; set; }
-        private static string Toxic_Resistance { get; set; }
-        private static string Psionic_Resistance { get; set; }
+        public static string Smashing_Resistance { get; set; }
+        public static string Lethal_Resistance { get; set; }
+        public static string Fire_Resistance { get; set; }
+        public static string Cold_Resistance { get; set; }
+        public static string Energy_Resistance { get; set; }
+        public static string Negative_Resistance { get; set; }
+        public static string Toxic_Resistance { get; set; }
+        public static string Psionic_Resistance { get; set; }
 
-        private static string Damage_Buff { get; set; }
-        private static string Endurance_Usage { get; set; }
-        private static string Global_Recharge { get; set; }
-        private static string Recovery { get; set; }
-        private static string Regen { get; set; }
-        private static string ToHit { get; set; }
+        public static string Damage_Buff { get; set; }
+        public static string Endurance_Usage { get; set; }
+        public static string Global_Recharge { get; set; }
+        public static string Recovery { get; set; }
+        public static string Regen { get; set; }
+        public static string ToHit { get; set; }
 
         public static string ShrinkTheDatalink(string strUrl)
         {

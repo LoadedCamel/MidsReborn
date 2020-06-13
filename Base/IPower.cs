@@ -155,7 +155,7 @@ public interface IPower : IComparable
 
     string[] UIDSubPower { get; set; }
 
-    bool SubIsAltColour { get; set; }
+    bool SubIsAltColor { get; set; }
 
     Enums.eEnhance[] IgnoreEnh { get; set; }
 

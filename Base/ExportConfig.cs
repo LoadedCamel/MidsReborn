@@ -13,7 +13,7 @@ public class ExportConfig
     {
         Array.Resize(ref ColorSchemes, ColorSchemes.Length + 1);
         ColorSchemes[ColorSchemes.Length - 1].SetDefault();
-        ColorSchemes[ColorSchemes.Length - 1].SchemeName = "New Colours";
+        ColorSchemes[ColorSchemes.Length - 1].SchemeName = "New Colors";
     }
 
     public void AddCodes()
@@ -168,8 +168,8 @@ public class ExportConfig
         AddCodes();
         FormatCode[FormatCode.Length - 1].Name = "No Codes";
         FormatCode[FormatCode.Length - 1].Notes = "Unformatted plain text";
-        FormatCode[FormatCode.Length - 1].ColourOn = string.Empty;
-        FormatCode[FormatCode.Length - 1].ColourOff = string.Empty;
+        FormatCode[FormatCode.Length - 1].ColorOn = string.Empty;
+        FormatCode[FormatCode.Length - 1].ColorOff = string.Empty;
         FormatCode[FormatCode.Length - 1].SizeOn = string.Empty;
         FormatCode[FormatCode.Length - 1].SizeOff = string.Empty;
         FormatCode[FormatCode.Length - 1].BoldOn = string.Empty;
@@ -181,9 +181,9 @@ public class ExportConfig
         FormatCode[FormatCode.Length - 1].Space = WhiteSpace.Tab;
         AddCodes();
         FormatCode[FormatCode.Length - 1].Name = "Universal Codes";
-        FormatCode[FormatCode.Length - 1].Notes = "No font size or colour attributes";
-        FormatCode[FormatCode.Length - 1].ColourOn = string.Empty;
-        FormatCode[FormatCode.Length - 1].ColourOff = string.Empty;
+        FormatCode[FormatCode.Length - 1].Notes = "No font size or color attributes";
+        FormatCode[FormatCode.Length - 1].ColorOn = string.Empty;
+        FormatCode[FormatCode.Length - 1].ColorOff = string.Empty;
         FormatCode[FormatCode.Length - 1].SizeOn = string.Empty;
         FormatCode[FormatCode.Length - 1].SizeOff = string.Empty;
         FormatCode[FormatCode.Length - 1].BoldOn = "[b]";
@@ -196,8 +196,8 @@ public class ExportConfig
         AddCodes();
         FormatCode[FormatCode.Length - 1].Name = "phpBB";
         FormatCode[FormatCode.Length - 1].Notes = "As used by HU and The Echelon";
-        FormatCode[FormatCode.Length - 1].ColourOn = "[color=%VAL%]";
-        FormatCode[FormatCode.Length - 1].ColourOff = "[/color]";
+        FormatCode[FormatCode.Length - 1].ColorOn = "[color=%VAL%]";
+        FormatCode[FormatCode.Length - 1].ColorOff = "[/color]";
         FormatCode[FormatCode.Length - 1].SizeOn = "[size=%VAL%]";
         FormatCode[FormatCode.Length - 1].SizeOff = "[/size]";
         FormatCode[FormatCode.Length - 1].BoldOn = "[b]";
@@ -210,8 +210,8 @@ public class ExportConfig
         AddCodes();
         FormatCode[FormatCode.Length - 1].Name = "UBB.threads";
         FormatCode[FormatCode.Length - 1].Notes = "Used by the official CoX foums (which don't support small-fonts for the data chunk)";
-        FormatCode[FormatCode.Length - 1].ColourOn = "[color:%VAL%]";
-        FormatCode[FormatCode.Length - 1].ColourOff = "[/color]";
+        FormatCode[FormatCode.Length - 1].ColorOn = "[color:%VAL%]";
+        FormatCode[FormatCode.Length - 1].ColorOff = "[/color]";
         FormatCode[FormatCode.Length - 1].SizeOn = string.Empty;
         FormatCode[FormatCode.Length - 1].SizeOff = string.Empty;
         FormatCode[FormatCode.Length - 1].BoldOn = "[b]";
@@ -224,8 +224,8 @@ public class ExportConfig
         AddCodes();
         FormatCode[FormatCode.Length - 1].Name = "AkBBS";
         FormatCode[FormatCode.Length - 1].Notes = "These codes work with Runboard";
-        FormatCode[FormatCode.Length - 1].ColourOn = "[col=%VAL%]";
-        FormatCode[FormatCode.Length - 1].ColourOff = "[/col]";
+        FormatCode[FormatCode.Length - 1].ColorOn = "[col=%VAL%]";
+        FormatCode[FormatCode.Length - 1].ColorOff = "[/col]";
         FormatCode[FormatCode.Length - 1].SizeOn = "[small]";
         FormatCode[FormatCode.Length - 1].SizeOff = "[/small]";
         FormatCode[FormatCode.Length - 1].BoldOn = "[b]";
@@ -238,8 +238,8 @@ public class ExportConfig
         AddCodes();
         FormatCode[FormatCode.Length - 1].Name = "EZBoard";
         FormatCode[FormatCode.Length - 1].Notes = string.Empty;
-        FormatCode[FormatCode.Length - 1].ColourOn = "[font color=%VAL%]";
-        FormatCode[FormatCode.Length - 1].ColourOff = "[/font]";
+        FormatCode[FormatCode.Length - 1].ColorOn = "[font color=%VAL%]";
+        FormatCode[FormatCode.Length - 1].ColorOff = "[/font]";
         FormatCode[FormatCode.Length - 1].SizeOn = "[font size=1]";
         FormatCode[FormatCode.Length - 1].SizeOff = "[/font]";
         FormatCode[FormatCode.Length - 1].BoldOn = "[b]";
@@ -277,7 +277,7 @@ public class ExportConfig
                     continue;
                 int index1 = -1;
                 FormatCodes iFc = new FormatCodes();
-                flag = GrabString(out iFc.Name, ref reader) | GrabString(out iFc.Notes, ref reader) | GrabString(out iFc.ColourOn, ref reader) | GrabString(out iFc.ColourOff, ref reader) | GrabString(out iFc.SizeOn, ref reader) | GrabString(out iFc.SizeOff, ref reader) | GrabString(out iFc.BoldOn, ref reader) | GrabString(out iFc.BoldOff, ref reader) | GrabString(out iFc.ItalicOn, ref reader) | GrabString(out iFc.ItalicOff, ref reader) | GrabString(out iFc.UnderlineOn, ref reader) | GrabString(out iFc.UnderlineOff, ref reader) | GrabString(out var dest, ref reader);
+                flag = GrabString(out iFc.Name, ref reader) | GrabString(out iFc.Notes, ref reader) | GrabString(out iFc.ColorOn, ref reader) | GrabString(out iFc.ColorOff, ref reader) | GrabString(out iFc.SizeOn, ref reader) | GrabString(out iFc.SizeOff, ref reader) | GrabString(out iFc.BoldOn, ref reader) | GrabString(out iFc.BoldOff, ref reader) | GrabString(out iFc.ItalicOn, ref reader) | GrabString(out iFc.ItalicOff, ref reader) | GrabString(out iFc.UnderlineOn, ref reader) | GrabString(out iFc.UnderlineOff, ref reader) | GrabString(out var dest, ref reader);
                 iFc.Space = dest.IndexOf(" ", StringComparison.Ordinal) > -1 ? WhiteSpace.Space : WhiteSpace.Tab;
                 if (!flag)
                 {
@@ -385,8 +385,8 @@ public class ExportConfig
 
         public string Name;
         public string Notes;
-        public string ColourOn;
-        public string ColourOff;
+        public string ColorOn;
+        public string ColorOff;
         public string SizeOn;
         public string SizeOff;
         public string BoldOn;
@@ -406,8 +406,8 @@ public class ExportConfig
         {
             Name = iFc.Name;
             Notes = iFc.Notes;
-            ColourOn = iFc.ColourOn;
-            ColourOff = iFc.ColourOff;
+            ColorOn = iFc.ColorOn;
+            ColorOff = iFc.ColorOff;
             SizeOn = iFc.SizeOn;
             SizeOff = iFc.SizeOff;
             BoldOn = iFc.BoldOn;
@@ -423,8 +423,8 @@ public class ExportConfig
         {
             Name = string.Empty;
             Notes = string.Empty;
-            ColourOn = string.Empty;
-            ColourOff = string.Empty;
+            ColorOn = string.Empty;
+            ColorOff = string.Empty;
             SizeOn = string.Empty;
             SizeOff = string.Empty;
             BoldOn = string.Empty;

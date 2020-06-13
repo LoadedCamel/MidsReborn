@@ -123,7 +123,7 @@ namespace Hero_Designer
             int num = _myPetPowers.Count - 1;
             for (int index = 0; index <= num; ++index)
             {
-                ListLabelV3.LLItemState iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPetPowers[index]) ? (!(_myPetPowers[index].PowerType != Enums.ePowerType.Click | _myPetPowers[index].ClickBuff) ? (!_myPetPowers[index].SubIsAltColour ? ListLabelV3.LLItemState.Disabled : ListLabelV3.LLItemState.Invalid) : ListLabelV3.LLItemState.Enabled) : ListLabelV3.LLItemState.Selected;
+                ListLabelV3.LLItemState iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPetPowers[index]) ? (!(_myPetPowers[index].PowerType != Enums.ePowerType.Click | _myPetPowers[index].ClickBuff) ? (!_myPetPowers[index].SubIsAltColor ? ListLabelV3.LLItemState.Disabled : ListLabelV3.LLItemState.Invalid) : ListLabelV3.LLItemState.Enabled) : ListLabelV3.LLItemState.Selected;
                 ListLabelV3.ListLabelItemV3 iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV3.ListLabelItemV3(_myPetPowers[index].DisplayName, iState) : new ListLabelV3.ListLabelItemV3(_myPetPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV3.LLFontFlags.Bold);
                 if (index >= _myPetPowers.Count / 2.0)
                     llRight.AddItem(iItem);

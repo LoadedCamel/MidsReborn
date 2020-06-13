@@ -91,14 +91,14 @@ namespace Hero_Designer
             this.GroupBox1.Size = new System.Drawing.Size(328, 222);
             this.GroupBox1.TabIndex = 0;
             this.GroupBox1.TabStop = false;
-            this.GroupBox1.Text = "Colour Scheme:";
+            this.GroupBox1.Text = "Color Scheme:";
 
             this.Label4.Location = new System.Drawing.Point(165, 105);
             this.Label4.Name = "Label4";
 
             this.Label4.Size = new System.Drawing.Size(157, 89);
             this.Label4.TabIndex = 19;
-            this.Label4.Text = "Colour schemes marked '(US)' are intended for display on a dark bacground, and are suitable for the USA CoX forums.";
+            this.Label4.Text = "Color schemes marked '(US)' are intended for display on a dark bacground, and are suitable for the USA CoX forums.";
             this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.csSlots.BackColor = System.Drawing.Color.FromArgb(128, 128, (int)byte.MaxValue);
             this.csSlots.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;

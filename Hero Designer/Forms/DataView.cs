@@ -87,7 +87,7 @@ namespace Hero_Designer
         public Rectangle SnapLocation;
         public int TabPage;
 
-        bool VillainColour;
+        bool VillainColor;
 
         public event FloatChangeEventHandler FloatChange;
 
@@ -105,13 +105,13 @@ namespace Hero_Designer
 
         public bool DrawVillain
         {
-            get => VillainColour;
+            get => VillainColor;
             set
             {
-                VillainColour = value;
-                if (MidsContext.Config.DisableVillainColours)
-                    VillainColour = false;
-                pnlInfo.BackColor = VillainColour ? Color.Maroon : Color.Navy;
+                VillainColor = value;
+                if (MidsContext.Config.DisableVillainColors)
+                    VillainColor = false;
+                pnlInfo.BackColor = VillainColor ? Color.Maroon : Color.Navy;
                 DoPaint();
             }
         }
@@ -1028,7 +1028,7 @@ namespace Hero_Designer
                 bxFlip.Graphics.DrawString("Active Slotting:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
                 rectangle1.Y += rectangle1.Height;
                 bxFlip.Graphics.DrawString("Alternate:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
-                //ImageAttributes recolourIa = clsDrawX.GetRecolourIa(MidsContext.Character.IsHero());
+                //ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
                 SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                 int num2 = MidsContext.Character.CurrentBuild.Powers[inToonHistory].SlotCount - 1;
                 for (int index = 0; index <= num2; ++index)
@@ -2460,7 +2460,7 @@ namespace Hero_Designer
             SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             if (PowerID != pBase.PowerIndex)
                 return;
-            //ImageAttributes recolourIa = clsDrawX.GetRecolourIa(MidsContext.Character.IsHero());
+            //ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
             Rectangle rectangle1 = new Rectangle();
             ref Rectangle local1 = ref rectangle1;
             Size size = bxFlip.Size;

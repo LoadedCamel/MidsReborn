@@ -36,7 +36,7 @@ namespace Hero_Designer
             cPicker.Color = myScheme.Heading;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
                 myScheme.Heading = cPicker.Color;
-            updateColours();
+            updateColors();
         }
 
         void csHO_Click(object sender, EventArgs e)
@@ -44,7 +44,7 @@ namespace Hero_Designer
             cPicker.Color = myScheme.HOColor;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
                 myScheme.HOColor = cPicker.Color;
-            updateColours();
+            updateColors();
         }
 
         void csIO_Click(object sender, EventArgs e)
@@ -52,7 +52,7 @@ namespace Hero_Designer
             cPicker.Color = myScheme.IOColor;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
                 myScheme.IOColor = cPicker.Color;
-            updateColours();
+            updateColors();
         }
 
         void csLevel_Click(object sender, EventArgs e)
@@ -60,7 +60,7 @@ namespace Hero_Designer
             cPicker.Color = myScheme.Level;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
                 myScheme.Level = cPicker.Color;
-            updateColours();
+            updateColors();
         }
 
         void csPower_Click(object sender, EventArgs e)
@@ -68,7 +68,7 @@ namespace Hero_Designer
             cPicker.Color = myScheme.Power;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
                 myScheme.Power = cPicker.Color;
-            updateColours();
+            updateColors();
         }
 
         void csSet_Click(object sender, EventArgs e)
@@ -76,7 +76,7 @@ namespace Hero_Designer
             cPicker.Color = myScheme.SetColor;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
                 myScheme.SetColor = cPicker.Color;
-            updateColours();
+            updateColors();
         }
 
         void csSlots_Click(object sender, EventArgs e)
@@ -84,7 +84,7 @@ namespace Hero_Designer
             cPicker.Color = myScheme.Slots;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
                 myScheme.Slots = cPicker.Color;
-            updateColours();
+            updateColors();
         }
 
         void csTitle_Click(object sender, EventArgs e)
@@ -92,13 +92,13 @@ namespace Hero_Designer
             cPicker.Color = myScheme.Title;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
                 myScheme.Title = cPicker.Color;
-            updateColours();
+            updateColors();
         }
 
         void frmExportColor_Load(object sender, EventArgs e)
         {
             txtName.Text = myScheme.SchemeName;
-            updateColours();
+            updateColors();
         }
 
         void txtName_TextChanged(object sender, EventArgs e)
@@ -106,7 +106,7 @@ namespace Hero_Designer
             myScheme.SchemeName = txtName.Text;
         }
 
-        private void updateColours()
+        private void updateColors()
         {
             csTitle.BackColor = myScheme.Title;
             csHeading.BackColor = myScheme.Heading;

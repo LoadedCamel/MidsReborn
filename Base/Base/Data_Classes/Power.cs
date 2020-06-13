@@ -156,7 +156,7 @@ namespace Base.Data_Classes
 
         public string[] UIDSubPower { get; set; }
 
-        public bool SubIsAltColour { get; set; }
+        public bool SubIsAltColor { get; set; }
 
         public Enums.eEnhance[] IgnoreEnh { get; set; }
 
@@ -224,7 +224,7 @@ namespace Base.Data_Classes
             NIDSubPower = new int[0];
             Ignore_Buff = new Enums.eEnhance[0];
             IgnoreEnh = new Enums.eEnhance[0];
-            SubIsAltColour = false;
+            SubIsAltColor = false;
             BoostsAllowed = new string[0];
             Requires = new Requirement();
             int num = -2;
@@ -266,7 +266,7 @@ namespace Base.Data_Classes
             NIDSubPower = new int[0];
             Ignore_Buff = new Enums.eEnhance[0];
             IgnoreEnh = new Enums.eEnhance[0];
-            SubIsAltColour = false;
+            SubIsAltColor = false;
             if (template == null)
                 return;
             IsModified = template.IsModified;
@@ -349,7 +349,7 @@ namespace Base.Data_Classes
             Array.Copy(template.NIDSubPower, NIDSubPower, NIDSubPower.Length);
             UIDSubPower = new string[template.UIDSubPower.Length];
             Array.Copy(template.UIDSubPower, UIDSubPower, UIDSubPower.Length);
-            SubIsAltColour = template.SubIsAltColour;
+            SubIsAltColor = template.SubIsAltColor;
             IgnoreEnh = new Enums.eEnhance[template.IgnoreEnh.Length];
             Array.Copy(template.IgnoreEnh, IgnoreEnh, IgnoreEnh.Length);
             Ignore_Buff = new Enums.eEnhance[template.Ignore_Buff.Length];
@@ -394,7 +394,7 @@ namespace Base.Data_Classes
             NIDSubPower = new int[0];
             Ignore_Buff = new Enums.eEnhance[0];
             IgnoreEnh = new Enums.eEnhance[0];
-            SubIsAltColour = false;
+            SubIsAltColor = false;
             BoostsAllowed = new string[0];
             StaticIndex = reader.ReadInt32();
             FullName = reader.ReadString();

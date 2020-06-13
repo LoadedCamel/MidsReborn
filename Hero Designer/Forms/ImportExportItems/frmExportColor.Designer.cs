@@ -71,7 +71,7 @@ namespace Hero_Designer
             this.csSlots.Name = "csSlots";
             this.csSlots.Size = new System.Drawing.Size(52, 16);
             this.csSlots.TabIndex = 17;
-            this.myTip.SetToolTip(this.csSlots, "Click here to select the colour for this attribute.");
+            this.myTip.SetToolTip(this.csSlots, "Click here to select the color for this attribute.");
             this.csSlots.Click += new System.EventHandler(this.csSlots_Click);
             // 
             // csLevel
@@ -82,7 +82,7 @@ namespace Hero_Designer
             this.csLevel.Name = "csLevel";
             this.csLevel.Size = new System.Drawing.Size(52, 16);
             this.csLevel.TabIndex = 16;
-            this.myTip.SetToolTip(this.csLevel, "Click here to select the colour for this attribute.");
+            this.myTip.SetToolTip(this.csLevel, "Click here to select the color for this attribute.");
             this.csLevel.Click += new System.EventHandler(this.csLevel_Click);
             // 
             // csHeading
@@ -93,7 +93,7 @@ namespace Hero_Designer
             this.csHeading.Name = "csHeading";
             this.csHeading.Size = new System.Drawing.Size(52, 16);
             this.csHeading.TabIndex = 15;
-            this.myTip.SetToolTip(this.csHeading, "Click here to select the colour for this attribute.");
+            this.myTip.SetToolTip(this.csHeading, "Click here to select the color for this attribute.");
             this.csHeading.Click += new System.EventHandler(this.csHeading_Click);
             // 
             // csTitle
@@ -104,7 +104,7 @@ namespace Hero_Designer
             this.csTitle.Name = "csTitle";
             this.csTitle.Size = new System.Drawing.Size(52, 16);
             this.csTitle.TabIndex = 14;
-            this.myTip.SetToolTip(this.csTitle, "Click here to select the colour for this attribute.");
+            this.myTip.SetToolTip(this.csTitle, "Click here to select the color for this attribute.");
             this.csTitle.Click += new System.EventHandler(this.csTitle_Click);
             // 
             // csIO
@@ -115,7 +115,7 @@ namespace Hero_Designer
             this.csIO.Name = "csIO";
             this.csIO.Size = new System.Drawing.Size(52, 16);
             this.csIO.TabIndex = 23;
-            this.myTip.SetToolTip(this.csIO, "Click here to select the colour for this attribute.");
+            this.myTip.SetToolTip(this.csIO, "Click here to select the color for this attribute.");
             this.csIO.Click += new System.EventHandler(this.csIO_Click);
             // 
             // csSet
@@ -126,7 +126,7 @@ namespace Hero_Designer
             this.csSet.Name = "csSet";
             this.csSet.Size = new System.Drawing.Size(52, 16);
             this.csSet.TabIndex = 26;
-            this.myTip.SetToolTip(this.csSet, "Click here to select the colour for this attribute.");
+            this.myTip.SetToolTip(this.csSet, "Click here to select the color for this attribute.");
             this.csSet.Click += new System.EventHandler(this.csSet_Click);
             // 
             // csHO
@@ -137,7 +137,7 @@ namespace Hero_Designer
             this.csHO.Name = "csHO";
             this.csHO.Size = new System.Drawing.Size(52, 16);
             this.csHO.TabIndex = 28;
-            this.myTip.SetToolTip(this.csHO, "Click here to select the colour for this attribute.");
+            this.myTip.SetToolTip(this.csHO, "Click here to select the color for this attribute.");
             this.csHO.Click += new System.EventHandler(this.csHO_Click);
             // 
             // csPower
@@ -148,7 +148,7 @@ namespace Hero_Designer
             this.csPower.Name = "csPower";
             this.csPower.Size = new System.Drawing.Size(52, 16);
             this.csPower.TabIndex = 32;
-            this.myTip.SetToolTip(this.csPower, "Click here to select the colour for this attribute.");
+            this.myTip.SetToolTip(this.csPower, "Click here to select the color for this attribute.");
             this.csPower.Click += new System.EventHandler(this.csPower_Click);
             // 
             // cPicker
@@ -224,7 +224,7 @@ namespace Hero_Designer
             this.Label5.Name = "Label5";
             this.Label5.Size = new System.Drawing.Size(192, 36);
             this.Label5.TabIndex = 24;
-            this.Label5.Text = "Click on a colour box to modify it.";
+            this.Label5.Text = "Click on a color box to modify it.";
             this.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label7
@@ -308,7 +308,7 @@ namespace Hero_Designer
             this.Name = "frmExportColor";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Colour Scheme Editor";
+            this.Text = "Color Scheme Editor";
             this.ResumeLayout(false);
             this.PerformLayout();
 

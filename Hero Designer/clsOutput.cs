@@ -34,7 +34,7 @@ namespace Hero_Designer
             if (MidsContext.Config.ExportScheme < 0 | MidsContext.Config.Export.ColorSchemes.Length == 0)
             {
                 MidsContext.Config.Export.ResetColorsToDefaults();
-                Interaction.MsgBox("No colour schemes found, resetting to defaults.", MsgBoxStyle.Information, "Huh");
+                Interaction.MsgBox("No color schemes found, resetting to defaults.", MsgBoxStyle.Information, "Huh");
             }
             if (MidsContext.Config.ExportTarget >= MidsContext.Config.Export.FormatCode.Length)
                 MidsContext.Config.ExportTarget = 0;
@@ -57,7 +57,7 @@ namespace Hero_Designer
             ExportConfig.FormatCodes[] formatCode = MidsContext.Config.Export.FormatCode;
             int idFormatA = idFormat;
             Plain = formatCode[idFormatA].BoldOn
-                    + formatCode[idFormatA].ColourOn
+                    + formatCode[idFormatA].ColorOn
                     + formatCode[idFormatA].ItalicOn
                     + formatCode[idFormatA].SizeOn
                     + formatCode[idFormatA].UnderlineOn == "";
@@ -362,7 +362,7 @@ namespace Hero_Designer
                     str3 = "0" + str3;
                 while (str4.Length < 2)
                     str4 = "0" + str4;
-                str1 = ExportConfig.FormatCodes.FillCode(MidsContext.Config.Export.FormatCode[idFormat].ColourOn, "#" + str2 + str3 + str4) + iText + MidsContext.Config.Export.FormatCode[idFormat].ColourOff;
+                str1 = ExportConfig.FormatCodes.FillCode(MidsContext.Config.Export.FormatCode[idFormat].ColorOn, "#" + str2 + str3 + str4) + iText + MidsContext.Config.Export.FormatCode[idFormat].ColorOff;
             }
             return str1;
         }

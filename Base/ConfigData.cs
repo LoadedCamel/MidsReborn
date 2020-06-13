@@ -35,7 +35,7 @@ public class ConfigData
     public int ExportScheme { get; set; } = 1;
     public int ExportTarget { get; set; } = 1;
     public bool DisableDataDamageGraph { get; private set; }
-    public bool DisableVillainColours { get; set; }
+    public bool DisableVillainColors { get; set; }
     public bool IsInitialized { get; set; }
     public int Columns { get; set; } = 3;
     public PrintOptionProfile PrintProfile { get; set; } = PrintOptionProfile.SinglePage;
@@ -77,7 +77,7 @@ public class ConfigData
     public Enums.eSuppress Suppression { get; set; }
     public bool UseArcanaTime { get; set; }
     public ExportConfig Export { get; }
-    public bool PrintInColour { get; set; }
+    public bool PrintInColor { get; set; }
     public bool PrintHistory { get; set; }
     public bool SaveFolderChecked { get; set; }
     public bool ShowSlotLevels { get; set; }
@@ -268,7 +268,7 @@ public class ConfigData
                 }
                 //this._hideOriginEnhancements =
                 reader.ReadBoolean();
-                DisableVillainColours = !reader.ReadBoolean();
+                DisableVillainColors = !reader.ReadBoolean();
                 CheckForUpdates = reader.ReadBoolean();
                 Columns = reader.ReadInt32();
                 _lastSize.Width = reader.ReadInt32();
@@ -294,7 +294,7 @@ public class ConfigData
                     I9.ExportStripEnh = reader.ReadBoolean();
                     I9.ExportStripSetNames = reader.ReadBoolean();
                     I9.ExportExtraSep = reader.ReadBoolean();
-                    PrintInColour = reader.ReadBoolean();
+                    PrintInColor = reader.ReadBoolean();
                     //this._printScheme = 
                     reader.ReadInt32();
                 }
@@ -596,6 +596,12 @@ public class ConfigData
         public Color ColorPowerTakenDark { get; set; }
         public Color ColorPowerHighlight { get; set; }
         public Color ColorPowerDisabled { get; set; }
+        public Color ColorPowerTakenHero { get; set; }
+        public Color ColorPowerTakenDarkHero { get; set; }
+        public Color ColorPowerHighlightHero { get; set; }
+        public Color ColorPowerTakenVillain { get; set; }
+        public Color ColorPowerTakenDarkVillain { get; set; }
+        public Color ColorPowerHighlightVillain { get; set; }
         public bool PairedBold { get; set; }
         public float PairedBase { get; set; }
 
@@ -637,10 +643,13 @@ public class ConfigData
             ColorPlName = Color.FromArgb(192, 192, byte.MaxValue);
             ColorPlSpecial = Color.FromArgb(128, 128, byte.MaxValue);
             ColorPowerAvailable = Color.Gold;
-            ColorPowerTaken = Color.DodgerBlue;
+            ColorPowerTaken = Color.FromArgb(116, 168, 234);
             ColorPowerTakenDark = Color.DodgerBlue;
             ColorPowerHighlight = Color.FromArgb(64, 64, 96);
-            ColorPowerDisabled = Color.LightGray;
+            ColorPowerDisabled = Color.DimGray;
+            //ColorPowerTakenVillain = Color.FromArgb(191, 74, 56);
+            //ColorPowerTakenDarkVillain = Color.Maroon;
+            //ColorPowerHighlightVillain = Color.FromArgb(96,64,64);
             PairedBase = 8.25f;
             PairedBold = false;
         }

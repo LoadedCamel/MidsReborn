@@ -94,7 +94,7 @@ namespace Hero_Designer
             int num = _myPowers.Count - 1;
             for (int index = 0; index <= num; ++index)
             {
-                ListLabelV3.LLItemState iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]) ? (!(_myPowers[index].PowerType != Enums.ePowerType.Click | _myPowers[index].ClickBuff) ? (!_myPowers[index].SubIsAltColour ? ListLabelV3.LLItemState.Disabled : ListLabelV3.LLItemState.Invalid) : ListLabelV3.LLItemState.Enabled) : ListLabelV3.LLItemState.Selected;
+                ListLabelV3.LLItemState iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]) ? (!(_myPowers[index].PowerType != Enums.ePowerType.Click | _myPowers[index].ClickBuff) ? (!_myPowers[index].SubIsAltColor ? ListLabelV3.LLItemState.Disabled : ListLabelV3.LLItemState.Invalid) : ListLabelV3.LLItemState.Enabled) : ListLabelV3.LLItemState.Selected;
                 ListLabelV3.ListLabelItemV3 iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV3.ListLabelItemV3(_myPowers[index].DisplayName, iState) : new ListLabelV3.ListLabelItemV3(_myPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV3.LLFontFlags.Bold);
                 if (index >= _myPowers.Count / 2.0)
                     llRight.AddItem(iItem);
