@@ -86,6 +86,12 @@
     <Compile Include="Forms\frmColorOptions.Designer.cs">
       <DependentUpon>frmColorOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmInitializing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmInitializing.Designer.cs">
+      <DependentUpon>frmInitializing.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -230,9 +236,6 @@
     </Compile>
     <Compile Include="Forms\frmOptionListDlg.Designer.cs">
       <DependentUpon>frmOptionListDlg.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmLoading.Designer.cs">
-      <DependentUpon>frmLoading.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmInputLevel.Designer.cs">
       <DependentUpon>FrmInputLevel.cs</DependentUpon>
@@ -2078,12 +2081,17 @@
     <Content Include="Images\Unknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\mrb_splash.png" />
+    <None Include="Resources\mrbshield_reduced.png" />
     <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
     <EmbeddedResource Include="Forms\frmColorOptions.resx">
       <DependentUpon>frmColorOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmInitializing.resx">
+      <DependentUpon>frmInitializing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmUpdate.resx">
       <DependentUpon>frmUpdate.cs</DependentUpon>
@@ -2237,9 +2245,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FrmInputLevel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmLoading.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmMain.cs">
@@ -2406,9 +2411,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmInputLevel.resx">
       <DependentUpon>FrmInputLevel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmLoading.resx">
-      <DependentUpon>frmLoading.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>

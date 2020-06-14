@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using Base.Master_Classes;
+using Hero_Designer.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -27,7 +28,7 @@ namespace Hero_Designer
                 set => MidsContext.Character = value;
             }
 
-            public static void LoadData(ref frmLoading iFrm)
+            public static void LoadData(ref frmInitializing iFrm)
             {
                 DatabaseAPI.LoadDatabaseVersion();
                 IsAppInitialized = true;
@@ -43,14 +44,14 @@ namespace Hero_Designer
                 {
                     Interaction.MsgBox(
                         "Failed to load Leveling data file! The program is unable to proceed.\r\n" +
-                        "We suggest you redownload the application from https://github.com/Crytilis/mids-reborn-hero-designer/releases",
+                        "We suggest you re-download the application from https://github.com/Crytilis/mids-reborn-hero-designer/releases",
                         MsgBoxStyle.Critical, "Error");
                     ProjectData.EndApp();
                 }
 
                 if (!DatabaseAPI.LoadMainDatabase())
                 {
-                    Interaction.MsgBox("There was an error reading the database. Aborting.", MsgBoxStyle.Critical, "Dang");
+                    Interaction.MsgBox("There was an error reading the database. Aborting.", MsgBoxStyle.Critical, "Database Error");
                     ProjectData.EndApp();
                 }
 
@@ -69,15 +70,15 @@ namespace Hero_Designer
 
                 iFrm?.SetMessage("Loading Graphics...");
                 Task[] taskArray = new Task[9];
-                taskArray[0] = Task.Run(() => { I9Gfx.LoadOriginImages(); });
-                taskArray[1] = Task.Run(() => { I9Gfx.LoadArchetypeImages(); });
-                taskArray[2] = Task.Run(() => { I9Gfx.LoadPowersetImages(); });
-                taskArray[3] = Task.Run(() => { I9Gfx.LoadEnhancements(); });
-                taskArray[4] = Task.Run(() => { I9Gfx.LoadSets(); });
-                taskArray[5] = Task.Run(() => { I9Gfx.LoadBorders(); });
-                taskArray[6] = Task.Run(() => { I9Gfx.LoadSetTypes(); });
-                taskArray[7] = Task.Run(() => { I9Gfx.LoadEnhTypes(); });
-                taskArray[8] = Task.Run(() => { I9Gfx.LoadClasses(); });                
+                taskArray[0] = Task.Run(I9Gfx.LoadOriginImages);
+                taskArray[1] = Task.Run(I9Gfx.LoadArchetypeImages);
+                taskArray[2] = Task.Run(I9Gfx.LoadPowersetImages);
+                taskArray[3] = Task.Run(I9Gfx.LoadEnhancements);
+                taskArray[4] = Task.Run(I9Gfx.LoadSets);
+                taskArray[5] = Task.Run(I9Gfx.LoadBorders);
+                taskArray[6] = Task.Run(I9Gfx.LoadSetTypes);
+                taskArray[7] = Task.Run(I9Gfx.LoadEnhTypes);
+                taskArray[8] = Task.Run(I9Gfx.LoadClasses);                
                 Task.WaitAll(taskArray);
 
                 MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate));

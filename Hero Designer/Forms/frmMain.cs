@@ -225,9 +225,9 @@ namespace Hero_Designer
                 int height1 = 0;
                 int width1 = 0;
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
-                using frmLoading iFrm = new frmLoading();
-                _frmLoading = iFrm;
-                _frmLoading.Show();
+                using frmInitializing iFrm = new frmInitializing();
+                _frmInitializing = iFrm;
+                _frmInitializing.Show();
                 myDataView = dvAnchored;
                 pnlGFX.BackColor = BackColor;
                 NoUpdate = true;
@@ -258,8 +258,8 @@ namespace Hero_Designer
 
                 if (args.IndexOf("MASTERMODE=YES", StringComparison.OrdinalIgnoreCase) > -1)
                     MidsContext.Config.MasterMode = true;
-                MainModule.MidsController.LoadData(ref _frmLoading);
-                _frmLoading?.SetMessage("Setting up UI...");
+                MainModule.MidsController.LoadData(ref _frmInitializing);
+                _frmInitializing?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
                 var loadedFromArgs = false;
@@ -350,8 +350,8 @@ namespace Hero_Designer
                     tsAdvResetTips.Visible = true;
                 }
                 Show();
-                _frmLoading.Hide();
-                _frmLoading.Close();
+                _frmInitializing.Hide();
+                _frmInitializing.Close();
                 Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 Point iLocation = new Point();
@@ -4757,7 +4757,7 @@ namespace Hero_Designer
         }
 
         bool exportDiscordInProgress;
-        private frmLoading _frmLoading;
+        private frmInitializing _frmInitializing;
 
         private async void tsExportDiscord_Click(object sender, EventArgs e)
         {
