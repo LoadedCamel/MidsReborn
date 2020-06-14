@@ -44,7 +44,7 @@ namespace Hero_Designer.Forms
             this.Label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Label1.Font = new System.Drawing.Font("Arial Black", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label1.ForeColor = System.Drawing.Color.Gold;
-            this.Label1.Location = new System.Drawing.Point(202, 347);
+            this.Label1.Location = new System.Drawing.Point(211, 363);
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(447, 34);
             this.Label1.TabIndex = 2;
@@ -53,7 +53,6 @@ namespace Hero_Designer.Forms
             // 
             // tmrOp
             // 
-            this.tmrOp.Interval = 50;
             this.tmrOp.Tick += new System.EventHandler(this.tmrOp_Tick);
             // 
             // frmInitializing
@@ -62,8 +61,10 @@ namespace Hero_Designer.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.Label1);
+            this.DoubleBuffered = true;
             this.Name = "frmInitializing";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
