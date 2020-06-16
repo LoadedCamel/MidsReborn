@@ -87,7 +87,7 @@ namespace Hero_Designer
         void btnDelete_Click(object sender, EventArgs e)
 
         {
-            if (lvSets.SelectedIndices.Count <= 0 || Interaction.MsgBox(("Really delete set: " + lvSets.SelectedItems[0].Text + "?"), MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (lvSets.SelectedIndices.Count <= 0 || Interaction.MsgBox("Really delete set: " + lvSets.SelectedItems[0].Text + "?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                 return;
             int selectedIndex = lvSets.SelectedIndices[0];
             DatabaseAPI.Database.EnhancementSets.RemoveAt(selectedIndex);

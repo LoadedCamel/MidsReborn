@@ -2189,7 +2189,7 @@ namespace Hero_Designer
                 return;
             RectangleF destRect = new RectangleF(1f, (lblATLocked.Height - 16) / 2f, 16f, 16f);
             --destRect.Y;
-            RectangleF srcRect = new RectangleF((MidsContext.Character.Archetype.Idx * 16), 0.0f, 16f, 16f);
+            RectangleF srcRect = new RectangleF(MidsContext.Character.Archetype.Idx * 16, 0.0f, 16f, 16f);
             Graphics graphics = e.Graphics;
             graphics.DrawImage(I9Gfx.Archetypes.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
             destRect.X = lblATLocked.Width - 19;
@@ -4299,7 +4299,7 @@ namespace Hero_Designer
                 if (hIDX > -1)
                     powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDX];
                 if (!(I9Popup.hIDX != hIDX | I9Popup.eIDX != sIDX | I9Popup.pIDX != pIDX |
-                      (I9Popup.hIDX == -1 | I9Popup.eIDX == -1 | I9Popup.pIDX == -1)))
+                      I9Popup.hIDX == -1 | I9Popup.eIDX == -1 | I9Popup.pIDX == -1))
                     return;
                 Rectangle rectangle = new Rectangle();
                 if (hIDX > -1 & sIDX < 0 & pIDX < 0 & eSlot == null & setIDX < 0)
@@ -4346,7 +4346,7 @@ namespace Hero_Designer
                 if (flag & iPopup.Sections != null)
                 {
                     if (I9Popup.hIDX != hIDX | I9Popup.eIDX != sIDX | I9Popup.pIDX != pIDX |
-                        (I9Popup.hIDX == -1 | I9Popup.eIDX == -1 | I9Popup.pIDX == -1))
+                        I9Popup.hIDX == -1 | I9Popup.eIDX == -1 | I9Popup.pIDX == -1)
                     {
                         if (!Picker & !PowerListing)
                         {
@@ -5750,7 +5750,7 @@ namespace Hero_Designer
                                     i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
                                     if (i9Slot.Enh == -1)
                                     {
-                                        int num3 = (int) MessageBox.Show(("Error with: " + str1), null, MessageBoxButtons.OK);
+                                        int num3 = (int) MessageBox.Show("Error with: " + str1, null, MessageBoxButtons.OK);
                                         i9Slot.Enh = 0;
                                     }
                                 }
@@ -5841,7 +5841,7 @@ namespace Hero_Designer
             }
             catch
             {
-                MessageBox.Show(("Invalid Import Data, Blame Sai!\nError: " + str1), null, MessageBoxButtons.OK);
+                MessageBox.Show("Invalid Import Data, Blame Sai!\nError: " + str1, null, MessageBoxButtons.OK);
             }
         }
 

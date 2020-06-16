@@ -137,7 +137,7 @@ namespace Hero_Designer
 
         void csDelete_Click(object sender, EventArgs e)
         {
-            if (csList.Items.Count <= 0 || Interaction.MsgBox(("Delete " + csList.SelectedItem + "?"), MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (csList.Items.Count <= 0 || Interaction.MsgBox("Delete " + csList.SelectedItem + "?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                 return;
             MidsContext.Config.Export.RemoveScheme(csList.SelectedIndex);
             csPopulateList();
@@ -215,7 +215,7 @@ namespace Hero_Designer
 
         void fcDelete_Click(object sender, EventArgs e)
         {
-            if (fcList.Items.Count <= 0 || Interaction.MsgBox(("Delete " + fcList.SelectedItem + "?"), MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (fcList.Items.Count <= 0 || Interaction.MsgBox("Delete " + fcList.SelectedItem + "?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                 return;
             MidsContext.Config.Export.RemoveCodes(fcList.SelectedIndex);
             fcPopulateList();

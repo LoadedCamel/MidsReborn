@@ -39,7 +39,7 @@ namespace Hero_Designer
                     if (DatabaseAPI.Database.AttribMods.ImportModifierTablefromCSV(lblAttribIndex.Text, lblAttribTables.Text, Convert.ToInt32(udAttribRevision.Value)))
                     {
                         DatabaseAPI.Database.AttribMods.Store(MyApplication.GetSerializer());
-                        Interaction.MsgBox((Convert.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length) + " modifier tables imported and saved."), MsgBoxStyle.Information, "Done.");
+                        Interaction.MsgBox(Convert.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length) + " modifier tables imported and saved.", MsgBoxStyle.Information, "Done.");
                     }
                     else
                     {

@@ -127,7 +127,7 @@ public class Build
 
     public void RemoveSlotFromPower(int powerIdx, int slotIdx)
     {
-        if (powerIdx < 0 || powerIdx > Powers.Count - 1 || (slotIdx < 0 || slotIdx > Powers[powerIdx].Slots.Length - 1))
+        if (powerIdx < 0 || powerIdx > Powers.Count - 1 || slotIdx < 0 || slotIdx > Powers[powerIdx].Slots.Length - 1)
             return;
         int index1 = -1;
         SlotEntry[] slotEntryArray = new SlotEntry[Powers[powerIdx].Slots.Length - 1];
@@ -1072,12 +1072,12 @@ Note: Normal and Special enhancements cannot go above +3, and Inventions cannot 
             if (
                 (testFX.EffectType == Enums.eEffectType.Mez || testFX.EffectType == Enums.eEffectType.MezResist) &&
                 fxList[index].MezType == testFX.MezType ||
-                (testFX.EffectType == Enums.eEffectType.Damage && testFX.DamageType == fxList[index].DamageType ||
-                 testFX.EffectType == Enums.eEffectType.Defense && testFX.DamageType == fxList[index].DamageType) ||
-                (testFX.EffectType == Enums.eEffectType.Resistance && testFX.DamageType == fxList[index].DamageType ||
+                testFX.EffectType == Enums.eEffectType.Damage && testFX.DamageType == fxList[index].DamageType ||
+                 testFX.EffectType == Enums.eEffectType.Defense && testFX.DamageType == fxList[index].DamageType ||
+                testFX.EffectType == Enums.eEffectType.Resistance && testFX.DamageType == fxList[index].DamageType ||
                  testFX.EffectType == Enums.eEffectType.DamageBuff && testFX.DamageType == fxList[index].DamageType ||
                  testFX.EffectType == Enums.eEffectType.Enhancement && testFX.ETModifies == fxList[index].ETModifies &&
-                 (testFX.DamageType == fxList[index].DamageType && testFX.MezType == fxList[index].MezType)) ||
+                 testFX.DamageType == fxList[index].DamageType && testFX.MezType == fxList[index].MezType ||
                 testFX.EffectType == Enums.eEffectType.ResEffect && testFX.ETModifies == fxList[index].ETModifies ||
                 testFX.EffectType == Enums.eEffectType.None && testFX.Special == fxList[index].Special &&
                 testFX.Special.IndexOf("DEBT", StringComparison.OrdinalIgnoreCase) > -1)

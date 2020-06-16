@@ -1229,8 +1229,8 @@ namespace Hero_Designer
             items.Clear();
             items.Add("All Sets");
             items.Add("Primary & Secondary");
-            items.Add(("Primary (" + MidsContext.Character.Powersets[0].DisplayName + ")"));
-            items.Add(("Secondary (" + MidsContext.Character.Powersets[1].DisplayName + ")"));
+            items.Add("Primary (" + MidsContext.Character.Powersets[0].DisplayName + ")");
+            items.Add("Secondary (" + MidsContext.Character.Powersets[1].DisplayName + ")");
             items.Add("Ancillary");
             items.Add("Pools");
             items.Add("Powers Taken");

@@ -88,7 +88,7 @@ namespace Import
 
     public bool CheckSimilar(ref IEffect iEffect)
     {
-      return IsValid && iEffect.EffectType == Data.EffectType && (iEffect.DamageType == Data.DamageType && iEffect.MezType == Data.MezType) && (iEffect.ETModifies == Data.ETModifies && iEffect.PvMode == Data.PvMode && (iEffect.ToWho == Data.ToWho && iEffect.SpecialCase == Data.SpecialCase)) && (iEffect.AttribType == Data.AttribType && iEffect.Aspect == Data.Aspect && (iEffect.Reward == Data.Reward && iEffect.EffectId == Data.EffectId)) && iEffect.Summon == Data.Summon;
+      return IsValid && iEffect.EffectType == Data.EffectType && iEffect.DamageType == Data.DamageType && iEffect.MezType == Data.MezType && iEffect.ETModifies == Data.ETModifies && iEffect.PvMode == Data.PvMode && iEffect.ToWho == Data.ToWho && iEffect.SpecialCase == Data.SpecialCase && iEffect.AttribType == Data.AttribType && iEffect.Aspect == Data.Aspect && iEffect.Reward == Data.Reward && iEffect.EffectId == Data.EffectId && iEffect.Summon == Data.Summon;
     }
 
     public bool CheckDifference(ref IEffect iEffect, out string message)

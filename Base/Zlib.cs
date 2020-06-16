@@ -53,7 +53,7 @@ public class Zlib
         return Array.Empty<byte>();
     }
 
-    static bool is64BitProcess = (IntPtr.Size == 8);
+    static bool is64BitProcess = IntPtr.Size == 8;
     const string ExternalCompressionName = "HeroDesigner.ZLib.exe";
     public static byte[] UncompressChunk(ref byte[] iBytes, int outSize)
     {

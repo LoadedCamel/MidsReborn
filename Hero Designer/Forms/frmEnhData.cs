@@ -135,7 +135,7 @@ namespace Hero_Designer
             {
                 2 => 0.625f,
                 3 => 0.5f,
-                4 => (7f / 16f),
+                4 => 7f / 16f,
                 _ => 1f
             };
             int num4 = myEnh.Effect.Length - 1;
@@ -252,7 +252,7 @@ namespace Hero_Designer
             string str = FileIO.StripPath(ImagePicker.FileName);
             if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
             {
-                int num = (int)Interaction.MsgBox(("You must select an image from the " + I9Gfx.GetEnhancementsPath() + " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it."), MsgBoxStyle.Information, "Ah...");
+                int num = (int)Interaction.MsgBox("You must select an image from the " + I9Gfx.GetEnhancementsPath() + " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", MsgBoxStyle.Information, "Ah...");
             }
             else
             {
@@ -772,10 +772,10 @@ namespace Hero_Designer
             cbSched.BeginUpdate();
             cbSched.Items.Clear();
             string Style = "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##";
-            cbSched.Items.Add(("A (" + Strings.Format((float)(DatabaseAPI.Database.MultSO[0][0] * 100.0), Style) + "%)"));
-            cbSched.Items.Add(("B (" + Strings.Format((float)(DatabaseAPI.Database.MultSO[0][1] * 100.0), Style) + "%)"));
-            cbSched.Items.Add(("C (" + Strings.Format((float)(DatabaseAPI.Database.MultSO[0][2] * 100.0), Style) + "%)"));
-            cbSched.Items.Add(("D (" + Strings.Format((float)(DatabaseAPI.Database.MultSO[0][3] * 100.0), Style) + "%)"));
+            cbSched.Items.Add("A (" + Strings.Format((float)(DatabaseAPI.Database.MultSO[0][0] * 100.0), Style) + "%)");
+            cbSched.Items.Add("B (" + Strings.Format((float)(DatabaseAPI.Database.MultSO[0][1] * 100.0), Style) + "%)");
+            cbSched.Items.Add("C (" + Strings.Format((float)(DatabaseAPI.Database.MultSO[0][2] * 100.0), Style) + "%)");
+            cbSched.Items.Add("D (" + Strings.Format((float)(DatabaseAPI.Database.MultSO[0][3] * 100.0), Style) + "%)");
             cbSched.EndUpdate();
         }
 
@@ -835,7 +835,7 @@ namespace Hero_Designer
                     lstSelected.Items.Add(str);
                 }
                 else
-                    lstSelected.Items.Add(("Special: " + myEnh.Effect[index].FX.BuildEffectString()));
+                    lstSelected.Items.Add("Special: " + myEnh.Effect[index].FX.BuildEffectString());
             }
             lstSelected.EndUpdate();
         }
@@ -1282,12 +1282,12 @@ namespace Hero_Designer
             string str1 = "Edit ";
             var str2 = myEnh.TypeID switch
             {
-                Enums.eType.InventO => (str1 + "Invention: "),
-                Enums.eType.SpecialO => (str1 + "HO: "),
-                Enums.eType.SetO => (myEnh.nIDSet > -1
+                Enums.eType.InventO => str1 + "Invention: ",
+                Enums.eType.SpecialO => str1 + "HO: ",
+                Enums.eType.SetO => myEnh.nIDSet > -1
                     ? str1 + DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].DisplayName + ": "
-                    : str1 + "Set Invention: "),
-                _ => (str1 + "Enhancement: ")
+                    : str1 + "Set Invention: ",
+                _ => str1 + "Enhancement: "
             };
             Text = str2 + myEnh.Name;
         }

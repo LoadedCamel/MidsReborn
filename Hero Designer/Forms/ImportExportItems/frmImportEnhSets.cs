@@ -158,7 +158,7 @@ namespace Hero_Designer
                 lstImport.Items[0].EnsureVisible();
             lstImport.EndUpdate();
             HideUnchanged.Text = "Hide Unchanged";
-            int num5 = (int)Interaction.MsgBox(("New: " + Convert.ToString(num2) + "\r\nModified: " + Convert.ToString(num3)));
+            int num5 = (int)Interaction.MsgBox("New: " + Convert.ToString(num2) + "\r\nModified: " + Convert.ToString(num3));
         }
 
         void frmImportEnhSets_Load(object sender, EventArgs e)
@@ -221,7 +221,7 @@ namespace Hero_Designer
             }
             while (iString != null);
             iStream.Close();
-            int num6 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
+            int num6 = (int)Interaction.MsgBox("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
 
@@ -247,7 +247,7 @@ namespace Hero_Designer
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             BusyHide();
-            Interaction.MsgBox(("Import of " + Convert.ToString(num1) + " records completed!"), MsgBoxStyle.Information, "Done");
+            Interaction.MsgBox("Import of " + Convert.ToString(num1) + " records completed!", MsgBoxStyle.Information, "Done");
             DisplayInfo();
             return false;
         }

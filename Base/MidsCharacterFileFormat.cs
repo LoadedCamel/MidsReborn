@@ -101,7 +101,7 @@ public static class MidsCharacterFileFormat
         }
 
         // this one seems to still work as intended, we may not need to change it
-        string str3 = "http://www.cohplanner.com/mids/download.php" + ("?uc=" + cData.SzUncompressed + "&c=" + cData.SzCompressed + "&a=" + cData.SzEncoded + "&f=HEX&dc=") + str1;
+        string str3 = "http://www.cohplanner.com/mids/download.php" + "?uc=" + cData.SzUncompressed + "&c=" + cData.SzCompressed + "&a=" + cData.SzEncoded + "&f=HEX&dc=" + str1;
         return str3.Length <= DataLinkMaxLength ? (!justLink ? (!useBbCode ? "<a href=\"" + str3 + "\">Click this DataLink to open the build!</a>" : "[url=" + str3 + "]Click this DataLink to open the build![/url]") : str3) : "";
     }
 

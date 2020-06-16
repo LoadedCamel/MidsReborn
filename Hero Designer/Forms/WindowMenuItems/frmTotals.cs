@@ -294,7 +294,7 @@ namespace Hero_Designer
             Rectangle rectangle = new Rectangle();
             pnlMisc.Left = pnlDRHE.Left;
             pnlStatus.Left = pnlDRHE.Left;
-            Width = Width - ClientSize.Width + (pnlDRHE.Left * 2 + 320);
+            Width = Width - ClientSize.Width + pnlDRHE.Left * 2 + 320;
             rectangle.X = MainModule.MidsController.SzFrmTotals.X;
             rectangle.Y = MainModule.MidsController.SzFrmTotals.Y;
             rectangle.Width = MainModule.MidsController.SzFrmTotals.Width;

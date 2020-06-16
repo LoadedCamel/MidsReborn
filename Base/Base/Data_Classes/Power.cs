@@ -643,9 +643,9 @@ namespace Base.Data_Classes
                 if (effect.EffectType != Enums.eEffectType.Damage ||
                     (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum &&
                      !(Math.Abs(effect.Probability) > 0.999000012874603)) ||
-                    (effect.EffectClass == Enums.eEffectClass.Ignored ||
-                     (effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self)) ||
-                    (!(effect.Probability > 0.0) || !effect.CanInclude()) || !effect.PvXInclude())
+                    effect.EffectClass == Enums.eEffectClass.Ignored ||
+                     (effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self) ||
+                    !(effect.Probability > 0.0) || !effect.CanInclude() || !effect.PvXInclude())
                     continue;
                 float num2 = effect.Mag;
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
@@ -702,9 +702,9 @@ namespace Base.Data_Classes
                 if (effect.EffectType != Enums.eEffectType.Damage ||
                     (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum &&
                      !(Math.Abs(effect.Probability) > 0.999000012874603)) ||
-                    (effect.EffectClass == Enums.eEffectClass.Ignored ||
-                     (effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self)) ||
-                    (!(effect.Probability > 0.0) || !effect.CanInclude()) || !effect.PvXInclude())
+                    effect.EffectClass == Enums.eEffectClass.Ignored ||
+                     (effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self) ||
+                    !(effect.Probability > 0.0) || !effect.CanInclude() || !effect.PvXInclude())
                     continue;
                 float num1 = effect.Mag;
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
@@ -1130,7 +1130,7 @@ namespace Base.Data_Classes
             for (int iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
                 if (!Effects[iIndex].PvXInclude() || !(Effects[iIndex].Probability > 0.0) ||
-                    (Effects[iIndex].ETModifies != iEffect || !Effects[iIndex].CanInclude()) ||
+                    Effects[iIndex].ETModifies != iEffect || !Effects[iIndex].CanInclude() ||
                     (Effects[iIndex].EffectType != Enums.eEffectType.Enhancement &&
                      Effects[iIndex].EffectType != Enums.eEffectType.DamageBuff) ||
                     (Effects[iIndex].Absorbed_Effect && Effects[iIndex].Absorbed_PowerType == Enums.ePowerType.GlobalBoost))
@@ -1156,15 +1156,15 @@ namespace Base.Data_Classes
             Enums.ShortFX shortFx = new Enums.ShortFX();
             for (int iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
-                bool flag = onlySelf == onlyTarget || !onlySelf && Effects[iIndex].ToWho == Enums.eToWho.Target || (!onlyTarget && Effects[iIndex].ToWho == Enums.eToWho.Self || onlySelf & Effects[iIndex].ToWho != Enums.eToWho.Target) || onlyTarget & Effects[iIndex].ToWho != Enums.eToWho.Self;
+                bool flag = onlySelf == onlyTarget || !onlySelf && Effects[iIndex].ToWho == Enums.eToWho.Target || !onlyTarget && Effects[iIndex].ToWho == Enums.eToWho.Self || onlySelf & Effects[iIndex].ToWho != Enums.eToWho.Target || onlyTarget & Effects[iIndex].ToWho != Enums.eToWho.Self;
                 if (iEffect == Enums.eEffectType.SpeedFlying & !maxMode && Effects[iIndex].Aspect == Enums.eAspect.Max || iEffect == Enums.eEffectType.SpeedRunning & !maxMode & Effects[iIndex].Aspect == Enums.eAspect.Max || iEffect == Enums.eEffectType.SpeedJumping & !maxMode & Effects[iIndex].Aspect == Enums.eAspect.Max)
                     flag = false;
                 if ((MidsContext.Config.Suppression & Effects[iIndex].Suppression) != Enums.eSuppress.None)
                     flag = false;
                 if (!flag || !(Effects[iIndex].Probability > 0.0) || (maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max) ||
-                    (Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
-                     Effects[iIndex].EffectClass == Enums.eEffectClass.Special) ||
-                    ((!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed) || !Effects[iIndex].CanInclude()) ||
+                    Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
+                     Effects[iIndex].EffectClass == Enums.eEffectClass.Special ||
+                    (!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed) || !Effects[iIndex].CanInclude() ||
                     !Effects[iIndex].PvXInclude())
                     continue;
                 float mag = Effects[iIndex].Mag;
@@ -1205,7 +1205,7 @@ namespace Base.Data_Classes
             for (int iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
                 if (Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
-                    (Effects[iIndex].InherentSpecial || !Effects[iIndex].PvXInclude()) ||
+                    Effects[iIndex].InherentSpecial || !Effects[iIndex].PvXInclude() ||
                     (!(Effects[iIndex].DelayedTime <= 5.0) && !allowDelay) ||
                     (iTarget != Enums.eToWho.Unspecified && Effects[iIndex].ToWho != Enums.eToWho.All && iTarget != Effects[iIndex].ToWho))
                     continue;
@@ -1995,8 +1995,8 @@ namespace Base.Data_Classes
             {
                 for (int index = 0; index <= source.Effects.Length - 1; ++index)
                 {
-                    if (!isGrantPower & (source.EntitiesAffected == Enums.eEntity.Caster &
-                                         source.Effects[index].EffectType != Enums.eEffectType.EntCreate))
+                    if (!isGrantPower & source.EntitiesAffected == Enums.eEntity.Caster &
+                                         source.Effects[index].EffectType != Enums.eEffectType.EntCreate)
                         continue;
                     if (source.Effects[index].EffectType == Enums.eEffectType.EntCreate && source.Effects[index].nSummon > -1)
                     {
@@ -2196,7 +2196,7 @@ namespace Base.Data_Classes
                 IEffect effect = Effects[t];
                 int nSummon1 = effect.nSummon;
                 int stacking = 1;
-                if (VariableEnabled && effect.VariableModified && (hIdx > -1 && MidsContext.Character != null) && MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
+                if (VariableEnabled && effect.VariableModified && hIdx > -1 && MidsContext.Character != null && MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
                     stacking = MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue;
                 var nPowerset = DatabaseAPI.Database.Entities[nSummon1].GetNPowerset();
                 if (nPowerset.Count == 0)
@@ -2260,11 +2260,11 @@ namespace Base.Data_Classes
 
             //Check if the power has a class requirement.
             if (this.Requires.NClassName.Length > 0)
-                return (this.Requires.NClassName.Contains(classId));
+                return this.Requires.NClassName.Contains(classId);
 
             //Check if the power has a class exclusion.
             if (this.Requires.NClassNameNot.Length > 0)
-                return (!this.Requires.NClassNameNot.Contains(classId));
+                return !this.Requires.NClassNameNot.Contains(classId);
 
             return true;
         }

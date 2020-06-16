@@ -2537,7 +2537,7 @@ namespace Hero_Designer
                 bool onlyTarget = pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target;
                 if (ID > 0)
                     flag = pBase.Effects[Index[ID]].EffectType == pBase.Effects[Index[ID - 1]].EffectType &
-                           (pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self & pBase.Effects[Index[ID - 1]].ToWho == Enums.eToWho.Self) &
+                           pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Self & pBase.Effects[Index[ID - 1]].ToWho == Enums.eToWho.Self &
                            pBase.Effects[Index[ID]].ToWho == Enums.eToWho.Target;
                 if (pBase.Effects[Index[ID]].DelayedTime > 5.0)
                     flag = true;
@@ -4011,7 +4011,7 @@ namespace Hero_Designer
                       Convert.ToString(DatabaseAPI.Database.EnhancementSets[iSet].LevelMax + 1)
                     : Convert.ToString(DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1);
                 info_txtSmall.Rtf = RTF.StartRTF() +
-                                    (str1 + RTF.Color(RTF.ElementID.Invention) + "Level: " + str2 + RTF.Color(RTF.ElementID.Text)) +
+                                    str1 + RTF.Color(RTF.ElementID.Invention) + "Level: " + str2 + RTF.Color(RTF.ElementID.Text) +
                                     RTF.EndRTF();
                 Info_txtLarge.Rtf = RTF.StartRTF() + EnhancementSetCollection.GetSetInfoLongRTF(iSet) + RTF.EndRTF();
             }

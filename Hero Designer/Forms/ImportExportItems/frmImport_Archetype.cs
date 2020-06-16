@@ -148,7 +148,7 @@ namespace Hero_Designer
                 return false;
             }
             iStream.Close();
-            int num5 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nBad: " + Convert.ToString(num4)), MsgBoxStyle.Information, "File Parsed");
+            int num5 = (int)Interaction.MsgBox("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nBad: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
 
@@ -169,7 +169,7 @@ namespace Hero_Designer
             DatabaseAPI.Database.ArchetypeVersion.Revision = Convert.ToInt32(udATRevision.Value);
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
-            int num3 = (int)Interaction.MsgBox(("Import of " + Convert.ToString(num1) + " classes completed!"), MsgBoxStyle.Information, "Done");
+            int num3 = (int)Interaction.MsgBox("Import of " + Convert.ToString(num1) + " classes completed!", MsgBoxStyle.Information, "Done");
             DisplayInfo();
             return false;
         }

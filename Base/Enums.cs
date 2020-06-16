@@ -8,7 +8,7 @@ public static class Enums
 {
     public static bool MezDurationEnhancable(eMez mezEnum)
     {
-        return mezEnum == eMez.Confused || mezEnum == eMez.Held || (mezEnum == eMez.Immobilized || mezEnum == eMez.Placate) || (mezEnum == eMez.Sleep || mezEnum == eMez.Stunned || (mezEnum == eMez.Taunt || mezEnum == eMez.Terrorized)) || mezEnum == eMez.Untouchable;
+        return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized || mezEnum == eMez.Placate || mezEnum == eMez.Sleep || mezEnum == eMez.Stunned || mezEnum == eMez.Taunt || mezEnum == eMez.Terrorized || mezEnum == eMez.Untouchable;
     }
 
     public static string GetEffectName(eEffectType iID)
@@ -199,7 +199,7 @@ public static class Enums
         else
         {
             string str2 = "";
-            if (iDamage[1] && iDamage[2] && (iDamage[3] && iDamage[4]) && (iDamage[5] && iDamage[6] && iDamage[8]) && iDamage[7])
+            if (iDamage[1] && iDamage[2] && iDamage[3] && iDamage[4] && iDamage[5] && iDamage[6] && iDamage[8] && iDamage[7])
             {
                 str2 = "All";
             }
@@ -230,9 +230,9 @@ public static class Enums
         else
         {
             string str2 = "";
-            if (iDamage[1] && iDamage[2] && (iDamage[3] && iDamage[4]) && (iDamage[5] && iDamage[6] && iDamage[8]) && iDamage[7])
+            if (iDamage[1] && iDamage[2] && iDamage[3] && iDamage[4] && iDamage[5] && iDamage[6] && iDamage[8] && iDamage[7])
                 str2 = "All";
-            else if (!iDamage[1] && !iDamage[2] && (!iDamage[3] && !iDamage[4]) && (!iDamage[5] && !iDamage[6] && !iDamage[8]) && !iDamage[7])
+            else if (!iDamage[1] && !iDamage[2] && !iDamage[3] && !iDamage[4] && !iDamage[5] && !iDamage[6] && !iDamage[8] && !iDamage[7])
             {
                 str2 = "All";
             }
@@ -265,7 +265,7 @@ public static class Enums
             string str2 = "";
             if (iMez[1] && iMez[2] && iMez[10] && iMez[9])
                 str2 = "Mez";
-            else if (iMez[4] && iMez[5] && (iMez[1] && iMez[2]) && iMez[10] && iMez[9])
+            else if (iMez[4] && iMez[5] && iMez[1] && iMez[2] && iMez[10] && iMez[9])
             {
                 str2 = "Knocked";
             }

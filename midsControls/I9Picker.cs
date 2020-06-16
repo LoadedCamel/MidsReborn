@@ -314,7 +314,7 @@ namespace midsControls
             RectangleF layoutRectangle2 = default;
             checked
             {
-                iRect.Y = _headerHeight + (_nPad * 2 + _nSize + (_nSize * _rows + _nPad * (_rows - 1))) + 2 + _nPad;
+                iRect.Y = _headerHeight + _nPad * 2 + _nSize + _nSize * _rows + _nPad * (_rows - 1) + 2 + _nPad;
                 iRect.Height = Height - (iRect.Y + _nPad);
                 iRect.Width = _nSize * 4 + _nPad * 3;
                 layoutRectangle.X = iRect.X;
@@ -935,7 +935,7 @@ namespace midsControls
                     break;
             }
 
-            return (cellIDX > -1 & cellIDX < array.Length);
+            return cellIDX > -1 & cellIDX < array.Length;
         }
 
         void DoEnhancementPicked(int index)
@@ -1531,7 +1531,7 @@ namespace midsControls
 
                         break;
                     }
-                    case Enums.eType.SetO when (UI.View.SetID > -1 && UI.View.SetTypeID > -1):
+                    case Enums.eType.SetO when UI.View.SetID > -1 && UI.View.SetTypeID > -1:
                     {
                         var enhSetMax = DatabaseAPI.Database.EnhancementSets[UI.Sets[UI.View.SetTypeID][UI.View.SetID]].LevelMax + 1;
                         ioMax = enhSetMax;
@@ -1574,7 +1574,7 @@ namespace midsControls
 
                         break;
                     }
-                    case Enums.eType.SetO when (UI.View.SetID > -1 & UI.View.SetTypeID > -1):
+                    case Enums.eType.SetO when UI.View.SetID > -1 & UI.View.SetTypeID > -1:
                         ioMax = DatabaseAPI.Database.EnhancementSets[UI.Sets[UI.View.SetTypeID][UI.View.SetID]].LevelMax + 1;
                         ioMin = DatabaseAPI.Database.EnhancementSets[UI.Sets[UI.View.SetTypeID][UI.View.SetID]].LevelMin + 1;
                         break;

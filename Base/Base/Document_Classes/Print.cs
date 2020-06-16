@@ -113,7 +113,7 @@ namespace Base.Document_Classes
             else
                 s = "Level " + num3 + " " + MidsContext.Character.Archetype.DisplayName;
             args.Graphics.DrawString(s, font1, solidBrush, layoutRectangle, format);
-            int num4 = num1 + (8 + num2);
+            int num4 = num1 + 8 + num2;
             args.Graphics.DrawLine(pen, bounds.Left, num4, bounds.Left + bounds.Width, num4);
             format.Alignment = StringAlignment.Near;
             format.LineAlignment = StringAlignment.Center;
@@ -254,7 +254,7 @@ namespace Base.Document_Classes
                 if (MidsContext.Character.Archetype.Epic)
                 {
                     string s = "------------";
-                    args.Graphics.DrawString(s, font1, solidBrush, new RectangleF((bounds.Left + 15), vPos, bounds.Width, 15f), format);
+                    args.Graphics.DrawString(s, font1, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
                     vPos += 15;
                 }
             }
@@ -430,13 +430,13 @@ namespace Base.Document_Classes
             Font font2 = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             BuildPowerListShort(ref vPos, bounds, 12, true, false, false, args);
             string s2 = "------------";
-            args.Graphics.DrawString(s2, font2, solidBrush, new RectangleF((bounds.Left + 15), vPos, bounds.Width, 15f), format);
+            args.Graphics.DrawString(s2, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
             vPos += 15;
             BuildPowerListShort(ref vPos, bounds, 12, false, true, false, args);
             if (!MidsContext.Character.Archetype.Epic)
                 return;
             string s3 = "------------";
-            args.Graphics.DrawString(s3, font2, solidBrush, new RectangleF((bounds.Left + 15), vPos, bounds.Width, 15f), format);
+            args.Graphics.DrawString(s3, font2, solidBrush, new RectangleF(bounds.Left + 15, vPos, bounds.Width, 15f), format);
             vPos += 15;
             BuildPowerListShort(ref vPos, bounds, 12, false, true, true, args);
         }

@@ -111,7 +111,7 @@ namespace Hero_Designer
             {
                 int num1 = (int)Interaction.MsgBox("Unknown error caused an invalid PowerIndex return value.", MsgBoxStyle.Exclamation, "Wha?");
             }
-            else if (Interaction.MsgBox(("Really delete Class: " + DatabaseAPI.Database.Classes[index1].ClassName + " (" + DatabaseAPI.Database.Classes[index1].DisplayName + ")?"), MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") == MsgBoxResult.Yes)
+            else if (Interaction.MsgBox("Really delete Class: " + DatabaseAPI.Database.Classes[index1].ClassName + " (" + DatabaseAPI.Database.Classes[index1].DisplayName + ")?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") == MsgBoxResult.Yes)
             {
                 Archetype[] archetypeArray = new Archetype[DatabaseAPI.Database.Classes.Length - 1 + 1];
                 int num2 = index1;
@@ -298,7 +298,7 @@ namespace Hero_Designer
 
         void btnPowerDelete_Click(object sender, EventArgs e)
         {
-            if (lvPower.SelectedIndices.Count <= 0 || Interaction.MsgBox(("Really delete Power: " + lvPower.SelectedItems[0].SubItems[3].Text + "?"), MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (lvPower.SelectedIndices.Count <= 0 || Interaction.MsgBox("Really delete Power: " + lvPower.SelectedItems[0].SubItems[3].Text + "?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                 return;
             IPower[] powerArray = new IPower[DatabaseAPI.Database.Power.Length - 1 + 1];
             int num1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
@@ -530,7 +530,7 @@ namespace Hero_Designer
                 string str = "";
                 if (DatabaseAPI.Database.Powersets[index1].Powers.Length > 0)
                     str = DatabaseAPI.Database.Powersets[index1].FullName + " still has powers attached to it.\r\nThese powers will be orphaned if you remove the set.\r\n\r\n";
-                if (Interaction.MsgBox((str + "Really delete Powerset: " + DatabaseAPI.Database.Powersets[index1].DisplayName + "?"),
+                if (Interaction.MsgBox(str + "Really delete Powerset: " + DatabaseAPI.Database.Powersets[index1].DisplayName + "?",
                         MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                     return;
                 IPowerset[] powersetArray = new IPowerset[DatabaseAPI.Database.Powersets.Length - 1 + 1];

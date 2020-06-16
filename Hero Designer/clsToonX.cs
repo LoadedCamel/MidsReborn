@@ -781,8 +781,8 @@ namespace Hero_Designer
                 IEffect effect1 = power.Effects[effIdx];
                 var disqualified = effect1.EffectClass == Enums.eEffectClass.Ignored
                                    || (effectType == Enums.eEffectType.Enhancement &&
-                                       (effect1.EffectType != Enums.eEffectType.Enhancement &&
-                                        effect1.EffectType != Enums.eEffectType.DamageBuff))
+                                       effect1.EffectType != Enums.eEffectType.Enhancement &&
+                                        effect1.EffectType != Enums.eEffectType.DamageBuff)
                                    || (effectType == Enums.eEffectType.GrantPower &&
                                        (effect1.EffectType == Enums.eEffectType.Enhancement ||
                                         effect1.EffectType == Enums.eEffectType.DamageBuff))
@@ -2353,10 +2353,10 @@ namespace Hero_Designer
                 else if (nVer > BuildFormatChange2)
                 {
                     int num2 = (int) Interaction.MsgBox(
-                        ("The data being loaded was saved by a newer version of the application (File format v" +
+                        "The data being loaded was saved by a newer version of the application (File format v" +
                          Strings.Format(nVer, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###") + ", expected " +
                          Strings.Format(1.4f, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###") +
-                         "). It may not load correctly."), MsgBoxStyle.Information, "Just FYI");
+                         "). It may not load correctly.", MsgBoxStyle.Information, "Just FYI");
                 }
 
                 string[] strArray2 = IoGrab2(iStream, "|");

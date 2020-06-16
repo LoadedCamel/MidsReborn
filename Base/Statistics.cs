@@ -84,9 +84,9 @@ public class Statistics
         var num = unit switch
         {
             Enums.eSpeedMeasure.FeetPerSecond => iSpeed,
-            Enums.eSpeedMeasure.MetersPerSecond => (iSpeed * 0.3048f),
-            Enums.eSpeedMeasure.MilesPerHour => (iSpeed * 0.6818182f),
-            Enums.eSpeedMeasure.KilometersPerHour => (iSpeed * 1.09728f),
+            Enums.eSpeedMeasure.MetersPerSecond => iSpeed * 0.3048f,
+            Enums.eSpeedMeasure.MilesPerHour => iSpeed * 0.6818182f,
+            Enums.eSpeedMeasure.KilometersPerHour => iSpeed * 1.09728f,
             _ => iSpeed
         };
         return num;
@@ -97,9 +97,9 @@ public class Statistics
         var num = unit switch
         {
             Enums.eSpeedMeasure.FeetPerSecond => iDist,
-            Enums.eSpeedMeasure.MetersPerSecond => (iDist * 0.3048f),
+            Enums.eSpeedMeasure.MetersPerSecond => iDist * 0.3048f,
             Enums.eSpeedMeasure.MilesPerHour => iDist,
-            Enums.eSpeedMeasure.KilometersPerHour => (iDist * 0.3048f),
+            Enums.eSpeedMeasure.KilometersPerHour => iDist * 0.3048f,
             _ => iDist
         };
         return num;

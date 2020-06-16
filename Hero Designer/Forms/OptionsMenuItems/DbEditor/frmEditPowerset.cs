@@ -58,11 +58,11 @@ namespace Hero_Designer
             lblNameFull.Text = ps.GroupName + "." + ps.SetName;
             if (ps.GroupName == "" | ps.SetName == "")
             {
-                int num1 = (int)Interaction.MsgBox(("Powerset name '" + ps.FullName + " is invalid."), MsgBoxStyle.Exclamation, "No Can Do");
+                int num1 = (int)Interaction.MsgBox("Powerset name '" + ps.FullName + " is invalid.", MsgBoxStyle.Exclamation, "No Can Do");
             }
             else if (!PowersetFullNameIsUnique(Convert.ToString(ps.nID)))
             {
-                int num2 = (int)Interaction.MsgBox(("Powerset name '" + ps.FullName + " already exists, please enter a unique name."), MsgBoxStyle.Exclamation, "No Can Do");
+                int num2 = (int)Interaction.MsgBox("Powerset name '" + ps.FullName + " already exists, please enter a unique name.", MsgBoxStyle.Exclamation, "No Can Do");
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Hero_Designer
             string str = FileIO.StripPath(ImagePicker.FileName);
             if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
             {
-                int num = (int)Interaction.MsgBox(("You must select an image from the " + I9Gfx.GetPowersetsPath() + " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it."), MsgBoxStyle.Information, "Ah...");
+                int num = (int)Interaction.MsgBox("You must select an image from the " + I9Gfx.GetPowersetsPath() + " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", MsgBoxStyle.Information, "Ah...");
             }
             else
             {

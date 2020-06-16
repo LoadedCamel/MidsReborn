@@ -400,7 +400,7 @@ namespace Hero_Designer
                 if (DatabaseAPI.Database.Enhancements[index].UID != "")
                     cbEnh.Items.Add(DatabaseAPI.Database.Enhancements[index].UID);
                 else
-                    cbEnh.Items.Add(("X - " + DatabaseAPI.Database.Enhancements[index].Name));
+                    cbEnh.Items.Add("X - " + DatabaseAPI.Database.Enhancements[index].Name);
             }
             cbEnh.EndUpdate();
             cbSal0.BeginUpdate();
@@ -585,7 +585,7 @@ namespace Hero_Designer
                 lstItems.Items.Clear();
                 int num = DatabaseAPI.Database.Recipes[Index].Item.Length - 1;
                 for (int index = 0; index <= num; ++index)
-                    lstItems.Items.Add(("Level: " + Convert.ToString(DatabaseAPI.Database.Recipes[Index].Item[index].Level + 1)));
+                    lstItems.Items.Add("Level: " + Convert.ToString(DatabaseAPI.Database.Recipes[Index].Item[index].Level + 1));
                 if (lstItems.Items.Count > 0)
                     lstItems.SelectedIndex = 0;
                 NoUpdate = false;

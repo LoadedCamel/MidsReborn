@@ -469,7 +469,7 @@ namespace Hero_Designer
                     continue;
                 string text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDX].NIDPower].DisplayName;
                 if (chkSortByLevel.Checked)
-                    text = Strings.Format((MidsContext.Character.CurrentBuild.Powers[hIDX].Level + 1), "00") + " - " + text;
+                    text = Strings.Format(MidsContext.Character.CurrentBuild.Powers[hIDX].Level + 1, "00") + " - " + text;
                 lvPower.Items.Add(text);
                 lvPower.Items[lvPower.Items.Count - 1].Tag = hIDX;
             }

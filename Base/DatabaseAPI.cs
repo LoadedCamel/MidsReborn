@@ -125,7 +125,7 @@ public static class DatabaseAPI
             {
                 if ((powerset.SetType == Enums.ePowerSetType.Primary || powerset.SetType == Enums.ePowerSetType.Secondary) && powerset.nArchetype != nIDClass & powerset.nArchetype > -1)
                     isOk = false;
-                if (powerset.Powers.Length > 0 && isOk && (powerset.SetType != Enums.ePowerSetType.Inherent && powerset.SetType != Enums.ePowerSetType.Accolade) && powerset.SetType != Enums.ePowerSetType.Temp && !powerset.Powers[0].Requires.ClassOk(nIDClass))
+                if (powerset.Powers.Length > 0 && isOk && powerset.SetType != Enums.ePowerSetType.Inherent && powerset.SetType != Enums.ePowerSetType.Accolade && powerset.SetType != Enums.ePowerSetType.Temp && !powerset.Powers[0].Requires.ClassOk(nIDClass))
                     isOk = false;
             }
             if (isOk)
@@ -918,9 +918,9 @@ public static class DatabaseAPI
             {
                 Enums.eType.Normal => Database.Enhancements[iEnh].ShortName,
                 Enums.eType.SpecialO => Database.Enhancements[iEnh].ShortName,
-                Enums.eType.InventO => ("Invention: " + Database.Enhancements[iEnh].ShortName),
-                Enums.eType.SetO => (Database.EnhancementSets[Database.Enhancements[iEnh].nIDSet].DisplayName + ": " +
-                                     Database.Enhancements[iEnh].ShortName),
+                Enums.eType.InventO => "Invention: " + Database.Enhancements[iEnh].ShortName,
+                Enums.eType.SetO => Database.EnhancementSets[Database.Enhancements[iEnh].nIDSet].DisplayName + ": " +
+                                     Database.Enhancements[iEnh].ShortName,
                 _ => string.Empty
             };
         }

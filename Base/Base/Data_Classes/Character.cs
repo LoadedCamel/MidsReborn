@@ -1068,7 +1068,7 @@ namespace Base.Data_Classes
                 int index1 = popupData1.Add();
                 popupData1.Sections[index1].Add(enhancementSet.DisplayName, iColor, 1.25f);
                 popupData1.Sections[index1].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)enhancementSet.SetType], PopUp.Colors.Invention);
-                string str = enhancementSet.LevelMin != enhancementSet.LevelMax ? (enhancementSet.LevelMin + 1) + " to " + (enhancementSet.LevelMax + 1) : (enhancementSet.LevelMin + 1).ToString(CultureInfo.InvariantCulture);
+                string str = enhancementSet.LevelMin != enhancementSet.LevelMax ? enhancementSet.LevelMin + 1 + " to " + (enhancementSet.LevelMax + 1) : (enhancementSet.LevelMin + 1).ToString(CultureInfo.InvariantCulture);
                 popupData1.Sections[index1].Add("Level Range: " + str, PopUp.Colors.Text);
                 popupData1.Add(PopSetEnhList(sIdx, powerEntry));
                 popupData1.Add(PopSetBonusListing(sIdx, powerEntry));

@@ -217,7 +217,7 @@ namespace Hero_Designer
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveRecipes(serializer);
             DisplayInfo();
-            int num8 = (int)Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num6) + "\r\nRejected: " + Convert.ToString(num7)), MsgBoxStyle.Information, "File Parsed");
+            int num8 = (int)Interaction.MsgBox("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num6) + "\r\nRejected: " + Convert.ToString(num7), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
     }

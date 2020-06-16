@@ -212,7 +212,7 @@ namespace Hero_Designer
                 return;
             if (string.Equals(clbMutex.Items[index].ToString(), b, StringComparison.OrdinalIgnoreCase))
             {
-                Interaction.MsgBox(("'" + b + "' is not unique!"), MsgBoxStyle.Information, "Unable to add");
+                Interaction.MsgBox("'" + b + "' is not unique!", MsgBoxStyle.Information, "Unable to add");
             }
             else
             {

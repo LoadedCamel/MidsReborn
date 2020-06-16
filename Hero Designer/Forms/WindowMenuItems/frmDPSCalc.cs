@@ -133,7 +133,7 @@ namespace Hero_Designer
                         continue;
                     string text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[powerLocation].NIDPower].DisplayName;
                     if (chkSortByLevel.Checked)
-                        text = Strings.Format((MidsContext.Character.CurrentBuild.Powers[powerLocation].Level + 1), "00") + " - " + text;
+                        text = Strings.Format(MidsContext.Character.CurrentBuild.Powers[powerLocation].Level + 1, "00") + " - " + text;
                     string[] damageData = GetDamageData(powerLocation);
                     lvPower.Items.Add(text).SubItems.AddRange(damageData);
                     GlobalDamageBuff += float.Parse(damageData[5]) *

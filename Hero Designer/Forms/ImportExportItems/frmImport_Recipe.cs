@@ -255,7 +255,7 @@ namespace Hero_Designer
             }
             BusyHide();
             iStream2.Close();
-            Interaction.MsgBox(("Parse Completed!\r\nTotal Records: " + num5 + "\r\nGood: " + num2 + "\r\nRejected: " + num3), MsgBoxStyle.Information, "File Parsed");
+            Interaction.MsgBox("Parse Completed!\r\nTotal Records: " + num5 + "\r\nGood: " + num2 + "\r\nRejected: " + num3, MsgBoxStyle.Information, "File Parsed");
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveRecipes(serializer);
             DatabaseAPI.SaveEnhancementDb(serializer);

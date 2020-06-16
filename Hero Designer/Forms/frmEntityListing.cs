@@ -74,7 +74,7 @@ namespace Hero_Designer
 
         void btnDelete_Click(object sender, EventArgs e)
         {
-            if (lvEntity.SelectedIndices.Count <= 0 || Interaction.MsgBox(("Really delete entity: " + DatabaseAPI.Database.Entities[lvEntity.SelectedIndices[0]].DisplayName + "?"), MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (lvEntity.SelectedIndices.Count <= 0 || Interaction.MsgBox("Really delete entity: " + DatabaseAPI.Database.Entities[lvEntity.SelectedIndices[0]].DisplayName + "?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
                 return;
             SummonedEntity[] summonedEntityArray = new SummonedEntity[DatabaseAPI.Database.Entities.Length - 1 + 1];
             int selectedIndex = lvEntity.SelectedIndices[0];

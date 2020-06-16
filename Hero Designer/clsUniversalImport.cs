@@ -397,7 +397,7 @@ namespace Hero_Designer
             catch (Exception ex)
             {
                 MidsContext.Config.BuildMode = buildMode;
-                Interaction.MsgBox(("Unable to import from forum post:\r\n" + ex.Message + "\r\n\r\nCheck the build was copied correctly."),
+                Interaction.MsgBox("Unable to import from forum post:\r\n" + ex.Message + "\r\n\r\nCheck the build was copied correctly.",
                     MsgBoxStyle.Information, "Forum Import Filter");
                 return false;
             }
@@ -543,8 +543,8 @@ namespace Hero_Designer
             for (int index = start; index <= iStr.Length - 1; ++index)
             {
                 if ((!char.IsLetterOrDigit(iStr, index) | iStr.Substring(index, 1) == " ") &
-                    (iStr.Substring(index, 1) != ":" & iStr.Substring(index, 1) != "-" & iStr.Substring(index, 1) != "+" &
-                     iStr.Substring(index, 1) != "/" & iStr.Substring(index, 1) != "%" & iStr.Substring(index, 1) != "'"))
+                    iStr.Substring(index, 1) != ":" & iStr.Substring(index, 1) != "-" & iStr.Substring(index, 1) != "+" &
+                     iStr.Substring(index, 1) != "/" & iStr.Substring(index, 1) != "%" & iStr.Substring(index, 1) != "'")
                     return index;
             }
 

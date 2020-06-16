@@ -119,8 +119,8 @@ public class Enhancement : IEnhancement
             {
                 Enums.eType.Normal => Name,
                 Enums.eType.SpecialO => Name,
-                Enums.eType.InventO => ("Invention: " + Name),
-                Enums.eType.SetO => (DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName + ": " + Name),
+                Enums.eType.InventO => "Invention: " + Name,
+                Enums.eType.SetO => DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName + ": " + Name,
                 _ => string.Empty
             };
             return str;

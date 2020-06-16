@@ -114,7 +114,7 @@ namespace Hero_Designer
                 string str = FileIO.StripPath(ImagePicker.FileName);
                 if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
                 {
-                    int num = (int)Interaction.MsgBox(("You must select an image from the " + I9Gfx.GetEnhancementsPath() + " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it."), MsgBoxStyle.Information, "Ah...");
+                    int num = (int)Interaction.MsgBox("You must select an image from the " + I9Gfx.GetEnhancementsPath() + " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", MsgBoxStyle.Information, "Ah...");
                 }
                 else
                 {
@@ -347,7 +347,7 @@ namespace Hero_Designer
             cbSlotCount.Items.Clear();
             int num1 = mySet.Enhancements.Length - 2;
             for (int index = 0; index <= num1; ++index)
-                cbSlotCount.Items.Add((Convert.ToString(index + 2) + " Enhancements"));
+                cbSlotCount.Items.Add(Convert.ToString(index + 2) + " Enhancements");
             int num2 = mySet.Enhancements.Length - 1;
             for (int index = 0; index <= num2; ++index)
                 cbSlotCount.Items.Add(DatabaseAPI.Database.Enhancements[mySet.Enhancements[index]].Name);

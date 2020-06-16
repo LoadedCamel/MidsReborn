@@ -241,7 +241,7 @@ namespace Hero_Designer
             lstTweaks.Items.Clear();
             int num = MidsContext.Config.CompOverride.Length - 1;
             for (int index = 0; index <= num; ++index)
-                lstTweaks.Items.Add((MidsContext.Config.CompOverride[index].Powerset + "." + MidsContext.Config.CompOverride[index].Power));
+                lstTweaks.Items.Add(MidsContext.Config.CompOverride[index].Powerset + "." + MidsContext.Config.CompOverride[index].Power);
             if (lstTweaks.Items.Count > 0)
                 lstTweaks.SelectedIndex = 0;
             lstTweaks.EndUpdate();

@@ -197,7 +197,7 @@ namespace Hero_Designer
                 if (index == MyAT.Idx || !string.Equals(DatabaseAPI.Database.Classes[index].ClassName, txtClassName.Text,
                         StringComparison.OrdinalIgnoreCase))
                     continue;
-                int num2 = (int)Interaction.MsgBox((txtClassName.Text + " is already in use, please select a unique class name."), MsgBoxStyle.Information, "Name in Use");
+                int num2 = (int)Interaction.MsgBox(txtClassName.Text + " is already in use, please select a unique class name.", MsgBoxStyle.Information, "Name in Use");
                 return false;
             }
             return true;

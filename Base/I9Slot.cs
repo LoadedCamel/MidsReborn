@@ -32,8 +32,8 @@ public class I9Slot : ICloneable
         foreach (Enums.sEffect sEffect in enhancement.Effect)
         {
             if (sEffect.Mode != Enums.eEffMode.Enhancement || (sEffect.BuffMode == Enums.eBuffDebuff.DeBuffOnly && !(mag <= 0.0)) ||
-                ((sEffect.BuffMode == Enums.eBuffDebuff.BuffOnly && !(mag >= 0.0)) ||
-                 (sEffect.Schedule == Enums.eSchedule.None || (Enums.eEnhance) sEffect.Enhance.ID != iEffect)) ||
+                (sEffect.BuffMode == Enums.eBuffDebuff.BuffOnly && !(mag >= 0.0)) ||
+                 sEffect.Schedule == Enums.eSchedule.None || (Enums.eEnhance) sEffect.Enhance.ID != iEffect ||
                 (subEnh >= 0 && subEnh != sEffect.Enhance.SubID))
                 continue;
             float scheduleMult = GetScheduleMult(enhancement.TypeID, sEffect.Schedule);
