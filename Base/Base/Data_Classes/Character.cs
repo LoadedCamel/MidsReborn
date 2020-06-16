@@ -69,7 +69,7 @@ namespace Base.Data_Classes
 
         public int Origin { get; set; }
 
-        public IPowerset[] Powersets { get; private set; }
+        public IPowerset[] Powersets { get; set; }
 
         public bool[] PoolLocked { get; set; }
 
