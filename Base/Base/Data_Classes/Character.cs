@@ -1,12 +1,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
+using HeroViewer.Base;
 
 namespace Base.Data_Classes
 {
@@ -45,6 +47,14 @@ namespace Base.Data_Classes
                     num2 = 49;
                 LevelCache = num2;
                 return num2;
+            }
+        }
+
+        public int MaxLevel
+        {
+            get
+            {
+                return 49;
             }
         }
 
@@ -221,6 +231,13 @@ namespace Base.Data_Classes
             }
         }
 
+        public int GetPowersByLevel(int Level)
+        {
+            int[] powerPickedLevels = new[] { 0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 34, 37, 40, 43, 46, 48 };
+
+            return powerPickedLevels.Where(e => e <= Level).ToArray().Length;
+        }
+
         public bool IsHero() => Alignment == Enums.Alignment.Hero || Alignment == Enums.Alignment.Vigilante;
 
         public bool IsVillain => Alignment == Enums.Alignment.Rogue || Alignment == Enums.Alignment.Villain;
@@ -268,7 +285,7 @@ namespace Base.Data_Classes
         // returns the last thing it tried to read from, for inclusion in the error message
         public void LoadPowersetsByName2(IList<string> names, ref string blameName)
         {
-            var powersets = names.Select(n => string.IsNullOrEmpty(n) ? null : DatabaseAPI.GetPowersetByName(n)).ToArray();
+            /*var powersets = names.Select(n => string.IsNullOrEmpty(n) ? null : DatabaseAPI.GetPowersetByName(n)).ToArray();
             var toBlame = powersets.Select((ps, i) => new { Index = i, Ps = ps }).FirstOrDefault(x => x.Ps == null);
             if (toBlame != null)
                 blameName = names[toBlame.Index];
@@ -290,6 +307,29 @@ namespace Base.Data_Classes
                 if (powersetByName3 == null)
                     blameName = names[index];
                 Powersets[index + 1] = powersetByName3;
+            }*/
+            Powersets = new IPowerset[8];
+            int m = 0; int k = 3;
+            for (int i = 0; i < names.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(names[i])) continue;
+                if (names[i].IndexOf("Epic.", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    Powersets[7] = DatabaseAPI.GetPowersetByName(names[i]);
+                    if (Powersets[7] == null) blameName = names[i];
+                }
+                else if (names[i].IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    Powersets[k] = DatabaseAPI.GetPowersetByName(names[i]);
+                    if (Powersets[k] == null) blameName = names[i];
+                    k++;
+                }
+                else
+                {
+                    Powersets[m] = DatabaseAPI.GetPowersetByName(names[i]);
+                    if (Powersets[m] == null) blameName = names[i];
+                    m++;
+                }
             }
         }
         public IEnumerable<(int, string)> LoadPowersetsByName(IList<string> names)
@@ -418,7 +458,7 @@ namespace Base.Data_Classes
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power == null || power.Power == null || !power.StatInclude) continue;
-                
+
                 switch (power.Power.PowerName.ToUpper())
                 {
                     case "TIME_CRAWL":
@@ -838,6 +878,19 @@ namespace Base.Data_Classes
                 numArray[0] += DatabaseAPI.Database.Levels[level].Slots - num;
                 numArray[1] += num;
             }
+            return numArray;
+        }
+
+        public int[] GetSlotCounts(int level)
+        {
+            int[] numArray = new int[2];
+
+            int numTaken = SlotLevelQueue.GetNumSlotsBeforeLevel(level) + CurrentBuild.SlotsPlacedAtLevel(level);
+            int numTotal = DatabaseAPI.Database.Levels.Sum(e => e.Slots);
+
+            numArray[0] = numTotal - numTaken;
+            numArray[1] = numTaken;
+
             return numArray;
         }
 

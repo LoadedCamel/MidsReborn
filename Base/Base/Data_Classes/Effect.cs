@@ -426,7 +426,7 @@ namespace Base.Data_Classes
                     str5 = str1 + " " + effectNameShort1 + "(" + str7 + ")" + str3 + str2;
                     break;
                 case Enums.eEffectType.GrantPower:
-                    IPower powerByName = DatabaseAPI.GetPowerByName(Summon);
+                    IPower powerByName = DatabaseAPI.GetPowerByFullName(Summon);
                     string str8 = powerByName == null ? " " + Summon : " " + powerByName.DisplayName;
                     str5 = effectNameShort1 + str8 + str3;
                     break;
@@ -714,7 +714,7 @@ namespace Base.Data_Classes
                     break;
                 case Enums.eEffectType.GrantPower:
                     iValue4 = string.Empty;
-                    IPower powerByName = DatabaseAPI.GetPowerByName(Summon);
+                    IPower powerByName = DatabaseAPI.GetPowerByFullName(Summon);
                     string str14 = powerByName == null ? " " + Summon : " " + powerByName.DisplayName;
                     str10 = effectName + str14 + str3;
                     break;

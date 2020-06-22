@@ -67,6 +67,7 @@ namespace Hero_Designer
             this.tsFileNew = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tsFileOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -210,7 +211,9 @@ namespace Hero_Designer
             // txtName
             // 
             this.txtName.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtName.ForeColor = System.Drawing.SystemColors.ControlText;
+            // Color may differ if user has an alternate windows theme enabled.
+            // Label not very visible especially with dark themes.
+            this.txtName.ForeColor = System.Drawing.Color.Black;
             this.txtName.Location = new System.Drawing.Point(96, 82);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(142, 20);
@@ -223,7 +226,7 @@ namespace Hero_Designer
             this.cbAT.DisplayMember = "DisplayName";
             this.cbAT.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAT.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbAT.ForeColor = System.Drawing.Color.Black;
             this.cbAT.ItemHeight = 16;
             this.cbAT.Location = new System.Drawing.Point(94, 109);
             this.cbAT.MaxDropDownItems = 15;
@@ -241,7 +244,7 @@ namespace Hero_Designer
             this.cbOrigin.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbOrigin.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbOrigin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbOrigin.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbOrigin.ForeColor = System.Drawing.Color.Black;
             this.cbOrigin.ItemHeight = 16;
             this.cbOrigin.Location = new System.Drawing.Point(94, 133);
             this.cbOrigin.Name = "cbOrigin";
@@ -254,7 +257,8 @@ namespace Hero_Designer
             // 
             this.cbPrimary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPrimary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPrimary.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPrimary.ForeColor = System.Drawing.Color.Black;
+            this.cbPrimary.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPrimary.ItemHeight = 16;
             this.cbPrimary.Location = new System.Drawing.Point(16, 182);
             this.cbPrimary.MaxDropDownItems = 15;
@@ -292,7 +296,8 @@ namespace Hero_Designer
             // 
             this.cbSecondary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSecondary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSecondary.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbSecondary.ForeColor = System.Drawing.Color.Black;
+            this.cbSecondary.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbSecondary.ItemHeight = 16;
             this.cbSecondary.Location = new System.Drawing.Point(168, 182);
             this.cbSecondary.MaxDropDownItems = 15;
@@ -309,7 +314,7 @@ namespace Hero_Designer
             this.cbPool0.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPool0.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPool0.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPool0.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPool0.ForeColor = System.Drawing.Color.Black;
             this.cbPool0.ItemHeight = 16;
             this.cbPool0.Location = new System.Drawing.Point(328, 182);
             this.cbPool0.MaxDropDownItems = 15;
@@ -337,7 +342,7 @@ namespace Hero_Designer
             this.cbPool1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPool1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPool1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPool1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPool1.ForeColor = System.Drawing.Color.Black;
             this.cbPool1.ItemHeight = 16;
             this.cbPool1.Location = new System.Drawing.Point(328, 290);
             this.cbPool1.MaxDropDownItems = 15;
@@ -365,7 +370,7 @@ namespace Hero_Designer
             this.cbPool2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPool2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPool2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPool2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPool2.ForeColor = System.Drawing.Color.Black;
             this.cbPool2.ItemHeight = 16;
             this.cbPool2.Location = new System.Drawing.Point(328, 398);
             this.cbPool2.MaxDropDownItems = 15;
@@ -400,7 +405,7 @@ namespace Hero_Designer
             this.cbPool3.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPool3.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPool3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPool3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPool3.ForeColor = System.Drawing.Color.Black;
             this.cbPool3.ItemHeight = 16;
             this.cbPool3.Location = new System.Drawing.Point(328, 506);
             this.cbPool3.MaxDropDownItems = 15;
@@ -428,7 +433,7 @@ namespace Hero_Designer
             this.cbAncillary.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbAncillary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAncillary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAncillary.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbAncillary.ForeColor = System.Drawing.Color.Black;
             this.cbAncillary.ItemHeight = 16;
             this.cbAncillary.Location = new System.Drawing.Point(328, 614);
             this.cbAncillary.Name = "cbAncillary";
@@ -582,13 +587,13 @@ namespace Hero_Designer
             this.MenuBar.BackColor = System.Drawing.SystemColors.Control;
             this.MenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[7]
             {
-            this.FileToolStripMenuItem,
-            this.ImportExportToolStripMenuItem,
-            this.OptionsToolStripMenuItem,
-            this.CharacterToolStripMenuItem,
-            this.ViewToolStripMenuItem,
-            this.HelpToolStripMenuItem1,
-            this.WindowToolStripMenuItem
+                this.FileToolStripMenuItem,
+                this.ImportExportToolStripMenuItem,
+                this.OptionsToolStripMenuItem,
+                this.CharacterToolStripMenuItem,
+                this.ViewToolStripMenuItem,
+                this.HelpToolStripMenuItem1,
+                this.WindowToolStripMenuItem
             });
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
@@ -598,17 +603,18 @@ namespace Hero_Designer
             // 
             // FileToolStripMenuItem
             // 
-            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[9]
+            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[10]
             {
-            this.tsFileNew,
-            this.ToolStripSeparator7,
-            this.tsFileOpen,
-            this.tsFileSave,
-            this.tsFileSaveAs,
-            this.ToolStripSeparator8,
-            this.tsFilePrint,
-            this.ToolStripSeparator9,
-            this.tsFileQuit
+                this.tsFileNew,
+                this.ToolStripSeparator7,
+                this.tsFileOpen,
+                this.tsBuildRcv,
+                this.tsFileSave,
+                this.tsFileSaveAs,
+                this.ToolStripSeparator8,
+                this.tsFilePrint,
+                this.ToolStripSeparator9,
+                this.tsFileQuit
             });
             this.FileToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
@@ -635,6 +641,14 @@ namespace Hero_Designer
             this.tsFileOpen.Size = new System.Drawing.Size(179, 22);
             this.tsFileOpen.Text = "&Open...";
             this.tsFileOpen.Click += new System.EventHandler(tsFileOpen_Click);
+            // 
+            // tsFileSave
+            // 
+            this.tsBuildRcv.Name = "tsBuildRcv";
+            //this.tsFileOpen.ShortcutKeys = System.Windows.Forms.Keys.B | System.Windows.Forms.Keys.Control;
+            this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
+            this.tsBuildRcv.Text = "Attempt Build Recovery...";
+            this.tsBuildRcv.Click += new System.EventHandler(tsBuildRcv_Click);
             // 
             // tsFileSave
             // 
@@ -2048,6 +2062,7 @@ namespace Hero_Designer
         ToolStripMenuItem tsExportLong;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
+        ToolStripMenuItem tsBuildRcv;
         ToolStripMenuItem tsFilePrint;
         ToolStripMenuItem tsFileQuit;
         ToolStripMenuItem tsFileSave;

@@ -21,31 +21,12 @@ using Hero_Designer.Forms;
 using Hero_Designer.My;
 using midsControls;
 using Timer = System.Windows.Forms.Timer;
-using System.Diagnostics;
-
+using HeroViewer;
+using HeroViewer.Base;
 
 
 namespace Hero_Designer
 {
-    /*
-    public class RawPowerData
-    {
-        public string FullName { get; set; }
-        public int Level { get; set; }
-        public string Powerset { get; set; }
-        public RawEnhData[] Slots { get; set; }
-        public static List<IPower> Powers { get; set; }
-    }
-
-    public class RawEnhData
-    {
-        public string InternalName { get; set; }
-        public int Level { get; set; }
-        public int Boosters { get; set; }
-        public bool HasCatalyst { get; set; } // NOT IMPLEMENTED
-    }
-    */
-
     public partial class frmMain : Form
     {
         #region "fields"
@@ -644,7 +625,7 @@ namespace Hero_Designer
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
-            SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
+            SolidBrush solidBrush = new SolidBrush(Color.Black);
             IPowerset[] powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, SetType);
             if (e.Index > -1 & e.Index < powersetIndexes.Length)
             {
@@ -680,7 +661,8 @@ namespace Hero_Designer
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
-            SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
+            //SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
+            SolidBrush solidBrush = new SolidBrush(Color.Black);
             if (e.Index > -1)
             {
                 var cmbOrigin = GetCbOrigin();
@@ -2979,8 +2961,8 @@ namespace Hero_Designer
             if (MainModule.MidsController.Toon.Complete)
                 drawing.HighlightSlot(-1);
             int[] slotCounts = MainModule.MidsController.Toon.GetSlotCounts();
-            ibAccolade.TextOff = slotCounts[0] <= 0 ? "No slots left" : slotCounts[0] + " slots to go";
-            ibAccolade.TextOn = slotCounts[1] <= 0 ? "No slots placed" : slotCounts[1] + " slots placed";
+            ibAccolade.TextOff = slotCounts[0] <= 0 ? "No slot left" : slotCounts[0] + " slot" + (slotCounts[0] == 1 ? String.Empty : "s") + " to go";
+            ibAccolade.TextOn = slotCounts[1] <= 0 ? "No slot placed" : slotCounts[1] + " slot" + (slotCounts[1] == 1 ? String.Empty : "s") + " placed";
             if (index > -1 & index <= MidsContext.Character.CurrentBuild.Powers.Count)
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             MidsContext.Character.Validate();
@@ -4884,6 +4866,26 @@ namespace Hero_Designer
 
         void tsFileNew_Click(object sender, EventArgs e) => command_New();
 
+        void tsBuildRcv_Click(object sender, EventArgs e)
+        {
+            if (MainModule.MidsController.Toon.Locked & FileModified)
+            {
+                FloatTop(false);
+                DialogResult msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?", "Question",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                FloatTop(true);
+                if (msgBoxResult == DialogResult.No)
+                    return;
+            }
+
+            FloatTop(false);
+            if (DlgOpen.ShowDialog() == DialogResult.OK)
+            {
+                //DoOpen(DlgOpen.FileName);
+                BuildRecover(DlgOpen.FileName);
+            }
+            FloatTop(true);
+        }
         void tsFileOpen_Click(object sender, EventArgs e)
         {
             if (MainModule.MidsController.Toon.Locked & FileModified)
@@ -5549,310 +5551,16 @@ namespace Hero_Designer
             UpdatePowerList(llPool3);
         }
 
-        struct RawPowerData
-        {
-            public string FullName;
-            public int Level;
-            public bool Valid;
-            public IPowerset Powerset;
-            public List<RawEnhData> Slots;
-            public IPower pData;
-        }
-
-        struct RawEnhData
-        {
-            public string InternalName;
-            public int Level;
-            public int Boosters;
-            public bool HasCatalyst; // NOT IMPLEMENTED YET
-            public int eData;
-        }
-
-        private static I9Slot SelectEnhancementByIdx(int enhID, string enhInternalName)
-        {
-            I9Slot i9Slot = new I9Slot
-            {
-                //Enh = DatabaseAPI.GetEnhancementByUIDName(aSlots[j].InternalName)
-                Enh = enhID
-            };
-
-            //str1 = buildFileLinesArray[index3].enhancementName;
-            if (i9Slot.Enh == -1)
-            {
-                string iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", String.Empty);
-                i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
-                if (i9Slot.Enh == -1)
-                {
-                    _ = MessageBox.Show(("Error getting data for enhancement UID: " + enhInternalName), null, MessageBoxButtons.OK);
-                    i9Slot.Enh = 0;
-                }
-            }
-
-            return i9Slot;
-        }
-
-        private static void AddPowerToBuildSheet(RawPowerData p, ref List<PowerEntry> listPowers)
-        {
-            int i;
-            PowerEntry powerEntry = new PowerEntry
-            {
-                Level = p.Level,
-                StatInclude = false,
-                VariableValue = 0,
-                Slots = new SlotEntry[p.Slots.Count]
-            };
-
-            if (p.Slots.Count > 0)
-            {
-                for (i = 0; i < powerEntry.Slots.Length; i++)
-                {
-                    powerEntry.Slots[i] = new SlotEntry
-                    {
-                        Level = 49,
-                        Enhancement = new I9Slot(),
-                        FlippedEnhancement = new I9Slot()
-                    };
-                    if (p.Slots[i].InternalName == "Empty") continue;
-
-                    I9Slot i9Slot = SelectEnhancementByIdx(p.Slots[i].eData, p.Slots[i].InternalName);
-                    Enums.eType enhType = DatabaseAPI.Database.Enhancements[i9Slot.Enh].TypeID;
-
-                    if (enhType == Enums.eType.Normal || enhType == Enums.eType.SpecialO)
-                    {
-                        i9Slot.RelativeLevel = (Enums.eEnhRelative)(p.Slots[i].Boosters + 4); // +4 === 5 boosters ??? Damn you, maths.
-                        i9Slot.Grade = Enums.eEnhGrade.TrainingO;
-                    }
-
-                    if (enhType == Enums.eType.InventO || enhType == Enums.eType.SetO)
-                    {
-                        // Current enhancement level: //p.Slots[i].Level;
-                        // Set to maximum since attuned ones will give the lowest level possible.
-                        i9Slot.IOLevel = DatabaseAPI.Database.Enhancements[i9Slot.Enh].LevelMax;
-                        i9Slot.RelativeLevel = (Enums.eEnhRelative)(p.Slots[i].Boosters + 4);
-                    }
-
-                    powerEntry.Slots[i].Enhancement = i9Slot;
-                }
-
-                if (powerEntry.Slots.Length > 0) powerEntry.Slots[0].Level = powerEntry.Level;
-            }
-
-            powerEntry.NIDPower = p.pData.PowerIndex;
-            powerEntry.NIDPowerset = p.pData.PowerSetID;
-            powerEntry.IDXPower = p.pData.PowerSetIndex;
-            if (powerEntry.Level == 0 && powerEntry.Power.FullSetName == "Pool.Fitness")
-            {
-                if (powerEntry.NIDPower == 2553)
-                    powerEntry.NIDPower = 1521;
-                if (powerEntry.NIDPower == 2554)
-                    powerEntry.NIDPower = 1523;
-                if (powerEntry.NIDPower == 2555)
-                    powerEntry.NIDPower = 1522;
-                if (powerEntry.NIDPower == 2556)
-                    powerEntry.NIDPower = 1524;
-                powerEntry.NIDPowerset = p.pData.PowerSetID;
-                powerEntry.IDXPower = p.pData.PowerSetIndex;
-            }
-
-            try
-            {
-                //MessageBox.Show("L5659 - Adding: " + powerEntry.Power.FullName + "\r\n" + "NIDPower: " + Convert.ToString(powerEntry.NIDPower, null) + "\r\n" + "NIDPowerset: " + Convert.ToString(powerEntry.NIDPowerset, null));
-                listPowers.Add(powerEntry);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
-            }
-        }
-
-        // Name suggests it could accept both a file and a plain string?
         void GameImport(string buildString)
         {
             try
             {
-                int header_size = 4; // Number of lines before actual build data
-                Regex r; Match m;
+                ImportFromBuildsave importHandle = new ImportFromBuildsave(buildString);
+                List<PowerEntry>? listPowers = importHandle.Parse();
 
-                int i; int j;
-                string rawPowerset;
-                Regex r1; Regex r2; Regex r3;
-                Match m1; Match m2; Match m3;
+                if (listPowers == null) return;
 
-                RawPowerData p = new RawPowerData(); p.Valid = false;
-                List<RawEnhData> powerSlots = new List<RawEnhData>();
-                RawEnhData e = new RawEnhData();
-
-                List<PowerEntry> listPowers = new List<PowerEntry>();
-
-                List<string> powerSets = new List<string>();
-                string[] powerIDChunks = Array.Empty<string>();
-
-                r1 = new Regex(@"^Level ([0-9]+)\: (.+)$"); // Picked power
-                r2 = new Regex(@"^[\t\s]*EMPTY$"); // Empty enhancement slot
-                r3 = new Regex(@"^[\t\s]*([0-9a-zA-Z\+\:\-_]+) \(([0-9]+)(\+([1-5]))?\)$"); // Filled enhancement slot
-
-                int line = -1;
-                string lineText;
-                using StreamReader streamReader = new StreamReader(buildString);
-                while ((lineText = streamReader.ReadLine()) != null)
-                {
-                    line++;
-
-                    if (line == 0)
-                    {
-                        // Name, Level, Origin, ClassID
-                        r = new Regex(@"^([^\:]+)\: Level ([0-9]+) ([a-zA-Z]+) ([a-zA-Z_]+)$");
-                        m = r.Match(lineText);
-                        if (!m.Success)
-                        {
-                            _ = MessageBox.Show("This build cannot be imported because it doesn't match the expected format.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        string atName = m.Groups[4].Value.Replace("Class_", String.Empty);
-                        MidsContext.Character.Archetype = DatabaseAPI.GetArchetypeByName(atName);
-                        MidsContext.Character.Origin = DatabaseAPI.GetOriginByName(MidsContext.Character.Archetype, m.Groups[3].Value);
-                        MidsContext.Character.Reset(MidsContext.Character.Archetype, MidsContext.Character.Origin);
-                        MidsContext.Character.Name = m.Groups[1].Value;
-                    }
-                    else if (line < header_size)
-                    {
-                        continue;
-                    }
-
-                    m1 = r1.Match(lineText);
-                    m2 = r2.Match(lineText);
-                    m3 = r3.Match(lineText);
-
-                    if (m1.Success)
-                    {
-                        if (p.Valid)
-                        {
-                            //MessageBox.Show("Adding " + p.FullName + "\r\n" + Convert.ToString(p.pData.PowerSetIndex, null) + "\r\n" + Convert.ToString(p.pData.PowerIndex, null));
-                            AddPowerToBuildSheet(p, ref listPowers);
-                        }
-
-                        powerIDChunks = m1.Groups[2].Value.Split(' ');
-                        rawPowerset = (powerIDChunks[0] + "." + powerIDChunks[1]).Trim();
-                        p.FullName = m1.Groups[2].Value.Replace(" ", ".");
-                        p.Valid =
-                            powerIDChunks[0] != "Redirects" && // Apparently this is registered for some reason...
-                            p.FullName.IndexOf("Defensive_Adaptation", StringComparison.OrdinalIgnoreCase) == -1 && // Bio Armor stances
-                            p.FullName.IndexOf("Efficient_Adaptation", StringComparison.OrdinalIgnoreCase) == -1 &&
-                            p.FullName.IndexOf("Offensive_Adaptation", StringComparison.OrdinalIgnoreCase) == -1 &&
-                            p.FullName.IndexOf("Form_of_the ", StringComparison.OrdinalIgnoreCase) == -1 && // Staff Fighting stances
-                            p.FullName.IndexOf("_Ammunition", StringComparison.OrdinalIgnoreCase) == -1 && // Dual Pistols ammo
-                            p.FullName.IndexOf("Combo_Level", StringComparison.OrdinalIgnoreCase) == -1 && // Staff Fighting, Street Justice, Water Blast...
-                            (p.Level != 0 || rawPowerset == "Inherent.Inherent" || rawPowerset != "Inherent.Fitness"); // Hidden stuff e.g. sub powers in pools (Translocation, Jaunt, ...)
-                        //MessageBox.Show("L5745: " + p.FullName + "\r\n" + Convert.ToString(p.Valid));
-                        p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
-                        p.Slots = new List<RawEnhData>();
-                        if (p.Valid)
-                        {
-                            p.Powerset = DatabaseAPI.GetPowersetByName((powerIDChunks[0] + "." + powerIDChunks[1]).Trim());
-                            p.pData = DatabaseAPI.GetPowerByName(p.FullName);
-                            /*MessageBox.Show(p.FullName + "\r\n" +
-                                p.Powerset.ToStringOrNull() + "\r\n" +
-                                (p.Valid ? "Valid" : "Invalid") + "\r\n" +
-                                p.Level + "\r\n" +
-                                Convert.ToString(p.Powerset.FullName.IndexOf("Redirects."), null)
-                            );*/
-                            if (!powerSets.Contains(p.Powerset.FullName) &&
-                                (p.Powerset.FullName != "Inherent.Inherent") &&
-                                (p.Powerset.FullName != "Inherent.Fitness")
-                            )
-                            {
-                                powerSets.Add(p.Powerset.FullName);
-                            }
-                        }
-                    }
-                    else if (m2.Success)
-                    {
-                        // Empty slot
-                        e.InternalName = "Empty";
-                        e.Level = 0;
-                        e.Boosters = 0;
-                        e.HasCatalyst = false;
-                        e.eData = -1;
-                        p.Slots.Add(e);
-                    }
-                    else if (m3.Success)
-                    {
-                        // Enhancement: internal name, level, (dummy), boosters
-                        e.InternalName = m3.Groups[1].Value;
-                        e.Level = Convert.ToInt32(m3.Groups[2].Value, null);
-                        e.Boosters = m3.Groups.Count > 3 & !string.IsNullOrWhiteSpace(m3.Groups[4].Value) ? Convert.ToInt32(m3.Groups[4].Value, null) : 0;
-                        e.HasCatalyst = false;
-                        e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
-                        p.Slots.Add(e);
-                    }
-                }
-
-                streamReader.Close();
-                if (p.Valid) AddPowerToBuildSheet(p, ref listPowers);
-                //MessageBox.Show(Convert.ToString(listPowers.FindIndex(el => el.Power.FullName == "Brute_Defense.Bio_Organic_Armor.Environmental_Adaptation"), null));
-                //MessageBox.Show(Convert.ToString(listPowers.FindIndex(el => el.Power.FullName == "Brute_Defense.Bio_Organic_Armor.Ablative_Carapace"), null));
-
-                string toBlameSet = String.Empty;
-                MidsContext.Character.LoadPowersetsByName2(powerSets.ToArray(), ref toBlameSet);
-                MidsContext.Character.CurrentBuild.LastPower = 24;
-
-                // Zed - Doesn't seem to order anything.
-                // Neither does OrderByDescending().
-                List<PowerEntry> powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
-                //listPowers.OrderBy(el => el.Level).ToList(); //sortPowerEntryList(listPowers);
-                int k = 0;
-                for (k=0; k<listPowers.Count; k++)
-                {
-                    if (!powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
-                    {
-                        //MessageBox.Show("L5809: " + powerEntryList[k].Power.FullName + "\r\n" + Convert.ToString(powerEntryList[k].NIDPowerset) + "\r\n" + Convert.ToString(powerEntryList[k].NIDPower));
-                        PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
-                    }
-                }
-
-                List<SlotEntry> slotEntryList = new List<SlotEntry>();
-                foreach (var t in MidsContext.Character.CurrentBuild.Powers)
-                {
-                    foreach (var t1 in powerEntryList)
-                    {
-                        if (t1.Power.FullName != t.Power.FullName) continue;
-
-                        if (t1.Slots.Length > 0) slotEntryList.Add(t1.Slots[0]);
-                        for (i = 0; i < t1.Slots.Length - 1; i++)
-                        {
-                            slotEntryList.Add(t1.Slots[i + 1]);
-                            t.AddSlot(49);
-                        }
-
-                        break;
-                    }
-                }
-
-                int idx = 0;
-                foreach (var t in MidsContext.Character.CurrentBuild.Powers)
-                {
-                    for (i = 0; i < t.Slots.Length; i++)
-                    {
-                        t.Slots[i] = slotEntryList[idx++];
-                    }
-                }
-
-                MidsContext.Archetype = MidsContext.Character.Archetype;
-                MidsContext.Character.Validate();
-                MidsContext.Character.Lock();
-                //MidsContext.Character.ResetLevel();
-                MidsContext.Character.RequestedLevel = 49;
-                MidsContext.Character.SetLevelTo(49);
-                MidsContext.Character.PoolShuffle();
-                I9Gfx.OriginIndex = MidsContext.Character.Origin;
-                
-                MidsContext.Character.Validate();
-                MidsContext.Config.LastFileName = buildString;
-
-                // Update titlebar
-                LastFileName = buildString;
-                SetTitleBar();
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
             }
             catch (Exception e)
             {
@@ -5860,12 +5568,208 @@ namespace Hero_Designer
             }
         }
 
-        List<PowerEntry> sortPowerEntryList(List<PowerEntry> listPowerEntry)
+        void BuildRecover(string buildString)
         {
-            listPowerEntry.Sort((p1, p2) => p1.Level.CompareTo(p2.Level));
-            //listPowerEntry.Sort((p1, p2) => p1.Level > p2.Level);
+            try
+            {
+                PlainTextParser importHandle = new PlainTextParser(buildString);
+                List<PowerEntry>? listPowers = importHandle.Parse();
 
-            return listPowerEntry;
+                if (listPowers == null) return;
+
+                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\r\n\r\n" + e.StackTrace);
+            }
+        }
+
+        private int CountPools(UniqueList<string> listPowersets)
+        {
+            return listPowersets.Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0).ToArray().Length;
+        }
+
+        private void PadPowerPools(ref UniqueList<string> listPowersets)
+        {
+            int nbPools = CountPools(listPowersets);
+
+            if (nbPools == 4) return;
+
+            string[] pickedPowerPools = listPowersets.Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0).ToArray();
+            string[] dbPowerPools = Database.Instance.Powersets
+                .Where(ps => ps.FullName.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0 && !pickedPowerPools.Contains(ps.FullName))
+                .OrderBy(e => e.DisplayName)
+                .Select(e => e.FullName)
+                .ToArray();
+
+            for (int i = 0; i < 4 - nbPools; i++)
+            {
+                listPowersets.Add(dbPowerPools[i]);
+            }
+        }
+
+        private void FilterVEATPools(ref UniqueList<string> listPowersets)
+        {
+            if (listPowersets.Contains("Training_Gadgets.Bane_Spider_Training") || listPowersets.Contains("Training_Gadgets.Crab_Spider_Training"))
+            {
+                listPowersets.FromList(listPowersets.Where(e => e != "Training_Gadgets.Training_and_Gadgets").ToList());
+                return;
+            }
+
+            if (listPowersets.Contains("Widow_Training.Fortunata_Training") || listPowersets.Contains("Widow_Training.Night_Widow_Training"))
+            {
+                listPowersets.FromList(listPowersets.Where(e => e != "Widow_Training.Widow_Training").ToList());
+                return;
+            }
+        }
+
+        private void InjectBuild(string buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersets, RawCharacterInfo characterInfo)
+        {
+            // Need to pad pools powerlist so there are 4
+            // So epic pools doesn't end up shown as a regular pool...
+            PadPowerPools(ref listPowersets);
+            FilterVEATPools(ref listPowersets);
+
+            string toBlameSet = String.Empty;
+            MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
+            MidsContext.Character.CurrentBuild.LastPower = MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
+
+            List<PowerEntry> powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
+            int k = 0;
+            int pickedSlots = 0;
+            try
+            {
+                for (k = 0; k < listPowers.Count; k++)
+                {
+                    if (!powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
+                    {
+                        PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+
+            PowerEntry p;
+            int i;
+            SlotLevelQueue sl = new SlotLevelQueue();
+            try
+            {
+                foreach (PowerEntry pe in MidsContext.Character.CurrentBuild.Powers)
+                {
+                    if (pe.Power == null) continue; // Not picked power will be in the list, but not instanciated!
+                    var pList = powerEntryList.Where(e => pe.Power.FullName == e.Power.FullName).ToArray();
+                    if (pList.Length == 0) continue;
+
+                    p = pList.First();
+                    while (pe.Slots.Length < p.Slots.Length)
+                    {
+                        pe.AddSlot(MidsContext.Character.MaxLevel);
+                    }
+
+                    p.Slots.CopyTo(pe.Slots, 0);
+                    for (i = 0; i < pe.Slots.Length; i++)
+                    {
+                        if (i == 0)
+                        {
+                            pe.Slots[i].Level = pe.Level;
+                        }
+                        else
+                        {
+                            pe.Slots[i].Level = sl.PickSlot();
+                            pickedSlots++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+
+            fixStatIncludes();
+            FileModified = false;
+            MidsContext.Character.Lock();
+            MidsContext.Character.PoolShuffle();
+            I9Gfx.OriginIndex = MidsContext.Character.Origin;
+            MidsContext.Config.LastFileName = buildFile;
+            LastFileName = buildFile;
+            SetTitleBar();
+
+            int idx = -1;
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            {
+                idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
+                if (idx < 0)
+                {
+                    idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                }
+            }
+            else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
+            {
+                idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                drawing.HighlightSlot(-1);
+            }
+
+            if (MainModule.MidsController.Toon.Complete)
+            {
+                drawing.HighlightSlot(-1);
+            }
+
+            if (idx > -1 & idx <= MidsContext.Character.CurrentBuild.Powers.Count)
+            {
+                MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[idx].Level;
+                MidsContext.Character.SetLevelTo(MidsContext.Character.CurrentBuild.Powers[idx].Level);
+            }
+
+            return;
+
+            // Update slots counter... maybe.
+            // Turns out all this block is not needed. (I think)
+            /*
+            int index = -1;
+            MainModule.MidsController.Toon.Complete = !sl.IsValidNext();
+            fixStatIncludes();
+            FileModified = false;
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            {
+                index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
+                if (index < 0)
+                {
+                    index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                }
+            }
+            else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
+            {
+                index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                drawing.HighlightSlot(-1);
+            }
+
+            if (MainModule.MidsController.Toon.Complete)
+            {
+                drawing.HighlightSlot(-1);
+            }
+
+            int[] slotCounts = MainModule.MidsController.Toon.GetSlotCounts(characterInfo.Level - 1);
+            ibAccolade.TextOff = slotCounts[0] <= 0 ? "No slot left" : slotCounts[0] + " slot" + (slotCounts[0] == 1 ? String.Empty : "s") + " to go";
+            ibAccolade.TextOn = slotCounts[1] <= 0 ? "No slot placed" : slotCounts[1] + " slot" + (slotCounts[1] == 1 ? String.Empty : "s") + " placed";
+            if (index > -1 & index <= MidsContext.Character.CurrentBuild.Powers.Count)
+            {
+                MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
+                MidsContext.Character.SetLevelTo(MidsContext.Character.CurrentBuild.Powers[index].Level);
+            }
+
+            MidsContext.Character.Validate();
+            MidsContext.Character.Lock();
+            MidsContext.Character.PoolShuffle();
+            I9Gfx.OriginIndex = MidsContext.Character.Origin;
+
+            MidsContext.Character.Validate();
+            MidsContext.Config.LastFileName = buildFile;
+            */
         }
     }
 }
