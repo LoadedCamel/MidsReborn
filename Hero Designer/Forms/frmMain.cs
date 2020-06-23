@@ -5732,7 +5732,7 @@ namespace Hero_Designer
 
             if (listPowersets.Contains("Widow_Training.Fortunata_Training") || listPowersets.Contains("Widow_Training.Night_Widow_Training"))
             {
-                listPowersets.FromList(listPowersets.Where(e => e != "Widow_Training.Widow_Training").ToList());
+                listPowersets.FromList(listPowersets.Where(e => e != "Widow_Training.Widow_Training" && e != "Teamwork.Teamwork").ToList());
                 return;
             }
         }
@@ -5745,6 +5745,7 @@ namespace Hero_Designer
             FilterVEATPools(ref listPowersets);
 
             string toBlameSet = String.Empty;
+            MessageBox.Show(String.Join(", ", listPowersets.ToArray()));
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
             MidsContext.Character.CurrentBuild.LastPower = MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
 
