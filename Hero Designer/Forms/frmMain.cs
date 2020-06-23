@@ -5745,9 +5745,8 @@ namespace Hero_Designer
             FilterVEATPools(ref listPowersets);
 
             string toBlameSet = String.Empty;
-            MessageBox.Show(String.Join(", ", listPowersets.ToArray()));
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
-            MidsContext.Character.CurrentBuild.LastPower = MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
+            MidsContext.Character.CurrentBuild.LastPower = 24; //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
 
             List<PowerEntry> powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
             int k = 0;
@@ -5837,6 +5836,11 @@ namespace Hero_Designer
             {
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[idx].Level;
                 MidsContext.Character.SetLevelTo(MidsContext.Character.CurrentBuild.Powers[idx].Level);
+            }
+            else
+            {
+                MidsContext.Character.RequestedLevel = MidsContext.Character.MaxLevel;
+                MidsContext.Character.SetLevelTo(MidsContext.Character.MaxLevel);
             }
 
             return;
