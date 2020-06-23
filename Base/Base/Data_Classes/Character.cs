@@ -209,6 +209,9 @@ namespace Base.Data_Classes
         public void ResetLevel()
             => LevelCache = -1;
 
+        public void SetLevelTo(int Level)
+            => LevelCache = Level;
+
         public void Lock()
         {
             int powersPlaced = CurrentBuild.PowersPlaced;

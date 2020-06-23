@@ -5666,6 +5666,7 @@ namespace Hero_Designer
         {
             public string FullName;
             public int Level;
+            public bool Valid;
             public IPowerset Powerset;
             public List<RawEnhData> Slots;
             public IPower pData;
@@ -5691,7 +5692,7 @@ namespace Hero_Designer
             //str1 = buildFileLinesArray[index3].enhancementName;
             if (i9Slot.Enh == -1)
             {
-                string iName = enhInternalName.Replace("Attuned", "Crafted");
+                string iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", String.Empty);
                 i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
                 if (i9Slot.Enh == -1)
                 {
@@ -5746,26 +5747,34 @@ namespace Hero_Designer
                     powerEntry.Slots[i].Enhancement = i9Slot;
                 }
 
-                powerEntry.NIDPower = p.pData.PowerIndex;
+                if (powerEntry.Slots.Length > 0) powerEntry.Slots[0].Level = powerEntry.Level;
+            }
+
+            powerEntry.NIDPower = p.pData.PowerIndex;
+            powerEntry.NIDPowerset = p.pData.PowerSetID;
+            powerEntry.IDXPower = p.pData.PowerSetIndex;
+            if (powerEntry.Level == 0 && powerEntry.Power.FullSetName == "Pool.Fitness")
+            {
+                if (powerEntry.NIDPower == 2553)
+                    powerEntry.NIDPower = 1521;
+                if (powerEntry.NIDPower == 2554)
+                    powerEntry.NIDPower = 1523;
+                if (powerEntry.NIDPower == 2555)
+                    powerEntry.NIDPower = 1522;
+                if (powerEntry.NIDPower == 2556)
+                    powerEntry.NIDPower = 1524;
                 powerEntry.NIDPowerset = p.pData.PowerSetID;
                 powerEntry.IDXPower = p.pData.PowerSetIndex;
-                if (powerEntry.Level == 0 && powerEntry.Power.FullSetName == "Pool.Fitness")
-                {
-                    if (powerEntry.NIDPower == 2553)
-                        powerEntry.NIDPower = 1521;
-                    if (powerEntry.NIDPower == 2554)
-                        powerEntry.NIDPower = 1523;
-                    if (powerEntry.NIDPower == 2555)
-                        powerEntry.NIDPower = 1522;
-                    if (powerEntry.NIDPower == 2556)
-                        powerEntry.NIDPower = 1524;
-                    powerEntry.NIDPowerset = p.pData.PowerSetID;
-                    powerEntry.IDXPower = p.pData.PowerSetIndex;
-                }
+            }
 
-                if (powerEntry.Slots.Length > 0)
-                    powerEntry.Slots[0].Level = powerEntry.Level;
+            try
+            {
+                //MessageBox.Show("L5659 - Adding: " + powerEntry.Power.FullName + "\r\n" + "NIDPower: " + Convert.ToString(powerEntry.NIDPower, null) + "\r\n" + "NIDPowerset: " + Convert.ToString(powerEntry.NIDPowerset, null));
                 listPowers.Add(powerEntry);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 
@@ -5778,11 +5787,11 @@ namespace Hero_Designer
                 Regex r; Match m;
 
                 int i; int j;
-                int pMode = 0;
+                string rawPowerset;
                 Regex r1; Regex r2; Regex r3;
                 Match m1; Match m2; Match m3;
 
-                RawPowerData p = new RawPowerData();
+                RawPowerData p = new RawPowerData(); p.Valid = false;
                 List<RawEnhData> powerSlots = new List<RawEnhData>();
                 RawEnhData e = new RawEnhData();
 
@@ -5830,25 +5839,44 @@ namespace Hero_Designer
 
                     if (m1.Success)
                     {
-                        if (pMode != 0)
+                        if (p.Valid)
                         {
+                            //MessageBox.Show("Adding " + p.FullName + "\r\n" + Convert.ToString(p.pData.PowerSetIndex, null) + "\r\n" + Convert.ToString(p.pData.PowerIndex, null));
                             AddPowerToBuildSheet(p, ref listPowers);
                         }
 
-                        pMode = 1;
                         powerIDChunks = m1.Groups[2].Value.Split(' ');
+                        rawPowerset = (powerIDChunks[0] + "." + powerIDChunks[1]).Trim();
                         p.FullName = m1.Groups[2].Value.Replace(" ", ".");
-                        p.Powerset = DatabaseAPI.GetPowersetByName((powerIDChunks[0] + "." + powerIDChunks[1]).Trim());
+                        p.Valid =
+                            powerIDChunks[0] != "Redirects" && // Apparently this is registered for some reason...
+                            p.FullName.IndexOf("Defensive_Adaptation", StringComparison.OrdinalIgnoreCase) == -1 && // Bio Armor stances
+                            p.FullName.IndexOf("Efficient_Adaptation", StringComparison.OrdinalIgnoreCase) == -1 &&
+                            p.FullName.IndexOf("Offensive_Adaptation", StringComparison.OrdinalIgnoreCase) == -1 &&
+                            p.FullName.IndexOf("Form_of_the ", StringComparison.OrdinalIgnoreCase) == -1 && // Staff Fighting stances
+                            p.FullName.IndexOf("_Ammunition", StringComparison.OrdinalIgnoreCase) == -1 && // Dual Pistols ammo
+                            p.FullName.IndexOf("Combo_Level", StringComparison.OrdinalIgnoreCase) == -1 && // Staff Fighting, Street Justice, Water Blast...
+                            (p.Level != 0 || rawPowerset == "Inherent.Inherent" || rawPowerset != "Inherent.Fitness"); // Hidden stuff e.g. sub powers in pools (Translocation, Jaunt, ...)
+                        //MessageBox.Show("L5745: " + p.FullName + "\r\n" + Convert.ToString(p.Valid));
                         p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
                         p.Slots = new List<RawEnhData>();
-                        p.pData = DatabaseAPI.GetPowerByName(p.FullName);
-
-                        if (!powerSets.Contains(p.Powerset.FullName) &&
-                            (p.Powerset.FullName != "Inherent.Inherent") &&
-                            (p.Powerset.FullName != "Inherent.Fitness")
-                        )
+                        if (p.Valid)
                         {
-                            powerSets.Add(p.Powerset.FullName);
+                            p.Powerset = DatabaseAPI.GetPowersetByName((powerIDChunks[0] + "." + powerIDChunks[1]).Trim());
+                            p.pData = DatabaseAPI.GetPowerByName(p.FullName);
+                            /*MessageBox.Show(p.FullName + "\r\n" +
+                                p.Powerset.ToStringOrNull() + "\r\n" +
+                                (p.Valid ? "Valid" : "Invalid") + "\r\n" +
+                                p.Level + "\r\n" +
+                                Convert.ToString(p.Powerset.FullName.IndexOf("Redirects."), null)
+                            );*/
+                            if (!powerSets.Contains(p.Powerset.FullName) &&
+                                (p.Powerset.FullName != "Inherent.Inherent") &&
+                                (p.Powerset.FullName != "Inherent.Fitness")
+                            )
+                            {
+                                powerSets.Add(p.Powerset.FullName);
+                            }
                         }
                     }
                     else if (m2.Success)
@@ -5873,17 +5901,27 @@ namespace Hero_Designer
                     }
                 }
 
-                AddPowerToBuildSheet(p, ref listPowers);
                 streamReader.Close();
+                if (p.Valid) AddPowerToBuildSheet(p, ref listPowers);
+                //MessageBox.Show(Convert.ToString(listPowers.FindIndex(el => el.Power.FullName == "Brute_Defense.Bio_Organic_Armor.Environmental_Adaptation"), null));
+                //MessageBox.Show(Convert.ToString(listPowers.FindIndex(el => el.Power.FullName == "Brute_Defense.Bio_Organic_Armor.Ablative_Carapace"), null));
 
                 string toBlameSet = String.Empty;
                 MidsContext.Character.LoadPowersetsByName2(powerSets.ToArray(), ref toBlameSet);
                 MidsContext.Character.CurrentBuild.LastPower = 24;
 
-                List<PowerEntry> powerEntryList = sortPowerEntryList(listPowers);
-                foreach (var t in powerEntryList)
+                // Zed - Doesn't seem to order anything.
+                // Neither does OrderByDescending().
+                List<PowerEntry> powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
+                //listPowers.OrderBy(el => el.Level).ToList(); //sortPowerEntryList(listPowers);
+                int k = 0;
+                for (k=0; k<listPowers.Count; k++)
                 {
-                    if (!t.PowerSet.FullName.Contains("Inherent")) PowerPickedNoRedraw(t.NIDPowerset, t.NIDPower);
+                    if (!powerEntryList[k].PowerSet.FullName.Contains("Inherent"))
+                    {
+                        //MessageBox.Show("L5809: " + powerEntryList[k].Power.FullName + "\r\n" + Convert.ToString(powerEntryList[k].NIDPowerset) + "\r\n" + Convert.ToString(powerEntryList[k].NIDPower));
+                        PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
+                    }
                 }
 
                 List<SlotEntry> slotEntryList = new List<SlotEntry>();
@@ -5916,9 +5954,12 @@ namespace Hero_Designer
                 MidsContext.Archetype = MidsContext.Character.Archetype;
                 MidsContext.Character.Validate();
                 MidsContext.Character.Lock();
-                MidsContext.Character.ResetLevel();
+                //MidsContext.Character.ResetLevel();
+                MidsContext.Character.RequestedLevel = 49;
+                MidsContext.Character.SetLevelTo(49);
                 MidsContext.Character.PoolShuffle();
                 I9Gfx.OriginIndex = MidsContext.Character.Origin;
+                
                 MidsContext.Character.Validate();
                 MidsContext.Config.LastFileName = buildString;
 
@@ -5935,6 +5976,8 @@ namespace Hero_Designer
         List<PowerEntry> sortPowerEntryList(List<PowerEntry> listPowerEntry)
         {
             listPowerEntry.Sort((p1, p2) => p1.Level.CompareTo(p2.Level));
+            //listPowerEntry.Sort((p1, p2) => p1.Level > p2.Level);
+
             return listPowerEntry;
         }
     }
