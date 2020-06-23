@@ -98,7 +98,7 @@ public static class DatabaseAPI
     }
 
     public static int NidFromUidPower(string name)
-        => GetPowerByName(name)?.PowerIndex ?? -1;
+        => GetPowerByFullName(name)?.PowerIndex ?? -1;
 
     public static int NidFromUidEntity(string uidEntity)
         => Database.Entities.TryFindIndex(se => string.Equals(se.UID, uidEntity, StringComparison.OrdinalIgnoreCase));
@@ -222,7 +222,7 @@ public static class DatabaseAPI
         return items.ToArray();
     }
 
-    public static IPowerset GetPowersetByName(string iName)
+    public static IPowerset? GetPowersetByName(string iName)
     {
         string[] strArray = iName.Split('.');
         if (strArray.Length < 2)
@@ -252,6 +252,19 @@ public static class DatabaseAPI
         }
         return null;
     }
+
+    public static IPowerset? GetPowersetByIndex(int idx)
+    {
+        try
+        {
+            return Database.Powersets[idx];
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
     //Pine
     public static IPowerset GetPowersetByName(string iName, Enums.ePowerSetType iSet)
     {
@@ -269,7 +282,7 @@ public static class DatabaseAPI
 
     public static int GetOriginByName(Archetype archetype, string iOrigin)
     {
-        for (int index = 0; index <= archetype.Origin.Length - 1; ++index)
+        for (int index = 0; index < archetype.Origin.Length; ++index)
         {
             if (string.Equals(iOrigin, archetype.Origin[index], StringComparison.OrdinalIgnoreCase))
                 return index;
@@ -277,9 +290,9 @@ public static class DatabaseAPI
         return 0;
     }
 
-    public static int GetPowerByName(string iName, int iArchetype)
+    public static int GetPowerIndexByDisplayName(string iName, int iArchetype)
     {
-        for (int index = 0; index <= Database.Power.Length - 1; ++index)
+        /*for (int index = 0; index < Database.Power.Length; ++index)
         {
             int num = -1;
             if (Database.Power[index].PowerSetID > -1)
@@ -288,9 +301,25 @@ public static class DatabaseAPI
                 return index;
         }
         return -1;
+        */
+
+        return Array.IndexOf(Database.Power, Database.Power.Where(p =>
+            p.DisplayName == iName &&
+            (p.PowerSetID <= -1 || (Database.Powersets[p.PowerSetID].nArchetype == iArchetype || Database.Powersets[p.PowerSetID].nArchetype == -1))
+        ));
     }
 
-    public static IPower GetPowerByName(string name)
+    public static IPower? GetPowerByDisplayName(string iName, int iArchetype)
+    {
+        int idx = Array.IndexOf(Database.Power, Database.Power.Where(p =>
+            p.DisplayName == iName &&
+            (p.PowerSetID <= -1 || (Database.Powersets[p.PowerSetID].nArchetype == iArchetype || Database.Powersets[p.PowerSetID].nArchetype == -1))
+        ));
+
+        return (idx > -1 ? Database.Power[idx] : null);
+    }
+
+    public static IPower? GetPowerByFullName(string name)
     {
         if (string.IsNullOrEmpty(name))
             return null;
@@ -366,6 +395,248 @@ public static class DatabaseAPI
                 return index;
         }
         return iIndexes.Length > 0 ? 0 : -1;
+    }
+
+    // Zed -- imported from Hero Viewer
+    public static bool EnhIsATO(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        IEnhancement enhData = Database.Enhancements[enhIdx];
+        if (enhData.nIDSet == -1) return false;
+
+        EnhancementSet enhSetData = Database.EnhancementSets[enhData.nIDSet];
+
+        return (
+            enhSetData.SetType == Enums.eSetType.Arachnos ||
+            enhSetData.SetType == Enums.eSetType.Blaster ||
+            enhSetData.SetType == Enums.eSetType.Brute ||
+            enhSetData.SetType == Enums.eSetType.Controller ||
+            enhSetData.SetType == Enums.eSetType.Corruptor ||
+            enhSetData.SetType == Enums.eSetType.Defender ||
+            enhSetData.SetType == Enums.eSetType.Dominator ||
+            enhSetData.SetType == Enums.eSetType.Kheldian ||
+            enhSetData.SetType == Enums.eSetType.Mastermind ||
+            enhSetData.SetType == Enums.eSetType.Scrapper ||
+            enhSetData.SetType == Enums.eSetType.Sentinel ||
+            enhSetData.SetType == Enums.eSetType.Stalker ||
+            enhSetData.SetType == Enums.eSetType.Tanker
+        );
+    }
+    public static bool EnhIsWinterEventE(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        IEnhancement enhData = Database.Enhancements[enhIdx];
+        if (enhData.nIDSet == -1) return false;
+
+        EnhancementSet enhSetData = Database.EnhancementSets[enhData.nIDSet];
+
+        return (
+            enhSetData.DisplayName.IndexOf("Avalanche", StringComparison.OrdinalIgnoreCase) > -1 ||
+            enhSetData.DisplayName.IndexOf("Blistering Cold", StringComparison.OrdinalIgnoreCase) > -1 ||
+            enhSetData.DisplayName.IndexOf("Entomb", StringComparison.OrdinalIgnoreCase) > -1 ||
+            enhSetData.DisplayName.IndexOf("Frozen Blast", StringComparison.OrdinalIgnoreCase) > -1 ||
+            enhSetData.DisplayName.IndexOf("Winter's Bite", StringComparison.OrdinalIgnoreCase) > -1
+        );
+    }
+
+    public static bool EnhIsMovieE(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        IEnhancement enhData = Database.Enhancements[enhIdx];
+        if (enhData.nIDSet == -1) return false;
+
+        EnhancementSet enhSetData = Database.EnhancementSets[enhData.nIDSet];
+
+        return enhSetData.DisplayName.IndexOf("Overwhelming Force", StringComparison.OrdinalIgnoreCase) > -1;
+    }
+
+    public static bool EnhIsIO(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        IEnhancement enhData = Database.Enhancements[enhIdx];
+
+        return (enhData.TypeID == Enums.eType.InventO || enhData.TypeID == Enums.eType.SetO) && !EnhIsNaturallyAttuned(enhIdx);
+    }
+
+    // Enh for which a catalyst can be used on OR has been used on already
+    // All ATOs, Winter Event sets, all IOs but regular (white grade) ones
+    public static bool EnhCanReceiveCatalyst(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        IEnhancement enhData = Database.Enhancements[enhIdx];
+
+        return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || enhData.TypeID == Enums.eType.SetO;
+    }
+
+    // Purple grade IOs + Superior ATOs + Superior Winter Event enhancements
+    public static bool EnhIsSuperior(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        IEnhancement enhData = Database.Enhancements[enhIdx];
+        if (enhData.RecipeIDX == -1) return false;
+
+        Recipe enhRecipe = Database.Recipes[enhData.RecipeIDX];
+
+        return enhRecipe.Rarity == Recipe.RecipeRarity.UltraRare;
+    }
+
+    // Purple grade IOs only
+    public static bool EnhIsSuperiorIO(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        IEnhancement enhData = Database.Enhancements[enhIdx];
+        if (enhData.RecipeIDX == -1) return false;
+
+        Recipe enhRecipe = Database.Recipes[enhData.RecipeIDX];
+
+        return enhRecipe.Rarity == Recipe.RecipeRarity.UltraRare && !EnhIsATO(enhIdx) && !EnhIsWinterEventE(enhIdx);
+    }
+
+    public static bool EnhIsNaturallyAttuned(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || EnhIsMovieE(enhIdx);
+    }
+
+    // Enh + catalyst = Superior Enh
+    // Basic ATOs, Basic Winter Event sets or purple grade sets
+    // For Reference: Attuned_Overwhelming_Force_A
+    public static bool CanCatalystUpgradeSuperior(int enhIdx)
+    {
+        if (enhIdx == -1) return false;
+
+        IEnhancement enhData = Database.Enhancements[enhIdx];
+        Recipe.RecipeRarity enhRarity;
+        if (enhData.RecipeIDX == -1) enhRarity = Recipe.RecipeRarity.Common;
+
+        Recipe enhRecipe = Database.Recipes[enhData.RecipeIDX];
+        enhRarity = enhRecipe.Rarity;
+
+        return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || (enhRarity == Recipe.RecipeRarity.Rare && enhData.LongName.IndexOf("Superior", StringComparison.OrdinalIgnoreCase) == -1);
+    }
+
+    private static string[] GetPurpleSetsEnhUIDList()
+    {
+        return Database.Enhancements.Where(e =>
+            e.nIDSet > -1 &&
+            e.RecipeIDX > -1 &&
+            Database.Recipes[e.RecipeIDX].Rarity == Recipe.RecipeRarity.UltraRare &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Arachnos &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Blaster &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Brute &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Controller &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Corruptor &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Defender &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Dominator &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Kheldian &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Mastermind &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Scrapper &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Sentinel &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Stalker &&
+            Database.EnhancementSets[e.nIDSet].SetType != Enums.eSetType.Tanker
+        ).Select(e => e.UID).ToArray();
+    }
+
+    private static string[] GetATOSetsEnhUIDList()
+    {
+        return Database.Enhancements.Where(e =>
+           e.nIDSet > -1 &&
+           (
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Arachnos ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Blaster ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Brute ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Controller ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Corruptor ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Defender ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Dominator ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Kheldian ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Mastermind ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Scrapper ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Sentinel ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Stalker ||
+               Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Tanker
+           )
+        ).Select(e => e.UID).ToArray();
+    }
+
+    private static string[] GetWinterEventEnhUIDList()
+    {
+        return Database.Enhancements.Where(e =>
+            e.nIDSet > -1 &&
+            (
+                e.UID.IndexOf("Avalanche", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.UID.IndexOf("Blistering_Cold", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.UID.IndexOf("Entomb", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.UID.IndexOf("Frozen_Blast", StringComparison.OrdinalIgnoreCase) > -1 ||
+                e.UID.IndexOf("Winters_Bite", StringComparison.OrdinalIgnoreCase) > -1
+            )
+        ).Select(e => e.UID).ToArray();
+    }
+
+    private static string[] GetMovieEnhUIDList()
+    {
+        return Database.Enhancements.Where(e =>
+            e.nIDSet > -1 && e.UID.IndexOf("Overwhelming_Force", StringComparison.OrdinalIgnoreCase) > -1
+        ).Select(e => e.UID).ToArray();
+    }
+
+    public static string GetEnhancementBaseUIDName(string iName)
+    {
+        string[] purpleSetsEnh = GetPurpleSetsEnhUIDList();
+        string[] ATOSetsEnh = GetATOSetsEnhUIDList();
+        string[] WinterEventEnh = GetWinterEventEnhUIDList();
+        string[] MovieEnh = GetMovieEnhUIDList();
+
+        // Purple IOs
+        if (purpleSetsEnh.Any(e => e.Contains(iName.Replace("Superior_Attuned_", string.Empty))))
+        {
+            return iName.Replace("Superior_Attuned_", "Crafted_");
+        }
+        else if (ATOSetsEnh.Any(e => e.Contains(iName)) || WinterEventEnh.Any(e => e.Contains(iName)) || MovieEnh.Any(e => e.Contains(iName)))
+        {
+            return iName;
+        }
+        else
+        {
+            // IOs + SpecialOs
+            return iName
+                .Replace("Synthetic_", string.Empty)
+                .Replace("Attuned_", "Crafted_")
+                .Replace("Science_", "Magic_")
+                .Replace("Mutation_", "Magic_")
+                .Replace("Natural__", "Magic_")
+                .Replace("Mutation_", "Magic_");
+        }
+    }
+
+    public static bool EnhHasCatalyst(string iName)
+    {
+        string[] purpleSetsEnh = GetPurpleSetsEnhUIDList();
+        string[] ATOSetsEnh = GetATOSetsEnhUIDList();
+        string[] WinterEventEnh = GetWinterEventEnhUIDList();
+        string[] MovieEnh = GetMovieEnhUIDList();
+
+        // Purple IOs
+        if (purpleSetsEnh.Any(e => e.Contains(iName.Replace("Superior_Attuned_", string.Empty))))
+        {
+            return iName.IndexOf("Superior_Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
+        }
+        else if (!ATOSetsEnh.Any(e => e.Contains(iName)) && !WinterEventEnh.Any(e => e.Contains(iName)) && !MovieEnh.Any(e => e.Contains(iName)))
+        {
+            return iName.IndexOf("Superior_", StringComparison.OrdinalIgnoreCase) > -1;
+        }
+        else
+        {
+            return iName.IndexOf("Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
+        }
     }
 
     public static int GetEnhancementByUIDName(string iName)

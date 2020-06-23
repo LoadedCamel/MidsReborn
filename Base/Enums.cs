@@ -600,6 +600,12 @@ public static class Enums
         Pet
     }
 
+    public enum eValidationType
+    {
+        Power,
+        Powerset
+    }
+
     public enum Alignment
     {
         Hero,

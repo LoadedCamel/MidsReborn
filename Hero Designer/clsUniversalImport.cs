@@ -139,9 +139,9 @@ namespace Hero_Designer
                     return setPair;
             }
 
-            int powerByName = DatabaseAPI.GetPowerByName(iName, nAT);
+            int powerByName = DatabaseAPI.GetPowerIndexByDisplayName(iName, nAT);
             if (powerByName < 0)
-                powerByName = DatabaseAPI.GetPowerByName(iName.Replace("'", ""), nAT);
+                powerByName = DatabaseAPI.GetPowerIndexByDisplayName(iName.Replace("'", ""), nAT);
             if (powerByName > -1)
             {
                 return new SetPair(DatabaseAPI.Database.Power[powerByName].PowerSetID, DatabaseAPI.Database.Power[powerByName].PowerSetIndex);
