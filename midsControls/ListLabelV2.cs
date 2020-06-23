@@ -311,6 +311,9 @@ namespace midsControls
         void FillDefaultItems()
         {
             ClearItems();
+            // Bunch o' items that will never be shown
+            // Except maybe if you manage to go under the map.
+            /*
             AddItem(new ListLabelItemV2("Header Item", LLItemState.Heading, -1, -1, -1, "", LLFontFlags.Bold, LLTextAlign.Center));
             AddItem(new ListLabelItemV2("Enabled", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
             AddItem(new ListLabelItemV2("Disabled Item", LLItemState.Disabled, -1, -1, -1, "", LLFontFlags.Bold));
@@ -334,6 +337,7 @@ namespace midsControls
             AddItem(new ListLabelItemV2("Item 13", LLItemState.Invalid, -1, -1, -1, "", LLFontFlags.Bold));
             AddItem(new ListLabelItemV2("Item 14", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
             AddItem(new ListLabelItemV2("Item 15", LLItemState.Enabled, -1, -1, -1, "", LLFontFlags.Bold));
+            */
             Draw();
         }
 
@@ -432,14 +436,16 @@ namespace midsControls
             checked
             {
                 if (Operators.CompareString(Items[Index].Text, "", false) == 0)
+                {
                     return;
+                }
                 InitBuffer();
                 int num = 1;
                 if (Items[Index].Text.Contains(" "))
                 {
                     string[] array = Items[Index].Text.Split(" ".ToCharArray());
                     StringFormat stringFormat = new StringFormat(StringFormatFlags.NoWrap);
-                    Font font = new Font(Font, (FontStyle) Items[Index].FontFlags);
+                    Font font = new Font(Font, (FontStyle)Items[Index].FontFlags);
                     string str = "";
                     if (Items[Index].ItemState == LLItemState.Heading)
                     {
@@ -473,7 +479,6 @@ namespace midsControls
                             text = text + " " + array[i];
                         }
                     }
-
                     Items[Index].WrappedText = text;
                 }
                 else

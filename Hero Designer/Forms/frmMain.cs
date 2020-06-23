@@ -494,7 +494,9 @@ namespace Hero_Designer
                     for (int iIDXPower = 0; iIDXPower <= powerset.Powers.Length - 1; ++iIDXPower)
                     {
                         if (powerset.Powers[iIDXPower].Level <= 0)
+                        {
                             continue;
+                        }
                         message = "";
                         var iItem2 = new ListLabelV2.ListLabelItemV2(powerset.Powers[iIDXPower].DisplayName,
                             MainModule.MidsController.Toon.PowerState(powerset.Powers[iIDXPower].PowerIndex,
@@ -514,10 +516,14 @@ namespace Hero_Designer
                 }
 
                 if (Powerset.Powers != null)
+                {
                     for (int iIDXPower = 0; iIDXPower <= Powerset.Powers.Length - 1; ++iIDXPower)
                     {
                         if ((Powerset.Powers[iIDXPower].Level <= 0) || (!Powerset.Powers[iIDXPower].AllowedForClass(MidsContext.Character.Archetype.Idx)))
+                        {
+                            //MessageBox.Show("L524: " + Powerset.DisplayName + "\r\n" + Convert.ToString(Powerset.Powers[iIDXPower].Level, null) + "\r\n" + Powerset.Powers[iIDXPower].DisplayName);
                             continue;
+                        }
                         message = "";
                         var targetPs =
                             MainModule.MidsController.Toon.PowerState(Powerset.Powers[iIDXPower].PowerIndex,
@@ -536,6 +542,9 @@ namespace Hero_Designer
                             iItem.Italic = true;
                         llPower.AddItem(iItem);
                     }
+
+                    //MessageBox.Show(Convert.ToString(Powerset.Powers.Length, null) + "\r\n" + Powerset.DisplayName + "\r\n" + llPower.Items.Length);
+                }
 
                 llPower.SuspendRedraw = false;
             }
@@ -3686,6 +3695,7 @@ namespace Hero_Designer
             llPool1.Height = llPool1.DesiredHeight;
             llPool2.Height = llPool2.DesiredHeight;
             llPool3.Height = llPool3.DesiredHeight;
+            MessageBox.Show("raToFloat()\r\n" + String.Join(", ", new int[] { llPool0.DesiredHeight, llPool1.DesiredHeight, llPool2.DesiredHeight, llPool3.DesiredHeight }));
             llAncillary.Height = llAncillary.DesiredHeight;
             Rectangle poolRect1 = raGetPoolRect(0);
             raMovePool(1, poolRect1.Left, poolRect1.Bottom);
@@ -5486,17 +5496,24 @@ namespace Hero_Designer
         {
             llPower.SuspendRedraw = true;
             if (llPower.Items.Length == 0)
-                llPower.AddItem(new ListLabelV2.ListLabelItemV2("Nothing", ListLabelV2.LLItemState.Disabled, -1, -1, -1, string.Empty));
-            int num = llPower.Items.Length - 1;
-            for (int index = 0; index <= num; ++index)
             {
-                ListLabelV2.ListLabelItemV2 listLabelItemV2 = llPower.Items[index];
-                if (!(listLabelItemV2.nIDSet > -1 & listLabelItemV2.IDXPower > -1))
-                    continue;
-                string message = string.Empty;
-                listLabelItemV2.ItemState = MainModule.MidsController.Toon.PowerState(listLabelItemV2.nIDPower, ref message);
-                listLabelItemV2.Italic = listLabelItemV2.ItemState == ListLabelV2.LLItemState.Invalid;
-                listLabelItemV2.Bold = MidsContext.Config.RtFont.PairedBold;
+                llPower.AddItem(new ListLabelV2.ListLabelItemV2("Nothing", ListLabelV2.LLItemState.Disabled, -1, -1, -1, string.Empty));
+            }
+            else
+            {
+                int num = llPower.Items.Length - 1;
+                for (int index = 0; index < num; index++)
+                {
+                    if (llPower.Items[index].nIDSet == -1 || llPower.Items[index].IDXPower == -1)
+                    {
+                        continue;
+                    }
+                    ListLabelV2.ListLabelItemV2 listLabelItemV2 = llPower.Items[index];
+                    string message = string.Empty;
+                    listLabelItemV2.ItemState = MainModule.MidsController.Toon.PowerState(listLabelItemV2.nIDPower, ref message);
+                    listLabelItemV2.Italic = listLabelItemV2.ItemState == ListLabelV2.LLItemState.Invalid;
+                    listLabelItemV2.Bold = MidsContext.Config.RtFont.PairedBold;
+                }
             }
 
             llPower.SuspendRedraw = false;
@@ -5699,82 +5716,11 @@ namespace Hero_Designer
             LastFileName = buildFile;
             SetTitleBar();
 
-            int idx = -1;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
-            {
-                idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
-                if (idx < 0)
-                {
-                    idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
-                }
-            }
-            else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
-            {
-                idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
-                drawing.HighlightSlot(-1);
-            }
-
-            if (MainModule.MidsController.Toon.Complete)
-            {
-                drawing.HighlightSlot(-1);
-            }
-
-            if (idx > -1 & idx <= MidsContext.Character.CurrentBuild.Powers.Count)
-            {
-                MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[idx].Level;
-                MidsContext.Character.SetLevelTo(MidsContext.Character.CurrentBuild.Powers[idx].Level);
-            }
-            else
-            {
-                MidsContext.Character.RequestedLevel = MidsContext.Character.MaxLevel;
-                MidsContext.Character.SetLevelTo(MidsContext.Character.MaxLevel);
-            }
-
-            return;
-
-            // Update slots counter... maybe.
-            // Turns out all this block is not needed. (I think)
-            /*
-            int index = -1;
-            MainModule.MidsController.Toon.Complete = !sl.IsValidNext();
-            fixStatIncludes();
-            FileModified = false;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
-            {
-                index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
-                if (index < 0)
-                {
-                    index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
-                }
-            }
-            else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
-            {
-                index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
-                drawing.HighlightSlot(-1);
-            }
-
-            if (MainModule.MidsController.Toon.Complete)
-            {
-                drawing.HighlightSlot(-1);
-            }
-
-            int[] slotCounts = MainModule.MidsController.Toon.GetSlotCounts(characterInfo.Level - 1);
-            ibAccolade.TextOff = slotCounts[0] <= 0 ? "No slot left" : slotCounts[0] + " slot" + (slotCounts[0] == 1 ? String.Empty : "s") + " to go";
-            ibAccolade.TextOn = slotCounts[1] <= 0 ? "No slot placed" : slotCounts[1] + " slot" + (slotCounts[1] == 1 ? String.Empty : "s") + " placed";
-            if (index > -1 & index <= MidsContext.Character.CurrentBuild.Powers.Count)
-            {
-                MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
-                MidsContext.Character.SetLevelTo(MidsContext.Character.CurrentBuild.Powers[index].Level);
-            }
-
-            MidsContext.Character.Validate();
-            MidsContext.Character.Lock();
-            MidsContext.Character.PoolShuffle();
-            I9Gfx.OriginIndex = MidsContext.Character.Origin;
-
-            MidsContext.Character.Validate();
-            MidsContext.Config.LastFileName = buildFile;
-            */
+            PowerEntry[] powerEntryArray = DeepCopyPowerList();
+            RearrangeAllSlotsInBuild(powerEntryArray, true);
+            ShallowCopyPowerList(powerEntryArray);
+            PowerModified(markModified: false);
+            DoRedraw();
         }
     }
 }

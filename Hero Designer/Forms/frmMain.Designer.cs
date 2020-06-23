@@ -1557,6 +1557,7 @@ namespace Hero_Designer
             // 
             this.llPool0.Expandable = false;
             this.llPool0.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.llPool0.ForeColor = System.Drawing.Color.Yellow;
             this.llPool0.HighVis = true;
             this.llPool0.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPool0.Location = new System.Drawing.Point(328, 206);
@@ -1569,6 +1570,8 @@ namespace Hero_Designer
             this.llPool0.ScrollBarWidth = 11;
             this.llPool0.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
             this.llPool0.Size = new System.Drawing.Size(136, 69);
+            this.llPool0.MinimumSize = new System.Drawing.Size(132, 10);
+            this.llPool0.MaximumSize = new System.Drawing.Size(136, 90);
             this.llPool0.SizeNormal = new System.Drawing.Size(136, 69);
             this.llPool0.SuspendRedraw = false;
             this.llPool0.TabIndex = 34;
@@ -1594,6 +1597,8 @@ namespace Hero_Designer
             this.llPool1.ScrollBarWidth = 8;
             this.llPool1.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
             this.llPool1.Size = new System.Drawing.Size(136, 69);
+            this.llPool1.MinimumSize = new System.Drawing.Size(132, 10);
+            this.llPool1.MaximumSize = new System.Drawing.Size(136, 90);
             this.llPool1.SizeNormal = new System.Drawing.Size(136, 69);
             this.llPool1.SuspendRedraw = false;
             this.llPool1.TabIndex = 35;
@@ -1601,6 +1606,60 @@ namespace Hero_Designer
             this.llPool1.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool1_ItemClick);
             this.llPool1.MouseLeave += new System.EventHandler(llALL_MouseLeave);
             this.llPool1.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
+            // 
+            // llPool2
+            // 
+            this.llPool2.Expandable = false;
+            this.llPool2.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.llPool2.ForeColor = System.Drawing.Color.Yellow;
+            this.llPool2.HighVis = true;
+            this.llPool2.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llPool2.Location = new System.Drawing.Point(328, 422);
+            this.llPool2.MaxHeight = 500;
+            this.llPool2.Name = "llPool2";
+            this.llPool2.PaddingX = 1;
+            this.llPool2.PaddingY = 1;
+            this.llPool2.Scrollable = true;
+            this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
+            this.llPool2.ScrollBarWidth = 8;
+            this.llPool2.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
+            this.llPool2.Size = new System.Drawing.Size(136, 69);
+            this.llPool2.MinimumSize = new System.Drawing.Size(132, 10);
+            this.llPool2.MaximumSize = new System.Drawing.Size(136, 90);
+            this.llPool2.SizeNormal = new System.Drawing.Size(136, 69);
+            this.llPool2.SuspendRedraw = false;
+            this.llPool2.TabIndex = 36;
+            this.llPool2.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llPool2_ItemHover);
+            this.llPool2.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool2_ItemClick);
+            this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
+            this.llPool2.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
+            // 
+            // llPool3
+            // 
+            this.llPool3.Expandable = false;
+            this.llPool3.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.llPool3.ForeColor = System.Drawing.Color.Yellow;
+            this.llPool3.HighVis = true;
+            this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llPool3.Location = new System.Drawing.Point(328, 530);
+            this.llPool3.MaxHeight = 500;
+            this.llPool3.Name = "llPool3";
+            this.llPool3.PaddingX = 1;
+            this.llPool3.PaddingY = 1;
+            this.llPool3.Scrollable = true;
+            this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
+            this.llPool3.ScrollBarWidth = 8;
+            this.llPool3.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
+            this.llPool3.Size = new System.Drawing.Size(136, 69);
+            this.llPool3.MinimumSize = new System.Drawing.Size(132, 10);
+            this.llPool3.MaximumSize = new System.Drawing.Size(136, 90);
+            this.llPool3.SizeNormal = new System.Drawing.Size(136, 69);
+            this.llPool3.SuspendRedraw = false;
+            this.llPool3.TabIndex = 37;
+            this.llPool3.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llPool3_ItemHover);
+            this.llPool3.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool3_ItemClick);
+            this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
+            this.llPool3.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llSecondary
             // 
@@ -1649,56 +1708,6 @@ namespace Hero_Designer
             this.llPrimary.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPrimary_ItemClick);
             this.llPrimary.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
             this.llPrimary.ExpandChanged += new midsControls.ListLabelV2.ExpandChangedEventHandler(PriSec_ExpandChanged);
-            // 
-            // llPool3
-            // 
-            this.llPool3.Expandable = false;
-            this.llPool3.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
-            this.llPool3.ForeColor = System.Drawing.Color.Yellow;
-            this.llPool3.HighVis = true;
-            this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llPool3.Location = new System.Drawing.Point(328, 530);
-            this.llPool3.MaxHeight = 500;
-            this.llPool3.Name = "llPool3";
-            this.llPool3.PaddingX = 1;
-            this.llPool3.PaddingY = 1;
-            this.llPool3.Scrollable = true;
-            this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
-            this.llPool3.ScrollBarWidth = 8;
-            this.llPool3.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool3.Size = new System.Drawing.Size(136, 69);
-            this.llPool3.SizeNormal = new System.Drawing.Size(136, 69);
-            this.llPool3.SuspendRedraw = false;
-            this.llPool3.TabIndex = 37;
-            this.llPool3.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llPool3_ItemHover);
-            this.llPool3.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool3_ItemClick);
-            this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool3.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
-            // 
-            // llPool2
-            // 
-            this.llPool2.Expandable = false;
-            this.llPool2.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
-            this.llPool2.ForeColor = System.Drawing.Color.Yellow;
-            this.llPool2.HighVis = true;
-            this.llPool2.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llPool2.Location = new System.Drawing.Point(328, 422);
-            this.llPool2.MaxHeight = 500;
-            this.llPool2.Name = "llPool2";
-            this.llPool2.PaddingX = 1;
-            this.llPool2.PaddingY = 1;
-            this.llPool2.Scrollable = true;
-            this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
-            this.llPool2.ScrollBarWidth = 8;
-            this.llPool2.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool2.Size = new System.Drawing.Size(136, 69);
-            this.llPool2.SizeNormal = new System.Drawing.Size(136, 69);
-            this.llPool2.SuspendRedraw = false;
-            this.llPool2.TabIndex = 36;
-            this.llPool2.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llPool2_ItemHover);
-            this.llPool2.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool2_ItemClick);
-            this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool2.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // lblHero
             // 
