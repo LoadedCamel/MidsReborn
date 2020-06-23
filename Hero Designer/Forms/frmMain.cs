@@ -293,7 +293,7 @@ namespace Hero_Designer
                     return;
                 }
 
-                if (args.IndexOf("MASTERMODE=YES", StringComparison.OrdinalIgnoreCase) > -1)
+                if (findCommandLineParameter(args, "MASTERMODE=YES"))
                     MidsContext.Config.MasterMode = true;
                 MainModule.MidsController.LoadData(ref _frmInitializing);
                 _frmInitializing?.SetMessage("Setting up UI...");
