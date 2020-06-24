@@ -110,8 +110,11 @@ namespace Hero_Designer
             {
                 VillainColor = value;
                 if (MidsContext.Config.DisableVillainColors)
+                {
                     VillainColor = false;
-                pnlInfo.BackColor = VillainColor ? Color.Maroon : Color.Navy;
+                }
+
+                pnlInfo.BackColor = VillainColor ? MidsContext.Config.RtFont.ColorPowerTakenDarkVillain : MidsContext.Config.RtFont.ColorPowerTakenDarkHero;
                 DoPaint();
             }
         }
@@ -297,7 +300,7 @@ namespace Hero_Designer
             enhListing.Height = Info_Damage.Bottom - (enhListing.Top + (pnlEnhActive.Height + 4) * 2);
             pnlEnhActive.Top = enhListing.Bottom + 4;
             pnlEnhInactive.Top = pnlEnhActive.Bottom + 4;
-            pnlInfo.Height = Info_Damage.Bottom + 4;
+            pnlInfo.Height = Info_Damage.Bottom + 10;
             pnlEnh.Height = pnlInfo.Height;
             Height = pnlInfo.Bottom;
             Compact = true;
@@ -1014,7 +1017,7 @@ namespace Hero_Designer
             }
             else
             {
-                StringFormat format = new StringFormat();
+                using StringFormat format = new StringFormat();
                 int num1 = bxFlip.Size.Width - 188;
                 Rectangle rectangle1 = new Rectangle();
                 ref Rectangle local1 = ref rectangle1;
@@ -1022,14 +1025,14 @@ namespace Hero_Designer
                 Size size = bxFlip.Size;
                 int height = (int) Math.Round(size.Height / 2.0);
                 local1 = new Rectangle(-4, 0, width, height);
-                SolidBrush solidBrush1 = new SolidBrush(enhListing.NameColor);
+                using SolidBrush solidBrush1 = new SolidBrush(enhListing.NameColor);
                 format.Alignment = StringAlignment.Far;
                 format.LineAlignment = StringAlignment.Center;
                 bxFlip.Graphics.DrawString("Active Slotting:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
                 rectangle1.Y += rectangle1.Height;
                 bxFlip.Graphics.DrawString("Alternate:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
                 //ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
-                SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
+                using SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                 int num2 = MidsContext.Character.CurrentBuild.Powers[inToonHistory].SlotCount - 1;
                 for (int index = 0; index <= num2; ++index)
                 {
@@ -1074,10 +1077,7 @@ namespace Hero_Designer
                                 bounds.Y -= 3f;
                                 bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
                                 Graphics graphics2 = bxFlip.Graphics;
-                                clsDrawX.DrawOutlineText(
-                                    Convert.ToString(MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index].Enhancement
-                                                             .IOLevel + 1), bounds, Color.Cyan, Color.FromArgb(128, 0, 0, 0),
-                                    pnlEnhActive.Font, 1f, graphics2);
+                                clsDrawX.DrawOutlineText(Convert.ToString(MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index].Enhancement.IOLevel + 1), bounds, Color.Cyan, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
                             }
                             else if (MidsContext.Config.ShowEnhRel &
                                      (DatabaseAPI.Database
@@ -1143,10 +1143,7 @@ namespace Hero_Designer
                                 bounds.Y -= 3f;
                                 bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
                                 Graphics graphics2 = bxFlip.Graphics;
-                                clsDrawX.DrawOutlineText(
-                                    Convert.ToString(MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index]
-                                                             .FlippedEnhancement.IOLevel + 1), bounds, Color.Cyan,
-                                    Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
+                                clsDrawX.DrawOutlineText(Convert.ToString(MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index].FlippedEnhancement.IOLevel + 1), bounds, Color.Cyan, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
                             }
                             else if (MidsContext.Config.ShowEnhRel &
                                      (DatabaseAPI.Database
@@ -2454,7 +2451,7 @@ namespace Hero_Designer
             Enums.eEnhGrade Grade1,
             Enums.eEnhGrade Grade2)
         {
-            SolidBrush solidBrush1 = new SolidBrush(enhListing.BackColor);
+            using SolidBrush solidBrush1 = new SolidBrush(enhListing.BackColor);
             if (pBase == null)
                 return;
             SolidBrush solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
@@ -3670,7 +3667,7 @@ namespace Hero_Designer
             enhListing.Height = Info_Damage.Bottom - (enhListing.Top + (pnlEnhActive.Height + 4) * 2);
             pnlEnhActive.Top = enhListing.Bottom + 4;
             pnlEnhInactive.Top = pnlEnhActive.Bottom + 4;
-            pnlInfo.Height = Info_Damage.Bottom + 4;
+            pnlInfo.Height = Info_Damage.Bottom + 10;
             pnlEnh.Height = pnlInfo.Height;
             Height = pnlInfo.Bottom;
             Compact = false;

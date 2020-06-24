@@ -603,12 +603,12 @@ namespace Hero_Designer
             // 
             // FileToolStripMenuItem
             // 
-            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[10]
+            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
                 this.tsFileNew,
                 this.ToolStripSeparator7,
                 this.tsFileOpen,
-                this.tsBuildRcv,
+                //this.tsBuildRcv,
                 this.tsFileSave,
                 this.tsFileSaveAs,
                 this.ToolStripSeparator8,
@@ -2017,7 +2017,7 @@ namespace Hero_Designer
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;
 
-            this.MinimumSize = new System.Drawing.Size(640, 480);
+            this.MinimumSize = new System.Drawing.Size(1024, 830);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             //this.Location = new Point(10, 10);
             this.Text = "Hero Designer";

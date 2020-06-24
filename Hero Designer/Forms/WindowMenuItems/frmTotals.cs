@@ -148,8 +148,7 @@ namespace Hero_Designer
             stringFormat.LineAlignment = StringAlignment.Center;
             using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
-            extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+            extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             float height2 = bFont.GetHeight(e.Graphics) + 2f;
             RectangleF Bounds = new RectangleF(0.0f, (float) ((tab0.Height - (double) height2) / 2.0), tab0.Width, height2);
             Graphics graphics = extendedBitmap.Graphics;
@@ -182,11 +181,9 @@ namespace Hero_Designer
             using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             if (index == 3)
-                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                    GraphicsUnit.Pixel);
+                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height, GraphicsUnit.Pixel);
             else
-                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                    GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             float height = bFont.GetHeight(e.Graphics) + 2f;
             RectangleF Bounds = new RectangleF(0.0f, (float) ((tab0.Height - (double) height) / 2.0), tab0.Width, height);
             Graphics graphics = extendedBitmap.Graphics;
@@ -412,7 +409,7 @@ namespace Hero_Designer
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             else
-                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             float height = bFont.GetHeight(e.Graphics) + 2f;
             RectangleF Bounds = new RectangleF(0.0f, (float) ((tab0.Height - (double) height) / 2.0), tab0.Width, height);

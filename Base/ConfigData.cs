@@ -321,10 +321,13 @@ public class ConfigData
                     DisableLoadLastFileOnStart = !reader.ReadBoolean();
                     LastFileName = reader.ReadString();
                     RtFont.ColorPowerAvailable = reader.ReadRGB();
-                    RtFont.ColorPowerTaken = reader.ReadRGB();
-                    RtFont.ColorPowerTakenDark = reader.ReadRGB();
                     RtFont.ColorPowerDisabled = reader.ReadRGB();
-                    RtFont.ColorPowerHighlight = reader.ReadRGB();
+                    RtFont.ColorPowerTakenHero = reader.ReadRGB();
+                    RtFont.ColorPowerTakenDarkHero = reader.ReadRGB();
+                    RtFont.ColorPowerHighlightHero = reader.ReadRGB();
+                    RtFont.ColorPowerTakenVillain = reader.ReadRGB();
+                    RtFont.ColorPowerTakenDarkVillain = reader.ReadRGB();
+                    RtFont.ColorPowerHighlightVillain = reader.ReadRGB();
                 }
                 if (version >= 1.23000001907349)
                 {
@@ -592,9 +595,6 @@ public class ConfigData
         public Color ColorPlName { get; set; }
         public Color ColorPlSpecial { get; set; }
         public Color ColorPowerAvailable { get; set; }
-        public Color ColorPowerTaken { get; set; }
-        public Color ColorPowerTakenDark { get; set; }
-        public Color ColorPowerHighlight { get; set; }
         public Color ColorPowerDisabled { get; set; }
         public Color ColorPowerTakenHero { get; set; }
         public Color ColorPowerTakenDarkHero { get; set; }
@@ -621,9 +621,6 @@ public class ConfigData
             ColorPlName = iFs.ColorPlName;
             ColorPlSpecial = iFs.ColorPlSpecial;
             ColorPowerAvailable = iFs.ColorPowerAvailable;
-            ColorPowerTaken = iFs.ColorPowerTaken;
-            ColorPowerTakenDark = iFs.ColorPowerTakenDark;
-            ColorPowerHighlight = iFs.ColorPowerHighlight;
             ColorPowerDisabled = iFs.ColorPowerDisabled;
             ColorPowerTakenHero = iFs.ColorPowerTakenHero;
             ColorPowerTakenDarkHero = iFs.ColorPowerTakenDarkHero;
@@ -651,12 +648,9 @@ public class ConfigData
             ColorPlName = Color.FromArgb(192, 192, byte.MaxValue);
             ColorPlSpecial = Color.FromArgb(128, 128, byte.MaxValue);
             ColorPowerAvailable = Color.Gold;
-            ColorPowerTaken = Color.FromArgb(116, 168, 234);
-            ColorPowerTakenDark = Color.DodgerBlue;
-            ColorPowerHighlight = Color.FromArgb(64, 64, 96);
             ColorPowerDisabled = Color.DimGray;
             ColorPowerTakenHero = Color.FromArgb(116, 168, 234);
-            ColorPowerTakenDarkHero = Color.Blue;
+            ColorPowerTakenDarkHero = Color.DodgerBlue;
             ColorPowerHighlightHero = Color.FromArgb(64, 64, 96);
             ColorPowerTakenVillain = Color.FromArgb(191, 74, 56);
             ColorPowerTakenDarkVillain = Color.Maroon;

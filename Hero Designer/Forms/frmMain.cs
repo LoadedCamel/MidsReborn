@@ -390,6 +390,7 @@ namespace Hero_Designer
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
                 Refresh();
+                Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 Point iLocation = new Point();
                 ref Point local = ref iLocation;
@@ -5181,13 +5182,13 @@ namespace Hero_Designer
 
         void UpdateColors(bool skipDraw = false)
         {
-            //myDataView.DrawVillain = !MidsContext.Character.IsHero();
+            myDataView.DrawVillain = !MidsContext.Character.IsHero();
             bool draw;
             draw = I9Picker.ForeColor.R != 96;
             BackColor = Color.FromArgb(0, 0, 0);
-            lblATLocked.BackColor = Color.FromArgb(128, 128, byte.MaxValue);
-            I9Picker.ForeColor = Color.FromArgb(96, 48, byte.MaxValue);
-
+            lblATLocked.BackColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+            I9Picker.ForeColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+            I9Picker.Selected = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerHighlightHero : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             I9Picker.BackColor = BackColor;
             I9Popup.BackColor = Color.Black;
             I9Popup.ForeColor = I9Picker.ForeColor;
@@ -5228,65 +5229,13 @@ namespace Hero_Designer
                     drawing.bxPower[3].Bitmap);
             }
 
-            if (MidsContext.Character.IsHero())
+            foreach (ListLabelV3 llControl in Controls.OfType<ListLabelV3>())
             {
-                llPrimary.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                llPrimary.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                llPrimary.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-
-                llSecondary.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                llSecondary.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                llSecondary.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-
-                llPool0.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                llPool0.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                llPool0.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-
-                llPool1.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                llPool1.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                llPool1.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-
-                llPool2.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                llPool2.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                llPool2.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-
-                llPool3.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                llPool3.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                llPool3.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-
-                llAncillary.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                llAncillary.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                llAncillary.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-            }
-            else
-            {
-                llPrimary.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llPrimary.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llPrimary.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-
-                llSecondary.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llSecondary.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llSecondary.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-
-                llPool0.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llPool0.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llPool0.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-
-                llPool1.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llPool1.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llPool1.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-
-                llPool2.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llPool2.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llPool2.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-
-                llPool3.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llPool3.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llPool3.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-
-                llAncillary.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llAncillary.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llAncillary.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
+                llControl.ScrollBarColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+                llControl.ScrollButtonColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+                llControl.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+                llControl.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+                llControl.HoverColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerHighlightHero : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             }
 
             if (!draw)
@@ -5506,23 +5455,11 @@ namespace Hero_Designer
             iList.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
             iList.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            if (MidsContext.Character.IsHero())
-            {
-                iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-            }
-            else
-            {
-
-                iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-            }
-
-            iList.ScrollBarColor = Color.FromArgb(64, 64, byte.MaxValue);
-            iList.ScrollButtonColor = Color.FromArgb(32, 32, byte.MaxValue);
-
+            iList.ScrollBarColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+            iList.ScrollButtonColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+            iList.HoverColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerHighlightHero : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
         }
 
         void UpdateOtherFormsFonts()
@@ -5532,40 +5469,18 @@ namespace Hero_Designer
                 frmIncarnate fIncarnate = this.fIncarnate;
                 if (fIncarnate.Visible)
                 {
-                    fIncarnate.LLLeft.SuspendRedraw = true;
-                    fIncarnate.LLRight.SuspendRedraw = true;
-                    fIncarnate.LLLeft.Font = llPrimary.Font;
-                    fIncarnate.LLRight.Font = llPrimary.Font;
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-                    fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-                    if (MidsContext.Character.IsHero())
+                    foreach (ListLabelV3 llControl in fIncarnate.Controls.OfType<ListLabelV3>())
                     {
-                        fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                        fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                        fIncarnate.LLLeft.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-                    }
-                    else
-                    {
-                        fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                        fIncarnate.LLLeft.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                        fIncarnate.LLLeft.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-                    }
-
-                    fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-                    fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-                    fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-                    if (MidsContext.Character.IsHero())
-                    {
-                        fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                        fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                        fIncarnate.LLRight.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-                    }
-                    else
-                    {
-                        fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                        fIncarnate.LLRight.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                        fIncarnate.LLRight.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
+                        llControl.SuspendRedraw = true;
+                        llControl.Font = llPrimary.Font;
+                        llControl.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+                        llControl.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+                        llControl.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+                        llControl.ScrollBarColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+                        llControl.ScrollButtonColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+                        llControl.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+                        llControl.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+                        llControl.HoverColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerHighlightHero : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
                     }
 
                     int num1 = fIncarnate.LLLeft.Items.Length - 1;

@@ -526,20 +526,11 @@ namespace Hero_Designer
             iList.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
             iList.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            if (MidsContext.Character.IsHero())
-            {
-                iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenHero);
-                iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkHero);
-                iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightHero;
-            }
-            else
-            {
-                
-                iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                iList.HoverColor = MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-            }
-            //iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
+            iList.ScrollBarColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+            iList.ScrollButtonColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+            iList.UpdateTextColors(ListLabelV3.LLItemState.Selected, MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenHero : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+            iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled, MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+            iList.HoverColor = MidsContext.Character.IsHero() ? MidsContext.Config.RtFont.ColorPowerHighlightHero : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             iList.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
         }
 
