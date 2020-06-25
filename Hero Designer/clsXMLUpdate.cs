@@ -26,7 +26,7 @@ namespace Hero_Designer
 
         public bool RestartNeeded = false;
 
-        public static void BugReportCrytilis() => LaunchBrowser("https://github.com/Crytilis/mids-reborn-hero-designer/issues");
+        public static void BugReportCrytilis() => LaunchBrowser("https://github.com/Reborn-Team/Hero-Designer/issues");
 
         public static void DownloadFromDomain() => LaunchBrowser("https://midsreborn.com/download/MRB_Setup.exe");
 
@@ -36,10 +36,10 @@ namespace Hero_Designer
 
         public static void GoToGitHub()
         {
-            LaunchBrowser("https://github.com/Crytilis/mids-reborn-hero-designer");
+            LaunchBrowser("https://github.com/Reborn-Team/Hero-Designer");
         }
 
-        public static void GoToForums() { LaunchBrowser("https://forums.homecomingservers.com/topic/7645-mids-reborn-hero-designer/"); }
+        public static void GoToForums() { LaunchBrowser("https://forums.homecomingservers.com/topic/19963-mids-reborn-hero-designer/"); }
 
         private static void LaunchBrowser(string iUri)
         {

@@ -44,7 +44,7 @@ namespace Hero_Designer
                 {
                     Interaction.MsgBox(
                         "Failed to load Leveling data file! The program is unable to proceed.\r\n" +
-                        "We suggest you re-download the application from https://github.com/Crytilis/mids-reborn-hero-designer/releases",
+                        "We suggest you re-download the application from https://github.com/Reborn-Team/Hero-Designer/releases",
                         MsgBoxStyle.Critical, "Error");
                     ProjectData.EndApp();
                 }
