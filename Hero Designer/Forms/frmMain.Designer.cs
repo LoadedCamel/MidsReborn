@@ -227,11 +227,11 @@ namespace Hero_Designer
             this.cbAT.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAT.ForeColor = System.Drawing.Color.Black;
-            this.cbAT.ItemHeight = 16;
+            this.cbAT.ItemHeight = 17;
             this.cbAT.Location = new System.Drawing.Point(94, 109);
             this.cbAT.MaxDropDownItems = 15;
             this.cbAT.Name = "cbAT";
-            this.cbAT.Size = new System.Drawing.Size(144, 22);
+            this.cbAT.Size = new System.Drawing.Size(144, 24);
             this.cbAT.TabIndex = 3;
             this.cbAT.ValueMember = "Idx";
             this.cbAT.DrawItem += new System.Windows.Forms.DrawItemEventHandler(cbAT_DrawItem);
@@ -245,10 +245,10 @@ namespace Hero_Designer
             this.cbOrigin.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbOrigin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbOrigin.ForeColor = System.Drawing.Color.Black;
-            this.cbOrigin.ItemHeight = 16;
+            this.cbOrigin.ItemHeight = 17;
             this.cbOrigin.Location = new System.Drawing.Point(94, 133);
             this.cbOrigin.Name = "cbOrigin";
-            this.cbOrigin.Size = new System.Drawing.Size(144, 22);
+            this.cbOrigin.Size = new System.Drawing.Size(144, 24);
             this.cbOrigin.TabIndex = 5;
             this.cbOrigin.DrawItem += new System.Windows.Forms.DrawItemEventHandler(cbOrigin_DrawItem);
             this.cbOrigin.SelectionChangeCommitted += new System.EventHandler(cbOrigin_SelectedIndexChanged);

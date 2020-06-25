@@ -29,10 +29,12 @@ namespace Hero_Designer
 
         void ApplyPvpDr()
         {
-            if (!MidsContext.Config.Inc.DisablePvE)
+            if (MidsContext.Config.Inc.DisablePvE)
             {
-                /*for (int i = 0; i <= Totals.Def.Length - 1; i++)
-                    Totals.Def(i) = CalculatePvpDr(Totals.Def(i), 1.2, 1.0);*/
+                for (var index = 0; index < Totals.Def.Length; index++)
+                {
+                    Totals.Def[index] = CalculatePvpDr(Totals.Def[index], 1.2f, 1f);
+                }
             }
         }
 
@@ -262,8 +264,7 @@ namespace Hero_Designer
             return num1;
         }
 
-        static float CalculatePvpDr(float val, float a, float b)
-            => val * (float) (1.0 - Math.Abs(Math.Atan(a * (double) val)) * (2.0 / Math.PI) * b);
+        static float CalculatePvpDr(float val, float a, float b) => val * (float) (1.0 - Math.Abs(Math.Atan(a * (double) val)) * (2.0 / Math.PI) * b);
 
         public static string FixSpelling(string iString)
         {
@@ -511,6 +512,7 @@ namespace Hero_Designer
                 Totals.BuffDam = minDmgBuff;
             else
                 Totals.BuffDam = maxDmgBuff;
+
             ApplyPvpDr();
             TotalsCapped.Assign(Totals);
             TotalsCapped.BuffDam = Math.Min(TotalsCapped.BuffDam, Archetype.DamageCap - 1f);

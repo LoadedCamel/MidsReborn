@@ -577,7 +577,7 @@ namespace Hero_Designer
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
-            SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
+            using SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
             if (e.Index > -1)
             {
                 var cbAT = new ComboBoxT<Archetype>(this.cbAT);
@@ -585,7 +585,7 @@ namespace Hero_Designer
                 RectangleF destRect = new RectangleF(e.Bounds.X + 1, e.Bounds.Y, 16f, 16f);
                 RectangleF srcRect = new RectangleF(index * 16, 0.0f, 16f, 16f);
                 e.Graphics.DrawImage(I9Gfx.Archetypes.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
-                StringFormat format = new StringFormat(StringFormatFlags.NoWrap)
+                using StringFormat format = new StringFormat(StringFormatFlags.NoWrap)
                 {
                     LineAlignment = StringAlignment.Center
                 };
@@ -626,7 +626,7 @@ namespace Hero_Designer
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
-            SolidBrush solidBrush = new SolidBrush(Color.Black);
+            using SolidBrush solidBrush = new SolidBrush(Color.Black);
             IPowerset[] powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, SetType);
             if (e.Index > -1 & e.Index < powersetIndexes.Length)
             {
@@ -645,7 +645,7 @@ namespace Hero_Designer
                 else
                     e.Graphics.DrawImage(I9Gfx.Powersets.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
 
-                StringFormat format = new StringFormat(StringFormatFlags.NoWrap)
+                using StringFormat format = new StringFormat(StringFormatFlags.NoWrap)
                 {
                     LineAlignment = StringAlignment.Center
                 };
@@ -663,14 +663,14 @@ namespace Hero_Designer
             e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
             //SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
-            SolidBrush solidBrush = new SolidBrush(Color.Black);
+            using SolidBrush solidBrush = new SolidBrush(Color.Black);
             if (e.Index > -1)
             {
                 var cmbOrigin = GetCbOrigin();
                 RectangleF destRect = new RectangleF(e.Bounds.X + 1, e.Bounds.Y, 16f, 16f);
                 RectangleF srcRect = new RectangleF(DatabaseAPI.GetOriginIDByName(cmbOrigin[e.Index]) * 16, 0.0f, 16f, 16f);
                 e.Graphics.DrawImage(I9Gfx.Origins.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
-                StringFormat format = new StringFormat(StringFormatFlags.NoWrap)
+                using StringFormat format = new StringFormat(StringFormatFlags.NoWrap)
                 {
                     LineAlignment = StringAlignment.Center
                 };
@@ -2225,7 +2225,7 @@ namespace Hero_Designer
         {
             if (MainModule.MidsController.Toon == null)
                 return;
-            RectangleF destRect = new RectangleF(1f, (lblATLocked.Height - 16) / 2f, 16f, 16f);
+            RectangleF destRect = new RectangleF(1f, (lblATLocked.Height - 17) / 2f, 16f, 16f);
             --destRect.Y;
             RectangleF srcRect = new RectangleF(MidsContext.Character.Archetype.Idx * 16, 0.0f, 16f, 16f);
             Graphics graphics = e.Graphics;
