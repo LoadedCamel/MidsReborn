@@ -130,12 +130,6 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.Designer.cs">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WindowMenuItems\frmPets.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\WindowMenuItems\frmPets.Designer.cs">
-      <DependentUpon>frmPets.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\WindowMenuItems\frmMMPowers.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2111,9 +2105,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.resx">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WindowMenuItems\frmPets.resx">
-      <DependentUpon>frmPets.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmMMPowers.resx">
       <DependentUpon>frmMMPowers.cs</DependentUpon>
