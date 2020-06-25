@@ -66,10 +66,12 @@ public class Build
         }
     }
 
-    public int TotalSlotsAvailable
+    /*public int TotalSlotsAvailable
     {
         get { return DatabaseAPI.Database.Levels.Sum(level => level.Slots); }
-    }
+    }*/
+
+    public int TotalSlotsAvailable => 67;
 
     public PowerEntry AddPower(IPower power, int specialLevel = -1)
     {

@@ -2679,7 +2679,11 @@ namespace Hero_Designer
                 return;
             MainModule.MidsController.Toon.BuildSlot(dragStartPower, dragStartSlot);
             // no idea what pnlGFX_MouseDoubleClick represents, marking modified as it would have before the added arg
-            PowerModified(markModified: true);
+            PowerEntry[] powerEntryArray = DeepCopyPowerList();
+            RearrangeAllSlotsInBuild(powerEntryArray, true);
+            ShallowCopyPowerList(powerEntryArray);
+            PowerModified(markModified: false);
+            DoRedraw();
             FileModified = true;
             DoneDblClick = true;
             LastClickPlacedSlot = false;
@@ -2875,7 +2879,11 @@ namespace Hero_Designer
                             if (MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
                             {
                                 // adding a slot by itself doesn't really change the build substantially without an enh going into it
+                                PowerEntry[] powerEntryArray = DeepCopyPowerList();
+                                RearrangeAllSlotsInBuild(powerEntryArray, true);
+                                ShallowCopyPowerList(powerEntryArray);
                                 PowerModified(markModified: false);
+                                DoRedraw();
                                 LastClickPlacedSlot = true;
                                 /* Disabled until can find why it is not saving
                                         MidsContext.Config.Tips.Show(Tips.TipType.FirstEnh);*/
@@ -2970,9 +2978,12 @@ namespace Hero_Designer
 
             if (MainModule.MidsController.Toon.Complete)
                 drawing.HighlightSlot(-1);
+            
             int[] slotCounts = MainModule.MidsController.Toon.GetSlotCounts();
-            ibAccolade.TextOff = slotCounts[0] <= 0 ? "No slot left" : slotCounts[0] + " slot" + (slotCounts[0] == 1 ? String.Empty : "s") + " to go";
-            ibAccolade.TextOn = slotCounts[1] <= 0 ? "No slot placed" : slotCounts[1] + " slot" + (slotCounts[1] == 1 ? String.Empty : "s") + " placed";
+            slotCounts[0] = Math.Abs(MidsContext.Character.CurrentBuild.TotalSlotsAvailable - MidsContext.Character.CurrentBuild.SlotsPlaced);
+            slotCounts[1] = MidsContext.Character.CurrentBuild.SlotsPlaced;
+            ibAccolade.TextOff = slotCounts[0] <= 0 ? "No slot left" : slotCounts[0] + " slot" + (slotCounts[0] == 1 ? string.Empty : "s") + " to go";
+            ibAccolade.TextOn = slotCounts[1] <= 0 ? "No slot placed" : slotCounts[1] + " slot" + (slotCounts[1] == 1 ? string.Empty : "s") + " placed";
             if (index > -1 & index <= MidsContext.Character.CurrentBuild.Powers.Count)
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             MidsContext.Character.Validate();
@@ -3861,7 +3872,7 @@ namespace Hero_Designer
 
             int[] numArray2 = fakeInitialize(3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23, 23, 25, 25, 27, 27,
                 29, 29, 31, 31, 31, 33, 33, 33, 34, 34, 34, 36, 36, 36, 37, 37, 37, 39, 39, 39, 40, 40, 40, 42, 42, 42, 43, 43, 43, 45, 45, 45,
-                46, 46, 46, 48, 48, 48, 50, 50, 50);
+                46, 46, 46, 47, 47, 48, 48, 48, 49, 49, 50, 50, 50);
             bool flag1 = false;
             int index6 = 0;
             int num5 = tp.Length - 1;
@@ -3894,9 +3905,7 @@ namespace Hero_Designer
 
             if (!(flag1 & notifyUser))
                 return;
-            MessageBox.Show(
-                @"The current arrangement of powers and their slots is impossible in-game. Invalid slots have been darkened and marked as level 51.",
-                null, MessageBoxButtons.OK);
+            MessageBox.Show(@"The current arrangement of powers and their slots is impossible in-game. Invalid slots have been darkened and marked as level 51.", null, MessageBoxButtons.OK);
         }
 
         void RedrawUnderPopup(Rectangle RectRedraw)
@@ -5424,7 +5433,7 @@ namespace Hero_Designer
                 dmBuffer.Graphics.DrawImage(drawing.bxPower[(int)ePowerState].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             else
-                dmBuffer.Graphics.DrawImage(drawing.bxPower[(int)ePowerState].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                dmBuffer.Graphics.DrawImage(MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel, drawing.pImageAttributes);
             float height2 = bFont.GetHeight(dmBuffer.Graphics) + 2f;
             RectangleF Bounds = new RectangleF(0.0f, (float)((pbDynMode.Height - (double)height2) / 2.0), pbDynMode.Width, height2);

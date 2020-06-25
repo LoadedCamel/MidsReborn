@@ -62,13 +62,7 @@ namespace Base.Data_Classes
             }
         }
 
-        public int MaxLevel
-        {
-            get
-            {
-                return 49;
-            }
-        }
+        public int MaxLevel => 49;
 
         public int RequestedLevel { get; set; }
 
@@ -187,6 +181,14 @@ namespace Base.Data_Classes
         {
             get
             {
+                int num = CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
+                return num;
+            }
+        }
+        /*public int SlotsRemaining
+        {
+            get
+            {
                 int num1;
                 if (Level < DatabaseAPI.Database.Levels.Length && DatabaseAPI.Database.Levels[Level].Slots > 0)
                 {
@@ -199,7 +201,7 @@ namespace Base.Data_Classes
                     num1 = 0;
                 return num1;
             }
-        }
+        }*/
 
         public bool CanPlaceSlot
         {
@@ -207,7 +209,7 @@ namespace Base.Data_Classes
             {
                 if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
                 {
-                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 & MidsContext.Config.BuildOption != Enums.dmItem.Power)
+                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
                         return true;
                 }
                 else if (Level > -1 & Level < DatabaseAPI.Database.Levels.Length && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)

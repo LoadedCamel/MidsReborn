@@ -516,12 +516,7 @@ namespace Base.Data_Classes
             get
             {
                 var ps = GetPowerSet();
-                return Enhancements.Length > 0 &&
-                    (ps.SetType == Enums.ePowerSetType.Primary
-                        || ps.SetType == Enums.ePowerSetType.Secondary
-                        || ps.SetType == Enums.ePowerSetType.Ancillary
-                        || ps.SetType == Enums.ePowerSetType.Inherent
-                        || ps.SetType == Enums.ePowerSetType.Pool);
+                return Enhancements.Length > 0 && (ps.SetType == Enums.ePowerSetType.Primary || ps.SetType == Enums.ePowerSetType.Secondary || ps.SetType == Enums.ePowerSetType.Ancillary || ps.SetType == Enums.ePowerSetType.Inherent || ps.SetType == Enums.ePowerSetType.Pool);
             }
         }
         public float AoEModifier => EffectArea != Enums.eEffectArea.Cone ? (EffectArea != Enums.eEffectArea.Sphere ? 1f : (float)(1.0 + Radius * 0.150000005960464)) : (float)(1.0 + Radius * 0.150000005960464 - Radius * 0.000366669992217794 * (360 - Arc));
