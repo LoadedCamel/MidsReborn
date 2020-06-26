@@ -2106,10 +2106,8 @@ namespace Hero_Designer
 
         void ibMode_ButtonClicked()
         {
-            if (MainModule.MidsController.Toon == null)
-                return;
-            MidsContext.Config.BuildMode =
-                MidsContext.Config.BuildMode != Enums.dmModes.Dynamic ? Enums.dmModes.Dynamic : Enums.dmModes.LevelUp;
+            if (MainModule.MidsController.Toon == null) return;
+            MidsContext.Config.BuildMode = MidsContext.Config.BuildMode != Enums.dmModes.Dynamic ? Enums.dmModes.Dynamic : Enums.dmModes.LevelUp;
             MidsContext.Character.ResetLevel();
             // changing from dynamic view to level up or reverse is not a file modification
             PowerModified(markModified: false);

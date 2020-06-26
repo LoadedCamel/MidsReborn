@@ -187,14 +187,42 @@ namespace midsControls
         {
             unchecked
             {
-                if (!MidsContext.Config.I9.HideIOLevels & (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.SetO
-                                                           | DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID ==
-                                                           Enums.eType.InventO))
+                Enums.eType enhType = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID;
+                if (!MidsContext.Config.I9.HideIOLevels && (enhType == Enums.eType.SetO || enhType == Enums.eType.InventO))
                 {
                     RectangleF iValue2 = rect;
                     iValue2.Y -= 3f;
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                    string iStr = Convert.ToString(checked(slot.Enhancement.IOLevel + 1));
+                    string relativeLevelNumeric;
+                    string enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
+                    // Catalysed enhancements take character level no matter what.
+                    // Game does not allow boosters over enhancement catalysts.
+                    if (DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh))
+                    {
+                        relativeLevelNumeric = string.Empty;
+                    }
+                    else
+                    {
+                        relativeLevelNumeric = slot.Enhancement.RelativeLevel switch
+                        {
+                            // Zed - need to move this in Enums.
+                            Enums.eEnhRelative.PlusOne => "+1",
+                            Enums.eEnhRelative.PlusTwo => "+2",
+                            Enums.eEnhRelative.PlusThree => "+3",
+                            Enums.eEnhRelative.PlusFour => "+4",
+                            Enums.eEnhRelative.PlusFive => "+5",
+                            _ => string.Empty
+                        };
+                    }
+
+                    // If enhancement has boosters, need to stretch the level drawing zone a little.
+                    // Or relative level doesn't fit in.
+                    if (!string.IsNullOrEmpty(relativeLevelNumeric))
+                    {
+                        iValue2.Width += 10f;
+                        iValue2.X -= 5f;
+                    }
+                    string iStr = Convert.ToString(checked(slot.Enhancement.IOLevel + 1)) + relativeLevelNumeric;
                     RectangleF bounds = ScaleDown(iValue2);
                     Color cyan = Color.Cyan;
                     Color outline = Color.FromArgb(128, 0, 0, 0);
@@ -202,9 +230,7 @@ namespace midsControls
                     g = bxBuffer.Graphics;
                     DrawOutlineText(iStr, bounds, cyan, outline, font, outlineSpace, g);
                 }
-                else if (MidsContext.Config.ShowEnhRel & (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal
-                                                          | DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID ==
-                                                          Enums.eType.SpecialO))
+                else if (MidsContext.Config.ShowEnhRel && (enhType == Enums.eType.Normal || enhType == Enums.eType.SpecialO))
                 {
                     RectangleF iValue2 = rect;
                     iValue2.Y -= 3f;
