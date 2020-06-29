@@ -1867,69 +1867,6 @@ namespace midsControls
                                 powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
                                 displayLocation = powerEntry.Power.DisplayLocation;
                             }
-                            else
-                            {
-                                if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                                {
-                                    Character.gridEntries.Add(powerEntry.Power.PowerName);
-                                }
-                                powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                        }
-                        else if (powerEntry.Power.InherentType == Enums.eGridType.Powerset)
-                        {
-                            if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                            {
-                                Character.gridEntries.Add(powerEntry.Power.PowerName);
-                            }
-                            powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                            displayLocation = powerEntry.Power.DisplayLocation;
-                        }
-                        else if (powerEntry.Power.InherentType == Enums.eGridType.Power)
-                        {
-                            if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                            {
-                                Character.gridEntries.Add(powerEntry.Power.PowerName);
-                            }
-                            powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                            displayLocation = powerEntry.Power.DisplayLocation;
-                        }
-                        else if (powerEntry.Power.InherentType == Enums.eGridType.Pet)
-                        {
-                            if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                            {
-                                Character.gridEntries.Add(powerEntry.Power.PowerName);
-                            }
-                            powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                            displayLocation = powerEntry.Power.DisplayLocation;
-                        }
-                        else if (powerEntry.Power.InherentType == Enums.eGridType.Incarnate)
-                        {
-                            if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                            {
-                                Character.gridEntries.Add(powerEntry.Power.PowerName);
-                            }
-                            powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                            displayLocation = powerEntry.Power.DisplayLocation;
-                        }
-                        else if (powerEntry.Power.InherentType == Enums.eGridType.Accolade)
-                        {
-                            if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                            {
-                                Character.gridEntries.Add(powerEntry.Power.PowerName);
-                            }
-                            powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                            displayLocation = powerEntry.Power.DisplayLocation;
-                        }
-                        else if (powerEntry.Power.InherentType == Enums.eGridType.Temp)
-                        {
-                            if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                            {
-                                Character.gridEntries.Add(powerEntry.Power.PowerName);
-                            }
-                            powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                            displayLocation = powerEntry.Power.DisplayLocation;
                         }
                         else
                         {
