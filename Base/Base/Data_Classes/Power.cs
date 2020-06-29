@@ -182,6 +182,8 @@ namespace Base.Data_Classes
 
         public string ForcedClass { get; set; }
 
+        public Enums.eGridType InherentType { get; set; }
+
         public int ForcedClassID { get; set; }
 
         public IEffect[] Effects { get; set; }
@@ -355,6 +357,7 @@ namespace Base.Data_Classes
             Ignore_Buff = new Enums.eEnhance[template.Ignore_Buff.Length];
             Array.Copy(template.Ignore_Buff, Ignore_Buff, Ignore_Buff.Length);
             SkipMax = template.SkipMax;
+            InherentType = template.InherentType;
             LocationIndex = template.DisplayLocation;
             MutexAuto = template.MutexAuto;
             MutexIgnore = template.MutexIgnore;
@@ -470,6 +473,7 @@ namespace Base.Data_Classes
             for (int index = 0; index <= Ignore_Buff.Length - 1; ++index)
                 Ignore_Buff[index] = (Enums.eEnhance)reader.ReadInt32();
             SkipMax = reader.ReadBoolean();
+            InherentType = (Enums.eGridType) reader.ReadInt32();
             DisplayLocation = reader.ReadInt32();
             MutexAuto = reader.ReadBoolean();
             MutexIgnore = reader.ReadBoolean();
@@ -611,6 +615,7 @@ namespace Base.Data_Classes
             for (int index = 0; index <= Ignore_Buff.Length - 1; ++index)
                 writer.Write((int)Ignore_Buff[index]);
             writer.Write(SkipMax);
+            writer.Write((int) InherentType);
             writer.Write(LocationIndex);
             writer.Write(MutexAuto);
             writer.Write(MutexIgnore);

@@ -359,7 +359,7 @@ namespace Hero_Designer
             this.chkColorInherent.Size = new System.Drawing.Size(222, 20);
             this.chkColorInherent.TabIndex = 70;
             this.chkColorInherent.Text = "Use alternate colors for inherents";
-            this.myTip.SetToolTip(this.chkColorInherent, "Draws villain builds in red rather than blue.");
+            this.myTip.SetToolTip(this.chkColorInherent, "Uses alternate colors for inherents.");
             this.chkColorInherent.Visible = false;
             // 
             // chkHighVis
@@ -621,7 +621,7 @@ namespace Hero_Designer
             this.chkRelSignOnly.Size = new System.Drawing.Size(167, 43);
             this.chkRelSignOnly.TabIndex = 69;
             this.chkRelSignOnly.Text = "Show signs only for relative levels (\'++\' rather than \'+2\')";
-            this.myTip.SetToolTip(this.chkRelSignOnly, "Draws villain builds in red rather than blue.");
+            this.myTip.SetToolTip(this.chkRelSignOnly, "Show signs only for relative levels (\'++\' rather than \'+2\')");
             // 
             // Label3
             // 

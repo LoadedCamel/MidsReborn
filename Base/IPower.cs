@@ -187,6 +187,8 @@ public interface IPower : IComparable
 
     string ForcedClass { get; set; }
 
+    Enums.eGridType InherentType { get; set; }
+
     int ForcedClassID { get; set; }
 
     IEffect[] Effects { get; set; }

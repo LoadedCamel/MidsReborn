@@ -376,7 +376,6 @@ public class PowerEntry : ICloneable
             return;
         Slots = new SlotEntry[0];
     }
-
     public object Clone()
     {
         PowerEntry powerEntry = new PowerEntry(Level, Power, Chosen)

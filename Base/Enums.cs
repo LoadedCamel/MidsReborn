@@ -651,6 +651,19 @@ public static class Enums
         Incarnate
     }
 
+    public enum eGridType
+    {
+        None,
+        Accolade,
+        Class,
+        Incarnate,
+        Inherent,
+        Pet,
+        Power,
+        Powerset,
+        Temp
+    }
+
     public enum ePowerType
     {
         Click,

@@ -444,6 +444,14 @@ namespace Hero_Designer
             myPower.ForcedClass = !(index < 0 | index > DatabaseAPI.Database.Classes.Length - 1) ? DatabaseAPI.Database.Classes[index].ClassName : "";
         }
 
+        void cbInherentType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Updating)
+                return;
+            txtVisualLocation.ReadOnly = cbInherentType.SelectedIndex > 0;
+            myPower.InherentType = (Enums.eGridType) cbInherentType.SelectedIndex;
+        }
+
         void cbNameGroup_Leave(object sender, EventArgs e)
         {
             if (Updating)
@@ -523,7 +531,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
-            myPower.SubIsAltColor = chkAltSub.Checked;
+            //myPower.SubIsAltColor = chkAltSub.Checked;
         }
 
         void chkAlwaysToggle_CheckedChanged(object sender, EventArgs e)
@@ -643,6 +651,7 @@ namespace Hero_Designer
         {
             if (Updating)
                 return;
+            cbInherentType.Enabled = chkSubInclude.CheckState == CheckState.Checked;
             myPower.IncludeFlag = chkSubInclude.Checked;
         }
 
@@ -987,6 +996,15 @@ namespace Hero_Designer
             cbNameSet.EndUpdate();
         }
 
+        void FillComboInherent()
+        {
+            Enums.eGridType eGridType = Enums.eGridType.None;
+            cbInherentType.BeginUpdate();
+            cbInherentType.Items.Clear();
+            cbInherentType.Items.AddRange(Enum.GetNames(eGridType.GetType()));
+            cbInherentType.EndUpdate();
+        }
+
         void FillTab_Attribs()
         {
             IPower power = myPower;
@@ -1003,9 +1021,9 @@ namespace Hero_Designer
             txtRadius.Text = Convert.ToString(power.Radius, CultureInfo.InvariantCulture);
             txtArc.Text = Convert.ToString(power.Arc, CultureInfo.InvariantCulture);
             txtMaxTargets.Text = Convert.ToString(power.MaxTargets, CultureInfo.InvariantCulture);
-            cbPowerType.SelectedIndex = (int)power.PowerType;
-            cbEffectArea.SelectedIndex = (int)power.EffectArea;
-            cbNotify.SelectedIndex = (int)power.AIReport;
+            cbPowerType.SelectedIndex = (int) power.PowerType;
+            cbEffectArea.SelectedIndex = (int) power.EffectArea;
+            cbNotify.SelectedIndex = (int) power.AIReport;
             chkLos.Checked = power.TargetLoS;
             chkIgnoreStrength.Checked = power.IgnoreStrength;
             txtNumCharges.Text = Convert.ToString(power.NumCharges, CultureInfo.InvariantCulture);
@@ -1033,7 +1051,8 @@ namespace Hero_Designer
             chkBuffCycle.Checked = power.ClickBuff;
             chkAlwaysToggle.Checked = power.AlwaysToggle;
             chkGraphFix.Checked = myPower.SkipMax;
-            chkAltSub.Checked = power.SubIsAltColor;
+            cbInherentType.SelectedIndex = (int) myPower.InherentType;
+            //chkAltSub.Checked = power.SubIsAltColor;
             chkSubInclude.Checked = power.IncludeFlag;
             chkSortOverride.Checked = power.SortOverride;
             txtVisualLocation.Text = Convert.ToString(power.DisplayLocation, CultureInfo.InvariantCulture);
@@ -1204,11 +1223,16 @@ namespace Hero_Designer
         {
             RedrawEnhPicker();
             FillComboBoxes();
+            FillComboInherent();
             DrawSetList();
             Req_GroupList();
             FillTab_SubPowers();
             refresh_PowerData();
             Updating = false;
+            if (chkSubInclude.CheckState == CheckState.Checked)
+            {
+                cbInherentType.Enabled = true;
+            }
         }
 
         static int GetClassByID(int iID)

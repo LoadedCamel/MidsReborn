@@ -110,6 +110,8 @@ namespace Hero_Designer
 
         internal SaveFileDialog DlgSave;
 
+        private Base.Data_Classes.Character _character;
+
         public bool petWindowFlag { get; set; }
 
         private List<string> MMPets { get; } = new List<string>();
@@ -307,6 +309,7 @@ namespace Hero_Designer
                     {
                         loadedFromArgs = true;
                         PowerModified(markModified: false);
+                        Character.gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
                     }
                 }
                 bool toonLoaded = false;
@@ -1203,6 +1206,8 @@ namespace Hero_Designer
         {
             if (!File.Exists(fName))
                 return false;
+            if (_character != null)
+                Character.gridEntries = new List<string>() {"a", "b", "c", "d", "e", "f", "g", "h"};
             DataViewLocked = false;
             NewToon(true, true);
             Stream mStream = null;
@@ -1248,7 +1253,7 @@ namespace Hero_Designer
             return true;
         }
 
-        void DoRedraw()
+        public void DoRedraw()
         {
             if (drawing == null) return;
             NoResizeEvent = true;
@@ -1266,7 +1271,7 @@ namespace Hero_Designer
             drawing.FullRedraw();
         }
 
-        void DoResize()
+        public void DoResize()
         {
             lblHero.Width = ibRecipe.Left - 4;
             if (NoResizeEvent || drawing == null)
@@ -1973,10 +1978,10 @@ namespace Hero_Designer
                         : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
                     for (int index = 0; index <= power.NIDSubPower.Length - 1; ++index)
                     {
-                        if (MidsContext.Character.CurrentBuild.PowerUsed(
-                            DatabaseAPI.Database.Power[power.NIDSubPower[index]]))
-                            MidsContext.Character.CurrentBuild.RemovePower(
-                                DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
+                        if (MidsContext.Character.CurrentBuild.PowerUsed(DatabaseAPI.Database.Power[power.NIDSubPower[index]]))
+                        {
+                            MidsContext.Character.CurrentBuild.RemovePower(DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
+                        }
                     }
                 }
 
@@ -2558,6 +2563,7 @@ namespace Hero_Designer
                 petsButton.Visible = true;
                 petsButton.Enabled = true;
             }
+            Character.gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
             NewDraw(skipDraw);
             UpdateControls(true);
             SetTitleBar(MidsContext.Character.IsHero());

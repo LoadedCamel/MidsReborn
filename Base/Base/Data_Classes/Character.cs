@@ -71,6 +71,8 @@ namespace Base.Data_Classes
 
         public Build CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
 
+        public static List<string> gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
+
         public Archetype Archetype
         {
             get => _archetype;
