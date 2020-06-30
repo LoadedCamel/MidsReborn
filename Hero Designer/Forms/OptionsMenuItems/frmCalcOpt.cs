@@ -8,7 +8,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
@@ -548,6 +547,18 @@ namespace Hero_Designer
             optEnh.Text = "Training Origin";
         }
 
+        // Ref: chkIOLevel
+        void chkShowSOLevels_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        void chkEnableDmgGraph_CheckedChanged(object sender, EventArgs e)
+        {
+            rbGraphTwoLine.Enabled = chkEnableDmgGraph.Checked;
+            rbGraphStacked.Enabled = chkEnableDmgGraph.Checked;
+            rbGraphSimple.Enabled = chkEnableDmgGraph.Checked;
+        }
+
         void PopulateSuppression()
         {
             clbSuppression.BeginUpdate();
@@ -577,9 +588,9 @@ namespace Hero_Designer
             optDO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.DualO;
             optTO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.TrainingO;
             cbEnhLevel.SelectedIndex = (int)config.CalcEnhLevel;
-            udExHigh.Value = new Decimal(config.ExempHigh);
-            udExLow.Value = new Decimal(config.ExempLow);
-            udForceLevel.Value = new Decimal(config.ForceLevel);
+            udExHigh.Value = new decimal(config.ExempHigh);
+            udExLow.Value = new decimal(config.ExempLow);
+            udForceLevel.Value = new decimal(config.ForceLevel);
             chkHighVis.Checked = config.EnhanceVisibility;
             rbGraphTwoLine.Checked = config.DataGraphType == Enums.eDDGraph.Both;
             rbGraphStacked.Checked = config.DataGraphType == Enums.eDDGraph.Stacked;
@@ -589,10 +600,15 @@ namespace Hero_Designer
             rbChanceAverage.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Average;
             rbChanceMax.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Max;
             rbChanceIgnore.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum;
-            udBaseToHit.Value = new Decimal(config.BaseAcc * 100f);
+            udBaseToHit.Value = new decimal(config.BaseAcc * 100f);
             chkVillainColour.Checked = !config.DisableVillainColours;
             chkUpdates.Checked = config.CheckForUpdates;
-            udIOLevel.Value = Decimal.Compare(new Decimal(config.I9.DefaultIOLevel + 1), udIOLevel.Maximum) <= 0 ? new Decimal(config.I9.DefaultIOLevel + 1) : udIOLevel.Maximum;
+            chkShowSOLevels.Checked = config.ShowSOLevels;
+            chkEnableDmgGraph.Checked = !config.DisableDataDamageGraph;
+            rbGraphTwoLine.Enabled = chkEnableDmgGraph.Checked;
+            rbGraphStacked.Enabled = chkEnableDmgGraph.Checked;
+            rbGraphSimple.Enabled = chkEnableDmgGraph.Checked;
+            udIOLevel.Value = decimal.Compare(new decimal(config.I9.DefaultIOLevel + 1), udIOLevel.Maximum) <= 0 ? new decimal(config.I9.DefaultIOLevel + 1) : udIOLevel.Maximum;
             chkIOLevel.Checked = !config.I9.HideIOLevels;
             chkIOEffects.Checked = !config.I9.IgnoreEnhFX;
             chkSetBonus.Checked = !config.I9.IgnoreSetBonusFX;
@@ -781,10 +797,12 @@ namespace Hero_Designer
             config.DisableVillainColours = !chkVillainColour.Checked;
             config.CheckForUpdates = chkUpdates.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
-            config.I9.HideIOLevels = !chkIOLevel.Checked;
             config.I9.IgnoreEnhFX = !chkIOEffects.Checked;
             config.I9.IgnoreSetBonusFX = !chkSetBonus.Checked;
+            config.I9.HideIOLevels = !chkIOLevel.Checked;
             config.ShowRelSymbols = chkRelSignOnly.Checked;
+            config.ShowSOLevels = chkShowSOLevels.Checked;
+            config.DisableDataDamageGraph = !chkEnableDmgGraph.Checked;
             config.I9.DisablePrintIOLevels = !chkIOPrintLevels.Checked;
             config.PrintInColour = chkColourPrint.Checked;
             config.RtFont.RTFBase = Convert.ToInt32(decimal.Multiply(udRTFSize.Value, new decimal(2)));

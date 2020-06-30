@@ -62,6 +62,7 @@ namespace Hero_Designer
             this.Label40 = new System.Windows.Forms.Label();
             this.udIOLevel = new System.Windows.Forms.NumericUpDown();
             this.GroupBox3 = new System.Windows.Forms.GroupBox();
+            this.chkShowSOLevels = new System.Windows.Forms.CheckBox();
             this.chkRelSignOnly = new System.Windows.Forms.CheckBox();
             this.Label3 = new System.Windows.Forms.Label();
             this.optTO = new System.Windows.Forms.RadioButton();
@@ -215,6 +216,7 @@ namespace Hero_Designer
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
+            this.chkEnableDmgGraph = new System.Windows.Forms.CheckBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.GroupBox17.SuspendLayout();
@@ -291,7 +293,7 @@ namespace Hero_Designer
             // 
             // TabPage3
             // 
-            this.TabPage3.Controls.Add(this.chkShowAlphaPopup);
+            this.TabPage3.Controls.Add(this.chkColourPrint);
             this.TabPage3.Controls.Add(this.chkNoTips);
             this.TabPage3.Controls.Add(this.chkMiddle);
             this.TabPage3.Controls.Add(this.GroupBox17);
@@ -308,7 +310,7 @@ namespace Hero_Designer
             // 
             // chkShowAlphaPopup
             // 
-            this.chkShowAlphaPopup.Location = new System.Drawing.Point(434, 285);
+            this.chkShowAlphaPopup.Location = new System.Drawing.Point(11, 91);
             this.chkShowAlphaPopup.Name = "chkShowAlphaPopup";
             this.chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
             this.chkShowAlphaPopup.TabIndex = 79;
@@ -316,7 +318,7 @@ namespace Hero_Designer
             // 
             // chkNoTips
             // 
-            this.chkNoTips.Location = new System.Drawing.Point(434, 304);
+            this.chkNoTips.Location = new System.Drawing.Point(458, 304);
             this.chkNoTips.Name = "chkNoTips";
             this.chkNoTips.Size = new System.Drawing.Size(141, 18);
             this.chkNoTips.TabIndex = 78;
@@ -325,7 +327,7 @@ namespace Hero_Designer
             // 
             // chkMiddle
             // 
-            this.chkMiddle.Location = new System.Drawing.Point(206, 304);
+            this.chkMiddle.Location = new System.Drawing.Point(207, 282);
             this.chkMiddle.Name = "chkMiddle";
             this.chkMiddle.Size = new System.Drawing.Size(222, 18);
             this.chkMiddle.TabIndex = 77;
@@ -334,6 +336,7 @@ namespace Hero_Designer
             // GroupBox17
             // 
             this.GroupBox17.Controls.Add(this.chkColorInherent);
+            this.GroupBox17.Controls.Add(this.chkShowAlphaPopup);
             this.GroupBox17.Controls.Add(this.chkHighVis);
             this.GroupBox17.Controls.Add(this.Label36);
             this.GroupBox17.Controls.Add(this.chkStatBold);
@@ -364,7 +367,7 @@ namespace Hero_Designer
             // 
             // chkHighVis
             // 
-            this.chkHighVis.Location = new System.Drawing.Point(140, 91);
+            this.chkHighVis.Location = new System.Drawing.Point(262, 91);
             this.chkHighVis.Name = "chkHighVis";
             this.chkHighVis.Size = new System.Drawing.Size(222, 20);
             this.chkHighVis.TabIndex = 69;
@@ -374,7 +377,7 @@ namespace Hero_Designer
             // 
             // Label36
             // 
-            this.Label36.Location = new System.Drawing.Point(141, 9);
+            this.Label36.Location = new System.Drawing.Point(138, 9);
             this.Label36.Name = "Label36";
             this.Label36.Size = new System.Drawing.Size(39, 16);
             this.Label36.TabIndex = 64;
@@ -401,7 +404,7 @@ namespace Hero_Designer
             // 
             // btnFontColour
             // 
-            this.btnFontColour.Location = new System.Drawing.Point(312, 36);
+            this.btnFontColour.Location = new System.Drawing.Point(312, 30);
             this.btnFontColour.Name = "btnFontColour";
             this.btnFontColour.Size = new System.Drawing.Size(172, 27);
             this.btnFontColour.TabIndex = 61;
@@ -485,7 +488,7 @@ namespace Hero_Designer
             // 
             // chkIOPrintLevels
             // 
-            this.chkIOPrintLevels.Location = new System.Drawing.Point(207, 285);
+            this.chkIOPrintLevels.Location = new System.Drawing.Point(207, 304);
             this.chkIOPrintLevels.Name = "chkIOPrintLevels";
             this.chkIOPrintLevels.Size = new System.Drawing.Size(221, 18);
             this.chkIOPrintLevels.TabIndex = 75;
@@ -493,6 +496,7 @@ namespace Hero_Designer
             // 
             // GroupBox5
             // 
+            this.GroupBox5.Controls.Add(this.chkEnableDmgGraph);
             this.GroupBox5.Controls.Add(this.rbGraphSimple);
             this.GroupBox5.Controls.Add(this.rbGraphStacked);
             this.GroupBox5.Controls.Add(this.rbGraphTwoLine);
@@ -505,18 +509,18 @@ namespace Hero_Designer
             // 
             // rbGraphSimple
             // 
-            this.rbGraphSimple.Location = new System.Drawing.Point(6, 89);
+            this.rbGraphSimple.Location = new System.Drawing.Point(6, 95);
             this.rbGraphSimple.Name = "rbGraphSimple";
-            this.rbGraphSimple.Size = new System.Drawing.Size(164, 32);
+            this.rbGraphSimple.Size = new System.Drawing.Size(164, 23);
             this.rbGraphSimple.TabIndex = 5;
             this.rbGraphSimple.Text = "Base against Enhanced";
             this.myTip.SetToolTip(this.rbGraphSimple, "This graph type doesn\'t reflect the max damage potential of other powers.");
             // 
             // rbGraphStacked
             // 
-            this.rbGraphStacked.Location = new System.Drawing.Point(6, 53);
+            this.rbGraphStacked.Location = new System.Drawing.Point(6, 70);
             this.rbGraphStacked.Name = "rbGraphStacked";
-            this.rbGraphStacked.Size = new System.Drawing.Size(286, 32);
+            this.rbGraphStacked.Size = new System.Drawing.Size(286, 23);
             this.rbGraphStacked.TabIndex = 4;
             this.rbGraphStacked.Text = "Base + Enhanced (stacked) against Max Enhancable";
             this.myTip.SetToolTip(this.rbGraphStacked, "\'Max Enhacable\' is damage if slotted with 6 +3 damage enhancements.");
@@ -524,9 +528,9 @@ namespace Hero_Designer
             // rbGraphTwoLine
             // 
             this.rbGraphTwoLine.Checked = true;
-            this.rbGraphTwoLine.Location = new System.Drawing.Point(6, 17);
+            this.rbGraphTwoLine.Location = new System.Drawing.Point(6, 45);
             this.rbGraphTwoLine.Name = "rbGraphTwoLine";
-            this.rbGraphTwoLine.Size = new System.Drawing.Size(286, 32);
+            this.rbGraphTwoLine.Size = new System.Drawing.Size(286, 23);
             this.rbGraphTwoLine.TabIndex = 3;
             this.rbGraphTwoLine.TabStop = true;
             this.rbGraphTwoLine.Text = "Base / Enhanced against Max Enhancable (Default)";
@@ -599,6 +603,7 @@ namespace Hero_Designer
             // 
             // GroupBox3
             // 
+            this.GroupBox3.Controls.Add(this.chkShowSOLevels);
             this.GroupBox3.Controls.Add(this.chkRelSignOnly);
             this.GroupBox3.Controls.Add(this.Label3);
             this.GroupBox3.Controls.Add(this.optTO);
@@ -609,19 +614,28 @@ namespace Hero_Designer
             this.GroupBox3.Controls.Add(this.Label4);
             this.GroupBox3.Location = new System.Drawing.Point(4, 4);
             this.GroupBox3.Name = "GroupBox3";
-            this.GroupBox3.Size = new System.Drawing.Size(184, 301);
+            this.GroupBox3.Size = new System.Drawing.Size(184, 318);
             this.GroupBox3.TabIndex = 62;
             this.GroupBox3.TabStop = false;
             this.GroupBox3.Text = "Regular Enhancements:";
             // 
+            // chkShowSOLevels
+            // 
+            this.chkShowSOLevels.Location = new System.Drawing.Point(11, 257);
+            this.chkShowSOLevels.Name = "chkShowSOLevels";
+            this.chkShowSOLevels.Size = new System.Drawing.Size(150, 23);
+            this.chkShowSOLevels.TabIndex = 71;
+            this.chkShowSOLevels.Text = "Display SO/HO Levels";
+            this.chkShowSOLevels.UseVisualStyleBackColor = true;
+            this.chkShowSOLevels.CheckedChanged += new System.EventHandler(this.chkShowSOLevels_CheckedChanged);
+            // 
             // chkRelSignOnly
             // 
-            this.chkRelSignOnly.Location = new System.Drawing.Point(11, 252);
+            this.chkRelSignOnly.Location = new System.Drawing.Point(11, 278);
             this.chkRelSignOnly.Name = "chkRelSignOnly";
             this.chkRelSignOnly.Size = new System.Drawing.Size(167, 43);
             this.chkRelSignOnly.TabIndex = 69;
             this.chkRelSignOnly.Text = "Show signs only for relative levels (\'++\' rather than \'+2\')";
-            this.myTip.SetToolTip(this.chkRelSignOnly, "Draws villain builds in red rather than blue.");
             // 
             // Label3
             // 
@@ -2265,9 +2279,9 @@ namespace Hero_Designer
             // 
             // chkColourPrint
             // 
-            this.chkColourPrint.Location = new System.Drawing.Point(246, 367);
+            this.chkColourPrint.Location = new System.Drawing.Point(458, 282);
             this.chkColourPrint.Name = "chkColourPrint";
-            this.chkColourPrint.Size = new System.Drawing.Size(156, 16);
+            this.chkColourPrint.Size = new System.Drawing.Size(221, 18);
             this.chkColourPrint.TabIndex = 2;
             this.chkColourPrint.Text = "Print in color";
             this.chkColourPrint.Visible = false;
@@ -2282,6 +2296,17 @@ namespace Hero_Designer
             // 
             this.cPicker.FullOpen = true;
             // 
+            // chkEnableDmgGraph
+            // 
+            this.chkEnableDmgGraph.AutoSize = true;
+            this.chkEnableDmgGraph.Location = new System.Drawing.Point(6, 21);
+            this.chkEnableDmgGraph.Name = "chkEnableDmgGraph";
+            this.chkEnableDmgGraph.Size = new System.Drawing.Size(133, 18);
+            this.chkEnableDmgGraph.TabIndex = 6;
+            this.chkEnableDmgGraph.Text = "Enable Damage Graph";
+            this.chkEnableDmgGraph.UseVisualStyleBackColor = true;
+            this.chkEnableDmgGraph.CheckedChanged += new System.EventHandler(this.chkEnableDmgGraph_CheckedChanged);
+            // 
             // frmCalcOpt
             // 
             this.AcceptButton = this.btnOK;
@@ -2289,7 +2314,6 @@ namespace Hero_Designer
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(757, 392);
-            this.Controls.Add(this.chkColourPrint);
             this.Controls.Add(this.TabControl1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -2309,6 +2333,7 @@ namespace Hero_Designer
             ((System.ComponentModel.ISupportInitialize)(this.udStatSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udRTFSize)).EndInit();
             this.GroupBox5.ResumeLayout(false);
+            this.GroupBox5.PerformLayout();
             this.GroupBox14.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.udIOLevel)).EndInit();
             this.GroupBox3.ResumeLayout(false);
@@ -2537,5 +2562,7 @@ namespace Hero_Designer
         private CheckBox checkBox24;
         private Label lblUpdateURL;
         private ComboBox cbUpdateURL;
+        private CheckBox chkShowSOLevels;
+        private CheckBox chkEnableDmgGraph;
     }
 }

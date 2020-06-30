@@ -131,7 +131,9 @@ namespace Hero_Designer
             this.tsView2Col = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewIOLevels = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsViewSOLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewRelative = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsViewRelativeAsSigns = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSlotLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewActualDamage_New = new System.Windows.Forms.ToolStripMenuItem();
@@ -1100,14 +1102,16 @@ namespace Hero_Designer
             // 
             // ViewToolStripMenuItem
             // 
-            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[11]
+            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[12]
             {
             (System.Windows.Forms.ToolStripItem) this.tsView2Col,
             (System.Windows.Forms.ToolStripItem) this.tsView3Col,
             (System.Windows.Forms.ToolStripItem) this.tsView4Col,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator13,
             (System.Windows.Forms.ToolStripItem) this.tsViewIOLevels,
-            (System.Windows.Forms.ToolStripItem) this.tsViewRelative,
+            (System.Windows.Forms.ToolStripItem) this.tsViewSOLevels,
+            //(System.Windows.Forms.ToolStripItem) this.tsViewRelative,
+            (System.Windows.Forms.ToolStripItem) this.tsViewRelativeAsSigns,
             (System.Windows.Forms.ToolStripItem) this.tsViewSlotLevels,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator2,
             (System.Windows.Forms.ToolStripItem) this.tsViewActualDamage_New,
@@ -1151,12 +1155,30 @@ namespace Hero_Designer
             this.tsViewIOLevels.Text = "Show &IO Levels";
             this.tsViewIOLevels.Click += new System.EventHandler(tsViewIOLevels_Click);
             // 
+            // tsViewSOLevels
+            // 
+            this.tsViewSOLevels.Checked = false;
+            this.tsViewSOLevels.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            this.tsViewSOLevels.Name = "tsViewSOLevels";
+            this.tsViewSOLevels.Size = new System.Drawing.Size(282, 22);
+            this.tsViewSOLevels.Text = "Show SO/HO Levels";
+            this.tsViewSOLevels.Click += new System.EventHandler(tsViewSOLevels_Click);
+            // 
             // tsViewRelative
             // 
             this.tsViewRelative.Name = "tsViewRelative";
             this.tsViewRelative.Size = new System.Drawing.Size(282, 22);
             this.tsViewRelative.Text = "Show &Enhancement Relative Levels";
             this.tsViewRelative.Click += new System.EventHandler(tsViewRelative_Click);
+            // 
+            // tsViewRelativeAsSigns
+            // 
+            this.tsViewRelativeAsSigns.Checked = false;
+            this.tsViewRelativeAsSigns.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            this.tsViewRelativeAsSigns.Name = "tsViewRelativeAsSigns";
+            this.tsViewRelativeAsSigns.Size = new System.Drawing.Size(282, 22);
+            this.tsViewRelativeAsSigns.Text = "Show Relative Levels with signs ('+'/'-')";
+            this.tsViewRelativeAsSigns.Click += new System.EventHandler(tsViewRelativeAsSigns_Click);
             // 
             // tsViewSlotLevels
             // 
@@ -2103,7 +2125,9 @@ namespace Hero_Designer
         ToolStripMenuItem tsViewDPS_New;
         ToolStripMenuItem tsViewGraphs;
         ToolStripMenuItem tsViewIOLevels;
+        ToolStripMenuItem tsViewSOLevels;
         ToolStripMenuItem tsViewRelative;
+        ToolStripMenuItem tsViewRelativeAsSigns;
         ToolStripMenuItem tsViewSetCompare;
         ToolStripMenuItem tsViewSets;
         ToolStripMenuItem tsViewSlotLevels;
