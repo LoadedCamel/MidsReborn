@@ -482,7 +482,7 @@ namespace Hero_Designer
             // 
             this.lblLocked0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLocked0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked0.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblLocked0.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked0.ForeColor = System.Drawing.Color.Black;
             this.lblLocked0.Location = new System.Drawing.Point(308, 166);
             this.lblLocked0.Name = "lblLocked0";
@@ -498,7 +498,7 @@ namespace Hero_Designer
             // 
             this.lblLocked1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLocked1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblLocked1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked1.ForeColor = System.Drawing.Color.Black;
             this.lblLocked1.Location = new System.Drawing.Point(308, 186);
             this.lblLocked1.Name = "lblLocked1";
@@ -514,7 +514,7 @@ namespace Hero_Designer
             // 
             this.lblLocked2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLocked2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblLocked2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked2.ForeColor = System.Drawing.Color.Black;
             this.lblLocked2.Location = new System.Drawing.Point(304, 194);
             this.lblLocked2.Name = "lblLocked2";
@@ -530,7 +530,7 @@ namespace Hero_Designer
             // 
             this.lblLocked3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLocked3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLocked3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblLocked3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocked3.ForeColor = System.Drawing.Color.Black;
             this.lblLocked3.Location = new System.Drawing.Point(284, 210);
             this.lblLocked3.Name = "lblLocked3";
@@ -546,7 +546,7 @@ namespace Hero_Designer
             // 
             this.lblLockedAncillary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLockedAncillary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLockedAncillary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblLockedAncillary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedAncillary.ForeColor = System.Drawing.Color.Black;
             this.lblLockedAncillary.Location = new System.Drawing.Point(268, 230);
             this.lblLockedAncillary.Name = "lblLockedAncillary";
@@ -562,7 +562,7 @@ namespace Hero_Designer
             // 
             this.lblLockedSecondary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblLockedSecondary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblLockedSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblLockedSecondary.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLockedSecondary.ForeColor = System.Drawing.Color.Black;
             this.lblLockedSecondary.Location = new System.Drawing.Point(257, 246);
             this.lblLockedSecondary.Name = "lblLockedSecondary";
