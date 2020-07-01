@@ -324,8 +324,8 @@ namespace Hero_Designer
 
                 dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
-                lblATLocked.Location = cbAT.Location;
-                lblATLocked.Size = cbAT.Size;
+                lblATLocked.Location = new Point(cbAT.Location.X, cbAT.Location.Y);
+                lblATLocked.Size = new Size(cbAT.Width, cbAT.Height);
                 lblATLocked.Visible = false;
                 lblLocked0.Location = cbPool0.Location;
                 lblLocked0.Size = cbPool0.Size;

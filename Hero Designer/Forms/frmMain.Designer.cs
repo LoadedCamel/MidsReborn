@@ -226,7 +226,7 @@ namespace Hero_Designer
             this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAT.ForeColor = System.Drawing.Color.Black;
             this.cbAT.ItemHeight = 17;
-            this.cbAT.Location = new System.Drawing.Point(94, 109);
+            this.cbAT.Location = new System.Drawing.Point(94, 108);
             this.cbAT.MaxDropDownItems = 15;
             this.cbAT.Name = "cbAT";
             this.cbAT.Size = new System.Drawing.Size(144, 23);
@@ -450,9 +450,9 @@ namespace Hero_Designer
             // 
             this.lblATLocked.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.lblATLocked.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblATLocked.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblATLocked.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblATLocked.ForeColor = System.Drawing.Color.Black;
-            this.lblATLocked.Location = new System.Drawing.Point(94, 113);
+            this.lblATLocked.Location = new System.Drawing.Point(94, 110);
             this.lblATLocked.Name = "lblATLocked";
             this.lblATLocked.Size = new System.Drawing.Size(92, 29);
             this.lblATLocked.TabIndex = 53;
