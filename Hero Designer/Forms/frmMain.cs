@@ -432,9 +432,39 @@ namespace Hero_Designer
         internal void ChildRequestedRedraw()
             => DoRedraw();
 
-        void accoladeButton_ButtonClicked() => PowerModified(markModified: false);
+        //void accoladeButton_ButtonClicked() => PowerModified(markModified: false);
 
-        void accoladeButton_MouseDown(object sender, MouseEventArgs e)
+        void accoladeButton_ButtonClicked()
+        {
+            bool flag = false;
+            if (fAccolade == null)
+                flag = true;
+            else if (fAccolade.IsDisposed)
+                flag = true;
+            if (flag)
+            {
+                frmMain iParent = this;
+                IPower power = !MainModule.MidsController.Toon.IsHero() ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)] : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
+                List<IPower> iPowers = new List<IPower>();
+                int num = power.NIDSubPower.Length - 1;
+                for (int index = 0; index <= num; ++index)
+                    iPowers.Add(DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
+                fAccolade = new frmAccolade(iParent, iPowers);
+            }
+
+            if (!fAccolade.Visible)
+            {
+                accoladeButton.Checked = true;
+                fAccolade.Show(this);
+            }
+            else
+            {
+                accoladeButton.Checked = false;
+                fAccolade.Close();
+            }
+        }
+
+        /*void accoladeButton_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Clicks != 2)
                 return;
@@ -450,13 +480,9 @@ namespace Hero_Designer
             }
             if (!fAccolade.Visible)
                 fAccolade.Show(this);
-        }
+        }*/
 
-        void AccoladesWindowToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accoladeButton_MouseDown(RuntimeHelpers.GetObjectValue(sender), new MouseEventArgs(MouseButtons.Left, 2, 0, 0, 0));
-            accoladeButton.Checked = true;
-        }
+        void AccoladesWindowToolStripMenuItem_Click(object sender, EventArgs e) => accoladeButton_ButtonClicked();
 
         static int ArchetypeIndirectToIndex(int iIndirect)
         {

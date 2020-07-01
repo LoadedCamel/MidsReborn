@@ -1752,10 +1752,10 @@ namespace Hero_Designer
             this.accoladeButton.Name = "accoladeButton";
             this.accoladeButton.Size = new System.Drawing.Size(105, 22);
             this.accoladeButton.TabIndex = 114;
-            this.accoladeButton.TextOff = "Accolades (Off)";
-            this.accoladeButton.TextOn = "Accolades (On)";
+            this.accoladeButton.TextOff = "Accolades";
+            this.accoladeButton.TextOn = "Accolades";
             this.accoladeButton.Toggle = true;
-            this.accoladeButton.MouseDown += new MouseEventHandler(accoladeButton_MouseDown);
+            //this.accoladeButton.MouseDown += new MouseEventHandler(accoladeButton_MouseDown);
             this.accoladeButton.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(accoladeButton_ButtonClicked);
             //
             // petsButton
@@ -1956,7 +1956,7 @@ namespace Hero_Designer
             this.ibPopup.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibPopup_ButtonClicked);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1156, 772);
+            this.ClientSize = new System.Drawing.Size(1156, 805);
             this.Controls.Add(this.heroVillain);
             this.Controls.Add(this.petsButton);
             this.Controls.Add(this.tempPowersButton);
@@ -2017,7 +2017,7 @@ namespace Hero_Designer
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;
 
-            this.MinimumSize = new System.Drawing.Size(1024, 830);
+            this.MinimumSize = new System.Drawing.Size(1024, 850);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             //this.Location = new Point(10, 10);
             this.Text = "Hero Designer";

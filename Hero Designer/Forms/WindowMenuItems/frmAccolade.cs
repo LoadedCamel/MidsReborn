@@ -46,6 +46,19 @@ namespace Hero_Designer
             Name = nameof(frmAccolade);
             _myParent = iParent;
             _myPowers = iPowers;
+            FormClosing += FrmAccolade_FormClosing;
+        }
+
+        private void FrmAccolade_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                _myParent.accoladeButton.Checked = false;
+            }
+            if (DialogResult == DialogResult.Cancel)
+            {
+                _myParent.accoladeButton.Checked = false;
+            }
         }
 
         public void UpdateFonts(Font font)
@@ -144,18 +157,31 @@ namespace Hero_Designer
             {
                 if (Item.ItemState == ListLabelV3.LLItemState.Disabled)
                     return;
-                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[Item.Index]))
+
+                bool flag = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[Item.Index]);
+                int num1 = llLeft.Items.Length - 1;
+                for (int index = 0; index <= num1; ++index)
                 {
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[Item.Index]);
-                    Item.ItemState = ListLabelV3.LLItemState.Enabled;
+                    if (llLeft.Items[index].ItemState == ListLabelV3.LLItemState.Selected)
+                        llLeft.Items[index].ItemState = ListLabelV3.LLItemState.Enabled;
+                    if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]))
+                        MidsContext.Character.CurrentBuild.RemovePower(_myPowers[index]);
                 }
-                else
+                int num2 = llRight.Items.Length - 1;
+                for (int index = 0; index <= num2; ++index)
                 {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index]).StatInclude = true;
+                    if (llRight.Items[index].ItemState == ListLabelV3.LLItemState.Selected)
+                        llRight.Items[index].ItemState = ListLabelV3.LLItemState.Enabled;
+                    if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index + llLeft.Items.Length]))
+                        MidsContext.Character.CurrentBuild.RemovePower(_myPowers[index + llLeft.Items.Length]);
+                }
+                if (flag)
+                {
+                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index], 49).StatInclude = true;
                     Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
                 llLeft.Refresh();
-                _myParent.PowerModified(markModified: false);
+                _myParent.PowerModified(markModified: true);
             }
         }
 
