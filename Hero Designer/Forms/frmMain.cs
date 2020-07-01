@@ -1276,7 +1276,7 @@ namespace Hero_Designer
 
         public void DoResize()
         {
-            lblHero.Width = ibRecipe.Left - 4;
+            //lblHero.Width = ibRecipe.Left - 4;
             if (NoResizeEvent || drawing == null)
                 return;
             int num1 = ClientSize.Width - pnlGFXFlow.Left;
