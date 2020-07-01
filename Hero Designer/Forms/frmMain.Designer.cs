@@ -1974,6 +1974,7 @@ namespace Hero_Designer
             this.Controls.Add(this.llPool0);
             this.Controls.Add(this.llPool1);
             this.Controls.Add(this.llPool2);
+            this.Controls.Add(this.llPool3);
             this.Controls.Add(this.llAncillary);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
