@@ -2076,9 +2076,9 @@
     <Content Include="Images\Unknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\mrb_splash.png" />
     <None Include="Resources\mrbshield_reduced.png" />
-    <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
