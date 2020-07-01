@@ -49,9 +49,6 @@ public class ConfigData
     public Enums.GraphStyle StatGraphStyle { get; set; } = Enums.GraphStyle.Stacked;
     public Enums.CompOverride[] CompOverride { get; set; }
 
-    public int CurrentGridCount { get; set; }
-    public int LastGridCount { get; set; }
-
     public string DNickName { get; set; }
     public List<string> DServers { get; } = new List<string>();
     public string DSelServer { get; set; }

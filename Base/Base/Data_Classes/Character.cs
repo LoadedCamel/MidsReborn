@@ -179,6 +179,9 @@ namespace Base.Data_Classes
 
         public Statistics DisplayStats { get; }
 
+        public int displayIndex { get; set; }
+        public List<PowerEntry> inherentPowers { get; set; }
+
         public int SlotsRemaining
         {
             get
@@ -470,6 +473,7 @@ namespace Base.Data_Classes
             NotPackMentality = true;
             FastSnipe = false;
             NotFastSnipe = true;
+            inherentPowers = new List<PowerEntry>();
 
             foreach (var power in CurrentBuild.Powers)
             {
@@ -613,6 +617,65 @@ namespace Base.Data_Classes
                         CrossPunchBuff = true;
                         NotCrossPunchBuff = false;
                         break;
+                }
+
+                if (!power.Chosen)
+                {
+                    inherentPowers.Add(power);
+                    if (power.Power.InherentType == Enums.eGridType.Class)
+                    {
+                        displayIndex = 0;
+                        power.Power.DisplayLocation = displayIndex;
+                    }
+
+                    if (power.Power.InherentType == Enums.eGridType.Inherent)
+                    {
+                        string powName = power.Power.PowerName;
+                        if (powName.Equals("Brawl"))
+                        {
+                            displayIndex = 1;
+                            power.Power.DisplayLocation = displayIndex;
+                        }
+                        else if (powName.Equals("Sprint"))
+                        {
+                            displayIndex = 2;
+                            power.Power.DisplayLocation = displayIndex;
+                        }
+                        else if (powName.Equals("Rest"))
+                        {
+                            displayIndex = 3;
+                            power.Power.DisplayLocation = displayIndex;
+                        }
+                        else if (powName.Equals("Swift"))
+                        {
+                            displayIndex = 4;
+                            power.Power.DisplayLocation = displayIndex;
+                        }
+                        else if (powName.Equals("Hurdle"))
+                        {
+                            displayIndex = 5;
+                            power.Power.DisplayLocation = displayIndex;
+                        }
+                        else if (powName.Equals("Health"))
+                        {
+                            displayIndex = 6;
+                            power.Power.DisplayLocation = displayIndex;
+                        }
+                        else if (powName.Equals("Stamina"))
+                        {
+                            displayIndex = 7;
+                            power.Power.DisplayLocation = displayIndex;
+                        }
+                    }
+                    else
+                    {
+                        displayIndex = inherentPowers.Count -1;
+                        if (displayIndex > 7 && displayIndex < 59)
+                        {
+                            power.Power.DisplayLocation = displayIndex;
+                            ++displayIndex;
+                        }
+                    }
                 }
 
                 for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)

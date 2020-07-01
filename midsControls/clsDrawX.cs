@@ -1739,8 +1739,6 @@ namespace midsControls
             };
         }
 
-        //public static List<string> Character.gridEntries = new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h" };
-        public static List<string> selectedPowers = new List<string>();
 
         public Point PowerPosition(PowerEntry powerEntry, int displayLocation = -1)
         {
@@ -1764,119 +1762,12 @@ namespace midsControls
                 bool flag = false;
                 int iRow = 0;
                 int iCol = 0;
-                try
-                {
-                    if (selectedPowers.Count > -1)
-                    {
-                        selectedPowers.Clear();
-                        foreach (var entry in MidsContext.Character.CurrentBuild.Powers)
-                        {
-                            if (!entry.Chosen && entry.Power != null)
-                            {
-                                selectedPowers.Add(entry.Power.PowerName);
-                            }
-                        }
-                    }
 
-                    var result = selectedPowers.Except(Character.gridEntries).ToList();
-                    if (!result.Any())
-                    {
-                        Character.gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
-                    }
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    MessageBox.Show($"Message: {e.Message}\r\n\nTrace: {e.StackTrace}");
-                }
                 if (!powerEntry.Chosen)
                 {
                     if (displayLocation == -1 && powerEntry.Power != null)
                     {
-                        if (powerEntry.Power.InherentType == Enums.eGridType.Class)
-                        {
-                            if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                            {
-                                Character.gridEntries[0] = powerEntry.Power.PowerName;
-                            }
-                            powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                            displayLocation = powerEntry.Power.DisplayLocation;
-                        }
-                        else if (powerEntry.Power.InherentType == Enums.eGridType.Inherent)
-                        {
-                            var powName = powerEntry.Power.PowerName;
-                            if (powName.Equals("Brawl"))
-                            {
-                                if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                                {
-                                    Character.gridEntries[1] = powerEntry.Power.PowerName;
-                                }
-                                powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                            else if (powName.Equals("Sprint"))
-                            {
-                                if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                                {
-                                    Character.gridEntries[2] = powerEntry.Power.PowerName;
-                                }
-                                powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                            else if (powName.Equals("Rest"))
-                            {
-                                if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                                {
-                                    Character.gridEntries[3] = powerEntry.Power.PowerName;
-                                }
-                                powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                            else if (powName.Equals("Swift"))
-                            {
-                                if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                                {
-                                    Character.gridEntries[4] = powerEntry.Power.PowerName;
-                                }
-                                powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                            else if (powName.Equals("Hurdle"))
-                            {
-                                if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                                {
-                                    Character.gridEntries[5] = powerEntry.Power.PowerName;
-                                }
-                                powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                            else if (powName.Equals("Health"))
-                            {
-                                if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                                {
-                                    Character.gridEntries[6] = powerEntry.Power.PowerName;
-                                }
-                                powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                            else if (powName.Equals("Stamina"))
-                            {
-                                if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                                {
-                                    Character.gridEntries[7] = powerEntry.Power.PowerName;
-                                }
-                                powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                                displayLocation = powerEntry.Power.DisplayLocation;
-                            }
-                        }
-                        else
-                        {
-                            if (!Character.gridEntries.Contains(powerEntry.Power.PowerName))
-                            {
-                                Character.gridEntries.Add(powerEntry.Power.PowerName);
-                            }
-                            powerEntry.Power.DisplayLocation = Character.gridEntries.IndexOf(powerEntry.Power.PowerName);
-                            displayLocation = powerEntry.Power.DisplayLocation;
-                        }
+                        displayLocation = powerEntry.Power.DisplayLocation;
                     }
 
                     if (displayLocation <= -1) return CRtoXY(iCol, iRow);

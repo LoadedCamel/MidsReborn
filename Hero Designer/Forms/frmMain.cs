@@ -110,8 +110,6 @@ namespace Hero_Designer
 
         internal SaveFileDialog DlgSave;
 
-        private Base.Data_Classes.Character _character;
-
         public bool petWindowFlag { get; set; }
 
         private List<string> MMPets { get; } = new List<string>();
@@ -309,7 +307,6 @@ namespace Hero_Designer
                     {
                         loadedFromArgs = true;
                         PowerModified(markModified: false);
-                        Character.gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
                     }
                 }
                 bool toonLoaded = false;
@@ -1206,8 +1203,6 @@ namespace Hero_Designer
         {
             if (!File.Exists(fName))
                 return false;
-            if (_character != null)
-                Character.gridEntries = new List<string>() {"a", "b", "c", "d", "e", "f", "g", "h"};
             DataViewLocked = false;
             NewToon(true, true);
             Stream mStream = null;
@@ -2563,7 +2558,6 @@ namespace Hero_Designer
                 petsButton.Visible = true;
                 petsButton.Enabled = true;
             }
-            Character.gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
             NewDraw(skipDraw);
             UpdateControls(true);
             SetTitleBar(MidsContext.Character.IsHero());
