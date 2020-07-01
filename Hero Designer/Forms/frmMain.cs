@@ -464,24 +464,6 @@ namespace Hero_Designer
             }
         }
 
-        /*void accoladeButton_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Clicks != 2)
-                return;
-            accoladeButton.Checked = false;
-            if (fAccolade == null || fAccolade.IsDisposed)
-            {
-                IPower power = !MainModule.MidsController.Toon.IsHero() ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)] : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
-                List<IPower> iPowers = new List<IPower>();
-                int num = power.NIDSubPower.Length - 1;
-                for (int index = 0; index <= num; ++index)
-                    iPowers.Add(DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
-                fAccolade = new frmAccolade(this, iPowers) { Text = "Accolades" };
-            }
-            if (!fAccolade.Visible)
-                fAccolade.Show(this);
-        }*/
-
         void AccoladesWindowToolStripMenuItem_Click(object sender, EventArgs e) => accoladeButton_ButtonClicked();
 
         static int ArchetypeIndirectToIndex(int iIndirect)

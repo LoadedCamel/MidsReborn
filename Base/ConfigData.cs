@@ -50,7 +50,7 @@ public class ConfigData
     public Enums.CompOverride[] CompOverride { get; set; }
 
     public string DNickName { get; set; }
-    public List<string> DServers { get; } = new List<string>();
+    public List<string> DServers { get; set; }
     public string DSelServer { get; set; }
     public string DChannel { get; set; }
     public List<string> CheckedStatBoxes { get; set; } = new List<string>();
