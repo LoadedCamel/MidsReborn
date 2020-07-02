@@ -27,7 +27,7 @@ namespace Hero_Designer
 
         readonly frmMain _myParent;
 
-        readonly List<IPower> _myPowers;
+        List<IPower> _myPowers;
         Panel Panel1;
 
         ctlPopUp PopInfo;
@@ -91,6 +91,7 @@ namespace Hero_Designer
 
         void FillLists()
         {
+            _myPowers = _myPowers.OrderBy(x => x.DisplayName).ToList();
             llLeft.SuspendRedraw = true;
             llRight.SuspendRedraw = true;
             llLeft.ClearItems();
