@@ -79,6 +79,12 @@
   <ItemGroup>
     <Compile Include="clsZip.cs" />
     <Compile Include="clsHook.cs" />
+    <Compile Include="Forms\WindowMenuItems\frmPrestige.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmPrestige.Designer.cs">
+      <DependentUpon>frmPrestige.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImportTools.cs" />
     <Compile Include="FileAssocation.cs" />
     <Compile Include="Forms\frmColorOptions.cs">
@@ -2078,7 +2084,6 @@
     </Content>
     <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\mrb_splash.png" />
-    <None Include="Resources\mrbshield_reduced.png" />
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
@@ -2105,6 +2110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.resx">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WindowMenuItems\frmPrestige.resx">
+      <DependentUpon>frmPrestige.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmMMPowers.resx">
       <DependentUpon>frmMMPowers.cs</DependentUpon>

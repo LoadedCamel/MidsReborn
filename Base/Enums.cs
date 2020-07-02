@@ -661,6 +661,7 @@ public static class Enums
         Pet,
         Power,
         Powerset,
+        Prestige,
         Temp
     }
 

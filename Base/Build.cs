@@ -798,7 +798,7 @@ Note: Normal and Special enhancements cannot go above +3, and Inventions cannot 
             foreach (IPower power in powerset.Powers)
             {
                 int val2 = 0;
-                if (!power.IncludeFlag || power.Level > maxLevel + 1 || PowerUsed(power) || !MeetsRequirement(power, maxLevel + 1))
+                if (!power.IncludeFlag || power.Level > maxLevel + 1 || PowerUsed(power) || !MeetsRequirement(power, maxLevel + 1) || power.InherentType == Enums.eGridType.Prestige)
                     continue;
                 if (power.Requires.NPowerID.Length > 0)
                 {

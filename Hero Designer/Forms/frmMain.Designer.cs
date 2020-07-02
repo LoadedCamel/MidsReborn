@@ -175,7 +175,7 @@ namespace Hero_Designer
             this.tempPowersButton = new midsControls.ImageButton();
             this.accoladeButton = new midsControls.ImageButton();
             this.incarnateButton = new midsControls.ImageButton();
-            this.ibVetPools = new midsControls.ImageButton();
+            this.prestigeButton = new midsControls.ImageButton();
             this.ibPvX = new midsControls.ImageButton();
             this.ibRecipe = new midsControls.ImageButton();
             this.ibPopup = new midsControls.ImageButton();
@@ -1410,7 +1410,7 @@ namespace Hero_Designer
             this.topPanel.Controls.Add(this.tempPowersButton);
             this.topPanel.Controls.Add(this.accoladeButton);
             this.topPanel.Controls.Add(this.incarnateButton);
-            this.topPanel.Controls.Add(this.ibVetPools);
+            this.topPanel.Controls.Add(this.prestigeButton);
             this.topPanel.Controls.Add(this.ibPvX);
             this.topPanel.Controls.Add(this.ibRecipe);
             this.topPanel.Controls.Add(this.ibPopup);
@@ -1508,19 +1508,20 @@ namespace Hero_Designer
             this.incarnateButton.Toggle = true;
             this.incarnateButton.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.incarnateButton_ButtonClicked);
             // 
-            // ibVetPools
+            // prestigeButton
             // 
-            this.ibVetPools.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ibVetPools.Checked = false;
-            this.ibVetPools.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibVetPools.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibVetPools.Location = new System.Drawing.Point(713, 29);
-            this.ibVetPools.Name = "ibVetPools";
-            this.ibVetPools.Size = new System.Drawing.Size(105, 22);
-            this.ibVetPools.TabIndex = 111;
-            this.ibVetPools.TextOff = "Prestige Powers";
-            this.ibVetPools.TextOn = "Prestige Powers";
-            this.ibVetPools.Toggle = true;
+            this.prestigeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.prestigeButton.Checked = false;
+            this.prestigeButton.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.prestigeButton.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.prestigeButton.Location = new System.Drawing.Point(713, 29);
+            this.prestigeButton.Name = "prestigeButton";
+            this.prestigeButton.Size = new System.Drawing.Size(105, 22);
+            this.prestigeButton.TabIndex = 111;
+            this.prestigeButton.TextOff = "Prestige Powers";
+            this.prestigeButton.TextOn = "Prestige Powers";
+            this.prestigeButton.Toggle = true;
+            this.prestigeButton.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.prestige_ButtonClicked);
             // 
             // ibPvX
             // 
@@ -2096,7 +2097,7 @@ namespace Hero_Designer
         ImageButton ibSets;
         ImageButton ibSlotLevels;
         ImageButton ibTotals;
-        public ImageButton ibVetPools;
+        public ImageButton prestigeButton;
         ToolStripMenuItem ImportExportToolStripMenuItem;
         public ImageButton incarnateButton;
         ToolStripMenuItem IncarnateWindowToolStripMenuItem;

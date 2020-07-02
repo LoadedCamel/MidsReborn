@@ -61,6 +61,7 @@ namespace Hero_Designer
         bool FileModified { get; set; }
         frmIncarnate fIncarnate;
         frmMMPowers fMMPets;
+        frmPrestige fPrestige;
         bool FlipActive;
         PowerEntry FlipGP;
         readonly int FlipInterval;
@@ -2164,6 +2165,39 @@ namespace Hero_Designer
 
         void IncarnateWindowToolStripMenuItem_Click(object sender, EventArgs e) => incarnateButton_ButtonClicked();
 
+        void prestige_ButtonClicked()
+        {
+            bool flag = false;
+            if (fPrestige == null)
+                flag = true;
+            else if (fPrestige.IsDisposed)
+                flag = true;
+            if (flag)
+            {
+                frmMain iParent = this;
+                List<IPower> iPowers = new List<IPower>();
+                foreach (var power in DatabaseAPI.Database.Power)
+                {
+                    if (power.InherentType == Enums.eGridType.Prestige)
+                    {
+                        iPowers.Add(power);
+                    }
+                }
+                fPrestige = new frmPrestige(iParent, iPowers);
+            }
+
+            if (!fPrestige.Visible)
+            {
+                prestigeButton.Checked = true;
+                fPrestige.Show(this);
+            }
+            else
+            {
+                prestigeButton.Checked = false;
+                fPrestige.Close();
+            }
+        }
+
         void Info_Enhancement(I9Slot iEnh, int iLevel = -1) => myDataView.SetEnhancement(iEnh, iLevel);
 
         internal void UnlockFloatingStats()
@@ -2556,6 +2590,8 @@ namespace Hero_Designer
                 fTemp.Dispose();
             if (fIncarnate != null && !fIncarnate.IsDisposed)
                 fIncarnate.Dispose();
+            if (fPrestige != null && !fPrestige.IsDisposed)
+                fPrestige.Dispose();
             if (MidsContext.Character.Archetype.DisplayName != "Mastermind")
             {
                 petsButton.Visible = false;
@@ -5236,7 +5272,7 @@ namespace Hero_Designer
 
             var ibs = new[]
             {
-                ibSets, ibPvX, incarnateButton, tempPowersButton, petsButton, accoladeButton, heroVillain, ibVetPools, ibTotals, ibMode, ibSlotLevels,
+                ibSets, ibPvX, incarnateButton, tempPowersButton, petsButton, accoladeButton, heroVillain, prestigeButton, ibTotals, ibMode, ibSlotLevels,
                 ibPopup, ibRecipe, ibAccolade
             };
             foreach (var ib in ibs)
@@ -5525,6 +5561,12 @@ namespace Hero_Designer
             frmAccolade fAccolade = this.fAccolade;
             if (fAccolade.Visible)
                 fAccolade.UpdateFonts(llPrimary.Font);
+
+            if (this.fPrestige == null)
+                return;
+            frmPrestige fPrestige = this.fPrestige;
+            if (fPrestige.Visible)
+                fPrestige.UpdateFonts(llPrimary.Font);
         }
 
         void UpdatePowerList(ListLabelV3 llPower)
