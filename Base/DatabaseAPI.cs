@@ -97,8 +97,7 @@ public static class DatabaseAPI
         return Database.Power.TryFindIndex(p => p.StaticIndex == sidPower);
     }
 
-    public static int NidFromUidPower(string name)
-        => GetPowerByFullName(name)?.PowerIndex ?? -1;
+    public static int NidFromUidPower(string name) => GetPowerByFullName(name)?.PowerIndex ?? -1;
 
     public static int NidFromUidEntity(string uidEntity)
         => Database.Entities.TryFindIndex(se => string.Equals(se.UID, uidEntity, StringComparison.OrdinalIgnoreCase));

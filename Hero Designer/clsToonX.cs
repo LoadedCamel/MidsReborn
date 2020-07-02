@@ -1700,8 +1700,7 @@ namespace Hero_Designer
             int index1 = popupData.Add();
             popupData.Sections[index1].Add(power.DisplayName, PopUp.Colors.Title, 1.25f);
             if (power.PowerSetID > -1)
-                popupData.Sections[index1].Add("Powerset: " + DatabaseAPI.Database.Powersets[power.PowerSetID].DisplayName, PopUp.Colors.Text,
-                    0.9f, FontStyle.Bold, 1);
+                popupData.Sections[index1].Add("Powerset: " + DatabaseAPI.Database.Powersets[power.PowerSetID].DisplayName, PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
             if (hIDX > -1)
             {
                 if (CurrentBuild.Powers[hIDX].Chosen)
@@ -1802,8 +1801,7 @@ namespace Hero_Designer
                         }
 
                         I9SetData.sSetInfo[] setInfo = CurrentBuild.SetBonus[index2].SetInfo;
-                        EnhancementSet enhancementSet =
-                            DatabaseAPI.Database.EnhancementSets[CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].SetIDX];
+                        EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].SetIDX];
                         popupData.Sections[index1]
                             .Add(
                                 enhancementSet.DisplayName + " (" + Convert.ToString(setInfo[senInfoIdx].SlottedCount) + "/" +
@@ -1811,11 +1809,17 @@ namespace Hero_Designer
                         for (int bonusIdx = 0; bonusIdx <= enhancementSet.Bonus.Length - 1; ++bonusIdx)
                         {
                             if (setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted &
-                                (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE |
-                                 enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                                (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP &
+                                 MidsContext.Config.Inc.DisablePvE |
+                                 enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE &
+                                 !MidsContext.Config.Inc.DisablePvE |
                                  enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any))
-                                popupData.Sections[index1].Add(enhancementSet.GetEffectString(bonusIdx, false, true), PopUp.Colors.Effect,
-                                    0.9f, FontStyle.Bold, 1);
+                            {
+                                if (!string.IsNullOrWhiteSpace(enhancementSet.GetEffectString(bonusIdx, false, true)))
+                                {
+                                    popupData.Sections[index1].Add(enhancementSet.GetEffectString(bonusIdx, false, true), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                                }
+                            }
                         }
 
                         for (int enhIdx = 0; enhIdx <= CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].EnhIndexes.Length - 1; ++enhIdx)
