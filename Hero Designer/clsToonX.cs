@@ -1802,18 +1802,24 @@ namespace Hero_Designer
                         I9SetData.sSetInfo[] setInfo = CurrentBuild.SetBonus[index2].SetInfo;
                         EnhancementSet enhancementSet =
                             DatabaseAPI.Database.EnhancementSets[CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].SetIDX];
-                        popupData.Sections[index1]
-                            .Add(
-                                enhancementSet.DisplayName + " (" + Convert.ToString(setInfo[senInfoIdx].SlottedCount) + "/" +
-                                Convert.ToString(enhancementSet.Enhancements.Length) + ")", PopUp.Colors.Title);
+                        popupData.Sections[index1].Add(
+                                enhancementSet.DisplayName +
+                                " (" + Convert.ToString(setInfo[senInfoIdx].SlottedCount, null) + "/" + Convert.ToString(enhancementSet.Enhancements.Length, null) + ")",
+                                PopUp.Colors.Title);
+
+                        string enhEffectStr;
                         for (int bonusIdx = 0; bonusIdx <= enhancementSet.Bonus.Length - 1; ++bonusIdx)
                         {
+                            // Zed: fix for massive blank lines flood in set bonuses.
+                            // This only happens with the latest sets (Synapse's Shock, Power Transfer and the others).
+                            // Exact reason unknown.
+                            enhEffectStr = enhancementSet.GetEffectString(bonusIdx, false, true);
                             if (setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted &
+                                !string.IsNullOrWhiteSpace(enhEffectStr) &
                                 (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE |
-                                 enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                                 enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any))
-                                popupData.Sections[index1].Add(enhancementSet.GetEffectString(bonusIdx, false, true), PopUp.Colors.Effect,
-                                    0.9f, FontStyle.Bold, 1);
+                                    enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
+                                    enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any))
+                                popupData.Sections[index1].Add(enhEffectStr, PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
                         }
 
                         for (int enhIdx = 0; enhIdx <= CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx].EnhIndexes.Length - 1; ++enhIdx)

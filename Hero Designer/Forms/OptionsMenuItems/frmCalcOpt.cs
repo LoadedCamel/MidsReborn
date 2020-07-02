@@ -77,7 +77,7 @@ namespace Hero_Designer
             {
                 DialogResult = DialogResult.OK;
                 StoreControls();
-                myParent.DoCalcOptUpdates();
+                myParent.DoCalcOptUpdates(true);
                 Hide();
             }
         }

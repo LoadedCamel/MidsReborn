@@ -36,11 +36,12 @@ namespace Hero_Designer
             this.btnCancel = new System.Windows.Forms.Button();
             this.TabControl1 = new System.Windows.Forms.TabControl();
             this.TabPage3 = new System.Windows.Forms.TabPage();
-            this.chkShowAlphaPopup = new System.Windows.Forms.CheckBox();
+            this.chkColourPrint = new System.Windows.Forms.CheckBox();
             this.chkNoTips = new System.Windows.Forms.CheckBox();
             this.chkMiddle = new System.Windows.Forms.CheckBox();
             this.GroupBox17 = new System.Windows.Forms.GroupBox();
             this.chkColorInherent = new System.Windows.Forms.CheckBox();
+            this.chkShowAlphaPopup = new System.Windows.Forms.CheckBox();
             this.chkHighVis = new System.Windows.Forms.CheckBox();
             this.Label36 = new System.Windows.Forms.Label();
             this.chkStatBold = new System.Windows.Forms.CheckBox();
@@ -53,6 +54,7 @@ namespace Hero_Designer
             this.udRTFSize = new System.Windows.Forms.NumericUpDown();
             this.chkIOPrintLevels = new System.Windows.Forms.CheckBox();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
+            this.chkEnableDmgGraph = new System.Windows.Forms.CheckBox();
             this.rbGraphSimple = new System.Windows.Forms.RadioButton();
             this.rbGraphStacked = new System.Windows.Forms.RadioButton();
             this.rbGraphTwoLine = new System.Windows.Forms.RadioButton();
@@ -65,9 +67,6 @@ namespace Hero_Designer
             this.chkShowSOLevels = new System.Windows.Forms.CheckBox();
             this.chkRelSignOnly = new System.Windows.Forms.CheckBox();
             this.Label3 = new System.Windows.Forms.Label();
-            this.optTO = new System.Windows.Forms.RadioButton();
-            this.optDO = new System.Windows.Forms.RadioButton();
-            this.optSO = new System.Windows.Forms.RadioButton();
             this.optEnh = new System.Windows.Forms.Label();
             this.cbEnhLevel = new System.Windows.Forms.ComboBox();
             this.Label4 = new System.Windows.Forms.Label();
@@ -212,11 +211,12 @@ namespace Hero_Designer
             this.lblExample = new System.Windows.Forms.Label();
             this.GroupBox7 = new System.Windows.Forms.GroupBox();
             this.listScenarios = new System.Windows.Forms.ListBox();
-            this.chkColourPrint = new System.Windows.Forms.CheckBox();
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.chkEnableDmgGraph = new System.Windows.Forms.CheckBox();
+            this.optTO = new System.Windows.Forms.RadioButton();
+            this.optDO = new System.Windows.Forms.RadioButton();
+            this.optSO = new System.Windows.Forms.RadioButton();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.GroupBox17.SuspendLayout();
@@ -308,13 +308,14 @@ namespace Hero_Designer
             this.TabPage3.Text = "Enhancements & View";
             this.TabPage3.UseVisualStyleBackColor = true;
             // 
-            // chkShowAlphaPopup
+            // chkColourPrint
             // 
-            this.chkShowAlphaPopup.Location = new System.Drawing.Point(11, 91);
-            this.chkShowAlphaPopup.Name = "chkShowAlphaPopup";
-            this.chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
-            this.chkShowAlphaPopup.TabIndex = 79;
-            this.chkShowAlphaPopup.Text = "Include Alpha buffs in popups";
+            this.chkColourPrint.Location = new System.Drawing.Point(458, 282);
+            this.chkColourPrint.Name = "chkColourPrint";
+            this.chkColourPrint.Size = new System.Drawing.Size(221, 18);
+            this.chkColourPrint.TabIndex = 2;
+            this.chkColourPrint.Text = "Print in color";
+            this.chkColourPrint.Visible = false;
             // 
             // chkNoTips
             // 
@@ -364,6 +365,14 @@ namespace Hero_Designer
             this.chkColorInherent.Text = "Use alternate colors for inherents";
             this.myTip.SetToolTip(this.chkColorInherent, "Draws villain builds in red rather than blue.");
             this.chkColorInherent.Visible = false;
+            // 
+            // chkShowAlphaPopup
+            // 
+            this.chkShowAlphaPopup.Location = new System.Drawing.Point(11, 91);
+            this.chkShowAlphaPopup.Name = "chkShowAlphaPopup";
+            this.chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
+            this.chkShowAlphaPopup.TabIndex = 79;
+            this.chkShowAlphaPopup.Text = "Include Alpha buffs in popups";
             // 
             // chkHighVis
             // 
@@ -507,6 +516,17 @@ namespace Hero_Designer
             this.GroupBox5.TabStop = false;
             this.GroupBox5.Text = "Damage Graph Style:";
             // 
+            // chkEnableDmgGraph
+            // 
+            this.chkEnableDmgGraph.AutoSize = true;
+            this.chkEnableDmgGraph.Location = new System.Drawing.Point(6, 21);
+            this.chkEnableDmgGraph.Name = "chkEnableDmgGraph";
+            this.chkEnableDmgGraph.Size = new System.Drawing.Size(133, 18);
+            this.chkEnableDmgGraph.TabIndex = 6;
+            this.chkEnableDmgGraph.Text = "Enable Damage Graph";
+            this.chkEnableDmgGraph.UseVisualStyleBackColor = true;
+            this.chkEnableDmgGraph.CheckedChanged += new System.EventHandler(this.chkEnableDmgGraph_CheckedChanged);
+            // 
             // rbGraphSimple
             // 
             this.rbGraphSimple.Location = new System.Drawing.Point(6, 95);
@@ -647,45 +667,6 @@ namespace Hero_Designer
     "ee below that of the character.)";
             this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // optTO
-            // 
-            this.optTO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optTO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optTO.Location = new System.Drawing.Point(24, 74);
-            this.optTO.Name = "optTO";
-            this.optTO.Size = new System.Drawing.Size(44, 44);
-            this.optTO.TabIndex = 48;
-            this.optTO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optTO, "Training enhancements are the weakest kind.");
-            this.optTO.CheckedChanged += new System.EventHandler(this.optTO_CheckedChanged);
-            // 
-            // optDO
-            // 
-            this.optDO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optDO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optDO.Location = new System.Drawing.Point(72, 74);
-            this.optDO.Name = "optDO";
-            this.optDO.Size = new System.Drawing.Size(44, 44);
-            this.optDO.TabIndex = 49;
-            this.optDO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optDO, "Dual Origin enhancements can be bought from level 12 onwards.");
-            this.optDO.CheckedChanged += new System.EventHandler(this.optDO_CheckedChanged);
-            // 
-            // optSO
-            // 
-            this.optSO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optSO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optSO.Checked = true;
-            this.optSO.Location = new System.Drawing.Point(120, 74);
-            this.optSO.Name = "optSO";
-            this.optSO.Size = new System.Drawing.Size(44, 44);
-            this.optSO.TabIndex = 50;
-            this.optSO.TabStop = true;
-            this.optSO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optSO, "Single Origin enhancements are the most powerful kind, and can be bought from lev" +
-        "el 22.");
-            this.optSO.CheckedChanged += new System.EventHandler(this.optSO_CheckedChanged);
-            // 
             // optEnh
             // 
             this.optEnh.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -735,9 +716,9 @@ namespace Hero_Designer
             this.TabPage2.Controls.Add(this.GroupBox15);
             this.TabPage2.Controls.Add(this.GroupBox8);
             this.TabPage2.Controls.Add(this.GroupBox6);
-            this.TabPage2.Location = new System.Drawing.Point(4, 23);
+            this.TabPage2.Location = new System.Drawing.Point(4, 22);
             this.TabPage2.Name = "TabPage2";
-            this.TabPage2.Size = new System.Drawing.Size(749, 325);
+            this.TabPage2.Size = new System.Drawing.Size(749, 326);
             this.TabPage2.TabIndex = 1;
             this.TabPage2.Text = "Effects & Maths";
             this.TabPage2.UseVisualStyleBackColor = true;
@@ -945,9 +926,9 @@ namespace Hero_Designer
             this.TabPage6.Controls.Add(this.GroupBox13);
             this.TabPage6.Controls.Add(this.GroupBox10);
             this.TabPage6.Controls.Add(this.GroupBox4);
-            this.TabPage6.Location = new System.Drawing.Point(4, 23);
+            this.TabPage6.Location = new System.Drawing.Point(4, 22);
             this.TabPage6.Name = "TabPage6";
-            this.TabPage6.Size = new System.Drawing.Size(749, 325);
+            this.TabPage6.Size = new System.Drawing.Size(749, 326);
             this.TabPage6.TabIndex = 5;
             this.TabPage6.Text = "Exemping & Base Values";
             this.TabPage6.UseVisualStyleBackColor = true;
@@ -1157,10 +1138,10 @@ namespace Hero_Designer
             this.tabPage7.Controls.Add(this.GroupBox20);
             this.tabPage7.Controls.Add(this.GroupBox19);
             this.tabPage7.Controls.Add(this.GroupBox18);
-            this.tabPage7.Location = new System.Drawing.Point(4, 23);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(749, 325);
+            this.tabPage7.Size = new System.Drawing.Size(749, 326);
             this.tabPage7.TabIndex = 7;
             this.tabPage7.Text = "Discord Export Settings";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -1677,9 +1658,9 @@ namespace Hero_Designer
             // 
             this.TabPage4.Controls.Add(this.GroupBox12);
             this.TabPage4.Controls.Add(this.GroupBox11);
-            this.TabPage4.Location = new System.Drawing.Point(4, 23);
+            this.TabPage4.Location = new System.Drawing.Point(4, 22);
             this.TabPage4.Name = "TabPage4";
-            this.TabPage4.Size = new System.Drawing.Size(749, 325);
+            this.TabPage4.Size = new System.Drawing.Size(749, 326);
             this.TabPage4.TabIndex = 3;
             this.TabPage4.Text = "Forum Export Settings";
             this.TabPage4.UseVisualStyleBackColor = true;
@@ -2043,9 +2024,9 @@ namespace Hero_Designer
             this.TabPage5.Controls.Add(this.Label1);
             this.TabPage5.Controls.Add(this.GroupBox16);
             this.TabPage5.Controls.Add(this.GroupBox1);
-            this.TabPage5.Location = new System.Drawing.Point(4, 23);
+            this.TabPage5.Location = new System.Drawing.Point(4, 22);
             this.TabPage5.Name = "TabPage5";
-            this.TabPage5.Size = new System.Drawing.Size(749, 325);
+            this.TabPage5.Size = new System.Drawing.Size(749, 326);
             this.TabPage5.TabIndex = 4;
             this.TabPage5.Text = "Updates & Paths";
             this.TabPage5.UseVisualStyleBackColor = true;
@@ -2190,9 +2171,9 @@ namespace Hero_Designer
             this.TabPage1.Controls.Add(this.cmbAction);
             this.TabPage1.Controls.Add(this.GroupBox9);
             this.TabPage1.Controls.Add(this.GroupBox7);
-            this.TabPage1.Location = new System.Drawing.Point(4, 23);
+            this.TabPage1.Location = new System.Drawing.Point(4, 22);
             this.TabPage1.Name = "TabPage1";
-            this.TabPage1.Size = new System.Drawing.Size(749, 325);
+            this.TabPage1.Size = new System.Drawing.Size(749, 326);
             this.TabPage1.TabIndex = 6;
             this.TabPage1.Text = "Drag & Drop";
             this.TabPage1.UseVisualStyleBackColor = true;
@@ -2277,15 +2258,6 @@ namespace Hero_Designer
             this.listScenarios.TabIndex = 0;
             this.listScenarios.SelectedIndexChanged += new System.EventHandler(this.listScenarios_SelectedIndexChanged);
             // 
-            // chkColourPrint
-            // 
-            this.chkColourPrint.Location = new System.Drawing.Point(458, 282);
-            this.chkColourPrint.Name = "chkColourPrint";
-            this.chkColourPrint.Size = new System.Drawing.Size(221, 18);
-            this.chkColourPrint.TabIndex = 2;
-            this.chkColourPrint.Text = "Print in color";
-            this.chkColourPrint.Visible = false;
-            // 
             // myTip
             // 
             this.myTip.AutoPopDelay = 10000;
@@ -2296,16 +2268,50 @@ namespace Hero_Designer
             // 
             this.cPicker.FullOpen = true;
             // 
-            // chkEnableDmgGraph
+            // optTO
             // 
-            this.chkEnableDmgGraph.AutoSize = true;
-            this.chkEnableDmgGraph.Location = new System.Drawing.Point(6, 21);
-            this.chkEnableDmgGraph.Name = "chkEnableDmgGraph";
-            this.chkEnableDmgGraph.Size = new System.Drawing.Size(133, 18);
-            this.chkEnableDmgGraph.TabIndex = 6;
-            this.chkEnableDmgGraph.Text = "Enable Damage Graph";
-            this.chkEnableDmgGraph.UseVisualStyleBackColor = true;
-            this.chkEnableDmgGraph.CheckedChanged += new System.EventHandler(this.chkEnableDmgGraph_CheckedChanged);
+            this.optTO.Appearance = System.Windows.Forms.Appearance.Button;
+            this.optTO.BackgroundImage = global::Hero_Designer.Resources.optTO_Image;
+            this.optTO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.optTO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.optTO.Location = new System.Drawing.Point(24, 74);
+            this.optTO.Name = "optTO";
+            this.optTO.Size = new System.Drawing.Size(44, 44);
+            this.optTO.TabIndex = 48;
+            this.optTO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.myTip.SetToolTip(this.optTO, "Training enhancements are the weakest kind.");
+            this.optTO.CheckedChanged += new System.EventHandler(this.optTO_CheckedChanged);
+            // 
+            // optDO
+            // 
+            this.optDO.Appearance = System.Windows.Forms.Appearance.Button;
+            this.optDO.BackgroundImage = global::Hero_Designer.Resources.optDO_Image;
+            this.optDO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.optDO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.optDO.Location = new System.Drawing.Point(72, 74);
+            this.optDO.Name = "optDO";
+            this.optDO.Size = new System.Drawing.Size(44, 44);
+            this.optDO.TabIndex = 49;
+            this.optDO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.myTip.SetToolTip(this.optDO, "Dual Origin enhancements can be bought from level 12 onwards.");
+            this.optDO.CheckedChanged += new System.EventHandler(this.optDO_CheckedChanged);
+            // 
+            // optSO
+            // 
+            this.optSO.Appearance = System.Windows.Forms.Appearance.Button;
+            this.optSO.BackgroundImage = global::Hero_Designer.Resources.optSO_Image;
+            this.optSO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.optSO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.optSO.Checked = true;
+            this.optSO.Location = new System.Drawing.Point(120, 74);
+            this.optSO.Name = "optSO";
+            this.optSO.Size = new System.Drawing.Size(44, 44);
+            this.optSO.TabIndex = 50;
+            this.optSO.TabStop = true;
+            this.optSO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.myTip.SetToolTip(this.optSO, "Single Origin enhancements are the most powerful kind, and can be bought from lev" +
+        "el 22.");
+            this.optSO.CheckedChanged += new System.EventHandler(this.optSO_CheckedChanged);
             // 
             // frmCalcOpt
             // 

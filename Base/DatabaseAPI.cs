@@ -505,9 +505,29 @@ public static class DatabaseAPI
         return enhRecipe.Rarity == Recipe.RecipeRarity.UltraRare && !EnhIsATO(enhIdx) && !EnhIsWinterEventE(enhIdx);
     }
 
+    public static bool EnhIsNaturallyAttuned(string enhUID)
+    {
+        if (string.IsNullOrWhiteSpace(enhUID)) return false;
+
+        int enhIdx = GetEnhancementByUIDName(enhUID);
+        if (enhIdx == -1) return false;
+
+        return EnhIsNaturallyAttuned(enhIdx);
+    }
+
     public static bool EnhIsNaturallyAttuned(int enhIdx)
     {
         if (enhIdx == -1) return false;
+        // Zed: Added safeties for those like me who like to play dangerously
+        // and realise Enhancement.StaticIndex is --not-- the same as the index on Database.Enhancements .
+        try
+        {
+            IEnhancement enhData = Database.Enhancements[enhIdx];
+        }
+        catch (Exception)
+        {
+            return false;
+        }
 
         return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || EnhIsMovieE(enhIdx);
     }
@@ -621,6 +641,21 @@ public static class DatabaseAPI
                 .Replace("Natural__", "Magic_")
                 .Replace("Mutation_", "Magic_");
         }
+    }
+
+    public static bool EnhHasCatalyst(int enhIdx)
+    {
+        string enhUID;
+        try
+        {
+            enhUID = Database.Enhancements[enhIdx].UID;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
+        return EnhHasCatalyst(enhUID);
     }
 
     public static bool EnhHasCatalyst(string iName)

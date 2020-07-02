@@ -1824,7 +1824,7 @@ namespace Hero_Designer
         void frmMain_Closed(object sender, EventArgs e)
         {
             MidsContext.Config.LastSize = Size;
-            MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
+            //MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
         }
 
         void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -1885,6 +1885,12 @@ namespace Hero_Designer
             if (drawing != null)
                 DoRedraw();
             UpdateColours();
+        }
+
+        internal void DoCalcOptUpdates(bool SaveConfig)
+        {
+            if (SaveConfig) MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
+            DoCalcOptUpdates();
         }
 
         void GetBestDamageValues()

@@ -236,16 +236,22 @@ namespace midsControls
                         color = Color.White;
                     }
 
-                    string relativeString = string.Empty;
+                    string relativeString;
                     // Always display relative level if present
                     //if (MidsContext.Config.ShowEnhRel)
                     relativeString = Enums.GetRelativeString(slot.Enhancement.RelativeLevel, MidsContext.Config.ShowRelSymbols);
 
-                    if (MidsContext.Config.ShowSOLevels)
+                    // +3 SO do not exist ingame, at least not through combinations.
+                    // Display flat level instead.
+                    if (slot.Enhancement.RelativeLevel == Enums.eEnhRelative.PlusThree)
+                    {
+                        // I dunno. MidsContext.Character.Level == 48 ?
+                        relativeString = Convert.ToString(Math.Max(53, MidsContext.Character.Level + 5), null);
+                    }
+                    else if (MidsContext.Config.ShowSOLevels)
                     {
                         // It isn't slot.Enhancement.IOLevel... always set to 0
                         // Improvisation it is...
-                        // I dunno. MidsContext.Character.Level == 48 ?
                         relativeString = Convert.ToString(Math.Max(50, MidsContext.Character.Level + 2), null) + relativeString;
                     }
 
@@ -253,7 +259,8 @@ namespace midsControls
                         //MidsContext.Config.ShowEnhRel &&
                         MidsContext.Config.ShowSOLevels &&
                         slot.Enhancement.RelativeLevel != Enums.eEnhRelative.None &&
-                        slot.Enhancement.RelativeLevel != Enums.eEnhRelative.Even
+                        slot.Enhancement.RelativeLevel != Enums.eEnhRelative.Even &&
+                        slot.Enhancement.RelativeLevel != Enums.eEnhRelative.PlusThree
                     )
                     {
                         iValue2.Width += 10f;

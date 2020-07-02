@@ -757,7 +757,9 @@ namespace Base.Data_Classes
                     case Enums.eType.SpecialO:
                         popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(byte.MaxValue, byte.MaxValue, 0), 1f, FontStyle.Bold, 0);
                         break;
-                    case Enums.eType.SetO:
+                    case Enums.eType.SetO when !DatabaseAPI.EnhHasCatalyst(enhancement.UID) && !DatabaseAPI.EnhIsNaturallyAttuned(enhancement.UID):
+                        // From a player's point of view, catalysed have no level.
+                        // They just adjust to the user's.
                         popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false), PopUp.Colors.Invention, 1f, FontStyle.Bold, 0);
                         break;
                 }

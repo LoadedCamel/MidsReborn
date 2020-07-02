@@ -403,30 +403,7 @@ public class Enhancement : IEnhancement
         return level;
     }
 
-    public string GetSpecialName()
-    {
-        string specialOriginText;
-        switch (SubTypeID)
-        {
-            case Enums.eSubtype.Hamidon:
-                specialOriginText = "Hamidon";
-                break;
-
-            case Enums.eSubtype.Hydra:
-                specialOriginText = "Hydra";
-                break;
-
-            case Enums.eSubtype.Titan:
-                specialOriginText = "Titan";
-                break;
-
-            default:
-                specialOriginText = "Unknown";
-                break;
-        }
-
-        return specialOriginText + " Origin";
-    }
+    public string GetSpecialName() => $"{Enum.GetName(typeof(Enums.eSubtype), (int)SubTypeID)} Origin";
 
     public static float ApplyED(Enums.eSchedule iSched, float iVal)
     {
