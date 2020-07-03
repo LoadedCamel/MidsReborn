@@ -17,7 +17,8 @@ namespace Hero_Designer
             try
             {
                 MidsContext.AssertVersioning();
-                Application.Run(new frmMain());
+                using frmMain frmMain = new frmMain();
+                Application.Run(frmMain);
             }
             catch (Exception ex)
             {

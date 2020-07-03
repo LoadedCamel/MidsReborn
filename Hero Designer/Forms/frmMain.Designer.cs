@@ -1610,11 +1610,10 @@ namespace Hero_Designer
             // 
             // pnlGFXFlow
             // 
-            this.pnlGFXFlow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlGFXFlow.Anchor = AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Left;
             this.pnlGFXFlow.AutoScroll = true;
             this.pnlGFXFlow.Controls.Add(this.pnlGFX);
-            this.pnlGFXFlow.Location = new System.Drawing.Point(500, 78);
+            this.pnlGFXFlow.Location = new System.Drawing.Point(480, 80);
             this.pnlGFXFlow.Name = "pnlGFXFlow";
             this.pnlGFXFlow.Size = new System.Drawing.Size(687, 891);
             this.pnlGFXFlow.TabIndex = 112;

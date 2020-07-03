@@ -60,7 +60,7 @@ namespace midsControls
             gTarget = iTarget.CreateGraphics();
             cTarget = iTarget;
             //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-            DefaultFont = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+            DefaultFont = new Font("Arial", 11f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             BackColor = iTarget.BackColor;
         }
 
@@ -103,7 +103,7 @@ namespace midsControls
                 gTarget.SmoothingMode = SmoothingMode.HighQuality;
                 gTarget.TextRenderingHint = TextRenderingHint.SystemDefault;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-                DefaultFont = new Font("Segoe UI", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+                DefaultFont = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
                 BackColor = iTarget.BackColor;
                 if (szBuffer.Height < cTarget.Height)
                 {
@@ -115,10 +115,24 @@ namespace midsControls
         void DrawSplit()
         {
             Pen pen = new Pen(Color.Goldenrod, 2f);
+            int iValue = 0;
             checked
             {
-                int iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 1;
-                bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 195), ScaleDown(iValue));
+                switch (vcCols)
+                { 
+                    case 2:
+                        iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 65;
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width), ScaleDown(iValue));
+                        break;
+                    case 3:
+                        iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 40;
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 205), ScaleDown(iValue));
+                        break;
+                    case 4:
+                        iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 30;
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 200), ScaleDown(iValue));
+                        break;
+                }
             }
         }
 
@@ -231,14 +245,14 @@ namespace midsControls
             string text = string.Empty;
             string text2 = string.Empty;
             RectangleF rectangleF = new RectangleF(0f, 0f, 0f, 0f);
-            var stringFormat = new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.NoClip)
+            var stringFormat = new StringFormat(StringFormatFlags.NoClip)
             {
                 Trimming = StringTrimming.None
             };
             Pen pen2 = new Pen(Color.Black);
             Rectangle rectangle = default;
             //Font font = new Font(DefaultFont.FontFamily, FontScale(DefaultFont.SizeInPoints), DefaultFont.Style, GraphicsUnit.Point);
-            Font font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            Font font = new Font("Arial", FontScale(DefaultFont.Size), FontStyle.Bold, GraphicsUnit.Pixel, 0);
             int slotChk = MidsContext.Character.SlotCheck(iSlot);
             Enums.ePowerState ePowerState = iSlot.State;
             bool canPlaceSlot = MidsContext.Character.CanPlaceSlot;
@@ -281,8 +295,8 @@ namespace midsControls
 
                 rectangleF.Height = szSlot.Height;
                 rectangleF.Width = szSlot.Width;
-                stringFormat.Alignment = StringAlignment.Center;
-                stringFormat.LineAlignment = StringAlignment.Center;
+                stringFormat.Alignment = StringAlignment.Near;
+                stringFormat.LineAlignment = StringAlignment.Near;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bool grey;
                 ImageAttributes imageAttr;
@@ -512,7 +526,7 @@ namespace midsControls
                     solidBrush = new SolidBrush(Color.FromArgb(128, 0, 0, 0));
                 }
 
-                stringFormat.FormatFlags |= StringFormatFlags.NoWrap;
+                stringFormat.FormatFlags = StringFormatFlags.MeasureTrailingSpaces;
                 if (MidsContext.Config.EnhanceVisibility)
                 {
                     string iStr4 = text;
@@ -531,7 +545,7 @@ namespace midsControls
                 }
                 else
                 {
-                    bxBuffer.Graphics.DrawString(text, font, solidBrush, ScaleDown(rectangleF), stringFormat);
+                    bxBuffer.Graphics.DrawString(text, font, solidBrush, ScaleDown(rectangleF));
                 }
 
                 return result;
@@ -1813,13 +1827,13 @@ namespace midsControls
             {
                 if (iRow >= vcRowsPowers)
                 {
-                    result.X = iCol * (SzPower.Width + 8);
-                    result.Y = 6 + iRow * (SzPower.Height + 20);
+                    result.X = iCol * (SzPower.Width + 13);
+                    result.Y = 6 + iRow * (SzPower.Height + 25);
                 }
                 else
                 {
-                    result.X = iCol * (SzPower.Width + 10);
-                    result.Y = iRow * (SzPower.Height + 20);
+                    result.X = iCol * (SzPower.Width + 15);
+                    result.Y = iRow * (SzPower.Height + 25);
                 }
 
                 return result;
