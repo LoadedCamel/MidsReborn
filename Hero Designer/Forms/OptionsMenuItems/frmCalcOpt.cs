@@ -626,11 +626,12 @@ namespace Hero_Designer
             chkStatBold.Checked = config.RtFont.PairedBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
             dcNickName.Text = config.DNickName;
-            dcChannel.Text = config.DChannel;            
-            foreach (var item in config.DServers.Append(config.DSelServer).Where(item => !string.IsNullOrWhiteSpace(item) && !dcExList.Items.Contains(config.DSelServer)).Distinct())
+            dcChannel.Text = config.DChannel;
+            //commented out for replacement forthcoming
+            /*foreach (var item in config.DServers.Append(config.DSelServer).Where(item => !string.IsNullOrWhiteSpace(item) && !dcExList.Items.Contains(config.DSelServer)).Distinct())
                 dcExList.Items.Add(item);
             if (!string.IsNullOrWhiteSpace(config.DSelServer))
-                dcExList.SelectedItem = config.DSelServer;
+                dcExList.SelectedItem = config.DSelServer;*/
             lblSaveFolder.Text = config.GetSaveFolder();
             foreach (var item in config.CheckedStatBoxes)
             {
