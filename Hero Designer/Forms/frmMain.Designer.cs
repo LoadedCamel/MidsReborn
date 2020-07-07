@@ -130,7 +130,9 @@ namespace Hero_Designer
             this.tsView4Col = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewIOLevels = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsViewSOLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewRelative = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsViewRelativeAsSigns = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSlotLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewActualDamage_New = new System.Windows.Forms.ToolStripMenuItem();
@@ -1114,12 +1116,30 @@ namespace Hero_Designer
             this.tsViewIOLevels.Text = "Show &IO Levels";
             this.tsViewIOLevels.Click += new System.EventHandler(this.tsViewIOLevels_Click);
             // 
+            // tsViewSOLevels
+            // 
+            this.tsViewSOLevels.Checked = false;
+            this.tsViewSOLevels.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            this.tsViewSOLevels.Name = "tsViewSOLevels";
+            this.tsViewSOLevels.Size = new System.Drawing.Size(282, 22);
+            this.tsViewSOLevels.Text = "Show SO/HO Levels";
+            this.tsViewSOLevels.Click += new System.EventHandler(tsViewSOLevels_Click);
+            // 
             // tsViewRelative
             // 
             this.tsViewRelative.Name = "tsViewRelative";
             this.tsViewRelative.Size = new System.Drawing.Size(282, 22);
             this.tsViewRelative.Text = "Show &Enhancement Relative Levels";
             this.tsViewRelative.Click += new System.EventHandler(this.tsViewRelative_Click);
+            // 
+            // tsViewRelativeAsSigns
+            // 
+            this.tsViewRelativeAsSigns.Checked = false;
+            this.tsViewRelativeAsSigns.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            this.tsViewRelativeAsSigns.Name = "tsViewRelativeAsSigns";
+            this.tsViewRelativeAsSigns.Size = new System.Drawing.Size(282, 22);
+            this.tsViewRelativeAsSigns.Text = "Show Relative Levels with signs ('+'/'-')";
+            this.tsViewRelativeAsSigns.Click += new System.EventHandler(tsViewRelativeAsSigns_Click);
             // 
             // tsViewSlotLevels
             // 
@@ -2062,7 +2082,9 @@ namespace Hero_Designer
         ToolStripMenuItem tsViewDPS_New;
         ToolStripMenuItem tsViewGraphs;
         ToolStripMenuItem tsViewIOLevels;
+        ToolStripMenuItem tsViewSOLevels;
         ToolStripMenuItem tsViewRelative;
+        ToolStripMenuItem tsViewRelativeAsSigns;
         ToolStripMenuItem tsViewSetCompare;
         ToolStripMenuItem tsViewSets;
         ToolStripMenuItem tsViewSlotLevels;

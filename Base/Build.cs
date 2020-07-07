@@ -548,16 +548,32 @@ public class Build
         if (MessageBox.Show(
                 $@"Really set all placed enhancements to a relative level of {display}?
 
-Note: Normal and Special enhancements cannot go above +3, and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) !=
+Note: Normal enhancements cannot go above +3,
+Special enhancements cannot go above +2,
+and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) !=
             DialogResult.Yes)
             return false;
         foreach (PowerEntry power in Powers)
         {
             foreach (SlotEntry slot in power.Slots)
             {
-                if (slot.Enhancement.Enh <= -1)
-                    continue;
+                if (slot.Enhancement.Enh <= -1) continue;
+
                 IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
+                if (enhancement.TypeID == Enums.eType.SpecialO)
+                {
+                    if (newVal > Enums.eEnhRelative.PlusTwo) newVal = Enums.eEnhRelative.PlusTwo;
+                }
+                else if (enhancement.TypeID == Enums.eType.Normal)
+                {
+                    if (newVal > Enums.eEnhRelative.PlusThree) newVal = Enums.eEnhRelative.PlusThree;
+                }
+                else if (enhancement.TypeID == Enums.eType.InventO || enhancement.TypeID == Enums.eType.SetO)
+                {
+                    if (newVal < Enums.eEnhRelative.Even && newVal != Enums.eEnhRelative.None) newVal = Enums.eEnhRelative.Even;
+                }
+
+                /*
                 if (newVal > Enums.eEnhRelative.PlusThree)
                 {
                     int num = enhancement.TypeID == Enums.eType.Normal ? 0 : (enhancement.TypeID != Enums.eType.SpecialO ? 1 : 0);
@@ -570,6 +586,8 @@ Note: Normal and Special enhancements cannot go above +3, and Inventions cannot 
                 }
                 else
                     slot.Enhancement.RelativeLevel = newVal;
+                */
+                slot.Enhancement.RelativeLevel = newVal;
             }
         }
 

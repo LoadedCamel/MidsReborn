@@ -83,6 +83,7 @@ public class ConfigData
     public bool ShowSlotLevels { get; set; }
     public bool ShowEnhRel { get; set; }
     public bool ShowRelSymbols { get; set; }
+    public bool ShowSOLevels { get; set; }
     public bool EnhanceVisibility { get; set; }
     public Tips Tips { get; set; }
     public bool PopupRecipes { get; set; }

@@ -184,7 +184,7 @@ namespace Hero_Designer
             Mids_Version = MidsContext.AppAssemblyVersion;
 
             Character_Name = MidsContext.Character.Name;
-            Character_Level = Convert.ToString(num);
+            Character_Level = Convert.ToString(num, null);
             Character_Archetype = MidsContext.Character.Archetype.DisplayName;
             Character_Primary_Power = MidsContext.Character.Powersets[0].DisplayName;
             Character_Secondary_Power = MidsContext.Character.Powersets[1].DisplayName;

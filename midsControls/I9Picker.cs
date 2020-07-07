@@ -55,6 +55,8 @@ namespace midsControls
         Color _cHighlight;
         Color _cSelected;
 
+        private IEnhancement SelectedEnhancement = null;
+
         IContainer components;
 
 
@@ -83,6 +85,14 @@ namespace midsControls
             _cSelected = Color.BlueViolet;
             _nPowerIDX = -1;
             InitializeComponent();
+        }
+
+        public new void BringToFront()
+        {
+            _lastRelativeLevel = Enums.eEnhRelative.Even;
+            UI.View.RelLevel = Enums.eEnhRelative.Even;
+
+            base.BringToFront();
         }
 
         [field: AccessedThroughProperty("tTip")]
@@ -787,8 +797,7 @@ namespace midsControls
 
         int GetCellIndex(Point cell)
         {
-            if (cell.X < 0 | cell.Y <= 0)
-                return -1;
+            if (cell.X < 0 | cell.Y <= 0) return -1;
             return checked((cell.Y - 1) * 4 + cell.X);
         }
 
@@ -805,7 +814,7 @@ namespace midsControls
 
                 if (cellXY.Y == 0)
                 {
-                    UI.View.TabID = (Enums.eType) cellXY.X;
+                    UI.View.TabID = (Enums.eType)cellXY.X;
                     if (cellXY.X == 4 & UI.SetTypes.Length > 0)
                     {
                         UI.View.SetTypeID = 0;
@@ -815,7 +824,8 @@ namespace midsControls
                         }
                     }
                     else
-                        switch (cellXY.X)
+                    {
+                        /*switch (cellXY.X)
                         {
                             case 2:
                             {
@@ -833,13 +843,25 @@ namespace midsControls
                                     UI.Initial.TabID = Enums.eType.Normal;
                                 break;
                             }
-                            case 3 when UI.View.RelLevel > Enums.eEnhRelative.PlusThree:
-                                UI.View.RelLevel = Enums.eEnhRelative.PlusThree;
+                            case 3 when UI.View.RelLevel > Enums.eEnhRelative.PlusTwo:
+                                UI.View.RelLevel = Enums.eEnhRelative.PlusTwo;
                                 break;
+                        }*/
+                        UI.View.RelLevel = Enums.eEnhRelative.Even;
+                        if (cellXY.X == 2)
+                        {
+                            if (UI.Initial.TabID == Enums.eType.Normal) UI.Initial.TabID = Enums.eType.InventO;
                         }
+                        else if (cellXY.X == 1)
+                        {
+                            if (UI.Initial.TabID == Enums.eType.InventO) UI.Initial.TabID = Enums.eType.Normal;
+                        }
+                    }
 
                     if (cellXY.X == 0)
+                    {
                         DoEnhancementPicked(-1);
+                    }
                 }
                 else if (cellXY.Y > 0)
                 {
@@ -882,6 +904,7 @@ namespace midsControls
                     }
                     else if (CellSetSelect(cellIndex))
                     {
+                        UI.View.RelLevel = Enums.eEnhRelative.Even;
                         UI.View.SetID = cellIndex;
                         CheckAndFixIOLevel();
                         DoHover(_hoverCell, true);
@@ -1175,23 +1198,28 @@ namespace midsControls
                         {
                             case 0:
                                 tId = -1;
+                                SelectedEnhancement = null;
                                 SetInfoStrings("", "");
                                 break;
                             case Enums.eType.Normal:
                                 tId = UI.NO[cellIndex];
+                                SelectedEnhancement = DatabaseAPI.Database.Enhancements[tId];
                                 SetInfoStrings(DatabaseAPI.Database.Enhancements[tId].Name, DatabaseAPI.Database.Enhancements[tId].Desc);
                                 break;
                             case Enums.eType.InventO:
                                 tId = UI.IO[cellIndex];
+                                SelectedEnhancement = DatabaseAPI.Database.Enhancements[tId];
                                 SetInfoStrings(DatabaseAPI.Database.Enhancements[tId].Name, DatabaseAPI.Database.Enhancements[tId].Desc);
                                 break;
                             case Enums.eType.SpecialO:
                                 tId = UI.SpecialO[cellIndex];
+                                SelectedEnhancement = DatabaseAPI.Database.Enhancements[tId];
                                 SetInfoStrings(DatabaseAPI.Database.Enhancements[tId].Name, DatabaseAPI.Database.Enhancements[tId].Desc);
                                 break;
                             case Enums.eType.SetO:
                             {
                                 tId = DatabaseAPI.Database.EnhancementSets[UI.Sets[UI.View.SetTypeID][UI.View.SetID]].Enhancements[cellIndex];
+                                SelectedEnhancement = DatabaseAPI.Database.Enhancements[tId];
                                 string text = DatabaseAPI.Database.Enhancements[tId].Name;
                                 string str2;
                                 if (DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[tId].nIDSet].LevelMin ==
@@ -1738,9 +1766,18 @@ namespace midsControls
                     eEnhRelative++;
                 }
 
-                if (eEnhRelative > Enums.eEnhRelative.PlusThree & (UI.View.TabID == Enums.eType.Normal | (int) UI.View.TabID == 3))
+                if (SelectedEnhancement != null && (DatabaseAPI.EnhHasCatalyst(SelectedEnhancement.UID) || DatabaseAPI.EnhIsNaturallyAttuned(SelectedEnhancement.StaticIndex)))
+                {
+                    eEnhRelative = Enums.eEnhRelative.Even;
+                }
+                //if (eEnhRelative > Enums.eEnhRelative.PlusThree & (UI.View.TabID == Enums.eType.Normal | (int) UI.View.TabID == 3))
+                else if (eEnhRelative > Enums.eEnhRelative.PlusThree & (UI.View.TabID == Enums.eType.Normal))
                 {
                     eEnhRelative = Enums.eEnhRelative.PlusThree;
+                }
+                else if (eEnhRelative > Enums.eEnhRelative.PlusTwo & (UI.View.TabID == Enums.eType.SpecialO))
+                {
+                    eEnhRelative = Enums.eEnhRelative.PlusTwo;
                 }
                 else if (eEnhRelative < Enums.eEnhRelative.Even & (UI.View.TabID == Enums.eType.InventO | UI.View.TabID == Enums.eType.SetO))
                 {

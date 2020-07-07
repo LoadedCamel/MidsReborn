@@ -63,18 +63,18 @@ namespace HeroViewer
         {
             I9Slot i9Slot = new I9Slot
             {
-                //Enh = DatabaseAPI.GetEnhancementByUIDName(aSlots[j].InternalName);
+                //Enh = DatabaseAPI.Get EnhancementByUIDName(aSlots[j].InternalName);
                 Enh = enhID
             };
 
             //str1 = buildFileLinesArray[index3].enhancementName;
             if (i9Slot.Enh == -1)
             {
-                string iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", String.Empty);
+                string iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", string.Empty);
                 i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
                 if (i9Slot.Enh == -1)
                 {
-                    _ = MessageBox.Show(("Error getting data for enhancement UID: " + enhInternalName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _ = MessageBox.Show("Error getting data for enhancement UID: " + enhInternalName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     i9Slot.Enh = 0;
                 }
             }
@@ -255,7 +255,7 @@ namespace HeroViewer
                     }
 
                     this.CharacterInfo.Name = m.Groups[1].Value;
-                    this.CharacterInfo.Archetype = m.Groups[4].Value.Replace("Class_", String.Empty);
+                    this.CharacterInfo.Archetype = m.Groups[4].Value.Replace("Class_", string.Empty);
                     this.CharacterInfo.Origin = m.Groups[3].Value;
                     this.CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
 
@@ -430,7 +430,7 @@ namespace HeroViewer
             Regex r; Regex rs;
             Match m; Match ms;
             string cnt;
-            int i; int j;
+            int i;
 
             RawPowerData p = new RawPowerData { Valid = false };
             List<RawEnhData> powerSlots = new List<RawEnhData>();
@@ -449,7 +449,7 @@ namespace HeroViewer
             }
 
             cnt = Regex.Replace(cnt, @"[\r\n]", "\r\n"); // Line conversion to PC/Win format (just in case)
-            cnt = Regex.Replace(cnt, @"\<br \/\>", String.Empty); // For good ol' Mids 1.962 support
+            cnt = Regex.Replace(cnt, @"\<br \/\>", string.Empty); // For good ol' Mids 1.962 support
             cnt = Regex.Replace(cnt, @"\&nbsp\;", " "); // Nbsp html entities to spaces
             cnt = Regex.Replace(cnt, @" {2,}", "\t"); // Note: [JS] Use of \s here break newlines
 
@@ -481,7 +481,7 @@ namespace HeroViewer
                 // Name is empty
                 rs = new Regex(@"Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
                 ms = rs.Match(cnt);
-                this.CharacterInfo.Name = String.Empty;
+                this.CharacterInfo.Name = string.Empty;
                 this.CharacterInfo.Level = Convert.ToInt32(ms.Groups[1].Value, null);
                 this.CharacterInfo.Origin = ms.Groups[2].Value;
                 this.CharacterInfo.Archetype = ms.Groups[3].Value;
@@ -533,7 +533,7 @@ namespace HeroViewer
                 p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, DatabaseAPI.GetArchetypeByName(this.CharacterInfo.Archetype).Idx);
                 p.Powerset = p.pData != null ? DatabaseAPI.GetPowersetByIndex(p.pData.PowerSetIndex) : null;
                 p.Valid = this.CheckValid(p.pData);
-                PSlotsStr = (m.Groups.Count > 3) ? m.Groups[3].Value.Trim() : String.Empty;
+                PSlotsStr = (m.Groups.Count > 3) ? m.Groups[3].Value.Trim() : string.Empty;
                 if (!String.IsNullOrEmpty(PSlotsStr))
                 {
                     // Extract enhancement name and slot level ('A' for power inherent slot)

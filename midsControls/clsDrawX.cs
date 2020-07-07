@@ -183,59 +183,60 @@ namespace midsControls
         static int IndexFromLevel()
             => MidsContext.Character.CurrentBuild.Powers.FindIndex(pow => pow?.Level == MidsContext.Character.RequestedLevel);
 
-        void DrawEnhancement(SlotEntry slot, Font font, Graphics g, ref RectangleF rect)
+        void DrawEnhancementLevel(SlotEntry slot, Font font, Graphics g, ref RectangleF rect)
         {
             unchecked
             {
                 Enums.eType enhType = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID;
-                if (!MidsContext.Config.I9.HideIOLevels && (enhType == Enums.eType.SetO || enhType == Enums.eType.InventO))
+                bool catalystSet = false;
+                if (enhType == Enums.eType.SetO || enhType == Enums.eType.InventO)
                 {
                     RectangleF iValue2 = rect;
                     iValue2.Y -= 3f;
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
                     string relativeLevelNumeric;
                     string enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
+                    catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh);
                     // Catalysed enhancements take character level no matter what.
                     // Game does not allow boosters over enhancement catalysts.
-                    if (DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh))
+                    // [Zed] Note: I am not sure yet if catalysed enhancements are considered having the level of the user.
+                    // Meaning a max level 30 IO --MAY-- have the stats of a level 50 one, even if it doesn't exist.
+                    if (catalystSet || slot.Enhancement.RelativeLevel <= Enums.eEnhRelative.Even)
                     {
                         relativeLevelNumeric = string.Empty;
                     }
                     else
                     {
-                        relativeLevelNumeric = slot.Enhancement.RelativeLevel switch
-                        {
-                            // Zed - need to move this in Enums.
-                            Enums.eEnhRelative.PlusOne => "+1",
-                            Enums.eEnhRelative.PlusTwo => "+2",
-                            Enums.eEnhRelative.PlusThree => "+3",
-                            Enums.eEnhRelative.PlusFour => "+4",
-                            Enums.eEnhRelative.PlusFive => "+5",
-                            _ => string.Empty
-                        };
+                        relativeLevelNumeric = Enums.GetRelativeString(slot.Enhancement.RelativeLevel, false);
                     }
 
-                    // If enhancement has boosters, need to stretch the level drawing zone a little.
-                    // Or relative level doesn't fit in.
+                    // If enhancement has boosters, need to stretch the level drawing zone a little,
+                    // or relative level doesn't fit in.
                     if (!string.IsNullOrEmpty(relativeLevelNumeric))
                     {
                         iValue2.Width += 10f;
                         iValue2.X -= 5f;
                     }
-                    string iStr = Convert.ToString(checked(slot.Enhancement.IOLevel + 1)) + relativeLevelNumeric;
-                    RectangleF bounds = ScaleDown(iValue2);
-                    Color cyan = Color.Cyan;
-                    Color outline = Color.FromArgb(128, 0, 0, 0);
-                    float outlineSpace = 1f;
-                    g = bxBuffer.Graphics;
-                    DrawOutlineText(iStr, bounds, cyan, outline, font, outlineSpace, g);
+
+                    string iStr = (MidsContext.Config.I9.HideIOLevels ? string.Empty : Convert.ToString(checked(slot.Enhancement.IOLevel + 1))) + relativeLevelNumeric;
+                    if (!catalystSet)
+                    {
+                        RectangleF bounds = ScaleDown(iValue2);
+                        Color cyan = Color.Cyan;
+                        Color outline = Color.FromArgb(128, 0, 0, 0);
+                        float outlineSpace = 1f;
+                        g = bxBuffer.Graphics;
+
+                        DrawOutlineText(iStr, bounds, cyan, outline, font, outlineSpace, g);
+                    }
                 }
-                else if (MidsContext.Config.ShowEnhRel && (enhType == Enums.eType.Normal || enhType == Enums.eType.SpecialO))
+                else if (enhType == Enums.eType.Normal || enhType == Enums.eType.SpecialO)
                 {
                     RectangleF iValue2 = rect;
                     iValue2.Y -= 3f;
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
                     Color color;
+                    
                     if (slot.Enhancement.RelativeLevel == 0)
                     {
                         color = Color.FromArgb(172,67,50);
@@ -254,13 +255,38 @@ namespace midsControls
                         color = Color.White;
                     }
 
-                    string relativeString = Enums.GetRelativeString(slot.Enhancement.RelativeLevel, MidsContext.Config.ShowRelSymbols);
-                    RectangleF bounds2 = ScaleDown(iValue2);
-                    Color text3 = color;
-                    Color outline2 = Color.FromArgb(128, 0, 0, 0);
-                    Font bFont2 = font;
-                    float outlineSpace2 = 1f;
-                    DrawOutlineText(relativeString, bounds2, text3, outline2, bFont2, outlineSpace2, g);
+                    string relativeString = string.Empty;
+                    // Always display relative level if present
+                    //if (MidsContext.Config.ShowEnhRel)
+                    relativeString = Enums.GetRelativeString(slot.Enhancement.RelativeLevel, MidsContext.Config.ShowRelSymbols);
+
+                    if (MidsContext.Config.ShowSOLevels)
+                    {
+                        // It isn't slot.Enhancement.IOLevel... always set to 0
+                        // Improvisation it is...
+                        // I dunno. MidsContext.Character.Level == 48 ?
+                        relativeString = Convert.ToString(Math.Max(50, MidsContext.Character.Level + 2), null) + relativeString;
+                    }
+
+                    if (
+                        //MidsContext.Config.ShowEnhRel &&
+                        MidsContext.Config.ShowSOLevels &&
+                        slot.Enhancement.RelativeLevel != Enums.eEnhRelative.None &&
+                        slot.Enhancement.RelativeLevel != Enums.eEnhRelative.Even
+                    )
+                    {
+                        iValue2.Width += 10f;
+                        iValue2.X -= 5f;
+                    }
+
+                    if (!string.IsNullOrEmpty(relativeString))
+                    {
+                        RectangleF bounds2 = ScaleDown(iValue2);
+                        Color outline2 = Color.FromArgb(128, 0, 0, 0);
+                        float outlineSpace2 = 1f;
+
+                        DrawOutlineText(relativeString, bounds2, color, outline2, font, outlineSpace2, g);
+                    }
                 }
             }
         }
@@ -437,34 +463,33 @@ namespace midsControls
                     {
                         if (inDesigner) continue;
                         IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
-                        Graphics graphics5 = bxBuffer.Graphics;
+                        Graphics graphics6 = bxBuffer.Graphics;
                         Rectangle clipRect2 = new Rectangle((int) Math.Round(rectangleF.X), point.Y, 30, 30);
-                        I9Gfx.DrawEnhancementAt(ref graphics5, ScaleDown(clipRect2), enhancement.ImageIdx,
+                        I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect2), enhancement.ImageIdx,
                             I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
                         if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
                             (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
                             (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                            RectangleF iValue2 = rectangleF;
-                            iValue2.Inflate(1f, 1f);
-                            bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(iValue2));
+                            RectangleF iValue3 = rectangleF;
+                            iValue3.Inflate(1f, 1f);
+                            bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(iValue3));
                         }
 
                         if (slot.Enhancement.Enh > -1)
-                            DrawEnhancement(slot, font, graphics, ref rectangleF);
+                            DrawEnhancementLevel(slot, font, graphics, ref rectangleF);
                     }
 
-                    if (!MidsContext.Config.ShowSlotLevels)
-                        continue;
+                    if (!MidsContext.Config.ShowSlotLevels) continue;
+
+                    RectangleF iValue2 = rectangleF;
+                    unchecked
                     {
-                        RectangleF iValue2 = rectangleF;
-                        unchecked
-                        {
-                            iValue2.Y += iValue2.Height;
-                            iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                            iValue2.Y -= iValue2.Height;
-                        }
+                        iValue2.Y += iValue2.Height;
+                        iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
+                        iValue2.Y -= iValue2.Height;
+                    }
 
                         Graphics graphics5 = bxBuffer.Graphics;
                         DrawOutlineText(

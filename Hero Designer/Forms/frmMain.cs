@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using Base;
@@ -366,7 +365,9 @@ namespace Hero_Designer
                 }
                 Size = new Size(width1, height1);
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
+                tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
+                tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
                 tsViewSelected();
                 tsIODefault.Text = "Default (" + (MidsContext.Config.I9.DefaultIOLevel + 1) + ")";
                 SetDamageMenuCheckMarks();
@@ -5189,10 +5190,24 @@ namespace Hero_Designer
             DoRedraw();
         }
 
+        void tsViewSOLevels_Click(object sender, EventArgs e)
+        {
+            MidsContext.Config.ShowSOLevels = !MidsContext.Config.ShowSOLevels;
+            tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
+            DoRedraw();
+        }
+
         void tsViewRelative_Click(object sender, EventArgs e)
         {
             MidsContext.Config.ShowEnhRel = !MidsContext.Config.ShowEnhRel;
             tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
+            DoRedraw();
+        }
+
+        void tsViewRelativeAsSigns_Click(object sender, EventArgs e)
+        {
+            MidsContext.Config.ShowRelSymbols = !MidsContext.Config.ShowRelSymbols;
+            tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
             DoRedraw();
         }
 
