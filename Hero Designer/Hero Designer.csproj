@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="clsZip.cs" />
     <Compile Include="clsHook.cs" />
+    <Compile Include="GenFreebies.cs" />
     <Compile Include="ImportTools.cs" />
     <Compile Include="FileAssocation.cs" />
     <Compile Include="Forms\frmUpdate.cs">

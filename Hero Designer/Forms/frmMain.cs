@@ -20,8 +20,8 @@ using Hero_Designer.Forms;
 using Hero_Designer.My;
 using midsControls;
 using Timer = System.Windows.Forms.Timer;
-using HeroViewer;
 using HeroViewer.Base;
+using HeroViewer;
 
 
 namespace Hero_Designer
@@ -109,6 +109,7 @@ namespace Hero_Designer
         internal OpenFileDialog DlgOpen;
 
         internal SaveFileDialog DlgSave;
+        internal SaveFileDialog DlgSaveMnu;
 
         public bool petWindowFlag { get; set; }
 
@@ -375,6 +376,7 @@ namespace Hero_Designer
                 GetBestDamageValues();
                 dvAnchored.SetFontData();
                 DlgSave.InitialDirectory = MidsContext.Config.GetSaveFolder();
+                DlgSaveMnu.InitialDirectory = MidsContext.Config.GetSaveFolder(); // Zed: Not sure if this necessary...
                 DlgOpen.InitialDirectory = MidsContext.Config.GetSaveFolder();
                 NoUpdate = false;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
@@ -586,7 +588,8 @@ namespace Hero_Designer
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
             e.DrawBackground();
-            SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
+            //SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
+            SolidBrush solidBrush = new SolidBrush(Color.Black);
             if (e.Index > -1)
             {
                 var cbAT = new ComboBoxT<Archetype>(this.cbAT);
@@ -620,6 +623,7 @@ namespace Hero_Designer
         {
             if (NoUpdate)
                 return;
+
             NewToon(false);
             SetFormHeight();
             SetAncilPoolHeight();
@@ -4930,6 +4934,31 @@ namespace Hero_Designer
 
         void tsFileSaveAs_Click(object sender, EventArgs e)
             => doSaveAs();
+
+        void tsGenFreebies_Click(object sender, EventArgs e)
+        {
+            if (MainModule.MidsController.Toon == null) return;
+
+            FloatTop(false);            
+            DlgSaveMnu.FileName = FreebiesMenu.MenuName + ".mnu";
+            if (DlgSaveMnu.ShowDialog() == DialogResult.OK)
+            {
+                bool saveOp = FreebiesMenu.SaveTo(DlgSaveMnu.FileName);
+                if (!saveOp)
+                {
+                    MessageBox.Show("Couldn't save popmenu to file: " + DlgSaveMnu.FileName, "Whoops", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Popmenu saved.\r\nIf necessary, move it to your CoH\\data\\texts\\English\\Menus subfolder and restart your client for it to be updated.",
+                        "Woop",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+            }
+
+            FloatTop(true);
+        }
 
         void tsFlipAllEnh_Click(object sender, EventArgs e)
         {

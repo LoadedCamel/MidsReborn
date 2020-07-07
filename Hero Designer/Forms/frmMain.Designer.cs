@@ -54,6 +54,7 @@ namespace Hero_Designer
             this.lblATLocked = new System.Windows.Forms.Label();
             this.DlgOpen = new System.Windows.Forms.OpenFileDialog();
             this.DlgSave = new System.Windows.Forms.SaveFileDialog();
+            this.DlgSaveMnu = new System.Windows.Forms.SaveFileDialog();
             this.tTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblLocked0 = new System.Windows.Forms.Label();
             this.lblLocked1 = new System.Windows.Forms.Label();
@@ -68,6 +69,7 @@ namespace Hero_Designer
             this.ToolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tsFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -482,6 +484,11 @@ namespace Hero_Designer
             // 
             this.DlgSave.DefaultExt = "mxd";
             this.DlgSave.Filter = "Hero/Villain Builds (*.mxd)|*.mxd";
+            //
+            // dlgSaveMnu
+            //
+            this.DlgSaveMnu.DefaultExt = "mnu";
+            this.DlgSaveMnu.Filter = "CoH Popmenu (*.mnu)|*.mnu";
             // 
             // tTip
             // 
@@ -605,7 +612,7 @@ namespace Hero_Designer
             // 
             // FileToolStripMenuItem
             // 
-            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[10]
+            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[11]
             {
                 this.tsFileNew,
                 this.ToolStripSeparator7,
@@ -613,6 +620,7 @@ namespace Hero_Designer
                 this.tsBuildRcv,
                 this.tsFileSave,
                 this.tsFileSaveAs,
+                this.tsGenFreebies,
                 this.ToolStripSeparator8,
                 this.tsFilePrint,
                 this.ToolStripSeparator9,
@@ -627,28 +635,28 @@ namespace Hero_Designer
             // 
             this.tsFileNew.Name = "tsFileNew";
             this.tsFileNew.ShortcutKeys = System.Windows.Forms.Keys.N | System.Windows.Forms.Keys.Control;
-            this.tsFileNew.Size = new System.Drawing.Size(179, 22);
+            this.tsFileNew.Size = new System.Drawing.Size(230, 22);
             this.tsFileNew.Text = "&New / Clear";
             this.tsFileNew.Click += new System.EventHandler(tsFileNew_Click);
             // 
             // ToolStripSeparator7
             // 
             this.ToolStripSeparator7.Name = "ToolStripSeparator7";
-            this.ToolStripSeparator7.Size = new System.Drawing.Size(176, 6);
+            this.ToolStripSeparator7.Size = new System.Drawing.Size(227, 6);
             // 
             // tsFileOpen
             // 
             this.tsFileOpen.Name = "tsFileOpen";
             this.tsFileOpen.ShortcutKeys = System.Windows.Forms.Keys.O | System.Windows.Forms.Keys.Control;
-            this.tsFileOpen.Size = new System.Drawing.Size(179, 22);
+            this.tsFileOpen.Size = new System.Drawing.Size(230, 22);
             this.tsFileOpen.Text = "&Open...";
             this.tsFileOpen.Click += new System.EventHandler(tsFileOpen_Click);
             // 
-            // tsFileSave
+            // tsBuildRcv
             // 
             this.tsBuildRcv.Name = "tsBuildRcv";
             //this.tsFileOpen.ShortcutKeys = System.Windows.Forms.Keys.B | System.Windows.Forms.Keys.Control;
-            this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
+            this.tsBuildRcv.Size = new System.Drawing.Size(230, 22);
             this.tsBuildRcv.Text = "Attempt Build Recovery...";
             this.tsBuildRcv.Click += new System.EventHandler(tsBuildRcv_Click);
             // 
@@ -656,40 +664,47 @@ namespace Hero_Designer
             // 
             this.tsFileSave.Name = "tsFileSave";
             this.tsFileSave.ShortcutKeys = System.Windows.Forms.Keys.S | System.Windows.Forms.Keys.Control;
-            this.tsFileSave.Size = new System.Drawing.Size(179, 22);
+            this.tsFileSave.Size = new System.Drawing.Size(230, 22);
             this.tsFileSave.Text = "&Save";
             this.tsFileSave.Click += new System.EventHandler(tsFileSave_Click);
             // 
             // tsFileSaveAs
             // 
             this.tsFileSaveAs.Name = "tsFileSaveAs";
-            this.tsFileSaveAs.Size = new System.Drawing.Size(179, 22);
+            this.tsFileSaveAs.Size = new System.Drawing.Size(230, 22);
             this.tsFileSaveAs.Text = "Save &As...";
             this.tsFileSaveAs.Click += new System.EventHandler(tsFileSaveAs_Click);
+            //
+            // tsGenFreebies
+            //
+            this.tsGenFreebies.Name = "tsGenFreebies";
+            this.tsGenFreebies.Size = new System.Drawing.Size(230, 22);
+            this.tsGenFreebies.Text = "Generate Freebies menu...";
+            this.tsGenFreebies.Click += new System.EventHandler(tsGenFreebies_Click);
             // 
             // ToolStripSeparator8
             // 
             this.ToolStripSeparator8.Name = "ToolStripSeparator8";
-            this.ToolStripSeparator8.Size = new System.Drawing.Size(176, 6);
+            this.ToolStripSeparator8.Size = new System.Drawing.Size(227, 6);
             // 
             // tsFilePrint
             // 
             this.tsFilePrint.Name = "tsFilePrint";
             this.tsFilePrint.ShortcutKeys = System.Windows.Forms.Keys.P | System.Windows.Forms.Keys.Control;
-            this.tsFilePrint.Size = new System.Drawing.Size(179, 22);
+            this.tsFilePrint.Size = new System.Drawing.Size(230, 22);
             this.tsFilePrint.Text = "&Print...";
             this.tsFilePrint.Click += new System.EventHandler(tsFilePrint_Click);
             // 
             // ToolStripSeparator9
             // 
             this.ToolStripSeparator9.Name = "ToolStripSeparator9";
-            this.ToolStripSeparator9.Size = new System.Drawing.Size(176, 6);
+            this.ToolStripSeparator9.Size = new System.Drawing.Size(227, 6);
             // 
             // tsFileQuit
             // 
             this.tsFileQuit.Name = "tsFileQuit";
             this.tsFileQuit.ShortcutKeys = System.Windows.Forms.Keys.Q | System.Windows.Forms.Keys.Control;
-            this.tsFileQuit.Size = new System.Drawing.Size(179, 22);
+            this.tsFileQuit.Size = new System.Drawing.Size(230, 22);
             this.tsFileQuit.Text = "&Quit";
             this.tsFileQuit.Click += new System.EventHandler(tsFileQuit_Click);
             // 
@@ -2094,6 +2109,7 @@ namespace Hero_Designer
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
         ToolStripMenuItem tsBuildRcv;
+        ToolStripMenuItem tsGenFreebies;
         ToolStripMenuItem tsFilePrint;
         ToolStripMenuItem tsFileQuit;
         ToolStripMenuItem tsFileSave;
