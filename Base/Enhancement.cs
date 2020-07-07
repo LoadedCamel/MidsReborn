@@ -34,7 +34,7 @@ public class Enhancement : IEnhancement
     public string UIDSet { get; set; }
     public IPower GetPower()
     {
-        return _power ?? (_power = DatabaseAPI.GetPowerByName("Boosts." + UID + "." + UID));
+        return _power ?? (_power = DatabaseAPI.GetPowerByFullName("Boosts." + UID + "." + UID));
     }
 
     void IEnhancement.SetPower(IPower power) => _power = power;
@@ -403,8 +403,7 @@ public class Enhancement : IEnhancement
         return level;
     }
 
-    public string GetSpecialName()
-        => ((int)SubTypeID) + " Origin";
+    public string GetSpecialName() => $"{Enum.GetName(typeof(Enums.eSubtype), (int)SubTypeID)} Origin";
 
     public static float ApplyED(Enums.eSchedule iSched, float iVal)
     {

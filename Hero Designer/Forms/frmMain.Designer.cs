@@ -67,6 +67,7 @@ namespace Hero_Designer
             this.tsFileNew = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tsFileOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -130,7 +131,9 @@ namespace Hero_Designer
             this.tsView2Col = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewIOLevels = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsViewSOLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewRelative = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsViewRelativeAsSigns = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSlotLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewActualDamage_New = new System.Windows.Forms.ToolStripMenuItem();
@@ -210,7 +213,9 @@ namespace Hero_Designer
             // txtName
             // 
             this.txtName.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtName.ForeColor = System.Drawing.SystemColors.ControlText;
+            // Color may differ if user has an alternate windows theme enabled.
+            // Label not very visible especially with dark themes.
+            this.txtName.ForeColor = System.Drawing.Color.Black;
             this.txtName.Location = new System.Drawing.Point(96, 82);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(142, 20);
@@ -223,7 +228,7 @@ namespace Hero_Designer
             this.cbAT.DisplayMember = "DisplayName";
             this.cbAT.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAT.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbAT.ForeColor = System.Drawing.Color.Black;
             this.cbAT.ItemHeight = 16;
             this.cbAT.Location = new System.Drawing.Point(94, 109);
             this.cbAT.MaxDropDownItems = 15;
@@ -241,7 +246,7 @@ namespace Hero_Designer
             this.cbOrigin.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbOrigin.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbOrigin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbOrigin.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbOrigin.ForeColor = System.Drawing.Color.Black;
             this.cbOrigin.ItemHeight = 16;
             this.cbOrigin.Location = new System.Drawing.Point(94, 133);
             this.cbOrigin.Name = "cbOrigin";
@@ -254,7 +259,8 @@ namespace Hero_Designer
             // 
             this.cbPrimary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPrimary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPrimary.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPrimary.ForeColor = System.Drawing.Color.Black;
+            this.cbPrimary.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPrimary.ItemHeight = 16;
             this.cbPrimary.Location = new System.Drawing.Point(16, 182);
             this.cbPrimary.MaxDropDownItems = 15;
@@ -292,7 +298,8 @@ namespace Hero_Designer
             // 
             this.cbSecondary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSecondary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSecondary.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbSecondary.ForeColor = System.Drawing.Color.Black;
+            this.cbSecondary.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbSecondary.ItemHeight = 16;
             this.cbSecondary.Location = new System.Drawing.Point(168, 182);
             this.cbSecondary.MaxDropDownItems = 15;
@@ -309,7 +316,7 @@ namespace Hero_Designer
             this.cbPool0.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPool0.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPool0.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPool0.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPool0.ForeColor = System.Drawing.Color.Black;
             this.cbPool0.ItemHeight = 16;
             this.cbPool0.Location = new System.Drawing.Point(328, 182);
             this.cbPool0.MaxDropDownItems = 15;
@@ -337,7 +344,7 @@ namespace Hero_Designer
             this.cbPool1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPool1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPool1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPool1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPool1.ForeColor = System.Drawing.Color.Black;
             this.cbPool1.ItemHeight = 16;
             this.cbPool1.Location = new System.Drawing.Point(328, 290);
             this.cbPool1.MaxDropDownItems = 15;
@@ -365,7 +372,7 @@ namespace Hero_Designer
             this.cbPool2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPool2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPool2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPool2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPool2.ForeColor = System.Drawing.Color.Black;
             this.cbPool2.ItemHeight = 16;
             this.cbPool2.Location = new System.Drawing.Point(328, 398);
             this.cbPool2.MaxDropDownItems = 15;
@@ -400,7 +407,7 @@ namespace Hero_Designer
             this.cbPool3.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbPool3.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbPool3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPool3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbPool3.ForeColor = System.Drawing.Color.Black;
             this.cbPool3.ItemHeight = 16;
             this.cbPool3.Location = new System.Drawing.Point(328, 506);
             this.cbPool3.MaxDropDownItems = 15;
@@ -428,7 +435,7 @@ namespace Hero_Designer
             this.cbAncillary.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cbAncillary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAncillary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAncillary.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.cbAncillary.ForeColor = System.Drawing.Color.Black;
             this.cbAncillary.ItemHeight = 16;
             this.cbAncillary.Location = new System.Drawing.Point(328, 614);
             this.cbAncillary.Name = "cbAncillary";
@@ -582,13 +589,13 @@ namespace Hero_Designer
             this.MenuBar.BackColor = System.Drawing.SystemColors.Control;
             this.MenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[7]
             {
-            this.FileToolStripMenuItem,
-            this.ImportExportToolStripMenuItem,
-            this.OptionsToolStripMenuItem,
-            this.CharacterToolStripMenuItem,
-            this.ViewToolStripMenuItem,
-            this.HelpToolStripMenuItem1,
-            this.WindowToolStripMenuItem
+                this.FileToolStripMenuItem,
+                this.ImportExportToolStripMenuItem,
+                this.OptionsToolStripMenuItem,
+                this.CharacterToolStripMenuItem,
+                this.ViewToolStripMenuItem,
+                this.HelpToolStripMenuItem1,
+                this.WindowToolStripMenuItem
             });
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
@@ -598,17 +605,18 @@ namespace Hero_Designer
             // 
             // FileToolStripMenuItem
             // 
-            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[9]
+            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[10]
             {
-            this.tsFileNew,
-            this.ToolStripSeparator7,
-            this.tsFileOpen,
-            this.tsFileSave,
-            this.tsFileSaveAs,
-            this.ToolStripSeparator8,
-            this.tsFilePrint,
-            this.ToolStripSeparator9,
-            this.tsFileQuit
+                this.tsFileNew,
+                this.ToolStripSeparator7,
+                this.tsFileOpen,
+                this.tsBuildRcv,
+                this.tsFileSave,
+                this.tsFileSaveAs,
+                this.ToolStripSeparator8,
+                this.tsFilePrint,
+                this.ToolStripSeparator9,
+                this.tsFileQuit
             });
             this.FileToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
@@ -635,6 +643,14 @@ namespace Hero_Designer
             this.tsFileOpen.Size = new System.Drawing.Size(179, 22);
             this.tsFileOpen.Text = "&Open...";
             this.tsFileOpen.Click += new System.EventHandler(tsFileOpen_Click);
+            // 
+            // tsFileSave
+            // 
+            this.tsBuildRcv.Name = "tsBuildRcv";
+            //this.tsFileOpen.ShortcutKeys = System.Windows.Forms.Keys.B | System.Windows.Forms.Keys.Control;
+            this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
+            this.tsBuildRcv.Text = "Attempt Build Recovery...";
+            this.tsBuildRcv.Click += new System.EventHandler(tsBuildRcv_Click);
             // 
             // tsFileSave
             // 
@@ -1086,14 +1102,16 @@ namespace Hero_Designer
             // 
             // ViewToolStripMenuItem
             // 
-            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[11]
+            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[12]
             {
             (System.Windows.Forms.ToolStripItem) this.tsView2Col,
             (System.Windows.Forms.ToolStripItem) this.tsView3Col,
             (System.Windows.Forms.ToolStripItem) this.tsView4Col,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator13,
             (System.Windows.Forms.ToolStripItem) this.tsViewIOLevels,
-            (System.Windows.Forms.ToolStripItem) this.tsViewRelative,
+            (System.Windows.Forms.ToolStripItem) this.tsViewSOLevels,
+            //(System.Windows.Forms.ToolStripItem) this.tsViewRelative,
+            (System.Windows.Forms.ToolStripItem) this.tsViewRelativeAsSigns,
             (System.Windows.Forms.ToolStripItem) this.tsViewSlotLevels,
             (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator2,
             (System.Windows.Forms.ToolStripItem) this.tsViewActualDamage_New,
@@ -1137,12 +1155,30 @@ namespace Hero_Designer
             this.tsViewIOLevels.Text = "Show &IO Levels";
             this.tsViewIOLevels.Click += new System.EventHandler(tsViewIOLevels_Click);
             // 
+            // tsViewSOLevels
+            // 
+            this.tsViewSOLevels.Checked = false;
+            this.tsViewSOLevels.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            this.tsViewSOLevels.Name = "tsViewSOLevels";
+            this.tsViewSOLevels.Size = new System.Drawing.Size(282, 22);
+            this.tsViewSOLevels.Text = "Show SO/HO Levels";
+            this.tsViewSOLevels.Click += new System.EventHandler(tsViewSOLevels_Click);
+            // 
             // tsViewRelative
             // 
             this.tsViewRelative.Name = "tsViewRelative";
             this.tsViewRelative.Size = new System.Drawing.Size(282, 22);
             this.tsViewRelative.Text = "Show &Enhancement Relative Levels";
             this.tsViewRelative.Click += new System.EventHandler(tsViewRelative_Click);
+            // 
+            // tsViewRelativeAsSigns
+            // 
+            this.tsViewRelativeAsSigns.Checked = false;
+            this.tsViewRelativeAsSigns.CheckState = System.Windows.Forms.CheckState.Unchecked;
+            this.tsViewRelativeAsSigns.Name = "tsViewRelativeAsSigns";
+            this.tsViewRelativeAsSigns.Size = new System.Drawing.Size(282, 22);
+            this.tsViewRelativeAsSigns.Text = "Show Relative Levels with signs ('+'/'-')";
+            this.tsViewRelativeAsSigns.Click += new System.EventHandler(tsViewRelativeAsSigns_Click);
             // 
             // tsViewSlotLevels
             // 
@@ -1543,6 +1579,7 @@ namespace Hero_Designer
             // 
             this.llPool0.Expandable = false;
             this.llPool0.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.llPool0.ForeColor = System.Drawing.Color.Yellow;
             this.llPool0.HighVis = true;
             this.llPool0.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPool0.Location = new System.Drawing.Point(328, 206);
@@ -1555,6 +1592,8 @@ namespace Hero_Designer
             this.llPool0.ScrollBarWidth = 11;
             this.llPool0.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
             this.llPool0.Size = new System.Drawing.Size(136, 69);
+            this.llPool0.MinimumSize = new System.Drawing.Size(132, 10);
+            this.llPool0.MaximumSize = new System.Drawing.Size(136, 90);
             this.llPool0.SizeNormal = new System.Drawing.Size(136, 69);
             this.llPool0.SuspendRedraw = false;
             this.llPool0.TabIndex = 34;
@@ -1580,6 +1619,8 @@ namespace Hero_Designer
             this.llPool1.ScrollBarWidth = 8;
             this.llPool1.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
             this.llPool1.Size = new System.Drawing.Size(136, 69);
+            this.llPool1.MinimumSize = new System.Drawing.Size(132, 10);
+            this.llPool1.MaximumSize = new System.Drawing.Size(136, 90);
             this.llPool1.SizeNormal = new System.Drawing.Size(136, 69);
             this.llPool1.SuspendRedraw = false;
             this.llPool1.TabIndex = 35;
@@ -1587,6 +1628,60 @@ namespace Hero_Designer
             this.llPool1.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool1_ItemClick);
             this.llPool1.MouseLeave += new System.EventHandler(llALL_MouseLeave);
             this.llPool1.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
+            // 
+            // llPool2
+            // 
+            this.llPool2.Expandable = false;
+            this.llPool2.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.llPool2.ForeColor = System.Drawing.Color.Yellow;
+            this.llPool2.HighVis = true;
+            this.llPool2.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llPool2.Location = new System.Drawing.Point(328, 422);
+            this.llPool2.MaxHeight = 500;
+            this.llPool2.Name = "llPool2";
+            this.llPool2.PaddingX = 1;
+            this.llPool2.PaddingY = 1;
+            this.llPool2.Scrollable = true;
+            this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
+            this.llPool2.ScrollBarWidth = 8;
+            this.llPool2.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
+            this.llPool2.Size = new System.Drawing.Size(136, 69);
+            this.llPool2.MinimumSize = new System.Drawing.Size(132, 10);
+            this.llPool2.MaximumSize = new System.Drawing.Size(136, 90);
+            this.llPool2.SizeNormal = new System.Drawing.Size(136, 69);
+            this.llPool2.SuspendRedraw = false;
+            this.llPool2.TabIndex = 36;
+            this.llPool2.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llPool2_ItemHover);
+            this.llPool2.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool2_ItemClick);
+            this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
+            this.llPool2.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
+            // 
+            // llPool3
+            // 
+            this.llPool3.Expandable = false;
+            this.llPool3.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
+            this.llPool3.ForeColor = System.Drawing.Color.Yellow;
+            this.llPool3.HighVis = true;
+            this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
+            this.llPool3.Location = new System.Drawing.Point(328, 530);
+            this.llPool3.MaxHeight = 500;
+            this.llPool3.Name = "llPool3";
+            this.llPool3.PaddingX = 1;
+            this.llPool3.PaddingY = 1;
+            this.llPool3.Scrollable = true;
+            this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
+            this.llPool3.ScrollBarWidth = 8;
+            this.llPool3.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
+            this.llPool3.Size = new System.Drawing.Size(136, 69);
+            this.llPool3.MinimumSize = new System.Drawing.Size(132, 10);
+            this.llPool3.MaximumSize = new System.Drawing.Size(136, 90);
+            this.llPool3.SizeNormal = new System.Drawing.Size(136, 69);
+            this.llPool3.SuspendRedraw = false;
+            this.llPool3.TabIndex = 37;
+            this.llPool3.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llPool3_ItemHover);
+            this.llPool3.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool3_ItemClick);
+            this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
+            this.llPool3.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llSecondary
             // 
@@ -1635,56 +1730,6 @@ namespace Hero_Designer
             this.llPrimary.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPrimary_ItemClick);
             this.llPrimary.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
             this.llPrimary.ExpandChanged += new midsControls.ListLabelV2.ExpandChangedEventHandler(PriSec_ExpandChanged);
-            // 
-            // llPool3
-            // 
-            this.llPool3.Expandable = false;
-            this.llPool3.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
-            this.llPool3.ForeColor = System.Drawing.Color.Yellow;
-            this.llPool3.HighVis = true;
-            this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llPool3.Location = new System.Drawing.Point(328, 530);
-            this.llPool3.MaxHeight = 500;
-            this.llPool3.Name = "llPool3";
-            this.llPool3.PaddingX = 1;
-            this.llPool3.PaddingY = 1;
-            this.llPool3.Scrollable = true;
-            this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
-            this.llPool3.ScrollBarWidth = 8;
-            this.llPool3.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool3.Size = new System.Drawing.Size(136, 69);
-            this.llPool3.SizeNormal = new System.Drawing.Size(136, 69);
-            this.llPool3.SuspendRedraw = false;
-            this.llPool3.TabIndex = 37;
-            this.llPool3.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llPool3_ItemHover);
-            this.llPool3.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool3_ItemClick);
-            this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool3.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
-            // 
-            // llPool2
-            // 
-            this.llPool2.Expandable = false;
-            this.llPool2.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, (byte)0);
-            this.llPool2.ForeColor = System.Drawing.Color.Yellow;
-            this.llPool2.HighVis = true;
-            this.llPool2.HoverColor = System.Drawing.Color.WhiteSmoke;
-            this.llPool2.Location = new System.Drawing.Point(328, 422);
-            this.llPool2.MaxHeight = 500;
-            this.llPool2.Name = "llPool2";
-            this.llPool2.PaddingX = 1;
-            this.llPool2.PaddingY = 1;
-            this.llPool2.Scrollable = true;
-            this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
-            this.llPool2.ScrollBarWidth = 8;
-            this.llPool2.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool2.Size = new System.Drawing.Size(136, 69);
-            this.llPool2.SizeNormal = new System.Drawing.Size(136, 69);
-            this.llPool2.SuspendRedraw = false;
-            this.llPool2.TabIndex = 36;
-            this.llPool2.ItemHover += new midsControls.ListLabelV2.ItemHoverEventHandler(llPool2_ItemHover);
-            this.llPool2.ItemClick += new midsControls.ListLabelV2.ItemClickEventHandler(llPool2_ItemClick);
-            this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool2.EmptyHover += new midsControls.ListLabelV2.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // lblHero
             // 
@@ -2048,6 +2093,7 @@ namespace Hero_Designer
         ToolStripMenuItem tsExportLong;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
+        ToolStripMenuItem tsBuildRcv;
         ToolStripMenuItem tsFilePrint;
         ToolStripMenuItem tsFileQuit;
         ToolStripMenuItem tsFileSave;
@@ -2079,7 +2125,9 @@ namespace Hero_Designer
         ToolStripMenuItem tsViewDPS_New;
         ToolStripMenuItem tsViewGraphs;
         ToolStripMenuItem tsViewIOLevels;
+        ToolStripMenuItem tsViewSOLevels;
         ToolStripMenuItem tsViewRelative;
+        ToolStripMenuItem tsViewRelativeAsSigns;
         ToolStripMenuItem tsViewSetCompare;
         ToolStripMenuItem tsViewSets;
         ToolStripMenuItem tsViewSlotLevels;

@@ -45,53 +45,36 @@ public static class Enums
     {
         if (onlySign)
         {
-            switch (iRel)
+            return iRel switch
             {
-                case eEnhRelative.MinusThree:
-                    return "---";
-                case eEnhRelative.MinusTwo:
-                    return "--";
-                case eEnhRelative.MinusOne:
-                    return "-";
-                case eEnhRelative.Even:
-                    return "";
-                case eEnhRelative.PlusOne:
-                    return "+";
-                case eEnhRelative.PlusTwo:
-                    return "++";
-                case eEnhRelative.PlusThree:
-                    return "+++";
-                case eEnhRelative.PlusFour:
-                    return "+4";
-                case eEnhRelative.PlusFive:
-                    return "+5";
-            }
+                eEnhRelative.MinusThree => "---",
+                eEnhRelative.MinusTwo => "--",
+                eEnhRelative.MinusOne => "-",
+                eEnhRelative.Even => string.Empty,
+                eEnhRelative.PlusOne => "+",
+                eEnhRelative.PlusTwo => "++",
+                eEnhRelative.PlusThree => "+++",
+                eEnhRelative.PlusFour => "+4",
+                eEnhRelative.PlusFive => "+5",
+                _ => string.Empty
+            };
         }
         else
         {
-            switch (iRel)
+            return iRel switch
             {
-                case eEnhRelative.MinusThree:
-                    return "-3";
-                case eEnhRelative.MinusTwo:
-                    return "-2";
-                case eEnhRelative.MinusOne:
-                    return "-1";
-                case eEnhRelative.Even:
-                    return "";
-                case eEnhRelative.PlusOne:
-                    return "+1";
-                case eEnhRelative.PlusTwo:
-                    return "+2";
-                case eEnhRelative.PlusThree:
-                    return "+3";
-                case eEnhRelative.PlusFour:
-                    return "+4";
-                case eEnhRelative.PlusFive:
-                    return "+5";
-            }
+                eEnhRelative.MinusThree => "-3",
+                eEnhRelative.MinusTwo => "-2",
+                eEnhRelative.MinusOne => "-1",
+                eEnhRelative.Even => string.Empty,
+                eEnhRelative.PlusOne => "+1",
+                eEnhRelative.PlusTwo => "+2",
+                eEnhRelative.PlusThree => "+3",
+                eEnhRelative.PlusFour => "+4",
+                eEnhRelative.PlusFive => "+5",
+                _ => string.Empty
+            };
         }
-        return "";
     }
 
     public static int StringToFlaggedEnum(string iStr, object eEnum, bool noFlag = false)
@@ -598,6 +581,12 @@ public static class Enums
         VillainEpic,
         Henchman,
         Pet
+    }
+
+    public enum eValidationType
+    {
+        Power,
+        Powerset
     }
 
     public enum Alignment

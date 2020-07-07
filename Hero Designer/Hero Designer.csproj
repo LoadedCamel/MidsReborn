@@ -8,6 +8,8 @@
     <RootNamespace>Hero_Designer</RootNamespace>
     <AssemblyName>Hero Designer</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -77,6 +79,7 @@
   <ItemGroup>
     <Compile Include="clsZip.cs" />
     <Compile Include="clsHook.cs" />
+    <Compile Include="ImportTools.cs" />
     <Compile Include="FileAssocation.cs" />
     <Compile Include="Forms\frmUpdate.cs">
       <SubType>Form</SubType>
@@ -2058,6 +2061,9 @@
     <Content Include="Images\Unknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optTO.Image.png" />
