@@ -59,22 +59,20 @@ public static class Enums
                 _ => string.Empty
             };
         }
-        else
+
+        return iRel switch
         {
-            return iRel switch
-            {
-                eEnhRelative.MinusThree => "-3",
-                eEnhRelative.MinusTwo => "-2",
-                eEnhRelative.MinusOne => "-1",
-                eEnhRelative.Even => string.Empty,
-                eEnhRelative.PlusOne => "+1",
-                eEnhRelative.PlusTwo => "+2",
-                eEnhRelative.PlusThree => "+3",
-                eEnhRelative.PlusFour => "+4",
-                eEnhRelative.PlusFive => "+5",
-                _ => string.Empty
-            };
-        }
+            eEnhRelative.MinusThree => "-3",
+            eEnhRelative.MinusTwo => "-2",
+            eEnhRelative.MinusOne => "-1",
+            eEnhRelative.Even => string.Empty,
+            eEnhRelative.PlusOne => "+1",
+            eEnhRelative.PlusTwo => "+2",
+            eEnhRelative.PlusThree => "+3",
+            eEnhRelative.PlusFour => "+4",
+            eEnhRelative.PlusFive => "+5",
+            _ => string.Empty
+        };
     }
 
     public static int StringToFlaggedEnum(string iStr, object eEnum, bool noFlag = false)

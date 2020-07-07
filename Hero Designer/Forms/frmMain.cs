@@ -18,11 +18,10 @@ using Base.Display;
 using Base.Master_Classes;
 using Hero_Designer.Forms;
 using Hero_Designer.My;
-using midsControls;
-using Timer = System.Windows.Forms.Timer;
 using HeroViewer;
 using HeroViewer.Base;
-
+using midsControls;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Hero_Designer
 {
@@ -315,7 +314,7 @@ namespace Hero_Designer
 
                 if (!toonLoaded)
                 {
-                    NewToon(true, false);
+                    NewToon();
                     PowerModified(markModified: true);
                 }
 
@@ -5656,7 +5655,7 @@ namespace Hero_Designer
             try
             {
                 ImportFromBuildsave importHandle = new ImportFromBuildsave(buildString);
-                List<PowerEntry>? listPowers = importHandle.Parse();
+                var listPowers = importHandle.Parse();
 
                 if (listPowers == null) return;
 
@@ -5664,7 +5663,7 @@ namespace Hero_Designer
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message + "\r\n\r\n" + e.StackTrace);
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
             }
         }
 
@@ -5720,7 +5719,6 @@ namespace Hero_Designer
             if (listPowersets.Contains("Widow_Training.Fortunata_Training") || listPowersets.Contains("Widow_Training.Night_Widow_Training"))
             {
                 listPowersets.FromList(listPowersets.Where(e => e != "Widow_Training.Widow_Training" && e != "Teamwork.Teamwork").ToList());
-                return;
             }
         }
 
@@ -5829,9 +5827,18 @@ namespace Hero_Designer
                 MidsContext.Character.RequestedLevel = MidsContext.Character.MaxLevel;
                 MidsContext.Character.SetLevelTo(MidsContext.Character.MaxLevel);
             }
-
-            return;
-
+            MidsContext.Archetype = MidsContext.Character.Archetype;
+            MidsContext.Character.Validate();
+            MidsContext.Character.Lock();
+            MidsContext.Character.ResetLevel();
+            MidsContext.Character.PoolShuffle();
+            I9Gfx.OriginIndex = MidsContext.Character.Origin;
+            MidsContext.Character.Validate();
+            PowerEntry[] powerEntryArray = DeepCopyPowerList();
+            RearrangeAllSlotsInBuild(powerEntryArray, true);
+            ShallowCopyPowerList(powerEntryArray);
+            PowerModified(markModified: false);
+            DoRedraw();
             // Update slots counter... maybe.
             // Turns out all this block is not needed. (I think)
             /*

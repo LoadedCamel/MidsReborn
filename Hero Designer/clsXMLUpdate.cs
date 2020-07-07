@@ -5,15 +5,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Windows.Forms;
 using System.Xml;
-using Base;
 using Base.Master_Classes;
 using Hero_Designer.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using midsControls;
 
 namespace Hero_Designer
 {
@@ -131,7 +126,7 @@ namespace Hero_Designer
             }
             else
             {
-                MessageBox.Show($@"No update is available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"No update is available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

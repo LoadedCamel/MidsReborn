@@ -3,7 +3,6 @@ using System;
 using System.Drawing;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {

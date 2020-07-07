@@ -5,10 +5,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
-using Base.Master_Classes;
-using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -235,8 +234,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             {
                 if (isBonus())
                 {
-                    mySet.Bonus[BonusID()].Name = (string[])Utils.CopyArray(mySet.Bonus[BonusID()].Name, (Array)new string[mySet.Bonus[BonusID()].Name.Length + 1]);
-                    mySet.Bonus[BonusID()].Index = (int[])Utils.CopyArray(mySet.Bonus[BonusID()].Index, (Array)new int[mySet.Bonus[BonusID()].Index.Length + 1]);
+                    mySet.Bonus[BonusID()].Name = (string[])Utils.CopyArray(mySet.Bonus[BonusID()].Name, new string[mySet.Bonus[BonusID()].Name.Length + 1]);
+                    mySet.Bonus[BonusID()].Index = (int[])Utils.CopyArray(mySet.Bonus[BonusID()].Index, new int[mySet.Bonus[BonusID()].Index.Length + 1]);
                     mySet.Bonus[BonusID()].Name[mySet.Bonus[BonusID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     mySet.Bonus[BonusID()].Index[mySet.Bonus[BonusID()].Index.Length - 1] = index;
                     mySet.Bonus[BonusID()].Slotted = cbSlotCount.SelectedIndex + 2;
@@ -244,8 +243,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 else if (isSpecial())
                 {
                     mySet.SpecialBonus[SpecialID()].Special = SpecialID();
-                    mySet.SpecialBonus[SpecialID()].Name = (string[])Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Name, (Array)new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
-                    mySet.SpecialBonus[SpecialID()].Index = (int[])Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Index, (Array)new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
+                    mySet.SpecialBonus[SpecialID()].Name = (string[])Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Name, new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
+                    mySet.SpecialBonus[SpecialID()].Index = (int[])Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Index, new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
                     mySet.SpecialBonus[SpecialID()].Name[mySet.SpecialBonus[SpecialID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     mySet.SpecialBonus[SpecialID()].Index[mySet.SpecialBonus[SpecialID()].Index.Length - 1] = index;
                 }
@@ -381,15 +380,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             {
                 using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap($"{I9Gfx.GetEnhancementsPath()}{mySet.Image}");
                 using ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
-                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), System.Drawing.GraphicsUnit.Pixel);
-                extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, System.Drawing.GraphicsUnit.Pixel);
+                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
+                extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
                 btnImage.Text = mySet.Image;
             }
             else
             {
                 using ExtendedBitmap extendedBitmap = new ExtendedBitmap(30, 30);
-                extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), System.Drawing.GraphicsUnit.Pixel);
+                extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap.Bitmap);
                 btnImage.Text = @"Select Image";
             }

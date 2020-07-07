@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
 using midsControls;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {

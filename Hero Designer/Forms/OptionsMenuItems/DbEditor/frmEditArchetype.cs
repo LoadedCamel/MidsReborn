@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {

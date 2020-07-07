@@ -6,8 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms.JsonImport;
+using Hero_Designer.My;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
@@ -215,7 +215,7 @@ namespace Hero_Designer
 
         private void btnExportJSON_Click(object sender, EventArgs e)
         {
-            var serializer = My.MyApplication.GetSerializer();
+            var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveJsonDatabase(serializer);
         }
 

@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -10,9 +9,9 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
-using midsControls;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using midsControls;
 
 namespace Hero_Designer
 {
@@ -3525,7 +3524,6 @@ namespace Hero_Designer
             NewLateBinding.LateCall(Sender, null, "SetTip", Arguments, null, null, CopyBack, true);
             if (!CopyBack[0])
             {
-                return;
             }
             else
             {

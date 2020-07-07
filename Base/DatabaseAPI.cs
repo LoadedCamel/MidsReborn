@@ -599,21 +599,20 @@ public static class DatabaseAPI
         {
             return iName.Replace("Superior_Attuned_", "Crafted_");
         }
-        else if (ATOSetsEnh.Any(e => e.Contains(iName)) || WinterEventEnh.Any(e => e.Contains(iName)) || MovieEnh.Any(e => e.Contains(iName)))
+
+        if (ATOSetsEnh.Any(e => e.Contains(iName)) || WinterEventEnh.Any(e => e.Contains(iName)) || MovieEnh.Any(e => e.Contains(iName)))
         {
             return iName;
         }
-        else
-        {
-            // IOs + SpecialOs
-            return iName
-                .Replace("Synthetic_", string.Empty)
-                .Replace("Attuned_", "Crafted_")
-                .Replace("Science_", "Magic_")
-                .Replace("Mutation_", "Magic_")
-                .Replace("Natural__", "Magic_")
-                .Replace("Mutation_", "Magic_");
-        }
+
+        // IOs + SpecialOs
+        return iName
+            .Replace("Synthetic_", string.Empty)
+            .Replace("Attuned_", "Crafted_")
+            .Replace("Science_", "Magic_")
+            .Replace("Mutation_", "Magic_")
+            .Replace("Natural__", "Magic_")
+            .Replace("Mutation_", "Magic_");
     }
 
     public static bool EnhHasCatalyst(string iName)
@@ -628,14 +627,13 @@ public static class DatabaseAPI
         {
             return iName.IndexOf("Superior_Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
         }
-        else if (!ATOSetsEnh.Any(e => e.Contains(iName)) && !WinterEventEnh.Any(e => e.Contains(iName)) && !MovieEnh.Any(e => e.Contains(iName)))
+
+        if (!ATOSetsEnh.Any(e => e.Contains(iName)) && !WinterEventEnh.Any(e => e.Contains(iName)) && !MovieEnh.Any(e => e.Contains(iName)))
         {
             return iName.IndexOf("Superior_", StringComparison.OrdinalIgnoreCase) > -1;
         }
-        else
-        {
-            return iName.IndexOf("Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
-        }
+
+        return iName.IndexOf("Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
     }
 
     public static int GetEnhancementByUIDName(string iName)
@@ -1190,7 +1188,7 @@ public static class DatabaseAPI
                 Enums.eType.SpecialO => Database.Enhancements[iEnh].ShortName,
                 Enums.eType.InventO => "Invention: " + Database.Enhancements[iEnh].ShortName,
                 Enums.eType.SetO => Database.EnhancementSets[Database.Enhancements[iEnh].nIDSet].DisplayName + ": " +
-                                     Database.Enhancements[iEnh].ShortName,
+                                    Database.Enhancements[iEnh].ShortName,
                 _ => string.Empty
             };
         }

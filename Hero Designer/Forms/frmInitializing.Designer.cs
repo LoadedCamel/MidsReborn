@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace Hero_Designer.Forms
 {
@@ -7,7 +8,7 @@ namespace Hero_Designer.Forms
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -75,7 +76,7 @@ namespace Hero_Designer.Forms
         }
 
         #endregion
-        private System.Windows.Forms.Label Label1;
-        private System.Windows.Forms.Timer tmrOp;
+        private Label Label1;
+        private Timer tmrOp;
     }
 }

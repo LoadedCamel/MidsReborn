@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Base.Master_Classes;
-using midsControls;
 using Microsoft.VisualBasic;
+using midsControls;
 
 namespace Hero_Designer
 {

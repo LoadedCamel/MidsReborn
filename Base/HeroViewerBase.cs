@@ -47,16 +47,16 @@ namespace HeroViewer.Base
 
         public void FromList(List<T> listElements)
         {
-            base.Clear();
-            base.AddRange(listElements);
+            Clear();
+            AddRange(listElements);
         }
     }
 
     public class SlotLevelQueue
     {
-        private int Index = 0;
+        private int Index;
         private int Level = -1;
-        private int SlotsAtLevel = 0;
+        private int SlotsAtLevel;
         /*private static readonly int[] SlotLevels = new[]
         {
             2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28,
@@ -73,8 +73,6 @@ namespace HeroViewer.Base
         {
             return DatabaseAPI.Database.Levels.Select(e => e.Slots).Sum();
         }
-
-        public SlotLevelQueue() { }
 
         public int PickSlot()
         {

@@ -292,7 +292,7 @@ namespace Hero_Designer
                     powerSet.Powers = powerArray;
                     powerArray[powerSet.Powers.Length-1] = newPower;
                 }
-                UpdateLists(this.lvGroup.SelectedIndices[0], this.lvSet.SelectedIndices[0]);
+                UpdateLists(lvGroup.SelectedIndices[0], lvSet.SelectedIndices[0]);
             }
         }
 

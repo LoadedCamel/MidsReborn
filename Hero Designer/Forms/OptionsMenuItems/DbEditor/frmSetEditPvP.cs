@@ -1,13 +1,10 @@
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
@@ -212,8 +209,8 @@ namespace Hero_Designer
                     var index3 = num2;
 
                     bonus[index3].PvMode = BonusMode;
-                    bonus[index3].Name = (string[]) Utils.CopyArray(bonus[index3].Name, (Array) new string[bonus[index3].Name.Length + 1]);
-                    bonus[index3].Index = (int[]) Utils.CopyArray(bonus[index3].Index, (Array) new int[bonus[index3].Index.Length + 1]);
+                    bonus[index3].Name = (string[]) Utils.CopyArray(bonus[index3].Name, new string[bonus[index3].Name.Length + 1]);
+                    bonus[index3].Index = (int[]) Utils.CopyArray(bonus[index3].Index, new int[bonus[index3].Index.Length + 1]);
                     bonus[index3].Index[bonus[index3].Index.Length - 1] = nBonus;
                     bonus[index3].Name[bonus[index3].Name.Length - 1] = DatabaseAPI.Database.Power[nBonus].FullName;
                 }

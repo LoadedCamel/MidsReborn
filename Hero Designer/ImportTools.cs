@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Base.Master_Classes;
-using Base.Data_Classes;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Linq;
+using Base.Master_Classes;
 using HeroViewer.Base;
 
 namespace HeroViewer
@@ -20,8 +19,8 @@ namespace HeroViewer
         protected RawCharacterInfo CharacterInfo { get; set; }
         protected string BuildString { get; set; }
         protected UniqueList<string> PowerSets { get; set; }
-        protected string[] excludePowersets { get; } = new[] { "Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents" };
-        protected string[] excludePowers { get; } = new[] {
+        protected string[] excludePowersets { get; } = { "Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents" };
+        protected string[] excludePowers { get; } = {
             "Efficient_Adaptation", "Defensive_Adaptation", "Offensive_Adaptation",
             "Form_of_the_Body", "Form_of_the_Mind", "Form_of_the_Soul",
             "Ammunition",
@@ -53,7 +52,7 @@ namespace HeroViewer
                 "Villain" => Enums.Alignment.Villain,
                 "Loyalist" => Enums.Alignment.Loyalist,
                 "Resistance" => Enums.Alignment.Resistance,
-                _ => MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain,
+                _ => MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain
             };
 
             MidsContext.Character.SetLevelTo(CharacterInfo.Level - 1);
@@ -132,7 +131,7 @@ namespace HeroViewer
             powerEntry.IDXPower = p.pData.PowerSetIndex;
             if (powerEntry.Level == 0 && powerEntry.Power.FullSetName == "Pool.Fitness")
             {
-                powerEntry.NIDPower = this.OldFitnessPoolIDs[powerEntry.NIDPower];
+                powerEntry.NIDPower = OldFitnessPoolIDs[powerEntry.NIDPower];
                 powerEntry.NIDPowerset = p.pData.PowerSetID;
                 powerEntry.IDXPower = p.pData.PowerSetIndex;
             }
@@ -154,11 +153,11 @@ namespace HeroViewer
             switch (validateType)
             {
                 case Enums.eValidationType.Powerset:
-                    excludes = this.excludePowersets;
+                    excludes = excludePowersets;
                     break;
 
                 case Enums.eValidationType.Power:
-                    excludes = this.excludePowers;
+                    excludes = excludePowers;
                     break;
 
                 default:
@@ -174,7 +173,7 @@ namespace HeroViewer
         {
             if (input == null) return false;
 
-            return !this.excludePowersets.Any(x => input.FullName.Contains(x));
+            return !excludePowersets.Any(x => input.FullName.Contains(x));
         }
 
         // CheckValid, for direct powerset result
@@ -183,7 +182,7 @@ namespace HeroViewer
         {
             if (input == null) return false;
 
-            return !this.excludePowers.Any(x => input.FullName.Contains(x));
+            return !excludePowers.Any(x => input.FullName.Contains(x));
         }
 
         protected string FixKheldPowerNames(string powerName)
@@ -196,12 +195,12 @@ namespace HeroViewer
 
         public UniqueList<string> GetPowersets()
         {
-            return this.PowerSets;
+            return PowerSets;
         }
 
         public RawCharacterInfo GetCharacterInfo()
         {
-            return this.CharacterInfo;
+            return CharacterInfo;
         }
     }
 
@@ -213,9 +212,9 @@ namespace HeroViewer
         private readonly int HeaderSize = 4; // Number of lines before actual build data
         public ImportFromBuildsave(string buildString)
         {
-            this.BuildString = buildString;
-            this.PowerSets = new UniqueList<string>();
-            this.CharacterInfo = new RawCharacterInfo();
+            BuildString = buildString;
+            PowerSets = new UniqueList<string>();
+            CharacterInfo = new RawCharacterInfo();
         }
 
         public List<PowerEntry>? Parse()
@@ -238,7 +237,7 @@ namespace HeroViewer
 
             int line = -1;
             string lineText;
-            using StreamReader streamReader = new StreamReader(this.BuildString);
+            using StreamReader streamReader = new StreamReader(BuildString);
             while ((lineText = streamReader.ReadLine()) != null)
             {
                 line++;
@@ -254,14 +253,14 @@ namespace HeroViewer
                         return null;
                     }
 
-                    this.CharacterInfo.Name = m.Groups[1].Value;
-                    this.CharacterInfo.Archetype = m.Groups[4].Value.Replace("Class_", string.Empty);
-                    this.CharacterInfo.Origin = m.Groups[3].Value;
-                    this.CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
+                    CharacterInfo.Name = m.Groups[1].Value;
+                    CharacterInfo.Archetype = m.Groups[4].Value.Replace("Class_", string.Empty);
+                    CharacterInfo.Origin = m.Groups[3].Value;
+                    CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
 
                     SetCharacterInfo();
                 }
-                else if (line < this.HeaderSize)
+                else if (line < HeaderSize)
                 {
                     continue;
                 }
@@ -284,18 +283,18 @@ namespace HeroViewer
                     p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     if (p.pData == null)
                     {
-                        p.FullName = this.FixKheldPowerNames(p.FullName);
+                        p.FullName = FixKheldPowerNames(p.FullName);
                         powerIDChunks = p.FullName.Split('.');
                         rawPowerset = (powerIDChunks[0] + "." + powerIDChunks[1]).Trim();
                         p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
                         p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     }
-                    p.Valid = this.CheckValid(p.pData);
+                    p.Valid = CheckValid(p.pData);
                     p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
                     p.Slots = new List<RawEnhData>();
-                    if (this.CheckValid(p.Powerset))
+                    if (CheckValid(p.Powerset))
                     {
-                        this.PowerSets.Add(p.Powerset.FullName);
+                        PowerSets.Add(p.Powerset.FullName);
                     }
                 }
                 else if (m2.Success)
@@ -407,17 +406,17 @@ namespace HeroViewer
 
         public PlainTextParser(string buildString)
         {
-            this.BuildString = buildString;
-            this.PowerSets = new UniqueList<string>();
-            this.CharacterInfo = new RawCharacterInfo();
-            this.BuilderApp = new BuilderApp();
+            BuildString = buildString;
+            PowerSets = new UniqueList<string>();
+            CharacterInfo = new RawCharacterInfo();
+            BuilderApp = new BuilderApp();
         }
 
         private string ShortNamesConversion(string sn)
         {
             if (string.IsNullOrEmpty(sn)) return sn;
 
-            foreach (KeyValuePair<string, string> k in this.OldSetNames)
+            foreach (KeyValuePair<string, string> k in OldSetNames)
             {
                 if (sn.IndexOf(k.Key, StringComparison.Ordinal) > -1) return sn.Replace(k.Key, k.Value);
             }
@@ -440,7 +439,7 @@ namespace HeroViewer
 
             try
             {
-                cnt = File.ReadAllText(this.BuildString);
+                cnt = File.ReadAllText(BuildString);
             }
             catch (Exception ex)
             {
@@ -469,9 +468,9 @@ namespace HeroViewer
                 return null;
             }
 
-            this.CharacterInfo.Alignment = m.Groups[1].Value;
-            this.BuilderApp.Software = m.Groups[2].Value;
-            this.BuilderApp.Version = m.Groups[3].Value;
+            CharacterInfo.Alignment = m.Groups[1].Value;
+            BuilderApp.Software = m.Groups[2].Value;
+            BuilderApp.Version = m.Groups[3].Value;
 
             // Character name, level, origin and archetype
             r = new Regex(@"([^\r\n\t]+)\: Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
@@ -481,17 +480,17 @@ namespace HeroViewer
                 // Name is empty
                 rs = new Regex(@"Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
                 ms = rs.Match(cnt);
-                this.CharacterInfo.Name = string.Empty;
-                this.CharacterInfo.Level = Convert.ToInt32(ms.Groups[1].Value, null);
-                this.CharacterInfo.Origin = ms.Groups[2].Value;
-                this.CharacterInfo.Archetype = ms.Groups[3].Value;
+                CharacterInfo.Name = string.Empty;
+                CharacterInfo.Level = Convert.ToInt32(ms.Groups[1].Value, null);
+                CharacterInfo.Origin = ms.Groups[2].Value;
+                CharacterInfo.Archetype = ms.Groups[3].Value;
             }
             else
             {
-                this.CharacterInfo.Name = m.Groups[1].Value;
-                this.CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
-                this.CharacterInfo.Origin = m.Groups[3].Value;
-                this.CharacterInfo.Archetype = m.Groups[4].Value;
+                CharacterInfo.Name = m.Groups[1].Value;
+                CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
+                CharacterInfo.Origin = m.Groups[3].Value;
+                CharacterInfo.Archetype = m.Groups[4].Value;
             }
 
             SetCharacterInfo();
@@ -501,7 +500,7 @@ namespace HeroViewer
             m = r.Match(cnt);
             while (m.Success)
             {
-                this.PowerSets.Add(m.Groups[2].Value);
+                PowerSets.Add(m.Groups[2].Value);
                 m = m.NextMatch();
             }
 
@@ -512,7 +511,7 @@ namespace HeroViewer
             {
                 if (m.Groups[2].Value != "Fitness")
                 {
-                    this.PowerSets.Add(m.Groups[2].Value);
+                    PowerSets.Add(m.Groups[2].Value);
                 }
                 m = m.NextMatch();
             }
@@ -530,9 +529,9 @@ namespace HeroViewer
 
                 p.DisplayName = m.Groups[2].Value.Trim();
                 p.Level = Convert.ToInt32(m.Groups[1].Value, null);
-                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, DatabaseAPI.GetArchetypeByName(this.CharacterInfo.Archetype).Idx);
+                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype).Idx);
                 p.Powerset = p.pData != null ? DatabaseAPI.GetPowersetByIndex(p.pData.PowerSetIndex) : null;
-                p.Valid = this.CheckValid(p.pData);
+                p.Valid = CheckValid(p.pData);
                 PSlotsStr = (m.Groups.Count > 3) ? m.Groups[3].Value.Trim() : string.Empty;
                 if (!String.IsNullOrEmpty(PSlotsStr))
                 {
@@ -544,9 +543,9 @@ namespace HeroViewer
                     for (i = 0; i < PSlots.Length; i++)
                     {
                         s = Regex.Split(PSlots[i], @"/[\(\)]");
-                        s = Array.FindAll<string>(s, e => !String.IsNullOrWhiteSpace(e));
+                        s = Array.FindAll(s, e => !String.IsNullOrWhiteSpace(e));
 
-                        sContentEnh = (s[0] == "Empty") ? null : this.ShortNamesConversion(s[0]); // Enhancement name (Enhancement.ShortName)
+                        sContentEnh = (s[0] == "Empty") ? null : ShortNamesConversion(s[0]); // Enhancement name (Enhancement.ShortName)
                         try
                         {
                             e.InternalName = s[0];
@@ -570,9 +569,9 @@ namespace HeroViewer
 
                 if (p.Valid)
                 {
-                    if (this.CheckValid(p.Powerset))
+                    if (CheckValid(p.Powerset))
                     {
-                        this.PowerSets.Add(p.Powerset.FullName);
+                        PowerSets.Add(p.Powerset.FullName);
                     }
                     AddPowerToBuildSheet(p, ref listPowers);
                 }
@@ -583,7 +582,7 @@ namespace HeroViewer
 
         public List<string> GetPowerSets()
         {
-            return this.PowerSets;
+            return PowerSets;
         }
     }
 }

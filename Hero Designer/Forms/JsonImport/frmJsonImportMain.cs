@@ -1,16 +1,11 @@
-﻿using Base.Data_Classes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Base.Data_Classes;
+using Hero_Designer.My;
+using Newtonsoft.Json;
 
 namespace Hero_Designer.Forms.JsonImport
 {
@@ -62,8 +57,8 @@ namespace Hero_Designer.Forms.JsonImport
                     }
                 }
             }
-            DatabaseAPI.Database.AttribMods.Store(My.MyApplication.GetSerializer());
-            DatabaseAPI.SaveJsonDatabase(My.MyApplication.GetSerializer());
+            DatabaseAPI.Database.AttribMods.Store(MyApplication.GetSerializer());
+            DatabaseAPI.SaveJsonDatabase(MyApplication.GetSerializer());
             _ = MessageBox.Show(@"Import completed");
         }
     }

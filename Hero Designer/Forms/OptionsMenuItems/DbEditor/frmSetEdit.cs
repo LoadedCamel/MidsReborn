@@ -1,8 +1,3 @@
-using Base.Data_Classes;
-using Base.Display;
-using Base.Master_Classes;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -10,6 +5,11 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Base.Data_Classes;
+using Base.Display;
+using Base.Master_Classes;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
@@ -25,7 +25,7 @@ namespace Hero_Designer
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                EventHandler eventHandler2 = new EventHandler(lvBonusList_DoubleClick);
+                EventHandler eventHandler2 = lvBonusList_DoubleClick;
                 if (_lvBonusList != null)
                 {
                     _lvBonusList.DoubleClick -= eventHandler2;
@@ -43,8 +43,8 @@ namespace Hero_Designer
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                EventHandler eventHandler1 = new EventHandler(udMaxLevel_Leave);
-                EventHandler eventHandler2 = new EventHandler(udMaxLevel_ValueChanged);
+                EventHandler eventHandler1 = udMaxLevel_Leave;
+                EventHandler eventHandler2 = udMaxLevel_ValueChanged;
                 if (_udMaxLevel != null)
                 {
                     _udMaxLevel.Leave -= eventHandler1;
@@ -64,8 +64,8 @@ namespace Hero_Designer
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                EventHandler eventHandler1 = new EventHandler(udMinLevel_Leave);
-                EventHandler eventHandler2 = new EventHandler(udMinLevel_ValueChanged);
+                EventHandler eventHandler1 = udMinLevel_Leave;
+                EventHandler eventHandler2 = udMinLevel_ValueChanged;
                 if (_udMinLevel != null)
                 {
                     _udMinLevel.Leave -= eventHandler1;
@@ -81,7 +81,7 @@ namespace Hero_Designer
 
         public frmSetEdit(ref EnhancementSet iSet)
         {
-            Load += new EventHandler(frmSetEdit_Load);
+            Load += frmSetEdit_Load;
             SetBonusList = new int[0];
             Loading = true;
             InitializeComponent();
@@ -158,8 +158,8 @@ namespace Hero_Designer
                     {
                         EnhancementSet.BonusItem[] bonus = mySet.Bonus;
                         int index3 = num3;
-                        bonus[index3].Name = (string[])Utils.CopyArray(bonus[index3].Name, (Array)new string[bonus[index3].Name.Length + 1]);
-                        bonus[index3].Index = (int[])Utils.CopyArray(bonus[index3].Index, (Array)new int[bonus[index3].Index.Length + 1]);
+                        bonus[index3].Name = (string[])Utils.CopyArray(bonus[index3].Name, new string[bonus[index3].Name.Length + 1]);
+                        bonus[index3].Index = (int[])Utils.CopyArray(bonus[index3].Index, new int[bonus[index3].Index.Length + 1]);
                         bonus[index3].Index[bonus[index3].Index.Length - 1] = index2;
                         bonus[index3].Name[bonus[index3].Name.Length - 1] = DatabaseAPI.Database.Power[index2].FullName;
                     }
@@ -274,15 +274,15 @@ namespace Hero_Designer
             {
                 using ExtendedBitmap extendedBitmap1 = new ExtendedBitmap($"{I9Gfx.GetEnhancementsPath()}{mySet.Image}");
                 using ExtendedBitmap extendedBitmap2 = new ExtendedBitmap(30, 30);
-                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), System.Drawing.GraphicsUnit.Pixel);
-                extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, System.Drawing.GraphicsUnit.Pixel);
+                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
+                extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
                 btnImage.Text = mySet.Image;
             }
             else
             {
                 using ExtendedBitmap extendedBitmap = new ExtendedBitmap(30, 30);
-                extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), System.Drawing.GraphicsUnit.Pixel);
+                extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap.Bitmap);
                 btnImage.Text = @"Select Image";
             }
@@ -385,7 +385,7 @@ namespace Hero_Designer
             string[] names = Enum.GetNames(Enums.eSetType.Untyped.GetType());
             cbSetType.BeginUpdate();
             cbSetType.Items.Clear();
-            cbSetType.Items.AddRange((object[])names);
+            cbSetType.Items.AddRange(names);
             cbSetType.EndUpdate();
         }
 
@@ -407,7 +407,7 @@ namespace Hero_Designer
                     extendedBitmap.Graphics.Clear(Color.White);
                     Graphics graphics = extendedBitmap.Graphics;
                     I9Gfx.DrawEnhancement(ref graphics, DatabaseAPI.Database.Enhancements[mySet.Enhancements[index]].ImageIdx, gfxGrade);
-                    ilEnh.Images.Add((Image)extendedBitmap.Bitmap);
+                    ilEnh.Images.Add(extendedBitmap.Bitmap);
                 }
                 else
                 {
@@ -417,7 +417,7 @@ namespace Hero_Designer
                     imageSize2 = ilEnh.ImageSize;
                     int height2 = imageSize2.Height;
                     Bitmap bitmap = new Bitmap(width2, height2);
-                    images.Add((Image)bitmap);
+                    images.Add(bitmap);
                 }
             }
         }
@@ -520,8 +520,8 @@ namespace Hero_Designer
             {
                 if (isBonus())
                 {
-                    mySet.Bonus[BonusID()].Name = (string[])Utils.CopyArray(mySet.Bonus[BonusID()].Name, (Array)new string[mySet.Bonus[BonusID()].Name.Length + 1]);
-                    mySet.Bonus[BonusID()].Index = (int[])Utils.CopyArray(mySet.Bonus[BonusID()].Index, (Array)new int[mySet.Bonus[BonusID()].Index.Length + 1]);
+                    mySet.Bonus[BonusID()].Name = (string[])Utils.CopyArray(mySet.Bonus[BonusID()].Name, new string[mySet.Bonus[BonusID()].Name.Length + 1]);
+                    mySet.Bonus[BonusID()].Index = (int[])Utils.CopyArray(mySet.Bonus[BonusID()].Index, new int[mySet.Bonus[BonusID()].Index.Length + 1]);
                     mySet.Bonus[BonusID()].Name[mySet.Bonus[BonusID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     mySet.Bonus[BonusID()].Index[mySet.Bonus[BonusID()].Index.Length - 1] = index;
                     mySet.Bonus[BonusID()].Slotted = cbSlotCount.SelectedIndex+2;                                        
@@ -529,8 +529,8 @@ namespace Hero_Designer
                 else if (isSpecial())
                 {
                     mySet.SpecialBonus[SpecialID()].Special = SpecialID();
-                    mySet.SpecialBonus[SpecialID()].Name = (string[])Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Name, (Array)new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
-                    mySet.SpecialBonus[SpecialID()].Index = (int[])Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Index, (Array)new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
+                    mySet.SpecialBonus[SpecialID()].Name = (string[])Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Name, new string[mySet.SpecialBonus[SpecialID()].Name.Length + 1]);
+                    mySet.SpecialBonus[SpecialID()].Index = (int[])Utils.CopyArray(mySet.SpecialBonus[SpecialID()].Index, new int[mySet.SpecialBonus[SpecialID()].Index.Length + 1]);
                     mySet.SpecialBonus[SpecialID()].Name[mySet.SpecialBonus[SpecialID()].Name.Length - 1] = DatabaseAPI.Database.Power[index].FullName;
                     mySet.SpecialBonus[SpecialID()].Index[mySet.SpecialBonus[SpecialID()].Index.Length - 1] = index;
                 }

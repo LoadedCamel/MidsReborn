@@ -6,7 +6,6 @@ using System.IO;
 using System.Windows.Forms;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {

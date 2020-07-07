@@ -807,7 +807,6 @@ namespace Hero_Designer
             config.I9.HideIOLevels = !chkIOLevel.Checked;
             config.ShowRelSymbols = chkRelSignOnly.Checked;
             config.ShowSOLevels = chkShowSOLevels.Checked;
-            config.DisableDataDamageGraph = !chkEnableDmgGraph.Checked;
             config.I9.DisablePrintIOLevels = !chkIOPrintLevels.Checked;
             config.PrintInColor = chkColorPrint.Checked;
             config.RtFont.RTFBase = Convert.ToInt32(decimal.Multiply(udRTFSize.Value, new decimal(2)));

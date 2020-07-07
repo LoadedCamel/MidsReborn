@@ -6,9 +6,8 @@ using System.Globalization;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
-using midsControls;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+using midsControls;
 
 namespace Hero_Designer
 {

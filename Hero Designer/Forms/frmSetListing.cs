@@ -5,13 +5,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Display;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
@@ -140,7 +138,7 @@ namespace Hero_Designer
             string uidOld = "";
             int selectedIndex1 = lvSets.SelectedIndices[0];
             EnhancementSetCollection enhancementSets = DatabaseAPI.Database.EnhancementSets;
-            int selectedIndex2 = this.lvSets.SelectedIndices[0];
+            int selectedIndex2 = lvSets.SelectedIndices[0];
             /*string setName = Regex.Replace(lvSets.SelectedItems[0].Text, @"( \(\w+\))", "");
             var setNameIndex = enhancementSets.FindIndex(x => x.DisplayName == setName);*/
             EnhancementSet iSet = enhancementSets[selectedIndex2];

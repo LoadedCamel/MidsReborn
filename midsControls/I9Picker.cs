@@ -55,7 +55,7 @@ namespace midsControls
         Color _cHighlight;
         Color _cSelected;
 
-        private IEnhancement SelectedEnhancement = null;
+        private IEnhancement SelectedEnhancement;
 
         IContainer components;
 

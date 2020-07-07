@@ -293,7 +293,6 @@ namespace Hero_Designer
             // 
             // TabPage3
             // 
-            this.TabPage3.Controls.Add(this.chkColourPrint);
             this.TabPage3.Controls.Add(this.chkNoTips);
             this.TabPage3.Controls.Add(this.chkMiddle);
             this.TabPage3.Controls.Add(this.GroupBox17);

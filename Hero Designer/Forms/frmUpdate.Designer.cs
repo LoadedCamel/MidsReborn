@@ -1,11 +1,15 @@
-﻿namespace Hero_Designer.Forms
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using midsControls;
+
+namespace Hero_Designer.Forms
 {
     partial class frmUpdate
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -80,8 +84,8 @@
 
         #endregion
 
-        public midsControls.ctlProgressBar ctlProgressBar1;
-        public System.Windows.Forms.RichTextBox richTextBox1;
-        public midsControls.ctlProgressBar ctlProgressBar2;
+        public ctlProgressBar ctlProgressBar1;
+        public RichTextBox richTextBox1;
+        public ctlProgressBar ctlProgressBar2;
     }
 }

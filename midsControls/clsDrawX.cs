@@ -5,16 +5,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
-using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Syncfusion.DataSource.Extensions;
-using Syncfusion.Windows.Forms.Grid;
 
 namespace midsControls
 {
@@ -49,7 +44,7 @@ namespace midsControls
                 if (value < 2 | value > 4)
                     return;
                 vcCols = value;
-                vcRowsPowers = checked((int) Math.Round(24.0 / vcCols));
+                vcRowsPowers = checked((int)Math.Round(24.0 / vcCols));
             }
         }
 
@@ -119,7 +114,7 @@ namespace midsControls
             checked
             {
                 switch (vcCols)
-                { 
+                {
                     case 2:
                         iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 65;
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width), ScaleDown(iValue));
@@ -236,10 +231,10 @@ namespace midsControls
                     iValue2.Y -= 3f;
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
                     Color color;
-                    
+
                     if (slot.Enhancement.RelativeLevel == 0)
                     {
-                        color = Color.FromArgb(172,67,50);
+                        color = Color.FromArgb(172, 67, 50);
                     }
                     else if (slot.Enhancement.RelativeLevel < Enums.eEnhRelative.Even)
                     {
@@ -314,7 +309,7 @@ namespace midsControls
             Point point = default;
             checked
             {
-                point.X = (int) Math.Round(result.X + (checked(SzPower.Width - (szSlot.Width * 6)) / 2.0));
+                point.X = (int)Math.Round(result.X + (checked(SzPower.Width - (szSlot.Width * 6)) / 2.0));
                 point.Y = result.Y + 18;
                 Graphics graphics = bxBuffer.Graphics;
                 Brush brush = new SolidBrush(BackColor);
@@ -382,8 +377,8 @@ namespace midsControls
                     imageAttr = GreySlot(grey);
                 }
 
-                Rectangle iValue = new Rectangle(result.X, result.Y, bxPower[(int) ePowerState].Size.Width,
-                    bxPower[(int) ePowerState].Size.Height);
+                Rectangle iValue = new Rectangle(result.X, result.Y, bxPower[(int)ePowerState].Size.Width,
+                    bxPower[(int)ePowerState].Size.Height);
                 if (ePowerState == Enums.ePowerState.Used || toggling)
                 {
                     if (!MidsContext.Config.DisableDesaturateInherent & !iSlot.Chosen)
@@ -396,19 +391,19 @@ namespace midsControls
                     Rectangle destRect = ScaleDown(iValue);
                     int srcX = 0;
                     int srcY = 0;
-                    int width = bxPower[(int) ePowerState].ClipRect.Width;
-                    Rectangle clipRect2 = bxPower[(int) ePowerState].ClipRect;
+                    int width = bxPower[(int)ePowerState].ClipRect.Width;
+                    Rectangle clipRect2 = bxPower[(int)ePowerState].ClipRect;
                     graphics2.DrawImage(bitmap, destRect, srcX, srcY, width, clipRect2.Height, GraphicsUnit.Pixel, imageAttr);
                 }
                 else
                 {
                     Graphics graphics3 = bxBuffer.Graphics;
-                    Image bitmap2 = bxPower[(int) ePowerState].Bitmap;
+                    Image bitmap2 = bxPower[(int)ePowerState].Bitmap;
                     Rectangle destRect2 = ScaleDown(iValue);
                     int srcX2 = 0;
                     int srcY2 = 0;
-                    int width2 = bxPower[(int) ePowerState].ClipRect.Width;
-                    clipRect = bxPower[(int) ePowerState].ClipRect;
+                    int width2 = bxPower[(int)ePowerState].ClipRect.Width;
+                    clipRect = bxPower[(int)ePowerState].ClipRect;
                     graphics3.DrawImage(bitmap2, destRect2, srcX2, srcY2, width2, clipRect.Height, GraphicsUnit.Pixel);
                 }
 
@@ -416,8 +411,8 @@ namespace midsControls
                 {
                     rectangle.Height = 15;
                     rectangle.Width = rectangle.Height;
-                    rectangle.Y = (int) Math.Round(iValue.Top + checked(iValue.Height - rectangle.Height) / 2.0);
-                    rectangle.X = (int) Math.Round(iValue.Right - (rectangle.Width + checked(iValue.Height - rectangle.Height) / 2.0));
+                    rectangle.Y = (int)Math.Round(iValue.Top + checked(iValue.Height - rectangle.Height) / 2.0);
+                    rectangle.X = (int)Math.Round(iValue.Right - (rectangle.Width + checked(iValue.Height - rectangle.Height) / 2.0));
                     rectangle = ScaleDown(rectangle);
                     PathGradientBrush brush2;
                     if (iSlot.StatInclude)
@@ -447,7 +442,7 @@ namespace midsControls
                     rectangleF.Y = point.Y;
                     if (slot.Enhancement.Enh < 0)
                     {
-                        Rectangle clipRect2 = new Rectangle((int) Math.Round(rectangleF.X), point.Y, 30, 30);
+                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, 30, 30);
                         bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, 30, 30, GraphicsUnit.Pixel,
                             pImageAttributes);
                         if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
@@ -463,33 +458,34 @@ namespace midsControls
                     {
                         if (inDesigner) continue;
                         IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
-                        Graphics graphics6 = bxBuffer.Graphics;
-                        Rectangle clipRect2 = new Rectangle((int) Math.Round(rectangleF.X), point.Y, 30, 30);
-                        I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect2), enhancement.ImageIdx,
+                        Graphics graphics5 = bxBuffer.Graphics;
+                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, 30, 30);
+                        I9Gfx.DrawEnhancementAt(ref graphics5, ScaleDown(clipRect2), enhancement.ImageIdx,
                             I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
                         if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
                             (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
                             (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                            RectangleF iValue3 = rectangleF;
-                            iValue3.Inflate(1f, 1f);
-                            bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(iValue3));
+                            RectangleF iValue2 = rectangleF;
+                            iValue2.Inflate(1f, 1f);
+                            bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(iValue2));
                         }
 
                         if (slot.Enhancement.Enh > -1)
                             DrawEnhancementLevel(slot, font, graphics, ref rectangleF);
                     }
 
-                    if (!MidsContext.Config.ShowSlotLevels) continue;
-
-                    RectangleF iValue2 = rectangleF;
-                    unchecked
+                    if (!MidsContext.Config.ShowSlotLevels)
+                        continue;
                     {
-                        iValue2.Y += iValue2.Height;
-                        iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                        iValue2.Y -= iValue2.Height;
-                    }
+                        RectangleF iValue2 = rectangleF;
+                        unchecked
+                        {
+                            iValue2.Y += iValue2.Height;
+                            iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
+                            iValue2.Y -= iValue2.Height;
+                        }
 
                         Graphics graphics5 = bxBuffer.Graphics;
                         DrawOutlineText(
@@ -605,8 +601,8 @@ namespace midsControls
 
         PathGradientBrush MakePathBrush(Rectangle iRect, PointF iCenter, Color iColor1, Color icolor2)
         {
-            float num = (float) (iRect.Left + iRect.Width * 0.5);
-            float num2 = (float) (iRect.Top + iRect.Height * 0.5);
+            float num = (float)(iRect.Left + iRect.Width * 0.5);
+            float num2 = (float)(iRect.Top + iRect.Height * 0.5);
             GraphicsPath graphicsPath = new GraphicsPath();
             graphicsPath.AddEllipse(iRect);
             PathGradientBrush pathGradientBrush;
@@ -623,13 +619,14 @@ namespace midsControls
 
                 pathGradientBrush = new PathGradientBrush(graphicsPath)
                 {
-                    CenterColor = iColor1, SurroundColors = array
+                    CenterColor = iColor1,
+                    SurroundColors = array
                 };
                 pathGradientBrush2 = pathGradientBrush;
             }
 
-            PointF centerPoint = new PointF((float) (num + (iCenter.X + iCenter.X * (iRect.Width * 0.5))),
-                (float) (num2 + (iCenter.Y + iCenter.Y * (iRect.Height * 0.5))));
+            PointF centerPoint = new PointF((float)(num + (iCenter.X + iCenter.X * (iRect.Width * 0.5))),
+                (float)(num2 + (iCenter.Y + iCenter.Y * (iRect.Height * 0.5))));
             pathGradientBrush2.CenterPoint = centerPoint;
             return pathGradientBrush;
         }
@@ -712,7 +709,8 @@ namespace midsControls
         {
             StringFormat stringFormat = new StringFormat(StringFormatFlags.NoWrap)
             {
-                LineAlignment = StringAlignment.Near, Alignment = leftAlign ? StringAlignment.Near : StringAlignment.Center
+                LineAlignment = StringAlignment.Near,
+                Alignment = leftAlign ? StringAlignment.Near : StringAlignment.Center
             };
 
             SolidBrush brush = new SolidBrush(outlineColor);
@@ -808,7 +806,7 @@ namespace midsControls
 
                     if (!isValid)
                         return -1;
-                    iX = (int) Math.Round(iX - (point.X + checked(SzPower.Width - szSlot.Width * 6) / 2.0));
+                    iX = (int)Math.Round(iX - (point.X + checked(SzPower.Width - szSlot.Width * 6) / 2.0));
                     for (int i = 0; i <= MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length - 1; i++)
                     {
                         if (iX <= (i + 1) * szSlot.Width)
@@ -902,9 +900,9 @@ namespace midsControls
             if (drawingArea.Width > iSize.Width | drawingArea.Height > iSize.Height)
             {
                 Scaling = true;
-                ScaleValue = (double) drawingArea.Width / iSize.Width > drawingArea.Height / (double) iSize.Height
-                    ? (float) (drawingArea.Width / (double) iSize.Width)
-                    : (float) (drawingArea.Height / (double) iSize.Height);
+                ScaleValue = (double)drawingArea.Width / iSize.Width > drawingArea.Height / (double)iSize.Height
+                    ? (float)(drawingArea.Width / (double)iSize.Width)
+                    : (float)(drawingArea.Height / (double)iSize.Height);
                 ResetTarget();
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -951,7 +949,7 @@ namespace midsControls
             }
             else
             {
-                iValue = checked((int) Math.Round(iValue / ScaleValue));
+                iValue = checked((int)Math.Round(iValue / ScaleValue));
                 result = iValue;
             }
 
@@ -967,7 +965,7 @@ namespace midsControls
             }
             else
             {
-                iValue = checked((int) Math.Round(iValue * ScaleValue));
+                iValue = checked((int)Math.Round(iValue * ScaleValue));
                 result = iValue;
             }
 
@@ -1001,10 +999,10 @@ namespace midsControls
                 }
                 else
                 {
-                    iValue.X = (int) Math.Round(iValue.X / ScaleValue);
-                    iValue.Y = (int) Math.Round(iValue.Y / ScaleValue);
-                    iValue.Width = (int) Math.Round(iValue.Width / ScaleValue);
-                    iValue.Height = (int) Math.Round(iValue.Height / ScaleValue);
+                    iValue.X = (int)Math.Round(iValue.X / ScaleValue);
+                    iValue.Y = (int)Math.Round(iValue.Y / ScaleValue);
+                    iValue.Width = (int)Math.Round(iValue.Width / ScaleValue);
+                    iValue.Height = (int)Math.Round(iValue.Height / ScaleValue);
                     result = iValue;
                 }
 
@@ -1018,10 +1016,10 @@ namespace midsControls
             {
                 if (!Scaling)
                     return iValue;
-                iValue.X = (int) Math.Round(iValue.X / ScaleValue);
-                iValue.Y = (int) Math.Round(iValue.Y / ScaleValue);
-                iValue.Width = (int) Math.Round(iValue.Width / ScaleValue);
-                iValue.Height = (int) Math.Round(iValue.Height / ScaleValue);
+                iValue.X = (int)Math.Round(iValue.X / ScaleValue);
+                iValue.Y = (int)Math.Round(iValue.Y / ScaleValue);
+                iValue.Width = (int)Math.Round(iValue.Width / ScaleValue);
+                iValue.Height = (int)Math.Round(iValue.Height / ScaleValue);
                 return iValue;
             }
         }
@@ -1090,7 +1088,6 @@ namespace midsControls
                 useHeroColors = MidsContext.Character.IsHero();
             if (MidsContext.Config.DisableVillainColors)
                 useHeroColors = true;
-
             VillainColor = !useHeroColors;*/
             pColorMatrix = new ColorMatrix(heroMatrix);
             if (pImageAttributes == null)
@@ -1129,7 +1126,7 @@ namespace midsControls
 
                         if (r != 4)
                         {
-                            colorMatrix[r, c] = (float) (colorMatrix[r, c] / 1.5);
+                            colorMatrix[r, c] = (float)(colorMatrix[r, c] / 1.5);
                         }
 
                         c++;
@@ -1185,7 +1182,7 @@ namespace midsControls
 
                         if (Grey && r != 4)
                         {
-                            tCM[r, c] = (float) (tCM[r, c] / 1.5);
+                            tCM[r, c] = (float)(tCM[r, c] / 1.5);
                         }
 
                         c++;
@@ -1893,7 +1890,7 @@ namespace midsControls
 
         public Size GetDrawingArea()
         {
-            Size result = (Size) PowerPosition(23);
+            Size result = (Size)PowerPosition(23);
             checked
             {
                 result.Width += SzPower.Width;
@@ -1923,12 +1920,12 @@ namespace midsControls
         {
             int cols = vcCols;
             MiniSetCol(6);
-            Size result = (Size) PowerPosition(23);
+            Size result = (Size)PowerPosition(23);
             MiniSetCol(2);
             int[][] inherentGrid = GetInherentGrid();
             checked
             {
-                Size size = (Size) CRtoXY(inherentGrid[inherentGrid.Length - 1].Length - 1, inherentGrid.Length - 1);
+                Size size = (Size)CRtoXY(inherentGrid[inherentGrid.Length - 1].Length - 1, inherentGrid.Length - 1);
                 if (size.Height > result.Height)
                 {
                     result.Height = size.Height + 20;
@@ -1953,7 +1950,7 @@ namespace midsControls
             if (cols < 2 | cols > 6)
                 return;
             vcCols = cols;
-            vcRowsPowers = checked((int) Math.Round(24.0 / vcCols));
+            vcRowsPowers = checked((int)Math.Round(24.0 / vcCols));
         }
 
         public Size GetRequiredDrawingArea()

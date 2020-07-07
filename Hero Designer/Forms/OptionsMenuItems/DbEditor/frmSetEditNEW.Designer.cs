@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 {
@@ -7,7 +8,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -522,44 +523,44 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         #endregion
 
-        private System.Windows.Forms.Button btnImage;
-        private System.Windows.Forms.Button btnNoImage;
-        private System.Windows.Forms.ImageList ilEnh;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.NumericUpDown udMaxLevel;
-        private System.Windows.Forms.NumericUpDown udMinLevel;
-        private System.Windows.Forms.TextBox txtInternal;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtNameShort;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtNameFull;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.RichTextBox txtDesc;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox cbSetType;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ListView lvEnh;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RichTextBox rtbBonus;
-        private System.Windows.Forms.ListBox lstBonus;
-        private System.Windows.Forms.ComboBox cbSlotCount;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ListView lvBonusList;
-        private System.Windows.Forms.TextBox txtAlternate;
-        private System.Windows.Forms.TextBox txtBonusFilter;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.RadioButton rbIfAny;
-        private System.Windows.Forms.RadioButton rbIfCritter;
-        private System.Windows.Forms.RadioButton rbIfPlayer;
-        private System.Windows.Forms.OpenFileDialog ImagePicker;
+        private Button btnImage;
+        private Button btnNoImage;
+        private ImageList ilEnh;
+        private GroupBox groupBox1;
+        private NumericUpDown udMaxLevel;
+        private NumericUpDown udMinLevel;
+        private TextBox txtInternal;
+        private Label label3;
+        private TextBox txtNameShort;
+        private Label label2;
+        private TextBox txtNameFull;
+        private Label label1;
+        private Label label4;
+        private RichTextBox txtDesc;
+        private Label label6;
+        private Label label5;
+        private ComboBox cbSetType;
+        private Label label7;
+        private GroupBox groupBox2;
+        private ListView lvEnh;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private GroupBox groupBox3;
+        private RichTextBox rtbBonus;
+        private ListBox lstBonus;
+        private ComboBox cbSlotCount;
+        private Label label8;
+        private ListView lvBonusList;
+        private TextBox txtAlternate;
+        private TextBox txtBonusFilter;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private Button btnCancel;
+        private Button btnSave;
+        private Label label9;
+        private RadioButton rbIfAny;
+        private RadioButton rbIfCritter;
+        private RadioButton rbIfPlayer;
+        private OpenFileDialog ImagePicker;
     }
 }

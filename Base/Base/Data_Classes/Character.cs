@@ -1,11 +1,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
 using HeroViewer.Base;
@@ -252,7 +250,7 @@ namespace Base.Data_Classes
 
         public int GetPowersByLevel(int Level)
         {
-            int[] powerPickedLevels = new[] { 0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 34, 37, 40, 43, 46, 48 };
+            int[] powerPickedLevels = { 0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 34, 37, 40, 43, 46, 48 };
 
             return powerPickedLevels.Where(e => e <= Level).ToArray().Length;
         }

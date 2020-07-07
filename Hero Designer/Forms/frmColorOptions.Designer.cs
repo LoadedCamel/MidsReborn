@@ -1,11 +1,15 @@
-﻿namespace Hero_Designer.Forms
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using midsControls;
+
+namespace Hero_Designer.Forms
 {
     partial class frmColorOptions
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -621,48 +625,48 @@
 
         #endregion
 
-        private System.Windows.Forms.ColorDialog colorSelector;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button HighlightVillain;
-        private System.Windows.Forms.Button DarkTakenVillain;
-        private System.Windows.Forms.Button TakenVillain;
-        private System.Windows.Forms.Button HighlightHero;
-        private System.Windows.Forms.Button DarkTakenHero;
-        private System.Windows.Forms.Button TakenHeroColor;
-        private System.Windows.Forms.Button UnavailPowerColor;
-        private System.Windows.Forms.Button AvailPowerColor;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button SpecialCaseColor;
-        private System.Windows.Forms.Button ValueColor;
-        private System.Windows.Forms.Button AlertColor;
-        private System.Windows.Forms.Button EnhancementsColor;
-        private System.Windows.Forms.Button FadedColor;
-        private System.Windows.Forms.Button InventionsWhiteColor;
-        private System.Windows.Forms.Button InventionsColor;
-        private System.Windows.Forms.Button TextColor;
-        private System.Windows.Forms.Button BGColor;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Button ButtonDefault;
-        private System.Windows.Forms.Button ButtonCancel;
-        private System.Windows.Forms.Button ButtonOkay;
-        private midsControls.ctlColorList ctlColorList1;
+        private ColorDialog colorSelector;
+        private Label label1;
+        private Label label2;
+        private RichTextBox richTextBox1;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private Label label6;
+        private Label label7;
+        private Label label8;
+        private Label label9;
+        private Label label10;
+        private Label label11;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Button HighlightVillain;
+        private Button DarkTakenVillain;
+        private Button TakenVillain;
+        private Button HighlightHero;
+        private Button DarkTakenHero;
+        private Button TakenHeroColor;
+        private Button UnavailPowerColor;
+        private Button AvailPowerColor;
+        private Label label19;
+        private Label label17;
+        private Label label16;
+        private Label label15;
+        private Label label14;
+        private Label label12;
+        private Button SpecialCaseColor;
+        private Button ValueColor;
+        private Button AlertColor;
+        private Button EnhancementsColor;
+        private Button FadedColor;
+        private Button InventionsWhiteColor;
+        private Button InventionsColor;
+        private Button TextColor;
+        private Button BGColor;
+        private Label label13;
+        private Label label18;
+        private Button ButtonDefault;
+        private Button ButtonCancel;
+        private Button ButtonOkay;
+        private ctlColorList ctlColorList1;
     }
 }

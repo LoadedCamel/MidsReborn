@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -12,11 +11,9 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
-using midsControls;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using System.Text.RegularExpressions;
-using Base;
+using midsControls;
 
 namespace Hero_Designer
 {
