@@ -2065,6 +2065,8 @@
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
+    <None Include="Data\OldEnhDB.mhd" />
+    <None Include="Data\OldSetDB.mhd" />
     <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optTO.Image.png" />

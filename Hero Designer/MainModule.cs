@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -41,16 +42,24 @@ namespace Hero_Designer
                 iFrm?.SetMessage("Loading Powerset Database...");
                 if (!DatabaseAPI.LoadLevelsDatabase())
                 {
-                    Interaction.MsgBox(
+                    MessageBox.Show(
                         "Failed to load Leveling data file! The program is unable to proceed.\r\n" +
                         "We suggest you redownload the application from https://github.com/Crytilis/mids-reborn-hero-designer/releases",
-                        MsgBoxStyle.Critical, "Error");
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
                     ProjectData.EndApp();
                 }
 
                 if (!DatabaseAPI.LoadMainDatabase())
                 {
-                    Interaction.MsgBox("There was an error reading the database. Aborting.", MsgBoxStyle.Critical, "Dang");
+                    MessageBox.Show(
+                        "There was an error reading the database. Aborting.",
+                        "Dang",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
                     ProjectData.EndApp();
                 }
 
@@ -66,6 +75,22 @@ namespace Hero_Designer
                 iFrm?.SetMessage("Loading Recipe Database...");               
                 DatabaseAPI.LoadSalvage();
                 DatabaseAPI.LoadRecipes();
+
+                iFrm?.SetMessage("Loading Legacy Enhancements Database...");
+                bool oldEnhLoad = DatabaseAPI.LoadOldEnhNames();
+
+                iFrm?.SetMessage("Loading Legacy Sets Database...");
+                bool oldSetsLoad = DatabaseAPI.LoadOldSetNames();
+
+                if (!(oldEnhLoad && oldSetsLoad))
+                {
+                    MessageBox.Show(
+                        Application.ProductName + " will function but old builds recovery will be unavailable.",
+                        "Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
 
                 iFrm?.SetMessage("Loading Graphics...");
                 Task[] taskArray = new Task[9];

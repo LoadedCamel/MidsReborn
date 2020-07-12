@@ -1,6 +1,5 @@
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -47,6 +46,10 @@ namespace Base.Data_Classes
         public Salvage[] Salvage { get; set; }
 
         public List<Origin> Origins { get; set; }
+
+        public IDictionary<string, string[]> OldEnhNames { get; set; }
+
+        public IDictionary<string, string> OldSetNames { get; set; }
 
         public IDictionary<string, PowersetGroup> PowersetGroups { get; set; }
 

@@ -1089,6 +1089,107 @@ public static class DatabaseAPI
         Database.Version = GetDatabaseVersion(target);
     }
 
+    public static bool LoadOldEnhNames()
+    {
+        Database.OldEnhNames = new Dictionary<string, string[]>();
+        try
+        {
+            StreamReader file = new StreamReader(Files.SelectDataFileLoad("OldEnhDB.mhd"));
+            string line;
+            int i = 0;
+            string[] chunks;
+            int enhIdx;
+            IEnhancement enhData;
+            while ((line = file.ReadLine()) != null)
+            {
+                if (i++ < 4) continue;
+                chunks = line.Split(',');
+                if (chunks.Length < 2)
+                {
+                    file.Close();
+                    throw new FormatException("Cannot read data at line " + Convert.ToString(i, null) + ": not enough values.");
+                }
+                if (chunks.Length > 3)
+                {
+                    file.Close();
+                    throw new FormatException("Cannot read data at line " + Convert.ToString(i, null) + ": too many values.");
+                }
+
+                // UID, ShortName, UIDSet
+                // Crafted_Bonesnap_A,Acc/Dmg,Bonesnap
+                enhIdx = GetEnhancementByUIDName(chunks[0]);
+                if (enhIdx == -1)
+                {
+                    file.Close();
+                    throw new InvalidDataException("Cannot get data for enhancement UID " + chunks[0] + " at line " + Convert.ToString(i, null));
+                }
+
+                enhData = Database.Enhancements[enhIdx];
+                // UID => (old ShortName, UIDSet, new ShortName)
+                Database.OldEnhNames.Add(chunks[0], new string[3] { chunks[1], chunks.Length < 3 || string.IsNullOrEmpty(chunks[2]) ? string.Empty : chunks[2], enhData.ShortName });
+            }
+
+            file.Close();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Database.OldEnhNames.Clear();
+            MessageBox.Show("Could not load legacy enhancements database.\r\n" +
+                "Reason: " + ex.Message + " (" + Convert.ToString(ex.GetType()) + ")"
+            );
+
+            return false;
+        }
+
+    }
+
+    public static bool LoadOldSetNames()
+    {
+        Database.OldSetNames = new Dictionary<string, string>();
+        try
+        {
+            StreamReader file = new StreamReader(Files.SelectDataFileLoad("OldSetDB.mhd"));
+            string line;
+            int i = 0;
+            string[] chunks;
+            while ((line = file.ReadLine()) != null)
+            {
+                if (i++ < 4) continue;
+                chunks = line.Split(',');
+                if (chunks.Length < 2)
+                {
+                    file.Close();
+                    throw new FormatException("Cannot read data at line " + Convert.ToString(i, null) + ": not enough values.");
+                }
+                if (chunks.Length > 2)
+                {
+                    file.Close();
+                    throw new FormatException("Cannot read data at line " + Convert.ToString(i, null) + ": too many values.");
+                }
+
+                // Old ShortName => new ShortName
+                Database.OldSetNames.Add(chunks[0], chunks[1]);
+            }
+
+            file.Close();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Database.OldSetNames.Clear();
+            Database.OldEnhNames.Clear();
+            MessageBox.Show("Could not load legacy sets database.\r\n" +
+                "Reason: " + ex.Message + " (" + ex.InnerException + ")"
+            );
+
+            return false;
+        }
+
+    }
+
     static float GetDatabaseVersion(string fp)
     {
         var fName = Debugger.IsAttached ? Files.SearchUp("Data", fp) : fp;
