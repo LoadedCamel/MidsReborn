@@ -12,12 +12,12 @@ The project has been reborn once more! This time with a new name, some new featu
 - Crytilis
 - Bopper
 - Feles Noctis
-- Procat
 - Zed
 
 #### In-Active Development Team Members
 - Maslow
 - Pine
+- Procat
 
 #### Official Discord Server
 https://discord.gg/pG5TCEg
