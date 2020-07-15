@@ -337,90 +337,36 @@ namespace HeroViewer
     public class PlainTextParser : ImportBase
     {
         private BuilderApp BuilderApp;
-        private readonly Dictionary<string, string> OldSetNames = new Dictionary<string, string>
-        {
-            ["Achilles"] = "AchHee",
-            ["AdjTgt"] = "AdjTrg",
-            ["Aegis"] = "Ags",
-            ["Armgdn"] = "Arm",
-            ["AnWeak"] = "AnlWkn",
-            ["BasGaze"] = "BslGaz",
-            ["CSndmn"] = "CaloftheS",
-            ["C\"ngBlow"] = "ClvBlo",
-            ["C\"ngImp"] = "CrsImp",
-            ["Dct\"dW"] = "DctWnd",
-            ["Decim"] = "Dcm",
-            ["Det\"tn"] = "Dtn",
-            ["Dev\"n"] = "Dvs",
-            ["Efficacy"] = "EffAdp",
-            ["Enf\"dOp"] = "EnfOpr",
-            ["Erad"] = "Erd",
-            ["ExRmnt"] = "ExpRnf",
-            ["ExStrk"] = "ExpStr",
-            ["ExtrmM"] = "ExtMsr",
-            ["FotG"] = "FuroftheG",
-            ["FrcFbk"] = "FrcFdb",
-            ["F\"dSmite"] = "FcsSmt",
-            ["GA"] = "GldArm",
-            ["GSFC"] = "GssSynFr-",
-            ["Hectmb"] = "Hct",
-            ["HO:Micro"] = "Micro",
-            ["H\"zdH"] = "HrmHln",
-            ["ImpSkn"] = "ImpSki",
-            ["Insult"] = "TrmIns",
-            ["KinCrsh"] = "KntCrs",
-            ["KntkC\"bat"] = "KntCmb",
-            ["Krma"] = "Krm",
-            ["Ksmt"] = "Ksm",
-            ["LkGmblr"] = "LucoftheG",
-            ["LgcRps"] = "LthRps",
-            ["Mako"] = "Mk\"Bit",
-            ["Mlais"] = "MlsIll",
-            ["Mocking"] = "MckBrt",
-            ["MotCorruptor"] = "MlcoftheC",
-            ["Mrcl"] = "Mrc",
-            ["M\"Strk"] = "Mlt",
-            ["Numna"] = "NmnCnv",
-            ["Oblit"] = "Obl",
-            ["Panac"] = "Pnc",
-            ["Posi"] = "PstBls",
-            ["Prv-Heal/EndMod"] = "Prv-Heal/EndRdx",
-            ["P\"ngS\"Fest"] = "PndSlg",
-            ["P\"Shift"] = "PrfShf",
-            ["Rec\"dRet"] = "RctRtc",
-            ["RctvArm"] = "RctArm",
-            ["RzDz"] = "RzzDzz",
-            ["SMotCorruptor"] = "SprMlcoft",
-            ["SprWntBit-Acc/Dmg/EndRdx/Rchg"] = "SprWntBit-Dmg/EndRdx/Acc/Rchg",
-            ["Srng"] = "Srn",
-            ["SStalkersG"] = "SprStlGl",
-            ["SWotController"] = "SprWiloft",
-            ["S\"fstPrt"] = "StdPrt",
-            ["T\"Death"] = "TchofDth",
-            ["T\"pst"] = "Tmp",
-            ["Thundr"] = "Thn",
-            ["ULeap"] = "UnbLea",
-            ["UndDef"] = "UndDfn",
-            ["WotController"] = "WiloftheC",
-            ["Zephyr"] = "BlsoftheZ"
-        };
 
         public PlainTextParser(string buildString)
         {
-            this.BuildString = buildString;
-            this.PowerSets = new UniqueList<string>();
-            this.CharacterInfo = new RawCharacterInfo();
-            this.BuilderApp = new BuilderApp();
+            BuildString = buildString;
+            PowerSets = new UniqueList<string>();
+            CharacterInfo = new RawCharacterInfo();
+            BuilderApp = new BuilderApp();
         }
 
-        private string ShortNamesConversion(string sn)
+        private static string ShortNamesConversion(string sn)
         {
-            if (string.IsNullOrEmpty(sn)) return sn;
+            if (string.IsNullOrWhiteSpace(sn)) return sn;
 
-            foreach (KeyValuePair<string, string> k in this.OldSetNames)
-            {
-                if (sn.IndexOf(k.Key, StringComparison.Ordinal) > -1) return sn.Replace(k.Key, k.Value);
-            }
+            sn = Database.Instance.OldSetNames.Aggregate(sn, (current, value) => current.Replace(value.Key, value.Value));
+
+            EnhancementSet enhSet = Database.Instance.EnhancementSets
+                .Where(e => e.ShortName == sn.Split('-')[0])
+                .First();
+            
+            var enhData = Database.Instance.OldEnhNames
+                .Where(e => e.Value[2] == enhSet.Uid && sn.IndexOf(e.Value[1], StringComparison.OrdinalIgnoreCase) > -1)
+                .Select(e => new { UID = e.Key, OldShortName = e.Value[0] })
+                .First();
+
+            int enhIdx = DatabaseAPI.GetEnhancementByUIDName(enhData.UID);
+            if (enhIdx == -1) return sn;
+
+            string newEnhSn = Database.Instance.Enhancements[enhIdx].ShortName;
+
+            sn = sn.Replace(enhData.OldShortName, newEnhSn);
 
             return sn;
         }
@@ -440,7 +386,7 @@ namespace HeroViewer
 
             try
             {
-                cnt = File.ReadAllText(this.BuildString);
+                cnt = File.ReadAllText(BuildString);
             }
             catch (Exception ex)
             {
@@ -469,29 +415,29 @@ namespace HeroViewer
                 return null;
             }
 
-            this.CharacterInfo.Alignment = m.Groups[1].Value;
-            this.BuilderApp.Software = m.Groups[2].Value;
-            this.BuilderApp.Version = m.Groups[3].Value;
+            CharacterInfo.Alignment = m.Groups[1].Value;
+            BuilderApp.Software = m.Groups[2].Value;
+            BuilderApp.Version = m.Groups[3].Value;
 
             // Character name, level, origin and archetype
             r = new Regex(@"([^\r\n\t]+)\: Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
             m = r.Match(cnt);
             if (!m.Success)
             {
-                // Name is empty
+                // If Name is empty
                 rs = new Regex(@"Level ([0-9]{1,2}) ([a-zA-Z]+) ([a-zA-Z ]+)");
                 ms = rs.Match(cnt);
-                this.CharacterInfo.Name = string.Empty;
-                this.CharacterInfo.Level = Convert.ToInt32(ms.Groups[1].Value, null);
-                this.CharacterInfo.Origin = ms.Groups[2].Value;
-                this.CharacterInfo.Archetype = ms.Groups[3].Value;
+                CharacterInfo.Name = string.Empty;
+                CharacterInfo.Level = Convert.ToInt32(ms.Groups[1].Value, null);
+                CharacterInfo.Origin = ms.Groups[2].Value;
+                CharacterInfo.Archetype = ms.Groups[3].Value;
             }
             else
             {
-                this.CharacterInfo.Name = m.Groups[1].Value;
-                this.CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
-                this.CharacterInfo.Origin = m.Groups[3].Value;
-                this.CharacterInfo.Archetype = m.Groups[4].Value;
+                CharacterInfo.Name = m.Groups[1].Value;
+                CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
+                CharacterInfo.Origin = m.Groups[3].Value;
+                CharacterInfo.Archetype = m.Groups[4].Value;
             }
 
             SetCharacterInfo();
@@ -501,7 +447,7 @@ namespace HeroViewer
             m = r.Match(cnt);
             while (m.Success)
             {
-                this.PowerSets.Add(m.Groups[2].Value);
+                PowerSets.Add(m.Groups[2].Value);
                 m = m.NextMatch();
             }
 
@@ -512,7 +458,7 @@ namespace HeroViewer
             {
                 if (m.Groups[2].Value != "Fitness")
                 {
-                    this.PowerSets.Add(m.Groups[2].Value);
+                    PowerSets.Add(m.Groups[2].Value);
                 }
                 m = m.NextMatch();
             }
@@ -530,11 +476,11 @@ namespace HeroViewer
 
                 p.DisplayName = m.Groups[2].Value.Trim();
                 p.Level = Convert.ToInt32(m.Groups[1].Value, null);
-                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, DatabaseAPI.GetArchetypeByName(this.CharacterInfo.Archetype).Idx);
+                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype).Idx);
                 p.Powerset = p.pData != null ? DatabaseAPI.GetPowersetByIndex(p.pData.PowerSetIndex) : null;
-                p.Valid = this.CheckValid(p.pData);
+                p.Valid = CheckValid(p.pData);
                 PSlotsStr = (m.Groups.Count > 3) ? m.Groups[3].Value.Trim() : string.Empty;
-                if (!String.IsNullOrEmpty(PSlotsStr))
+                if (!string.IsNullOrEmpty(PSlotsStr))
                 {
                     // Extract enhancement name and slot level ('A' for power inherent slot)
                     // Handle special enhancements with parenthesis like ExpRnf-+Res(Pets)(50)
@@ -544,9 +490,10 @@ namespace HeroViewer
                     for (i = 0; i < PSlots.Length; i++)
                     {
                         s = Regex.Split(PSlots[i], @"/[\(\)]");
-                        s = Array.FindAll<string>(s, e => !String.IsNullOrWhiteSpace(e));
+                        s = Array.FindAll(s, e => !string.IsNullOrWhiteSpace(e));
 
-                        sContentEnh = (s[0] == "Empty") ? null : this.ShortNamesConversion(s[0]); // Enhancement name (Enhancement.ShortName)
+                        // Enhancement name (Enhancement.ShortName)
+                        sContentEnh = (s[0] == "Empty") ? null : ShortNamesConversion(s[0]);
                         try
                         {
                             e.InternalName = s[0];
@@ -556,7 +503,7 @@ namespace HeroViewer
                             e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
                             p.Slots.Add(e);
                         }
-                        catch (FormatException) // if (isNaN(s[1]
+                        catch (FormatException) // if (isNaN(s[1]))
                         {
                             e.InternalName = "Empty";
                             e.Level = 0;
@@ -570,9 +517,9 @@ namespace HeroViewer
 
                 if (p.Valid)
                 {
-                    if (this.CheckValid(p.Powerset))
+                    if (CheckValid(p.Powerset))
                     {
-                        this.PowerSets.Add(p.Powerset.FullName);
+                        PowerSets.Add(p.Powerset.FullName);
                     }
                     AddPowerToBuildSheet(p, ref listPowers);
                 }
@@ -583,7 +530,7 @@ namespace HeroViewer
 
         public List<string> GetPowerSets()
         {
-            return this.PowerSets;
+            return PowerSets;
         }
     }
 }

@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Master_Classes;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
@@ -28,6 +26,19 @@ namespace Hero_Designer
                 set => MidsContext.Character = value;
             }
 
+            private static void Quit()
+            {
+                // https://stackoverflow.com/a/12978034
+                if (Application.MessageLoop)
+                {
+                    Application.Exit();
+                }
+                else
+                {
+                    Environment.Exit(1);
+                }
+            }
+
             public static void LoadData(ref frmLoading iFrm)
             {
                 DatabaseAPI.LoadDatabaseVersion();
@@ -37,6 +48,13 @@ namespace Hero_Designer
                 DatabaseAPI.Database.AttribMods = new Modifiers();
                 if (!DatabaseAPI.Database.AttribMods.Load())
                 {
+                    MessageBox.Show(
+                        "Failed to load Attribute Modifiers database. Aborting.",
+                        "Woops",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Quit();
                 }
 
                 iFrm?.SetMessage("Loading Powerset Database...");
@@ -49,7 +67,7 @@ namespace Hero_Designer
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
                     );
-                    ProjectData.EndApp();
+                    Quit();
                 }
 
                 if (!DatabaseAPI.LoadMainDatabase())
@@ -60,14 +78,31 @@ namespace Hero_Designer
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
                     );
-                    ProjectData.EndApp();
+                    Quit();
                 }
 
                 if (!DatabaseAPI.LoadMaths())
-                    ProjectData.EndApp();
+                {
+                    MessageBox.Show(
+                        "Failed to load Maths database. Aborting.",
+                        "Dang",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Quit();
+                }
                 iFrm?.SetMessage("Loading Enhancement Database...");
                 if (!DatabaseAPI.LoadEnhancementClasses())
-                    ProjectData.EndApp();
+                {
+                    MessageBox.Show(
+                        "Failed to load Enhancements' classes. Aborting.",
+                        "Dang",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Quit();
+                }
+                
                 DatabaseAPI.LoadEnhancementDb();
                 DatabaseAPI.LoadOrigins();
                 DatabaseAPI.LoadSetTypeStrings();
