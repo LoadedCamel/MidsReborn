@@ -50,4 +50,5 @@ https://twitter.com/midsreborn
 
 ### Notes
 >Windows setup binaries are generated using **Advanced Installer** thanks to our friends at Caphyon.
+
 >**Sorry MacOS users, but Catilina is NOT supported at this time**
