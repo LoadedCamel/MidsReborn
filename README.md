@@ -30,7 +30,7 @@ https://twitter.com/midsreborn
 #### Windows
 
    * [.NET 4.8](https://dotnet.microsoft.com/download/thank-you/net48)
-   >Windows setup binaries are generated using **Advanced Installer** thanks to our friends at Caphyon.
+   
 
 #### MacOS
 
@@ -39,7 +39,7 @@ https://twitter.com/midsreborn
    * [Winetricks](https://brewformulas.org/Winetricks)  
    * .NET 4.7.2 "Install with Winetricks"  
    
-   >**Catilina is NOT supported at this time**
+   
 
 #### Linux
 
@@ -48,3 +48,6 @@ https://twitter.com/midsreborn
    * .NET 4.7.2 "Install with Winetricks"    
 
 
+###Notes
+>Windows setup binaries are generated using **Advanced Installer** thanks to our friends at Caphyon.
+>**Sorry MacOS users, but Catilina is NOT supported at this time**
