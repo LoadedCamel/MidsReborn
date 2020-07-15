@@ -77,8 +77,15 @@
   <PropertyGroup />
   <PropertyGroup />
   <ItemGroup>
+    <Compile Include="clsOAuth.cs" />
     <Compile Include="clsZip.cs" />
-    <Compile Include="clsHook.cs" />
+    <Compile Include="clsDiscord.cs" />
+    <Compile Include="Forms\frmDiscord.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDiscord.Designer.cs">
+      <DependentUpon>frmDiscord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WindowMenuItems\frmPrestige.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -387,6 +394,7 @@
     <Content Include="Images\Classes\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Images\defaultAvatar.png" />
     <Content Include="Images\Enhancements\Acc.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1251,9 +1259,7 @@
     <Content Include="Images\Enhancements\Zephyr.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\loading.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Images\loading.png" />
     <Content Include="Images\OriginAT\Class_Arachnos_Soldier.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2082,6 +2088,13 @@
     <Content Include="Images\Unknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Web\authorized.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web\unauthorized.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\discordauth.png" />
     <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\mrb_splash.png" />
     <None Include="Resources\optSO.Image.png" />
@@ -2089,6 +2102,9 @@
     <None Include="Resources\optDO.Image.png" />
     <EmbeddedResource Include="Forms\frmColorOptions.resx">
       <DependentUpon>frmColorOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDiscord.resx">
+      <DependentUpon>frmDiscord.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmInitializing.resx">
       <DependentUpon>frmInitializing.cs</DependentUpon>
@@ -2124,6 +2140,7 @@
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http" />
@@ -2554,6 +2571,10 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>106.11.4</Version>
+    </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

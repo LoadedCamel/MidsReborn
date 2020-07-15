@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 
 namespace Hero_Designer
 {
@@ -18,6 +22,7 @@ namespace Hero_Designer
 
         private bool fcNoUpdate;
         readonly frmMain myParent;
+        readonly clsOAuth clsOAuth;
         readonly string[][] scenActs;
         //public List<bool> checkStats = new List<bool>();
         private readonly List<string> useStats = new List<string>();
@@ -297,7 +302,7 @@ namespace Hero_Designer
             }
         }
 
-        void dcAdd_Click(object sender, EventArgs e)
+        /*void dcAdd_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(dcServerName.Text))
                 return;
@@ -336,11 +341,11 @@ namespace Hero_Designer
             {
                 MidsContext.Config.DChannel = dcChannel.Text;
             }
-        }
+        }*/
 
         private void InvBot_Click(object sender, EventArgs e)
         {
-            var botLink = Clshook.ShrinkTheDatalink("https://discordapp.com/api/oauth2/authorize?client_id=593333282234695701&permissions=18432&redirect_uri=https%3A%2F%2Fmidsreborn.com&scope=bot");
+            var botLink = clsDiscord.ShrinkTheDatalink("https://discordapp.com/api/oauth2/authorize?client_id=593333282234695701&permissions=18432&redirect_uri=https%3A%2F%2Fmidsreborn.com&scope=bot");
             Process.Start(botLink);
         }
 
@@ -521,6 +526,22 @@ namespace Hero_Designer
             csPopulateList();
             fcPopulateList();
             PopulateSuppression();
+            MidsContext.Config.DAuth.TryGetValue("access_token", out var token);
+            clsOAuth.RequestUser(token?.ToString());
+            Task.Delay(1000).ContinueWith(t => PopulateUserData());
+        }
+
+        void PopulateUserData()
+        {
+            var userId = clsOAuth.GetCryptedValue("User", "id");
+            var userName = clsOAuth.GetCryptedValue("User", "username");
+            var userDiscriminator = clsOAuth.GetCryptedValue("User", "discriminator");
+            var userAvatar = clsOAuth.GetCryptedValue("User", "avatar");
+            using WebClient webClient = new WebClient();
+            byte[] bytes = webClient.DownloadData($"https://cdn.discordapp.com/avatars/{userId}/{userAvatar}.png");
+            using MemoryStream memoryStream = new MemoryStream(bytes);
+            usrAvatar.Image = Image.FromStream(memoryStream);
+            dcNickName.Text = $@"{userName}#{userDiscriminator}";
         }
 
         void listScenarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -626,7 +647,7 @@ namespace Hero_Designer
             chkStatBold.Checked = config.RtFont.PairedBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
             dcNickName.Text = config.DNickName;
-            dcChannel.Text = config.DChannel;
+            //dcChannel.Text = config.DChannel;
             //commented out for replacement forthcoming
             /*foreach (var item in config.DServers.Append(config.DSelServer).Where(item => !string.IsNullOrWhiteSpace(item) && !dcExList.Items.Contains(config.DSelServer)).Distinct())
                 dcExList.Items.Add(item);

@@ -68,6 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsDrawX.cs" />
+    <Compile Include="ctlAvatar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlAvatar.Designer.cs">
+      <DependentUpon>ctlAvatar.cs</DependentUpon>
+    </Compile>
     <Compile Include="ctlColorList.cs">
       <SubType>Component</SubType>
     </Compile>

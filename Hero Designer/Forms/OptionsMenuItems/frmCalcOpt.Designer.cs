@@ -36,11 +36,11 @@ namespace Hero_Designer
             this.btnCancel = new System.Windows.Forms.Button();
             this.TabControl1 = new System.Windows.Forms.TabControl();
             this.TabPage3 = new System.Windows.Forms.TabPage();
-            this.chkShowAlphaPopup = new System.Windows.Forms.CheckBox();
             this.chkNoTips = new System.Windows.Forms.CheckBox();
             this.chkMiddle = new System.Windows.Forms.CheckBox();
             this.GroupBox17 = new System.Windows.Forms.GroupBox();
             this.chkColorInherent = new System.Windows.Forms.CheckBox();
+            this.chkShowAlphaPopup = new System.Windows.Forms.CheckBox();
             this.chkHighVis = new System.Windows.Forms.CheckBox();
             this.Label36 = new System.Windows.Forms.Label();
             this.chkStatBold = new System.Windows.Forms.CheckBox();
@@ -53,6 +53,7 @@ namespace Hero_Designer
             this.udRTFSize = new System.Windows.Forms.NumericUpDown();
             this.chkIOPrintLevels = new System.Windows.Forms.CheckBox();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
+            this.chkEnableDmgGraph = new System.Windows.Forms.CheckBox();
             this.rbGraphSimple = new System.Windows.Forms.RadioButton();
             this.rbGraphStacked = new System.Windows.Forms.RadioButton();
             this.rbGraphTwoLine = new System.Windows.Forms.RadioButton();
@@ -141,17 +142,10 @@ namespace Hero_Designer
             this.label35 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.GroupBox20 = new System.Windows.Forms.GroupBox();
-            this.dcChannel = new System.Windows.Forms.TextBox();
-            this.Label17 = new System.Windows.Forms.Label();
             this.GroupBox19 = new System.Windows.Forms.GroupBox();
-            this.Label18 = new System.Windows.Forms.Label();
-            this.dcServerName = new System.Windows.Forms.TextBox();
-            this.dcRemove = new System.Windows.Forms.Button();
-            this.dcAdd = new System.Windows.Forms.Button();
             this.dcExList = new System.Windows.Forms.ListBox();
             this.GroupBox18 = new System.Windows.Forms.GroupBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.usrAvatar = new System.Windows.Forms.PictureBox();
             this.dcNickName = new System.Windows.Forms.TextBox();
             this.TabPage4 = new System.Windows.Forms.TabPage();
             this.GroupBox12 = new System.Windows.Forms.GroupBox();
@@ -216,7 +210,6 @@ namespace Hero_Designer
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.chkEnableDmgGraph = new System.Windows.Forms.CheckBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.GroupBox17.SuspendLayout();
@@ -242,9 +235,9 @@ namespace Hero_Designer
             ((System.ComponentModel.ISupportInitialize)(this.udExHigh)).BeginInit();
             this.tabPage7.SuspendLayout();
             this.groupBox21.SuspendLayout();
-            this.GroupBox20.SuspendLayout();
             this.GroupBox19.SuspendLayout();
             this.GroupBox18.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.usrAvatar)).BeginInit();
             this.TabPage4.SuspendLayout();
             this.GroupBox12.SuspendLayout();
             this.GroupBox11.SuspendLayout();
@@ -307,14 +300,6 @@ namespace Hero_Designer
             this.TabPage3.Text = "Enhancements & View";
             this.TabPage3.UseVisualStyleBackColor = true;
             // 
-            // chkShowAlphaPopup
-            // 
-            this.chkShowAlphaPopup.Location = new System.Drawing.Point(11, 91);
-            this.chkShowAlphaPopup.Name = "chkShowAlphaPopup";
-            this.chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
-            this.chkShowAlphaPopup.TabIndex = 79;
-            this.chkShowAlphaPopup.Text = "Include Alpha buffs in popups";
-            // 
             // chkNoTips
             // 
             this.chkNoTips.Location = new System.Drawing.Point(458, 304);
@@ -363,6 +348,14 @@ namespace Hero_Designer
             this.chkColorInherent.Text = "Use alternate colors for inherents";
             this.myTip.SetToolTip(this.chkColorInherent, "Uses alternate colors for inherents.");
             this.chkColorInherent.Visible = false;
+            // 
+            // chkShowAlphaPopup
+            // 
+            this.chkShowAlphaPopup.Location = new System.Drawing.Point(11, 91);
+            this.chkShowAlphaPopup.Name = "chkShowAlphaPopup";
+            this.chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
+            this.chkShowAlphaPopup.TabIndex = 79;
+            this.chkShowAlphaPopup.Text = "Include Alpha buffs in popups";
             // 
             // chkHighVis
             // 
@@ -505,6 +498,17 @@ namespace Hero_Designer
             this.GroupBox5.TabIndex = 72;
             this.GroupBox5.TabStop = false;
             this.GroupBox5.Text = "Damage Graph Style:";
+            // 
+            // chkEnableDmgGraph
+            // 
+            this.chkEnableDmgGraph.AutoSize = true;
+            this.chkEnableDmgGraph.Location = new System.Drawing.Point(6, 21);
+            this.chkEnableDmgGraph.Name = "chkEnableDmgGraph";
+            this.chkEnableDmgGraph.Size = new System.Drawing.Size(133, 18);
+            this.chkEnableDmgGraph.TabIndex = 6;
+            this.chkEnableDmgGraph.Text = "Enable Damage Graph";
+            this.chkEnableDmgGraph.UseVisualStyleBackColor = true;
+            this.chkEnableDmgGraph.CheckedChanged += new System.EventHandler(this.chkEnableDmgGraph_CheckedChanged);
             // 
             // rbGraphSimple
             // 
@@ -1154,7 +1158,6 @@ namespace Hero_Designer
             this.tabPage7.Controls.Add(this.invBot);
             this.tabPage7.Controls.Add(this.label39);
             this.tabPage7.Controls.Add(this.groupBox21);
-            this.tabPage7.Controls.Add(this.GroupBox20);
             this.tabPage7.Controls.Add(this.GroupBox19);
             this.tabPage7.Controls.Add(this.GroupBox18);
             this.tabPage7.Location = new System.Drawing.Point(4, 23);
@@ -1171,7 +1174,7 @@ namespace Hero_Designer
             this.label41.Enabled = false;
             this.label41.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label41.ForeColor = System.Drawing.SystemColors.ButtonShadow;
-            this.label41.Location = new System.Drawing.Point(497, 252);
+            this.label41.Location = new System.Drawing.Point(239, 81);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(224, 30);
             this.label41.TabIndex = 7;
@@ -1180,7 +1183,7 @@ namespace Hero_Designer
             // invBot
             // 
             this.invBot.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.invBot.Location = new System.Drawing.Point(567, 226);
+            this.invBot.Location = new System.Drawing.Point(296, 45);
             this.invBot.Name = "invBot";
             this.invBot.Size = new System.Drawing.Size(102, 23);
             this.invBot.TabIndex = 6;
@@ -1192,12 +1195,12 @@ namespace Hero_Designer
             // 
             this.label39.AutoSize = true;
             this.label39.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label39.Location = new System.Drawing.Point(494, 178);
+            this.label39.Location = new System.Drawing.Point(201, 6);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(247, 28);
+            this.label39.Size = new System.Drawing.Size(285, 28);
             this.label39.TabIndex = 5;
-            this.label39.Text = "Want to share builds in your Discord?\r\nClick the button below to invite the MidsB" +
-    "ot";
+            this.label39.Text = "Want to share builds in your Discord?\r\nClick invite button to invite MidsBot to y" +
+    "our server.";
             this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // groupBox21
@@ -1231,7 +1234,7 @@ namespace Hero_Designer
             this.groupBox21.Controls.Add(this.label35);
             this.groupBox21.Controls.Add(this.label23);
             this.groupBox21.Controls.Add(this.label2);
-            this.groupBox21.Location = new System.Drawing.Point(6, 109);
+            this.groupBox21.Location = new System.Drawing.Point(6, 130);
             this.groupBox21.Name = "groupBox21";
             this.groupBox21.Size = new System.Drawing.Size(480, 189);
             this.groupBox21.TabIndex = 4;
@@ -1549,84 +1552,15 @@ namespace Hero_Designer
             this.label2.TabIndex = 0;
             this.label2.Text = "Defense";
             // 
-            // GroupBox20
-            // 
-            this.GroupBox20.Controls.Add(this.dcChannel);
-            this.GroupBox20.Controls.Add(this.Label17);
-            this.GroupBox20.Location = new System.Drawing.Point(270, 6);
-            this.GroupBox20.Name = "GroupBox20";
-            this.GroupBox20.Size = new System.Drawing.Size(216, 97);
-            this.GroupBox20.TabIndex = 3;
-            this.GroupBox20.TabStop = false;
-            this.GroupBox20.Text = "Discord Channel (case sensitive)";
-            // 
-            // dcChannel
-            // 
-            this.dcChannel.Location = new System.Drawing.Point(6, 28);
-            this.dcChannel.Name = "dcChannel";
-            this.dcChannel.Size = new System.Drawing.Size(199, 20);
-            this.dcChannel.TabIndex = 2;
-            this.dcChannel.TextChanged += new System.EventHandler(this.dcChannel_TextChanged);
-            // 
-            // Label17
-            // 
-            this.Label17.AutoSize = true;
-            this.Label17.Location = new System.Drawing.Point(8, 54);
-            this.Label17.Name = "Label17";
-            this.Label17.Size = new System.Drawing.Size(202, 14);
-            this.Label17.TabIndex = 3;
-            this.Label17.Text = "Channel name to Export to without the #:";
-            // 
             // GroupBox19
             // 
-            this.GroupBox19.Controls.Add(this.Label18);
-            this.GroupBox19.Controls.Add(this.dcServerName);
-            this.GroupBox19.Controls.Add(this.dcRemove);
-            this.GroupBox19.Controls.Add(this.dcAdd);
             this.GroupBox19.Controls.Add(this.dcExList);
             this.GroupBox19.Location = new System.Drawing.Point(492, 6);
             this.GroupBox19.Name = "GroupBox19";
-            this.GroupBox19.Size = new System.Drawing.Size(249, 154);
+            this.GroupBox19.Size = new System.Drawing.Size(249, 313);
             this.GroupBox19.TabIndex = 1;
             this.GroupBox19.TabStop = false;
-            this.GroupBox19.Text = "Discord Server (case sensitive):";
-            // 
-            // Label18
-            // 
-            this.Label18.AutoSize = true;
-            this.Label18.Location = new System.Drawing.Point(26, 110);
-            this.Label18.Name = "Label18";
-            this.Label18.Size = new System.Drawing.Size(111, 14);
-            this.Label18.TabIndex = 5;
-            this.Label18.Text = "Discord server name:";
-            // 
-            // dcServerName
-            // 
-            this.dcServerName.Location = new System.Drawing.Point(6, 128);
-            this.dcServerName.Name = "dcServerName";
-            this.dcServerName.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.dcServerName.Size = new System.Drawing.Size(157, 20);
-            this.dcServerName.TabIndex = 4;
-            // 
-            // dcRemove
-            // 
-            this.dcRemove.Location = new System.Drawing.Point(168, 68);
-            this.dcRemove.Name = "dcRemove";
-            this.dcRemove.Size = new System.Drawing.Size(75, 23);
-            this.dcRemove.TabIndex = 3;
-            this.dcRemove.Text = "Remove";
-            this.dcRemove.UseVisualStyleBackColor = true;
-            this.dcRemove.Click += new System.EventHandler(this.dcRemove_Click);
-            // 
-            // dcAdd
-            // 
-            this.dcAdd.Location = new System.Drawing.Point(168, 39);
-            this.dcAdd.Name = "dcAdd";
-            this.dcAdd.Size = new System.Drawing.Size(75, 23);
-            this.dcAdd.TabIndex = 2;
-            this.dcAdd.Text = "Add";
-            this.dcAdd.UseVisualStyleBackColor = true;
-            this.dcAdd.Click += new System.EventHandler(this.dcAdd_Click);
+            this.GroupBox19.Text = "Your Discord Servers:";
             // 
             // dcExList
             // 
@@ -1636,42 +1570,38 @@ namespace Hero_Designer
             "Mids Reborn (Default)"});
             this.dcExList.Location = new System.Drawing.Point(6, 19);
             this.dcExList.Name = "dcExList";
-            this.dcExList.Size = new System.Drawing.Size(157, 88);
+            this.dcExList.Size = new System.Drawing.Size(237, 284);
             this.dcExList.TabIndex = 0;
             this.dcExList.SelectedIndexChanged += new System.EventHandler(this.dcExList_SelectedIndexChanged);
             // 
             // GroupBox18
             // 
-            this.GroupBox18.Controls.Add(this.richTextBox1);
+            this.GroupBox18.Controls.Add(this.usrAvatar);
             this.GroupBox18.Controls.Add(this.dcNickName);
             this.GroupBox18.Location = new System.Drawing.Point(8, 6);
             this.GroupBox18.Name = "GroupBox18";
-            this.GroupBox18.Size = new System.Drawing.Size(256, 97);
+            this.GroupBox18.Size = new System.Drawing.Size(177, 118);
             this.GroupBox18.TabIndex = 0;
             this.GroupBox18.TabStop = false;
-            this.GroupBox18.Text = "Discord Nickname (case sensitive):";
             // 
-            // richTextBox1
+            // usrAvatar
             // 
-            this.richTextBox1.BackColor = System.Drawing.SystemColors.Window;
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.richTextBox1.Location = new System.Drawing.Point(6, 54);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBox1.Size = new System.Drawing.Size(244, 37);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "This should be set to the same nickname you use in Discord without the #xxxx. *It" +
-    " will be checked*";
+            this.usrAvatar.Image = global::Hero_Designer.Resources.defaultAvatar;
+            this.usrAvatar.Location = new System.Drawing.Point(47, 13);
+            this.usrAvatar.Name = "usrAvatar";
+            this.usrAvatar.Size = new System.Drawing.Size(84, 66);
+            this.usrAvatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.usrAvatar.TabIndex = 1;
+            this.usrAvatar.TabStop = false;
             // 
             // dcNickName
             // 
-            this.dcNickName.Location = new System.Drawing.Point(6, 28);
+            this.dcNickName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dcNickName.Location = new System.Drawing.Point(6, 85);
             this.dcNickName.Name = "dcNickName";
-            this.dcNickName.Size = new System.Drawing.Size(244, 20);
+            this.dcNickName.ReadOnly = true;
+            this.dcNickName.Size = new System.Drawing.Size(166, 20);
             this.dcNickName.TabIndex = 0;
-            this.dcNickName.TextChanged += new System.EventHandler(this.dcNickName_TextChanged);
             // 
             // TabPage4
             // 
@@ -2296,17 +2226,6 @@ namespace Hero_Designer
             // 
             this.cPicker.FullOpen = true;
             // 
-            // chkEnableDmgGraph
-            // 
-            this.chkEnableDmgGraph.AutoSize = true;
-            this.chkEnableDmgGraph.Location = new System.Drawing.Point(6, 21);
-            this.chkEnableDmgGraph.Name = "chkEnableDmgGraph";
-            this.chkEnableDmgGraph.Size = new System.Drawing.Size(133, 18);
-            this.chkEnableDmgGraph.TabIndex = 6;
-            this.chkEnableDmgGraph.Text = "Enable Damage Graph";
-            this.chkEnableDmgGraph.UseVisualStyleBackColor = true;
-            this.chkEnableDmgGraph.CheckedChanged += new System.EventHandler(this.chkEnableDmgGraph_CheckedChanged);
-            // 
             // frmCalcOpt
             // 
             this.AcceptButton = this.btnOK;
@@ -2356,12 +2275,10 @@ namespace Hero_Designer
             this.tabPage7.PerformLayout();
             this.groupBox21.ResumeLayout(false);
             this.groupBox21.PerformLayout();
-            this.GroupBox20.ResumeLayout(false);
-            this.GroupBox20.PerformLayout();
             this.GroupBox19.ResumeLayout(false);
-            this.GroupBox19.PerformLayout();
             this.GroupBox18.ResumeLayout(false);
             this.GroupBox18.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.usrAvatar)).EndInit();
             this.TabPage4.ResumeLayout(false);
             this.GroupBox12.ResumeLayout(false);
             this.GroupBox12.PerformLayout();
@@ -2423,8 +2340,6 @@ namespace Hero_Designer
         ListBox fcList;
         TextBox fcName;
         TextBox fcNotes;
-        Button dcAdd;
-        Button dcRemove;
         Button fcReset;
         Button fcSet;
         TextBox fcTextOff;
@@ -2445,7 +2360,6 @@ namespace Hero_Designer
         GroupBox GroupBox18;
         GroupBox GroupBox19;
         GroupBox GroupBox2;
-        GroupBox GroupBox20;
         GroupBox GroupBox3;
         GroupBox GroupBox4;
         GroupBox GroupBox5;
@@ -2461,8 +2375,6 @@ namespace Hero_Designer
         Label Label14;
         Label Label15;
         Label Label16;
-        Label Label17;
-        Label Label18;
         Label Label19;
         //System.Windows.Forms.Label Label2;
         Label Label20;
@@ -2507,7 +2419,6 @@ namespace Hero_Designer
         RadioButton rbGraphTwoLine;
         RadioButton rbPvE;
         RadioButton rbPvP;
-        RichTextBox richTextBox1;
         TabControl TabControl1;
         TabPage TabPage1;
         TabPage TabPage2;
@@ -2517,9 +2428,7 @@ namespace Hero_Designer
         TabPage TabPage6;
         TabPage tabPage7;
         NumericUpDown TeamSize;
-        TextBox dcChannel;
-        TextBox dcNickName;
-        TextBox dcServerName;
+        public TextBox dcNickName;
         //System.Windows.Forms.TextBox txtUpdatePath;
         NumericUpDown udBaseToHit;
         NumericUpDown udExHigh;
@@ -2565,5 +2474,6 @@ namespace Hero_Designer
         private ComboBox cbUpdateURL;
         private CheckBox chkShowSOLevels;
         private CheckBox chkEnableDmgGraph;
+        public PictureBox usrAvatar;
     }
 }

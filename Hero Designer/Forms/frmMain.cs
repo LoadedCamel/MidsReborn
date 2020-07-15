@@ -60,6 +60,7 @@ namespace Hero_Designer
         frmIncarnate fIncarnate;
         frmMMPowers fMMPets;
         frmPrestige fPrestige;
+        frmDiscord fDiscord;
         bool FlipActive;
         PowerEntry FlipGP;
         readonly int FlipInterval;
@@ -4668,7 +4669,8 @@ namespace Hero_Designer
         void tsAdvDBEdit_Click(object sender, EventArgs e)
         {
             FloatTop(false);
-            new frmDBEdit().ShowDialog(this);
+            using frmDBEdit frmDbEdit = new frmDBEdit();
+            frmDbEdit.ShowDialog(this);
             FloatTop(true);
         }
 
@@ -4856,7 +4858,22 @@ namespace Hero_Designer
         bool exportDiscordInProgress;
         private frmInitializing _frmInitializing;
 
-        private async void tsExportDiscord_Click(object sender, EventArgs e)
+        private void tsExportDiscord_Click(object sender, EventArgs e)
+        {
+            bool flag = false;
+            if (fDiscord == null)
+                flag = true;
+            else if (fDiscord.IsDisposed)
+                flag = true;
+            if (flag)
+            {
+                frmMain iParent = this;
+                fDiscord = new frmDiscord(ref iParent);
+                fDiscord.ShowDialog(this);
+            }
+        }
+
+        /*private async void tsExportDiscord_Click(object sender, EventArgs e)
         {
             void ShowConfigError(string field)
                 => MessageBox.Show($"{field} must be filled out in configuration before discord exports will function",
@@ -4907,7 +4924,7 @@ namespace Hero_Designer
             {
                 exportDiscordInProgress = false;
             }
-        }
+        }*/
 
         void tsExportLong_Click(object sender, EventArgs e)
         {
@@ -4941,8 +4958,7 @@ namespace Hero_Designer
             if (MainModule.MidsController.Toon.Locked & FileModified)
             {
                 FloatTop(false);
-                DialogResult msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?", "Question",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 FloatTop(true);
                 if (msgBoxResult == DialogResult.No)
                     return;
