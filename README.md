@@ -9,7 +9,7 @@ In early 2019 with the re-emergence of _City of Heroes_ thanks to the _Homecomin
 The project has been reborn once more! This time with a new name, some new features, and a new team!
 
 #### Active Development Team Members
-- Crytilis
+- Crytilis aka Metalios
 - Bopper
 - Feles Noctis
 - Zed
