@@ -1,88 +1,11 @@
-﻿using System.Drawing;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
 namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 {
-    public class OneLineDataGridView : DataGridView
-    {
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            switch (keyData)
-            {
-                case Keys.Left:
-                    if (this.CurrentCell.ColumnIndex == 0 && this.CurrentCell.RowIndex > 0)
-                    {
-                        if (!this.Rows[this.CurrentCell.RowIndex - 1].Cells[this.ColumnCount - 1].ReadOnly)
-                        {
-                            this.CurrentCell = this.Rows[this.CurrentCell.RowIndex - 1].Cells[this.ColumnCount - 1];
-                        }
-                    }
-                    else if (!this.Rows[this.CurrentCell.RowIndex].Cells[this.CurrentCell.ColumnIndex - 1].ReadOnly)
-                    {
-                        this.CurrentCell = this.Rows[this.CurrentCell.RowIndex].Cells[this.CurrentCell.ColumnIndex - 1];
-                    }
-
-                    return true;
-
-
-                case Keys.Right:
-                    if (this.CurrentCell.ColumnIndex == this.ColumnCount - 1 && this.CurrentCell.RowIndex < this.RowCount - 1)
-                    {
-                        if (!this.Rows[this.CurrentCell.RowIndex + 1].Cells[0].ReadOnly)
-                        {
-                            this.CurrentCell = this.Rows[this.CurrentCell.RowIndex + 1].Cells[0];
-                        }
-                    }
-                    else if (!this.Rows[this.CurrentCell.RowIndex].Cells[this.CurrentCell.ColumnIndex + 1].ReadOnly)
-                    {
-                        this.CurrentCell = this.Rows[this.CurrentCell.RowIndex].Cells[this.CurrentCell.ColumnIndex + 1];
-                    }
-
-                    return true;
-
-                case Keys.Up:
-                    if (this.CurrentCell.RowIndex > 0 && !this.Rows[this.CurrentCell.RowIndex - 1].Cells[this.CurrentCell.ColumnIndex].ReadOnly)
-                    {
-                        this.CurrentCell = this.Rows[this.CurrentCell.RowIndex - 1].Cells[this.CurrentCell.ColumnIndex];
-                    }
-
-                    return true;
-
-                case Keys.Down:
-                    if (this.CurrentCell.RowIndex < this.RowCount - 1 && !this.Rows[this.CurrentCell.RowIndex + 1].Cells[this.CurrentCell.ColumnIndex].ReadOnly)
-                    {
-                        this.CurrentCell = this.Rows[this.CurrentCell.RowIndex + 1].Cells[this.CurrentCell.ColumnIndex];
-                    }
-
-                    return true;
-
-                case Keys.Home:
-                    this.CurrentCell = this.Rows[0].Cells[0];
-
-                    return true;
-
-                case Keys.End:
-                    for (int i = this.ColumnCount - 1; i > 0; i--)
-                    {
-                        if (!this.Rows[this.RowCount - 1].Cells[i].ReadOnly)
-                        {
-                            this.CurrentCell = this.Rows[this.RowCount - 1].Cells[i];
-                            return true;
-                        }
-                    }
-
-                    this.CurrentCell = this.Rows[this.RowCount - 2].Cells[this.ColumnCount - 1];
-
-                    return true;
-
-                case Keys.PageDown: return false;
-                case Keys.PageUp: return false;
-
-                default: return base.ProcessCmdKey(ref msg, keyData);   
-            }
-        }
-    }
-
     partial class frmEditAttribMod
     {
         /// <summary>
@@ -119,17 +42,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label1 = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
-            this.dgTableData = new OneLineDataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -142,24 +54,27 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.lblRevision = new System.Windows.Forms.Label();
-            this.lblRevisionDate = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.cbArchetype = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
             this.pbGraph = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.dgTableData)).BeginInit();
+            this.btnAddNewTable = new System.Windows.Forms.Button();
+            this.bnRemoveTable = new System.Windows.Forms.Button();
+            this.lblRevision = new System.Windows.Forms.NumericUpDown();
+            this.lblRevisionDate = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lblRevision)).BeginInit();
             this.SuspendLayout();
             // 
             // listBoxTables
             // 
             this.listBoxTables.FormattingEnabled = true;
-            this.listBoxTables.Location = new System.Drawing.Point(7, 32);
+            this.listBoxTables.Location = new System.Drawing.Point(7, 40);
             this.listBoxTables.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.listBoxTables.Name = "listBoxTables";
-            this.listBoxTables.Size = new System.Drawing.Size(204, 407);
+            this.listBoxTables.Size = new System.Drawing.Size(204, 368);
             this.listBoxTables.TabIndex = 0;
+            this.listBoxTables.SelectedValueChanged += new System.EventHandler(this.listBoxTables_SelectedValueChanged);
             // 
             // btnImportCsv
             // 
@@ -169,6 +84,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnImportCsv.TabIndex = 1;
             this.btnImportCsv.Text = "Import from CSV";
             this.btnImportCsv.UseVisualStyleBackColor = true;
+            this.btnImportCsv.Click += new System.EventHandler(this.btnImportCsv_Click);
             // 
             // btnImportJson
             // 
@@ -178,6 +94,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnImportJson.TabIndex = 2;
             this.btnImportJson.Text = "Import from JSON";
             this.btnImportJson.UseVisualStyleBackColor = true;
+            this.btnImportJson.Click += new System.EventHandler(this.btnImportJson_Click);
             // 
             // btnImportDef
             // 
@@ -187,6 +104,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnImportDef.TabIndex = 3;
             this.btnImportDef.Text = "Import from DEF";
             this.btnImportDef.UseVisualStyleBackColor = true;
+            this.btnImportDef.Click += new System.EventHandler(this.btnImportDef_Click);
             // 
             // label1
             // 
@@ -206,6 +124,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Discard changes";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnSave
             // 
@@ -216,137 +135,14 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnSave.TabIndex = 6;
             this.btnSave.Text = "Save and close";
             this.btnSave.UseVisualStyleBackColor = true;
-            // 
-            // dgTableData
-            // 
-            this.dgTableData.AllowUserToAddRows = false;
-            this.dgTableData.AllowUserToDeleteRows = false;
-            this.dgTableData.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.dgTableData.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgTableData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgTableData.ColumnHeadersVisible = false;
-            this.dgTableData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3,
-            this.Column4,
-            this.Column5,
-            this.Column6,
-            this.Column7,
-            this.Column8,
-            this.Column9,
-            this.Column10});
-            this.dgTableData.Location = new System.Drawing.Point(257, 31);
-            this.dgTableData.MultiSelect = false;
-            this.dgTableData.Name = "dgTableData";
-            this.dgTableData.RowHeadersVisible = false;
-            this.dgTableData.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dgTableData.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.dgTableData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgTableData.ShowCellErrors = false;
-            this.dgTableData.ShowCellToolTips = false;
-            this.dgTableData.ShowEditingIcon = false;
-            this.dgTableData.ShowRowErrors = false;
-            this.dgTableData.Size = new System.Drawing.Size(620, 300);
-            this.dgTableData.TabIndex = 7;
-            this.dgTableData.SelectionChanged += new System.EventHandler(this.dgTableData_SelectionChanged);
-            // 
-            // Column1
-            // 
-            this.Column1.FillWeight = 62F;
-            this.Column1.HeaderText = "";
-            this.Column1.Name = "Column1";
-            this.Column1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column1.Width = 62;
-            // 
-            // Column2
-            // 
-            this.Column2.FillWeight = 62F;
-            this.Column2.HeaderText = "";
-            this.Column2.Name = "Column2";
-            this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column2.Width = 62;
-            // 
-            // Column3
-            // 
-            this.Column3.FillWeight = 62F;
-            this.Column3.HeaderText = "";
-            this.Column3.Name = "Column3";
-            this.Column3.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column3.Width = 62;
-            // 
-            // Column4
-            // 
-            this.Column4.FillWeight = 62F;
-            this.Column4.HeaderText = "";
-            this.Column4.Name = "Column4";
-            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column4.Width = 62;
-            // 
-            // Column5
-            // 
-            this.Column5.FillWeight = 62F;
-            this.Column5.HeaderText = "";
-            this.Column5.Name = "Column5";
-            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column5.Width = 62;
-            // 
-            // Column6
-            // 
-            this.Column6.FillWeight = 62F;
-            this.Column6.HeaderText = "";
-            this.Column6.Name = "Column6";
-            this.Column6.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column6.Width = 62;
-            // 
-            // Column7
-            // 
-            this.Column7.FillWeight = 62F;
-            this.Column7.HeaderText = "";
-            this.Column7.Name = "Column7";
-            this.Column7.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column7.Width = 62;
-            // 
-            // Column8
-            // 
-            this.Column8.FillWeight = 62F;
-            this.Column8.HeaderText = "";
-            this.Column8.Name = "Column8";
-            this.Column8.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column8.Width = 62;
-            // 
-            // Column9
-            // 
-            this.Column9.FillWeight = 62F;
-            this.Column9.HeaderText = "";
-            this.Column9.Name = "Column9";
-            this.Column9.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column9.Width = 62;
-            // 
-            // Column10
-            // 
-            this.Column10.FillWeight = 61F;
-            this.Column10.HeaderText = "";
-            this.Column10.Name = "Column10";
-            this.Column10.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column10.Width = 61;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ImageAlign = System.Drawing.ContentAlignment.TopRight;
-            this.label2.Location = new System.Drawing.Point(234, 49);
+            this.label2.Location = new System.Drawing.Point(234, 50);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(16, 16);
             this.label2.TabIndex = 9;
@@ -357,7 +153,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(226, 99);
+            this.label3.Location = new System.Drawing.Point(226, 100);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(24, 16);
             this.label3.TabIndex = 10;
@@ -368,7 +164,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(226, 149);
+            this.label4.Location = new System.Drawing.Point(226, 150);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(24, 16);
             this.label4.TabIndex = 11;
@@ -379,7 +175,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(226, 199);
+            this.label5.Location = new System.Drawing.Point(226, 200);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(24, 16);
             this.label5.TabIndex = 12;
@@ -390,7 +186,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(226, 249);
+            this.label6.Location = new System.Drawing.Point(226, 250);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(24, 16);
             this.label6.TabIndex = 13;
@@ -401,7 +197,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(226, 299);
+            this.label7.Location = new System.Drawing.Point(226, 300);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(24, 16);
             this.label7.TabIndex = 14;
@@ -412,7 +208,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(892, 249);
+            this.label9.Location = new System.Drawing.Point(892, 250);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(24, 16);
             this.label9.TabIndex = 19;
@@ -423,7 +219,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(892, 199);
+            this.label10.Location = new System.Drawing.Point(892, 200);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(24, 16);
             this.label10.TabIndex = 18;
@@ -434,7 +230,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(892, 149);
+            this.label11.Location = new System.Drawing.Point(892, 150);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(24, 16);
             this.label11.TabIndex = 17;
@@ -445,7 +241,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(892, 99);
+            this.label12.Location = new System.Drawing.Point(892, 100);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(24, 16);
             this.label12.TabIndex = 16;
@@ -457,7 +253,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ImageAlign = System.Drawing.ContentAlignment.TopRight;
-            this.label13.Location = new System.Drawing.Point(892, 49);
+            this.label13.Location = new System.Drawing.Point(892, 50);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(24, 16);
             this.label13.TabIndex = 15;
@@ -474,28 +270,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label8.TabIndex = 20;
             this.label8.Text = "Revision:";
             // 
-            // lblRevision
-            // 
-            this.lblRevision.BackColor = System.Drawing.SystemColors.Control;
-            this.lblRevision.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblRevision.Location = new System.Drawing.Point(737, 344);
-            this.lblRevision.Name = "lblRevision";
-            this.lblRevision.Size = new System.Drawing.Size(91, 20);
-            this.lblRevision.TabIndex = 21;
-            this.lblRevision.Text = "1";
-            this.lblRevision.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblRevisionDate
-            // 
-            this.lblRevisionDate.BackColor = System.Drawing.SystemColors.Control;
-            this.lblRevisionDate.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblRevisionDate.Location = new System.Drawing.Point(737, 370);
-            this.lblRevisionDate.Name = "lblRevisionDate";
-            this.lblRevisionDate.Size = new System.Drawing.Size(91, 20);
-            this.lblRevisionDate.TabIndex = 23;
-            this.lblRevisionDate.Text = "1";
-            this.lblRevisionDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // label16
             // 
             this.label16.AutoSize = true;
@@ -508,11 +282,13 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             // cbArchetype
             // 
+            this.cbArchetype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbArchetype.FormattingEnabled = true;
             this.cbArchetype.Location = new System.Drawing.Point(375, 5);
             this.cbArchetype.Name = "cbArchetype";
             this.cbArchetype.Size = new System.Drawing.Size(209, 21);
             this.cbArchetype.TabIndex = 24;
+            this.cbArchetype.SelectionChangeCommitted += new System.EventHandler(this.cbArchetype_SelectionChangeCommitted);
             // 
             // label17
             // 
@@ -533,17 +309,70 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.pbGraph.TabIndex = 26;
             this.pbGraph.TabStop = false;
             // 
+            // btnAddNewTable
+            // 
+            this.btnAddNewTable.Location = new System.Drawing.Point(15, 416);
+            this.btnAddNewTable.Name = "btnAddNewTable";
+            this.btnAddNewTable.Size = new System.Drawing.Size(87, 23);
+            this.btnAddNewTable.TabIndex = 27;
+            this.btnAddNewTable.Text = "Add New";
+            this.btnAddNewTable.UseVisualStyleBackColor = true;
+            this.btnAddNewTable.Click += new System.EventHandler(this.btnAddNewTable_Click);
+            // 
+            // bnRemoveTable
+            // 
+            this.bnRemoveTable.Location = new System.Drawing.Point(117, 416);
+            this.bnRemoveTable.Name = "bnRemoveTable";
+            this.bnRemoveTable.Size = new System.Drawing.Size(86, 23);
+            this.bnRemoveTable.TabIndex = 28;
+            this.bnRemoveTable.Text = "Remove";
+            this.bnRemoveTable.UseVisualStyleBackColor = true;
+            this.bnRemoveTable.Click += new System.EventHandler(this.bnRemoveTable_Click);
+            // 
+            // lblRevision
+            // 
+            this.lblRevision.Location = new System.Drawing.Point(739, 346);
+            this.lblRevision.Margin = new System.Windows.Forms.Padding(0);
+            this.lblRevision.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.lblRevision.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.lblRevision.Name = "lblRevision";
+            this.lblRevision.Size = new System.Drawing.Size(91, 20);
+            this.lblRevision.TabIndex = 24;
+            this.lblRevision.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lblRevisionDate
+            // 
+            this.lblRevisionDate.Location = new System.Drawing.Point(738, 371);
+            this.lblRevisionDate.Name = "lblRevisionDate";
+            this.lblRevisionDate.Size = new System.Drawing.Size(91, 20);
+            this.lblRevisionDate.TabIndex = 29;
+            this.lblRevisionDate.Text = "DD/MM/AAAA";
+            // 
             // frmEditAttribMod
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(928, 450);
+            this.Controls.Add(this.lblRevisionDate);
+            this.Controls.Add(this.lblRevision);
+            this.Controls.Add(this.bnRemoveTable);
+            this.Controls.Add(this.btnAddNewTable);
             this.Controls.Add(this.pbGraph);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.cbArchetype);
-            this.Controls.Add(this.lblRevisionDate);
             this.Controls.Add(this.label16);
-            this.Controls.Add(this.lblRevision);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label10);
@@ -556,7 +385,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.dgTableData);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.label1);
@@ -569,8 +397,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Name = "frmEditAttribMod";
             this.Text = "AttribMod Editor";
             this.Load += new System.EventHandler(this.frmEditAttribMod_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dgTableData)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lblRevision)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -585,34 +413,26 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSave;
-        private OneLineDataGridView dgTableData;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label lblRevision;
-        private System.Windows.Forms.Label lblRevisionDate;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.ComboBox cbArchetype;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
+        private System.Windows.Forms.ComboBox cbArchetype;
         private System.Windows.Forms.PictureBox pbGraph;
+        private Button btnAddNewTable;
+        private Button bnRemoveTable;
+        private Label[] dgCells;
+        private NumericUpDown lblRevision;
+        private TextBox lblRevisionDate;
     }
 }

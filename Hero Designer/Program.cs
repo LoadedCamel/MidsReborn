@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Base.Master_Classes;
 
@@ -14,22 +15,37 @@ namespace Hero_Designer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            try
+
+            if (Debugger.IsAttached || Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
                 MidsContext.AssertVersioning();
-                Application.Run(new frmMain());
-            }
-            catch (Exception ex)
-            {
-                var exTarget = ex;
-                while (exTarget?.InnerException != null)
+                using (frmMain f = new frmMain())
                 {
-                    exTarget = ex.InnerException;
+                    Application.Run(f);
                 }
+            }
+            else
+            {
+                try
+                {
+                    MidsContext.AssertVersioning();
+                    using (frmMain f = new frmMain())
+                    {
+                        Application.Run(f);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var exTarget = ex;
+                    while (exTarget?.InnerException != null)
+                    {
+                        exTarget = ex.InnerException;
+                    }
 
-                if (exTarget != null)
-                    MessageBox.Show(exTarget.Message, exTarget.GetType().Name);
-                throw;
+                    if (exTarget != null)
+                        MessageBox.Show(exTarget.Message, exTarget.GetType().Name);
+                    throw;
+                }
             }
         }
     }
