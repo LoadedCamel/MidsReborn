@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms.JsonImport;
+using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -221,6 +222,11 @@ namespace Hero_Designer
         private void btnJsonImporter_Click(object sender, EventArgs e)
         {
             new frmJsonImportMain().ShowDialog();
+        }
+
+        private void btnAttribModEdit_Click(object sender, EventArgs e)
+        {
+            new frmEditAttribMod().ShowDialog();
         }
     }
 }
