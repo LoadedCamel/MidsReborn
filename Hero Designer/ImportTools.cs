@@ -238,7 +238,7 @@ namespace HeroViewer
 
             int line = -1;
             string lineText;
-            using StreamReader streamReader = new StreamReader(this.BuildString);
+            using StreamReader streamReader = new StreamReader(BuildString);
             while ((lineText = streamReader.ReadLine()) != null)
             {
                 line++;
@@ -254,14 +254,14 @@ namespace HeroViewer
                         return null;
                     }
 
-                    this.CharacterInfo.Name = m.Groups[1].Value;
-                    this.CharacterInfo.Archetype = m.Groups[4].Value.Replace("Class_", string.Empty);
-                    this.CharacterInfo.Origin = m.Groups[3].Value;
-                    this.CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
+                    CharacterInfo.Name = m.Groups[1].Value;
+                    CharacterInfo.Archetype = m.Groups[4].Value.Replace("Class_", string.Empty);
+                    CharacterInfo.Origin = m.Groups[3].Value;
+                    CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
 
                     SetCharacterInfo();
                 }
-                else if (line < this.HeaderSize)
+                else if (line < HeaderSize)
                 {
                     continue;
                 }
@@ -284,40 +284,45 @@ namespace HeroViewer
                     p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     if (p.pData == null)
                     {
-                        p.FullName = this.FixKheldPowerNames(p.FullName);
+                        p.FullName = FixKheldPowerNames(p.FullName);
                         powerIDChunks = p.FullName.Split('.');
                         rawPowerset = (powerIDChunks[0] + "." + powerIDChunks[1]).Trim();
                         p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
                         p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     }
-                    p.Valid = this.CheckValid(p.pData);
+                    p.Valid = CheckValid(p.pData);
                     p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
                     p.Slots = new List<RawEnhData>();
-                    if (this.CheckValid(p.Powerset))
+                    if (CheckValid(p.Powerset))
                     {
-                        this.PowerSets.Add(p.Powerset.FullName);
+                        PowerSets.Add(p.Powerset.FullName);
                     }
                 }
                 else if (m2.Success)
                 {
                     // Empty slot
-                    e = new RawEnhData();
-                    e.InternalName = "Empty";
-                    e.Level = 0;
-                    e.Boosters = 0;
-                    e.HasCatalyst = false;
-                    e.eData = -1;
+                    e = new RawEnhData() {
+                        InternalName = "Empty",
+                        Level = 0,
+                        Boosters = 0,
+                        HasCatalyst = false,
+                        eData = -1
+                    };
                     p.Slots.Add(e);
                 }
                 else if (m3.Success)
                 {
                     // Enhancement: internal name, level, (dummy), boosters
-                    e = new RawEnhData();
-                    e.InternalName = DatabaseAPI.GetEnhancementBaseUIDName(m3.Groups[1].Value);
-                    e.Level = Convert.ToInt32(m3.Groups[2].Value, null);
-                    e.Boosters = m3.Groups.Count > 3 & !string.IsNullOrWhiteSpace(m3.Groups[4].Value) ? Convert.ToInt32(m3.Groups[4].Value, null) : 0;
-                    e.HasCatalyst = DatabaseAPI.EnhHasCatalyst(m3.Groups[1].Value);
+                    // Zed 08/10/20: Fix for bug "Cannot load enhancement data for 'Crafted_Artillery_X'"
+                    // Internal name for these are Crafted_Shrapnel_X
+                    e = new RawEnhData() {
+                        InternalName = DatabaseAPI.GetEnhancementBaseUIDName(m3.Groups[1].Value.Contains("Artillery") ? m3.Groups[1].Value.Replace("Artillery", "Shrapnel") : m3.Groups[1].Value),
+                        Level = Convert.ToInt32(m3.Groups[2].Value, null),
+                        Boosters = m3.Groups.Count > 3 & !string.IsNullOrWhiteSpace(m3.Groups[4].Value) ? Convert.ToInt32(m3.Groups[4].Value, null) : 0,
+                        HasCatalyst = DatabaseAPI.EnhHasCatalyst(m3.Groups[1].Value)
+                    };
                     e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
+                    
                     p.Slots.Add(e);
                 }
             }

@@ -5696,7 +5696,7 @@ namespace Hero_Designer
             PadPowerPools(ref listPowersets);
             FilterVEATPools(ref listPowersets);
 
-            string toBlameSet = String.Empty;
+            string toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
             MidsContext.Character.CurrentBuild.LastPower = 24; //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
 
