@@ -1,43 +1,42 @@
-﻿using Base.Data_Classes;
-using midsControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Base;
+using Base.Data_Classes;
+using midsControls;
+using ContentAlignment = System.Drawing.ContentAlignment;
 
 namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditAttribMod : Form
     {
+        private Modifiers TempAttribMods = new Modifiers();
+        private DataGraph GraphViewer;
 
         public frmEditAttribMod()
         {
             InitializeComponent();
+            GraphViewer = new DataGraph(new Size(pbGraph.Width, pbGraph.Height));
         }
 
         private void frmEditAttribMod_Load(object sender, EventArgs e)
         {
-            lblRevision.Text = Convert.ToString(Database.Instance.AttribMods.Revision, null);
-            lblRevisionDate.Text = Database.Instance.AttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
+            TempAttribMods = (Modifiers)Database.Instance.AttribMods.Clone(); // Safer to work on a temp copy...
+
+            lblRevision.Text = Convert.ToString(TempAttribMods.Revision, null);
+            lblRevisionDate.Text = TempAttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
 
             listBoxTables.BeginUpdate();
             listBoxTables.Items.Clear();
-            listBoxTables.Items.AddRange(Database.Instance.AttribMods.Modifier.Select(e => { return e.ID; }).ToArray());
+            listBoxTables.Items.AddRange(TempAttribMods.Modifier.Select(e => e.ID).ToArray());
             listBoxTables.SelectedIndex = 0;
             listBoxTables.EndUpdate();
 
-            // Zed: This list is not subject to change any time soon.
-            // Maybe worth the shot not to clear it every time the form is loaded.
             cbArchetype.BeginUpdate();
             cbArchetype.Items.Clear();
-            cbArchetype.Items.AddRange(Database.Instance.Classes.Select(e => { return e.ClassName; }).ToArray()); // e.DisplayName + e.ClassName is too long!
+            cbArchetype.Items.AddRange(Database.Instance.Classes.Select(e => e.ClassName).ToArray()); // e.DisplayName + e.ClassName is too long!
             cbArchetype.SelectedIndex = 0;
             cbArchetype.EndUpdate();
 
@@ -46,17 +45,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
         }
 
-        // //////////////////////////////////// //
+        #region Event Handlers
 
         private void listBoxTables_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (listBoxTables.SelectedIndex > -1 &&
-                cbArchetype.SelectedIndex > -1 &&
-                Database.Instance.AttribMods.Modifier.ElementAtOrDefault(listBoxTables.SelectedIndex) != null)
-            {
-                PopulateTableGrid(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
-                DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
-            }
+            if (listBoxTables.SelectedIndex <= -1 || cbArchetype.SelectedIndex <= -1 ||
+                TempAttribMods.Modifier.ElementAtOrDefault(listBoxTables.SelectedIndex) == null) return;
+            
+            PopulateTableGrid(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
+            DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
         }
 
         private void cbArchetype_SelectionChangeCommitted(object sender, EventArgs e)
@@ -66,12 +63,39 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnAddNewTable_Click(object sender, EventArgs e)
         {
+            string tableName = "";
+            DialogResult r = InputBox("Add modifier table", "New modifier table name:", ref tableName);
+            if (r == DialogResult.Cancel) return;
 
+            Modifiers.ModifierTable table = new Modifiers.ModifierTable(Database.Instance.Classes.Length)
+            {
+                BaseIndex = TempAttribMods.Modifier.Length - 1,
+                ID = tableName
+            };
+            _ = TempAttribMods.Modifier.Append(table);
+
+            listBoxTables.BeginUpdate();
+            listBoxTables.Items.Clear();
+            listBoxTables.Items.AddRange(TempAttribMods.Modifier.Select(e => e.ID).ToArray());
+            listBoxTables.SelectedIndex = table.BaseIndex;
+            listBoxTables.EndUpdate();
         }
 
         private void bnRemoveTable_Click(object sender, EventArgs e)
         {
+            if (listBoxTables.SelectedIndex >= 0 && listBoxTables.SelectedIndex < listBoxTables.Items.Count - 1)
+            {
+                MessageBox.Show("You can only remove the last element of the list.", "Dang", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            TempAttribMods.Modifier.RemoveLast();
+
+            listBoxTables.BeginUpdate();
+            listBoxTables.Items.Clear();
+            listBoxTables.Items.AddRange(TempAttribMods.Modifier.Select(e => e.ID).ToArray());
+            listBoxTables.SelectedIndex = listBoxTables.Items.Count - 1;
+            listBoxTables.EndUpdate();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -102,45 +126,97 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private void dgCellsLabel_MouseEnter(object sender, EventArgs e)
         {
             // http://csharphelper.com/blog/2014/09/use-an-event-handler-for-multiple-controls-in-c/
-            Label lbl = sender as Label;
+            if (!(sender is Label lbl)) return;
             lbl.BackColor = SystemColors.Highlight;
         }
 
         private void dgCellsLabel_MouseLeave(object sender, EventArgs e)
         {
-            Label lbl = sender as Label;
+            if (!(sender is Label lbl)) return;
             lbl.BackColor = SystemColors.Control;
         }
 
         private void dgCellsLabel_Click(object sender, EventArgs e)
         {
-            Label lbl = sender as Label;
-            MouseEventArgs ev = e as MouseEventArgs;
-
-            if (lbl != null)
+            if (!(sender is Label lbl)) return;
+            MouseEventArgs? ev = e as MouseEventArgs;
+            using EditableLabel editor = new EditableLabel
             {
-                using EditableLabel editor = new EditableLabel
-                {
-                    Location = lbl.PointToScreen(new Point(ev.X + 13, ev.Y + 5)),
-                    Text = lbl.Text
-                };
+                Location = lbl.PointToScreen(new Point(ev.X + 13, ev.Y + 5)),
+                Text = lbl.Text
+            };
 
-                if (editor.ShowDialog() == DialogResult.OK)
-                {
-                    lbl.Text = editor.Text;
-                }
-            }
+            if (editor.ShowDialog() != DialogResult.OK) return;
+
+            lbl.Text = editor.Text;
+            if (!float.TryParse(lbl.Text, out float dummy)) return;
+            TempAttribMods
+                .Modifier[listBoxTables.SelectedIndex]
+                .Table[Convert.ToInt32(lbl.Name.Substring(6), null)][cbArchetype.SelectedIndex] =
+                (float)Convert.ToDecimal(lbl.Text, null);
         }
 
-        // //////////////////////////////////// //
+        #endregion
+
+        // VB's InputBox() clone
+        // To be done later: move this to a separate class/user control
+        private static DialogResult InputBox(string title, string promptText, ref string value)
+        {
+            using Label label = new Label()
+            {
+                Text = promptText,
+                AutoSize = true,
+                Bounds = new Rectangle(9, 20, 372, 13)
+            };
+
+            using TextBox textBox = new TextBox()
+            {
+                Text = value,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top,
+                Bounds = new Rectangle(12, 36, 372, 20)
+            };
+
+            using Button buttonOk = new Button()
+            {
+                Text = "OK",
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
+                Bounds = new Rectangle(228, 72, 75, 23),
+                DialogResult = DialogResult.OK
+            };
+
+            using Button buttonCancel = new Button()
+            {
+                Text = "Cancel",
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
+                Bounds = new Rectangle(309, 72, 75, 23),
+                DialogResult = DialogResult.Cancel
+            };
+
+            using Form inputBoxFrm = new Form()
+            {
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                StartPosition = FormStartPosition.CenterScreen,
+                MinimizeBox = false,
+                MaximizeBox = false,
+                ShowInTaskbar = false,
+                Text = title
+            };
+
+            inputBoxFrm.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
+            inputBoxFrm.ClientSize = new Size(Math.Max(300, label.Right + 10), inputBoxFrm.ClientSize.Height);
+
+            DialogResult dialogResult = inputBoxFrm.ShowDialog();
+            value = textBox.Text;
+
+            return dialogResult;
+        }
 
         private void UpdateDataDisplay()
         {
-            if (listBoxTables.SelectedIndex > -1 && cbArchetype.SelectedIndex > -1)
-            {
-                PopulateTableGrid(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
-                DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
-            }
+            if (listBoxTables.SelectedIndex <= -1 || cbArchetype.SelectedIndex <= -1) return;
+            
+            PopulateTableGrid(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
+            DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
         }
 
         // 'Cause Designer is not happy if one touch his things. Boo.
@@ -148,7 +224,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             SuspendLayout();
 
-            dgCells = new Label[60];
+            dgCells = new Control[60];
             int i;
             for (i = 0; i < dgCells.Length; i++)
             {
@@ -165,9 +241,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     AutoSize = false
                 };
 
-                dgCells[i].MouseEnter += new EventHandler(dgCellsLabel_MouseEnter);
-                dgCells[i].MouseLeave += new EventHandler(dgCellsLabel_MouseLeave);
-                dgCells[i].Click += new EventHandler(dgCellsLabel_Click);
+                dgCells[i].MouseEnter += dgCellsLabel_MouseEnter;
+                dgCells[i].MouseLeave += dgCellsLabel_MouseLeave;
+                dgCells[i].Click += dgCellsLabel_Click;
             }
             Controls.AddRange(dgCells);
 
@@ -179,12 +255,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             int i; int l;
 
             SuspendLayout();
-            l = Convert.ToInt32(Math.Ceiling(Database.Instance.AttribMods.Modifier[modIdx].Table.Length / 10d)) * 10;
+            l = Convert.ToInt32(Math.Ceiling(TempAttribMods.Modifier[modIdx].Table.Length / 10d)) * 10;
             for (i = 0; i < l; i++)
             {
-                if (i < Database.Instance.AttribMods.Modifier[modIdx].Table.Length &&
-                Database.Instance.AttribMods.Modifier[modIdx].Table[i].Length > 0) {
-                    dgCells[i].Text = Convert.ToString(Database.Instance.AttribMods.Modifier[modIdx].Table[i][atIdx], null);
+                if (i < TempAttribMods.Modifier[modIdx].Table.Length &&
+                TempAttribMods.Modifier[modIdx].Table[i].Length > 0) {
+                    dgCells[i].Text = Convert.ToString(TempAttribMods.Modifier[modIdx].Table[i][atIdx], null);
                     dgCells[i].Enabled = true;
                     dgCells[i].BackColor = SystemColors.Control;
                 }
@@ -199,191 +275,25 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             ResumeLayout();
         }
 
-        private void DrawDataGraph(int modIdx, int atIdx, bool smoothDraw = true, bool detectPlateau = true, float ignoreValue = 0)
+        private void DrawDataGraph(int modIdx, int atIdx, bool smoothDraw = true, bool detectPlateau = true, float? ignoreValue = 0)
         {
-            Color lineColor = Color.Yellow;
-            Color dotsColor = Color.FromArgb(Convert.ToInt32(0.66 * 256), Color.LightGreen); // Alpha = 90%
-            Color bgColor = Color.Black;
-            Color axisColor = Color.Silver;
-            Color innerGridColor = Color.DarkGray;
-            Color axisValuesColor = Color.Gainsboro;
-            Padding padding = new Padding(15, 8, 8, 15);
-
-            bool drawDots = false;
-
             int i;
-            int w = pbGraph.Width - padding.Horizontal;
-            int h = pbGraph.Height - padding.Vertical;
-            int dotRadius = 1;
-
-            float xMin = 0;
-            float xMax = Database.Instance.AttribMods.Modifier[modIdx].Table.Length;
-            float yMin;
-            float yMax;
-            float xPlateau = float.NegativeInfinity;
-            float v;
-
+            
             List<float> dataSeries = new List<float>();
-            for (i = 0; i < Database.Instance.AttribMods.Modifier[modIdx].Table.Length; i++)
+            for (i = 0; i < TempAttribMods.Modifier[modIdx].Table.Length; i++)
             {
-                if (Database.Instance.AttribMods.Modifier[modIdx].Table[i].Length > 0)
+                if (TempAttribMods.Modifier[modIdx].Table[i].Length > 0)
                 {
-                    dataSeries.Add(Database.Instance.AttribMods.Modifier[modIdx].Table[i][atIdx]);
+                    dataSeries.Add(TempAttribMods.Modifier[modIdx].Table[i][atIdx]);
                 }
             }
 
-            v = dataSeries[0]; // Only because it needs to be forcibly initialized.
-            yMin = dataSeries.Min();
-            yMax = dataSeries.Max();
+            GraphViewer.SetOption("SmoothDraw", smoothDraw);
+            GraphViewer.SetOption("DetectPlateau", detectPlateau);
+            GraphViewer.SetOption("IgnoreValue", ignoreValue);
 
-            for (i = dataSeries.Count - 1; i > 0; i--)
-            {
-                if (dataSeries[i] != ignoreValue)
-                {
-                    v = dataSeries[i];
-                    break;
-                }
-            }
-
-            for (i = dataSeries.Count - 1; i > 0; i--)
-            {
-                if (dataSeries[i] != v && i < dataSeries.Count - 2)
-                {
-                    xPlateau = i + 1;
-                    break;
-                }
-            }
-
-            pbGraph.SuspendLayout();
-
-            Pen p;
-            Bitmap res = new Bitmap(pbGraph.Width, pbGraph.Height);
-            using (var g = Graphics.FromImage(res))
-            {
-                // Zed: I kinda want to use Anti-aliasing here but it also turns the dotted lines into plain ones,
-                // and the general apperance is pretty bad.
-                //g.SmoothingMode = SmoothingMode.HighQuality;
-                g.Clear(bgColor);
-
-                /*
-                 * Layers:
-                 * Inner grid (dotted)
-                 * Axis
-                 * Lines
-                 * Dots
-                 * Plateau secondary X axis
-                 * Axis Values
-                 */
-
-                // Warning CA2000 - call Dispose() on object before all references to it are out of scope
-                // https://stackoverflow.com/questions/16920386/call-system-idisposable-dispose-on-object-emailform-before-all-references-to-i
-
-                float xScale = w / Math.Max(xMax - xMin, 1);
-                float yScale = h / Math.Max(yMax - yMin, 1);
-
-                // /////////////////////// //
-                // Inner Grid
-                using (p = new Pen(color: innerGridColor) { DashStyle = DashStyle.Dot })
-                {
-                    // Verticals
-                    for (i = (int)xMin; i <= xMax; i += 5)
-                    {
-                        g.DrawLine(p, new Point((int)Math.Round(i * xScale) + padding.Left, padding.Top), new Point((int)Math.Round(i * xScale) + padding.Left, h + padding.Top));
-                    }
-
-                    // Horizontals
-                    for (i = padding.Top; i <= h + padding.Top; i += h / 5)
-                    {
-                        g.DrawLine(p, new Point(padding.Left, i), new Point(w + padding.Left, i));
-                    }
-                }
-
-                // /////////////////////// //
-                // Axis
-                using (p = new Pen(color: axisColor) { DashStyle = DashStyle.Solid })
-                {
-                    g.DrawLine(p, new Point(padding.Left, h + padding.Top), new Point(w + padding.Left, h + padding.Top));
-                    g.DrawLine(p, new Point(padding.Left, padding.Top), new Point(padding.Left, h + padding.Top));
-                    if (DataSetCrossZero(dataSeries)) // May need to draw the axis for value 0 here, if needed.
-                    {
-                        g.DrawLine(p, new Point(), new Point());
-                    }
-                }
-
-                // /////////////////////// //
-                // Lines
-                // Note: negate values if they are all negative, e.g. for damage tables.
-                bool reverseValues = CheckAllNegativeValues(dataSeries);
-                float val;
-
-                // Not using Array for graph data points.
-                // It may not have the same lengh as the source dataSeries.
-                List<Point> dataPoints = new List<Point>();
-
-                using (p = new Pen(color: lineColor) { DashStyle = DashStyle.Solid, Width = 1 })
-                {
-                    for (i = 0; i < Math.Min(50, dataSeries.Count); i++)
-                    {
-                        if (dataSeries[i] == ignoreValue) continue;
-                        val = dataSeries[i] * (reverseValues ? -1 : 1);
-                        val = h + padding.Top - val * yScale;
-                        dataPoints.Add(new Point((int)(i * xScale + padding.Left), (int)val));
-                    }
-
-                    if (dataPoints.Count < 2) return;
-
-                    if (smoothDraw)
-                    {
-                        g.DrawCurve(p, dataPoints.ToArray());
-                    }
-                    else
-                    {
-                        g.DrawLines(p, dataPoints.ToArray());
-                    }
-                }
-
-                // /////////////////////// //
-                // Dots
-                if (drawDots)
-                {
-                    using (p = new Pen(color: dotsColor))
-                    {
-                        for (i = 0; i < Math.Min(50, dataSeries.Count); i++)
-                        {
-                            if (dataSeries[i] == ignoreValue) continue;
-                            val = dataSeries[i] * (reverseValues ? -1 : 1);
-                            val = h + padding.Top - val * yScale;
-                            g.DrawEllipse(p, new Rectangle(new Point((int)(i * xScale + padding.Left) - dotRadius, (int)val - dotRadius), new Size(dotRadius * 2 + 1, dotRadius * 2 + 1)));
-                        }
-                    }
-                }
-            }
-
-            pbGraph.Image = res;
-            pbGraph.ResumeLayout();
-        }
-
-        private static bool CheckAllNegativeValues(List<float> values)
-        {
-            for (int i = 0; i < values.Count; i++)
-            {
-                if (values[i] > 0) return false;
-            }
-
-            return true;
-        }
-
-        private static bool DataSetCrossZero(List<float> values)
-        {
-            bool vPositive = false;
-            bool vNegative = false;
-            for (int i = 0; i<values.Count; i++)
-            {
-                if (values[i] > 0) vPositive = true;
-                if (values[i] < 0) vNegative = true;
-            }
-
-            return (vPositive & vNegative);
+            GraphViewer.SetDataPoints(dataSeries);
+            pbGraph.Image = GraphViewer.Draw();
         }
     }
 }

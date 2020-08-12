@@ -57,13 +57,13 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label16 = new System.Windows.Forms.Label();
             this.cbArchetype = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.pbGraph = new System.Windows.Forms.PictureBox();
             this.btnAddNewTable = new System.Windows.Forms.Button();
             this.bnRemoveTable = new System.Windows.Forms.Button();
             this.lblRevision = new System.Windows.Forms.NumericUpDown();
             this.lblRevisionDate = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).BeginInit();
+            this.pbGraph = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.lblRevision)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).BeginInit();
             this.SuspendLayout();
             // 
             // listBoxTables
@@ -146,7 +146,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(16, 16);
             this.label2.TabIndex = 9;
-            this.label2.Text = "1";
+            this.label2.Text = "0";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label3
@@ -157,7 +157,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(24, 16);
             this.label3.TabIndex = 10;
-            this.label3.Text = "11";
+            this.label3.Text = "10";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label4
@@ -168,7 +168,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(24, 16);
             this.label4.TabIndex = 11;
-            this.label4.Text = "21";
+            this.label4.Text = "20";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label5
@@ -179,7 +179,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(24, 16);
             this.label5.TabIndex = 12;
-            this.label5.Text = "31";
+            this.label5.Text = "30";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label6
@@ -190,7 +190,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(24, 16);
             this.label6.TabIndex = 13;
-            this.label6.Text = "41";
+            this.label6.Text = "40";
             this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label7
@@ -201,7 +201,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(24, 16);
             this.label7.TabIndex = 14;
-            this.label7.Text = "51";
+            this.label7.Text = "50";
             this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label9
@@ -212,7 +212,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(24, 16);
             this.label9.TabIndex = 19;
-            this.label9.Text = "50";
+            this.label9.Text = "49";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label10
@@ -223,7 +223,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(24, 16);
             this.label10.TabIndex = 18;
-            this.label10.Text = "40";
+            this.label10.Text = "39";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label11
@@ -234,7 +234,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(24, 16);
             this.label11.TabIndex = 17;
-            this.label11.Text = "30";
+            this.label11.Text = "29";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label12
@@ -245,7 +245,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(24, 16);
             this.label12.TabIndex = 16;
-            this.label12.Text = "20";
+            this.label12.Text = "19";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label13
@@ -255,9 +255,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label13.ImageAlign = System.Drawing.ContentAlignment.TopRight;
             this.label13.Location = new System.Drawing.Point(892, 50);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(24, 16);
+            this.label13.Size = new System.Drawing.Size(16, 16);
             this.label13.TabIndex = 15;
-            this.label13.Text = "10";
+            this.label13.Text = "9";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label8
@@ -299,15 +299,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.label17.Size = new System.Drawing.Size(68, 13);
             this.label17.TabIndex = 25;
             this.label17.Text = "Archetype:";
-            // 
-            // pbGraph
-            // 
-            this.pbGraph.BackColor = System.Drawing.Color.Black;
-            this.pbGraph.Location = new System.Drawing.Point(257, 344);
-            this.pbGraph.Name = "pbGraph";
-            this.pbGraph.Size = new System.Drawing.Size(360, 94);
-            this.pbGraph.TabIndex = 26;
-            this.pbGraph.TabStop = false;
             // 
             // btnAddNewTable
             // 
@@ -360,16 +351,26 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.lblRevisionDate.TabIndex = 29;
             this.lblRevisionDate.Text = "DD/MM/AAAA";
             // 
+            // pbGraph
+            // 
+            this.pbGraph.BackColor = System.Drawing.Color.Black;
+            this.pbGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbGraph.Location = new System.Drawing.Point(257, 344);
+            this.pbGraph.Name = "pbGraph";
+            this.pbGraph.Size = new System.Drawing.Size(360, 94);
+            this.pbGraph.TabIndex = 30;
+            this.pbGraph.TabStop = false;
+            // 
             // frmEditAttribMod
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(928, 450);
+            this.Controls.Add(this.pbGraph);
             this.Controls.Add(this.lblRevisionDate);
             this.Controls.Add(this.lblRevision);
             this.Controls.Add(this.bnRemoveTable);
             this.Controls.Add(this.btnAddNewTable);
-            this.Controls.Add(this.pbGraph);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.cbArchetype);
             this.Controls.Add(this.label16);
@@ -397,8 +398,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Name = "frmEditAttribMod";
             this.Text = "AttribMod Editor";
             this.Load += new System.EventHandler(this.frmEditAttribMod_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lblRevision)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -428,11 +429,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox cbArchetype;
-        private System.Windows.Forms.PictureBox pbGraph;
         private Button btnAddNewTable;
         private Button bnRemoveTable;
-        private Label[] dgCells;
+        private Control[] dgCells;
         private NumericUpDown lblRevision;
         private TextBox lblRevisionDate;
+        private PictureBox pbGraph;
     }
 }

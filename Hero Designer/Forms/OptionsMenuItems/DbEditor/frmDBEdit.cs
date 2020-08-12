@@ -7,60 +7,47 @@ using Base.Master_Classes;
 using Hero_Designer.Forms.JsonImport;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
     public partial class frmDBEdit : Form
     {
-        Button btnClose;
+        private Button btnClose;
+        private Button btnCSV;
+        private Button btnDate;
+        private Button btnEditEnh;
+        private Button btnEditEntity;
+        private Button btnEditIOSetPvE;
+        private Button btnEditIOSetPvP;
+        private Button btnFileReport;
+        private Button btnPSBrowse;
+        private Button btnRecipe;
+        private Button btnSalvage;
+        private Button exportIndexes;
+        private GroupBox GroupBox1;
+        private Label Label1;
+        private Label Label11;
+        private Label Label13;
+        private Label Label15;
+        private Label Label2;
+        private Label Label3;
+        private Label Label4;
+        private Label Label5;
+        private Label Label6;
+        private Label Label7;
+        private Label Label9;
+        private Label lblCountAT;
+        private Label lblCountEnh;
+        private Label lblCountFX;
+        private Label lblCountIOSet;
+        private Label lblCountPS;
+        private Label lblCountPwr;
+        private Label lblCountRecipe;
+        private Label lblCountSalvage;
+        private Label lblDate;
+        private TextBox txtDBVer;
 
-        Button btnCSV;
-
-        Button btnDate;
-
-        Button btnEditEnh;
-
-        Button btnEditEntity;
-
-        Button btnEditIOSetPvE;
-
-        Button btnEditIOSetPvP;
-
-        Button btnFileReport;
-
-        Button btnPSBrowse;
-
-        Button btnRecipe;
-
-        Button btnSalvage;
-        Button exportIndexes;
-        GroupBox GroupBox1;
-        Label Label1;
-        Label Label11;
-        Label Label13;
-        Label Label15;
-        Label Label2;
-        Label Label3;
-        Label Label4;
-        Label Label5;
-        Label Label6;
-        Label Label7;
-        Label Label9;
-        Label lblCountAT;
-        Label lblCountEnh;
-        Label lblCountFX;
-        Label lblCountIOSet;
-        Label lblCountPS;
-        Label lblCountPwr;
-        Label lblCountRecipe;
-        Label lblCountSalvage;
-        Label lblDate;
-
-        TextBox txtDBVer;
-
-
-        bool Initialized;
+        private bool Initialized;
         NumericUpDown UdIssue
         {
             get => udIssue;
@@ -88,83 +75,96 @@ namespace Hero_Designer
             Initialized = false;
             InitializeComponent();
             ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon)componentResourceManager.GetObject("$this.Icon", null);
             Name = nameof(frmDBEdit);
         }
 
-        void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
             Hide();
         }
 
-        void btnCSV_Click(object sender, EventArgs e)
+        private void btnCSV_Click(object sender, EventArgs e)
         {
-            new frmCSV().ShowDialog();
+            using frmCSV f = new frmCSV();
+            f.ShowDialog();
         }
 
-        void btnDate_Click(object sender, EventArgs e)
+        private void btnDate_Click(object sender, EventArgs e)
         {
             DatabaseAPI.Database.Date = DateTime.Now;
             DisplayInfo();
         }
 
-        void btnEditEnh_Click(object sender, EventArgs e)
+        private void btnEditEnh_Click(object sender, EventArgs e)
         {
-            new frmEnhEdit().ShowDialog();
+            using frmEnhEdit f = new frmEnhEdit();
+            f.ShowDialog();
             DisplayInfo();
         }
 
-        void btnEditEntity_Click(object sender, EventArgs e)
+        private void btnEditEntity_Click(object sender, EventArgs e)
         {
-            new frmEntityListing().ShowDialog();
+            using frmEntityListing f = new frmEntityListing();
+            f.ShowDialog();
         }
 
-        void btnEditIOSet_Click(object sender, EventArgs e)
+        private void btnEditIOSet_Click(object sender, EventArgs e)
         {
-            new frmSetListing().ShowDialog();
+            using (frmSetListing f = new frmSetListing())
+            {
+                f.ShowDialog();
+            }
             DisplayInfo();
         }
 
-        void btnEditIOSetPvP_Click(object sender, EventArgs e)
+        private void btnEditIOSetPvP_Click(object sender, EventArgs e)
         {
-            new frmSetListingPvP().ShowDialog();
+            using (frmSetListingPvP f = new frmSetListingPvP())
+            {
+                f.ShowDialog();
+            };
             DisplayInfo();
         }
 
-        void btnFileReport_Click(object sender, EventArgs e)
+        private void btnFileReport_Click(object sender, EventArgs e)
         {
-            Interaction.MsgBox(Files.FileData, MsgBoxStyle.Information, "File Loading Report");
+            MessageBox.Show(Files.FileData, "File Loading Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        void btnPSBrowse_Click(object sender, EventArgs e)
+        private void btnPSBrowse_Click(object sender, EventArgs e)
         {
-            new frmPowerBrowser().ShowDialog();
+            using (frmPowerBrowser f = new frmPowerBrowser())
+            {
+                f.ShowDialog();
+            }
             DisplayInfo();
         }
 
-        void btnRecipe_Click(object sender, EventArgs e)
+        private void btnRecipe_Click(object sender, EventArgs e)
         {
-            new frmRecipeEdit().ShowDialog();
+            using frmRecipeEdit f = new frmRecipeEdit();
+            f.ShowDialog();
         }
 
-        void btnSalvage_Click(object sender, EventArgs e)
+        private void btnSalvage_Click(object sender, EventArgs e)
 
         {
-            new frmSalvageEdit().ShowDialog();
+            using frmSalvageEdit f = new frmSalvageEdit();
+            f.ShowDialog();
         }
 
         public void DisplayInfo()
         {
-            if (MainModule.MidsController.Toon == null)
-                return;
+            if (MainModule.MidsController.Toon == null) return;
             lblDate.Text = Strings.Format(DatabaseAPI.Database.Date, "dd/MM/yyyy");
             UdIssue.Value = Convert.ToDecimal(DatabaseAPI.Database.Issue);
-            lblCountAT.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length);
+            lblCountAT.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length, null);
             lblCountEnh.Text = Strings.Format(DatabaseAPI.Database.Enhancements.Length, "#,###,##0");
             lblCountIOSet.Text = Strings.Format(DatabaseAPI.Database.EnhancementSets.Count, "#,###,##0");
             lblCountPS.Text = Strings.Format(DatabaseAPI.Database.Powersets.Length, "#,###,##0");
             lblCountPwr.Text = Strings.Format(DatabaseAPI.Database.Power.Length, "#,###,##0");
-            txtDBVer.Text = Convert.ToString(DatabaseAPI.Database.Version);
+            txtDBVer.Text = Convert.ToString(DatabaseAPI.Database.Version, null);
             int num1 = 0;
             int num2 = DatabaseAPI.Database.Power.Length - 1;
             for (int index = 0; index <= num2; ++index)
@@ -179,7 +179,7 @@ namespace Hero_Designer
             Initialized = true;
         }
 
-        void frmDBEdit_Load(object sender, EventArgs e)
+        private void frmDBEdit_Load(object sender, EventArgs e)
         {
             btnDate.Visible = MidsContext.Config.MasterMode;
             btnCSV.Visible = MidsContext.Config.MasterMode;
@@ -191,25 +191,22 @@ namespace Hero_Designer
             DisplayInfo();
         }
 
-        void txtDBVer_TextChanged(object sender, EventArgs e)
+        private void txtDBVer_TextChanged(object sender, EventArgs e)
         {
-            float num = Convert.ToSingle(txtDBVer.Text);
-            if (num < 1.0)
-                num = 1f;
+            float num = Convert.ToSingle(txtDBVer.Text, null);
+            if (num < 1.0) num = 1f;
             DatabaseAPI.Database.Version = num;
         }
 
-        void udIssue_KeyPress(object sender, KeyPressEventArgs e)
+        private void udIssue_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!MainModule.MidsController.IsAppInitialized)
-                return;
+            if (!MainModule.MidsController.IsAppInitialized) return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
         }
 
-        void udIssue_ValueChanged(object sender, EventArgs e)
+        private void udIssue_ValueChanged(object sender, EventArgs e)
         {
-            if (!MainModule.MidsController.IsAppInitialized || !Initialized)
-                return;
+            if (!MainModule.MidsController.IsAppInitialized || !Initialized) return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
         }
 
@@ -221,12 +218,14 @@ namespace Hero_Designer
 
         private void btnJsonImporter_Click(object sender, EventArgs e)
         {
-            new frmJsonImportMain().ShowDialog();
+            using frmJsonImportMain f = new frmJsonImportMain();
+            f.ShowDialog();
         }
 
         private void btnAttribModEdit_Click(object sender, EventArgs e)
         {
-            new frmEditAttribMod().ShowDialog();
+            using frmEditAttribMod f = new frmEditAttribMod();
+            f.ShowDialog();
         }
     }
 }

@@ -4626,7 +4626,10 @@ namespace Hero_Designer
         void tsAdvDBEdit_Click(object sender, EventArgs e)
         {
             FloatTop(false);
-            new frmDBEdit().ShowDialog(this);
+            using (frmDBEdit f = new frmDBEdit())
+            {
+                f.ShowDialog(this);
+            }
             FloatTop(true);
         }
 

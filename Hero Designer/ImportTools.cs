@@ -154,11 +154,11 @@ namespace HeroViewer
             switch (validateType)
             {
                 case Enums.eValidationType.Powerset:
-                    excludes = this.excludePowersets;
+                    excludes = excludePowersets;
                     break;
 
                 case Enums.eValidationType.Power:
-                    excludes = this.excludePowers;
+                    excludes = excludePowers;
                     break;
 
                 default:
@@ -174,7 +174,7 @@ namespace HeroViewer
         {
             if (input == null) return false;
 
-            return !this.excludePowersets.Any(x => input.FullName.Contains(x));
+            return !excludePowersets.Any(x => input.FullName.Contains(x));
         }
 
         // CheckValid, for direct powerset result
@@ -183,7 +183,7 @@ namespace HeroViewer
         {
             if (input == null) return false;
 
-            return !this.excludePowers.Any(x => input.FullName.Contains(x));
+            return !excludePowers.Any(x => input.FullName.Contains(x));
         }
 
         protected string FixKheldPowerNames(string powerName)
@@ -196,12 +196,12 @@ namespace HeroViewer
 
         public UniqueList<string> GetPowersets()
         {
-            return this.PowerSets;
+            return PowerSets;
         }
 
         public RawCharacterInfo GetCharacterInfo()
         {
-            return this.CharacterInfo;
+            return CharacterInfo;
         }
     }
 
@@ -213,9 +213,9 @@ namespace HeroViewer
         private readonly int HeaderSize = 4; // Number of lines before actual build data
         public ImportFromBuildsave(string buildString)
         {
-            this.BuildString = buildString;
-            this.PowerSets = new UniqueList<string>();
-            this.CharacterInfo = new RawCharacterInfo();
+            BuildString = buildString;
+            PowerSets = new UniqueList<string>();
+            CharacterInfo = new RawCharacterInfo();
         }
 
         public List<PowerEntry>? Parse()
