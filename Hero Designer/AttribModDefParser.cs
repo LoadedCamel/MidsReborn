@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 namespace Hero_Designer
 {
@@ -18,10 +20,10 @@ namespace Hero_Designer
 
         private int[] FindBlockBrackets(string src, int offset, int indent = 0)
         {
-            Regex r1 = new Regex(@"^" + (indent > 0 ? string.Concat(Enumerable.Repeat(Indent, indent)) : "") + "{{",
+            Regex r1 = new Regex(@"^(" + (indent > 0 ? string.Concat(Enumerable.Repeat(Indent, indent)) : "") + "{)",
                 RegexOptions.CultureInvariant | RegexOptions.Multiline);
 
-            Regex r2 = new Regex(@"^" + (indent > 0 ? string.Concat(Enumerable.Repeat(Indent, indent)) : "") + "}}",
+            Regex r2 = new Regex(@"^(" + (indent > 0 ? string.Concat(Enumerable.Repeat(Indent, indent)) : "") + "})",
                 RegexOptions.CultureInvariant | RegexOptions.Multiline);
 
             Match m1 = r1.Match(src, offset);
@@ -34,38 +36,60 @@ namespace Hero_Designer
             };
         }
 
-        private Dictionary<string, Dictionary<string, float[]>> ParseBlock(string src = "", string keyword = "Class", int indent = 0)
+        private void ParseBlock(ref Dictionary<string, Dictionary<string, float[]>> res, string src = "", string keyword = "Class", int indent = 0, string className = "", string modName = "")
         {
-            Dictionary<string, Dictionary<string, float[]>> res = new Dictionary<string, Dictionary<string, float[]>>();
-
             if (string.IsNullOrEmpty(src)) src = Cnt;
-            int offset = 0;
 
-            while (src.IndexOf((indent > 0 ? string.Concat(Enumerable.Repeat(Indent, indent)) : "") + keyword, offset, StringComparison.InvariantCulture) > -1)
+            if (keyword == "ModTableValues")
             {
-                offset = src.IndexOf((indent > 0 ? string.Concat(Enumerable.Repeat(Indent, indent)) : "") + keyword, offset, StringComparison.InvariantCulture) + keyword.Length + 1;
+                Regex rValues = new Regex(@"Values ([0-9\.\-\s\,]+)",
+                    RegexOptions.CultureInvariant | RegexOptions.Multiline);
+                float[] values = new Regex(@"\s*,\s*")
+                    .Split(rValues.Match(src).Groups[1].Value.Replace("Values ", ""))
+                    .Where(e => float.TryParse(e, out float dummy))
+                    .Select(e => (float)Convert.ToDecimal(e, null))
+                    .ToArray();
+
+                res[className][modName] = new float[values.Length];
+                Array.Copy(values, res[className][modName], values.Length);
+
+                return;
+            }
+            
+            int offset = 0;
+            while (src.IndexOf((indent > 0 ? string.Concat(Enumerable.Repeat(Indent, indent)) : "") + keyword,
+                offset, StringComparison.InvariantCulture) > -1)
+            {
+                offset = src.IndexOf((indent > 0 ? string.Concat(Enumerable.Repeat(Indent, indent)) : "") + keyword,
+                    offset, StringComparison.InvariantCulture) + keyword.Length + 1;
                 int[] range = FindBlockBrackets(src, offset, indent);
                 string blockStr = src.Substring(range[0], range[1] - range[0]);
-                Regex rName = new Regex(@"Name ([A-Za-z0-9\-_]+)", RegexOptions.CultureInvariant | RegexOptions.Multiline);
-                MatchCollection mName = rName.Matches(blockStr);
-                if (mName.Count == 0) break;
-                if (keyword == "Class")
+                offset += range[1] - range[0];
+                Regex rName;
+                switch (keyword)
                 {
-                    res.Add(mName[1].Value, ParseBlock(blockStr, "ModTable", indent + 1)["ModTable"]);
-                }
-                else
-                {
-                    Regex rValues = new Regex(@"Values ([0-9\.\-\s\,]+)", RegexOptions.CultureInvariant | RegexOptions.Multiline);
-                    float[] values = new Regex(@"\s*,\s*")
-                        .Split(blockStr)
-                        .Where(e => float.TryParse(e, out float dummy))
-                        .Select(e => (float)Convert.ToDecimal(e, null))
-                        .ToArray();
+                    case "Class":
+                        rName = new Regex(@"Name (Class_[A-Za-z0-9\-_]+)",
+                            RegexOptions.CultureInvariant | RegexOptions.Multiline);
+                        className = rName.Match(blockStr).Groups[1].Value.Replace(Indent, "").Replace("Name ", "");
+                        res.Add(className, new Dictionary<string, float[]>());
+                        ParseBlock(ref res, blockStr, "ModTable", indent + 1, className);
+                        break;
 
-                    res.Add("ModTable", new Dictionary<string, float[]>());
-                    res["ModTable"].Add(mName[1].Value, values);
+                    case "ModTable":
+                        rName = new Regex(@"Name ([A-Za-z0-9\-_]+)");
+                        modName = rName.Match(blockStr).Groups[1].Value.Replace(Indent, "").Replace("Name ", "");
+                        res[className].Add(modName, Array.Empty<float>());
+                        ParseBlock(ref res, blockStr, "ModTableValues", indent + 1, className, modName);
+                        break;
                 }
             }
+        }
+
+        public Dictionary<string, Dictionary<string, float[]>> ParseMods()
+        {
+            Dictionary<string, Dictionary<string, float[]>> res = new Dictionary<string, Dictionary<string, float[]>>();
+            ParseBlock(ref res);
 
             return res;
         }
