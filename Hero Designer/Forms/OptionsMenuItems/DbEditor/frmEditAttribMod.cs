@@ -107,7 +107,68 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnImportDef_Click(object sender, EventArgs e)
         {
-            // Todo
+            using OpenFileDialog f = new OpenFileDialog()
+            {
+                Title = "Select DEF source",
+                DefaultExt = "txt",
+                Filter = "Text files(*.txt)|*.txt|DEF files(*.def)|*.def|All files(*.*)|*.*",
+                FilterIndex = 0,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                Multiselect = false
+            };
+
+            DialogResult r = f.ShowDialog();
+            if (r != DialogResult.OK) return;
+
+            AttribModDefParser defParser = new AttribModDefParser(f.FileNames[0]);
+            Dictionary<string, Dictionary<string, float[]>> parsedDefs = defParser.ParseMods();
+
+            if (parsedDefs.Count == 0) return;
+
+            int nAt = parsedDefs.Count;
+            int nTables = 0;
+            foreach (KeyValuePair<string, Dictionary<string, float[]>> el in parsedDefs)
+            {
+                foreach (var _ in parsedDefs[el.Key]) nTables++;
+            }
+
+            r = MessageBox.Show(
+                Convert.ToString(nAt, null) + " Archetype" + (nAt != 1 ? "s" : "") + " found,\n" +
+                Convert.ToString(nTables, null) + " Tables found.\n\nProceed to import? This will overwrite current values.",
+                "DEF tables import", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (r != DialogResult.Yes) return;
+
+            Dictionary<string, int> modsIndexDictionary = new Dictionary<string, int>();
+            int i;
+            for (i = 0; i < TempAttribMods.Modifier.Length; i++)
+            {
+                modsIndexDictionary.Add(TempAttribMods.Modifier[i].ID, i);
+            }
+
+            Dictionary<string, int> atIndexDictionary = new Dictionary<string, int>();
+            for (i = 0; i < Database.Instance.Classes.Length; i++)
+            {
+                atIndexDictionary.Add(Database.Instance.Classes[i].ClassName, i);
+            }
+
+            foreach (KeyValuePair<string, Dictionary<string, float[]>> el in parsedDefs)
+            {
+                int atIdx = atIndexDictionary.ContainsKey(el.Key) ? atIndexDictionary[el.Key] : -1;
+                if (atIdx == -1) continue;
+
+                foreach (KeyValuePair<string, float[]> tData in parsedDefs[el.Key])
+                {
+                    int modIdx = modsIndexDictionary.ContainsKey(tData.Key) ? modsIndexDictionary[tData.Key] : -1;
+                    if (modIdx == -1) continue; // Todo: create mod table if new
+                    
+                    for (int k = 0; k < Math.Min(tData.Value.Length, TempAttribMods.Modifier[modIdx].Table.Length); k++)
+                    {   
+                        TempAttribMods.Modifier[modIdx].Table[k][atIdx] = parsedDefs[el.Key][tData.Key][k];
+                    }
+                }
+            }
         }
 
         private void dgCellsLabel_MouseEnter(object sender, EventArgs e)
