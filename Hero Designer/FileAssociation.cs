@@ -8,7 +8,7 @@ using Microsoft.Win32;
 namespace Hero_Designer
 {
     // 2 possibilities, the actual direct association, and the open with list options
-    public static class FileAssocation
+    public static class FileAssociation
     {
         const string MRUListValueName = "MRUList";
         const string FileKeyName = "Mids_Reborn_File";
@@ -16,7 +16,7 @@ namespace Hero_Designer
         //So basically the issue is that the open command doesn't always get properly set in the registry. The registry entry you need to modify is:
         //HKEY_CURRENT_USER\Software\Classes\Applications\Hero Designer.exe\shell\open\command
 
-        //If that either doesn't have a value or is set to the wrong value change it to the correct path and then try again. Alternatively you can modif the file association directly using the registry key:
+        //If that either doesn't have a value or is set to the wrong value change it to the correct path and then try again. Alternatively you can modify the file association directly using the registry key:
         //HKEY_CURRENT_USER\Software\Classes\mxd_auto_file\shell\open\command
 
         // found in registry win 10: Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.mxd\OpenWithList
@@ -34,10 +34,9 @@ namespace Hero_Designer
         }
         static bool CheckSubKeyValue(RegistryKey parentKey, string subkeyPath, Func<RegistryKey, bool> keyCheckIfExists)
         {
-            using (var subkey = parentKey.OpenSubKey(subkeyPath, writable: false))
-            {
-                return subkey != null && keyCheckIfExists(subkey);
-            }
+            using var subkey = parentKey.OpenSubKey(subkeyPath, writable: false);
+            
+            return subkey != null && keyCheckIfExists(subkey);
         }
 
         public static bool GetIsAssociated(string fullExePath) =>
@@ -59,19 +58,16 @@ namespace Hero_Designer
                 {
                     if (shell == null) return false;
                     var expected = "\"" + openWith + "\"" + " \"%1\"";
-                    if (!CheckSubKeyValue(shell, "edit\\command", key => (string)key.GetValue("") == expected))
-                        return false;
-                    if (!CheckSubKeyValue(shell, "open\\command", key => (string)key.GetValue("") == expected))
-                        return false;
+                    if (!CheckSubKeyValue(shell, "edit\\command", key => (string)key.GetValue("") == expected)) return false;
+                    if (!CheckSubKeyValue(shell, "open\\command", key => (string)key.GetValue("") == expected)) return false;
                 }
             }
-
 
             using (var uc = Registry.CurrentUser.OpenSubKey($@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\{extension}\UserChoice", writable: false))
             {
                 if ((string)uc.GetValue("Progid") != keyName) return false;
-
             }
+
             return true;
         }
 
@@ -102,7 +98,7 @@ namespace Hero_Designer
                 var mru = owlKey.GetValue(MRUListValueName);
                 var itemNames = owlKey.GetValueNames().Where(name => name != null && name != "(Default)" && name != MRUListValueName).ToArray();
                 // already present
-                if (itemNames.Any(name => string.Equals(MidsContext.AssemblyName, (string)owlKey.GetValue(name)))) return false;
+                if (itemNames.Any(name => string.Equals(MidsContext.AssemblyName, (string)owlKey.GetValue(name), StringComparison.Ordinal))) return false;
                 // error condition-ish
                 if (itemNames.Any(name => name.Length > 1))
                     return false;
@@ -149,12 +145,12 @@ namespace Hero_Designer
 
             var currentUser = Registry.CurrentUser.CreateSubKey(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + extension);
             if (currentUser != null)
-                using (var uc =
+            {
+                using var uc =
                     currentUser.OpenSubKey("UserChoice", RegistryKeyPermissionCheck.ReadWriteSubTree,
-                        RegistryRights.FullControl) ?? currentUser.CreateSubKey("UserChoice", true))
-                {
-                    uc.SetValue("Progid", keyName, RegistryValueKind.String);
-                }
+                        RegistryRights.FullControl) ?? currentUser.CreateSubKey("UserChoice", true);
+                uc.SetValue("Progid", keyName, RegistryValueKind.String);
+            }
 
             // Delete the key instead of trying to change it
             currentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\" + extension, true);
@@ -170,6 +166,5 @@ namespace Hero_Designer
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
-
     }
 }

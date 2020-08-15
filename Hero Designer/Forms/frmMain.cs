@@ -217,7 +217,7 @@ namespace Hero_Designer
             dvAnchored.Moved += dvAnchored_Move;
             dvAnchored.TabChanged += dvAnchored_TabChanged;
             var componentResourceManager = new ComponentResourceManager(typeof(frmMain));
-            var icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var icon = (Icon)componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
             Icon = icon;
             Name = nameof(frmMain);
         }
@@ -225,7 +225,7 @@ namespace Hero_Designer
         // [Zed 06/01/20]
         // Input: argv: string[] Command line parameters, value: argument value to look for, caseSensitive: bool, perform case (in)sensitive lookup
         // Output: bool, target value has (not) been found
-        bool findCommandLineParameter(string[] argv, string value, bool caseSensitive = true)
+        bool FindCommandLineParameter(string[] argv, string value, bool caseSensitive = true)
         {
             // Only inspect first 10 arguments,
             // skip first argument (aka %0), since it is the executable path.
@@ -283,7 +283,7 @@ namespace Hero_Designer
                 }
 
                 string[] args = Environment.GetCommandLineArgs();
-                if (findCommandLineParameter(args, "RECOVERY"))
+                if (FindCommandLineParameter(args, "RECOVERY"))
                 {
                     MessageBox.Show(
                         "As recovery mode has been invoked, you will be redirected to the download site for the most recent full install package.",
@@ -293,7 +293,7 @@ namespace Hero_Designer
                     return;
                 }
 
-                if (findCommandLineParameter(args, "MASTERMODE=YES"))
+                if (FindCommandLineParameter(args, "MASTERMODE=YES"))
                     MidsContext.Config.MasterMode = true;
                 MainModule.MidsController.LoadData(ref iFrm);
                 iFrm?.SetMessage("Setting up UI...");

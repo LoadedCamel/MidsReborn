@@ -89,7 +89,7 @@
     </Compile>
     <Compile Include="GenFreebies.cs" />
     <Compile Include="BuildImportTools.cs" />
-    <Compile Include="FileAssocation.cs" />
+    <Compile Include="FileAssociation.cs" />
     <Compile Include="Forms\frmUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
