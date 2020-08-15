@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Base;
 using Base.Data_Classes;
 using Hero_Designer.My;
 using midsControls;
+using Newtonsoft.Json;
 using ContentAlignment = System.Drawing.ContentAlignment;
 
 namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
@@ -62,12 +64,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
             Modifiers.ModifierTable table = new Modifiers.ModifierTable(Database.Instance.Classes.Length)
             {
-                BaseIndex = TempAttribMods.Modifier.Length - 1,
+                BaseIndex = TempAttribMods.Modifier.Length - 1, // Zed: This may not be correct, but this field is not used anywhere.
                 ID = tableName
             };
             _ = TempAttribMods.Modifier.Append(table);
 
-            UpdateModifiersList(table.BaseIndex);
+            UpdateModifiersList(TempAttribMods.Modifier.Length - 1);
         }
 
         private void bnRemoveTable_Click(object sender, EventArgs e)
@@ -97,19 +99,79 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnImportCsv_Click(object sender, EventArgs e)
         {
-            // Todo
+            if (listBoxTables.SelectedIndex < 0 || cbArchetype.SelectedIndex < 0) return;
+            
+            using OpenFileDialog f = new OpenFileDialog()
+            {
+                Title = "Select CSV source for " + listBoxTables.Items[listBoxTables.SelectedIndex],
+                DefaultExt = "csv",
+                Filter = "CSV files(*.csv)|*.csv|Text files(*.txt)|*.txt|All files(*.*)|*.*",
+                FilterIndex = 0,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                Multiselect = false
+            };
+
+            DialogResult r = f.ShowDialog();
+            if (r != DialogResult.OK) return;
+
+            int atIdx = cbArchetype.SelectedIndex;
+            int modIdx = listBoxTables.SelectedIndex;
+            string[] csvLines = File.ReadAllLines(f.FileNames[0]);
+            float[] table = CSV.ToArray(csvLines[0]).Select(e => float.Parse(e, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture)).ToArray();
+
+            for (int i = 0; i < TempAttribMods.Modifier[listBoxTables.SelectedIndex].Table.Length; i++)
+            {
+                TempAttribMods.Modifier[modIdx].Table[i][atIdx] = table[i];
+            }
+
+            PopulateTableGrid(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
+            DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
         }
 
         private void btnImportJson_Click(object sender, EventArgs e)
         {
-            // Todo
+            using OpenFileDialog f = new OpenFileDialog()
+            {
+                Title = "Select JSON source",
+                DefaultExt = "json",
+                Filter = "JSON files(*.json)|*.json|All files(*.*)|*.*",
+                FilterIndex = 0,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                Multiselect = false
+            };
+
+            DialogResult r = f.ShowDialog();
+            if (r != DialogResult.OK) return;
+
+            Modifiers m = new Modifiers();
+            m = JsonConvert.DeserializeObject<Modifiers>(File.ReadAllText(f.FileNames[0]));
+
+            int nAt = m.Modifier[0].Table.Length;
+            int nMods = m.Modifier.Length;
+
+            r = MessageBox.Show(
+                Convert.ToString(nAt, null) + " Archetype" + (nAt != 1 ? "s" : "") + " found,\n" +
+                Convert.ToString(nMods, null) + " Mod" + (nMods!= 1 ? "s" : "") + " found.\n\nProceed to import? This will overwrite current values.\n",
+                "JSON tables import", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (r != DialogResult.Yes) return;
+
+            TempAttribMods = (Modifiers)m.Clone();
+
+            lblRevision.Text = Convert.ToString(TempAttribMods.Revision, null);
+            lblRevisionDate.Text = TempAttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
+
+            UpdateModifiersList();
+            UpdateClassesList();
         }
 
         private void btnImportDef_Click(object sender, EventArgs e)
         {
             using OpenFileDialog f = new OpenFileDialog()
             {
-                Title = "Select DEF source",
+                Title = "Select DEF classes source",
                 DefaultExt = "txt",
                 Filter = "Text files(*.txt)|*.txt|DEF files(*.def)|*.def|All files(*.*)|*.*",
                 FilterIndex = 0,
@@ -124,18 +186,19 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             AttribModDefParser defParser = new AttribModDefParser(f.FileNames[0]);
             Dictionary<string, Dictionary<string, float[]>> parsedDefs = defParser.ParseMods();
 
-            if (parsedDefs.Count == 0) return;
+            if (parsedDefs.Count == 0)
+            {
+                MessageBox.Show("No mod tables found.", "Bloop", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             int nAt = parsedDefs.Count;
-            int nTables = 0;
-            foreach (KeyValuePair<string, Dictionary<string, float[]>> el in parsedDefs)
-            {
-                foreach (var _ in parsedDefs[el.Key]) nTables++;
-            }
+            int nTables = parsedDefs.Sum(el => parsedDefs[el.Key].Count);
 
             r = MessageBox.Show(
                 Convert.ToString(nAt, null) + " Archetype" + (nAt != 1 ? "s" : "") + " found,\n" +
-                Convert.ToString(nTables, null) + " Tables found.\n\nProceed to import? This will overwrite current values.",
+                Convert.ToString(nTables, null) + " Table" + (nTables != 1 ? "s" : "") + " found.\n\nProceed to import? This will overwrite current values.\n" +
+                "Note: new tables will -not- be created.",
                 "DEF tables import", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (r != DialogResult.Yes) return;
@@ -169,6 +232,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     }
                 }
             }
+
+            lblRevision.Text = Convert.ToString(TempAttribMods.Revision, null);
+            lblRevisionDate.Text = TempAttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
+
+            UpdateModifiersList();
+            UpdateClassesList();
         }
 
         private void dgCellsLabel_MouseEnter(object sender, EventArgs e)
