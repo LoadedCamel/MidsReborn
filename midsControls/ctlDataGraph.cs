@@ -29,7 +29,7 @@ namespace midsControls
             private bool DetectPlateau = false;
             private float? IgnoreValue = 0;
             private GraphColorOptions ColorOptions = new GraphColorOptions();
-            private Padding InnerPadding = new Padding(15, 8, 8, 15);
+            private Padding InnerPadding = new Padding(32, 8, 8, 15);
             private bool DrawDots = false;
             private int DotRadius = 1;
             private Size BitmapDimensions;
@@ -129,45 +129,53 @@ namespace midsControls
                 float xMax = DataSeries.Count;
                 float yMin;
                 float yMax;
+                float yMinR;
+                float yMaxR;
                 float xPlateau = float.NegativeInfinity;
                 float v;
 
                 if (DataSeries.Count == 0) return;
 
-                v = DataSeries.First(); // Only because it needs to be forcibly initialized.
                 yMin = DataSeries.Min();
                 yMax = DataSeries.Max();
 
-                for (i = DataSeries.Count - 1; i > 0; i--)
+                yMinR = float.PositiveInfinity;
+                yMaxR = float.NegativeInfinity;
+                for (i = 0; i < DataSeries.Count; i++)
                 {
-                    if (IgnoreValue == null || DataSeries[i] == IgnoreValue) continue;
-                    v = DataSeries[i];
-                    break;
+                    if (DataSeries[i] < yMinR && DataSeries[i] != IgnoreValue) yMinR = DataSeries[i];
+                    if (DataSeries[i] > yMaxR && DataSeries[i] != IgnoreValue) yMaxR = DataSeries[i];
                 }
 
-                for (i = DataSeries.Count - 1; i > 0; i--)
+                if (DataSeries.Count(e => e == DataSeries[0]) == DataSeries.Count)
                 {
-                    if (DataSeries[i] == v || i >= DataSeries.Count - 2) continue;
-                    xPlateau = i + 1;
-                    break;
+                    xPlateau = xMin;
+                }
+                else
+                {
+                    v = IgnoreValue != null ? DataSeries.Last(e => e != IgnoreValue) : DataSeries.Last();
+                    for (i = DataSeries.Count - 1; i > 0; i--)
+                    {
+                        if (IgnoreValue == null)
+                        {
+                            if (DataSeries[i] == v) continue;
+                        }
+                        else
+                        {
+                            if (DataSeries[i] == v | DataSeries[i] == IgnoreValue) continue;
+                        }
+
+                        xPlateau = xMin + i + 1;
+                        break;
+                    }
                 }
 
                 Pen p;
                 Bitmap res = new Bitmap(BitmapDimensions.Width, BitmapDimensions.Height);
                 g.Clear(ColorOptions.BGColor);
 
-                /*
-                 * Layers:
-                 * Inner grid (dotted)
-                 * Axis
-                 * Lines
-                 * Dots
-                 * Plateau secondary X axis
-                 * Axis Values
-                */
-
-                float xScale = w / Math.Max(xMax - xMin, 1);
-                float yScale = h / Math.Max(yMax - yMin, 1);
+                float xScale = w / Math.Max(xMax - xMin, 0.001f);
+                float yScale = h / Math.Max(yMax - yMin, 0.001f);
 
                 #region Graph: Inner Grid
                 using (p = new Pen(ColorOptions.InnerGridColor) { DashStyle = DashStyle.Dot })
@@ -221,9 +229,16 @@ namespace midsControls
                 {
                     for (i = 0; i < Math.Min(50, DataSeries.Count); i++)
                     {
-                        if (IgnoreValue != null && DataSeries[i] == IgnoreValue) continue;
-                        val = DataSeries[i] * (reverseValues ? -1 : 1);
-                        val = h + InnerPadding.Top - val * yScale;
+                        if (IgnoreValue != null && DataSeries[i] == IgnoreValue && xPlateau > xMin) continue;
+                        if (xPlateau == xMin)
+                        {
+                            val = InnerPadding.Top + h / 2; // If all values are the same, vertically center the line
+                        }
+                        else
+                        {
+                            val = DataSeries[i] * (reverseValues ? -1 : 1);
+                            val = h + InnerPadding.Top - (val - (reverseValues ? Math.Abs(yMax) : yMin)) * yScale;
+                        }
                         dataPoints.Add(new Point((int)(i * xScale + InnerPadding.Left), (int)val));
                     }
 
@@ -265,27 +280,35 @@ namespace midsControls
                 #endregion
 
                 #region Axis values
-                using Font segoeFont = new Font("Segoe UI", 7, FontStyle.Regular, GraphicsUnit.Pixel);
+                using Font segoeFont = new Font("Segoe UI", 9, FontStyle.Regular, GraphicsUnit.Pixel);
                 using Brush txtBrush = new SolidBrush(ColorOptions.AxisValuesColor);
-                TextFormatFlags sf = TextFormatFlags.HorizontalCenter | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+                TextFormatFlags sfH = TextFormatFlags.Left | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+                TextFormatFlags sfV = TextFormatFlags.Right | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-                TextRenderer.DrawText(g, "0", segoeFont,
-                    new Point(Math.Max(0, InnerPadding.Left - 5),
-                    Math.Min(h + InnerPadding.Vertical - 7, h + InnerPadding.Top + 5)),
-                    ColorOptions.AxisValuesColor,
-                    Color.Transparent,
-                    sf);
-                
-                for (i = (int)xMin + 10; i <= xMax; i += 10)
+                for (i = (int)xMin; i <= xMax; i += 10)
                 {
-                    TextRenderer.DrawText(g, Convert.ToString(i, null), segoeFont, new Point(
-                        (int) Math.Round(i * xScale) + InnerPadding.Left - 5,
-                        Math.Min(h + InnerPadding.Vertical, h + InnerPadding.Top + 5)), ColorOptions.AxisValuesColor, Color.Transparent, sf);
+                    TextRenderer.DrawText(g, Convert.ToString(i + 1, null), segoeFont, new Point(
+                        (int) Math.Round((i - xMin) * xScale) + InnerPadding.Left - (i < 10 ? 2 : 4),
+                        h + InnerPadding.Top + 7), ColorOptions.AxisValuesColor, Color.Transparent, sfH);
+                }
+
+                if (xPlateau > 0)
+                {
+                    float k = reverseValues ? Math.Abs(yMax) : yMin;
+                    for (i = 0; i < 6; i++)
+                    {
+                        TextRenderer.DrawText(g,
+                            Convert.ToString(Math.Round(k, Math.Abs(yMaxR - yMinR) < 1 ? 2 : 1), null), segoeFont,
+                            new Rectangle(1, InnerPadding.Top + h - h / 5 * i - 7,
+                                InnerPadding.Left - 5, 11),
+                            ColorOptions.AxisValuesColor, Color.Transparent,
+                            sfV);
+
+                        k += Math.Abs(yMax - yMin) / 5;
+                    }
                 }
 
                 #endregion
-
-                //g.DrawImage(img, new Point(0, 0));
             }
 
             private bool CheckAllNegativeValues()
