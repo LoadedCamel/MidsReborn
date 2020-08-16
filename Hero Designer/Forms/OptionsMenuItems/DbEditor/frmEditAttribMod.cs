@@ -465,9 +465,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             }
 
             pbGraph.Graph.SetSize(new Size(pbGraph.Width, pbGraph.Height));
-            pbGraph.Graph.SetOption("SmoothDraw", smoothDraw);
-            pbGraph.Graph.SetOption("DetectPlateau", detectPlateau);
-            pbGraph.Graph.SetOption("IgnoreValue", ignoreValue);
+            pbGraph.Graph.SmoothDraw = smoothDraw;
+            pbGraph.Graph.DetectPlateau = detectPlateau;
+            pbGraph.Graph.IgnoreValue = ignoreValue;
 
             pbGraph.Graph.SetDataPoints(dataSeries);
             pbGraph.Refresh();
