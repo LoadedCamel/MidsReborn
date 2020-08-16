@@ -78,7 +78,6 @@
   <PropertyGroup />
   <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
-    <Compile Include="DataGraph.cs" />
     <Compile Include="clsZip.cs" />
     <Compile Include="clsHook.cs" />
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.cs">

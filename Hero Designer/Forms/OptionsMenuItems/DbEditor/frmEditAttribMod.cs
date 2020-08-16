@@ -17,12 +17,10 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
     public partial class frmEditAttribMod : Form
     {
         private Modifiers TempAttribMods = new Modifiers();
-        private DataGraph GraphViewer;
 
         public frmEditAttribMod()
         {
             InitializeComponent();
-            GraphViewer = new DataGraph(new Size(pbGraph.Width, pbGraph.Height));
         }
 
         private void frmEditAttribMod_Load(object sender, EventArgs e)
@@ -466,12 +464,13 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 }
             }
 
-            GraphViewer.SetOption("SmoothDraw", smoothDraw);
-            GraphViewer.SetOption("DetectPlateau", detectPlateau);
-            GraphViewer.SetOption("IgnoreValue", ignoreValue);
+            pbGraph.Graph.SetSize(new Size(pbGraph.Width, pbGraph.Height));
+            pbGraph.Graph.SetOption("SmoothDraw", smoothDraw);
+            pbGraph.Graph.SetOption("DetectPlateau", detectPlateau);
+            pbGraph.Graph.SetOption("IgnoreValue", ignoreValue);
 
-            GraphViewer.SetDataPoints(dataSeries);
-            pbGraph.Image = GraphViewer.Draw();
+            pbGraph.Graph.SetDataPoints(dataSeries);
+            pbGraph.Refresh();
         }
     }
 }
