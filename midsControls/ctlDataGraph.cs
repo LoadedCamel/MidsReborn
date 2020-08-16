@@ -23,15 +23,16 @@ namespace midsControls
                 public Color AxisColor = Color.Silver;
                 public Color InnerGridColor = Color.DarkGray;
                 public Color AxisValuesColor = Color.Gainsboro;
+                public Color AxisPlateauColor = Color.DeepSkyBlue;
             }
 
-            private bool SmoothDraw = true; // Use Bezier curves instead of lines
-            private bool DetectPlateau = false;
-            private float? IgnoreValue = 0;
+            public bool SmoothDraw = true; // Use Bezier curves instead of lines
+            public bool DetectPlateau = false;
+            public float? IgnoreValue = 0;
             private GraphColorOptions ColorOptions = new GraphColorOptions();
             private Padding InnerPadding = new Padding(32, 8, 8, 15);
-            private bool DrawDots = false;
-            private int DotRadius = 1;
+            public bool DrawDots = false;
+            public int DotRadius = 1;
             private Size BitmapDimensions;
             private List<float> DataSeries;
 
@@ -46,67 +47,7 @@ namespace midsControls
             {
                 BitmapDimensions = new Size(s.Width, s.Height);
             }
-
-            public bool SetOption(string option, bool value)
-            {
-                Type t = typeof(DataGraph);
-                PropertyInfo info = t.GetProperty(option);
-                if (info == null || !info.CanWrite) return false;
-                if (!(info.PropertyType == typeof(bool))) return false;
-
-                info.SetValue(this, value, null);
-
-                return true;
-            }
-
-            public bool SetOption(string option, float? value)
-            {
-                Type t = typeof(DataGraph);
-                PropertyInfo info = t.GetProperty(option);
-                if (info == null || !info.CanWrite) return false;
-                if (!(info.PropertyType == typeof(float?))) return false;
-
-                info.SetValue(this, value, null);
-
-                return true;
-            }
-
-            public bool SetOption(string option, int value)
-            {
-                Type t = typeof(DataGraph);
-                PropertyInfo info = t.GetProperty(option);
-                if (info == null || !info.CanWrite) return false;
-                if (!(info.PropertyType == typeof(int))) return false;
-
-                info.SetValue(this, value, null);
-
-                return true;
-            }
-
-            public bool SetOption(string option, Padding value)
-            {
-                Type t = typeof(DataGraph);
-                PropertyInfo info = t.GetProperty(option);
-                if (info == null || !info.CanWrite) return false;
-                if (!(info.PropertyType == typeof(Padding))) return false;
-
-                info.SetValue(this, value, null);
-
-                return true;
-            }
-
-            public bool SetOption(string option, Color value)
-            {
-                Type t = typeof(GraphColorOptions);
-                PropertyInfo info = t.GetProperty(option);
-                if (info == null || !info.CanWrite) return false;
-                if (!(info.PropertyType == typeof(Color))) return false;
-
-                info.SetValue(ColorOptions, value, null);
-
-                return true;
-            }
-
+            
             public void SetDataPoints(List<float> dataPoints)
             {
                 DataSeries.Clear();
@@ -174,6 +115,11 @@ namespace midsControls
                 Bitmap res = new Bitmap(BitmapDimensions.Width, BitmapDimensions.Height);
                 g.Clear(ColorOptions.BGColor);
 
+                using Font segoeFont = new Font("Segoe UI", 9, FontStyle.Regular, GraphicsUnit.Pixel);
+                TextFormatFlags sfH = TextFormatFlags.Left | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+                TextFormatFlags sfV = TextFormatFlags.Right | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+
                 float xScale = w / Math.Max(xMax - xMin, 0.001f);
                 float yScale = h / Math.Max(yMax - yMin, 0.001f);
 
@@ -214,6 +160,23 @@ namespace midsControls
                         //g.DrawLine(p, new Point(), new Point()); // Not implemented
                     }
                 }
+
+                if (DetectPlateau && xPlateau > xMin && xPlateau < 49)
+                {
+                    using (p = new Pen(ColorOptions.AxisPlateauColor) {DashStyle = DashStyle.Dash})
+                    {
+                        g.DrawLine(p,
+                            new Point((int) Math.Round((xPlateau + xMin) * xScale) + InnerPadding.Left,
+                                InnerPadding.Top),
+                            new Point((int) Math.Round((xPlateau + xMin) * xScale) + InnerPadding.Left,
+                                h + InnerPadding.Top));
+                    }
+
+                    TextRenderer.DrawText(g, Convert.ToString(xPlateau + 1, null), segoeFont,
+                        new Point((int) ((xMin + xPlateau) * xScale + InnerPadding.Left + 3), InnerPadding.Top + h / 2),
+                        ColorOptions.AxisPlateauColor, Color.FromArgb(128, ColorOptions.BGColor), sfH);
+                }
+
                 #endregion
 
                 #region Graph: Lines
@@ -280,10 +243,7 @@ namespace midsControls
                 #endregion
 
                 #region Axis values
-                using Font segoeFont = new Font("Segoe UI", 9, FontStyle.Regular, GraphicsUnit.Pixel);
                 using Brush txtBrush = new SolidBrush(ColorOptions.AxisValuesColor);
-                TextFormatFlags sfH = TextFormatFlags.Left | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
-                TextFormatFlags sfV = TextFormatFlags.Right | TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 for (i = (int)xMin; i <= xMax; i += 10)
                 {
