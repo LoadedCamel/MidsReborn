@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -27,6 +28,7 @@ namespace Hero_Designer
     public class clsDiscord
     {
         #region structs
+
         private struct Defense
         {
             private string Smashing { get; set; }
@@ -84,11 +86,106 @@ namespace Hero_Designer
 
         }
 
+        public static void Test()
+        {
+            var totalStat = MidsContext.Character.Totals;
+            var displayStat = MidsContext.Character.DisplayStats;
+            foreach (var value in totalStat.Def)
+            {
+                Console.WriteLine(value * 100f);
+            }
+        }
+
         public static int ToonLevel()
         {
             var level = MidsContext.Character.Level + 1;
             if (level > 50) level = 50;
             return level;
+        }
+
+        public static void Stats()
+        {
+            Statistics displayStats = MidsContext.Character.DisplayStats;
+            string[] names = Enum.GetNames(Enums.eDamage.None.GetType());
+
+            var defenseDict = new Dictionary<string, string>();
+            var resistanceDict = new Dictionary<string, string>();
+
+            for (int typeIndex = 1; typeIndex <= names.Length - 1; ++typeIndex)
+            {
+                var tmpMatch = new Regex(@"(unique*|toxic|special)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                if (tmpMatch.Match(names[typeIndex]).Success)
+                    continue;
+                string defenseStat = $"{Strings.Format(displayStats.Defense(typeIndex), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##")}%";
+                switch (names[typeIndex])
+                {
+                    case "Smashing":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "Lethal":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "Fire":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "Cold":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "Energy":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "Negative":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "Psionic":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "Melee":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "Ranged":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                    case "AoE":
+                        defenseDict.Add(names[typeIndex], defenseStat);
+                        break;
+                }
+
+            }
+            for (int typeIndex = 1; typeIndex <= names.Length - 1; ++typeIndex)
+            {
+                var tmpMatch = new Regex(@"(unique*|melee|ranged|aoe|special)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                if (tmpMatch.Match(names[typeIndex]).Success)
+                    continue;
+                var resistanceStat = $"{Strings.Format(displayStats.DamageResistance(typeIndex, true), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##")}%";
+                switch (names[typeIndex])
+                {
+                    case "Smashing":
+                        resistanceDict.Add(names[typeIndex], resistanceStat);
+                        break;
+                    case "Lethal":
+                        resistanceDict.Add(names[typeIndex], resistanceStat);
+                        break;
+                    case "Fire":
+                        resistanceDict.Add(names[typeIndex], resistanceStat);
+                        break;
+                    case "Cold":
+                        resistanceDict.Add(names[typeIndex], resistanceStat);
+                        break;
+                    case "Energy":
+                        resistanceDict.Add(names[typeIndex], resistanceStat);
+                        break;
+                    case "Negative":
+                        resistanceDict.Add(names[typeIndex], resistanceStat);
+                        break;
+                    case "Toxic":
+                        resistanceDict.Add(names[typeIndex], resistanceStat);
+                        break;
+                    case "Psionic":
+                        resistanceDict.Add(names[typeIndex], resistanceStat);
+                        break;
+                }
+            }
         }
 
         public static string ShrinkTheDatalink(string strUrl)
@@ -97,8 +194,9 @@ namespace Hero_Designer
 
             var objWebRequest = (HttpWebRequest)WebRequest.Create(url);
             objWebRequest.Method = "GET";
-            using var objWebResponse = (HttpWebResponse)objWebRequest.GetResponse();
-            var srReader = new StreamReader(objWebResponse.GetResponseStream() ?? throw new InvalidOperationException());
+            using var objWebResponse = (HttpWebResponse) objWebRequest.GetResponse();
+            var srReader =
+                new StreamReader(objWebResponse.GetResponseStream() ?? throw new InvalidOperationException());
 
             var strHtml = srReader.ReadToEnd();
 

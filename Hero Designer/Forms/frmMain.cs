@@ -168,7 +168,7 @@ namespace Hero_Designer
                 dragdropScenarioAction = new short[20];
                 DoneDblClick = false;
             }
-
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
             Application.EnableVisualStyles();
             foreach (var backup in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.bak"))

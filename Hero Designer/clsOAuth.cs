@@ -158,10 +158,8 @@ namespace Hero_Designer
             var request = new RestRequest("users/@me", Method.GET);
             client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
             var response = client.Execute(request);
-            Console.WriteLine(response.Content);
             var jUserObject = JsonConvert.DeserializeObject<DiscordUser>(response.Content);
             Dictionary<string, object> userDict = new Dictionary<string, object>();
-
             PropertyInfo[] properties = typeof(DiscordUser).GetProperties();
             foreach (PropertyInfo property in properties)
             {
@@ -177,7 +175,6 @@ namespace Hero_Designer
             var request = new RestRequest("users/@me/guilds", Method.GET);
             client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
             var response = client.Execute(request);
-            Console.WriteLine(response.Content);
             var jUserObject = Deserialize<DiscordServers>(response.Content);
             Dictionary<string, DiscordServers> serversDict = jUserObject.ToDictionary(m => m.name);
             List<string> dServersList = new List<string>();
