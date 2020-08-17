@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Base;
-using HeroDesigner.Schema;
 
 public interface ISerialize
 {
