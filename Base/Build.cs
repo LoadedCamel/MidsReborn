@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
-using HeroDesigner.Schema;
 
 public class Build
 {
