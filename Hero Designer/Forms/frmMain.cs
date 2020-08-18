@@ -20,7 +20,6 @@ using Hero_Designer.Forms.OptionsMenuItems;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Hero_Designer.Forms.WindowMenuItems;
 using Hero_Designer.My;
-using HeroViewer.Base;
 using midsControls;
 using Timer = System.Windows.Forms.Timer;
 

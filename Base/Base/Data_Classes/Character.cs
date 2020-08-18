@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using Base.Display;
 using Base.Master_Classes;
-using HeroViewer.Base;
 
 namespace Base.Data_Classes
 {

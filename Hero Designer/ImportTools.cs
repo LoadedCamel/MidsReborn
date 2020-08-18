@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Master_Classes;
-using HeroViewer.Base;
 
 namespace Hero_Designer
 {
