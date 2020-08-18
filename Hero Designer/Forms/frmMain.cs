@@ -15,14 +15,16 @@ using Base;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
-using Hero_Designer.Forms;
+using Hero_Designer.Forms.ImportExportItems;
+using Hero_Designer.Forms.OptionsMenuItems;
+using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
+using Hero_Designer.Forms.WindowMenuItems;
 using Hero_Designer.My;
-using HeroViewer;
 using HeroViewer.Base;
 using midsControls;
 using Timer = System.Windows.Forms.Timer;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmMain : Form
     {

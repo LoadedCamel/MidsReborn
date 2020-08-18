@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmEnhMiniPick : Form
     {

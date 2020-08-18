@@ -7,7 +7,7 @@ using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using midsControls;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.ImportExportItems
 {
     public partial class frmForum : Form
     {

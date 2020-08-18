@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Base.Master_Classes;
 using HeroViewer.Base;
 
-namespace HeroViewer
+namespace Hero_Designer
 {
     /***********************
     ** Helpers

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Base.Master_Classes;
+using Hero_Designer.Forms;
 
 namespace Hero_Designer
 {

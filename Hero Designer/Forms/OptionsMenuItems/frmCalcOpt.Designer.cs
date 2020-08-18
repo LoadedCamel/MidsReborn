@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.OptionsMenuItems
 {
     public partial class frmCalcOpt
     {

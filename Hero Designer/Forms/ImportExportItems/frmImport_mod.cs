@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.ImportExportItems
 {
     public partial class frmImport_mod : Form
     {

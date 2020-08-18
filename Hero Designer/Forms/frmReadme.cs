@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using midsControls;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmReadme : Form
     {

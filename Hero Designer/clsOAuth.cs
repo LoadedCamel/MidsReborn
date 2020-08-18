@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using Base.Master_Classes;
+using Hero_Designer.Forms;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;

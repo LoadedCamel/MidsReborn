@@ -7,10 +7,11 @@ using System.IO;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
+using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmEnhData : Form
     {

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using midsControls;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.WindowMenuItems
 {
     public partial class frmMiniList : Form
     {

@@ -7,7 +7,7 @@ using Base.Document_Classes;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmPrint : Form
     {

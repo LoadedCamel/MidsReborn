@@ -8,7 +8,7 @@ using Hero_Designer.My;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.ImportExportItems
 {
     public partial class frmImport_EnhancementEffects : Form
     {

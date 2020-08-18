@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.WindowMenuItems
 {
     public partial class frmMMPowers
     {

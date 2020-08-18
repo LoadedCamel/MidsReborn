@@ -10,7 +10,7 @@ using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmSetListing : Form
     {

@@ -9,10 +9,10 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Master_Classes;
-using Hero_Designer.Forms;
+using Hero_Designer.Forms.ImportExportItems;
 using Microsoft.VisualBasic;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.OptionsMenuItems
 {
     public partial class frmCalcOpt : Form
     {

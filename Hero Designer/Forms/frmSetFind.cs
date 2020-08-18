@@ -12,7 +12,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using midsControls;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmSetFind : Form
     {

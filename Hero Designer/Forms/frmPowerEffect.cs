@@ -8,7 +8,7 @@ using Base.Data_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmPowerEffect : Form
     {

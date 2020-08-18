@@ -8,7 +8,7 @@ using Base.Display;
 using Microsoft.VisualBasic;
 using midsControls;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.WindowMenuItems
 {
     public partial class frmData : Form
     {

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Base.Display;
 using Microsoft.VisualBasic;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditPowerset : Form
     {

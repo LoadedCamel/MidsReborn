@@ -6,11 +6,12 @@ using System.Linq;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Master_Classes;
+using Hero_Designer.Forms.ImportExportItems;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmCSV : Form
     {

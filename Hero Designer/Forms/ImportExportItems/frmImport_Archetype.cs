@@ -10,7 +10,7 @@ using Import;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.ImportExportItems
 {
     public partial class frmImport_Archetype : Form
     {

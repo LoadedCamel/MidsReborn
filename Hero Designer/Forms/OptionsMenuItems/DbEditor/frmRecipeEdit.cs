@@ -8,7 +8,7 @@ using Hero_Designer.My;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmRecipeEdit : Form
     {

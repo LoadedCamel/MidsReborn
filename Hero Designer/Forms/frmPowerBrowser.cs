@@ -9,11 +9,12 @@ using System.Linq;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
+using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmPowerBrowser : Form
     {

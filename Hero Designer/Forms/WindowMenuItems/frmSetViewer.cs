@@ -6,7 +6,7 @@ using Base.Display;
 using Base.Master_Classes;
 using midsControls;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.WindowMenuItems
 {
     public partial class frmSetViewer : Form
     {

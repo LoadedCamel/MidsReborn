@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmZStatus : Form
     {

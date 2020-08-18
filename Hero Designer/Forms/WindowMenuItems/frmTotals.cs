@@ -8,7 +8,7 @@ using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using midsControls;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.WindowMenuItems
 {
     public partial class frmTotals : Form
     {

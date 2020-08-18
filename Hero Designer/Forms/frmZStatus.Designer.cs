@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms
 {
     public partial class frmZStatus
     {

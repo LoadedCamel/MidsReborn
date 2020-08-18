@@ -9,7 +9,7 @@ using Hero_Designer.Forms.JsonImport;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
 
-namespace Hero_Designer
+namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmDBEdit : Form
     {
