@@ -1,5 +1,6 @@
-# Welcome to the new Mids' Reborn : Hero Designer Github!
 [![Build status](https://ci.appveyor.com/api/projects/status/g2uaus540emwe3ox/branch/master?svg=true)](https://ci.appveyor.com/project/Crytilis/hero-designer/branch/master)
+
+
 #### Active Development Team Members
 - Crytilis aka Metalios
 - Bopper
