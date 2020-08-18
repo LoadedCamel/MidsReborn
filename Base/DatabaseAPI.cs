@@ -7,7 +7,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Base;
 using Base.Data_Classes;
 using Base.IO_Classes;
 using Base.Master_Classes;
@@ -1914,12 +1913,9 @@ public static class DatabaseAPI
             iClass = Database.Classes[iClass].Column;
             num = iClass >= 0
                 ? iTable <= Database.AttribMods.Modifier.Length - 1
-                    ?
-                    iLevel <= Database.AttribMods.Modifier[iTable].Table.Length - 1
-                        ?
-                        iClass <= Database.AttribMods.Modifier[iTable].Table[iLevel].Length - 1
-                            ?
-                            Database.AttribMods.Modifier[iTable].Table[iLevel][iClass]
+                    ? iLevel <= Database.AttribMods.Modifier[iTable].Table.Length - 1
+                        ? iClass <= Database.AttribMods.Modifier[iTable].Table[iLevel].Length - 1
+                            ? Database.AttribMods.Modifier[iTable].Table[iLevel][iClass]
                             : 0.0f
                         : 0.0f
                     : 0.0f

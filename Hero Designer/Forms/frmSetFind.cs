@@ -140,8 +140,7 @@ namespace Hero_Designer.Forms
                          Enums.eEffectType.HitPoints
                             ? DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].EffectType !=
                               Enums.eEffectType.Endurance
-                                ?
-                                Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].MagPercent,
+                                ? Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].MagPercent,
                                     "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")
                                 : Strings.Format(DatabaseAPI.Database.Power[setBonusList[index]].Effects[0].Mag,
                                     "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")

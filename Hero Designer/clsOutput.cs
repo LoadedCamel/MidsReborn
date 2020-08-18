@@ -309,12 +309,11 @@ namespace Hero_Designer
                                                         .Enhancements
                                                             [MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh]
                                                         .SubTypeID != Enums.eSubtype.Hydra
-                                                        ?
-                                                        DatabaseAPI.Database
-                                                            .Enhancements[
-                                                                MidsContext.Character.CurrentBuild.Powers[index1]
-                                                                    .Slots[index2].Enhancement.Enh].SubTypeID !=
-                                                        Enums.eSubtype.Titan ? "X:" : "TN:"
+                                                        ? DatabaseAPI.Database
+                                                              .Enhancements[
+                                                                  MidsContext.Character.CurrentBuild.Powers[index1]
+                                                                      .Slots[index2].Enhancement.Enh].SubTypeID !=
+                                                          Enums.eSubtype.Titan ? "X:" : "TN:"
                                                         : "HY:"
                                                     : "HO:";
                                             iText += formatColor(
@@ -331,19 +330,16 @@ namespace Hero_Designer
                                                     [MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh]
                                                 .SubTypeID == Enums.eSubtype.Hamidon
                                                 ? "HamiO:"
-                                                :
-                                                DatabaseAPI.Database
+                                                : DatabaseAPI.Database
                                                     .Enhancements
                                                         [MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh]
                                                     .SubTypeID != Enums.eSubtype.Hydra
-                                                    ?
-                                                    DatabaseAPI.Database
+                                                    ? DatabaseAPI.Database
                                                         .Enhancements[
                                                             MidsContext.Character.CurrentBuild.Powers[index1]
                                                                 .Slots[index2]
                                                                 .Enhancement.Enh].SubTypeID != Enums.eSubtype.Titan
-                                                        ?
-                                                        "Special:"
+                                                        ? "Special:"
                                                         : "Titan:"
                                                     : "Hydra:";
                                         iText += formatColor(

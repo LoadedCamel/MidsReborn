@@ -32,17 +32,12 @@ public static class OS
     {
         return Environment.OSVersion.Platform != PlatformID.Unix
             ? Environment.OSVersion.Version.Major >= 5
-                ?
-                !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 0))
-                    ?
-                    !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 1))
-                        ?
-                        !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 2))
-                            ?
-                            !((Environment.OSVersion.Version.Major == 6) & (Environment.OSVersion.Version.Minor == 0))
-                                ?
-                                !((Environment.OSVersion.Version.Major >= 6) &
-                                  (Environment.OSVersion.Version.Minor >= 0)) ? WindowsVersion.WinXP :
+                ? !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 0))
+                    ? !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 1))
+                        ? !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 2))
+                            ? !((Environment.OSVersion.Version.Major == 6) & (Environment.OSVersion.Version.Minor == 0))
+                                ? !((Environment.OSVersion.Version.Major >= 6) &
+                                    (Environment.OSVersion.Version.Minor >= 0)) ? WindowsVersion.WinXP :
                                 WindowsVersion.NewerThanVista
                                 : WindowsVersion.Vista
                             : WindowsVersion.Win2K3

@@ -1546,8 +1546,7 @@ namespace Hero_Designer
                     offset += 1;
                     tPower.NIDPowerset = Math.Abs(olderFile - 0.100000001490116) > float.Epsilon
                         ? Conversion.Val(data[offset]) >= 0.0
-                            ?
-                            Powersets[(int) Math.Round(Conversion.Val(data[offset]))].nID
+                            ? Powersets[(int) Math.Round(Conversion.Val(data[offset]))].nID
                             : -1
                         : (int) Math.Round(Conversion.Val(data[offset]));
                     offset += 1;

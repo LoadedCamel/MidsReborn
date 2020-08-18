@@ -109,8 +109,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             {
                 var iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index])
                     ? !((_myPowers[index].PowerType != Enums.ePowerType.Click) | _myPowers[index].ClickBuff)
-                        ?
-                        !_myPowers[index].SubIsAltColor ? ListLabelV3.LLItemState.Disabled :
+                        ? !_myPowers[index].SubIsAltColor ? ListLabelV3.LLItemState.Disabled :
                         ListLabelV3.LLItemState.Invalid
                         : ListLabelV3.LLItemState.Enabled
                     : ListLabelV3.LLItemState.Selected;

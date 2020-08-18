@@ -7,8 +7,7 @@ public class EnhancementSetCollection : List<EnhancementSet>
     {
         return sidx >= 0 && sidx <= Count
             ? string.IsNullOrEmpty(this[sidx].GetEffectString(bonus, false, true))
-                ?
-                string.IsNullOrEmpty(this[sidx].GetEffectString(bonus, true, true)) ? 0 : 1
+                ? string.IsNullOrEmpty(this[sidx].GetEffectString(bonus, true, true)) ? 0 : 1
                 : this[sidx].Bonus[bonus].Slotted
             : 0;
     }

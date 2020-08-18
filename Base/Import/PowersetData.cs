@@ -44,7 +44,7 @@ namespace Import
                 DatabaseAPI.Database.Powersets[_index] = new Powerset();
             }
 
-            if (!(!IsNew & _index < 0))
+            if (!(!IsNew & (_index < 0)))
                 DatabaseAPI.Database.Powersets[_index].ImportFromCSV(_csvString);
         }
 
@@ -53,14 +53,18 @@ namespace Import
             message = string.Empty;
             bool flag;
             if (!IsValid)
+            {
                 flag = false;
+            }
             else if (IsNew)
             {
                 message = "New";
                 flag = true;
             }
-            else if (_index < 0 | _index > DatabaseAPI.Database.Powersets.Length - 1)
+            else if ((_index < 0) | (_index > DatabaseAPI.Database.Powersets.Length - 1))
+            {
                 flag = true;
+            }
             else if (DatabaseAPI.Database.Powersets[_index].FullName != Data.FullName)
             {
                 message += $"Fullname: {DatabaseAPI.Database.Powersets[_index].FullName} => {Data.FullName}";
@@ -97,7 +101,9 @@ namespace Import
                 flag = true;
             }
             else
+            {
                 flag = false;
+            }
 
             return flag;
         }

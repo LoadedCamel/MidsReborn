@@ -1468,12 +1468,9 @@ namespace Base.Data_Classes
             var num = string.Compare(FullSetName, power.FullSetName, StringComparison.OrdinalIgnoreCase);
             return num == 0
                 ? Level <= power.Level ? Level >= power.Level
-                    ?
-                    Level != power.Level || !SortOverride || power.SortOverride
-                        ?
-                        Level != power.Level || SortOverride || !power.SortOverride
-                            ?
-                            string.Compare(FullName, power.FullName, StringComparison.OrdinalIgnoreCase)
+                    ? Level != power.Level || !SortOverride || power.SortOverride
+                        ? Level != power.Level || SortOverride || !power.SortOverride
+                            ? string.Compare(FullName, power.FullName, StringComparison.OrdinalIgnoreCase)
                             : 1
                         : -1
                     : -1 : 1

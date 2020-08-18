@@ -1842,8 +1842,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             var index = (int) Math.Round(
                 Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             ReqDisplayPower(lvPrListing.SelectedIndices[0] <= myPower.Requires.PowerID.Length - 1
-                ?
-                !rbPrPowerA.Checked ? myPower.Requires.PowerID[index][1] : myPower.Requires.PowerID[index][0]
+                ? !rbPrPowerA.Checked ? myPower.Requires.PowerID[index][1] : myPower.Requires.PowerID[index][0]
                 : !rbPrPowerA.Checked
                     ? myPower.Requires.PowerIDNot[index][1]
                     : myPower.Requires.PowerIDNot[index][0]);

@@ -346,6 +346,8 @@ namespace Hero_Designer
 
     public class PlainTextParser : ImportBase
     {
+        private readonly BuilderApp BuilderApp;
+
         private readonly Dictionary<string, string> OldSetNames = new Dictionary<string, string>
         {
             ["Achilles"] = "AchHee",
@@ -413,8 +415,6 @@ namespace Hero_Designer
             ["WotController"] = "WiloftheC",
             ["Zephyr"] = "BlsoftheZ"
         };
-
-        private readonly BuilderApp BuilderApp;
 
         public PlainTextParser(string buildString)
         {

@@ -7,7 +7,9 @@ using System.Linq;
 public static class Extensions
 {
     public static Color ReadRGB(this BinaryReader reader)
-        => Color.FromArgb(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+    {
+        return Color.FromArgb(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+    }
 
     //public static T[] Append<T>(this T[] source, T item)
     //{
@@ -18,12 +20,19 @@ public static class Extensions
     //}
 
     public static T[] RemoveIndex<T>(this T[] source, int index)
-        => source.Where((_, i) => i != index).ToArray();
+    {
+        return source.Where((_, i) => i != index).ToArray();
+    }
 
     public static T[] RemoveLast<T>(this T[] items)
-        => items.Take(items.Length - 1).ToArray();
+    {
+        return items.Take(items.Length - 1).ToArray();
+    }
 
-    public static string ToStringOrNull(this object o) => o?.ToString();
+    public static string ToStringOrNull(this object o)
+    {
+        return o?.ToString();
+    }
 
     // we use + 1 such that FirstOrDefault gives 0, which still isn't valid
     // so we take that back out if it didn't find one
@@ -31,13 +40,17 @@ public static class Extensions
     // case 1: item doesn't exist so first or default returns 0
     // case 2: item exists so the value must be > 0 because of + 1
     // -1 for not found
-    public static int TryFindIndex<T>(this IEnumerable<T> items, Func<T, bool> predicate) =>
-        items.Select((x, i) => predicate(x) ? i + 1 : -1).FirstOrDefault(i => i > 0) - 1;
+    public static int TryFindIndex<T>(this IEnumerable<T> items, Func<T, bool> predicate)
+    {
+        return items.Select((x, i) => predicate(x) ? i + 1 : -1).FirstOrDefault(i => i > 0) - 1;
+    }
 
-    public static IEnumerable<T> WhereI<T>(this IEnumerable<T> items, Func<T, int, bool> predicate) =>
-        items.Select((x, i) => new {value = x, index = i})
+    public static IEnumerable<T> WhereI<T>(this IEnumerable<T> items, Func<T, int, bool> predicate)
+    {
+        return items.Select((x, i) => new {value = x, index = i})
             .Where(v => predicate(v.value, v.index))
             .Select(v => v.value);
+    }
 
     public static IEnumerable<T> ExceptIndex<T>(this IEnumerable<T> items, int badIndex)
     {
@@ -50,16 +63,21 @@ public static class Extensions
         }
     }
 
-    public static IEnumerable<int> FindIndexes<T>(this IEnumerable<T> items, Func<T, bool> predicate) =>
-        items
+    public static IEnumerable<int> FindIndexes<T>(this IEnumerable<T> items, Func<T, bool> predicate)
+    {
+        return items
             // include index
             .Select((x, i) => new {value = x, index = i})
             // filter on predicate
             .Where(x => predicate(x.value))
             .Select(x => x.index);
+    }
 
     // works just fine when x is null, extension methods aren't instance methods.
-    public static bool IsValueString(this string x) => !string.IsNullOrWhiteSpace(x);
+    public static bool IsValueString(this string x)
+    {
+        return !string.IsNullOrWhiteSpace(x);
+    }
 
     public static string After(this string x, string delimiter)
     {
@@ -88,7 +106,10 @@ public static class Extensions
 
     // model after F#, both indexes are inclusive, unlike substring which is (index, count), this is (index, index)
     // in F# this would be x.[start..stop]
-    private static string GetRange(this string x, int start, int stop) => x.Substring(start, stop - start + 1);
+    private static string GetRange(this string x, int start, int stop)
+    {
+        return x.Substring(start, stop - start + 1);
+    }
 
     public static string GetLine(this string x, int lineIndex)
     {

@@ -265,7 +265,7 @@ namespace Hero_Designer.Forms
                 }
                 else
                 {
-                    this.cbStyle.Width = 154;
+                    cbStyle.Width = 154;
                 }
             }
 
