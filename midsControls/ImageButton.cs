@@ -16,10 +16,66 @@ namespace midsControls
     [DesignerGenerated]
     public class ImageButton : UserControl
     {
-        // Token: 0x14000008 RID: 8
-        // (add) Token: 0x060001A7 RID: 423 RVA: 0x00010566 File Offset: 0x0000E766
-        // (remove) Token: 0x060001A8 RID: 424 RVA: 0x00010580 File Offset: 0x0000E780
-        public event ButtonClickedEventHandler ButtonClicked;
+        // Token: 0x0200001D RID: 29
+        // (Invoke) Token: 0x060001C6 RID: 454
+        public delegate void ButtonClickedEventHandler();
+
+        // Token: 0x040000CC RID: 204
+        private ExtendedBitmap bxAltImage;
+
+        // Token: 0x040000CB RID: 203
+        private ExtendedBitmap bxImage;
+
+        // Token: 0x040000CD RID: 205
+        private ExtendedBitmap bxOut;
+
+        // Token: 0x040000D4 RID: 212
+        private PictureBox Knockout;
+
+        // Token: 0x040000D5 RID: 213
+        private Point KnockoutLocation;
+
+        // Token: 0x040000D3 RID: 211
+        private ImageAttributes myIA;
+
+        // Token: 0x040000D1 RID: 209
+        private bool pAltState;
+
+        // Token: 0x040000CE RID: 206
+        private string pTextOff;
+
+        // Token: 0x040000CF RID: 207
+        private string pTextOn;
+
+        // Token: 0x040000D0 RID: 208
+        private bool pToggle;
+
+        // Token: 0x040000D2 RID: 210
+        private bool pTogState;
+
+        // Token: 0x060001B7 RID: 439 RVA: 0x0001079C File Offset: 0x0000E99C
+        public ImageButton()
+        {
+            MouseDown += ImageButton_MouseDown;
+            MouseLeave += ImageButton_MouseLeave;
+            MouseUp += ImageButton_MouseUp;
+            Paint += ImageButton_Paint;
+            SizeChanged += ImageButton_SizeChanged;
+            BackColorChanged += ImageButton_BackColorChanged;
+            FontChanged += ImageButton_FontChanged;
+            bxImage = null;
+            bxAltImage = null;
+            bxOut = null;
+            pTextOff = "Button Text";
+            pTextOn = "Alt Text";
+            pToggle = false;
+            pAltState = false;
+            pTogState = false;
+            myIA = null;
+            Knockout = null;
+            KnockoutLocation = new Point(0, 0);
+            InitializeComponent();
+        }
 
         // Token: 0x17000059 RID: 89
         // (get) Token: 0x060001A9 RID: 425 RVA: 0x0001059C File Offset: 0x0000E79C
@@ -126,36 +182,17 @@ namespace midsControls
             set
             {
                 KnockoutLocation = value;
-                if (Knockout != null)
-                {
-                    Redraw();
-                }
+                if (Knockout != null) Redraw();
             }
         }
 
-        // Token: 0x060001B7 RID: 439 RVA: 0x0001079C File Offset: 0x0000E99C
-        public ImageButton()
-        {
-            MouseDown += ImageButton_MouseDown;
-            MouseLeave += ImageButton_MouseLeave;
-            MouseUp += ImageButton_MouseUp;
-            Paint += ImageButton_Paint;
-            SizeChanged += ImageButton_SizeChanged;
-            BackColorChanged += ImageButton_BackColorChanged;
-            FontChanged += ImageButton_FontChanged;
-            bxImage = null;
-            bxAltImage = null;
-            bxOut = null;
-            pTextOff = "Button Text";
-            pTextOn = "Alt Text";
-            pToggle = false;
-            pAltState = false;
-            pTogState = false;
-            myIA = null;
-            Knockout = null;
-            KnockoutLocation = new Point(0, 0);
-            InitializeComponent();
-        }
+        // Token: 0x040000CA RID: 202
+        private IContainer Components { get; }
+
+        // Token: 0x14000008 RID: 8
+        // (add) Token: 0x060001A7 RID: 423 RVA: 0x00010566 File Offset: 0x0000E766
+        // (remove) Token: 0x060001A8 RID: 424 RVA: 0x00010580 File Offset: 0x0000E780
+        public event ButtonClickedEventHandler ButtonClicked;
 
         // Token: 0x060001B8 RID: 440 RVA: 0x0001089C File Offset: 0x0000EA9C
         [DebuggerNonUserCode]
@@ -163,10 +200,7 @@ namespace midsControls
         {
             try
             {
-                if (disposing)
-                {
-                    Components?.Dispose();
-                }
+                if (disposing) Components?.Dispose();
             }
             finally
             {
@@ -179,7 +213,7 @@ namespace midsControls
         private void InitializeComponent()
         {
             SuspendLayout();
-            SizeF autoScaleDimensions = new SizeF(6f, 13f);
+            var autoScaleDimensions = new SizeF(6f, 13f);
             AutoScaleDimensions = autoScaleDimensions;
             AutoScaleMode = AutoScaleMode.Font;
             Name = "ImageButton";
@@ -190,10 +224,7 @@ namespace midsControls
         private void Redraw()
         {
             Draw();
-            if (bxOut.Bitmap != null)
-            {
-                CreateGraphics().DrawImage(bxOut.Bitmap, 0, 0);
-            }
+            if (bxOut.Bitmap != null) CreateGraphics().DrawImage(bxOut.Bitmap, 0, 0);
         }
 
         // Token: 0x060001BB RID: 443 RVA: 0x0001097A File Offset: 0x0000EB7A
@@ -220,33 +251,36 @@ namespace midsControls
         // Token: 0x060001BE RID: 446 RVA: 0x000109B0 File Offset: 0x0000EBB0
         private void Draw()
         {
-            StringFormat stringFormat = new StringFormat();
+            var stringFormat = new StringFormat();
             if (bxOut == null)
             {
-                if (Width == 0 | Height == 0)
+                if ((Width == 0) | (Height == 0))
                 {
                     bxOut = null;
                     return;
                 }
+
                 bxOut = new ExtendedBitmap(Width, Height);
             }
+
             bxOut.Graphics.TextContrast = 0;
             bxOut.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
             bxOut.Graphics.Clear(BackColor);
-            if (Knockout != null && (KnockoutLocation.X > -1 & KnockoutLocation.Y > -1))
+            if (Knockout != null && (KnockoutLocation.X > -1) & (KnockoutLocation.Y > -1))
             {
-                Rectangle srcRect = new Rectangle(KnockoutLocation, Size);
-                Graphics graphics = bxOut.Graphics;
-                Image image = Knockout.Image;
-                Point location = new Point(0, 0);
-                Rectangle bounds = new Rectangle(location, bxOut.Size);
+                var srcRect = new Rectangle(KnockoutLocation, Size);
+                var graphics = bxOut.Graphics;
+                var image = Knockout.Image;
+                var location = new Point(0, 0);
+                var bounds = new Rectangle(location, bxOut.Size);
                 graphics.DrawImage(image, bounds, srcRect, GraphicsUnit.Pixel);
             }
+
             checked
             {
-                if (!(bxImage == null | bxAltImage == null))
+                if (!((bxImage == null) | (bxAltImage == null)))
                 {
                     if (pAltState | (pToggle & pTogState))
                     {
@@ -254,110 +288,96 @@ namespace midsControls
                     }
                     else if (myIA != null)
                     {
-                        Graphics graphics2 = bxOut.Graphics;
+                        var graphics2 = bxOut.Graphics;
                         Image bitmap = bxImage.Bitmap;
-                        Point location = new Point(0, 0);
-                        Rectangle bounds = new Rectangle(location, bxOut.Size);
-                        graphics2.DrawImage(bitmap, bounds, 0, 0, bxOut.Size.Width, bxOut.Size.Height, GraphicsUnit.Pixel, myIA);
+                        var location = new Point(0, 0);
+                        var bounds = new Rectangle(location, bxOut.Size);
+                        graphics2.DrawImage(bitmap, bounds, 0, 0, bxOut.Size.Width, bxOut.Size.Height,
+                            GraphicsUnit.Pixel, myIA);
                     }
                     else
                     {
-                        Graphics graphics3 = bxOut.Graphics;
+                        var graphics3 = bxOut.Graphics;
                         Image bitmap2 = bxImage.Bitmap;
-                        Point location = new Point(0, 0);
-                        Rectangle bounds = new Rectangle(location, bxOut.Size);
-                        graphics3.DrawImage(bitmap2, bounds, 0, 0, bxOut.Size.Width, bxOut.Size.Height, GraphicsUnit.Pixel);
+                        var location = new Point(0, 0);
+                        var bounds = new Rectangle(location, bxOut.Size);
+                        graphics3.DrawImage(bitmap2, bounds, 0, 0, bxOut.Size.Width, bxOut.Size.Height,
+                            GraphicsUnit.Pixel);
                     }
                 }
                 else if (pAltState | (pToggle & pTogState))
                 {
                     bxOut.Graphics.Clear(Color.LightCoral);
-                    Graphics graphics4 = bxOut.Graphics;
-                    Pen red = Pens.Red;
-                    int x = 0;
-                    int y = 0;
-                    Rectangle bounds = Bounds;
-                    Rectangle bounds2 = new Rectangle(x, y, bounds.Width - 1, Bounds.Height - 1);
+                    var graphics4 = bxOut.Graphics;
+                    var red = Pens.Red;
+                    var x = 0;
+                    var y = 0;
+                    var bounds = Bounds;
+                    var bounds2 = new Rectangle(x, y, bounds.Width - 1, Bounds.Height - 1);
                     graphics4.DrawRectangle(red, bounds2);
                 }
                 else
                 {
                     bxOut.Graphics.Clear(Color.LavenderBlush);
-                    Graphics graphics5 = bxOut.Graphics;
-                    Pen red2 = Pens.Red;
-                    int x2 = 0;
-                    int y2 = 0;
-                    Rectangle bounds2 = Bounds;
-                    Rectangle bounds = new Rectangle(x2, y2, bounds2.Width - 1, Bounds.Height - 1);
+                    var graphics5 = bxOut.Graphics;
+                    var red2 = Pens.Red;
+                    var x2 = 0;
+                    var y2 = 0;
+                    var bounds2 = Bounds;
+                    var bounds = new Rectangle(x2, y2, bounds2.Width - 1, Bounds.Height - 1);
                     graphics5.DrawRectangle(red2, bounds);
                 }
             }
-            float num = Font.GetHeight(bxOut.Graphics) + 2f;
-            RectangleF rectangleF = new RectangleF(0f, (Height - num) / 2f, Width, num);
+
+            var num = Font.GetHeight(bxOut.Graphics) + 2f;
+            var rectangleF = new RectangleF(0f, (Height - num) / 2f, Width, num);
             string text;
             if (!pAltState | !pToggle)
-            {
                 text = pTextOff;
-            }
             else
-            {
                 text = pTextOn;
-            }
-            string iStr = text;
-            RectangleF bounds3 = rectangleF;
-            Color whiteSmoke = Color.WhiteSmoke;
-            Color outline = Color.FromArgb(192, 0, 0, 0);
-            Font font = Font;
-            float outlineSpace = 1f;
-            Graphics graphics6 = bxOut.Graphics;
+            var iStr = text;
+            var bounds3 = rectangleF;
+            var whiteSmoke = Color.WhiteSmoke;
+            var outline = Color.FromArgb(192, 0, 0, 0);
+            var font = Font;
+            var outlineSpace = 1f;
+            var graphics6 = bxOut.Graphics;
             graphics6.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             DrawOutlineText(iStr, bounds3, whiteSmoke, outline, font, outlineSpace, ref graphics6);
         }
 
         // Token: 0x060001BF RID: 447 RVA: 0x00010E10 File Offset: 0x0000F010
-        private void DrawOutlineText(string iStr, RectangleF bounds, Color text, Color outline, Font bFont, float outlineSpace, ref Graphics target, bool smallMode = false, bool leftAlign = false)
+        private void DrawOutlineText(string iStr, RectangleF bounds, Color text, Color outline, Font bFont,
+            float outlineSpace, ref Graphics target, bool smallMode = false, bool leftAlign = false)
         {
-            StringFormat stringFormat = new StringFormat(StringFormatFlags.NoWrap)
+            var stringFormat = new StringFormat(StringFormatFlags.NoWrap)
             {
                 LineAlignment = StringAlignment.Near,
                 Alignment = leftAlign ? StringAlignment.Near : StringAlignment.Center
             };
-            SolidBrush brush = new SolidBrush(outline);
-            RectangleF layoutRectangle = bounds;
-            RectangleF layoutRectangle2 = new RectangleF(layoutRectangle.X, layoutRectangle.Y, layoutRectangle.Width, bFont.GetHeight(target));
+            var brush = new SolidBrush(outline);
+            var layoutRectangle = bounds;
+            var layoutRectangle2 = new RectangleF(layoutRectangle.X, layoutRectangle.Y, layoutRectangle.Width,
+                bFont.GetHeight(target));
             layoutRectangle2.X -= outlineSpace;
-            if (!smallMode)
-            {
-                target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            }
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             layoutRectangle2.Y -= outlineSpace;
             target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             layoutRectangle2.X += outlineSpace;
-            if (!smallMode)
-            {
-                target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            }
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             layoutRectangle2.X += outlineSpace;
             target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             layoutRectangle2.Y += outlineSpace;
-            if (!smallMode)
-            {
-                target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            }
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             layoutRectangle2.Y += outlineSpace;
             target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             layoutRectangle2.X -= outlineSpace;
-            if (!smallMode)
-            {
-                target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            }
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             layoutRectangle2.X -= outlineSpace;
             target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             layoutRectangle2.Y -= outlineSpace;
-            if (!smallMode)
-            {
-                target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            }
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
             brush = new SolidBrush(text);
             target.DrawString(iStr, bFont, brush, layoutRectangle, stringFormat);
         }
@@ -399,12 +419,9 @@ namespace midsControls
             {
                 pAltState = false;
                 Redraw();
-                if (e.X >= 0 & e.Y >= 0 & e.X <= Width & e.Y <= Height)
-                {
-                    ButtonClicked?.Invoke();
-                }
+                if ((e.X >= 0) & (e.Y >= 0) & (e.X <= Width) & (e.Y <= Height)) ButtonClicked?.Invoke();
             }
-            else if (e.X >= 0 & e.Y >= 0 & e.X <= Width & e.Y <= Height)
+            else if ((e.X >= 0) & (e.Y >= 0) & (e.X <= Width) & (e.Y <= Height))
             {
                 pAltState = !pAltState;
                 pTogState = false;
@@ -416,66 +433,21 @@ namespace midsControls
         // Token: 0x060001C3 RID: 451 RVA: 0x00011168 File Offset: 0x0000F368
         private void ImageButton_Paint(object sender, PaintEventArgs e)
         {
-            if (bxOut == null)
-            {
-                Draw();
-            }
-            if (bxOut != null)
-            {
-                e.Graphics.DrawImage(bxOut.Bitmap, 0, 0);
-            }
+            if (bxOut == null) Draw();
+            if (bxOut != null) e.Graphics.DrawImage(bxOut.Bitmap, 0, 0);
         }
 
         // Token: 0x060001C4 RID: 452 RVA: 0x000111BC File Offset: 0x0000F3BC
         private void ImageButton_SizeChanged(object sender, EventArgs e)
         {
-            if (Size.Width != 105 | Size.Height != 22)
+            if ((Size.Width != 105) | (Size.Height != 22))
             {
-                Size size = new Size(105, 22);
+                var size = new Size(105, 22);
                 Size = size;
             }
+
             bxOut = new ExtendedBitmap(Width, Height);
             Redraw();
         }
-
-        // Token: 0x040000CA RID: 202
-        private IContainer Components { get; }
-
-        // Token: 0x040000CB RID: 203
-        private ExtendedBitmap bxImage;
-
-        // Token: 0x040000CC RID: 204
-        private ExtendedBitmap bxAltImage;
-
-        // Token: 0x040000CD RID: 205
-        private ExtendedBitmap bxOut;
-
-        // Token: 0x040000CE RID: 206
-        private string pTextOff;
-
-        // Token: 0x040000CF RID: 207
-        private string pTextOn;
-
-        // Token: 0x040000D0 RID: 208
-        private bool pToggle;
-
-        // Token: 0x040000D1 RID: 209
-        private bool pAltState;
-
-        // Token: 0x040000D2 RID: 210
-        private bool pTogState;
-
-        // Token: 0x040000D3 RID: 211
-        private ImageAttributes myIA;
-
-        // Token: 0x040000D4 RID: 212
-        private PictureBox Knockout;
-
-        // Token: 0x040000D5 RID: 213
-        private Point KnockoutLocation;
-
-        // Token: 0x0200001D RID: 29
-        // (Invoke) Token: 0x060001C6 RID: 454
-        public delegate void ButtonClickedEventHandler();
     }
 }

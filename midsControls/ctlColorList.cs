@@ -9,14 +9,16 @@ namespace midsControls
 {
     public sealed partial class ctlColorList : ListBox
     {
-        public List<Color> Colors { get; set; }
-
         public ctlColorList()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint | ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
+                ControlStyles.UserPaint | ControlStyles.SupportsTransparentBackColor, true);
             DrawMode = DrawMode.OwnerDrawFixed;
         }
+
+        public List<Color> Colors { get; set; }
 
         [DllImport("uxtheme", ExactSpelling = true)]
         private static extern int DrawThemeParentBackground(
@@ -34,26 +36,26 @@ namespace midsControls
             DrawThemeParentBackground(Handle, hdc, ref rec);
             g.ReleaseHdc(hdc);*/
 
-            using Region reg = new Region(e.ClipRectangle);
+            using var reg = new Region(e.ClipRectangle);
             if (Items.Count > 0)
-            {
-                for (int i = 0; i < Items.Count; i++)
+                for (var i = 0; i < Items.Count; i++)
                 {
                     rec = GetItemRectangle(i);
 
                     if (e.ClipRectangle.IntersectsWith(rec))
                     {
-                        if ((SelectionMode == SelectionMode.One && SelectedIndex == i) ||
-                            (SelectionMode == SelectionMode.MultiSimple && SelectedIndices.Contains(i)) ||
-                            (SelectionMode == SelectionMode.MultiExtended && SelectedIndices.Contains(i)))
-                            OnDrawItem(new DrawItemEventArgs(g, Font, rec, i, DrawItemState.Selected, ForeColor, BackColor));
+                        if (SelectionMode == SelectionMode.One && SelectedIndex == i ||
+                            SelectionMode == SelectionMode.MultiSimple && SelectedIndices.Contains(i) ||
+                            SelectionMode == SelectionMode.MultiExtended && SelectedIndices.Contains(i))
+                            OnDrawItem(new DrawItemEventArgs(g, Font, rec, i, DrawItemState.Selected, ForeColor,
+                                BackColor));
                         else
-                            OnDrawItem(new DrawItemEventArgs(g, Font, rec, i, DrawItemState.Default, ForeColor, BackColor));
+                            OnDrawItem(new DrawItemEventArgs(g, Font, rec, i, DrawItemState.Default, ForeColor,
+                                BackColor));
 
                         reg.Complement(rec);
                     }
                 }
-            }
         }
 
         protected override void OnDrawItem(DrawItemEventArgs e)
@@ -63,11 +65,13 @@ namespace midsControls
             {
                 using Brush backBrush = new SolidBrush(Colors[e.Index]);
                 e.Graphics.FillRectangle(backBrush, e.Bounds);
-                TextRenderer.DrawText(e.Graphics, GetItemText(Items[e.Index]), e.Font, e.Bounds, Colors[e.Index - 2], TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
+                TextRenderer.DrawText(e.Graphics, GetItemText(Items[e.Index]), e.Font, e.Bounds, Colors[e.Index - 2],
+                    TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
             }
             else
             {
-                TextRenderer.DrawText(e.Graphics, GetItemText(Items[e.Index]), e.Font, e.Bounds, Colors[e.Index], TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
+                TextRenderer.DrawText(e.Graphics, GetItemText(Items[e.Index]), e.Font, e.Bounds, Colors[e.Index],
+                    TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
             }
         }
     }

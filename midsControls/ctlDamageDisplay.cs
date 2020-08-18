@@ -12,12 +12,109 @@ namespace midsControls
 {
     public class ctlDamageDisplay : UserControl
     {
+        // Token: 0x0400002A RID: 42
+        private readonly Enums.eDDText pText;
+
+        // Token: 0x04000027 RID: 39
+        private ExtendedBitmap bxBuffer;
+
+        // Token: 0x04000025 RID: 37
+        private IContainer components;
+
+        // Token: 0x04000028 RID: 40
+        private Graphics myGFX;
+
+        // Token: 0x04000026 RID: 38
+        [AccessedThroughProperty("myTip")] private ToolTip myTip;
+
+        // Token: 0x04000036 RID: 54
+        private float nBase;
+
+        // Token: 0x04000037 RID: 55
+        private float nEnhanced;
+
+        // Token: 0x04000039 RID: 57
+        private float nHighestBase;
+
+        // Token: 0x0400003A RID: 58
+        private float nHighestEnhanced;
+
+        // Token: 0x04000038 RID: 56
+        private float nMaxEnhanced;
+
+        // Token: 0x04000035 RID: 53
+        private Enums.eDDAlign pAlign;
+
+        // Token: 0x0400002D RID: 45
+        private Color pFadeBackEnd;
+
+        // Token: 0x0400002C RID: 44
+        private Color pFadeBackStart;
+
+        // Token: 0x0400002F RID: 47
+        private Color pFadeBaseEnd;
+
+        // Token: 0x0400002E RID: 46
+        private Color pFadeBaseStart;
+
+        // Token: 0x04000031 RID: 49
+        private Color pFadeEnhEnd;
+
+        // Token: 0x04000030 RID: 48
+        private Color pFadeEnhStart;
+
+        // Token: 0x0400002B RID: 43
+        private Enums.eDDGraph pGraph;
+
+        // Token: 0x04000034 RID: 52
+        private int phPadding;
+
+        // Token: 0x0400003B RID: 59
+        private string pString;
+
+        // Token: 0x04000029 RID: 41
+        private Enums.eDDStyle pStyle;
+
+        // Token: 0x04000032 RID: 50
+        private Color pTextColor;
+
+        // Token: 0x04000033 RID: 51
+        private int pvPadding;
+
+        // Token: 0x0600006D RID: 109 RVA: 0x0000689C File Offset: 0x00004A9C
+        public ctlDamageDisplay()
+        {
+            BackColorChanged += ctlDamageDisplay_BackColorChanged;
+            Load += ctlDamageDisplay_Load;
+            Paint += ctlDamageDisplayt_Paint;
+            pStyle = (Enums.eDDStyle) 3;
+            pText = 0;
+            pGraph = (Enums.eDDGraph) 2;
+            pFadeBackStart = Color.Lime;
+            pFadeBackEnd = Color.Yellow;
+            pFadeBaseStart = Color.Blue;
+            pFadeBaseEnd = Color.LightBlue;
+            pFadeEnhStart = Color.Blue;
+            pFadeEnhEnd = Color.Red;
+            pTextColor = Color.Black;
+            pvPadding = 6;
+            phPadding = 3;
+            pAlign = (Enums.eDDAlign) 1;
+            nBase = 100f;
+            nEnhanced = 196f;
+            nMaxEnhanced = 207f;
+            nHighestBase = 200f;
+            nHighestEnhanced = 414f;
+            pString = "196 (100)";
+            InitializeComponent();
+        }
+
         public int PaddingV
         {
             get => pvPadding;
             set
             {
-                if (!(value >= 0 & checked(value * 2 < Height - 5)))
+                if (!((value >= 0) & checked(value * 2 < Height - 5)))
                     return;
                 pvPadding = value;
                 Draw();
@@ -29,7 +126,7 @@ namespace midsControls
             get => phPadding;
             set
             {
-                if (!(value >= 0 & checked(value * 2 < Width - 5)))
+                if (!((value >= 0) & checked(value * 2 < Width - 5)))
                     return;
                 phPadding = value;
                 Draw();
@@ -238,41 +335,10 @@ namespace midsControls
             }
         }
 
-        // Token: 0x0600006D RID: 109 RVA: 0x0000689C File Offset: 0x00004A9C
-        public ctlDamageDisplay()
-        {
-            BackColorChanged += ctlDamageDisplay_BackColorChanged;
-            Load += ctlDamageDisplay_Load;
-            Paint += ctlDamageDisplayt_Paint;
-            pStyle = (Enums.eDDStyle) 3;
-            pText = 0;
-            pGraph = (Enums.eDDGraph) 2;
-            pFadeBackStart = Color.Lime;
-            pFadeBackEnd = Color.Yellow;
-            pFadeBaseStart = Color.Blue;
-            pFadeBaseEnd = Color.LightBlue;
-            pFadeEnhStart = Color.Blue;
-            pFadeEnhEnd = Color.Red;
-            pTextColor = Color.Black;
-            pvPadding = 6;
-            phPadding = 3;
-            pAlign = (Enums.eDDAlign) 1;
-            nBase = 100f;
-            nEnhanced = 196f;
-            nMaxEnhanced = 207f;
-            nHighestBase = 200f;
-            nHighestEnhanced = 414f;
-            pString = "196 (100)";
-            InitializeComponent();
-        }
-
         // Token: 0x0600006E RID: 110 RVA: 0x000069AC File Offset: 0x00004BAC
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                components?.Dispose();
-            }
+            if (disposing) components?.Dispose();
 
             base.Dispose(disposing);
         }
@@ -287,7 +353,7 @@ namespace midsControls
                 AutoPopDelay = 20000, InitialDelay = 350, ReshowDelay = 100
             };
             Name = "ctlDamageDisplay";
-            Size size = new Size(312, 104);
+            var size = new Size(312, 104);
             Size = size;
         }
 
@@ -311,9 +377,7 @@ namespace midsControls
         private void ctlDamageDisplayt_Paint(object sender, PaintEventArgs e)
         {
             if (bxBuffer != null)
-            {
                 myGFX.DrawImage(bxBuffer.Bitmap, e.ClipRectangle, e.ClipRectangle, GraphicsUnit.Pixel);
-            }
         }
 
         // Token: 0x06000073 RID: 115 RVA: 0x00006B01 File Offset: 0x00004D01
@@ -337,85 +401,65 @@ namespace midsControls
         // Token: 0x06000076 RID: 118 RVA: 0x00006B20 File Offset: 0x00004D20
         private void DrawGraph()
         {
-            float height = Font.GetHeight(bxBuffer.Graphics);
-            Rectangle rectangle = new Rectangle(0, 0, Width, Height);
-            Rectangle rect = new Rectangle(0, 0, Width, Height);
+            var height = Font.GetHeight(bxBuffer.Graphics);
+            var rectangle = new Rectangle(0, 0, Width, Height);
+            var rect = new Rectangle(0, 0, Width, Height);
             checked
             {
-                if (pStyle == (Enums.eDDStyle) 3)
-                {
-                    rect.Height = (int) Math.Round(rect.Height - height);
-                }
+                if (pStyle == (Enums.eDDStyle) 3) rect.Height = (int) Math.Round(rect.Height - height);
 
-                Rectangle rectangle2 = new Rectangle(phPadding, pvPadding, Width - phPadding * 2, rect.Height - pvPadding * 2);
-                LinearGradientBrush brush = new LinearGradientBrush(rect, pFadeBackStart, pFadeBackEnd, 0f);
+                var rectangle2 = new Rectangle(phPadding, pvPadding, Width - phPadding * 2,
+                    rect.Height - pvPadding * 2);
+                var brush = new LinearGradientBrush(rect, pFadeBackStart, pFadeBackEnd, 0f);
                 bxBuffer.Graphics.FillRectangle(brush, rect);
                 if (!(Math.Abs(nBase) > float.Epsilon))
                     return;
                 unchecked
                 {
-                    if (Math.Abs(nMaxEnhanced) < float.Epsilon)
-                    {
-                        nMaxEnhanced = nBase * 2f;
-                    }
+                    if (Math.Abs(nMaxEnhanced) < float.Epsilon) nMaxEnhanced = nBase * 2f;
 
-                    if (Math.Abs(nHighestEnhanced) < float.Epsilon)
-                    {
-                        nHighestEnhanced = nBase * 2f;
-                    }
+                    if (Math.Abs(nHighestEnhanced) < float.Epsilon) nHighestEnhanced = nBase * 2f;
 
-                    if (Math.Abs(nHighestBase) < float.Epsilon)
-                    {
-                        nHighestBase = nBase * 2f;
-                    }
+                    if (Math.Abs(nHighestBase) < float.Epsilon) nHighestBase = nBase * 2f;
                 }
 
                 if (pGraph == 0)
                 {
-                    int num = (int) Math.Round(nBase / nMaxEnhanced * rectangle2.Width);
-                    SolidBrush brush2 = new SolidBrush(pFadeBaseStart);
-                    Rectangle rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
+                    var num = (int) Math.Round(nBase / nMaxEnhanced * rectangle2.Width);
+                    var brush2 = new SolidBrush(pFadeBaseStart);
+                    var rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
                     bxBuffer.Graphics.FillRectangle(brush2, rect2);
-                    int width = (int) Math.Round(nEnhanced / nMaxEnhanced * rectangle2.Width - num);
+                    var width = (int) Math.Round(nEnhanced / nMaxEnhanced * rectangle2.Width - num);
                     rect2 = new Rectangle(rectangle2.X + num, rectangle2.Y, width, rectangle2.Height);
                     Rectangle rect3 = default;
                     rect3.X = rectangle2.X + num;
                     rect3.Y = rectangle2.Y;
                     if (rectangle2.Width - num > 0)
-                    {
                         rect3.Width = rectangle2.Width - num;
-                    }
                     else
-                    {
                         rect3.Width = 1;
-                    }
 
                     rect3.Height = rectangle2.Height;
                     brush = new LinearGradientBrush(rect3, pFadeEnhStart, pFadeEnhEnd, 0f);
                     bxBuffer.Graphics.FillRectangle(brush, rect2);
                 }
                 else
+                {
                     switch (pGraph)
                     {
                         case (Enums.eDDGraph) 3:
                         {
-                            int num = (int) Math.Round(nBase / nHighestEnhanced * rectangle2.Width);
-                            Rectangle rect2 = new Rectangle(rectangle2.X, rectangle2.Y,
+                            var num = (int) Math.Round(nBase / nHighestEnhanced * rectangle2.Width);
+                            var rect2 = new Rectangle(rectangle2.X, rectangle2.Y,
                                 (int) Math.Round(nBase / nHighestBase * rectangle2.Width), rectangle2.Height);
-                            if (rect2.Width < 1)
-                            {
-                                rect2.Width = 1;
-                            }
+                            if (rect2.Width < 1) rect2.Width = 1;
 
                             brush = new LinearGradientBrush(rect2, pFadeBaseStart, pFadeBaseEnd, 0f);
                             rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
-                            int width = (int) Math.Round((nEnhanced - nBase) / nHighestEnhanced * rectangle2.Width);
+                            var width = (int) Math.Round((nEnhanced - nBase) / nHighestEnhanced * rectangle2.Width);
                             rect2 = new Rectangle(rectangle2.X + num, rectangle2.Y, width, rectangle2.Height);
-                            if (rect2.Width < 1)
-                            {
-                                rect2.Width = 1;
-                            }
+                            if (rect2.Width < 1) rect2.Width = 1;
 
                             brush = new LinearGradientBrush(rectangle2, pFadeEnhStart, pFadeEnhEnd, 0f);
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
@@ -423,28 +467,20 @@ namespace midsControls
                         }
                         case (Enums.eDDGraph) 2:
                         {
-                            int num2 = (int) Math.Round(rectangle2.Height / 2.0);
-                            int num = (int) Math.Round(nBase / nHighestEnhanced * rectangle2.Width);
-                            Rectangle rect2 = new Rectangle(rectangle2.X, rectangle2.Y, (int) Math.Round(0.5 * rectangle2.Width), num2);
-                            if (rect2.Width < 1)
-                            {
-                                rect2.Width = 1;
-                            }
+                            var num2 = (int) Math.Round(rectangle2.Height / 2.0);
+                            var num = (int) Math.Round(nBase / nHighestEnhanced * rectangle2.Width);
+                            var rect2 = new Rectangle(rectangle2.X, rectangle2.Y,
+                                (int) Math.Round(0.5 * rectangle2.Width), num2);
+                            if (rect2.Width < 1) rect2.Width = 1;
 
                             brush = new LinearGradientBrush(rectangle2, pFadeBaseStart, pFadeBaseEnd, 0f);
                             rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, num2);
-                            if (rect2.Width < 1)
-                            {
-                                rect2.Width = 1;
-                            }
+                            if (rect2.Width < 1) rect2.Width = 1;
 
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
-                            int width = (int) Math.Round(nEnhanced / nHighestEnhanced * rectangle2.Width);
+                            var width = (int) Math.Round(nEnhanced / nHighestEnhanced * rectangle2.Width);
                             rect2 = new Rectangle(rectangle2.X, num2 + rectangle2.Y, width, num2);
-                            if (rect2.Width < 1)
-                            {
-                                rect2.Width = 1;
-                            }
+                            if (rect2.Width < 1) rect2.Width = 1;
 
                             brush = new LinearGradientBrush(rectangle2, pFadeEnhStart, pFadeEnhEnd, 0f);
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
@@ -452,19 +488,18 @@ namespace midsControls
                         }
                         case (Enums.eDDGraph) 1:
                         {
-                            int num = (int) Math.Round(nEnhanced / nHighestEnhanced * rectangle2.Width);
-                            Rectangle rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
-                            if (rect2.Width < 1)
-                            {
-                                rect2.Width = 1;
-                            }
+                            var num = (int) Math.Round(nEnhanced / nHighestEnhanced * rectangle2.Width);
+                            var rect2 = new Rectangle(rectangle2.X, rectangle2.Y, num, rectangle2.Height);
+                            if (rect2.Width < 1) rect2.Width = 1;
 
-                            Rectangle rectangle3 = new Rectangle(rectangle2.X + num, rectangle2.Y, rectangle2.Width - num, rectangle2.Height);
+                            var rectangle3 = new Rectangle(rectangle2.X + num, rectangle2.Y, rectangle2.Width - num,
+                                rectangle2.Height);
                             brush = new LinearGradientBrush(rectangle3, pFadeEnhStart, pFadeEnhEnd, 0f);
                             bxBuffer.Graphics.FillRectangle(brush, rect2);
                             break;
                         }
                     }
+                }
 
                 switch (pStyle)
                 {
@@ -473,7 +508,7 @@ namespace midsControls
                         break;
                     case (Enums.eDDStyle) 3:
                     {
-                        Rectangle rectangle3 = new Rectangle(rectangle2.X, rectangle2.Y + rectangle2.Height, rectangle2.Width,
+                        var rectangle3 = new Rectangle(rectangle2.X, rectangle2.Y + rectangle2.Height, rectangle2.Width,
                             rectangle.Height - (rectangle2.Y + rectangle2.Height));
                         DrawText(rectangle3);
                         break;
@@ -485,19 +520,15 @@ namespace midsControls
         // Token: 0x06000077 RID: 119 RVA: 0x00007244 File Offset: 0x00005444
         private void DrawText(Rectangle bounds)
         {
-            RectangleF layoutRectangle = new RectangleF(0f, 0f, 0f, 0f);
-            StringFormat stringFormat = new StringFormat();
-            float height = Font.GetHeight(myGFX) + 6;
+            var layoutRectangle = new RectangleF(0f, 0f, 0f, 0f);
+            var stringFormat = new StringFormat();
+            var height = Font.GetHeight(myGFX) + 6;
             bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             layoutRectangle.X = checked(bounds.X + phPadding);
             if (pStyle == (Enums.eDDStyle) 3)
-            {
                 layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f + 2f;
-            }
             else
-            {
                 layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f - 1f;
-            }
 
             layoutRectangle.Width = checked(bounds.Width - phPadding * 2);
             layoutRectangle.Height = bounds.Height;
@@ -510,17 +541,17 @@ namespace midsControls
                 _ => stringFormat.Alignment
             };
 
-            Enums.eDDText eDdText = pText;
+            var eDdText = pText;
             if (eDdText == 0)
             {
             }
 
-            SizeF sizeF = bxBuffer.Graphics.MeasureString(pString, Font);
+            var sizeF = bxBuffer.Graphics.MeasureString(pString, Font);
             if (sizeF.Width > layoutRectangle.Width)
             {
                 bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 //Font font = new Font(Font.Name, Font.Size * (layoutRectangle.Width / sizeF.Width), Font.Style, GraphicsUnit.Point);
-                Font font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
+                var font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
                 bxBuffer.Graphics.DrawString(pString, font, brush, layoutRectangle, stringFormat);
             }
             else
@@ -535,17 +566,13 @@ namespace midsControls
         {
             if (bxBuffer == null)
                 return;
-            Rectangle rectangle = new Rectangle(0, -2, Width, Height);
+            var rectangle = new Rectangle(0, -2, Width, Height);
             Brush brush = new SolidBrush(BackColor);
             bxBuffer.Graphics.FillRectangle(brush, rectangle);
             if (pStyle != 0)
-            {
                 DrawGraph();
-            }
             else
-            {
                 DrawText(rectangle);
-            }
             //bxBuffer.Graphics.SetClip(rectangle2);
             myGFX.DrawImageUnscaled(bxBuffer.Bitmap, 0, 0);
         }
@@ -561,74 +588,5 @@ namespace midsControls
         {
             Draw();
         }
-
-        // Token: 0x04000025 RID: 37
-        private IContainer components;
-
-        // Token: 0x04000026 RID: 38
-        [AccessedThroughProperty("myTip")] private ToolTip myTip;
-
-        // Token: 0x04000027 RID: 39
-        private ExtendedBitmap bxBuffer;
-
-        // Token: 0x04000028 RID: 40
-        private Graphics myGFX;
-
-        // Token: 0x04000029 RID: 41
-        private Enums.eDDStyle pStyle;
-
-        // Token: 0x0400002A RID: 42
-        private readonly Enums.eDDText pText;
-
-        // Token: 0x0400002B RID: 43
-        private Enums.eDDGraph pGraph;
-
-        // Token: 0x0400002C RID: 44
-        private Color pFadeBackStart;
-
-        // Token: 0x0400002D RID: 45
-        private Color pFadeBackEnd;
-
-        // Token: 0x0400002E RID: 46
-        private Color pFadeBaseStart;
-
-        // Token: 0x0400002F RID: 47
-        private Color pFadeBaseEnd;
-
-        // Token: 0x04000030 RID: 48
-        private Color pFadeEnhStart;
-
-        // Token: 0x04000031 RID: 49
-        private Color pFadeEnhEnd;
-
-        // Token: 0x04000032 RID: 50
-        private Color pTextColor;
-
-        // Token: 0x04000033 RID: 51
-        private int pvPadding;
-
-        // Token: 0x04000034 RID: 52
-        private int phPadding;
-
-        // Token: 0x04000035 RID: 53
-        private Enums.eDDAlign pAlign;
-
-        // Token: 0x04000036 RID: 54
-        private float nBase;
-
-        // Token: 0x04000037 RID: 55
-        private float nEnhanced;
-
-        // Token: 0x04000038 RID: 56
-        private float nMaxEnhanced;
-
-        // Token: 0x04000039 RID: 57
-        private float nHighestBase;
-
-        // Token: 0x0400003A RID: 58
-        private float nHighestEnhanced;
-
-        // Token: 0x0400003B RID: 59
-        private string pString;
     }
 }
