@@ -26,6 +26,7 @@ public class ConfigData
 
     public float BaseAcc { get; set; } = 0.75f;
     public string UpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
+    public string DefaultUpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
     public bool DoNotUpdateFileAssociation { get; set; }
     public int ExempHigh { get; set; } = 50;
     public int TeamSize { get; set; } = 1;

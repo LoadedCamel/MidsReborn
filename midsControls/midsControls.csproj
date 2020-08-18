@@ -90,6 +90,18 @@
     <Compile Include="ctlProgressBar.Designer.cs">
       <DependentUpon>ctlProgressBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditableLabel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditableLabel.Designer.cs">
+      <DependentUpon>EditableLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlDataGraph.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlDataGraph.Designer.cs">
+      <DependentUpon>ctlDataGraph.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ctlDamageDisplay.resources" />

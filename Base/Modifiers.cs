@@ -1,15 +1,21 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
-public class Modifiers
+public class Modifiers : ICloneable
 {
     public ModifierTable[] Modifier = new ModifierTable[0];
     public DateTime RevisionDate = new DateTime(0L);
     public string SourceIndex = string.Empty;
     public string SourceTables = string.Empty;
     public int Revision;
+
+    public object Clone()
+    {
+        return MemberwiseClone();
+    }
 
     public bool ImportModifierTablefromCSV(string baseFn, string tableFn, int iRevision)
     {
@@ -201,7 +207,18 @@ public class Modifiers
         public ModifierTable()
         {
             for (int index = 0; index < Table.Length; ++index)
+            {
                 Table[index] = new float[0];
+            }
+        }
+
+        public ModifierTable(int archetypesListLength)
+        {
+            for (int index = 0; index < Table.Length; ++index)
+            {
+                Table[index] = new float[archetypesListLength];
+                Table[index] = Enumerable.Repeat(0f, archetypesListLength).ToArray();
+            }
         }
 
         public void StoreTo(BinaryWriter writer)

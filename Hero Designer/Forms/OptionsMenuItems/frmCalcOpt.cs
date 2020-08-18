@@ -516,6 +516,10 @@ namespace Hero_Designer
             csPopulateList();
             fcPopulateList();
             PopulateSuppression();
+
+            // https://stackoverflow.com/a/3991946
+            lblFileAssoc.Text = lblFileAssoc.Text.Replace("HeroDesigner", Application.ProductName);
+            lblAssocStatus.Text = "Status: " + (!FileAssociation.GetIsAssociated(Application.ExecutablePath) ? "Not " : "") + "associated";
         }
 
         void listScenarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -835,6 +839,14 @@ namespace Hero_Designer
                 ++index;
             }
             while (index <= 19);
+        }
+
+        private void btnFileAssoc_Click(object sender, EventArgs e)
+        {
+            FileAssociation.AddToOpenResult result = FileAssociation.AddToOpenWithLists(Application.ExecutablePath);
+            if (result != FileAssociation.AddToOpenResult.Success)
+                MessageBox.Show("Error setting file associations: unauthorized registry access.", "Oh snap",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

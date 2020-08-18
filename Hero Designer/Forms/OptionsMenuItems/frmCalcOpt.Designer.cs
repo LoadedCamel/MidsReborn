@@ -67,6 +67,9 @@ namespace Hero_Designer
             this.chkShowSOLevels = new System.Windows.Forms.CheckBox();
             this.chkRelSignOnly = new System.Windows.Forms.CheckBox();
             this.Label3 = new System.Windows.Forms.Label();
+            this.optTO = new System.Windows.Forms.RadioButton();
+            this.optDO = new System.Windows.Forms.RadioButton();
+            this.optSO = new System.Windows.Forms.RadioButton();
             this.optEnh = new System.Windows.Forms.Label();
             this.cbEnhLevel = new System.Windows.Forms.ComboBox();
             this.Label4 = new System.Windows.Forms.Label();
@@ -214,9 +217,9 @@ namespace Hero_Designer
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.optTO = new System.Windows.Forms.RadioButton();
-            this.optDO = new System.Windows.Forms.RadioButton();
-            this.optSO = new System.Windows.Forms.RadioButton();
+            this.btnFileAssoc = new System.Windows.Forms.Button();
+            this.lblFileAssoc = new System.Windows.Forms.Label();
+            this.lblAssocStatus = new System.Windows.Forms.Label();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.GroupBox17.SuspendLayout();
@@ -667,6 +670,51 @@ namespace Hero_Designer
     "ee below that of the character.)";
             this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // optTO
+            // 
+            this.optTO.Appearance = System.Windows.Forms.Appearance.Button;
+            this.optTO.BackgroundImage = global::Hero_Designer.Resources.optTO_Image;
+            this.optTO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.optTO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.optTO.Location = new System.Drawing.Point(24, 74);
+            this.optTO.Name = "optTO";
+            this.optTO.Size = new System.Drawing.Size(44, 44);
+            this.optTO.TabIndex = 48;
+            this.optTO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.myTip.SetToolTip(this.optTO, "Training enhancements are the weakest kind.");
+            this.optTO.CheckedChanged += new System.EventHandler(this.optTO_CheckedChanged);
+            // 
+            // optDO
+            // 
+            this.optDO.Appearance = System.Windows.Forms.Appearance.Button;
+            this.optDO.BackgroundImage = global::Hero_Designer.Resources.optDO_Image;
+            this.optDO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.optDO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.optDO.Location = new System.Drawing.Point(72, 74);
+            this.optDO.Name = "optDO";
+            this.optDO.Size = new System.Drawing.Size(44, 44);
+            this.optDO.TabIndex = 49;
+            this.optDO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.myTip.SetToolTip(this.optDO, "Dual Origin enhancements can be bought from level 12 onwards.");
+            this.optDO.CheckedChanged += new System.EventHandler(this.optDO_CheckedChanged);
+            // 
+            // optSO
+            // 
+            this.optSO.Appearance = System.Windows.Forms.Appearance.Button;
+            this.optSO.BackgroundImage = global::Hero_Designer.Resources.optSO_Image;
+            this.optSO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.optSO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.optSO.Checked = true;
+            this.optSO.Location = new System.Drawing.Point(120, 74);
+            this.optSO.Name = "optSO";
+            this.optSO.Size = new System.Drawing.Size(44, 44);
+            this.optSO.TabIndex = 50;
+            this.optSO.TabStop = true;
+            this.optSO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.myTip.SetToolTip(this.optSO, "Single Origin enhancements are the most powerful kind, and can be bought from lev" +
+        "el 22.");
+            this.optSO.CheckedChanged += new System.EventHandler(this.optSO_CheckedChanged);
+            // 
             // optEnh
             // 
             this.optEnh.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -716,9 +764,9 @@ namespace Hero_Designer
             this.TabPage2.Controls.Add(this.GroupBox15);
             this.TabPage2.Controls.Add(this.GroupBox8);
             this.TabPage2.Controls.Add(this.GroupBox6);
-            this.TabPage2.Location = new System.Drawing.Point(4, 22);
+            this.TabPage2.Location = new System.Drawing.Point(4, 23);
             this.TabPage2.Name = "TabPage2";
-            this.TabPage2.Size = new System.Drawing.Size(749, 326);
+            this.TabPage2.Size = new System.Drawing.Size(749, 325);
             this.TabPage2.TabIndex = 1;
             this.TabPage2.Text = "Effects & Maths";
             this.TabPage2.UseVisualStyleBackColor = true;
@@ -926,9 +974,9 @@ namespace Hero_Designer
             this.TabPage6.Controls.Add(this.GroupBox13);
             this.TabPage6.Controls.Add(this.GroupBox10);
             this.TabPage6.Controls.Add(this.GroupBox4);
-            this.TabPage6.Location = new System.Drawing.Point(4, 22);
+            this.TabPage6.Location = new System.Drawing.Point(4, 23);
             this.TabPage6.Name = "TabPage6";
-            this.TabPage6.Size = new System.Drawing.Size(749, 326);
+            this.TabPage6.Size = new System.Drawing.Size(749, 325);
             this.TabPage6.TabIndex = 5;
             this.TabPage6.Text = "Exemping & Base Values";
             this.TabPage6.UseVisualStyleBackColor = true;
@@ -1138,10 +1186,10 @@ namespace Hero_Designer
             this.tabPage7.Controls.Add(this.GroupBox20);
             this.tabPage7.Controls.Add(this.GroupBox19);
             this.tabPage7.Controls.Add(this.GroupBox18);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Location = new System.Drawing.Point(4, 23);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(749, 326);
+            this.tabPage7.Size = new System.Drawing.Size(749, 325);
             this.tabPage7.TabIndex = 7;
             this.tabPage7.Text = "Discord Export Settings";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -1658,9 +1706,9 @@ namespace Hero_Designer
             // 
             this.TabPage4.Controls.Add(this.GroupBox12);
             this.TabPage4.Controls.Add(this.GroupBox11);
-            this.TabPage4.Location = new System.Drawing.Point(4, 22);
+            this.TabPage4.Location = new System.Drawing.Point(4, 23);
             this.TabPage4.Name = "TabPage4";
-            this.TabPage4.Size = new System.Drawing.Size(749, 326);
+            this.TabPage4.Size = new System.Drawing.Size(749, 325);
             this.TabPage4.TabIndex = 3;
             this.TabPage4.Text = "Forum Export Settings";
             this.TabPage4.UseVisualStyleBackColor = true;
@@ -2015,6 +2063,9 @@ namespace Hero_Designer
             // 
             // TabPage5
             // 
+            this.TabPage5.Controls.Add(this.lblAssocStatus);
+            this.TabPage5.Controls.Add(this.lblFileAssoc);
+            this.TabPage5.Controls.Add(this.btnFileAssoc);
             this.TabPage5.Controls.Add(this.cbUpdateURL);
             this.TabPage5.Controls.Add(this.lblUpdateURL);
             this.TabPage5.Controls.Add(this.btnSaveFolderReset);
@@ -2024,9 +2075,9 @@ namespace Hero_Designer
             this.TabPage5.Controls.Add(this.Label1);
             this.TabPage5.Controls.Add(this.GroupBox16);
             this.TabPage5.Controls.Add(this.GroupBox1);
-            this.TabPage5.Location = new System.Drawing.Point(4, 22);
+            this.TabPage5.Location = new System.Drawing.Point(4, 23);
             this.TabPage5.Name = "TabPage5";
-            this.TabPage5.Size = new System.Drawing.Size(749, 326);
+            this.TabPage5.Size = new System.Drawing.Size(749, 325);
             this.TabPage5.TabIndex = 4;
             this.TabPage5.Text = "Updates & Paths";
             this.TabPage5.UseVisualStyleBackColor = true;
@@ -2042,14 +2093,14 @@ namespace Hero_Designer
             "http://keepers.dk/mids/update.xml",
             "http://keepers.dk/mids/update_beta.xml",
             "http://keepers.dk/mids/update_dev.xml"});
-            this.cbUpdateURL.Location = new System.Drawing.Point(17, 200);
+            this.cbUpdateURL.Location = new System.Drawing.Point(77, 180);
             this.cbUpdateURL.Name = "cbUpdateURL";
-            this.cbUpdateURL.Size = new System.Drawing.Size(593, 22);
+            this.cbUpdateURL.Size = new System.Drawing.Size(528, 22);
             this.cbUpdateURL.TabIndex = 67;
             // 
             // lblUpdateURL
             // 
-            this.lblUpdateURL.Location = new System.Drawing.Point(8, 175);
+            this.lblUpdateURL.Location = new System.Drawing.Point(5, 179);
             this.lblUpdateURL.Name = "lblUpdateURL";
             this.lblUpdateURL.Size = new System.Drawing.Size(168, 24);
             this.lblUpdateURL.TabIndex = 65;
@@ -2069,9 +2120,9 @@ namespace Hero_Designer
             // lblSaveFolder
             // 
             this.lblSaveFolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblSaveFolder.Location = new System.Drawing.Point(17, 270);
+            this.lblSaveFolder.Location = new System.Drawing.Point(125, 270);
             this.lblSaveFolder.Name = "lblSaveFolder";
-            this.lblSaveFolder.Size = new System.Drawing.Size(593, 22);
+            this.lblSaveFolder.Size = new System.Drawing.Size(485, 22);
             this.lblSaveFolder.TabIndex = 63;
             this.lblSaveFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblSaveFolder.UseMnemonic = false;
@@ -2088,17 +2139,17 @@ namespace Hero_Designer
             // 
             // chkLoadLastFile
             // 
-            this.chkLoadLastFile.Location = new System.Drawing.Point(17, 295);
+            this.chkLoadLastFile.Location = new System.Drawing.Point(17, 298);
             this.chkLoadLastFile.Name = "chkLoadLastFile";
-            this.chkLoadLastFile.Size = new System.Drawing.Size(156, 16);
+            this.chkLoadLastFile.Size = new System.Drawing.Size(156, 18);
             this.chkLoadLastFile.TabIndex = 61;
             this.chkLoadLastFile.Text = "Load last build on startup";
             // 
             // Label1
             // 
-            this.Label1.Location = new System.Drawing.Point(5, 246);
+            this.Label1.Location = new System.Drawing.Point(5, 268);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(168, 24);
+            this.Label1.Size = new System.Drawing.Size(114, 24);
             this.Label1.TabIndex = 8;
             this.Label1.Text = "Save Mids Builds To:";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2171,9 +2222,9 @@ namespace Hero_Designer
             this.TabPage1.Controls.Add(this.cmbAction);
             this.TabPage1.Controls.Add(this.GroupBox9);
             this.TabPage1.Controls.Add(this.GroupBox7);
-            this.TabPage1.Location = new System.Drawing.Point(4, 22);
+            this.TabPage1.Location = new System.Drawing.Point(4, 23);
             this.TabPage1.Name = "TabPage1";
-            this.TabPage1.Size = new System.Drawing.Size(749, 326);
+            this.TabPage1.Size = new System.Drawing.Size(749, 325);
             this.TabPage1.TabIndex = 6;
             this.TabPage1.Text = "Drag & Drop";
             this.TabPage1.UseVisualStyleBackColor = true;
@@ -2268,50 +2319,34 @@ namespace Hero_Designer
             // 
             this.cPicker.FullOpen = true;
             // 
-            // optTO
+            // btnFileAssoc
             // 
-            this.optTO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optTO.BackgroundImage = global::Hero_Designer.Resources.optTO_Image;
-            this.optTO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.optTO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optTO.Location = new System.Drawing.Point(24, 74);
-            this.optTO.Name = "optTO";
-            this.optTO.Size = new System.Drawing.Size(44, 44);
-            this.optTO.TabIndex = 48;
-            this.optTO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optTO, "Training enhancements are the weakest kind.");
-            this.optTO.CheckedChanged += new System.EventHandler(this.optTO_CheckedChanged);
+            this.btnFileAssoc.Location = new System.Drawing.Point(390, 214);
+            this.btnFileAssoc.Name = "btnFileAssoc";
+            this.btnFileAssoc.Size = new System.Drawing.Size(155, 36);
+            this.btnFileAssoc.TabIndex = 68;
+            this.btnFileAssoc.Text = "Rebuild file associations";
+            this.btnFileAssoc.UseVisualStyleBackColor = true;
+            this.btnFileAssoc.Click += new System.EventHandler(this.btnFileAssoc_Click);
             // 
-            // optDO
+            // lblFileAssoc
             // 
-            this.optDO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optDO.BackgroundImage = global::Hero_Designer.Resources.optDO_Image;
-            this.optDO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.optDO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optDO.Location = new System.Drawing.Point(72, 74);
-            this.optDO.Name = "optDO";
-            this.optDO.Size = new System.Drawing.Size(44, 44);
-            this.optDO.TabIndex = 49;
-            this.optDO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optDO, "Dual Origin enhancements can be bought from level 12 onwards.");
-            this.optDO.CheckedChanged += new System.EventHandler(this.optDO_CheckedChanged);
+            this.lblFileAssoc.AutoSize = true;
+            this.lblFileAssoc.Location = new System.Drawing.Point(5, 220);
+            this.lblFileAssoc.Name = "lblFileAssoc";
+            this.lblFileAssoc.Size = new System.Drawing.Size(356, 28);
+            this.lblFileAssoc.TabIndex = 69;
+            this.lblFileAssoc.Text = "Click this button if you want to associate .MHD and .MXD files\r\nwith HeroDesigner" +
+    ", so they can be directly opened from the file explorer.";
             // 
-            // optSO
+            // lblAssocStatus
             // 
-            this.optSO.Appearance = System.Windows.Forms.Appearance.Button;
-            this.optSO.BackgroundImage = global::Hero_Designer.Resources.optSO_Image;
-            this.optSO.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.optSO.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.optSO.Checked = true;
-            this.optSO.Location = new System.Drawing.Point(120, 74);
-            this.optSO.Name = "optSO";
-            this.optSO.Size = new System.Drawing.Size(44, 44);
-            this.optSO.TabIndex = 50;
-            this.optSO.TabStop = true;
-            this.optSO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.myTip.SetToolTip(this.optSO, "Single Origin enhancements are the most powerful kind, and can be bought from lev" +
-        "el 22.");
-            this.optSO.CheckedChanged += new System.EventHandler(this.optSO_CheckedChanged);
+            this.lblAssocStatus.AutoSize = true;
+            this.lblAssocStatus.Location = new System.Drawing.Point(577, 224);
+            this.lblAssocStatus.Name = "lblAssocStatus";
+            this.lblAssocStatus.Size = new System.Drawing.Size(52, 14);
+            this.lblAssocStatus.TabIndex = 70;
+            this.lblAssocStatus.Text = "Status: --";
             // 
             // frmCalcOpt
             // 
@@ -2372,6 +2407,7 @@ namespace Hero_Designer
             this.GroupBox12.PerformLayout();
             this.GroupBox11.ResumeLayout(false);
             this.TabPage5.ResumeLayout(false);
+            this.TabPage5.PerformLayout();
             this.GroupBox16.ResumeLayout(false);
             this.GroupBox1.ResumeLayout(false);
             this.TabPage1.ResumeLayout(false);
@@ -2570,5 +2606,8 @@ namespace Hero_Designer
         private ComboBox cbUpdateURL;
         private CheckBox chkShowSOLevels;
         private CheckBox chkEnableDmgGraph;
+        private Label lblFileAssoc;
+        private Button btnFileAssoc;
+        private Label lblAssocStatus;
     }
 }

@@ -2,9 +2,8 @@
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Base.Master_Classes;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
@@ -27,6 +26,19 @@ namespace Hero_Designer
                 set => MidsContext.Character = value;
             }
 
+            private static void Quit()
+            {
+                // https://stackoverflow.com/a/12978034
+                if (Application.MessageLoop)
+                {
+                    Application.Exit();
+                }
+                else
+                {
+                    Environment.Exit(1);
+                }
+            }
+
             public static void LoadData(ref frmLoading iFrm)
             {
                 DatabaseAPI.LoadDatabaseVersion();
@@ -36,29 +48,61 @@ namespace Hero_Designer
                 DatabaseAPI.Database.AttribMods = new Modifiers();
                 if (!DatabaseAPI.Database.AttribMods.Load())
                 {
+                    MessageBox.Show(
+                        "Failed to load Attribute Modifiers database. Aborting.",
+                        "Woops",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Quit();
                 }
 
                 iFrm?.SetMessage("Loading Powerset Database...");
                 if (!DatabaseAPI.LoadLevelsDatabase())
                 {
-                    Interaction.MsgBox(
+                    MessageBox.Show(
                         "Failed to load Leveling data file! The program is unable to proceed.\r\n" +
                         "We suggest you redownload the application from https://github.com/Crytilis/mids-reborn-hero-designer/releases",
-                        MsgBoxStyle.Critical, "Error");
-                    ProjectData.EndApp();
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Quit();
                 }
 
                 if (!DatabaseAPI.LoadMainDatabase())
                 {
-                    Interaction.MsgBox("There was an error reading the database. Aborting.", MsgBoxStyle.Critical, "Dang");
-                    ProjectData.EndApp();
+                    MessageBox.Show(
+                        "There was an error reading the database. Aborting.",
+                        "Dang",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Quit();
                 }
 
                 if (!DatabaseAPI.LoadMaths())
-                    ProjectData.EndApp();
+                {
+                    MessageBox.Show(
+                        "Failed to load Maths database. Aborting.",
+                        "Dang",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Quit();
+                }
                 iFrm?.SetMessage("Loading Enhancement Database...");
                 if (!DatabaseAPI.LoadEnhancementClasses())
-                    ProjectData.EndApp();
+                {
+                    MessageBox.Show(
+                        "Failed to load Enhancements' classes. Aborting.",
+                        "Dang",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Quit();
+                }
+                
                 DatabaseAPI.LoadEnhancementDb();
                 DatabaseAPI.LoadOrigins();
                 DatabaseAPI.LoadSetTypeStrings();
@@ -66,6 +110,22 @@ namespace Hero_Designer
                 iFrm?.SetMessage("Loading Recipe Database...");               
                 DatabaseAPI.LoadSalvage();
                 DatabaseAPI.LoadRecipes();
+
+                iFrm?.SetMessage("Loading Legacy Enhancements Database...");
+                bool oldEnhLoad = DatabaseAPI.LoadOldEnhNames();
+
+                iFrm?.SetMessage("Loading Legacy Sets Database...");
+                bool oldSetsLoad = DatabaseAPI.LoadOldSetNames();
+
+                if (!(oldEnhLoad && oldSetsLoad))
+                {
+                    MessageBox.Show(
+                        Application.ProductName + " will function but old builds recovery will be unavailable.",
+                        "Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
 
                 iFrm?.SetMessage("Loading Graphics...");
                 Task[] taskArray = new Task[9];

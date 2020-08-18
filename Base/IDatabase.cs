@@ -31,6 +31,10 @@ public interface IDatabase
 
     IDictionary<string, PowersetGroup> PowersetGroups { get; set; }
 
+    IDictionary<string, string[]> OldEnhNames { get; set; }
+
+    IDictionary<string, string> OldSetNames { get; set; }
+
     bool Loading { get; set; }
 
     object I9 { get; set; }

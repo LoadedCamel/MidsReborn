@@ -170,7 +170,6 @@ namespace midsControls
             unchecked
             {
                 Enums.eType enhType = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID;
-                bool catalystSet = false;
                 if (enhType == Enums.eType.SetO || enhType == Enums.eType.InventO)
                 {
                     RectangleF iValue2 = rect;
@@ -178,7 +177,7 @@ namespace midsControls
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
                     string relativeLevelNumeric;
                     string enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
-                    catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh);
+                    bool catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh);
                     // Catalysed enhancements take character level no matter what.
                     // Game does not allow boosters over enhancement catalysts.
                     // [Zed] Note: I am not sure yet if catalysed enhancements are considered having the level of the user.
@@ -246,13 +245,16 @@ namespace midsControls
                     if (slot.Enhancement.RelativeLevel == Enums.eEnhRelative.PlusThree)
                     {
                         // I dunno. MidsContext.Character.Level == 48 ?
-                        relativeString = Convert.ToString(Math.Max(53, MidsContext.Character.Level + 5), null);
+                        // Zed 07/07 - Having issues using MidsContext.Character.Level
+                        //relativeString = Convert.ToString(Math.Max(53, MidsContext.Character.Level + 5), null);
+                        relativeString = "53";
                     }
                     else if (MidsContext.Config.ShowSOLevels)
                     {
                         // It isn't slot.Enhancement.IOLevel... always set to 0
                         // Improvisation it is...
-                        relativeString = Convert.ToString(Math.Max(50, MidsContext.Character.Level + 2), null) + relativeString;
+                        //relativeString = Convert.ToString(Math.Max(50, MidsContext.Character.Level + 2), null) + relativeString;
+                        relativeString = "50" + relativeString;
                     }
 
                     if (

@@ -55,18 +55,29 @@ namespace Hero_Designer
         }
         const string ReadmeUrl = "https://raw.githubusercontent.com/Crytilis/mids-reborn-hero-designer/master/README.md";
 
-        public static void CheckUpdate()
+        public static void CheckUpdate(int n = 0)
         {
+            if (n >= 10)
+            {
+                MessageBox.Show("Aborting update check after 10 attempts.\r\n" +
+                    Application.ProductName + " will start in its current version.\r\n" +
+                    "Please light up a candle for the Internet Gods.", "Dammit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                return;
+            }
+
             var settings = new XmlReaderSettings
             {
                 XmlResolver = null,
                 DtdProcessing = DtdProcessing.Ignore
             };
+            
             //MessageBox.Show(MidsContext.Config.UpdatePath);
-            using var xmlReader = XmlReader.Create(MidsContext.Config.UpdatePath, settings);
-            while (xmlReader.Read())
+            try
             {
-                try
+                using var xmlReader = XmlReader.Create(MidsContext.Config.UpdatePath, settings);
+
+                while (xmlReader.Read())
                 {
                     switch (xmlReader.Name)
                     {
@@ -92,11 +103,40 @@ namespace Hero_Designer
                         }
                     }
                 }
-                catch (Exception e)
+            }
+            catch (Exception ex)
+            {
+                DialogResult r;
+                if (MidsContext.Config.UpdatePath != MidsContext.Config.DefaultUpdatePath)
                 {
-                    MessageBox.Show($"{e.Message}\n{e.StackTrace}", "Error");
+                    r = MessageBox.Show("Could not reach update URL.\r\n" + ex.Message + "\r\n\r\n" +
+                        "Would you like to revert to the default URL?",
+                        "Error",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Error
+                    );
+                    
+                    if (r == DialogResult.Yes)
+                    {
+                        MidsContext.Config.UpdatePath = MidsContext.Config.DefaultUpdatePath;
+                        CheckUpdate(++n);
+                    }
+                    else if (r == DialogResult.No)
+                    {
+                        CheckUpdate(++n);
+                    }
+                    
+                    return;
+                }
+                else
+                {
+                    r = MessageBox.Show("Could not reach update URL.\r\nRetry?", "Dang", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                    if (r == DialogResult.Yes) CheckUpdate(++n);
+
+                    return;
                 }
             }
+
             var cDbVersion = DatabaseAPI.Database.Version;
             if (AppVersion > MidsContext.AppVersion)
             {

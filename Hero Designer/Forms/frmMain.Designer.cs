@@ -54,6 +54,7 @@ namespace Hero_Designer
             this.lblATLocked = new System.Windows.Forms.Label();
             this.DlgOpen = new System.Windows.Forms.OpenFileDialog();
             this.DlgSave = new System.Windows.Forms.SaveFileDialog();
+            this.DlgSaveMnu = new System.Windows.Forms.SaveFileDialog();
             this.tTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblLocked0 = new System.Windows.Forms.Label();
             this.lblLocked1 = new System.Windows.Forms.Label();
@@ -68,6 +69,7 @@ namespace Hero_Designer
             this.ToolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tsFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -81,6 +83,7 @@ namespace Hero_Designer
             this.tsExportLong = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExportDataLink = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsExportDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsConfig = new System.Windows.Forms.ToolStripMenuItem();
@@ -482,6 +485,11 @@ namespace Hero_Designer
             // 
             this.DlgSave.DefaultExt = "mxd";
             this.DlgSave.Filter = "Hero/Villain Builds (*.mxd)|*.mxd";
+            //
+            // dlgSaveMnu
+            //
+            this.DlgSaveMnu.DefaultExt = "mnu";
+            this.DlgSaveMnu.Filter = "CoH Popmenu (*.mnu)|*.mnu";
             // 
             // tTip
             // 
@@ -627,28 +635,28 @@ namespace Hero_Designer
             // 
             this.tsFileNew.Name = "tsFileNew";
             this.tsFileNew.ShortcutKeys = System.Windows.Forms.Keys.N | System.Windows.Forms.Keys.Control;
-            this.tsFileNew.Size = new System.Drawing.Size(179, 22);
+            this.tsFileNew.Size = new System.Drawing.Size(this.TsMenusWidth[0], 22);
             this.tsFileNew.Text = "&New / Clear";
             this.tsFileNew.Click += new System.EventHandler(tsFileNew_Click);
             // 
             // ToolStripSeparator7
             // 
             this.ToolStripSeparator7.Name = "ToolStripSeparator7";
-            this.ToolStripSeparator7.Size = new System.Drawing.Size(176, 6);
+            this.ToolStripSeparator7.Size = new System.Drawing.Size(this.TsMenusWidth[0] - 3, 6);
             // 
             // tsFileOpen
             // 
             this.tsFileOpen.Name = "tsFileOpen";
             this.tsFileOpen.ShortcutKeys = System.Windows.Forms.Keys.O | System.Windows.Forms.Keys.Control;
-            this.tsFileOpen.Size = new System.Drawing.Size(179, 22);
+            this.tsFileOpen.Size = new System.Drawing.Size(this.TsMenusWidth[0], 22);
             this.tsFileOpen.Text = "&Open...";
             this.tsFileOpen.Click += new System.EventHandler(tsFileOpen_Click);
             // 
-            // tsFileSave
+            // tsBuildRcv
             // 
             this.tsBuildRcv.Name = "tsBuildRcv";
             //this.tsFileOpen.ShortcutKeys = System.Windows.Forms.Keys.B | System.Windows.Forms.Keys.Control;
-            this.tsBuildRcv.Size = new System.Drawing.Size(179, 22);
+            this.tsBuildRcv.Size = new System.Drawing.Size(this.TsMenusWidth[0], 22);
             this.tsBuildRcv.Text = "Attempt Build Recovery...";
             this.tsBuildRcv.Click += new System.EventHandler(tsBuildRcv_Click);
             // 
@@ -656,54 +664,56 @@ namespace Hero_Designer
             // 
             this.tsFileSave.Name = "tsFileSave";
             this.tsFileSave.ShortcutKeys = System.Windows.Forms.Keys.S | System.Windows.Forms.Keys.Control;
-            this.tsFileSave.Size = new System.Drawing.Size(179, 22);
+            this.tsFileSave.Size = new System.Drawing.Size(this.TsMenusWidth[0], 22);
             this.tsFileSave.Text = "&Save";
             this.tsFileSave.Click += new System.EventHandler(tsFileSave_Click);
             // 
             // tsFileSaveAs
             // 
             this.tsFileSaveAs.Name = "tsFileSaveAs";
-            this.tsFileSaveAs.Size = new System.Drawing.Size(179, 22);
+            this.tsFileSaveAs.Size = new System.Drawing.Size(this.TsMenusWidth[0], 22);
             this.tsFileSaveAs.Text = "Save &As...";
             this.tsFileSaveAs.Click += new System.EventHandler(tsFileSaveAs_Click);
             // 
             // ToolStripSeparator8
             // 
             this.ToolStripSeparator8.Name = "ToolStripSeparator8";
-            this.ToolStripSeparator8.Size = new System.Drawing.Size(176, 6);
+            this.ToolStripSeparator8.Size = new System.Drawing.Size(this.TsMenusWidth[0] - 3, 6);
             // 
             // tsFilePrint
             // 
             this.tsFilePrint.Name = "tsFilePrint";
             this.tsFilePrint.ShortcutKeys = System.Windows.Forms.Keys.P | System.Windows.Forms.Keys.Control;
-            this.tsFilePrint.Size = new System.Drawing.Size(179, 22);
+            this.tsFilePrint.Size = new System.Drawing.Size(this.TsMenusWidth[0], 22);
             this.tsFilePrint.Text = "&Print...";
             this.tsFilePrint.Click += new System.EventHandler(tsFilePrint_Click);
             // 
             // ToolStripSeparator9
             // 
             this.ToolStripSeparator9.Name = "ToolStripSeparator9";
-            this.ToolStripSeparator9.Size = new System.Drawing.Size(176, 6);
+            this.ToolStripSeparator9.Size = new System.Drawing.Size(this.TsMenusWidth[0] - 3, 6);
             // 
             // tsFileQuit
             // 
             this.tsFileQuit.Name = "tsFileQuit";
             this.tsFileQuit.ShortcutKeys = System.Windows.Forms.Keys.Q | System.Windows.Forms.Keys.Control;
-            this.tsFileQuit.Size = new System.Drawing.Size(179, 22);
+            this.tsFileQuit.Size = new System.Drawing.Size(this.TsMenusWidth[0], 22);
             this.tsFileQuit.Text = "&Quit";
             this.tsFileQuit.Click += new System.EventHandler(tsFileQuit_Click);
             // 
             // ImportExportToolStripMenuItem
             // 
-            this.ImportExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[7]
+            this.ImportExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[9]
             {
-            (System.Windows.Forms.ToolStripItem) this.tsImport,
-            (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator12,
-            (System.Windows.Forms.ToolStripItem) this.tsExport,
-            (System.Windows.Forms.ToolStripItem) this.tsExportLong,
-            (System.Windows.Forms.ToolStripItem) this.tsExportDataLink,
-            (System.Windows.Forms.ToolStripItem) this.ToolStripSeparator25,
-            (System.Windows.Forms.ToolStripItem) this.tsExportDiscord
+                this.tsImport,
+                this.ToolStripSeparator12,
+                this.tsExport,
+                this.tsExportLong,
+                this.tsExportDataLink,
+                this.ToolStripSeparator25,
+                this.tsGenFreebies,
+                this.ToolStripSeparator27,
+                this.tsExportDiscord
             });
             this.ImportExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ImportExportToolStripMenuItem.Name = "ImportExportToolStripMenuItem";
@@ -714,45 +724,57 @@ namespace Hero_Designer
             // 
             this.tsImport.Name = "tsImport";
             this.tsImport.ShortcutKeys = System.Windows.Forms.Keys.I | System.Windows.Forms.Keys.Control;
-            this.tsImport.Size = new System.Drawing.Size(240, 22);
+            this.tsImport.Size = new System.Drawing.Size(this.TsMenusWidth[1], 22);
             this.tsImport.Text = "&Import from Forum Post";
             this.tsImport.Click += new System.EventHandler(tsImport_Click);
             // 
             // ToolStripSeparator12
             // 
             this.ToolStripSeparator12.Name = "ToolStripSeparator12";
-            this.ToolStripSeparator12.Size = new System.Drawing.Size(237, 6);
+            this.ToolStripSeparator12.Size = new System.Drawing.Size(this.TsMenusWidth[1] - 3, 6);
             // 
             // tsExport
             // 
             this.tsExport.Name = "tsExport";
-            this.tsExport.Size = new System.Drawing.Size(240, 22);
+            this.tsExport.Size = new System.Drawing.Size(this.TsMenusWidth[1], 22);
             this.tsExport.Text = "&Short Forum Export...";
             this.tsExport.Click += new System.EventHandler(tsExport_Click);
             // 
             // tsExportLong
             // 
             this.tsExportLong.Name = "tsExportLong";
-            this.tsExportLong.Size = new System.Drawing.Size(240, 22);
+            this.tsExportLong.Size = new System.Drawing.Size(this.TsMenusWidth[1], 22);
             this.tsExportLong.Text = "&Long Forum Export...";
             this.tsExportLong.Click += new System.EventHandler(tsExportLong_Click);
             // 
             // tsExportDataLink
             // 
             this.tsExportDataLink.Name = "tsExportDataLink";
-            this.tsExportDataLink.Size = new System.Drawing.Size(240, 22);
+            this.tsExportDataLink.Size = new System.Drawing.Size(this.TsMenusWidth[1], 22);
             this.tsExportDataLink.Text = "Export Data Link";
             this.tsExportDataLink.Click += new System.EventHandler(tsExportDataLink_Click);
             //
             // ToolStripSeparator25
-            // 
+            //
             this.ToolStripSeparator25.Name = "ToolStripSeparator25";
-            this.ToolStripSeparator25.Size = new System.Drawing.Size(237, 6);
+            this.ToolStripSeparator25.Size = new System.Drawing.Size(this.TsMenusWidth[1] - 3, 6);
+            //
+            // tsGenFreebies
+            //
+            this.tsGenFreebies.Name = "tsGenFreebies";
+            this.tsGenFreebies.Size = new System.Drawing.Size(this.TsMenusWidth[0], 22);
+            this.tsGenFreebies.Text = "Export Build to Beta Server";
+            this.tsGenFreebies.Click += new System.EventHandler(tsGenFreebies_Click);
+            //
+            // ToolStripSeparator25
+            // 
+            this.ToolStripSeparator27.Name = "ToolStripSeparator27";
+            this.ToolStripSeparator27.Size = new System.Drawing.Size(this.TsMenusWidth[1] - 3, 6);
             // 
             // tsExportDataLink
             // 
             this.tsExportDiscord.Name = "tsExportDiscord";
-            this.tsExportDiscord.Size = new System.Drawing.Size(240, 22);
+            this.tsExportDiscord.Size = new System.Drawing.Size(this.TsMenusWidth[1], 22);
             this.tsExportDiscord.Text = "Export to Discord";
             this.tsExportDiscord.Click += new System.EventHandler(tsExportDiscord_Click);
             // 
@@ -761,14 +783,14 @@ namespace Hero_Designer
             this.OptionsToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
             this.OptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[8]
             {
-            this.tsConfig,
-            this.ToolStripSeparator14,
-            this.tsUpdateCheck,
-            this.ToolStripSeparator22,
-            this.tsLevelUp,
-            this.tsDynamic,
-            this.ToolStripSeparator5,
-            this.AdvancedToolStripMenuItem1
+                this.tsConfig,
+                this.ToolStripSeparator14,
+                this.tsUpdateCheck,
+                this.ToolStripSeparator22,
+                this.tsLevelUp,
+                this.tsDynamic,
+                this.ToolStripSeparator5,
+                this.AdvancedToolStripMenuItem1
             });
             this.OptionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem";
@@ -778,31 +800,31 @@ namespace Hero_Designer
             // tsConfig
             // 
             this.tsConfig.Name = "tsConfig";
-            this.tsConfig.Size = new System.Drawing.Size(199, 22);
+            this.tsConfig.Size = new System.Drawing.Size(this.TsMenusWidth[2], 22);
             this.tsConfig.Text = "&Configuration...";
             this.tsConfig.Click += new System.EventHandler(tsConfig_Click);
             // 
             // ToolStripSeparator14
             // 
             this.ToolStripSeparator14.Name = "ToolStripSeparator14";
-            this.ToolStripSeparator14.Size = new System.Drawing.Size(196, 6);
+            this.ToolStripSeparator14.Size = new System.Drawing.Size(this.TsMenusWidth[2] - 3, 6);
             // 
             // tsUpdateCheck
             // 
             this.tsUpdateCheck.Name = "tsUpdateCheck";
-            this.tsUpdateCheck.Size = new System.Drawing.Size(199, 22);
+            this.tsUpdateCheck.Size = new System.Drawing.Size(this.TsMenusWidth[2], 22);
             this.tsUpdateCheck.Text = "Check for &Updates Now";
             this.tsUpdateCheck.Click += new System.EventHandler(tsUpdateCheck_Click);
             // 
             // ToolStripSeparator22
             // 
             this.ToolStripSeparator22.Name = "ToolStripSeparator22";
-            this.ToolStripSeparator22.Size = new System.Drawing.Size(196, 6);
+            this.ToolStripSeparator22.Size = new System.Drawing.Size(this.TsMenusWidth[2] - 3, 6);
             // 
             // tsLevelUp
             // 
             this.tsLevelUp.Name = "tsLevelUp";
-            this.tsLevelUp.Size = new System.Drawing.Size(199, 22);
+            this.tsLevelUp.Size = new System.Drawing.Size(this.TsMenusWidth[2], 22);
             this.tsLevelUp.Text = "&Level-Up Mode";
             this.tsLevelUp.ToolTipText = "Alternate between placing powers and slots, just like levelling up in-game.";
             this.tsLevelUp.Click += new System.EventHandler(tsLevelUp_Click);
@@ -810,7 +832,7 @@ namespace Hero_Designer
             // tsDynamic
             // 
             this.tsDynamic.Name = "tsDynamic";
-            this.tsDynamic.Size = new System.Drawing.Size(199, 22);
+            this.tsDynamic.Size = new System.Drawing.Size(this.TsMenusWidth[2], 22);
             this.tsDynamic.Text = "&Dynamic Mode";
             this.tsDynamic.ToolTipText = "Place powers and slots in any order.";
             this.tsDynamic.Click += new System.EventHandler(tsDynamic_Click);
@@ -818,7 +840,7 @@ namespace Hero_Designer
             // ToolStripSeparator5
             // 
             this.ToolStripSeparator5.Name = "ToolStripSeparator5";
-            this.ToolStripSeparator5.Size = new System.Drawing.Size(196, 6);
+            this.ToolStripSeparator5.Size = new System.Drawing.Size(this.TsMenusWidth[2] - 3, 6);
             // 
             // AdvancedToolStripMenuItem1
             // 
@@ -830,7 +852,7 @@ namespace Hero_Designer
             (System.Windows.Forms.ToolStripItem) this.tsAdvResetTips
             });
             this.AdvancedToolStripMenuItem1.Name = "AdvancedToolStripMenuItem1";
-            this.AdvancedToolStripMenuItem1.Size = new System.Drawing.Size(199, 22);
+            this.AdvancedToolStripMenuItem1.Size = new System.Drawing.Size(this.TsMenusWidth[2], 22);
             this.AdvancedToolStripMenuItem1.Text = "&Advanced";
             // 
             // tsAdvDBEdit
@@ -886,7 +908,7 @@ namespace Hero_Designer
             (System.Windows.Forms.ToolStripItem) this.tsIOMax
             });
             this.SetAllIOsToDefault35ToolStripMenuItem.Name = "SetAllIOsToDefault35ToolStripMenuItem";
-            this.SetAllIOsToDefault35ToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.SetAllIOsToDefault35ToolStripMenuItem.Size = new System.Drawing.Size(this.TsMenusWidth[3], 22);
             this.SetAllIOsToDefault35ToolStripMenuItem.Text = "&Set all IOs to...";
             // 
             // tsIODefault
@@ -929,7 +951,7 @@ namespace Hero_Designer
             (System.Windows.Forms.ToolStripItem) this.tsEnhToTO
             });
             this.ToolStripMenuItem1.Name = "ToolStripMenuItem1";
-            this.ToolStripMenuItem1.Size = new System.Drawing.Size(245, 22);
+            this.ToolStripMenuItem1.Size = new System.Drawing.Size(this.TsMenusWidth[3], 22);
             this.ToolStripMenuItem1.Text = "Set all Enhancement &Origins to...";
             // 
             // tsEnhToSO
@@ -969,7 +991,7 @@ namespace Hero_Designer
             (System.Windows.Forms.ToolStripItem) this.tsEnhToNone
             });
             this.ToolStripMenuItem2.Name = "ToolStripMenuItem2";
-            this.ToolStripMenuItem2.Size = new System.Drawing.Size(245, 22);
+            this.ToolStripMenuItem2.Size = new System.Drawing.Size(this.TsMenusWidth[3], 22);
             this.ToolStripMenuItem2.Text = "Set all &Relative Levels to...";
             // 
             // tsEnhToPlus5
@@ -1045,7 +1067,7 @@ namespace Hero_Designer
             // ToolStripSeparator17
             // 
             this.ToolStripSeparator17.Name = "ToolStripSeparator17";
-            this.ToolStripSeparator17.Size = new System.Drawing.Size(242, 6);
+            this.ToolStripSeparator17.Size = new System.Drawing.Size(this.TsMenusWidth[3] - 3, 6);
             // 
             // SlotsToolStripMenuItem
             // 
@@ -1059,7 +1081,7 @@ namespace Hero_Designer
             (System.Windows.Forms.ToolStripItem) this.AutoArrangeAllSlotsToolStripMenuItem
             });
             this.SlotsToolStripMenuItem.Name = "SlotsToolStripMenuItem";
-            this.SlotsToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.SlotsToolStripMenuItem.Size = new System.Drawing.Size(this.TsMenusWidth[3], 22);
             this.SlotsToolStripMenuItem.Text = "Slo&ts";
             // 
             // tsFlipAllEnh
@@ -1128,21 +1150,21 @@ namespace Hero_Designer
             //this.tsView4Col.Checked = true;
             //this.tsView4Col.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsView4Col.Name = "tsView4Col";
-            this.tsView4Col.Size = new System.Drawing.Size(282, 22);
+            this.tsView4Col.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsView4Col.Text = "&4 Columns";
             this.tsView4Col.Click += new System.EventHandler(tsView4Col_Click);
             // 
             // tsView3Col
             // 
             this.tsView3Col.Name = "tsView3Col";
-            this.tsView3Col.Size = new System.Drawing.Size(282, 22);
+            this.tsView3Col.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsView3Col.Text = "&3 Columns";
             this.tsView3Col.Click += new System.EventHandler(tsView3Col_Click);
             // 
             // tsView2Col
             // 
             this.tsView2Col.Name = "tsView2Col";
-            this.tsView2Col.Size = new System.Drawing.Size(282, 22);
+            this.tsView2Col.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsView2Col.Text = "&2 Columns";
             this.tsView2Col.Click += new System.EventHandler(tsView2Col_Click);
             // 
@@ -1151,7 +1173,7 @@ namespace Hero_Designer
             this.tsViewIOLevels.Checked = true;
             this.tsViewIOLevels.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsViewIOLevels.Name = "tsViewIOLevels";
-            this.tsViewIOLevels.Size = new System.Drawing.Size(282, 22);
+            this.tsViewIOLevels.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsViewIOLevels.Text = "Show &IO Levels";
             this.tsViewIOLevels.Click += new System.EventHandler(tsViewIOLevels_Click);
             // 
@@ -1160,14 +1182,14 @@ namespace Hero_Designer
             this.tsViewSOLevels.Checked = false;
             this.tsViewSOLevels.CheckState = System.Windows.Forms.CheckState.Unchecked;
             this.tsViewSOLevels.Name = "tsViewSOLevels";
-            this.tsViewSOLevels.Size = new System.Drawing.Size(282, 22);
+            this.tsViewSOLevels.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsViewSOLevels.Text = "Show SO/HO Levels";
             this.tsViewSOLevels.Click += new System.EventHandler(tsViewSOLevels_Click);
             // 
             // tsViewRelative
             // 
             this.tsViewRelative.Name = "tsViewRelative";
-            this.tsViewRelative.Size = new System.Drawing.Size(282, 22);
+            this.tsViewRelative.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsViewRelative.Text = "Show &Enhancement Relative Levels";
             this.tsViewRelative.Click += new System.EventHandler(tsViewRelative_Click);
             // 
@@ -1176,42 +1198,42 @@ namespace Hero_Designer
             this.tsViewRelativeAsSigns.Checked = false;
             this.tsViewRelativeAsSigns.CheckState = System.Windows.Forms.CheckState.Unchecked;
             this.tsViewRelativeAsSigns.Name = "tsViewRelativeAsSigns";
-            this.tsViewRelativeAsSigns.Size = new System.Drawing.Size(282, 22);
+            this.tsViewRelativeAsSigns.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsViewRelativeAsSigns.Text = "Show Relative Levels with signs ('+'/'-')";
             this.tsViewRelativeAsSigns.Click += new System.EventHandler(tsViewRelativeAsSigns_Click);
             // 
             // tsViewSlotLevels
             // 
             this.tsViewSlotLevels.Name = "tsViewSlotLevels";
-            this.tsViewSlotLevels.Size = new System.Drawing.Size(282, 22);
+            this.tsViewSlotLevels.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsViewSlotLevels.Text = "Show &Slot Placement Levels";
             this.tsViewSlotLevels.Click += new System.EventHandler(tsViewSlotLevels_Click);
             // 
             // ToolStripSeparator2
             // 
             this.ToolStripSeparator2.Name = "ToolStripSeparator2";
-            this.ToolStripSeparator2.Size = new System.Drawing.Size(279, 6);
+            this.ToolStripSeparator2.Size = new System.Drawing.Size(this.TsMenusWidth[4] - 3, 6);
             // 
             // tsViewActualDamage_New
             // 
             this.tsViewActualDamage_New.Checked = true;
             this.tsViewActualDamage_New.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsViewActualDamage_New.Name = "tsViewActualDamage_New";
-            this.tsViewActualDamage_New.Size = new System.Drawing.Size(282, 22);
+            this.tsViewActualDamage_New.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsViewActualDamage_New.Text = "Show Damage Per Activation (Level 50)";
             this.tsViewActualDamage_New.Click += new System.EventHandler(tsViewActualDamage_New_Click);
             // 
             // tsViewDPS_New
             // 
             this.tsViewDPS_New.Name = "tsViewDPS_New";
-            this.tsViewDPS_New.Size = new System.Drawing.Size(282, 22);
+            this.tsViewDPS_New.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tsViewDPS_New.Text = "Show Damage Per Second (Level 50)";
             this.tsViewDPS_New.Click += new System.EventHandler(tsViewDPS_New_Click);
             // 
             // tlsDPA
             // 
             this.tlsDPA.Name = "tlsDPA";
-            this.tlsDPA.Size = new System.Drawing.Size(282, 22);
+            this.tlsDPA.Size = new System.Drawing.Size(this.TsMenusWidth[4], 22);
             this.tlsDPA.Text = "Show Damage Per Animation (Level 50)";
             this.tlsDPA.Click += new System.EventHandler(tlsDPA_Click);
             // 
@@ -1244,7 +1266,7 @@ namespace Hero_Designer
             // tsBug
             // 
             this.tsBugCrytilis.Name = "tsBug";
-            this.tsBugCrytilis.Size = new System.Drawing.Size(258, 22);
+            this.tsBugCrytilis.Size = new System.Drawing.Size(this.TsMenusWidth[5], 22);
             this.tsBugCrytilis.Text = "F&ile Bug Report";
             this.tsBugCrytilis.Visible = true;
             this.tsBugCrytilis.Click += new System.EventHandler(tsBugReportCrytilis_Click);
@@ -1252,7 +1274,7 @@ namespace Hero_Designer
             /* tsBug
             // 
             /this.tsBugImaginary.Name = "tsBugImaginary";
-            this.tsBugImaginary.Size = new System.Drawing.Size(258, 22);
+            this.tsBugImaginary.Size = new System.Drawing.Size(this.TsMenusWidth[5], 22);
             this.tsBugImaginary.Text = "F&ile Bug Report (Imaginary)";
             this.tsBugImaginary.Visible = true;
             this.tsBugImaginary.Click += new System.EventHandler(tsBugReportImaginary_Click);*/
@@ -1260,7 +1282,7 @@ namespace Hero_Designer
             // tsTitanForum
             // 
             this.tsHCMRBForum.Name = "tsHCMRBForum";
-            this.tsHCMRBForum.Size = new System.Drawing.Size(258, 22);
+            this.tsHCMRBForum.Size = new System.Drawing.Size(this.TsMenusWidth[5], 22);
             this.tsHCMRBForum.Text = "Official Homecoming Forum Thread";
             this.tsHCMRBForum.Click += new System.EventHandler(tsForumLink);
             // 
@@ -1272,7 +1294,7 @@ namespace Hero_Designer
             // tsDonate
             // 
             this.tsKoFi.Name = "tsKoFi";
-            this.tsKoFi.Size = new System.Drawing.Size(258, 22);
+            this.tsKoFi.Size = new System.Drawing.Size(this.TsMenusWidth[5], 22);
             this.tsKoFi.Text = "Support MRB via Ko-Fi";
             this.tsKoFi.Click += new System.EventHandler(tsKoFi_Click);
             // 
@@ -1284,7 +1306,7 @@ namespace Hero_Designer
             // tsPatreon
             // 
             this.tsPatreon.Name = "tsPatreon";
-            this.tsPatreon.Size = new System.Drawing.Size(258, 22);
+            this.tsPatreon.Size = new System.Drawing.Size(this.TsMenusWidth[5], 22);
             this.tsPatreon.Text = "Support MRB via Patreon";
             this.tsPatreon.Click += new System.EventHandler(tsPatreon_Click);
             // 
@@ -1296,14 +1318,14 @@ namespace Hero_Designer
             // tsGitHubCrytilis
             // 
             this.tsGitHubCrytilis.Name = "tsGitHubCrytilis";
-            this.tsGitHubCrytilis.Size = new System.Drawing.Size(258, 22);
+            this.tsGitHubCrytilis.Size = new System.Drawing.Size(this.TsMenusWidth[5], 22);
             this.tsGitHubCrytilis.Text = "MRB &GitHub";
             this.tsGitHubCrytilis.Click += new System.EventHandler(tsCrytilisLink);
             // 
             /* tsGitHunImaginary
             // 
             this.tsGitHubImaginary.Name = "tsGitHubImaginary";
-            this.tsGitHubImaginary.Size = new System.Drawing.Size(258, 22);
+            this.tsGitHubImaginary.Size = new System.Drawing.Size(this.TsMenusWidth[5], 22);
             this.tsGitHubImaginary.Text = "MRB &GitHub (Imaginary)";
             this.tsGitHubImaginary.Click += new System.EventHandler(tsImaginaryLink);*/
             // 
@@ -1337,7 +1359,7 @@ namespace Hero_Designer
             // 
             this.tsViewSets.Name = "tsViewSets";
             this.tsViewSets.ShortcutKeys = System.Windows.Forms.Keys.B | System.Windows.Forms.Keys.Control;
-            this.tsViewSets.Size = new System.Drawing.Size(232, 22);
+            this.tsViewSets.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.tsViewSets.Text = "&Sets && Bonuses";
             this.tsViewSets.Click += new System.EventHandler(tsViewSets_Click);
             // 
@@ -1345,7 +1367,7 @@ namespace Hero_Designer
             // 
             this.tsViewGraphs.Name = "tsViewGraphs";
             this.tsViewGraphs.ShortcutKeys = System.Windows.Forms.Keys.G | System.Windows.Forms.Keys.Control;
-            this.tsViewGraphs.Size = new System.Drawing.Size(232, 22);
+            this.tsViewGraphs.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.tsViewGraphs.Text = "Power &Graphs";
             this.tsViewGraphs.Click += new System.EventHandler(tsViewGraphs_Click);
             // 
@@ -1353,7 +1375,7 @@ namespace Hero_Designer
             // 
             this.tsViewSetCompare.Name = "tsViewSetCompare";
             this.tsViewSetCompare.ShortcutKeys = System.Windows.Forms.Keys.C | System.Windows.Forms.Keys.Control;
-            this.tsViewSetCompare.Size = new System.Drawing.Size(232, 22);
+            this.tsViewSetCompare.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.tsViewSetCompare.Text = "Powerset &Comparison";
             this.tsViewSetCompare.Click += new System.EventHandler(tsViewSetCompare_Click);
             // 
@@ -1361,7 +1383,7 @@ namespace Hero_Designer
             // 
             this.tsViewData.Name = "tsViewData";
             this.tsViewData.ShortcutKeys = System.Windows.Forms.Keys.D | System.Windows.Forms.Keys.Control;
-            this.tsViewData.Size = new System.Drawing.Size(232, 22);
+            this.tsViewData.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.tsViewData.Text = "&Data View";
             this.tsViewData.Click += new System.EventHandler(tsViewData_Click);
             // 
@@ -1369,20 +1391,20 @@ namespace Hero_Designer
             // 
             this.tsViewTotals.Name = "tsViewTotals";
             this.tsViewTotals.ShortcutKeys = System.Windows.Forms.Keys.T | System.Windows.Forms.Keys.Control;
-            this.tsViewTotals.Size = new System.Drawing.Size(232, 22);
+            this.tsViewTotals.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.tsViewTotals.Text = "Advanced &Totals";
             this.tsViewTotals.Click += new System.EventHandler(tsViewTotals_Click);
             // 
             // ToolStripSeparator18
             // 
             this.ToolStripSeparator18.Name = "ToolStripSeparator18";
-            this.ToolStripSeparator18.Size = new System.Drawing.Size(229, 6);
+            this.ToolStripSeparator18.Size = new System.Drawing.Size(this.TsMenusWidth[6] - 3, 6);
             // 
             // tsRecipeViewer
             // 
             this.tsRecipeViewer.Name = "tsRecipeViewer";
             this.tsRecipeViewer.ShortcutKeys = System.Windows.Forms.Keys.R | System.Windows.Forms.Keys.Control;
-            this.tsRecipeViewer.Size = new System.Drawing.Size(232, 22);
+            this.tsRecipeViewer.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.tsRecipeViewer.Text = "&Recipe Viewer";
             this.tsRecipeViewer.Click += new System.EventHandler(tsRecipeViewer_Click);
             // 
@@ -1390,26 +1412,26 @@ namespace Hero_Designer
             // 
             this.tsDPSCalc.Name = "tsDPSCalc";
             this.tsDPSCalc.ShortcutKeys = System.Windows.Forms.Keys.Z | System.Windows.Forms.Keys.Control;
-            this.tsDPSCalc.Size = new System.Drawing.Size(232, 22);
+            this.tsDPSCalc.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.tsDPSCalc.Text = "DPS Calculator (Beta)";
             this.tsDPSCalc.Click += new System.EventHandler(tsDPSCalc_Click);
             // 
             // ToolStripSeparator19
             // 
             this.ToolStripSeparator19.Name = "ToolStripSeparator19";
-            this.ToolStripSeparator19.Size = new System.Drawing.Size(229, 6);
+            this.ToolStripSeparator19.Size = new System.Drawing.Size(this.TsMenusWidth[6] - 3, 6);
             // 
             // tsSetFind
             // 
             this.tsSetFind.Name = "tsSetFind";
-            this.tsSetFind.Size = new System.Drawing.Size(232, 22);
+            this.tsSetFind.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.tsSetFind.Text = "Set &Bonus Finder";
             this.tsSetFind.Click += new System.EventHandler(tsSetFind_Click);
             // 
             // ToolStripSeparator21
             // 
             this.ToolStripSeparator21.Name = "ToolStripSeparator21";
-            this.ToolStripSeparator21.Size = new System.Drawing.Size(229, 6);
+            this.ToolStripSeparator21.Size = new System.Drawing.Size(this.TsMenusWidth[6] - 3, 6);
             // 
             // InGameRespecHelperToolStripMenuItem
             // 
@@ -1422,7 +1444,7 @@ namespace Hero_Designer
             (System.Windows.Forms.ToolStripItem) this.tsHelperLong2
             });
             this.InGameRespecHelperToolStripMenuItem.Name = "InGameRespecHelperToolStripMenuItem";
-            this.InGameRespecHelperToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.InGameRespecHelperToolStripMenuItem.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.InGameRespecHelperToolStripMenuItem.Text = "In-Game &Respec Helper";
             // 
             // tsHelperShort
@@ -1461,26 +1483,26 @@ namespace Hero_Designer
             // ToolStripMenuItem4
             // 
             this.ToolStripMenuItem4.Name = "ToolStripMenuItem4";
-            this.ToolStripMenuItem4.Size = new System.Drawing.Size(229, 6);
+            this.ToolStripMenuItem4.Size = new System.Drawing.Size(this.TsMenusWidth[6] - 3, 6);
             // 
             // AccoladesWindowToolStripMenuItem
             // 
             this.AccoladesWindowToolStripMenuItem.Name = "AccoladesWindowToolStripMenuItem";
-            this.AccoladesWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.AccoladesWindowToolStripMenuItem.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.AccoladesWindowToolStripMenuItem.Text = "&Accolades Window";
             this.AccoladesWindowToolStripMenuItem.Click += new System.EventHandler(AccoladesWindowToolStripMenuItem_Click);
             // 
             // IncarnateWindowToolStripMenuItem
             // 
             this.IncarnateWindowToolStripMenuItem.Name = "IncarnateWindowToolStripMenuItem";
-            this.IncarnateWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.IncarnateWindowToolStripMenuItem.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.IncarnateWindowToolStripMenuItem.Text = "&Incarnate Window";
             this.IncarnateWindowToolStripMenuItem.Click += new System.EventHandler(IncarnateWindowToolStripMenuItem_Click);
             // 
             // TemporaryPowersWindowToolStripMenuItem
             // 
             this.TemporaryPowersWindowToolStripMenuItem.Name = "TemporaryPowersWindowToolStripMenuItem";
-            this.TemporaryPowersWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.TemporaryPowersWindowToolStripMenuItem.Size = new System.Drawing.Size(this.TsMenusWidth[6], 22);
             this.TemporaryPowersWindowToolStripMenuItem.Text = "T&emporary Powers Window";
             this.TemporaryPowersWindowToolStripMenuItem.Click += new System.EventHandler(TemporaryPowersWindowToolStripMenuItem_Click);
             // 
@@ -2089,11 +2111,13 @@ namespace Hero_Designer
         ToolStripMenuItem tsExport;
         ToolStripMenuItem tsExportDataLink;
         ToolStripSeparator ToolStripSeparator25;
+        ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsExportDiscord;
         ToolStripMenuItem tsExportLong;
         ToolStripMenuItem tsFileNew;
         ToolStripMenuItem tsFileOpen;
         ToolStripMenuItem tsBuildRcv;
+        ToolStripMenuItem tsGenFreebies;
         ToolStripMenuItem tsFilePrint;
         ToolStripMenuItem tsFileQuit;
         ToolStripMenuItem tsFileSave;
@@ -2232,5 +2256,7 @@ namespace Hero_Designer
         TextBox txtName;
         ToolStripMenuItem ViewToolStripMenuItem;
         ToolStripMenuItem WindowToolStripMenuItem;
+
+        private readonly int[] TsMenusWidth = new int[7] { 230, 240, 199, 245, 282, 258, 232 };
     }
 }

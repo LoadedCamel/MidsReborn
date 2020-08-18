@@ -41,6 +41,8 @@ namespace Hero_Designer
             this.btnEditEnh = new System.Windows.Forms.Button();
             this.btnEditIOSetPvE = new System.Windows.Forms.Button();
             this.GroupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblCountMods = new System.Windows.Forms.Label();
+            this.Label10 = new System.Windows.Forms.Label();
             this.lblCountSalvage = new System.Windows.Forms.Label();
             this.Label6 = new System.Windows.Forms.Label();
             this.lblCountRecipe = new System.Windows.Forms.Label();
@@ -71,12 +73,15 @@ namespace Hero_Designer
             this.btnEditIOSetPvP = new System.Windows.Forms.Button();
             this.btnExportJSON = new System.Windows.Forms.Button();
             this.btnJsonImporter = new System.Windows.Forms.Button();
+            this.btnAttribModEdit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             this.GroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // udIssue
             // 
+            this.udIssue.BackColor = System.Drawing.Color.White;
+            this.udIssue.ForeColor = System.Drawing.Color.Black;
             this.udIssue.Location = new System.Drawing.Point(148, 44);
             this.udIssue.Minimum = new decimal(new int[] {
             1,
@@ -88,7 +93,7 @@ namespace Hero_Designer
             this.udIssue.TabIndex = 0;
             this.udIssue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.udIssue.Value = new decimal(new int[] {
-            12,
+            26,
             0,
             0,
             0});
@@ -126,8 +131,9 @@ namespace Hero_Designer
             // btnEditEnh
             // 
             this.btnEditEnh.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnEditEnh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditEnh.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditEnh.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditEnh.ForeColor = System.Drawing.Color.Black;
             this.btnEditEnh.Location = new System.Drawing.Point(48, 168);
             this.btnEditEnh.Name = "btnEditEnh";
             this.btnEditEnh.Size = new System.Drawing.Size(160, 24);
@@ -139,8 +145,9 @@ namespace Hero_Designer
             // btnEditIOSetPvE
             // 
             this.btnEditIOSetPvE.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnEditIOSetPvE.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditIOSetPvE.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditIOSetPvE.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditIOSetPvE.ForeColor = System.Drawing.Color.Black;
             this.btnEditIOSetPvE.Location = new System.Drawing.Point(48, 198);
             this.btnEditIOSetPvE.Name = "btnEditIOSetPvE";
             this.btnEditIOSetPvE.Size = new System.Drawing.Size(160, 24);
@@ -151,6 +158,8 @@ namespace Hero_Designer
             // 
             // GroupBox1
             // 
+            this.GroupBox1.Controls.Add(this.lblCountMods);
+            this.GroupBox1.Controls.Add(this.Label10);
             this.GroupBox1.Controls.Add(this.lblCountSalvage);
             this.GroupBox1.Controls.Add(this.Label6);
             this.GroupBox1.Controls.Add(this.lblCountRecipe);
@@ -170,10 +179,29 @@ namespace Hero_Designer
             this.GroupBox1.ForeColor = System.Drawing.Color.White;
             this.GroupBox1.Location = new System.Drawing.Point(236, 4);
             this.GroupBox1.Name = "GroupBox1";
-            this.GroupBox1.Size = new System.Drawing.Size(164, 218);
+            this.GroupBox1.Size = new System.Drawing.Size(164, 238);
             this.GroupBox1.TabIndex = 9;
             this.GroupBox1.TabStop = false;
             this.GroupBox1.Text = "Statistics:";
+            // 
+            // lblCountMods
+            // 
+            this.lblCountMods.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblCountMods.Location = new System.Drawing.Point(88, 208);
+            this.lblCountMods.Name = "lblCountMods";
+            this.lblCountMods.Size = new System.Drawing.Size(68, 20);
+            this.lblCountMods.TabIndex = 22;
+            this.lblCountMods.Text = "Count";
+            this.lblCountMods.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // Label10
+            // 
+            this.Label10.Location = new System.Drawing.Point(4, 208);
+            this.Label10.Name = "Label10";
+            this.Label10.Size = new System.Drawing.Size(84, 20);
+            this.Label10.TabIndex = 21;
+            this.Label10.Text = "Mod Tables:";
+            this.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblCountSalvage
             // 
@@ -331,9 +359,10 @@ namespace Hero_Designer
             // 
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnClose.Location = new System.Drawing.Point(236, 288);
+            this.btnClose.ForeColor = System.Drawing.Color.Black;
+            this.btnClose.Location = new System.Drawing.Point(236, 318);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(164, 24);
             this.btnClose.TabIndex = 10;
@@ -344,11 +373,12 @@ namespace Hero_Designer
             // btnDate
             // 
             this.btnDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnDate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDate.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDate.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnDate.Location = new System.Drawing.Point(31, 16);
+            this.btnDate.ForeColor = System.Drawing.Color.Black;
+            this.btnDate.Location = new System.Drawing.Point(31, 15);
             this.btnDate.Name = "btnDate";
-            this.btnDate.Size = new System.Drawing.Size(111, 20);
+            this.btnDate.Size = new System.Drawing.Size(111, 23);
             this.btnDate.TabIndex = 13;
             this.btnDate.Text = "Set Date";
             this.btnDate.UseVisualStyleBackColor = true;
@@ -358,8 +388,9 @@ namespace Hero_Designer
             // btnSalvage
             // 
             this.btnSalvage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnSalvage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSalvage.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSalvage.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSalvage.ForeColor = System.Drawing.Color.Black;
             this.btnSalvage.Location = new System.Drawing.Point(48, 258);
             this.btnSalvage.Name = "btnSalvage";
             this.btnSalvage.Size = new System.Drawing.Size(160, 24);
@@ -371,8 +402,9 @@ namespace Hero_Designer
             // btnRecipe
             // 
             this.btnRecipe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnRecipe.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRecipe.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRecipe.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnRecipe.ForeColor = System.Drawing.Color.Black;
             this.btnRecipe.Location = new System.Drawing.Point(48, 288);
             this.btnRecipe.Name = "btnRecipe";
             this.btnRecipe.Size = new System.Drawing.Size(160, 24);
@@ -384,9 +416,10 @@ namespace Hero_Designer
             // btnCSV
             // 
             this.btnCSV.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnCSV.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCSV.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCSV.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnCSV.Location = new System.Drawing.Point(48, 323);
+            this.btnCSV.ForeColor = System.Drawing.Color.Black;
+            this.btnCSV.Location = new System.Drawing.Point(48, 357);
             this.btnCSV.Name = "btnCSV";
             this.btnCSV.Size = new System.Drawing.Size(160, 24);
             this.btnCSV.TabIndex = 16;
@@ -397,8 +430,9 @@ namespace Hero_Designer
             // btnEditEntity
             // 
             this.btnEditEntity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnEditEntity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditEntity.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditEntity.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditEntity.ForeColor = System.Drawing.Color.Black;
             this.btnEditEntity.Location = new System.Drawing.Point(48, 138);
             this.btnEditEntity.Name = "btnEditEntity";
             this.btnEditEntity.Size = new System.Drawing.Size(160, 24);
@@ -410,8 +444,9 @@ namespace Hero_Designer
             // btnPSBrowse
             // 
             this.btnPSBrowse.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnPSBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPSBrowse.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPSBrowse.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnPSBrowse.ForeColor = System.Drawing.Color.Black;
             this.btnPSBrowse.Location = new System.Drawing.Point(48, 94);
             this.btnPSBrowse.Name = "btnPSBrowse";
             this.btnPSBrowse.Size = new System.Drawing.Size(160, 38);
@@ -422,6 +457,8 @@ namespace Hero_Designer
             // 
             // txtDBVer
             // 
+            this.txtDBVer.BackColor = System.Drawing.Color.White;
+            this.txtDBVer.ForeColor = System.Drawing.Color.Black;
             this.txtDBVer.Location = new System.Drawing.Point(148, 68);
             this.txtDBVer.Name = "txtDBVer";
             this.txtDBVer.Size = new System.Drawing.Size(84, 20);
@@ -440,9 +477,10 @@ namespace Hero_Designer
             // btnFileReport
             // 
             this.btnFileReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnFileReport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFileReport.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFileReport.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnFileReport.Location = new System.Drawing.Point(236, 258);
+            this.btnFileReport.ForeColor = System.Drawing.Color.Black;
+            this.btnFileReport.Location = new System.Drawing.Point(236, 288);
             this.btnFileReport.Name = "btnFileReport";
             this.btnFileReport.Size = new System.Drawing.Size(164, 24);
             this.btnFileReport.TabIndex = 23;
@@ -467,8 +505,9 @@ namespace Hero_Designer
             // btnEditIOSetPvP
             // 
             this.btnEditIOSetPvP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnEditIOSetPvP.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditIOSetPvP.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditIOSetPvP.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditIOSetPvP.ForeColor = System.Drawing.Color.Black;
             this.btnEditIOSetPvP.Location = new System.Drawing.Point(48, 228);
             this.btnEditIOSetPvP.Name = "btnEditIOSetPvP";
             this.btnEditIOSetPvP.Size = new System.Drawing.Size(160, 24);
@@ -480,9 +519,10 @@ namespace Hero_Designer
             // btnExportJSON
             // 
             this.btnExportJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnExportJSON.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExportJSON.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExportJSON.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnExportJSON.Location = new System.Drawing.Point(48, 353);
+            this.btnExportJSON.ForeColor = System.Drawing.Color.Black;
+            this.btnExportJSON.Location = new System.Drawing.Point(48, 387);
             this.btnExportJSON.Name = "btnExportJSON";
             this.btnExportJSON.Size = new System.Drawing.Size(160, 24);
             this.btnExportJSON.TabIndex = 26;
@@ -493,9 +533,10 @@ namespace Hero_Designer
             // btnJsonImporter
             // 
             this.btnJsonImporter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnJsonImporter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnJsonImporter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnJsonImporter.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnJsonImporter.Location = new System.Drawing.Point(48, 383);
+            this.btnJsonImporter.ForeColor = System.Drawing.Color.Black;
+            this.btnJsonImporter.Location = new System.Drawing.Point(48, 417);
             this.btnJsonImporter.Name = "btnJsonImporter";
             this.btnJsonImporter.Size = new System.Drawing.Size(160, 24);
             this.btnJsonImporter.TabIndex = 27;
@@ -503,11 +544,26 @@ namespace Hero_Designer
             this.btnJsonImporter.UseVisualStyleBackColor = true;
             this.btnJsonImporter.Click += new System.EventHandler(this.btnJsonImporter_Click);
             // 
+            // btnAttribModEdit
+            // 
+            this.btnAttribModEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnAttribModEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAttribModEdit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAttribModEdit.ForeColor = System.Drawing.Color.Black;
+            this.btnAttribModEdit.Location = new System.Drawing.Point(48, 318);
+            this.btnAttribModEdit.Name = "btnAttribModEdit";
+            this.btnAttribModEdit.Size = new System.Drawing.Size(160, 24);
+            this.btnAttribModEdit.TabIndex = 28;
+            this.btnAttribModEdit.Text = "AttribMod Editor";
+            this.btnAttribModEdit.UseVisualStyleBackColor = true;
+            this.btnAttribModEdit.Click += new System.EventHandler(this.btnAttribModEdit_Click);
+            // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(416, 422);
+            this.ClientSize = new System.Drawing.Size(416, 453);
+            this.Controls.Add(this.btnAttribModEdit);
             this.Controls.Add(this.btnJsonImporter);
             this.Controls.Add(this.btnExportJSON);
             this.Controls.Add(this.btnFileReport);
@@ -550,5 +606,8 @@ namespace Hero_Designer
 
         private Button btnExportJSON;
         private Button btnJsonImporter;
+        private Label lblCountMods;
+        private Label Label10;
+        private Button btnAttribModEdit;
     }
 }
