@@ -1,4 +1,3 @@
-
 using System.IO;
 
 public interface IEnhancement
@@ -37,10 +36,6 @@ public interface IEnhancement
 
     string UIDSet { get; set; }
 
-    //IPower Power { get; set; }
-    IPower GetPower();
-    void SetPower(IPower power);
-
     Enums.sEffect[] Effect { get; set; }
 
     float EffectChance { get; set; }
@@ -64,6 +59,10 @@ public interface IEnhancement
     bool Superior { get; set; }
 
     string LongName { get; }
+
+    //IPower Power { get; set; }
+    IPower GetPower();
+    void SetPower(IPower power);
 
     int CheckAndFixIOLevel(int level);
 

@@ -1,15 +1,15 @@
-
 using System;
 using System.IO;
 using System.Windows.Forms;
 
 public class Modifiers
 {
+    private const string StoreName = "Mids' Hero Designer Attribute Modifier Tables";
     public ModifierTable[] Modifier = new ModifierTable[0];
+    public int Revision;
     public DateTime RevisionDate = new DateTime(0L);
     public string SourceIndex = string.Empty;
     public string SourceTables = string.Empty;
-    public int Revision;
 
     public bool ImportModifierTablefromCSV(string baseFn, string tableFn, int iRevision)
     {
@@ -23,6 +23,7 @@ public class Modifiers
             MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return false;
         }
+
         Modifier = new ModifierTable[0];
         string iLine1;
         do
@@ -30,15 +31,15 @@ public class Modifiers
             iLine1 = FileIO.ReadLineUnlimited(iStream1, char.MinValue);
             if (iLine1 == null || iLine1.StartsWith("#"))
                 continue;
-            string[] array = CSV.ToArray(iLine1);
+            var array = CSV.ToArray(iLine1);
             Array.Resize(ref Modifier, Modifier.Length + 1);
             Modifier[Modifier.Length - 1] = new ModifierTable
             {
                 BaseIndex = Convert.ToInt32(array[0]),
                 ID = array[1]
             };
-        }
-        while (iLine1 != null);
+        } while (iLine1 != null);
+
         iStream1.Close();
         StreamReader iStream2;
         try
@@ -50,28 +51,29 @@ public class Modifiers
             MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return false;
         }
+
         string iLine2;
         do
         {
             iLine2 = FileIO.ReadLineUnlimited(iStream2, char.MinValue);
             if (iLine2 == null || iLine2.StartsWith("#"))
                 continue;
-            string[] array = CSV.ToArray(iLine2);
+            var array = CSV.ToArray(iLine2);
             if (array.Length <= 0)
                 continue;
-            int num = int.Parse(array[0]) - 1;
-            for (int index1 = 0; index1 <= Modifier.Length - 1; ++index1)
+            var num = int.Parse(array[0]) - 1;
+            for (var index1 = 0; index1 <= Modifier.Length - 1; ++index1)
             {
-                if (!(num >= Modifier[index1].BaseIndex & num <= Modifier[index1].BaseIndex + 55))
+                if (!((num >= Modifier[index1].BaseIndex) & (num <= Modifier[index1].BaseIndex + 55)))
                     continue;
-                int index2 = num - Modifier[index1].BaseIndex;
+                var index2 = num - Modifier[index1].BaseIndex;
                 Modifier[index1].Table[index2] = new float[array.Length - 1];
-                for (int index3 = 0; index3 <= array.Length - 2; ++index3)
+                for (var index3 = 0; index3 <= array.Length - 2; ++index3)
                     Modifier[index1].Table[index2][index3] = float.Parse(array[index3 + 1]);
                 break;
             }
-        }
-        while (iLine2 != null);
+        } while (iLine2 != null);
+
         bool flag;
         if (Modifier.Length > 0)
         {
@@ -82,13 +84,16 @@ public class Modifiers
             flag = true;
         }
         else
+        {
             flag = false;
+        }
+
         return flag;
     }
 
     public bool Load()
     {
-        string path = Files.SelectDataFileLoad("AttribMod.mhd");
+        var path = Files.SelectDataFileLoad("AttribMod.mhd");
         Modifier = new ModifierTable[0];
         FileStream fileStream;
         BinaryReader reader;
@@ -102,6 +107,7 @@ public class Modifiers
             MessageBox.Show(ex.Message + '\n' + '\n' + "Modifier tables couldn't be loaded.");
             return false;
         }
+
         try
         {
             if (reader.ReadString() != "Mids' Hero Designer Attribute Modifier Tables")
@@ -116,9 +122,9 @@ public class Modifiers
             RevisionDate = DateTime.FromBinary(reader.ReadInt64());
             SourceIndex = reader.ReadString();
             SourceTables = reader.ReadString();
-            int num = 0;
+            var num = 0;
             Modifier = new ModifierTable[reader.ReadInt32() + 1];
-            for (int index = 0; index <= Modifier.Length - 1; ++index)
+            for (var index = 0; index <= Modifier.Length - 1; ++index)
             {
                 Modifier[index] = new ModifierTable();
                 Modifier[index].Load(reader);
@@ -127,11 +133,13 @@ public class Modifiers
                 num = 0;
                 Application.DoEvents();
             }
+
             return true;
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Modifier table file isn't how it should be (" + ex.Message + ")" + '\n' + "No modifiers loaded.");
+            MessageBox.Show("Modifier table file isn't how it should be (" + ex.Message + ")" + '\n' +
+                            "No modifiers loaded.");
             Modifier = new ModifierTable[0];
             reader.Close();
             fileStream.Close();
@@ -139,7 +147,7 @@ public class Modifiers
         }
     }
 
-    void StoreRaw(ISerialize serializer, string path, string name)
+    private void StoreRaw(ISerialize serializer, string path, string name)
     {
         var toSerialize = new
         {
@@ -153,10 +161,9 @@ public class Modifiers
         ConfigData.SaveRawMhd(serializer, toSerialize, path, null);
     }
 
-    const string StoreName = "Mids' Hero Designer Attribute Modifier Tables";
     public void Store(ISerialize serializer)
     {
-        string path = Files.SelectDataFileSave("AttribMod.mhd");
+        var path = Files.SelectDataFileSave("AttribMod.mhd");
         StoreRaw(serializer, path, StoreName);
         FileStream fileStream;
         BinaryWriter writer;
@@ -170,6 +177,7 @@ public class Modifiers
             MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             return;
         }
+
         try
         {
             writer.Write(StoreName);
@@ -178,7 +186,7 @@ public class Modifiers
             writer.Write(SourceIndex);
             writer.Write(SourceTables);
             writer.Write(Modifier.Length - 1);
-            for (int index = 0; index <= Modifier.Length - 1; ++index)
+            for (var index = 0; index <= Modifier.Length - 1; ++index)
                 Modifier[index].StoreTo(writer);
         }
         catch (Exception ex)
@@ -194,13 +202,13 @@ public class Modifiers
 
     public class ModifierTable
     {
-        public string ID = string.Empty;
         public readonly float[][] Table = new float[55][];
         public int BaseIndex;
+        public string ID = string.Empty;
 
         public ModifierTable()
         {
-            for (int index = 0; index < Table.Length; ++index)
+            for (var index = 0; index < Table.Length; ++index)
                 Table[index] = new float[0];
         }
 
@@ -208,10 +216,10 @@ public class Modifiers
         {
             writer.Write(ID);
             writer.Write(BaseIndex);
-            for (int index1 = 0; index1 <= Table.Length - 1; ++index1)
+            for (var index1 = 0; index1 <= Table.Length - 1; ++index1)
             {
                 writer.Write(Table[index1].Length - 1);
-                for (int index2 = 0; index2 <= Table[index1].Length - 1; ++index2)
+                for (var index2 = 0; index2 <= Table[index1].Length - 1; ++index2)
                     writer.Write(Table[index1][index2]);
             }
         }
@@ -220,10 +228,10 @@ public class Modifiers
         {
             ID = reader.ReadString();
             BaseIndex = reader.ReadInt32();
-            for (int index1 = 0; index1 <= Table.Length - 1; ++index1)
+            for (var index1 = 0; index1 <= Table.Length - 1; ++index1)
             {
                 Table[index1] = new float[reader.ReadInt32() + 1];
-                for (int index2 = 0; index2 <= Table[index1].Length - 1; ++index2)
+                for (var index2 = 0; index2 <= Table[index1].Length - 1; ++index2)
                     Table[index1][index2] = reader.ReadSingle();
             }
         }

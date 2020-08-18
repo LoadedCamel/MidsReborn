@@ -7,25 +7,88 @@ using Base;
 
 public interface ISerialize
 {
+    string Extension { get; }
     string Serialize(object o);
     T Deserialize<T>(string x);
-    string Extension { get; }
 }
 
 public class ConfigData
 {
-    string _defaultSaveFolderOverride;
-    Size _lastSize = new Size(1072, 760);
+    public enum EDamageMath
+    {
+        Minimum,
+        Average,
+        Max
+    }
+
+    public enum EDamageReturn
+    {
+        Numeric,
+        DPS,
+        DPA
+    }
+
+    public enum PrintOptionProfile
+    {
+        None,
+        SinglePage,
+        MultiPage
+    }
+
+    private const string header = "Mids' Hero Designer Config V2";
+
+    private const string OverrideNames = "Mids' Hero Designer Comparison Overrides";
+
+    public readonly short[] DragDropScenarioAction =
+    {
+        3, 0, 5, 0, 3, 5, 0, 0, 5, 0, 2, 3, 0, 2, 2, 0, 0, 0, 0, 0
+    };
+
+    private string _defaultSaveFolderOverride;
+    private Size _lastSize = new Size(1072, 760);
+    public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
+    public string UpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
+
+    private ConfigData() : this(true, "")
+    {
+    }
+
+    private ConfigData(bool deserializing, string iFilename)
+    {
+        DamageMath.Calculate = EDamageMath.Average;
+        DamageMath.ReturnValue = EDamageReturn.Numeric;
+        I9.DefaultIOLevel = 49;
+        RtFont.SetDefault();
+        Tips = new Tips();
+        Export = new ExportConfig();
+        CompOverride = Array.Empty<Enums.CompOverride>();
+        if (deserializing) return;
+        if (!string.IsNullOrEmpty(iFilename) && File.Exists(iFilename))
+            try
+            {
+                LegacyForMigration(iFilename);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+            }
+
+        IntializeComponent();
+    }
 
     // these properties require setters for deserialization
     public SDamageMath DamageMath { get; } = new SDamageMath();
     public IncludeExclude Inc { get; } = new IncludeExclude();
     public Si9 I9 { get; } = new Si9();
     public FontSettings RtFont { get; } = new FontSettings();
-    public Size LastSize { get => _lastSize; set => _lastSize = value; }
+
+    public Size LastSize
+    {
+        get => _lastSize;
+        set => _lastSize = value;
+    }
 
     public float BaseAcc { get; set; } = 0.75f;
-    public string UpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
     public bool DoNotUpdateFileAssociation { get; set; }
     public int ExempHigh { get; set; } = 50;
     public int TeamSize { get; set; } = 1;
@@ -51,9 +114,10 @@ public class ConfigData
     public bool DiscordAuthorized { get; set; }
     public List<object> CryptedList { get; set; }
     public Dictionary<string, object> DAuth { get; set; }
+
     public Dictionary<string, object> DUser { get; set; }
     //public Dictionary<string, object> DServers { get; set; }
-    
+
     public string DNickName { get; set; }
     public List<string> DServers { get; set; }
     public string DSelServer { get; set; }
@@ -69,11 +133,7 @@ public class ConfigData
     public bool DisableAlphaPopup { get; set; }
     public bool DisableRepeatOnMiddleClick { get; set; }
     public bool DisableExportHex { get; set; }
-    public readonly short[] DragDropScenarioAction = {
-            3, 0, 5, 0, 3, 5, 0, 0, 5, 0, 2, 3, 0, 2, 2, 0, 0, 0, 0, 0
-        };
-    public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
-    static ConfigData _current { get; set; }
+    private static ConfigData _current { get; set; }
 
     public bool ExportBonusTotals { get; set; }
     public bool ExportBonusList { get; set; }
@@ -110,11 +170,12 @@ public class ConfigData
             if (string.IsNullOrWhiteSpace(value)
                 || Path.GetFullPath(value) == osDefault
                 || value == osDefault
-                || (osDefault != null && Path.GetFullPath(osDefault) == value))
+                || osDefault != null && Path.GetFullPath(osDefault) == value)
             {
                 _defaultSaveFolderOverride = null;
                 return;
             }
+
             _defaultSaveFolderOverride = value;
         }
     }
@@ -131,9 +192,9 @@ public class ConfigData
         }
     }
 
-    static void MigrateToSerializer(string mhdFn, ISerialize serializer)
+    private static void MigrateToSerializer(string mhdFn, ISerialize serializer)
     {
-        var oldMethod = new ConfigData(deserializing: false, iFilename: mhdFn);
+        var oldMethod = new ConfigData(false, mhdFn);
         oldMethod.IntializeComponent();
         var file = mhdFn + ".old";
         if (File.Exists(file))
@@ -146,13 +207,12 @@ public class ConfigData
     {
         // migrate
         // force Mhd if it exists, then rename it
-        var mhdFn = Files.GetConfigFilename(forceMhd: true);
+        var mhdFn = Files.GetConfigFilename(true);
         if (File.Exists(mhdFn))
             MigrateToSerializer(mhdFn, serializer);
 
-        var fn = Files.GetConfigFilename(forceMhd: false);
+        var fn = Files.GetConfigFilename(false);
         if (File.Exists(fn) && fn.EndsWith(".json"))
-        {
             try
             {
                 var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
@@ -162,41 +222,13 @@ public class ConfigData
             {
                 MessageBox.Show("Failed to load json config, falling back to mhd");
             }
-        }
         else
-        {
-            _current = new ConfigData(deserializing: false, iFilename: Files.GetConfigFilename(forceMhd: true));
-        }
+            _current = new ConfigData(false, Files.GetConfigFilename(true));
+
         _current.IntializeComponent();
     }
 
-    ConfigData() : this(true, "") { }
-
-    ConfigData(bool deserializing, string iFilename)
-    {
-        DamageMath.Calculate = EDamageMath.Average;
-        DamageMath.ReturnValue = EDamageReturn.Numeric;
-        I9.DefaultIOLevel = 49;
-        RtFont.SetDefault();
-        Tips = new Tips();
-        Export = new ExportConfig();
-        CompOverride = Array.Empty<Enums.CompOverride>();
-        if (deserializing) return;
-        if (!string.IsNullOrEmpty(iFilename) && File.Exists(iFilename))
-        {
-            try
-            {
-                LegacyForMigration(iFilename);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            }
-        }
-        IntializeComponent();
-    }
-
-    void IntializeComponent()
+    private void IntializeComponent()
     {
         if (string.IsNullOrEmpty(UpdatePath))
             UpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
@@ -212,12 +244,11 @@ public class ConfigData
         }
     }
 
-    void LegacyForMigration(string iFilename)
+    private void LegacyForMigration(string iFilename)
     {
         //using (FileStream fileStream = new FileStream(iFilename, FileMode.Open, FileAccess.Read))
         {
-
-            using (BinaryReader reader = new BinaryReader(File.Open(iFilename, FileMode.Open, FileAccess.Read)))
+            using (var reader = new BinaryReader(File.Open(iFilename, FileMode.Open, FileAccess.Read)))
             {
                 float version;
                 switch (reader.ReadString())
@@ -238,6 +269,7 @@ public class ConfigData
                         //fileStream.Close();
                         return;
                 }
+
                 /* Commenting out for now - will remove later
                 this.DNickName = reader.ReadString();
                 this.DSelServer = reader.ReadString();
@@ -249,24 +281,22 @@ public class ConfigData
                 double num5 = reader.ReadSingle();
                 double num6 = reader.ReadSingle();
                 double num7 = reader.ReadSingle();
-                CalcEnhLevel = (Enums.eEnhRelative)reader.ReadInt32();
-                CalcEnhOrigin = (Enums.eEnhGrade)reader.ReadInt32();
+                CalcEnhLevel = (Enums.eEnhRelative) reader.ReadInt32();
+                CalcEnhOrigin = (Enums.eEnhGrade) reader.ReadInt32();
                 ExempHigh = reader.ReadInt32();
                 ExempLow = reader.ReadInt32();
                 Inc.DisablePvE = !reader.ReadBoolean();
                 reader.ReadBoolean();
-                DamageMath.Calculate = (EDamageMath)reader.ReadInt32();
+                DamageMath.Calculate = (EDamageMath) reader.ReadInt32();
                 reader.ReadSingle();
                 if (version < 1.24000000953674)
-                {
                     reader.ReadBoolean();
-                }
                 else
                     reader.ReadInt32();
-                DamageMath.ReturnValue = (EDamageReturn)reader.ReadInt32();
+                DamageMath.ReturnValue = (EDamageReturn) reader.ReadInt32();
                 DisableDataDamageGraph = !reader.ReadBoolean();
                 DataDamageGraphPercentageOnly = reader.ReadBoolean();
-                DataGraphType = (Enums.eDDGraph)reader.ReadInt32();
+                DataGraphType = (Enums.eDDGraph) reader.ReadInt32();
                 ExportScheme = reader.ReadInt32();
                 ExportTarget = reader.ReadInt32();
                 if (version >= 1.24000000953674)
@@ -274,6 +304,7 @@ public class ConfigData
                     ExportBonusTotals = reader.ReadBoolean();
                     ExportBonusList = reader.ReadBoolean();
                 }
+
                 //this._hideOriginEnhancements =
                 reader.ReadBoolean();
                 DisableVillainColors = !reader.ReadBoolean();
@@ -281,8 +312,8 @@ public class ConfigData
                 Columns = reader.ReadInt32();
                 _lastSize.Width = reader.ReadInt32();
                 _lastSize.Height = reader.ReadInt32();
-                DvState = (Enums.eVisibleSize)reader.ReadInt32();
-                StatGraphStyle = (Enums.GraphStyle)reader.ReadInt32();
+                DvState = (Enums.eVisibleSize) reader.ReadInt32();
+                StatGraphStyle = (Enums.GraphStyle) reader.ReadInt32();
                 if (version >= 1.0)
                     IsInitialized = !reader.ReadBoolean();
                 if (version >= 1.10000002384186)
@@ -306,6 +337,7 @@ public class ConfigData
                     //this._printScheme = 
                     reader.ReadInt32();
                 }
+
                 if (version >= 1.21000003814697)
                 {
                     RtFont.PairedBase = reader.ReadSingle();
@@ -323,6 +355,7 @@ public class ConfigData
                     RtFont.ColorPlName = reader.ReadRGB();
                     RtFont.ColorPlSpecial = reader.ReadRGB();
                 }
+
                 if (version >= 1.22000002861023)
                 {
                     ShowSlotLevels = reader.ReadBoolean();
@@ -337,22 +370,25 @@ public class ConfigData
                     RtFont.ColorPowerTakenDarkVillain = reader.ReadRGB();
                     RtFont.ColorPowerHighlightVillain = reader.ReadRGB();
                 }
+
                 if (version >= 1.23000001907349)
                 {
                     Tips = new Tips(reader);
                     DefaultSaveFolderOverride = reader.ReadString();
                 }
+
                 if (version >= 1.24000000953674)
                 {
                     EnhanceVisibility = reader.ReadBoolean();
                     reader.ReadBoolean();
-                    BuildMode = (Enums.dmModes)reader.ReadInt32();
-                    BuildOption = (Enums.dmItem)reader.ReadInt32();
+                    BuildMode = (Enums.dmModes) reader.ReadInt32();
+                    BuildOption = (Enums.dmItem) reader.ReadInt32();
                     //this.UpdatePath =
                     reader.ReadString();
                     //if (string.IsNullOrEmpty(this.UpdatePath))
                     //    this.UpdatePath = "https://midsreborn.com/mids_updates/";
                 }
+
                 if (version >= 1.25)
                 {
                     ShowEnhRel = reader.ReadBoolean();
@@ -362,17 +398,18 @@ public class ConfigData
                         DisableAlphaPopup = !reader.ReadBoolean();
                     PopupRecipes = reader.ReadBoolean();
                     ShoppingListIncludesRecipes = reader.ReadBoolean();
-                    PrintProfile = (PrintOptionProfile)reader.ReadInt32();
+                    PrintProfile = (PrintOptionProfile) reader.ReadInt32();
                     PrintHistory = reader.ReadBoolean();
                     LastPrinter = reader.ReadString();
                     DisablePrintProfileEnh = !reader.ReadBoolean();
                     DisableDesaturateInherent = !reader.ReadBoolean();
                     DisableRepeatOnMiddleClick = !reader.ReadBoolean();
                 }
+
                 if (version >= 1.25999999046326)
                     DisableExportHex = !reader.ReadBoolean();
                 if (version >= 1.26999998092651)
-                    SpeedFormat = (Enums.eSpeedMeasure)reader.ReadInt32();
+                    SpeedFormat = (Enums.eSpeedMeasure) reader.ReadInt32();
                 if (version >= 1.27999997138977)
                     SaveFolderChecked = reader.ReadBoolean();
                 if (version >= 1.28999996185303)
@@ -382,7 +419,10 @@ public class ConfigData
         }
     }
 
-    public string GetSaveFolder() => DefaultSaveFolderOverride ?? OS.GetDefaultSaveFolder();
+    public string GetSaveFolder()
+    {
+        return DefaultSaveFolderOverride ?? OS.GetDefaultSaveFolder();
+    }
 
     public void CreateDefaultSaveFolder()
     {
@@ -395,28 +435,36 @@ public class ConfigData
         Directory.CreateDirectory(saveFolder);
     }
 
-    void SaveRaw(ISerialize serializer, string iFilename)
-        => SaveRawMhd(serializer, this, iFilename, null);
-
-    const string header = "Mids' Hero Designer Config V2";
-    void Save(ISerialize serializer, string iFilename)
-        => SaveRaw(serializer, iFilename);
-
-    void RelocateSaveFolder(bool manual)
+    private void SaveRaw(ISerialize serializer, string iFilename)
     {
-        if (!string.IsNullOrWhiteSpace(DefaultSaveFolderOverride) && Directory.Exists(DefaultSaveFolderOverride) && OS.GetDefaultSaveFolder() != DefaultSaveFolderOverride & (!SaveFolderChecked | manual))
+        SaveRawMhd(serializer, this, iFilename, null);
+    }
+
+    private void Save(ISerialize serializer, string iFilename)
+    {
+        SaveRaw(serializer, iFilename);
+    }
+
+    private void RelocateSaveFolder(bool manual)
+    {
+        if (!string.IsNullOrWhiteSpace(DefaultSaveFolderOverride) && Directory.Exists(DefaultSaveFolderOverride) &&
+            (OS.GetDefaultSaveFolder() != DefaultSaveFolderOverride) & (!SaveFolderChecked | manual))
         {
             if (DefaultSaveFolderOverride.IndexOf(OS.GetMyDocumentsPath(), StringComparison.OrdinalIgnoreCase) > -1)
             {
                 SaveFolderChecked = true;
                 return;
             }
+
             if (Directory.Exists(DefaultSaveFolderOverride))
             {
-                if (MessageBox.Show("In order for Mids' Reborn : Designer to operate better in more recent versions of Windows, the recommended Save folder has been changed to appear inside the My Documents folder.\nThe application can automatically move your save folder and its contents to 'My Documents\\Hero & Villain Builds\\'.\nThis message will not appear again.\n\nMove your Save folder now?", "Save Folder Location", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                if (MessageBox.Show(
+                    "In order for Mids' Reborn : Designer to operate better in more recent versions of Windows, the recommended Save folder has been changed to appear inside the My Documents folder.\nThe application can automatically move your save folder and its contents to 'My Documents\\Hero & Villain Builds\\'.\nThis message will not appear again.\n\nMove your Save folder now?",
+                    "Save Folder Location", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 {
                     LastFileName = string.Empty;
-                    string defaultSaveFolder = DefaultSaveFolderOverride;
+                    var defaultSaveFolder = DefaultSaveFolderOverride;
                     DefaultSaveFolderOverride = null;
                     if (FileIO.CopyFolder(defaultSaveFolder, GetSaveFolder()))
                     {
@@ -424,14 +472,18 @@ public class ConfigData
                     }
                     else
                     {
-                        MessageBox.Show(@"Save folder couldn't be moved! Using old save folder instead.", "Whoops", MessageBoxButtons.OK);
+                        MessageBox.Show(@"Save folder couldn't be moved! Using old save folder instead.", "Whoops",
+                            MessageBoxButtons.OK);
                         DefaultSaveFolderOverride = defaultSaveFolder;
                     }
                 }
             }
             else
+            {
                 CreateDefaultSaveFolder();
+            }
         }
+
         SaveFolderChecked = true;
     }
 
@@ -450,11 +502,11 @@ public class ConfigData
         }
     }
 
-    void LoadOverrides()
+    private void LoadOverrides()
     {
-        using (FileStream fileStream = new FileStream(Files.SelectDataFileLoad("Compare.mhd"), FileMode.Open, FileAccess.Read))
+        using (var fileStream = new FileStream(Files.SelectDataFileLoad("Compare.mhd"), FileMode.Open, FileAccess.Read))
         {
-            using (BinaryReader binaryReader = new BinaryReader(fileStream))
+            using (var binaryReader = new BinaryReader(fileStream))
             {
                 if (binaryReader.ReadString() != "Mids' Hero Designer Comparison Overrides")
                 {
@@ -463,7 +515,7 @@ public class ConfigData
                 else
                 {
                     CompOverride = new Enums.CompOverride[binaryReader.ReadInt32() + 1];
-                    for (int index = 0; index <= CompOverride.Length - 1; ++index)
+                    for (var index = 0; index <= CompOverride.Length - 1; ++index)
                     {
                         CompOverride[index].Powerset = binaryReader.ReadString();
                         CompOverride[index].Power = binaryReader.ReadString();
@@ -483,18 +535,19 @@ public class ConfigData
     {
         try
         {
-            var path = Path.Combine(Path.GetDirectoryName(fn), Path.GetFileNameWithoutExtension(fn) + "." + serializer.Extension);
+            var path = Path.Combine(Path.GetDirectoryName(fn),
+                Path.GetFileNameWithoutExtension(fn) + "." + serializer.Extension);
             var text = serializer.Serialize(o);
             // don't save if the file will be the same
             if (lastSaveInfo != null && text != null
-                && lastSaveInfo.Length > 0 && text.Length > 0
-                && lastSaveInfo.Hash != 0 && lastSaveInfo.Hash == text.GetHashCode()
-                && File.Exists(fn))
+                                     && lastSaveInfo.Length > 0 && text.Length > 0
+                                     && lastSaveInfo.Hash != 0 && lastSaveInfo.Hash == text.GetHashCode()
+                                     && File.Exists(fn))
                 return lastSaveInfo;
             if (lastSaveInfo != null)
                 Console.WriteLine("Writing out updated file: " + fn);
-            File.WriteAllText(path, contents: text);
-            return new RawSaveResult(length: text?.Length ?? 0, hash: text?.GetHashCode() ?? 0);
+            File.WriteAllText(path, text);
+            return new RawSaveResult(text?.Length ?? 0, text?.GetHashCode() ?? 0);
         }
         catch (Exception ex)
         {
@@ -503,8 +556,7 @@ public class ConfigData
         }
     }
 
-    const string OverrideNames = "Mids' Hero Designer Comparison Overrides";
-    void SaveRawOverrides(ISerialize serializer, string iFilename, string name)
+    private void SaveRawOverrides(ISerialize serializer, string iFilename, string name)
     {
         var toSerialize = new
         {
@@ -514,18 +566,18 @@ public class ConfigData
         SaveRawMhd(serializer, toSerialize, iFilename, null);
     }
 
-    void SaveOverrides(ISerialize serializer)
+    private void SaveOverrides(ISerialize serializer)
     {
         var fn = Files.SelectDataFileLoad("Compare.mhd");
         SaveRawOverrides(serializer, fn, OverrideNames);
 
-        using (FileStream fileStream = new FileStream(fn, FileMode.Create))
+        using (var fileStream = new FileStream(fn, FileMode.Create))
         {
-            using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
+            using (var binaryWriter = new BinaryWriter(fileStream))
             {
                 binaryWriter.Write(OverrideNames);
                 binaryWriter.Write(CompOverride.Length - 1);
-                for (int index = 0; index <= CompOverride.Length - 1; ++index)
+                for (var index = 0; index <= CompOverride.Length - 1; ++index)
                 {
                     binaryWriter.Write(CompOverride[index].Powerset);
                     binaryWriter.Write(CompOverride[index].Power);
@@ -535,37 +587,20 @@ public class ConfigData
         }
     }
 
-    public enum EDamageMath
-    {
-        Minimum,
-        Average,
-        Max
-    }
-
-    public enum EDamageReturn
-    {
-        Numeric,
-        DPS,
-        DPA
-    }
-
-    public enum PrintOptionProfile
-    {
-        None,
-        SinglePage,
-        MultiPage
-    }
-
     public class SDamageMath
     {
-        public EDamageMath Calculate { get; set; }
-        public EDamageReturn ReturnValue { get; set; }
-        public SDamageMath() { }
+        public SDamageMath()
+        {
+        }
+
         public SDamageMath(EDamageMath dmgMath, EDamageReturn dmgRet)
         {
             Calculate = dmgMath;
             ReturnValue = dmgRet;
         }
+
+        public EDamageMath Calculate { get; set; }
+        public EDamageReturn ReturnValue { get; set; }
     }
 
     public class IncludeExclude
@@ -662,8 +697,12 @@ public class ConfigData
             ColorPowerHighlightHero = Color.FromArgb(64, 64, 96);
             ColorPowerTakenVillain = Color.FromArgb(191, 74, 56);
             ColorPowerTakenDarkVillain = Color.Maroon;
-            ColorPowerHighlightVillain = Color.FromArgb(96,64,64);
-            ColorList = new List<Color> { ColorPowerTakenHero, ColorPowerTakenDarkHero, ColorPowerHighlightHero, ColorPowerTakenVillain, ColorPowerTakenDarkVillain, ColorPowerHighlightVillain };
+            ColorPowerHighlightVillain = Color.FromArgb(96, 64, 64);
+            ColorList = new List<Color>
+            {
+                ColorPowerTakenHero, ColorPowerTakenDarkHero, ColorPowerHighlightHero, ColorPowerTakenVillain,
+                ColorPowerTakenDarkVillain, ColorPowerHighlightVillain
+            };
             PairedBase = 8.25f;
             PairedBold = false;
         }

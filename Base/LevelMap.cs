@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -20,13 +19,14 @@ public class LevelMap
         }
         catch (Exception ex)
         {
-            int num = (int)MessageBox.Show("An error has occurred reading level data from database. Error: " + ex.Message);
+            var num = (int) MessageBox.Show("An error has occurred reading level data from database. Error: " +
+                                            ex.Message);
             throw;
         }
     }
 
     public Enums.dmItem LevelType()
     {
-        return Powers <= 0 ? (Slots <= 0 ? Enums.dmItem.None : Enums.dmItem.Slot) : Enums.dmItem.Power;
+        return Powers <= 0 ? Slots <= 0 ? Enums.dmItem.None : Enums.dmItem.Slot : Enums.dmItem.Power;
     }
 }

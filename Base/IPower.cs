@@ -1,12 +1,9 @@
-
 using System;
 using System.IO;
 using Base.Data_Classes;
 
 public interface IPower : IComparable
 {
-    IPowerset GetPowerSet();
-
     string FullSetName { get; }
 
     float CastTime { get; set; }
@@ -198,6 +195,7 @@ public interface IPower : IComparable
     bool HasGrantPowerEffect { get; set; }
 
     bool HasPowerOverrideEffect { get; set; }
+    IPowerset GetPowerSet();
 
     void StoreTo(ref BinaryWriter writer);
 
@@ -222,18 +220,19 @@ public interface IPower : IComparable
     Enums.ShortFX GetEnhancementMagSum(Enums.eEffectType iEffect, int subType = 0);
 
     Enums.ShortFX GetEffectMagSum(
-      Enums.eEffectType iEffect,
-      bool includeDelayed = false,
-      bool onlySelf = false,
-      bool onlyTarget = false,
-      bool maxMode = false);
+        Enums.eEffectType iEffect,
+        bool includeDelayed = false,
+        bool onlySelf = false,
+        bool onlyTarget = false,
+        bool maxMode = false);
 
     Enums.ShortFX GetDamageMagSum(
-      Enums.eEffectType iEffect,
-      Enums.eDamage iSub,
-      bool includeDelayed = false);
+        Enums.eEffectType iEffect,
+        Enums.eDamage iSub,
+        bool includeDelayed = false);
 
-    Enums.ShortFX GetEffectMag(Enums.eEffectType iEffect, Enums.eToWho iTarget = Enums.eToWho.Unspecified, bool allowDelay = false);
+    Enums.ShortFX GetEffectMag(Enums.eEffectType iEffect, Enums.eToWho iTarget = Enums.eToWho.Unspecified,
+        bool allowDelay = false);
 
     bool AffectsTarget(Enums.eEffectType iEffect);
 
@@ -250,22 +249,22 @@ public interface IPower : IComparable
     void SetMathMag();
 
     bool GetEffectStringGrouped(
-      int idEffect,
-      ref string returnString,
-      ref int[] returnMask,
-      bool shortForm,
-      bool simple,
-      bool noMag = false);
+        int idEffect,
+        ref string returnString,
+        ref int[] returnMask,
+        bool shortForm,
+        bool simple,
+        bool noMag = false);
 
     int[] AbsorbEffects(
-      IPower source,
-      float nDuration,
-      float nDelay,
-      Archetype archetype,
-      int stacking,
-      bool isGrantPower = false,
-      int fxid = -1,
-      int effectId = -1);
+        IPower source,
+        float nDuration,
+        float nDelay,
+        Archetype archetype,
+        int stacking,
+        bool isGrantPower = false,
+        int fxid = -1,
+        int effectId = -1);
 
     void ApplyGrantPowerEffects();
 

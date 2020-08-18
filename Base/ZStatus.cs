@@ -1,11 +1,15 @@
-
 using System.Windows.Forms;
 
 public partial class ZStatus : Form
 {
-    private Label lblStatus2;
     private Label lblStatus1;
+    private Label lblStatus2;
     private Label lblTitle;
+
+    public ZStatus()
+    {
+        InitializeComponent();
+    }
 
     public string StatusText1
     {
@@ -27,10 +31,5 @@ public partial class ZStatus : Form
             lblStatus2.Text = value;
             lblStatus2.Refresh();
         }
-    }
-
-    public ZStatus()
-    {
-        InitializeComponent();
     }
 }

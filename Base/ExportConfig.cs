@@ -1,4 +1,3 @@
-
 using System;
 using System.Drawing;
 using System.IO;
@@ -6,8 +5,31 @@ using System.Windows.Forms;
 
 public class ExportConfig
 {
+    public enum Element
+    {
+        Title,
+        Heading,
+        Level,
+        Power,
+        Slots,
+        IO,
+        SetO,
+        HO
+    }
+
+    public enum WhiteSpace
+    {
+        Space,
+        Tab
+    }
+
     public ColorScheme[] ColorSchemes = new ColorScheme[0];
     public FormatCodes[] FormatCode = new FormatCodes[0];
+
+    public ExportConfig()
+    {
+        ResetColorsToDefaults();
+    }
 
     public void AddScheme()
     {
@@ -26,45 +48,47 @@ public class ExportConfig
 
     public void RemoveScheme(int index)
     {
-        if (!(index > -1 & index < ColorSchemes.Length))
+        if (!((index > -1) & (index < ColorSchemes.Length)))
             return;
-        ColorScheme[] colorSchemeArray = new ColorScheme[ColorSchemes.Length - 1];
-        int index1 = 0;
-        for (int index2 = 0; index2 < ColorSchemes.Length; ++index2)
+        var colorSchemeArray = new ColorScheme[ColorSchemes.Length - 1];
+        var index1 = 0;
+        for (var index2 = 0; index2 < ColorSchemes.Length; ++index2)
         {
             if (index2 == index)
                 continue;
             colorSchemeArray[index1].Assign(ColorSchemes[index2]);
             ++index1;
         }
+
         ColorSchemes = new ColorScheme[colorSchemeArray.Length];
-        for (int index2 = 0; index2 < colorSchemeArray.Length; ++index2)
+        for (var index2 = 0; index2 < colorSchemeArray.Length; ++index2)
             ColorSchemes[index2].Assign(colorSchemeArray[index2]);
     }
 
     public void RemoveCodes(int index)
     {
-        if (!(index > -1 & index < FormatCode.Length))
+        if (!((index > -1) & (index < FormatCode.Length)))
             return;
-        FormatCodes[] formatCodesArray = new FormatCodes[FormatCode.Length - 1];
-        int index1 = 0;
-        for (int index2 = 0; index2 < FormatCode.Length; ++index2)
+        var formatCodesArray = new FormatCodes[FormatCode.Length - 1];
+        var index1 = 0;
+        for (var index2 = 0; index2 < FormatCode.Length; ++index2)
         {
             if (index2 == index)
                 continue;
             formatCodesArray[index1].Assign(FormatCode[index2]);
             ++index1;
         }
+
         FormatCode = new FormatCodes[formatCodesArray.Length];
-        for (int index2 = 0; index2 < formatCodesArray.Length; ++index2)
+        for (var index2 = 0; index2 < formatCodesArray.Length; ++index2)
             FormatCode[index2].Assign(formatCodesArray[index2]);
     }
 
-    static bool GrabString(out string dest, ref StreamReader reader)
+    private static bool GrabString(out string dest, ref StreamReader reader)
 
     {
         dest = reader.ReadLine();
-        return dest == "#CODE#" | dest == "#END#";
+        return (dest == "#CODE#") | (dest == "#END#");
     }
 
     public void ResetColorsToDefaults()
@@ -209,7 +233,8 @@ public class ExportConfig
         FormatCode[FormatCode.Length - 1].Space = WhiteSpace.Space;
         AddCodes();
         FormatCode[FormatCode.Length - 1].Name = "UBB.threads";
-        FormatCode[FormatCode.Length - 1].Notes = "Used by the official CoX foums (which don't support small-fonts for the data chunk)";
+        FormatCode[FormatCode.Length - 1].Notes =
+            "Used by the official CoX foums (which don't support small-fonts for the data chunk)";
         FormatCode[FormatCode.Length - 1].ColorOn = "[color:%VAL%]";
         FormatCode[FormatCode.Length - 1].ColorOff = "[/color]";
         FormatCode[FormatCode.Length - 1].SizeOn = string.Empty;
@@ -255,7 +280,7 @@ public class ExportConfig
     {
         if (!File.Exists(fName))
             return;
-        bool flag = false;
+        var flag = false;
         StreamReader reader;
         try
         {
@@ -263,81 +288,67 @@ public class ExportConfig
         }
         catch (Exception ex)
         {
-            int num = (int)MessageBox.Show(ex.Message);
+            var num = (int) MessageBox.Show(ex.Message);
             return;
         }
-        int num1 = 0;
+
+        var num1 = 0;
         try
         {
-            string str = reader.ReadLine();
+            var str = reader.ReadLine();
             do
             {
                 ++num1;
                 if (str == "#END#" || str != "#CODE#")
                     continue;
-                int index1 = -1;
-                FormatCodes iFc = new FormatCodes();
-                flag = GrabString(out iFc.Name, ref reader) | GrabString(out iFc.Notes, ref reader) | GrabString(out iFc.ColorOn, ref reader) | GrabString(out iFc.ColorOff, ref reader) | GrabString(out iFc.SizeOn, ref reader) | GrabString(out iFc.SizeOff, ref reader) | GrabString(out iFc.BoldOn, ref reader) | GrabString(out iFc.BoldOff, ref reader) | GrabString(out iFc.ItalicOn, ref reader) | GrabString(out iFc.ItalicOff, ref reader) | GrabString(out iFc.UnderlineOn, ref reader) | GrabString(out iFc.UnderlineOff, ref reader) | GrabString(out var dest, ref reader);
+                var index1 = -1;
+                var iFc = new FormatCodes();
+                flag = GrabString(out iFc.Name, ref reader) | GrabString(out iFc.Notes, ref reader) |
+                       GrabString(out iFc.ColorOn, ref reader) | GrabString(out iFc.ColorOff, ref reader) |
+                       GrabString(out iFc.SizeOn, ref reader) | GrabString(out iFc.SizeOff, ref reader) |
+                       GrabString(out iFc.BoldOn, ref reader) | GrabString(out iFc.BoldOff, ref reader) |
+                       GrabString(out iFc.ItalicOn, ref reader) | GrabString(out iFc.ItalicOff, ref reader) |
+                       GrabString(out iFc.UnderlineOn, ref reader) | GrabString(out iFc.UnderlineOff, ref reader) |
+                       GrabString(out var dest, ref reader);
                 iFc.Space = dest.IndexOf(" ", StringComparison.Ordinal) > -1 ? WhiteSpace.Space : WhiteSpace.Tab;
                 if (!flag)
                 {
-                    for (int index2 = 0; index2 < FormatCode.Length; ++index2)
-                    {
+                    for (var index2 = 0; index2 < FormatCode.Length; ++index2)
                         if (FormatCode[index2].Name == iFc.Name)
                             index1 = index2;
-                    }
                     if (index1 == -1)
                     {
                         Array.Resize(ref FormatCode, FormatCode.Length + 1);
                         index1 = FormatCode.Length - 1;
                     }
+
                     FormatCode[index1].Assign(iFc);
                     str = reader.ReadLine();
                 }
                 else
+                {
                     break;
-            }
-            while (!(str == "#END#" | num1 > 1024));
-            if (num1 > 1024 & !flag)
+                }
+            } while (!((str == "#END#") | (num1 > 1024)));
+
+            if ((num1 > 1024) & !flag)
             {
-                int num2 = (int)MessageBox.Show("Nonfatal error reading Forum Code Update. Couldn't find end of file!");
+                var num2 = (int) MessageBox.Show(
+                    "Nonfatal error reading Forum Code Update. Couldn't find end of file!");
             }
             else if (flag)
             {
-                int num3 = (int)MessageBox.Show("Nonfatal error reading Forum Code Update.");
+                var num3 = (int) MessageBox.Show("Nonfatal error reading Forum Code Update.");
             }
         }
         catch (Exception ex)
         {
-            int num2 = (int)MessageBox.Show(ex.Message);
+            var num2 = (int) MessageBox.Show(ex.Message);
         }
         finally
         {
             reader.Close();
         }
-    }
-
-    public ExportConfig()
-    {
-        ResetColorsToDefaults();
-    }
-
-    public enum WhiteSpace
-    {
-        Space,
-        Tab
-    }
-
-    public enum Element
-    {
-        Title,
-        Heading,
-        Level,
-        Power,
-        Slots,
-        IO,
-        SetO,
-        HO
     }
 
     public struct ColorScheme
@@ -381,7 +392,7 @@ public class ExportConfig
 
     public struct FormatCodes
     {
-        const string Placeholder = "%VAL%";
+        private const string Placeholder = "%VAL%";
 
         public string Name;
         public string Notes;

@@ -11,31 +11,31 @@ namespace HeroViewer.Base
 
     public class RawCharacterInfo
     {
-        public string Name;
-        public string Origin;
-        public int Level;
         public string Alignment;
         public string Archetype;
+        public int Level;
+        public string Name;
+        public string Origin;
     }
 
     public class RawEnhData
     {
+        public int Boosters;
+        public int eData;
+        public bool HasCatalyst; // NOT FULLY IMPLEMENTED
         public string InternalName;
         public int Level;
-        public int Boosters;
-        public bool HasCatalyst; // NOT FULLY IMPLEMENTED
-        public int eData;
     }
 
     public class RawPowerData
     {
-        public string FullName;
         public string DisplayName;
+        public string FullName;
         public int Level;
-        public bool Valid;
+        public IPower pData;
         public IPowerset Powerset;
         public List<RawEnhData> Slots;
-        public IPower pData;
+        public bool Valid;
     }
 
     public class UniqueList<T> : List<T>
@@ -56,6 +56,7 @@ namespace HeroViewer.Base
     {
         private int Index;
         private int Level = -1;
+
         private int SlotsAtLevel;
         /*private static readonly int[] SlotLevels = new[]
         {
@@ -87,7 +88,7 @@ namespace HeroViewer.Base
             {
                 SlotsAtLevel--;
                 Index++;
-                
+
                 return Level;
             }
 

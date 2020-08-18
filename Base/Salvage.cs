@@ -1,14 +1,19 @@
-
 using System.IO;
 
 public class Salvage
 {
-    public string InternalName = string.Empty;
+    public enum SalvageOrigin
+    {
+        Tech,
+        Magic
+    }
+
     public string ExternalName = string.Empty;
-    public Recipe.RecipeRarity Rarity;
-    public int LevelMin;
+    public string InternalName = string.Empty;
     public int LevelMax;
+    public int LevelMin;
     public SalvageOrigin Origin;
+    public Recipe.RecipeRarity Rarity;
 
     public Salvage()
     {
@@ -18,10 +23,10 @@ public class Salvage
     {
         InternalName = reader.ReadString();
         ExternalName = reader.ReadString();
-        Rarity = (Recipe.RecipeRarity)reader.ReadInt32();
+        Rarity = (Recipe.RecipeRarity) reader.ReadInt32();
         LevelMin = reader.ReadInt32();
         LevelMax = reader.ReadInt32();
-        Origin = (SalvageOrigin)reader.ReadInt32();
+        Origin = (SalvageOrigin) reader.ReadInt32();
     }
 
     public Salvage(ref Salvage iSalvage)
@@ -38,15 +43,9 @@ public class Salvage
     {
         writer.Write(InternalName);
         writer.Write(ExternalName);
-        writer.Write((int)Rarity);
+        writer.Write((int) Rarity);
         writer.Write(LevelMin);
         writer.Write(LevelMax);
-        writer.Write((int)Origin);
-    }
-
-    public enum SalvageOrigin
-    {
-        Tech,
-        Magic
+        writer.Write((int) Origin);
     }
 }

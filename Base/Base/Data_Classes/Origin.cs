@@ -1,11 +1,18 @@
-
 namespace Base.Data_Classes
 {
     public class Origin
     {
-        public string Name { get; }
-
-        public string[] Grades { get; }
+        public enum Grade
+        {
+            None = -1,
+            TrainingO = 0,
+            DualO = 1,
+            SingleO = 2,
+            HO = 3,
+            IO = 4,
+            SetO = 5,
+            Attuned = 6
+        }
 
         internal Origin(string name, string dualO, string singleO)
         {
@@ -20,16 +27,8 @@ namespace Base.Data_Classes
             Grades[6] = "IO";
         }
 
-        public enum Grade
-        {
-            None = -1,
-            TrainingO = 0,
-            DualO = 1,
-            SingleO = 2,
-            HO = 3,
-            IO = 4,
-            SetO = 5,
-            Attuned = 6
-        }
+        public string Name { get; }
+
+        public string[] Grades { get; }
     }
 }

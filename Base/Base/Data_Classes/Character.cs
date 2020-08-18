@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,16 +15,30 @@ namespace Base.Data_Classes
         public string EnhancementSet { get; set; }
         public int EnhancementSlot { get; set; }
     }
+
     public class Character
     {
-        Archetype _archetype;
-        bool? _completeCache;
+        public static List<string> gridEntries = new List<string> {"a", "b", "c", "d", "e", "f", "g", "h"};
+        private Archetype _archetype;
+        private bool? _completeCache;
+        public Dictionary<string, int> SetSlotLoc = new Dictionary<string, int>();
+        public HashSet<string> setSlotted = new HashSet<string>();
+
+        protected Character()
+        {
+            Name = string.Empty;
+            Powersets = new IPowerset[8];
+            PoolLocked = new bool[5];
+            Totals = new TotalStatistics();
+            TotalsCapped = new TotalStatistics();
+            DisplayStats = new Statistics(this);
+            Builds = new[] {new Build(this, DatabaseAPI.Database.Levels)};
+            Reset();
+        }
 
         public List<PowerEnhancements> powerEnhancements { get; private set; }
 
         public string setName { get; set; }
-        public HashSet<string> setSlotted = new HashSet<string>();
-        public Dictionary<string, int> SetSlotLoc = new Dictionary<string, int>();
 
         public string Name { get; set; }
 
@@ -33,10 +46,7 @@ namespace Base.Data_Classes
         {
             get
             {
-                if (LevelCache > -1)
-                {
-                    return LevelCache;
-                }
+                if (LevelCache > -1) return LevelCache;
 
                 int num2;
                 if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
@@ -45,14 +55,15 @@ namespace Base.Data_Classes
                 }
                 else
                 {
-                    int val1 = GetFirstAvailablePowerLevel(CurrentBuild);
+                    var val1 = GetFirstAvailablePowerLevel(CurrentBuild);
                     if (val1 < 0)
                         val1 = 49;
-                    int val2 = GetFirstAvailableSlotLevel();
+                    var val2 = GetFirstAvailableSlotLevel();
                     if (val2 < 0)
                         val2 = 49;
                     num2 = Math.Min(val1, val2);
                 }
+
                 if (num2 < 0)
                     num2 = 49;
                 LevelCache = num2;
@@ -64,12 +75,10 @@ namespace Base.Data_Classes
 
         public int RequestedLevel { get; set; }
 
-        Build[] Builds { get; }
+        private Build[] Builds { get; }
 
 
         public Build CurrentBuild => Builds.Length > 0 ? Builds[0] : null;
-
-        public static List<string> gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
 
         public Archetype Archetype
         {
@@ -98,8 +107,8 @@ namespace Base.Data_Classes
             get
             {
                 if (_completeCache.HasValue) return _completeCache.GetValueOrDefault();
-                int num1 = CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
-                int num2 = CurrentBuild.LastPower + 1 - CurrentBuild.PowersPlaced;
+                var num1 = CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
+                var num2 = CurrentBuild.LastPower + 1 - CurrentBuild.PowersPlaced;
                 _completeCache = num1 < 1 && num2 < 1;
                 return _completeCache.GetValueOrDefault();
             }
@@ -114,7 +123,7 @@ namespace Base.Data_Classes
 
         public int PerfectionOfSoulLevel => !IsStalker && PerfectionType == "soul" ? ActiveComboLevel : 0;
 
-        string PerfectionType { get; set; }
+        private string PerfectionType { get; set; }
 
         public bool AcceleratedActive { get; private set; }
 
@@ -184,7 +193,7 @@ namespace Base.Data_Classes
         {
             get
             {
-                int num = CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
+                var num = CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
                 return num;
             }
         }
@@ -212,50 +221,19 @@ namespace Base.Data_Classes
             {
                 if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
                 {
-                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
+                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 &&
+                        MidsContext.Config.BuildOption != Enums.dmItem.Power)
                         return true;
                 }
-                else if (Level > -1 & Level < DatabaseAPI.Database.Levels.Length && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
+                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) &&
+                         DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
+                {
                     return true;
+                }
+
                 return false;
             }
         }
-
-        public void ResetLevel()
-            => LevelCache = -1;
-
-        public void SetLevelTo(int Level)
-            => LevelCache = Level;
-
-        public void Lock()
-        {
-            int powersPlaced = CurrentBuild.PowersPlaced;
-            if (powersPlaced == 1 & CurrentBuild.PowerUsed(Powersets[1].Powers[0]))
-            {
-                Locked = false;
-                ResetLevel();
-            }
-            else if (powersPlaced > 0)
-            {
-                Locked = true;
-            }
-            else
-            {
-                if (powersPlaced != 0)
-                    return;
-                Locked = false;
-                ResetLevel();
-            }
-        }
-
-        public int GetPowersByLevel(int Level)
-        {
-            int[] powerPickedLevels = { 0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 34, 37, 40, 43, 46, 48 };
-
-            return powerPickedLevels.Where(e => e <= Level).ToArray().Length;
-        }
-
-        public bool IsHero() => Alignment == Enums.Alignment.Hero || Alignment == Enums.Alignment.Vigilante;
 
         public bool IsVillain => Alignment == Enums.Alignment.Rogue || Alignment == Enums.Alignment.Villain;
 
@@ -284,18 +262,53 @@ namespace Base.Data_Classes
 
         public bool IsArachnos => Archetype.ClassType == Enums.eClassType.VillainEpic;
 
-        public bool PoolTaken(int poolID) => Powersets[poolID] != null && poolID >= 3 && poolID <= 7 && PoolLocked[poolID - 3];
-
-        protected Character()
+        public void ResetLevel()
         {
-            Name = string.Empty;
-            Powersets = new IPowerset[8];
-            PoolLocked = new bool[5];
-            Totals = new TotalStatistics();
-            TotalsCapped = new TotalStatistics();
-            DisplayStats = new Statistics(this);
-            Builds = new[] { new Build(this, DatabaseAPI.Database.Levels) };
-            Reset();
+            LevelCache = -1;
+        }
+
+        public void SetLevelTo(int Level)
+        {
+            LevelCache = Level;
+        }
+
+        public void Lock()
+        {
+            var powersPlaced = CurrentBuild.PowersPlaced;
+            if ((powersPlaced == 1) & CurrentBuild.PowerUsed(Powersets[1].Powers[0]))
+            {
+                Locked = false;
+                ResetLevel();
+            }
+            else if (powersPlaced > 0)
+            {
+                Locked = true;
+            }
+            else
+            {
+                if (powersPlaced != 0)
+                    return;
+                Locked = false;
+                ResetLevel();
+            }
+        }
+
+        public int GetPowersByLevel(int Level)
+        {
+            int[] powerPickedLevels =
+                {0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 34, 37, 40, 43, 46, 48};
+
+            return powerPickedLevels.Where(e => e <= Level).ToArray().Length;
+        }
+
+        public bool IsHero()
+        {
+            return Alignment == Enums.Alignment.Hero || Alignment == Enums.Alignment.Vigilante;
+        }
+
+        public bool PoolTaken(int poolID)
+        {
+            return Powersets[poolID] != null && poolID >= 3 && poolID <= 7 && PoolLocked[poolID - 3];
         }
 
         // there are 2 versions of this method distributed, going to try to combine the logic bit by bit to see if there are substantial differences
@@ -326,8 +339,9 @@ namespace Base.Data_Classes
                 Powersets[index + 1] = powersetByName3;
             }*/
             Powersets = new IPowerset[8];
-            int m = 0; int k = 3;
-            for (int i = 0; i < names.Count; i++)
+            var m = 0;
+            var k = 3;
+            for (var i = 0; i < names.Count; i++)
             {
                 if (string.IsNullOrWhiteSpace(names[i])) continue;
                 if (names[i].IndexOf("Epic.", StringComparison.OrdinalIgnoreCase) == 0)
@@ -349,25 +363,27 @@ namespace Base.Data_Classes
                 }
             }
         }
+
         public IEnumerable<(int, string)> LoadPowersetsByName(IList<string> names)
         {
             Powersets = names.Select(n => string.IsNullOrEmpty(n) ? null : DatabaseAPI.GetPowersetByName(n)).ToArray();
-            return Powersets.Select((ps, i) => new { I = i, Ps = ps?.FullName, N = names[i] }).Where(x => !string.IsNullOrWhiteSpace(x.N) && x.Ps == null).Select(x => (x.I, x.N));
+            return Powersets.Select((ps, i) => new {I = i, Ps = ps?.FullName, N = names[i]})
+                .Where(x => !string.IsNullOrWhiteSpace(x.N) && x.Ps == null).Select(x => (x.I, x.N));
         }
 
         public void Reset(Archetype iArchetype = null, int iOrigin = 0)
         {
             Name = string.Empty;
-            bool flag1 = Archetype != null && iArchetype != null && Archetype.Idx == iArchetype.Idx;
+            var flag1 = Archetype != null && iArchetype != null && Archetype.Idx == iArchetype.Idx;
             Archetype = iArchetype ?? DatabaseAPI.Database.Classes[0];
             MidsContext.Archetype = Archetype;
             Origin = iOrigin > Archetype.Origin.Length - 1 ? Archetype.Origin.Length - 1 : iOrigin;
             if (flag1)
             {
-                bool flag2 = Powersets[0] != null && Powersets[0].nArchetype == Archetype.Idx;
+                var flag2 = Powersets[0] != null && Powersets[0].nArchetype == Archetype.Idx;
                 if (!flag2)
                     Powersets[0] = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Primary)[0];
-                bool flag3 = Powersets[1] != null && Powersets[1].nArchetype == Archetype.Idx;
+                var flag3 = Powersets[1] != null && Powersets[1].nArchetype == Archetype.Idx;
                 if (!flag3)
                     Powersets[1] = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Secondary)[0];
             }
@@ -376,8 +392,9 @@ namespace Base.Data_Classes
                 Powersets[0] = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Primary)[0];
                 Powersets[1] = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Secondary)[0];
             }
-            IPowerset[] powersetIndexes1 = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Pool);
-            int index = 0;
+
+            var powersetIndexes1 = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Pool);
+            var index = 0;
             Powersets[3] = powersetIndexes1[index];
             if (powersetIndexes1.Length - 1 > index)
                 ++index;
@@ -388,7 +405,7 @@ namespace Base.Data_Classes
             if (powersetIndexes1.Length - 1 > index)
                 ++index;
             Powersets[6] = powersetIndexes1[index];
-            IPowerset[] powersetIndexes2 = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Ancillary);
+            var powersetIndexes2 = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Ancillary);
             Powersets[7] = powersetIndexes2.Length <= 0 ? null : powersetIndexes2[0];
             ModifyEffects = new Dictionary<string, float>();
             PoolLocked = new bool[5];
@@ -436,7 +453,7 @@ namespace Base.Data_Classes
             RequestedLevel = -1;
         }
 
-        void RefreshActiveSpecial()
+        private void RefreshActiveSpecial()
         {
             powerEnhancements = new List<PowerEnhancements>();
             ActiveComboLevel = 0;
@@ -628,7 +645,7 @@ namespace Base.Data_Classes
 
                     if (power.Power.InherentType == Enums.eGridType.Inherent)
                     {
-                        string powName = power.Power.PowerName;
+                        var powName = power.Power.PowerName;
                         if (powName.Equals("Brawl"))
                         {
                             displayIndex = 1;
@@ -667,7 +684,7 @@ namespace Base.Data_Classes
                     }
                     else
                     {
-                        displayIndex = inherentPowers.Count -1;
+                        displayIndex = inherentPowers.Count - 1;
                         if (displayIndex > 7 && displayIndex < 59)
                         {
                             power.Power.DisplayLocation = displayIndex;
@@ -681,18 +698,19 @@ namespace Base.Data_Classes
                     var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
                     if (pSlotEnh > -1)
                     {
-                        IEnhancement enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
-                        powerEnhancements.Add(new PowerEnhancements{PowerName = power.Name, EnhancementSet = GetEnhSetName(enhancement.LongName), EnhancementSlot = slotIndex});
-
+                        var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
+                        powerEnhancements.Add(new PowerEnhancements
+                        {
+                            PowerName = power.Name, EnhancementSet = GetEnhSetName(enhancement.LongName),
+                            EnhancementSlot = slotIndex
+                        });
                     }
                     else
                     {
                         var index = slotIndex;
-                        var toRem = powerEnhancements.FindIndex(x => x.PowerName.Equals(power.Name) && x.EnhancementSlot == index);
-                        if (toRem != -1)
-                        {
-                            powerEnhancements.RemoveAt(toRem);
-                        }
+                        var toRem = powerEnhancements.FindIndex(x =>
+                            x.PowerName.Equals(power.Name) && x.EnhancementSlot == index);
+                        if (toRem != -1) powerEnhancements.RemoveAt(toRem);
                     }
                 }
             }
@@ -705,16 +723,12 @@ namespace Base.Data_Classes
             var enhSet = string.Empty;
             var setCount = DatabaseAPI.Database.EnhancementSets.Count;
             for (var setIndex = 0; setIndex < setCount; setIndex++)
-            {
                 foreach (var enh in DatabaseAPI.Database.EnhancementSets[setIndex].Enhancements)
                 {
-                    IEnhancement enhancement = DatabaseAPI.Database.Enhancements[enh];
+                    var enhancement = DatabaseAPI.Database.Enhancements[enh];
                     if (enhancement.LongName == longName)
-                    {
                         enhSet = DatabaseAPI.Database.EnhancementSets[setIndex].DisplayName;
-                    }
                 }
-            }
 
             return enhSet;
         }
@@ -728,7 +742,7 @@ namespace Base.Data_Classes
 
         protected bool PowersetMutexClash(int nIDPower)
         {
-            int powerSetId = DatabaseAPI.Database.Power[nIDPower].PowerSetID;
+            var powerSetId = DatabaseAPI.Database.Power[nIDPower].PowerSetID;
             Enums.PowersetType powersetType;
             switch (DatabaseAPI.Database.Powersets[powerSetId].SetType)
             {
@@ -747,90 +761,88 @@ namespace Base.Data_Classes
 
             if (powersetType == Enums.PowersetType.None)
                 return false;
-            for (int index = 0; index <= DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets.Length - 1; ++index)
-            {
-                if (DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets[index] == Powersets[(int)powersetType].nID)
+            for (var index = 0; index <= DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets.Length - 1; ++index)
+                if (DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets[index] == Powersets[(int) powersetType].nID)
                     return true;
-            }
-            for (int index = 0; index <= Powersets[(int)powersetType].nIDMutexSets.Length - 1; ++index)
-            {
-                if (Powersets[(int)powersetType].nIDMutexSets[index] == powerSetId)
+            for (var index = 0; index <= Powersets[(int) powersetType].nIDMutexSets.Length - 1; ++index)
+                if (Powersets[(int) powersetType].nIDMutexSets[index] == powerSetId)
                     return true;
-            }
             return false;
         }
 
-        void CheckAncillaryPowerSet()
+        private void CheckAncillaryPowerSet()
         {
-            IPowerset[] powersetIndexes = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Ancillary);
+            var powersetIndexes = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Ancillary);
             if (powersetIndexes.Length == 0)
+            {
                 Powersets[7] = null;
+            }
             else if (Powersets[7] == null)
             {
                 Powersets[7] = powersetIndexes[0];
             }
             else
             {
-                bool flag = false;
-                for (int index = 0; index <= powersetIndexes.Length - 1; ++index)
-                {
+                var flag = false;
+                for (var index = 0; index <= powersetIndexes.Length - 1; ++index)
                     if (Powersets[7].nID == powersetIndexes[index].nID)
                         flag = true;
-                }
                 if (!flag && powersetIndexes.Length > 0)
                     Powersets[7] = powersetIndexes[0];
             }
         }
 
-        IEnumerable<int> PoolGetAvailable(int iPool)
+        private IEnumerable<int> PoolGetAvailable(int iPool)
         {
-            IPowerset[] powersetIndexes = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Pool);
-            List<int> intList = new List<int>();
+            var powersetIndexes = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Pool);
+            var intList = new List<int>();
             foreach (var index1 in powersetIndexes)
             {
-                bool available = false;
-                for (int index2 = 3; index2 <= 6; ++index2)
-                {
+                var available = false;
+                for (var index2 = 3; index2 <= 6; ++index2)
                     if (index2 == iPool || !(PoolLocked[index2 - 3] && index1.nID == Powersets[index2].nID))
                         available = true;
-                }
                 if (available)
                     intList.Add(index1.nID);
             }
+
             return intList;
         }
 
         public int PoolToComboID(int iPool, int index)
         {
-            IEnumerable<int> available = PoolGetAvailable(iPool);
-            int num1 = -1;
-            foreach (int num2 in available)
+            var available = PoolGetAvailable(iPool);
+            var num1 = -1;
+            foreach (var num2 in available)
             {
                 ++num1;
                 if (num2 == index)
                     return num1;
             }
+
             return 0;
         }
 
         public static PopUp.PopupData PopEnhInfo(I9Slot iSlot, int iLevel = -1, PowerEntry powerEntry = null)
         {
-            PopUp.PopupData popupData1 = new PopUp.PopupData();
-            int index1 = popupData1.Add();
+            var popupData1 = new PopUp.PopupData();
+            var index1 = popupData1.Add();
             PopUp.PopupData popupData2;
             if (iSlot.Enh < 0)
             {
                 popupData1.Sections[index1].Add("Empty Slot", PopUp.Colors.Disabled, 1.25f);
                 if (iLevel > -1)
                     popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
-                int index2 = popupData1.Add();
-                popupData1.Sections[index2].Add("Right-Click to place an enhancement.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
-                popupData1.Sections[index2].Add("Shift-Click to move this slot.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
+                var index2 = popupData1.Add();
+                popupData1.Sections[index2].Add("Right-Click to place an enhancement.", PopUp.Colors.Disabled, 1f,
+                    FontStyle.Bold | FontStyle.Italic);
+                popupData1.Sections[index2].Add("Shift-Click to move this slot.", PopUp.Colors.Disabled, 1f,
+                    FontStyle.Bold | FontStyle.Italic);
                 popupData2 = popupData1;
             }
             else
             {
-                IEnhancement enhancement = DatabaseAPI.Database.Enhancements[iSlot.Enh];
+                var enhancement = DatabaseAPI.Database.Enhancements[iSlot.Enh];
                 switch (enhancement.TypeID)
                 {
                     case Enums.eType.Normal:
@@ -843,9 +855,8 @@ namespace Base.Data_Classes
                         popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f);
                         break;
                     case Enums.eType.SetO:
-                        Color iColor = PopUp.Colors.Title;
+                        var iColor = PopUp.Colors.Title;
                         if (enhancement.RecipeIDX > -1)
-                        {
                             iColor = DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity switch
                             {
                                 Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
@@ -853,32 +864,47 @@ namespace Base.Data_Classes
                                 Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
                                 _ => iColor
                             };
-                        }
-                        popupData1.Sections[index1].Add(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " + enhancement.Name, iColor, 1.25f);
+                        popupData1.Sections[index1]
+                            .Add(
+                                DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " +
+                                enhancement.Name, iColor, 1.25f);
                         break;
                 }
+
                 switch (enhancement.TypeID)
                 {
                     case Enums.eType.Normal:
-                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(0, byte.MaxValue, 0));
+                        popupData1.Sections[index1]
+                            .Add(iSlot.GetEnhancementString(), Color.FromArgb(0, byte.MaxValue, 0));
                         break;
                     case Enums.eType.InventO:
-                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false) + " - " + iSlot.GetEnhancementString(), PopUp.Colors.Invention);
+                        popupData1.Sections[index1]
+                            .Add(
+                                "Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false) + " - " +
+                                iSlot.GetEnhancementString(), PopUp.Colors.Invention);
                         break;
                     case Enums.eType.SpecialO:
-                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(), Color.FromArgb(byte.MaxValue, byte.MaxValue, 0));
+                        popupData1.Sections[index1].Add(iSlot.GetEnhancementString(),
+                            Color.FromArgb(byte.MaxValue, byte.MaxValue, 0));
                         break;
                     case Enums.eType.SetO:
-                        popupData1.Sections[index1].Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false), PopUp.Colors.Invention);
+                        popupData1.Sections[index1]
+                            .Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false),
+                                PopUp.Colors.Invention);
                         break;
                 }
+
                 if (iLevel > -1)
                     popupData1.Sections[index1].Add("Slot placed at level: " + (iLevel + 1), PopUp.Colors.Text);
                 if (enhancement.Unique)
                 {
                     index1 = popupData1.Add();
-                    popupData1.Sections[index1].Add("This enhancement is Unique. No more than one enhancement of this type can be slotted by a character.", PopUp.Colors.Text, 0.9f);
+                    popupData1.Sections[index1]
+                        .Add(
+                            "This enhancement is Unique. No more than one enhancement of this type can be slotted by a character.",
+                            PopUp.Colors.Text, 0.9f);
                 }
+
                 switch (enhancement.TypeID)
                 {
                     case Enums.eType.Normal:
@@ -888,75 +914,91 @@ namespace Base.Data_Classes
                             popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title);
                             break;
                         }
-                        int index2 = popupData1.Add();
-                        string[] strArray1 = BreakByNewLine(iSlot.GetEnhancementStringLong());
-                        for (int index3 = 0; index3 <= strArray1.Length - 1; ++index3)
+
+                        var index2 = popupData1.Add();
+                        var strArray1 = BreakByNewLine(iSlot.GetEnhancementStringLong());
+                        for (var index3 = 0; index3 <= strArray1.Length - 1; ++index3)
                         {
-                            string[] strArray2 = BreakByBracket(strArray1[index3]);
-                            popupData1.Sections[index2].Add(strArray2[0], Color.FromArgb(0, byte.MaxValue, 0), strArray2[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
+                            var strArray2 = BreakByBracket(strArray1[index3]);
+                            popupData1.Sections[index2].Add(strArray2[0], Color.FromArgb(0, byte.MaxValue, 0),
+                                strArray2[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
                         }
+
                         break;
                     case Enums.eType.SpecialO:
                     case Enums.eType.SetO:
                         if (!string.IsNullOrEmpty(enhancement.Desc))
                             popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title);
-                        int index4 = popupData1.Add();
-                        string[] strArray3 = BreakByNewLine(iSlot.GetEnhancementStringLong());
-                        for (int index3 = 0; index3 <= strArray3.Length - 1; ++index3)
+                        var index4 = popupData1.Add();
+                        var strArray3 = BreakByNewLine(iSlot.GetEnhancementStringLong());
+                        for (var index3 = 0; index3 <= strArray3.Length - 1; ++index3)
                         {
-                            var strArray2 = !enhancement.HasPowerEffect ? BreakByBracket(strArray3[index3]) : new[] { strArray3[index3], string.Empty };
-                            string[] strArray4 = strArray2;
-                            popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0), strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
+                            var strArray2 = !enhancement.HasPowerEffect
+                                ? BreakByBracket(strArray3[index3])
+                                : new[] {strArray3[index3], string.Empty};
+                            var strArray4 = strArray2;
+                            popupData1.Sections[index4].Add(strArray4[0], Color.FromArgb(0, byte.MaxValue, 0),
+                                strArray4[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
                         }
+
                         break;
                 }
+
                 if (!MidsContext.Config.PopupRecipes)
                 {
                     if (enhancement.TypeID == Enums.eType.SetO)
                     {
-                        int index3 = popupData1.Add();
-                        popupData1.Sections[index3].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType], PopUp.Colors.Invention);
-                        popupData1.Sections[index3].Add("Set Level Range: " + (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMin + 1) + " to " + (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMax + 1), PopUp.Colors.Text);
+                        var index3 = popupData1.Add();
+                        popupData1.Sections[index3]
+                            .Add(
+                                "Set Type: " + DatabaseAPI.Database.SetTypeStringLong[
+                                    (int) DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType],
+                                PopUp.Colors.Invention);
+                        popupData1.Sections[index3]
+                            .Add(
+                                "Set Level Range: " +
+                                (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMin + 1) + " to " +
+                                (DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMax + 1),
+                                PopUp.Colors.Text);
                         popupData1.Add(PopSetEnhList(enhancement.nIDSet, powerEntry));
                         popupData1.Add(PopSetBonusListing(enhancement.nIDSet, powerEntry));
                     }
                 }
                 else if (enhancement.TypeID == Enums.eType.SetO || enhancement.TypeID == Enums.eType.InventO)
+                {
                     popupData1.Add(PopRecipeInfo(enhancement.RecipeIDX, iSlot.IOLevel));
+                }
+
                 popupData2 = popupData1;
             }
+
             return popupData2;
         }
 
         public int GetFirstAvailablePowerIndex(int iLevel = 0)
         {
-            for (int index = 0; index <= CurrentBuild.LastPower; ++index)
-            {
+            for (var index = 0; index <= CurrentBuild.LastPower; ++index)
                 if (CurrentBuild.Powers[index].NIDPowerset < 0 && CurrentBuild.Powers[index].Level >= iLevel)
                     return index;
-            }
             return -1;
         }
 
-        static int GetFirstAvailablePowerLevel(Build currentbuild, int iLevel = 0)
+        private static int GetFirstAvailablePowerLevel(Build currentbuild, int iLevel = 0)
         {
-            for (int index = 0; index <= currentbuild.LastPower; ++index)
-            {
-                if (currentbuild.Powers[index].NIDPowerset < 0 & currentbuild.Powers[index].Level >= iLevel)
+            for (var index = 0; index <= currentbuild.LastPower; ++index)
+                if ((currentbuild.Powers[index].NIDPowerset < 0) & (currentbuild.Powers[index].Level >= iLevel))
                     return currentbuild.Powers[index].Level;
-            }
             return -1;
         }
 
-        int GetFirstAvailableSlotLevel(int iLevel = 0)
+        private int GetFirstAvailableSlotLevel(int iLevel = 0)
         {
             if (iLevel < 0)
                 iLevel = 0;
-            for (int level = iLevel; level < DatabaseAPI.Database.Levels.Length; ++level)
-            {
-                if (DatabaseAPI.Database.Levels[level].Slots > 0 && DatabaseAPI.Database.Levels[level].Slots - CurrentBuild.SlotsPlacedAtLevel(level) > 0)
+            for (var level = iLevel; level < DatabaseAPI.Database.Levels.Length; ++level)
+                if (DatabaseAPI.Database.Levels[level].Slots > 0 &&
+                    DatabaseAPI.Database.Levels[level].Slots - CurrentBuild.SlotsPlacedAtLevel(level) > 0)
                     return level;
-            }
             return -1;
         }
 
@@ -964,40 +1006,39 @@ namespace Base.Data_Classes
         {
             if (power.Power == null || !CanPlaceSlot || power.SlotCount > 5)
                 return -1;
-            if (!DatabaseAPI.Database.Power[power.NIDPower].Slottable)
-            {
-                return -1;
-            }
+            if (!DatabaseAPI.Database.Power[power.NIDPower].Slottable) return -1;
 
-            int iLevel = power.Level;
+            var iLevel = power.Level;
             if (DatabaseAPI.Database.Power[power.NIDPower].AllowFrontLoading)
                 iLevel = 0;
-            int firstAvailable = GetFirstAvailableSlotLevel(iLevel);
-            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp && firstAvailable > CurrentBuild.GetMaxLevel() + 1)
+            var firstAvailable = GetFirstAvailableSlotLevel(iLevel);
+            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp &&
+                firstAvailable > CurrentBuild.GetMaxLevel() + 1)
                 firstAvailable = -1;
             return firstAvailable;
         }
 
         public int[] GetSlotCounts()
         {
-            int[] numArray = new int[2];
-            for (int level = 0; level < DatabaseAPI.Database.Levels.Length; ++level)
+            var numArray = new int[2];
+            for (var level = 0; level < DatabaseAPI.Database.Levels.Length; ++level)
             {
                 if (DatabaseAPI.Database.Levels[level].Slots <= 0)
                     continue;
-                int num = CurrentBuild.SlotsPlacedAtLevel(level);
+                var num = CurrentBuild.SlotsPlacedAtLevel(level);
                 numArray[0] += DatabaseAPI.Database.Levels[level].Slots - num;
                 numArray[1] += num;
             }
+
             return numArray;
         }
 
         public int[] GetSlotCounts(int level)
         {
-            int[] numArray = new int[2];
+            var numArray = new int[2];
 
-            int numTaken = SlotLevelQueue.GetNumSlotsBeforeLevel(level) + CurrentBuild.SlotsPlacedAtLevel(level);
-            int numTotal = DatabaseAPI.Database.Levels.Sum(e => e.Slots);
+            var numTaken = SlotLevelQueue.GetNumSlotsBeforeLevel(level) + CurrentBuild.SlotsPlacedAtLevel(level);
+            var numTotal = DatabaseAPI.Database.Levels.Sum(e => e.Slots);
 
             numArray[0] = numTotal - numTaken;
             numArray[1] = numTaken;
@@ -1005,16 +1046,16 @@ namespace Base.Data_Classes
             return numArray;
         }
 
-        static string[] BreakByNewLine(string iString)
+        private static string[] BreakByNewLine(string iString)
         {
             iString = iString.Replace('\n', '^');
             return iString.Split('^');
         }
 
-        static string[] BreakByBracket(string iString)
+        private static string[] BreakByBracket(string iString)
         {
-            string[] strArray1 = { iString, string.Empty };
-            int length = iString.IndexOf(" (", StringComparison.Ordinal);
+            string[] strArray1 = {iString, string.Empty};
+            var length = iString.IndexOf(" (", StringComparison.Ordinal);
             string[] strArray2;
             if (length < 0)
             {
@@ -1027,56 +1068,56 @@ namespace Base.Data_Classes
                     strArray1[1] = iString.Substring(length + 1).Replace("(", "").Replace(")", "");
                 strArray2 = strArray1;
             }
+
             return strArray2;
         }
 
-        static PopUp.Section PopSetBonusListing(int sIdx, PowerEntry power)
+        private static PopUp.Section PopSetBonusListing(int sIdx, PowerEntry power)
         {
             var section1 = new PopUp.Section();
             section1.Add("Set Bonus:", PopUp.Colors.Title);
-            int num = 0;
+            var num = 0;
             if (power != null)
-            {
-                for (int index = 0; index <= power.Slots.Length - 1; ++index)
-                {
-                    if (power.Slots[index].Enhancement.Enh > -1 && DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].nIDSet == sIdx)
+                for (var index = 0; index <= power.Slots.Length - 1; ++index)
+                    if (power.Slots[index].Enhancement.Enh > -1 &&
+                        DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].nIDSet == sIdx)
                         ++num;
-                }
-            }
-            if (sIdx < 0 || sIdx > DatabaseAPI.Database.EnhancementSets.Count - 1)
-            {
-                return section1;
-            }
+            if (sIdx < 0 || sIdx > DatabaseAPI.Database.EnhancementSets.Count - 1) return section1;
 
-            EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-            for (int index = 0; index <= enhancementSet.Bonus.Length - 1; ++index)
+            var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
+            for (var index = 0; index <= enhancementSet.Bonus.Length - 1; ++index)
             {
-                string effectString = enhancementSet.GetEffectString(index, false, true);
+                var effectString = enhancementSet.GetEffectString(index, false, true);
                 if (string.IsNullOrEmpty(effectString))
                     continue;
                 if (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP)
                     effectString += " (PvP)";
-                if (num >= enhancementSet.Bonus[index].Slotted & (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any))
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f);
+                if ((num >= enhancementSet.Bonus[index].Slotted) &
+                    (((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
+                     ((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) |
+                     (enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any)))
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect,
+                        0.9f);
                 else if (power == null)
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect, 0.9f);
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Effect,
+                        0.9f);
                 else
-                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Disabled, 0.9f);
+                    section1.Add("(" + enhancementSet.Bonus[index].Slotted + ") " + effectString, PopUp.Colors.Disabled,
+                        0.9f);
             }
-            for (int index = 0; index <= enhancementSet.SpecialBonus.Length - 1; ++index)
+
+            for (var index = 0; index <= enhancementSet.SpecialBonus.Length - 1; ++index)
             {
-                string effectString = enhancementSet.GetEffectString(index, true, true);
+                var effectString = enhancementSet.GetEffectString(index, true, true);
                 if (string.IsNullOrEmpty(effectString))
                     continue;
-                bool flag = false;
+                var flag = false;
                 if (power != null)
-                {
-                    foreach (SlotEntry slot in power.Slots)
-                    {
-                        if (slot.Enhancement.Enh > -1 && enhancementSet.SpecialBonus[index].Special > -1 && slot.Enhancement.Enh == enhancementSet.Enhancements[enhancementSet.SpecialBonus[index].Special])
+                    foreach (var slot in power.Slots)
+                        if (slot.Enhancement.Enh > -1 && enhancementSet.SpecialBonus[index].Special > -1 &&
+                            slot.Enhancement.Enh ==
+                            enhancementSet.Enhancements[enhancementSet.SpecialBonus[index].Special])
                             flag = true;
-                    }
-                }
                 if (flag)
                     section1.Add("(Enh) " + effectString, PopUp.Colors.Effect, 0.9f);
                 else if (power == null)
@@ -1084,22 +1125,20 @@ namespace Base.Data_Classes
                 else
                     section1.Add("(Enh) " + effectString, PopUp.Colors.Disabled, 0.9f);
             }
+
             return section1;
         }
 
         public static PopUp.Section PopRecipeInfo(int rIdx, int iLevel)
         {
-            PopUp.Section section1 = new PopUp.Section();
-            if (rIdx < 0)
-            {
-                return section1;
-            }
+            var section1 = new PopUp.Section();
+            if (rIdx < 0) return section1;
 
-            Recipe recipe = DatabaseAPI.Database.Recipes[rIdx];
-            int index1 = -1;
-            int num1 = 52;
-            int num2 = 0;
-            for (int index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
+            var recipe = DatabaseAPI.Database.Recipes[rIdx];
+            var index1 = -1;
+            var num1 = 52;
+            var num2 = 0;
+            for (var index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
             {
                 if (recipe.Item[index2].Level > num2)
                     num2 = recipe.Item[index2].Level;
@@ -1110,10 +1149,11 @@ namespace Base.Data_Classes
                 index1 = index2;
                 break;
             }
+
             if (index1 < 0)
             {
                 iLevel = Enhancement.GranularLevelZb(iLevel, 0, 49);
-                for (int index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
+                for (var index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
                 {
                     if (recipe.Item[index2].Level != iLevel)
                         continue;
@@ -1121,27 +1161,31 @@ namespace Base.Data_Classes
                     break;
                 }
             }
-            if (index1 < 0)
-            {
-                return section1;
-            }
 
-            Recipe.RecipeEntry recipeEntry = recipe.Item[index1];
-            string str = string.Empty;
+            if (index1 < 0) return section1;
+
+            var recipeEntry = recipe.Item[index1];
+            var str = string.Empty;
             if (recipe.EnhIdx > -1)
                 str = " - " + DatabaseAPI.Database.Enhancements[recipe.EnhIdx].LongName;
             section1.Add("Recipe" + str, PopUp.Colors.Title);
             if (recipeEntry.BuyCost > 0)
-                section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
+                section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}",
+                    PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
             if (recipeEntry.CraftCost > 0)
-                section1.Add("Craft Cost:", PopUp.Colors.Invention, $"{recipeEntry.CraftCost:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
+                section1.Add("Craft Cost:", PopUp.Colors.Invention, $"{recipeEntry.CraftCost:###,###,##0}",
+                    PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
             if (recipeEntry.CraftCostM > 0)
-                section1.Add("Craft Cost (Memorized):", PopUp.Colors.Effect, $"{recipeEntry.CraftCostM:###,###,##0}", PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
-            for (int index2 = 0; index2 <= recipeEntry.Salvage.Length - 1 && (index2 == 0 || recipeEntry.SalvageIdx[index2] != recipeEntry.SalvageIdx[0]); ++index2)
+                section1.Add("Craft Cost (Memorized):", PopUp.Colors.Effect, $"{recipeEntry.CraftCostM:###,###,##0}",
+                    PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+            for (var index2 = 0;
+                index2 <= recipeEntry.Salvage.Length - 1 &&
+                (index2 == 0 || recipeEntry.SalvageIdx[index2] != recipeEntry.SalvageIdx[0]);
+                ++index2)
             {
                 if (recipeEntry.SalvageIdx[index2] < 0)
                     continue;
-                string empty = string.Empty;
+                var empty = string.Empty;
                 var iColor = DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].Rarity switch
                 {
                     Recipe.RecipeRarity.Common => PopUp.Colors.Common,
@@ -1151,8 +1195,11 @@ namespace Base.Data_Classes
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 if (recipeEntry.Count[index2] > 0)
-                    section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName + empty, iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                    section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName + empty,
+                        iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
+                        0.9f, FontStyle.Bold, 1);
             }
+
             return section1;
         }
 
@@ -1160,16 +1207,16 @@ namespace Base.Data_Classes
         {
             if (sIdx < 0)
             {
-                PopUp.PopupData popupData1 = new PopUp.PopupData();
+                var popupData1 = new PopUp.PopupData();
                 return popupData1;
             }
             else
             {
-                EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-                Color iColor = PopUp.Colors.Uncommon;
-                for (int index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
+                var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
+                var iColor = PopUp.Colors.Uncommon;
+                for (var index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
                 {
-                    IEnhancement enhancement = DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]];
+                    var enhancement = DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]];
                     if (enhancement.RecipeIDX <= -1)
                         continue;
                     if (DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity == Recipe.RecipeRarity.Rare)
@@ -1177,19 +1224,26 @@ namespace Base.Data_Classes
                         iColor = PopUp.Colors.Rare;
                         break;
                     }
+
                     if (DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity == Recipe.RecipeRarity.UltraRare)
                     {
                         iColor = PopUp.Colors.UltraRare;
                         break;
                     }
+
                     if (index > 2)
                         break;
                 }
-                PopUp.PopupData popupData1 = new PopUp.PopupData();
-                int index1 = popupData1.Add();
+
+                var popupData1 = new PopUp.PopupData();
+                var index1 = popupData1.Add();
                 popupData1.Sections[index1].Add(enhancementSet.DisplayName, iColor, 1.25f);
-                popupData1.Sections[index1].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)enhancementSet.SetType], PopUp.Colors.Invention);
-                string str = enhancementSet.LevelMin != enhancementSet.LevelMax ? enhancementSet.LevelMin + 1 + " to " + (enhancementSet.LevelMax + 1) : (enhancementSet.LevelMin + 1).ToString(CultureInfo.InvariantCulture);
+                popupData1.Sections[index1]
+                    .Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int) enhancementSet.SetType],
+                        PopUp.Colors.Invention);
+                var str = enhancementSet.LevelMin != enhancementSet.LevelMax
+                    ? enhancementSet.LevelMin + 1 + " to " + (enhancementSet.LevelMax + 1)
+                    : (enhancementSet.LevelMin + 1).ToString(CultureInfo.InvariantCulture);
                 popupData1.Sections[index1].Add("Level Range: " + str, PopUp.Colors.Text);
                 popupData1.Add(PopSetEnhList(sIdx, powerEntry));
                 popupData1.Add(PopSetBonusListing(sIdx, powerEntry));
@@ -1197,62 +1251,62 @@ namespace Base.Data_Classes
             }
         }
 
-        static PopUp.Section PopSetEnhList(int sIdx, PowerEntry power)
+        private static PopUp.Section PopSetEnhList(int sIdx, PowerEntry power)
         {
-            if (sIdx < 0 || sIdx > DatabaseAPI.Database.EnhancementSets.Count - 1)
-            {
-                return new PopUp.Section();
-            }
+            if (sIdx < 0 || sIdx > DatabaseAPI.Database.EnhancementSets.Count - 1) return new PopUp.Section();
 
-            int num = 0;
-            EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-            bool[] flagArray = new bool[enhancementSet.Enhancements.Length];
-            for (int index = 0; index <= flagArray.Length - 1; ++index)
+            var num = 0;
+            var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
+            var flagArray = new bool[enhancementSet.Enhancements.Length];
+            for (var index = 0; index <= flagArray.Length - 1; ++index)
                 flagArray[index] = false;
             if (power != null)
-            {
-                foreach (SlotEntry slot in power.Slots)
+                foreach (var slot in power.Slots)
                 {
-                    if (slot.Enhancement.Enh < 0 || DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet != sIdx)
+                    if (slot.Enhancement.Enh < 0 ||
+                        DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet != sIdx)
                         continue;
                     ++num;
-                    for (int index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
-                    {
+                    for (var index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
                         if (slot.Enhancement.Enh == enhancementSet.Enhancements[index])
                             flagArray[index] = true;
-                    }
                 }
-            }
+
             var section1 = new PopUp.Section();
             if (power != null)
-                section1.Add("Set: " + enhancementSet.DisplayName + " (" + num + "/" + enhancementSet.Enhancements.Length + ")", PopUp.Colors.Title);
-            for (int index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
+                section1.Add(
+                    "Set: " + enhancementSet.DisplayName + " (" + num + "/" + enhancementSet.Enhancements.Length + ")",
+                    PopUp.Colors.Title);
+            for (var index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
             {
-                string iText = enhancementSet.DisplayName + ": " + DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]].Name;
+                var iText = enhancementSet.DisplayName + ": " +
+                            DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]].Name;
                 if (flagArray[index] || power == null)
                     section1.Add(iText, PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
                 else
                     section1.Add(iText, PopUp.Colors.Disabled, 0.9f, FontStyle.Bold, 1);
             }
+
             return section1;
         }
 
         public void PoolShuffle()
         {
             //var poolPowers = this.Powersets.Skip(2).Take(4).ToList();
-            int[] poolOrder = new int[4];
-            int[] poolIndex = new int[4];
-            for (int i = 3; i <= 6; ++i)
+            var poolOrder = new int[4];
+            var poolIndex = new int[4];
+            for (var i = 3; i <= 6; ++i)
             {
                 var ps = Powersets[i];
                 poolIndex[i - 3] = ps?.nID ?? -1;
                 poolOrder[i - 3] = ps != null ? GetEarliestPowerIndex(Powersets[i].nID) : -1;
             }
-            for (int i = 0; i <= 3; ++i)
+
+            for (var i = 0; i <= 3; ++i)
             {
                 int minO = byte.MaxValue;
-                int minI = -1;
-                for (int x = 0; x <= poolOrder.Length - 1; ++x)
+                var minI = -1;
+                for (var x = 0; x <= poolOrder.Length - 1; ++x)
                 {
                     if (minO <= poolOrder[x])
                         continue;
@@ -1265,6 +1319,7 @@ namespace Base.Data_Classes
                 Powersets[i + 3] = DatabaseAPI.Database.Powersets[poolIndex[minI]];
                 poolOrder[minI] = 512;
             }
+
             // HACK: this assumes at least 8 powersets exist, but the database is fully editable.
             PoolLocked[0] = PowersetUsed(Powersets[3]) & PoolUnique(Enums.PowersetType.Pool0);
             PoolLocked[1] = PowersetUsed(Powersets[4]) & PoolUnique(Enums.PowersetType.Pool1);
@@ -1273,50 +1328,47 @@ namespace Base.Data_Classes
             PoolLocked[4] = PowersetUsed(Powersets[7]);
         }
 
-        int GetEarliestPowerIndex(int iSet)
+        private int GetEarliestPowerIndex(int iSet)
         {
-            for (int index = 0; index <= CurrentBuild.LastPower; ++index)
-            {
+            for (var index = 0; index <= CurrentBuild.LastPower; ++index)
                 if (CurrentBuild.Powers[index].NIDPowerset == iSet)
                     return index;
-            }
             return CurrentBuild.LastPower + 1;
         }
 
-        bool PoolUnique(Enums.PowersetType pool)
+        private bool PoolUnique(Enums.PowersetType pool)
         {
-            var ps = Powersets[(int)pool];
+            var ps = Powersets[(int) pool];
             if (ps == null) return false;
-            for (int index = 3; (Enums.PowersetType)index < pool; ++index)
-            {
-                if (Powersets[index] != null && Powersets[index].nID == Powersets[(int)pool].nID)
+            for (var index = 3; (Enums.PowersetType) index < pool; ++index)
+                if (Powersets[index] != null && Powersets[index].nID == Powersets[(int) pool].nID)
                     return false;
-            }
             return true;
         }
 
-        bool PowersetUsed(IPowerset powerset)
+        private bool PowersetUsed(IPowerset powerset)
         {
-            return powerset != null && CurrentBuild.Powers.Any(t => t.NIDPowerset == powerset.nID & t.IDXPower > -1);
+            return powerset != null &&
+                   CurrentBuild.Powers.Any(t => (t.NIDPowerset == powerset.nID) & (t.IDXPower > -1));
         }
 
         protected bool CanRemovePower(int index, bool allowSecondary, out string message)
         {
             message = string.Empty;
-            PowerEntry power = CurrentBuild.Powers[index];
+            var power = CurrentBuild.Powers[index];
             if (!power.Chosen)
             {
-                message = "You can't remove inherent powers.\nIf the power is a Kheldian form power, you can remove it by removing the shapeshift power which grants it.";
+                message =
+                    "You can't remove inherent powers.\nIf the power is a Kheldian form power, you can remove it by removing the shapeshift power which grants it.";
                 return false;
             }
 
-            if (!(power.NIDPowerset == Powersets[1].nID & power.IDXPower == 0 & !allowSecondary))
+            if (!((power.NIDPowerset == Powersets[1].nID) & (power.IDXPower == 0) & !allowSecondary))
                 return power.NIDPowerset >= 0;
             if (CurrentBuild.PowersPlaced <= 1)
                 return true;
             message = "The first power from your secondary set is non-optional and can't be removed.";
             return false;
-
         }
 
         public void SwitchSets(IPowerset newPowerset, IPowerset oldPowerset)
@@ -1355,24 +1407,31 @@ namespace Base.Data_Classes
                     newBranch = -1;
                 }
             }
-            for (int index4 = 0; index4 < Powersets.Length; ++index4)
-            {
+
+            for (var index4 = 0; index4 < Powersets.Length; ++index4)
                 if (Powersets[index4] != null && Powersets[index4].nID == oldPowerset.nID)
                     Powersets[index4] = newPowerset;
-            }
-            foreach (PowerEntry power in CurrentBuild.Powers)
+            foreach (var power in CurrentBuild.Powers)
             {
                 if (power.NIDPowerset < 0)
                     continue;
-                int idxPower = power.IDXPower;
+                var idxPower = power.IDXPower;
                 if (power.NIDPowerset == oldTrunk)
                 {
-                    for (int index4 = 0; index4 < DatabaseAPI.Database.Powersets[oldTrunk].Power.Length && DatabaseAPI.Database.Powersets[oldTrunk].Powers[index4].Level == 0; ++index4)
+                    for (var index4 = 0;
+                        index4 < DatabaseAPI.Database.Powersets[oldTrunk].Power.Length &&
+                        DatabaseAPI.Database.Powersets[oldTrunk].Powers[index4].Level == 0;
+                        ++index4)
                         --idxPower;
-                    for (int index4 = 0; index4 < DatabaseAPI.Database.Powersets[newTrunk].Power.Length && DatabaseAPI.Database.Powersets[newTrunk].Powers[index4].Level == 0; ++index4)
+                    for (var index4 = 0;
+                        index4 < DatabaseAPI.Database.Powersets[newTrunk].Power.Length &&
+                        DatabaseAPI.Database.Powersets[newTrunk].Powers[index4].Level == 0;
+                        ++index4)
                         ++idxPower;
                     if (newTrunk < 0)
+                    {
                         power.Reset();
+                    }
                     else if (idxPower > DatabaseAPI.Database.Powersets[newTrunk].Power.Length - 1 || idxPower < 0)
                     {
                         power.Reset();
@@ -1386,9 +1445,15 @@ namespace Base.Data_Classes
                 }
                 else if (power.NIDPowerset == oldBranch)
                 {
-                    for (int index4 = 0; index4 < DatabaseAPI.Database.Powersets[oldTrunk].Power.Length && DatabaseAPI.Database.Powersets[oldTrunk].Powers[index4].Level == 0; ++index4)
+                    for (var index4 = 0;
+                        index4 < DatabaseAPI.Database.Powersets[oldTrunk].Power.Length &&
+                        DatabaseAPI.Database.Powersets[oldTrunk].Powers[index4].Level == 0;
+                        ++index4)
                         --idxPower;
-                    for (int index4 = 0; index4 < DatabaseAPI.Database.Powersets[newTrunk].Power.Length && DatabaseAPI.Database.Powersets[newTrunk].Powers[index4].Level == 0; ++index4)
+                    for (var index4 = 0;
+                        index4 < DatabaseAPI.Database.Powersets[newTrunk].Power.Length &&
+                        DatabaseAPI.Database.Powersets[newTrunk].Powers[index4].Level == 0;
+                        ++index4)
                         ++idxPower;
                     if (newBranch < 0 || idxPower > DatabaseAPI.Database.Powersets[newBranch].Power.Length - 1)
                     {
@@ -1401,11 +1466,12 @@ namespace Base.Data_Classes
                         power.IDXPower = idxPower;
                     }
                 }
+
                 if (power.Power == null || !power.Power.Slottable)
                     power.Slots = Array.Empty<SlotEntry>();
                 else if (power.Slots.Length == 0)
-                {
-                    power.Slots = new[]{
+                    power.Slots = new[]
+                    {
                         new SlotEntry
                         {
                             Enhancement = new I9Slot(),
@@ -1413,21 +1479,23 @@ namespace Base.Data_Classes
                             Level = power.Level
                         }
                     };
-                }
                 else if (idxPower > -1)
-                {
-                    for (int index4 = 0; index4 < power.SlotCount; ++index4)
-                    {
+                    for (var index4 = 0; index4 < power.SlotCount; ++index4)
                         if (!power.PowerSet.Powers[idxPower].IsEnhancementValid(power.Slots[index4].Enhancement.Enh))
                             power.Slots[index4].Enhancement = new I9Slot();
-                    }
-                }
             }
+
             CurrentBuild.FullMutexCheck();
         }
 
         public class TotalStatistics
         {
+            internal TotalStatistics()
+            {
+                // do not set values to the value they default to in a constructor
+                Init(false);
+            }
+
             public float[] Def { get; private set; }
             public float[] Res { get; private set; }
             public float[] Mez { get; private set; }
@@ -1455,12 +1523,6 @@ namespace Base.Data_Classes
             public float BuffToHit { get; set; }
             public float BuffDam { get; set; }
             public float BuffEndRdx { get; set; }
-
-            internal TotalStatistics()
-            {
-                // do not set values to the value they default to in a constructor
-                Init(fullReset: false);
-            }
 
             public void Init(bool fullReset = true)
             {
@@ -1493,11 +1555,11 @@ namespace Base.Data_Classes
 
             public void Assign(TotalStatistics iSt)
             {
-                Def = (float[])iSt.Def.Clone();
-                Res = (float[])iSt.Res.Clone();
-                Mez = (float[])iSt.Mez.Clone();
-                MezRes = (float[])iSt.MezRes.Clone();
-                DebuffRes = (float[])iSt.DebuffRes.Clone();
+                Def = (float[]) iSt.Def.Clone();
+                Res = (float[]) iSt.Res.Clone();
+                Mez = (float[]) iSt.Mez.Clone();
+                MezRes = (float[]) iSt.MezRes.Clone();
+                DebuffRes = (float[]) iSt.DebuffRes.Clone();
                 Elusivity = iSt.Elusivity;
                 HPRegen = iSt.HPRegen;
                 HPMax = iSt.HPMax;

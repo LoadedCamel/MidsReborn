@@ -645,7 +645,7 @@ namespace Base.Data_Classes
                 case Enums.eEffectType.Mez:
                     var name2 = Enum.GetName(MezType.GetType(), MezType);
                     if (Duration > 0.0 && (!simple || MezType != Enums.eMez.None && MezType != Enums.eMez.Knockback &&
-                                           MezType != Enums.eMez.Knockup))
+                        MezType != Enums.eMez.Knockup))
                         str2 = Utilities.FixDP(Duration) + " second ";
                     var str9 = " (Mag " + str1 + ")";
                     str5 = str2 + name2 + str9 + str3;
@@ -1317,7 +1317,7 @@ namespace Base.Data_Classes
                                         if (lower.Contains("kHeld target> 0".ToLower()))
                                             SpecialCase = Enums.eSpecialCase.Mezzed;
                                         if (MagnitudeExpression.IndexOf("TeamSize",
-                                                StringComparison.OrdinalIgnoreCase) > -1)
+                                            StringComparison.OrdinalIgnoreCase) > -1)
                                         {
                                             SpecialCase = Enums.eSpecialCase.None;
                                             BaseProbability = 0.1f;
@@ -1465,80 +1465,80 @@ namespace Base.Data_Classes
                     else if (lower.IndexOf("source.TeamSize> 3", StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.TeamSize3;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Combo_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Combo_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Combo_Level_3 source.ownPower? !",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Combo_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Combo_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Combo_Level_3 source.ownPower? !",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ComboLevel0;
                     else if (lower.IndexOf("Temporary_Powers.Temporary_Powers.Combo_Level_1 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ComboLevel1;
                     else if (lower.IndexOf("Temporary_Powers.Temporary_Powers.Combo_Level_2 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ComboLevel2;
                     else if (lower.IndexOf("Temporary_Powers.Temporary_Powers.Combo_Level_3 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ComboLevel3;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_3 source.ownPower? !",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_3 source.ownPower? !",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfBody0;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_1 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_1 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfBody1;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_2 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_2 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfBody2;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_3 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_3 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfBody3;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_3 source.ownPower? !",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_3 source.ownPower? !",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfMind0;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_1 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_1 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfMind1;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_2 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_2 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfMind2;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_3 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_3 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfMind3;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_3 source.ownPower? !",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_3 source.ownPower? !",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfSoul0;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_1 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_1 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfSoul1;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_2 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_2 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfSoul2;
                     else if (lower.IndexOf(
-                                 "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_3 source.ownPower?",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_3 source.ownPower?",
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.PerfectionOfSoul3;
                     else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 0 ==",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ComboLevel0;
                     else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 1 ==",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ComboLevel1;
                     else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 2 ==",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ComboLevel2;
                     else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 3 ==",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ComboLevel3;
                     else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 2 <=",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.NotComboLevel3;
                     else if (lower.IndexOf("cur.kToHit source> .97 >=", StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.ToHit97;
@@ -1559,7 +1559,7 @@ namespace Base.Data_Classes
                     else if (lower.Contains("kfastmode source.mode?"))
                         SpecialCase = Enums.eSpecialCase.FastMode;
                     else if (lower.IndexOf("kOffensiveAdaptation source.Mode? ! kDefensiveAdaptation source.Mode? ! &&",
-                                 StringComparison.OrdinalIgnoreCase) > -1)
+                        StringComparison.OrdinalIgnoreCase) > -1)
                         SpecialCase = Enums.eSpecialCase.NotDefensiveNorOffensiveAdaptation;
                     else if (lower.IndexOf("kDefensiveAdaptation source.Mode? !", StringComparison.OrdinalIgnoreCase) >
                              -1)
@@ -1621,7 +1621,12 @@ namespace Base.Data_Classes
                                         ToWho == Enums.eToWho.Self && SpecialCase == Enums.eSpecialCase.None)
                                         SpecialCase = Enums.eSpecialCase.Defiance;
                                 }
-                                else if (ps.SetType == Enums.ePowerSetType.Inherent && EffectType == Enums.eEffectType.DamageBuff && (AttribType == Enums.eAttribType.Expression) & (Math.Abs(Scale - 0.0f) < 0.01) && power.Requires.ClassName.Length > 0 && string.Equals(power.Requires.ClassName[0], "CLASS_BRUTE", StringComparison.OrdinalIgnoreCase))
+                                else if (ps.SetType == Enums.ePowerSetType.Inherent &&
+                                         EffectType == Enums.eEffectType.DamageBuff &&
+                                         (AttribType == Enums.eAttribType.Expression) &
+                                         (Math.Abs(Scale - 0.0f) < 0.01) && power.Requires.ClassName.Length > 0 &&
+                                         string.Equals(power.Requires.ClassName[0], "CLASS_BRUTE",
+                                             StringComparison.OrdinalIgnoreCase))
                                 {
                                     Stacking = Enums.eStacking.Yes;
                                     AttribType = Enums.eAttribType.Magnitude;
@@ -2215,13 +2220,19 @@ namespace Base.Data_Classes
 
         {
             float num1;
-            if (MagnitudeExpression.IndexOf(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /", StringComparison.OrdinalIgnoreCase) > -1)
+            if (MagnitudeExpression.IndexOf(
+                ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /",
+                StringComparison.OrdinalIgnoreCase) > -1)
             {
-                var num2 = (float) ((Math.Max(Math.Min(power.RechargeTime, 30f), 0.0f) * 0.800000011920929 + 1.79999995231628) / 5.0) / power.AoEModifier * Scale;
-                if (MagnitudeExpression.Length > ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 2)
-                {
-                    num2 *= float.Parse(MagnitudeExpression.Substring(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1).Substring(0, 2));
-                }
+                var num2 = (float) ((Math.Max(Math.Min(power.RechargeTime, 30f), 0.0f) * 0.800000011920929 +
+                                     1.79999995231628) / 5.0) / power.AoEModifier * Scale;
+                if (MagnitudeExpression.Length >
+                    ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /"
+                        .Length + 2)
+                    num2 *= float.Parse(MagnitudeExpression
+                        .Substring(
+                            ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /"
+                                .Length + 1).Substring(0, 2));
 
                 num1 = num2;
             }

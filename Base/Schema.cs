@@ -1,11 +1,7 @@
-﻿using Base;
-using System;
-
-
-public class RawSaveResult
+﻿public class RawSaveResult
 {
-    internal int Length;
     internal int Hash;
+    internal int Length;
 
     public RawSaveResult(int length, int hash)
     {
@@ -32,8 +28,8 @@ public class FHash
 
 public class HistoryMap
 {
-    internal int Level = -1;
     internal int HID = -1;
+    internal int Level = -1;
     internal int SID = -1;
     internal string Text = string.Empty;
 }

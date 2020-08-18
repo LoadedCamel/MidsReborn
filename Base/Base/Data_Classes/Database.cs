@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +6,7 @@ namespace Base.Data_Classes
 {
     public sealed class Database : IDatabase
     {
+        public static Database Instance { get; } = new Database();
         public float Version { get; set; }
 
         public int Issue { get; set; }
@@ -65,8 +65,6 @@ namespace Base.Data_Classes
 
         public List<string> EffectIds { get; set; } = new List<string>();
 
-        public static Database Instance { get; } = new Database();
-
         public float VersionEnhDb { get; set; }
 
         public float[][] MultED { get; set; }
@@ -98,14 +96,14 @@ namespace Base.Data_Classes
         public void LoadEntities(BinaryReader reader)
         {
             Entities = new SummonedEntity[reader.ReadInt32() + 1];
-            for (int index = 0; index <= Entities.Length - 1; ++index)
+            for (var index = 0; index <= Entities.Length - 1; ++index)
                 Entities[index] = new SummonedEntity(reader);
         }
 
         public void StoreEntities(BinaryWriter writer)
         {
             writer.Write(Entities.Length - 1);
-            for (int index = 0; index <= Entities.Length - 1; ++index)
+            for (var index = 0; index <= Entities.Length - 1; ++index)
                 Entities[index].StoreTo(writer);
         }
     }

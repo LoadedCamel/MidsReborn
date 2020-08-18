@@ -1,18 +1,17 @@
-
 using System;
 using System.Collections.Generic;
 
 public class PowersetGroup : IComparable
 {
-    public string Name { get; }
-
-    public IDictionary<string, IPowerset> Powersets { get; }
-
     public PowersetGroup(string name)
     {
         Name = name;
         Powersets = new Dictionary<string, IPowerset>();
     }
+
+    public string Name { get; }
+
+    public IDictionary<string, IPowerset> Powersets { get; }
 
     public int CompareTo(object obj)
     {

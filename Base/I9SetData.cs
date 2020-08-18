@@ -1,12 +1,9 @@
-
 using System;
 
 public class I9SetData
 {
-    public sSetInfo[] SetInfo = new sSetInfo[0];
     public int PowerIndex;
-
-    public bool Empty => SetInfo.Length < 1;
+    public sSetInfo[] SetInfo = new sSetInfo[0];
 
     public I9SetData()
     {
@@ -16,7 +13,7 @@ public class I9SetData
     {
         PowerIndex = iSd.PowerIndex;
         SetInfo = new sSetInfo[iSd.SetInfo.Length];
-        for (int index = 0; index <= SetInfo.Length - 1; ++index)
+        for (var index = 0; index <= SetInfo.Length - 1; ++index)
         {
             SetInfo[index].SetIDX = iSd.SetInfo[index].SetIDX;
             SetInfo[index].SlottedCount = iSd.SetInfo[index].SlottedCount;
@@ -27,12 +24,14 @@ public class I9SetData
         }
     }
 
+    public bool Empty => SetInfo.Length < 1;
+
     public void Add(ref I9Slot iEnh)
     {
         if (iEnh.Enh < 0 || DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID != Enums.eType.SetO)
             return;
-        int nIdSet = DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet;
-        int index = Lookup(nIdSet);
+        var nIdSet = DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet;
+        var index = Lookup(nIdSet);
         if (index >= 0)
         {
             ++SetInfo[index].SlottedCount;
@@ -50,7 +49,7 @@ public class I9SetData
         }
     }
 
-    int Lookup(int setID)
+    private int Lookup(int setID)
 
     {
         int num;
@@ -60,52 +59,65 @@ public class I9SetData
         }
         else
         {
-            for (int index = 0; index <= SetInfo.Length - 1; ++index)
-            {
+            for (var index = 0; index <= SetInfo.Length - 1; ++index)
                 if (SetInfo[index].SetIDX == setID)
                     return index;
-            }
             num = -1;
         }
+
         return num;
     }
 
     public void BuildEffects(Enums.ePvX pvMode)
     {
-        for (int index1 = 0; index1 <= SetInfo.Length - 1; ++index1)
+        for (var index1 = 0; index1 <= SetInfo.Length - 1; ++index1)
         {
             if (SetInfo[index1].SlottedCount > 1)
-            {
-                for (int index2 = 0; index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus.Length - 1; ++index2)
+                for (var index2 = 0;
+                    index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus.Length - 1;
+                    ++index2)
                 {
-                    if (!(DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Slotted <= SetInfo[index1].SlottedCount &
-                          (DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].PvMode == pvMode |
-                           DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].PvMode == Enums.ePvX.Any)))
+                    if (!((DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Slotted <=
+                           SetInfo[index1].SlottedCount) &
+                          ((DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].PvMode ==
+                            pvMode) |
+                           (DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].PvMode ==
+                            Enums.ePvX.Any))))
                         continue;
-                    for (int index3 = 0; index3 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Index.Length - 1; ++index3)
+                    for (var index3 = 0;
+                        index3 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Index
+                            .Length - 1;
+                        ++index3)
                     {
                         Array.Resize(ref SetInfo[index1].Powers, SetInfo[index1].Powers.Length + 1);
-                        SetInfo[index1].Powers[SetInfo[index1].Powers.Length - 1] = DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Index[index3];
+                        SetInfo[index1].Powers[SetInfo[index1].Powers.Length - 1] = DatabaseAPI.Database
+                            .EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Index[index3];
                     }
                 }
-            }
 
             if (SetInfo[index1].SlottedCount <= 0)
                 continue;
             {
-                for (int index2 = 0; index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Enhancements.Length - 1; ++index2)
+                for (var index2 = 0;
+                    index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Enhancements.Length - 1;
+                    ++index2)
                 {
-                    if (DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2].Index.Length <= -1)
+                    if (DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2].Index
+                        .Length <= -1)
                         continue;
-                    for (int index3 = 0; index3 <= SetInfo[index1].EnhIndexes.Length - 1; ++index3)
+                    for (var index3 = 0; index3 <= SetInfo[index1].EnhIndexes.Length - 1; ++index3)
                     {
                         if (SetInfo[index1].EnhIndexes[index3] !=
                             DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Enhancements[index2])
                             continue;
-                        for (int index4 = 0; index4 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2].Index.Length - 1; ++index4)
+                        for (var index4 = 0;
+                            index4 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2]
+                                .Index.Length - 1;
+                            ++index4)
                         {
                             Array.Resize(ref SetInfo[index1].Powers, SetInfo[index1].Powers.Length + 1);
-                            SetInfo[index1].Powers[SetInfo[index1].Powers.Length - 1] = DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2].Index[index4];
+                            SetInfo[index1].Powers[SetInfo[index1].Powers.Length - 1] = DatabaseAPI.Database
+                                .EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2].Index[index4];
                         }
                     }
                 }

@@ -1,4 +1,3 @@
-
 using System;
 using System.IO;
 
@@ -29,9 +28,6 @@ public interface IEffect : IComparable, ICloneable
     string EffectId { get; set; }
 
     string Special { get; set; }
-
-    IPower GetPower();
-    void SetPower(IPower power);
 
     IEnhancement Enhancement { get; set; }
 
@@ -129,16 +125,19 @@ public interface IEffect : IComparable, ICloneable
 
     float ProcsPerMinute { get; set; }
 
+    IPower GetPower();
+    void SetPower(IPower power);
+
     bool isDamage();
 
     string BuildEffectStringShort(bool NoMag = false, bool simple = false, bool useBaseProbability = false);
 
     string BuildEffectString(
-      bool Simple = false,
-      string SpecialCat = "",
-      bool noMag = false,
-      bool Grouped = false,
-      bool useBaseProbability = false);
+        bool Simple = false,
+        string SpecialCat = "",
+        bool noMag = false,
+        bool Grouped = false,
+        bool useBaseProbability = false);
 
     void StoreTo(ref BinaryWriter writer);
 

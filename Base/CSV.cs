@@ -1,16 +1,15 @@
-
 using System.Text.RegularExpressions;
 
 public static class CSV
 {
-    static readonly Regex Reg = new Regex(",(?=(?:[^\"]|\"[^\"]*\")*$)", RegexOptions.CultureInvariant);
+    private static readonly Regex Reg = new Regex(",(?=(?:[^\"]|\"[^\"]*\")*$)", RegexOptions.CultureInvariant);
 
 
     public static string[] ToArray(string iLine)
     {
-        string[] strArray = Reg.Split(iLine);
-        char[] chArray = { '"' };
-        for (int index = 0; index < strArray.Length; ++index)
+        var strArray = Reg.Split(iLine);
+        char[] chArray = {'"'};
+        for (var index = 0; index < strArray.Length; ++index)
             strArray[index] = strArray[index].Trim(chArray);
         return strArray;
     }

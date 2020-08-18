@@ -6,7 +6,6 @@ using System.Windows.Forms;
 
 public static class Files
 {
-    public static string FileData = string.Empty;
     public const string MxdbFileDB = "I12.mhd";
     public const string MxdbFileLevels = "Levels.mhd";
     public const string MxdbFileMaths = "Maths.mhd";
@@ -20,10 +19,26 @@ public static class Files
     public const string MxdbFileOverrides = "Compare.mhd";
     public const string MxdbFileModifiers = "AttribMod.mhd";
     public const string PatchRtf = "patch.rtf";
-    const string MxdbFileConfig = "Config.mhd";
-    const string JsonFileConfig = "Config.json";
+    private const string MxdbFileConfig = "Config.mhd";
+    private const string JsonFileConfig = "Config.json";
 
     public const string RoamingFolder = "Data\\";
+    public static string FileData = string.Empty;
+
+    private static string FNameJsonConfig
+    {
+        get
+        {
+            var asmLOC = Assembly.GetExecutingAssembly().Location;
+            var dirLOC = $"{Directory.GetParent(asmLOC)}\\Data\\";
+            //var fp = Path.Combine(Application.StartupPath, Path.Combine("Data", JsonFileConfig));
+            return $"{dirLOC}{JsonFileConfig}";
+        }
+    }
+
+    private static string FNameConfig => SelectDataFileLoad(MxdbFileConfig);
+
+    private static string FPathAppData => Path.Combine(Application.StartupPath, "Data");
 
     internal static string SearchUp(string folder, string fn)
     {
@@ -35,8 +50,10 @@ public static class Files
             // get the directory that holds the filename, filename should be a FULL path
             var fnDir = Path.GetDirectoryName(filename);
             // if the filename is already in a folder with the correct foldername, we need to go up twice instead of once.
-            var targetRoot = fnDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).EndsWith(foldername) ?
-                Path.GetDirectoryName(fnDir) : fnDir;
+            var targetRoot =
+                fnDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).EndsWith(foldername)
+                    ? Path.GetDirectoryName(fnDir)
+                    : fnDir;
             var parent = Path.GetDirectoryName(targetRoot);
             if (parent == null) return null;
             var attempt = Path.Combine(Path.Combine(parent, foldername), Path.GetFileName(filename));
@@ -47,6 +64,7 @@ public static class Files
             if (recursed != null && File.Exists(recursed)) return recursed;
             return File.Exists(filename) ? filename : null;
         }
+
         try
         {
             var result = SearchUpRec(folder, fn);
@@ -58,25 +76,9 @@ public static class Files
         }
     }
 
-    static string FNameJsonConfig
-    {
-        get
-        {
-            var asmLOC = Assembly.GetExecutingAssembly().Location;
-            var dirLOC = $"{Directory.GetParent(asmLOC)}\\Data\\";
-            //var fp = Path.Combine(Application.StartupPath, Path.Combine("Data", JsonFileConfig));
-            return $"{dirLOC}{JsonFileConfig}";
-
-        }
-    }
-
-    static string FNameConfig => SelectDataFileLoad(MxdbFileConfig);
-
-    private static string FPathAppData => Path.Combine(Application.StartupPath, "Data");
-
     public static string SelectDataFileLoad(string iDataFile)
     {
-        string str = Path.Combine(FPathAppData, iDataFile);
+        var str = Path.Combine(FPathAppData, iDataFile);
         if (Debugger.IsAttached)
             str = SearchUp("Data", str);
         FileData = FileData + str + '\n';
@@ -98,6 +100,7 @@ public static class Files
         {
             MessageBox.Show("Unable to create output folder: " + ex.Message);
         }
+
         return string.Empty;
     }
 
@@ -116,6 +119,7 @@ public static class Files
         {
             MessageBox.Show("Config folder doesn't exist. Creating new one.");
         }
+
         return FNameConfig;
     }
 
@@ -130,6 +134,7 @@ public static class Files
         {
             MessageBox.Show("Unable to create output folder: " + ex.Message);
         }
+
         return FNameConfig;
     }
 
