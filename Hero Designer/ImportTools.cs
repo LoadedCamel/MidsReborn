@@ -9,7 +9,6 @@ using HeroViewer.Base;
 
 namespace HeroViewer
 {
-    
     /***********************
     ** Helpers
     */
@@ -19,8 +18,10 @@ namespace HeroViewer
         protected RawCharacterInfo CharacterInfo { get; set; }
         protected string BuildString { get; set; }
         protected UniqueList<string> PowerSets { get; set; }
-        protected string[] excludePowersets { get; } = { "Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents" };
-        protected string[] excludePowers { get; } = {
+        protected string[] excludePowersets { get; } = {"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
+
+        protected string[] excludePowers { get; } =
+        {
             "Efficient_Adaptation", "Defensive_Adaptation", "Offensive_Adaptation",
             "Form_of_the_Body", "Form_of_the_Mind", "Form_of_the_Soul",
             "Ammunition",
@@ -28,6 +29,7 @@ namespace HeroViewer
             /*"Black_Dwarf_", "Dark_Nova_", "White_Dwarf_", "Bright_Nova_",*/
             "Sorcery.Translocation", "Experimentation.Jaunt", "Force_of_Will.Stomp"
         };
+
         protected Dictionary<int, int> OldFitnessPoolIDs { get; } = new Dictionary<int, int>
         {
             [2553] = 1521,
@@ -41,7 +43,8 @@ namespace HeroViewer
             // Warning: DatabaseAPI.GetArchetypeByName looks up archetype info by display name, not by internal name.
             // Meaning underscores have to be replaced with spaces for VEATs...
             MidsContext.Character.Archetype = DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype.Replace("_", " "));
-            MidsContext.Character.Origin = DatabaseAPI.GetOriginByName(MidsContext.Character.Archetype, CharacterInfo.Origin);
+            MidsContext.Character.Origin =
+                DatabaseAPI.GetOriginByName(MidsContext.Character.Archetype, CharacterInfo.Origin);
             MidsContext.Character.Reset(MidsContext.Character.Archetype, MidsContext.Character.Origin);
             MidsContext.Character.Name = CharacterInfo.Name;
             MidsContext.Character.Alignment = CharacterInfo.Alignment switch
@@ -60,7 +63,7 @@ namespace HeroViewer
 
         protected I9Slot SelectEnhancementByIdx(int enhID, string enhInternalName)
         {
-            I9Slot i9Slot = new I9Slot
+            var i9Slot = new I9Slot
             {
                 //Enh = DatabaseAPI.Get EnhancementByUIDName(aSlots[j].InternalName);
                 Enh = enhID
@@ -69,21 +72,23 @@ namespace HeroViewer
             //str1 = buildFileLinesArray[index3].enhancementName;
             if (i9Slot.Enh == -1)
             {
-                string iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", string.Empty);
+                var iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", string.Empty);
                 i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
                 if (i9Slot.Enh == -1)
                 {
-                    _ = MessageBox.Show("Error getting data for enhancement UID: " + enhInternalName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _ = MessageBox.Show("Error getting data for enhancement UID: " + enhInternalName, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     i9Slot.Enh = 0;
                 }
             }
 
             return i9Slot;
         }
+
         protected void AddPowerToBuildSheet(RawPowerData p, ref List<PowerEntry> listPowers)
         {
             int i;
-            PowerEntry powerEntry = new PowerEntry
+            var powerEntry = new PowerEntry
             {
                 Level = p.Level,
                 StatInclude = false,
@@ -103,12 +108,13 @@ namespace HeroViewer
                     };
                     if (p.Slots[i].InternalName == "Empty") continue;
 
-                    I9Slot i9Slot = SelectEnhancementByIdx(p.Slots[i].eData, p.Slots[i].InternalName);
-                    Enums.eType enhType = DatabaseAPI.Database.Enhancements[i9Slot.Enh].TypeID;
+                    var i9Slot = SelectEnhancementByIdx(p.Slots[i].eData, p.Slots[i].InternalName);
+                    var enhType = DatabaseAPI.Database.Enhancements[i9Slot.Enh].TypeID;
 
                     if (enhType == Enums.eType.Normal || enhType == Enums.eType.SpecialO)
                     {
-                        i9Slot.RelativeLevel = (Enums.eEnhRelative)(p.Slots[i].Boosters + 4); // +4 === 5 boosters ??? Damn you, maths.
+                        i9Slot.RelativeLevel =
+                            (Enums.eEnhRelative) (p.Slots[i].Boosters + 4); // +4 === 5 boosters ??? Damn you, maths.
                         i9Slot.Grade = Enums.eEnhGrade.SingleO;
                     }
 
@@ -117,7 +123,7 @@ namespace HeroViewer
                         // Current enhancement level: //p.Slots[i].Level;
                         // Set to maximum since attuned ones will give the lowest level possible.
                         i9Slot.IOLevel = DatabaseAPI.Database.Enhancements[i9Slot.Enh].LevelMax;
-                        i9Slot.RelativeLevel = (Enums.eEnhRelative)(p.Slots[i].Boosters + 4);
+                        i9Slot.RelativeLevel = (Enums.eEnhRelative) (p.Slots[i].Boosters + 4);
                     }
 
                     powerEntry.Slots[i].Enhancement = i9Slot;
@@ -162,7 +168,9 @@ namespace HeroViewer
 
                 default:
                     return false;
-            };
+            }
+
+            ;
 
             return !excludes.Any(x => input.Contains(x));
         }
@@ -207,9 +215,10 @@ namespace HeroViewer
     /***********************
     ** Import from /buildsave .txt builds
     */
-        public class ImportFromBuildsave : ImportBase
+    public class ImportFromBuildsave : ImportBase
     {
         private readonly int HeaderSize = 4; // Number of lines before actual build data
+
         public ImportFromBuildsave(string buildString)
         {
             BuildString = buildString;
@@ -219,25 +228,30 @@ namespace HeroViewer
 
         public List<PowerEntry>? Parse()
         {
-            Regex r; Match m;
-            Regex r1; Regex r2; Regex r3;
-            Match m1; Match m2; Match m3;
+            Regex r;
+            Match m;
+            Regex r1;
+            Regex r2;
+            Regex r3;
+            Match m1;
+            Match m2;
+            Match m3;
 
             string rawPowerset;
-            RawPowerData p = new RawPowerData { Valid = false };
-            List<RawEnhData> powerSlots = new List<RawEnhData>();
+            var p = new RawPowerData {Valid = false};
+            var powerSlots = new List<RawEnhData>();
             RawEnhData e;
 
-            List<PowerEntry> listPowers = new List<PowerEntry>();
+            var listPowers = new List<PowerEntry>();
             string[] powerIDChunks;
 
             r1 = new Regex(@"^Level ([0-9]+)\: (.+)$"); // Picked power
             r2 = new Regex(@"^[\t\s]*EMPTY$"); // Empty enhancement slot
             r3 = new Regex(@"^[\t\s]*([0-9a-zA-Z\+\:\-_]+) \(([0-9]+)(\+([1-5]))?\)$"); // Filled enhancement slot
 
-            int line = -1;
+            var line = -1;
             string lineText;
-            using StreamReader streamReader = new StreamReader(BuildString);
+            using var streamReader = new StreamReader(BuildString);
             while ((lineText = streamReader.ReadLine()) != null)
             {
                 line++;
@@ -249,7 +263,8 @@ namespace HeroViewer
                     m = r.Match(lineText);
                     if (!m.Success)
                     {
-                        MessageBox.Show("This build cannot be imported because it doesn't match the expected format.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("This build cannot be imported because it doesn't match the expected format.",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return null;
                     }
 
@@ -271,10 +286,7 @@ namespace HeroViewer
 
                 if (m1.Success)
                 {
-                    if (p.Valid)
-                    {
-                        AddPowerToBuildSheet(p, ref listPowers);
-                    }
+                    if (p.Valid) AddPowerToBuildSheet(p, ref listPowers);
 
                     powerIDChunks = m1.Groups[2].Value.Split(' ');
                     rawPowerset = (powerIDChunks[0] + "." + powerIDChunks[1]).Trim();
@@ -289,13 +301,11 @@ namespace HeroViewer
                         p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
                         p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     }
+
                     p.Valid = CheckValid(p.pData);
                     p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
                     p.Slots = new List<RawEnhData>();
-                    if (CheckValid(p.Powerset))
-                    {
-                        PowerSets.Add(p.Powerset.FullName);
-                    }
+                    if (CheckValid(p.Powerset)) PowerSets.Add(p.Powerset.FullName);
                 }
                 else if (m2.Success)
                 {
@@ -314,7 +324,9 @@ namespace HeroViewer
                     e = new RawEnhData();
                     e.InternalName = DatabaseAPI.GetEnhancementBaseUIDName(m3.Groups[1].Value);
                     e.Level = Convert.ToInt32(m3.Groups[2].Value, null);
-                    e.Boosters = m3.Groups.Count > 3 & !string.IsNullOrWhiteSpace(m3.Groups[4].Value) ? Convert.ToInt32(m3.Groups[4].Value, null) : 0;
+                    e.Boosters = (m3.Groups.Count > 3) & !string.IsNullOrWhiteSpace(m3.Groups[4].Value)
+                        ? Convert.ToInt32(m3.Groups[4].Value, null)
+                        : 0;
                     e.HasCatalyst = DatabaseAPI.EnhHasCatalyst(m3.Groups[1].Value);
                     e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
                     p.Slots.Add(e);
@@ -335,7 +347,6 @@ namespace HeroViewer
 
     public class PlainTextParser : ImportBase
     {
-        private BuilderApp BuilderApp;
         private readonly Dictionary<string, string> OldSetNames = new Dictionary<string, string>
         {
             ["Achilles"] = "AchHee",
@@ -404,6 +415,8 @@ namespace HeroViewer
             ["Zephyr"] = "BlsoftheZ"
         };
 
+        private readonly BuilderApp BuilderApp;
+
         public PlainTextParser(string buildString)
         {
             BuildString = buildString;
@@ -416,26 +429,27 @@ namespace HeroViewer
         {
             if (string.IsNullOrEmpty(sn)) return sn;
 
-            foreach (KeyValuePair<string, string> k in OldSetNames)
-            {
-                if (sn.IndexOf(k.Key, StringComparison.Ordinal) > -1) return sn.Replace(k.Key, k.Value);
-            }
+            foreach (var k in OldSetNames)
+                if (sn.IndexOf(k.Key, StringComparison.Ordinal) > -1)
+                    return sn.Replace(k.Key, k.Value);
 
             return sn;
         }
 
         public List<PowerEntry>? Parse()
         {
-            Regex r; Regex rs;
-            Match m; Match ms;
+            Regex r;
+            Regex rs;
+            Match m;
+            Match ms;
             string cnt;
             int i;
 
-            RawPowerData p = new RawPowerData { Valid = false };
-            List<RawEnhData> powerSlots = new List<RawEnhData>();
-            RawEnhData e = new RawEnhData();
+            var p = new RawPowerData {Valid = false};
+            var powerSlots = new List<RawEnhData>();
+            var e = new RawEnhData();
 
-            List<PowerEntry> listPowers = new List<PowerEntry>();
+            var listPowers = new List<PowerEntry>();
 
             try
             {
@@ -464,7 +478,9 @@ namespace HeroViewer
 
             if (!m.Success)
             {
-                _ = MessageBox.Show("This build cannot be recovered because it doesn't contain a valid plain text part.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show(
+                    "This build cannot be recovered because it doesn't contain a valid plain text part.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
@@ -509,15 +525,14 @@ namespace HeroViewer
             m = r.Match(cnt);
             while (m.Success)
             {
-                if (m.Groups[2].Value != "Fitness")
-                {
-                    PowerSets.Add(m.Groups[2].Value);
-                }
+                if (m.Groups[2].Value != "Fitness") PowerSets.Add(m.Groups[2].Value);
                 m = m.NextMatch();
             }
 
             // Powers
-            string PSlotsStr; string[] PSlots; string[] s;
+            string PSlotsStr;
+            string[] PSlots;
+            string[] s;
             string? sContentEnh;
             r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)\t([^\r\n\t]+)");
             m = r.Match(cnt);
@@ -529,11 +544,12 @@ namespace HeroViewer
 
                 p.DisplayName = m.Groups[2].Value.Trim();
                 p.Level = Convert.ToInt32(m.Groups[1].Value, null);
-                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName, DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype).Idx);
+                p.pData = DatabaseAPI.GetPowerByDisplayName(p.DisplayName,
+                    DatabaseAPI.GetArchetypeByName(CharacterInfo.Archetype).Idx);
                 p.Powerset = p.pData != null ? DatabaseAPI.GetPowersetByIndex(p.pData.PowerSetIndex) : null;
                 p.Valid = CheckValid(p.pData);
-                PSlotsStr = (m.Groups.Count > 3) ? m.Groups[3].Value.Trim() : string.Empty;
-                if (!String.IsNullOrEmpty(PSlotsStr))
+                PSlotsStr = m.Groups.Count > 3 ? m.Groups[3].Value.Trim() : string.Empty;
+                if (!string.IsNullOrEmpty(PSlotsStr))
                 {
                     // Extract enhancement name and slot level ('A' for power inherent slot)
                     // Handle special enhancements with parenthesis like ExpRnf-+Res(Pets)(50)
@@ -543,13 +559,18 @@ namespace HeroViewer
                     for (i = 0; i < PSlots.Length; i++)
                     {
                         s = Regex.Split(PSlots[i], @"/[\(\)]");
-                        s = Array.FindAll(s, e => !String.IsNullOrWhiteSpace(e));
+                        s = Array.FindAll(s, e => !string.IsNullOrWhiteSpace(e));
 
-                        sContentEnh = (s[0] == "Empty") ? null : ShortNamesConversion(s[0]); // Enhancement name (Enhancement.ShortName)
+                        sContentEnh =
+                            s[0] == "Empty"
+                                ? null
+                                : ShortNamesConversion(s[0]); // Enhancement name (Enhancement.ShortName)
                         try
                         {
                             e.InternalName = s[0];
-                            e.Level = (s[1] == "A") ? 0 : Convert.ToInt32(s[1], null); // Slot level ("A" is the auto-granted one)
+                            e.Level = s[1] == "A"
+                                ? 0
+                                : Convert.ToInt32(s[1], null); // Slot level ("A" is the auto-granted one)
                             e.Boosters = 0; // Not handled
                             e.HasCatalyst = false;
                             e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
@@ -569,10 +590,7 @@ namespace HeroViewer
 
                 if (p.Valid)
                 {
-                    if (CheckValid(p.Powerset))
-                    {
-                        PowerSets.Add(p.Powerset.FullName);
-                    }
+                    if (CheckValid(p.Powerset)) PowerSets.Add(p.Powerset.FullName);
                     AddPowerToBuildSheet(p, ref listPowers);
                 }
             }

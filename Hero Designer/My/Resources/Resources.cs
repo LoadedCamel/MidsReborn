@@ -1,4 +1,3 @@
-
 using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -18,13 +17,14 @@ namespace Hero_Designer.My.Resources
     [DebuggerNonUserCode]
     internal sealed class Resources
     {
-        static ResourceManager resourceMan;
+        private static ResourceManager resourceMan;
 
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         private static CultureInfo Culture { get; set; }
 
-        internal static Bitmap Gradient => (Bitmap) RuntimeHelpers.GetObjectValue(ResourceManager.GetObject(nameof(Gradient), Culture));
+        internal static Bitmap Gradient =>
+            (Bitmap) RuntimeHelpers.GetObjectValue(ResourceManager.GetObject(nameof(Gradient), Culture));
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         private static ResourceManager ResourceManager =>

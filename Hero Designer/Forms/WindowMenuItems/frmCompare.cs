@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -13,36 +12,35 @@ namespace Hero_Designer
 {
     public partial class frmCompare : Form
     {
-        ImageButton btnClose;
-        Button btnTweakMatch;
-        ComboBox cbAT1;
-        ComboBox cbAT2;
-        ComboBox cbSet1;
-        ComboBox cbSet2;
-        ComboBox cbType1;
-        ComboBox cbType2;
-        CheckBox chkMatching;
-        ImageButton chkOnTop;
-        ctlMultiGraph Graph;
-        GroupBox GroupBox1;
-        GroupBox GroupBox2;
-        GroupBox GroupBox4;
-        Label lblKeyColor1;
-        Label lblKeyColor2;
-        Label lblScale;
-        ListBox lstDisplay;
-        TrackBar tbScaleX;
-        ToolTip tTip;
-
-        readonly string[] DisplayValueStrings;
-        float GraphMax;
-        bool Loaded;
+        private readonly string[] DisplayValueStrings;
+        private readonly frmMain myParent;
+        private readonly IPower[][] Powers;
+        private readonly string[][] Tips;
+        private readonly float[][] Values;
+        private ImageButton btnClose;
+        private Button btnTweakMatch;
+        private ComboBox cbAT1;
+        private ComboBox cbAT2;
+        private ComboBox cbSet1;
+        private ComboBox cbSet2;
+        private ComboBox cbType1;
+        private ComboBox cbType2;
+        private CheckBox chkMatching;
+        private ImageButton chkOnTop;
+        private ctlMultiGraph Graph;
+        private float GraphMax;
+        private GroupBox GroupBox1;
+        private GroupBox GroupBox2;
+        private GroupBox GroupBox4;
+        private Label lblKeyColor1;
+        private Label lblKeyColor2;
+        private Label lblScale;
+        private bool Loaded;
+        private ListBox lstDisplay;
         private Enums.CompMap Map;
-        bool Matching;
-        readonly frmMain myParent;
-        readonly IPower[][] Powers;
-        readonly string[][] Tips;
-        readonly float[][] Values;
+        private bool Matching;
+        private TrackBar tbScaleX;
+        private ToolTip tTip;
 
         public frmCompare(ref frmMain iFrm)
         {
@@ -87,34 +85,36 @@ namespace Hero_Designer
             InitializeComponent();
             Name = nameof(frmCompare);
             myParent = iFrm;
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmCompare));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmCompare));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
         }
 
-        void btnClose_ButtonClicked()
-            => Close();
+        private void btnClose_ButtonClicked()
+        {
+            Close();
+        }
 
-        void btnTweakMatch_Click(object sender, EventArgs e)
+        private void btnTweakMatch_Click(object sender, EventArgs e)
         {
             new frmTweakMatching().ShowDialog(this);
             DisplayGraph();
         }
 
-        void cbAT1_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbAT1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
             List_Sets(0);
         }
 
-        void cbAT2_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbAT2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
             List_Sets(1);
         }
 
-        void cbSet1_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbSet1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
@@ -122,7 +122,7 @@ namespace Hero_Designer
             DisplayGraph();
         }
 
-        void cbSet2_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbSet2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
@@ -130,21 +130,21 @@ namespace Hero_Designer
             DisplayGraph();
         }
 
-        void cbType1_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbType1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
             List_Sets(0);
         }
 
-        void cbType2_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbType2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
             List_Sets(1);
         }
 
-        void chkMatching_CheckedChanged(object sender, EventArgs e)
+        private void chkMatching_CheckedChanged(object sender, EventArgs e)
         {
             Matching = chkMatching.Checked;
             if (!Loaded)
@@ -152,7 +152,7 @@ namespace Hero_Designer
             DisplayGraph();
         }
 
-        void chkOnTop_CheckedChanged()
+        private void chkOnTop_CheckedChanged()
         {
             TopMost = chkOnTop.Checked;
         }
@@ -263,39 +263,41 @@ namespace Hero_Designer
                     Values_Universal(Enums.eEffectType.ToHit, true, true);
                     break;
             }
-            int index1 = 0;
+
+            var index1 = 0;
             do
             {
-                string[] powerDisplays = { "", "" };
-                float[] values = new float[2];
-                string iTip = "";
-                int mapIdx = 0;
+                string[] powerDisplays = {"", ""};
+                var values = new float[2];
+                var iTip = "";
+                var mapIdx = 0;
                 do
                 {
                     if (Map.Map[index1, mapIdx] > -1)
                     {
                         powerDisplays[mapIdx] = Powers[mapIdx][Map.Map[index1, mapIdx]].DisplayName;
                         values[mapIdx] = Values[mapIdx][Map.Map[index1, mapIdx]];
-                        if (iTip != "" & Tips[mapIdx][Map.Map[index1, mapIdx]] != "")
+                        if ((iTip != "") & (Tips[mapIdx][Map.Map[index1, mapIdx]] != ""))
                             iTip += "\r\n----------\r\n";
                         iTip += Tips[mapIdx][Map.Map[index1, mapIdx]];
                     }
+
                     ++mapIdx;
-                }
-                while (mapIdx <= 1);
+                } while (mapIdx <= 1);
+
                 Graph.AddItemPair(powerDisplays[0], powerDisplays[1], values[0], values[1], iTip);
                 ++index1;
-            }
-            while (index1 <= 20);
+            } while (index1 <= 20);
+
             Graph.Max = GraphMax;
             tbScaleX.Value = Graph.ScaleIndex;
             SetScaleLabel();
             Graph.EndUpdate();
         }
 
-        void FillDisplayList()
+        private void FillDisplayList()
         {
-            ListBox lstDisplay = this.lstDisplay;
+            var lstDisplay = this.lstDisplay;
             lstDisplay.BeginUpdate();
             lstDisplay.Items.Clear();
             lstDisplay.Items.AddRange(DisplayValueStrings);
@@ -303,17 +305,23 @@ namespace Hero_Designer
             lstDisplay.EndUpdate();
         }
 
-        void frmCompare_FormClosed(object sender, FormClosedEventArgs e) => this.EventHandlerWithCatch(() =>
-            myParent.FloatCompareGraph(false));
-
-        void frmCompare_KeyDown(object sender, KeyEventArgs e) => this.EventHandlerWithCatch(() =>
+        private void frmCompare_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (!(e.Control & e.Shift & e.KeyCode == Keys.T))
-                return;
-            btnTweakMatch.Visible = true;
-        });
+            this.EventHandlerWithCatch(() =>
+                myParent.FloatCompareGraph(false));
+        }
 
-        void frmCompare_Load(object sender, EventArgs e)
+        private void frmCompare_KeyDown(object sender, KeyEventArgs e)
+        {
+            this.EventHandlerWithCatch(() =>
+            {
+                if (!(e.Control & e.Shift & (e.KeyCode == Keys.T)))
+                    return;
+                btnTweakMatch.Visible = true;
+            });
+        }
+
+        private void frmCompare_Load(object sender, EventArgs e)
         {
             FillDisplayList();
             UpdateData();
@@ -331,17 +339,27 @@ namespace Hero_Designer
             chkMatching.Checked = Matching;
             Loaded = true;
             DisplayGraph();
-            tTip.SetToolTip(chkMatching, "Re-order powers so that similar powers are compared directly, regardless of their position in the set.\r\nFor example, moving snipe powers to directly compare.\r\n(This isn't known for its stunning accuracy, and gets confused by vastly different sets)");
+            tTip.SetToolTip(chkMatching,
+                "Re-order powers so that similar powers are compared directly, regardless of their position in the set.\r\nFor example, moving snipe powers to directly compare.\r\n(This isn't known for its stunning accuracy, and gets confused by vastly different sets)");
         }
 
-        void frmCompare_Move(object sender, EventArgs e) => this.EventHandlerWithCatch(StoreLocation);
+        private void frmCompare_Move(object sender, EventArgs e)
+        {
+            this.EventHandlerWithCatch(StoreLocation);
+        }
 
-        void frmCompare_Resize(object sender, EventArgs e) => this.EventHandlerWithCatch(StoreLocation);
+        private void frmCompare_Resize(object sender, EventArgs e)
+        {
+            this.EventHandlerWithCatch(StoreLocation);
+        }
 
-        void frmCompare_VisibleChanged(object sender, EventArgs e) => this.EventHandlerWithCatch(() =>
-            Graph.BackColor = BackColor);
+        private void frmCompare_VisibleChanged(object sender, EventArgs e)
+        {
+            this.EventHandlerWithCatch(() =>
+                Graph.BackColor = BackColor);
+        }
 
-        int getAT(int idx)
+        private int getAT(int idx)
         {
             return idx switch
             {
@@ -352,33 +370,36 @@ namespace Hero_Designer
         }
 
         private int getMax(int iVal1, int ival2)
-            => iVal1 <= ival2 ? ival2 : iVal1;
-
-        int GetNextFreeSlot()
         {
-            int index = 0;
+            return iVal1 <= ival2 ? ival2 : iVal1;
+        }
+
+        private int GetNextFreeSlot()
+        {
+            var index = 0;
             while (Map.Map[index, 1] != -1)
             {
                 ++index;
                 if (index > 20)
                     return 20;
             }
+
             return index;
         }
 
         private void GetPowers()
         {
-            int[] numArray = new int[2];
-            int Index = 0;
+            var numArray = new int[2];
+            var Index = 0;
             do
             {
                 numArray[Index] = getSetIndex(Index);
                 Powers[Index] = new IPower[DatabaseAPI.Database.Powersets[numArray[Index]].Powers.Length - 1 + 1];
                 Values[Index] = new float[Powers[Index].Length + 1];
                 Tips[Index] = new string[Powers[Index].Length + 1];
-                int nIDClass = Index != 0 ? cbAT2.SelectedIndex : cbAT1.SelectedIndex;
-                int num = Powers[Index].Length - 1;
-                for (int index = 0; index <= num; ++index)
+                var nIDClass = Index != 0 ? cbAT2.SelectedIndex : cbAT1.SelectedIndex;
+                var num = Powers[Index].Length - 1;
+                for (var index = 0; index <= num; ++index)
                 {
                     Powers[Index][index] = new Power(DatabaseAPI.Database.Powersets[numArray[Index]].Powers[index]);
                     Powers[Index][index].AbsorbPetEffects();
@@ -388,12 +409,12 @@ namespace Hero_Designer
                     Powers[Index][index].ForcedClassID = nIDClass;
                     Powers[Index][index].ForcedClass = DatabaseAPI.UidFromNidClass(nIDClass);
                 }
+
                 ++Index;
-            }
-            while (Index <= 1);
+            } while (Index <= 1);
         }
 
-        int getSetIndex(int Index)
+        private int getSetIndex(int Index)
         {
             ComboBox comboBox;
             switch (Index)
@@ -407,10 +428,11 @@ namespace Hero_Designer
                 default:
                     return 0;
             }
+
             return DatabaseAPI.GetPowersetIndexes(getAT(Index), getSetType(Index))[comboBox.SelectedIndex].nID;
         }
 
-        Enums.ePowerSetType getSetType(int Index)
+        private Enums.ePowerSetType getSetType(int Index)
         {
             ComboBox comboBox;
             switch (Index)
@@ -435,34 +457,36 @@ namespace Hero_Designer
             return ePowerSetType;
         }
 
-        string GetUniversalTipString(Enums.ShortFX iSFX, ref IPower iPower)
+        private string GetUniversalTipString(Enums.ShortFX iSFX, ref IPower iPower)
         {
-            string str1 = "";
+            var str1 = "";
             string str2;
             if (iSFX.Present)
             {
-                int[] numArray = new int[0];
-                string str3 = "";
+                var numArray = new int[0];
+                var str3 = "";
                 IPower power = new Power(iPower);
-                int num1 = iSFX.Index.Length - 1;
-                for (int index1 = 0; index1 <= num1; ++index1)
+                var num1 = iSFX.Index.Length - 1;
+                for (var index1 = 0; index1 <= num1; ++index1)
                 {
-                    if (iSFX.Index[index1] == -1 || power.Effects[iSFX.Index[index1]].EffectType == Enums.eEffectType.None)
+                    if (iSFX.Index[index1] == -1 ||
+                        power.Effects[iSFX.Index[index1]].EffectType == Enums.eEffectType.None)
                         continue;
-                    string returnString = "";
-                    int[] returnMask = new int[0];
+                    var returnString = "";
+                    var returnMask = new int[0];
                     power.GetEffectStringGrouped(iSFX.Index[index1], ref returnString, ref returnMask, false, false);
                     if (returnMask.Length <= 0)
                         continue;
                     if (str3 != "")
                         str3 += "\r\n  ";
                     str3 += returnString.Replace("\r\n", "\r\n  ");
-                    int num2 = returnMask.Length - 1;
-                    for (int index2 = 0; index2 <= num2; ++index2)
+                    var num2 = returnMask.Length - 1;
+                    for (var index2 = 0; index2 <= num2; ++index2)
                         power.Effects[returnMask[index2]].EffectType = Enums.eEffectType.None;
                 }
-                int num3 = iSFX.Index.Length - 1;
-                for (int index = 0; index <= num3; ++index)
+
+                var num3 = iSFX.Index.Length - 1;
+                for (var index = 0; index <= num3; ++index)
                 {
                     if (power.Effects[iSFX.Index[index]].EffectType == Enums.eEffectType.None)
                         continue;
@@ -470,29 +494,36 @@ namespace Hero_Designer
                         str3 += "\r\n  ";
                     str3 += power.Effects[iSFX.Index[index]].BuildEffectString().Replace("\r\n", "\r\n  ");
                 }
+
                 str2 = str1 + str3;
             }
             else
+            {
                 str2 = "";
+            }
+
             return str2;
         }
 
-        void Graph_Load(object sender, EventArgs e) { }
+        private void Graph_Load(object sender, EventArgs e)
+        {
+        }
 
-        void list_AT()
+        private void list_AT()
         {
             cbAT1.BeginUpdate();
             cbAT1.Items.Clear();
             cbAT2.BeginUpdate();
             cbAT2.Items.Clear();
-            int num = DatabaseAPI.Database.Classes.Length - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = DatabaseAPI.Database.Classes.Length - 1;
+            for (var index = 0; index <= num; ++index)
             {
                 if (!DatabaseAPI.Database.Classes[index].Playable)
                     continue;
                 cbAT1.Items.Add(DatabaseAPI.Database.Classes[index].DisplayName);
                 cbAT2.Items.Add(DatabaseAPI.Database.Classes[index].DisplayName);
             }
+
             cbAT1.SelectedIndex = MidsContext.Character.Archetype.Idx;
             cbAT2.SelectedIndex = MidsContext.Character.Archetype.Idx;
             cbAT1.EndUpdate();
@@ -501,7 +532,7 @@ namespace Hero_Designer
 
         private void List_Sets(int Index)
         {
-            Enums.ePowerSetType iSet = Enums.ePowerSetType.None;
+            var iSet = Enums.ePowerSetType.None;
             ComboBox comboBox1;
             ComboBox comboBox2;
             int selectedIndex;
@@ -527,9 +558,9 @@ namespace Hero_Designer
             };
             comboBox1.BeginUpdate();
             comboBox1.Items.Clear();
-            IPowerset[] powersetIndexes = DatabaseAPI.GetPowersetIndexes(selectedIndex, iSet);
-            int num = powersetIndexes.Length - 1;
-            for (int index = 0; index <= num; ++index)
+            var powersetIndexes = DatabaseAPI.GetPowersetIndexes(selectedIndex, iSet);
+            var num = powersetIndexes.Length - 1;
+            for (var index = 0; index <= num; ++index)
                 comboBox1.Items.Add(powersetIndexes[index].DisplayName);
             if (comboBox1.Items.Count > 0)
                 comboBox1.SelectedIndex = 0;
@@ -554,7 +585,7 @@ namespace Hero_Designer
             cbType2.EndUpdate();
         }
 
-        void lstDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        private void lstDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!Loaded)
                 return;
@@ -562,213 +593,214 @@ namespace Hero_Designer
             DisplayGraph();
         }
 
-        void map_Advanced()
+        private void map_Advanced()
         {
-            bool[] Placed = new bool[Powers[1].Length - 1 + 1];
-            int num1 = Placed.Length - 1;
-            for (int index = 0; index <= num1; ++index)
+            var Placed = new bool[Powers[1].Length - 1 + 1];
+            var num1 = Placed.Length - 1;
+            for (var index = 0; index <= num1; ++index)
                 Placed[index] = false;
             Map.Init();
-            int num2 = getMax(Powers[0].Length, Powers[1].Length);
+            var num2 = getMax(Powers[0].Length, Powers[1].Length);
             if (num2 > 20)
                 num2 = 20;
-            int num3 = num2;
-            for (int index = 0; index <= num3; ++index)
-            {
+            var num3 = num2;
+            for (var index = 0; index <= num3; ++index)
                 if (Powers[0].Length > index)
                     Map.Map[index, 0] = index;
-            }
-            int num4 = Powers[1].Length - 1;
-            for (int index1 = 0; index1 <= num4; ++index1)
+            var num4 = Powers[1].Length - 1;
+            for (var index1 = 0; index1 <= num4; ++index1)
             {
-                string displayName = Powers[1][index1].DisplayName;
-                int num5 = Powers[0].Length - 1;
-                for (int index2 = 0; index2 <= num5; ++index2)
+                var displayName = Powers[1][index1].DisplayName;
+                var num5 = Powers[0].Length - 1;
+                for (var index2 = 0; index2 <= num5; ++index2)
                 {
-                    if (!(string.Equals(Powers[0][index2].DisplayName, displayName, StringComparison.OrdinalIgnoreCase) & !Placed[index1]))
+                    if (!(string.Equals(Powers[0][index2].DisplayName, displayName,
+                        StringComparison.OrdinalIgnoreCase) & !Placed[index1]))
                         continue;
                     Map.Map[index2, 1] = index1;
                     Placed[index1] = true;
                     break;
                 }
             }
+
             mapOverride();
-            mapDescString(new[] { "summon" }, ref Placed);
-            mapDescString(new[] { "toggle", "+def", "smash" }, ref Placed);
-            mapDescString(new[] { "toggle", "+def", "energy" }, ref Placed);
-            mapDescString(new[] { "toggle", "+def", "fire" }, ref Placed);
-            mapDescString(new[] { "toggle", "+def", "ranged" }, ref Placed);
-            mapDescString(new[] { "toggle", "+def", "melee" }, ref Placed);
-            mapDescString(new[] { "toggle", "+def", "aoe" }, ref Placed);
-            mapDescString(new[] { "auto", "+def", "smash" }, ref Placed);
-            mapDescString(new[] { "auto", "+def", "energy" }, ref Placed);
-            mapDescString(new[] { "auto", "+def", "fire" }, ref Placed);
-            mapDescString(new[] { "auto", "+def", "ranged" }, ref Placed);
-            mapDescString(new[] { "auto", "+def", "melee" }, ref Placed);
-            mapDescString(new[] { "auto", "+def", "aoe" }, ref Placed);
-            mapDescString(new[] { "toggle", "+res", "smash" }, ref Placed);
-            mapDescString(new[] { "toggle", "+res", "energy" }, ref Placed);
-            mapDescString(new[] { "toggle", "+res", "fire" }, ref Placed);
-            mapDescString(new[] { "auto", "+res", "smash" }, ref Placed);
-            mapDescString(new[] { "auto", "+res", "energy" }, ref Placed);
-            mapDescString(new[] { "auto", "+res", "fire" }, ref Placed);
-            mapDescString(new[] { "toggle", "+def" }, ref Placed);
-            mapDescString(new[] { "toggle", "+res" }, ref Placed);
-            mapDescString(new[] { "auto", "+def" }, ref Placed);
-            mapDescString(new[] { "auto", "+res" }, ref Placed);
-            mapDescString(new[] { "AoE", "disorient" }, ref Placed);
-            mapDescString(new[] { "AoE", "stun" }, ref Placed);
-            mapDescString(new[] { "AoE", "hold" }, ref Placed);
-            mapDescString(new[] { "AoE", "sleep" }, ref Placed);
+            mapDescString(new[] {"summon"}, ref Placed);
+            mapDescString(new[] {"toggle", "+def", "smash"}, ref Placed);
+            mapDescString(new[] {"toggle", "+def", "energy"}, ref Placed);
+            mapDescString(new[] {"toggle", "+def", "fire"}, ref Placed);
+            mapDescString(new[] {"toggle", "+def", "ranged"}, ref Placed);
+            mapDescString(new[] {"toggle", "+def", "melee"}, ref Placed);
+            mapDescString(new[] {"toggle", "+def", "aoe"}, ref Placed);
+            mapDescString(new[] {"auto", "+def", "smash"}, ref Placed);
+            mapDescString(new[] {"auto", "+def", "energy"}, ref Placed);
+            mapDescString(new[] {"auto", "+def", "fire"}, ref Placed);
+            mapDescString(new[] {"auto", "+def", "ranged"}, ref Placed);
+            mapDescString(new[] {"auto", "+def", "melee"}, ref Placed);
+            mapDescString(new[] {"auto", "+def", "aoe"}, ref Placed);
+            mapDescString(new[] {"toggle", "+res", "smash"}, ref Placed);
+            mapDescString(new[] {"toggle", "+res", "energy"}, ref Placed);
+            mapDescString(new[] {"toggle", "+res", "fire"}, ref Placed);
+            mapDescString(new[] {"auto", "+res", "smash"}, ref Placed);
+            mapDescString(new[] {"auto", "+res", "energy"}, ref Placed);
+            mapDescString(new[] {"auto", "+res", "fire"}, ref Placed);
+            mapDescString(new[] {"toggle", "+def"}, ref Placed);
+            mapDescString(new[] {"toggle", "+res"}, ref Placed);
+            mapDescString(new[] {"auto", "+def"}, ref Placed);
+            mapDescString(new[] {"auto", "+res"}, ref Placed);
+            mapDescString(new[] {"AoE", "disorient"}, ref Placed);
+            mapDescString(new[] {"AoE", "stun"}, ref Placed);
+            mapDescString(new[] {"AoE", "hold"}, ref Placed);
+            mapDescString(new[] {"AoE", "sleep"}, ref Placed);
             mapDescString(new[]
             {
-        "AoE",
-        "immobilize"
+                "AoE",
+                "immobilize"
             }, ref Placed);
-            mapDescString(new[] { "AoE", "confuse" }, ref Placed);
-            mapDescString(new[] { "AoE", "fear" }, ref Placed);
+            mapDescString(new[] {"AoE", "confuse"}, ref Placed);
+            mapDescString(new[] {"AoE", "fear"}, ref Placed);
             mapDescString(new[]
             {
-        "Cone",
-        "disorient"
+                "Cone",
+                "disorient"
             }, ref Placed);
-            mapDescString(new[] { "Cone", "stun" }, ref Placed);
-            mapDescString(new[] { "Cone", "hold" }, ref Placed);
-            mapDescString(new[] { "Cone", "sleep" }, ref Placed);
+            mapDescString(new[] {"Cone", "stun"}, ref Placed);
+            mapDescString(new[] {"Cone", "hold"}, ref Placed);
+            mapDescString(new[] {"Cone", "sleep"}, ref Placed);
             mapDescString(new[]
             {
-        "Cone",
-        "immobilize"
+                "Cone",
+                "immobilize"
             }, ref Placed);
-            mapDescString(new[] { "Cone", "confuse" }, ref Placed);
-            mapDescString(new[] { "Cone", "fear" }, ref Placed);
-            mapDescString(new[] { "snipe" }, ref Placed);
+            mapDescString(new[] {"Cone", "confuse"}, ref Placed);
+            mapDescString(new[] {"Cone", "fear"}, ref Placed);
+            mapDescString(new[] {"snipe"}, ref Placed);
             mapDescString(new[]
             {
-        "AoE",
-        "Extreme",
-        "Self -Recovery"
+                "AoE",
+                "Extreme",
+                "Self -Recovery"
             }, ref Placed);
-            mapDescString(new[] { "close", "high" }, ref Placed);
+            mapDescString(new[] {"close", "high"}, ref Placed);
             mapDescString(new[]
             {
-        "ranged",
-        "disorient",
-        "minor"
+                "ranged",
+                "disorient",
+                "minor"
             }, ref Placed);
-            mapDescString(new[] { "ranged", "hold" }, ref Placed);
-            mapDescString(new[] { "cone", "extreme" }, ref Placed);
-            mapDescString(new[] { "cone", "superior" }, ref Placed);
-            mapDescString(new[] { "cone", "high" }, ref Placed);
-            mapDescString(new[] { "cone", "moderate" }, ref Placed);
-            mapDescString(new[] { "cone", "minor" }, ref Placed);
+            mapDescString(new[] {"ranged", "hold"}, ref Placed);
+            mapDescString(new[] {"cone", "extreme"}, ref Placed);
+            mapDescString(new[] {"cone", "superior"}, ref Placed);
+            mapDescString(new[] {"cone", "high"}, ref Placed);
+            mapDescString(new[] {"cone", "moderate"}, ref Placed);
+            mapDescString(new[] {"cone", "minor"}, ref Placed);
             mapDescString(new[]
             {
-        "ranged",
-        "AoE",
-        "extreme"
-            }, ref Placed);
-            mapDescString(new[]
-            {
-        "ranged",
-        "AoE",
-        "superior"
+                "ranged",
+                "AoE",
+                "extreme"
             }, ref Placed);
             mapDescString(new[]
             {
-        "ranged",
-        "AoE",
-        "high"
+                "ranged",
+                "AoE",
+                "superior"
             }, ref Placed);
             mapDescString(new[]
             {
-        "ranged",
-        "AoE",
-        "moderate"
+                "ranged",
+                "AoE",
+                "high"
             }, ref Placed);
             mapDescString(new[]
             {
-        "ranged",
-        "AoE",
-        "minor"
+                "ranged",
+                "AoE",
+                "moderate"
             }, ref Placed);
-            mapDescString(new[] { "AoE", "extreme" }, ref Placed);
-            mapDescString(new[] { "AoE", "superior" }, ref Placed);
-            mapDescString(new[] { "AoE", "high" }, ref Placed);
-            mapDescString(new[] { "AoE", "moderate" }, ref Placed);
-            mapDescString(new[] { "AoE", "minor" }, ref Placed);
-            mapDescString(new[] { "melee", "extreme" }, ref Placed);
             mapDescString(new[]
             {
-        "melee",
-        "superior"
+                "ranged",
+                "AoE",
+                "minor"
             }, ref Placed);
-            mapDescString(new[] { "melee", "high" }, ref Placed);
+            mapDescString(new[] {"AoE", "extreme"}, ref Placed);
+            mapDescString(new[] {"AoE", "superior"}, ref Placed);
+            mapDescString(new[] {"AoE", "high"}, ref Placed);
+            mapDescString(new[] {"AoE", "moderate"}, ref Placed);
+            mapDescString(new[] {"AoE", "minor"}, ref Placed);
+            mapDescString(new[] {"melee", "extreme"}, ref Placed);
             mapDescString(new[]
             {
-        "melee",
-        "moderate"
+                "melee",
+                "superior"
             }, ref Placed);
-            mapDescString(new[] { "melee", "minor" }, ref Placed);
+            mapDescString(new[] {"melee", "high"}, ref Placed);
             mapDescString(new[]
             {
-        "melee",
-        "disorient"
+                "melee",
+                "moderate"
             }, ref Placed);
-            mapDescString(new[] { "melee", "stun" }, ref Placed);
-            mapDescString(new[] { "melee", "hold" }, ref Placed);
-            mapDescString(new[] { "AoE", "knockback" }, ref Placed);
-            mapDescString(new[] { "AoE", "knockup" }, ref Placed);
+            mapDescString(new[] {"melee", "minor"}, ref Placed);
             mapDescString(new[]
             {
-        "Cone",
-        "knockback"
+                "melee",
+                "disorient"
             }, ref Placed);
-            mapDescString(new[] { "Cone", "knockup" }, ref Placed);
-            mapDescString(new[] { "AoE", "stealth" }, ref Placed);
-            mapDescString(new[] { "stealth" }, ref Placed);
-            mapDescString(new[] { "toggle", "-def" }, ref Placed);
-            mapDescString(new[] { "toggle", "-res" }, ref Placed);
-            mapDescString(new[] { "toggle", "-acc" }, ref Placed);
-            mapDescString(new[] { "toggle", "-dmg" }, ref Placed);
-            mapDescString(new[] { "-def" }, ref Placed);
-            mapDescString(new[] { "-res" }, ref Placed);
-            mapDescString(new[] { "-acc" }, ref Placed);
-            mapDescString(new[] { "-dmg" }, ref Placed);
-            mapDescString(new[] { "+dmg" }, ref Placed);
-            mapDescString(new[] { "+acc" }, ref Placed);
-            mapDescString(new[] { "heal", "team" }, ref Placed);
-            mapDescString(new[] { "heal", "ally" }, ref Placed);
-            mapDescString(new[] { "heal" }, ref Placed);
-            mapDescString(new[] { "+recovery" }, ref Placed);
-            mapDescString(new[] { "-recovery" }, ref Placed);
-            mapDescString(new[] { "-regen" }, ref Placed);
-            mapDescString(new[] { "extreme" }, ref Placed);
-            mapDescString(new[] { "superior" }, ref Placed);
-            mapDescString(new[] { "high" }, ref Placed);
-            mapDescString(new[] { "moderate" }, ref Placed);
-            mapDescString(new[] { "minor" }, ref Placed);
-            mapDescString(new[] { "disorient" }, ref Placed);
-            mapDescString(new[] { "stun" }, ref Placed);
-            mapDescString(new[] { "hold" }, ref Placed);
-            mapDescString(new[] { "sleep" }, ref Placed);
-            mapDescString(new[] { "immobilize" }, ref Placed);
-            mapDescString(new[] { "confuse" }, ref Placed);
-            mapDescString(new[] { "fear" }, ref Placed);
-            mapDescString(new[] { "cone" }, ref Placed);
-            mapDescString(new[] { "aoe" }, ref Placed);
-            mapDescString(new[] { "melee" }, ref Placed);
-            mapDescString(new[] { "ranged" }, ref Placed);
-            int num6 = Powers[1].Length - 1;
-            for (int index = 0; index <= num6; ++index)
+            mapDescString(new[] {"melee", "stun"}, ref Placed);
+            mapDescString(new[] {"melee", "hold"}, ref Placed);
+            mapDescString(new[] {"AoE", "knockback"}, ref Placed);
+            mapDescString(new[] {"AoE", "knockup"}, ref Placed);
+            mapDescString(new[]
+            {
+                "Cone",
+                "knockback"
+            }, ref Placed);
+            mapDescString(new[] {"Cone", "knockup"}, ref Placed);
+            mapDescString(new[] {"AoE", "stealth"}, ref Placed);
+            mapDescString(new[] {"stealth"}, ref Placed);
+            mapDescString(new[] {"toggle", "-def"}, ref Placed);
+            mapDescString(new[] {"toggle", "-res"}, ref Placed);
+            mapDescString(new[] {"toggle", "-acc"}, ref Placed);
+            mapDescString(new[] {"toggle", "-dmg"}, ref Placed);
+            mapDescString(new[] {"-def"}, ref Placed);
+            mapDescString(new[] {"-res"}, ref Placed);
+            mapDescString(new[] {"-acc"}, ref Placed);
+            mapDescString(new[] {"-dmg"}, ref Placed);
+            mapDescString(new[] {"+dmg"}, ref Placed);
+            mapDescString(new[] {"+acc"}, ref Placed);
+            mapDescString(new[] {"heal", "team"}, ref Placed);
+            mapDescString(new[] {"heal", "ally"}, ref Placed);
+            mapDescString(new[] {"heal"}, ref Placed);
+            mapDescString(new[] {"+recovery"}, ref Placed);
+            mapDescString(new[] {"-recovery"}, ref Placed);
+            mapDescString(new[] {"-regen"}, ref Placed);
+            mapDescString(new[] {"extreme"}, ref Placed);
+            mapDescString(new[] {"superior"}, ref Placed);
+            mapDescString(new[] {"high"}, ref Placed);
+            mapDescString(new[] {"moderate"}, ref Placed);
+            mapDescString(new[] {"minor"}, ref Placed);
+            mapDescString(new[] {"disorient"}, ref Placed);
+            mapDescString(new[] {"stun"}, ref Placed);
+            mapDescString(new[] {"hold"}, ref Placed);
+            mapDescString(new[] {"sleep"}, ref Placed);
+            mapDescString(new[] {"immobilize"}, ref Placed);
+            mapDescString(new[] {"confuse"}, ref Placed);
+            mapDescString(new[] {"fear"}, ref Placed);
+            mapDescString(new[] {"cone"}, ref Placed);
+            mapDescString(new[] {"aoe"}, ref Placed);
+            mapDescString(new[] {"melee"}, ref Placed);
+            mapDescString(new[] {"ranged"}, ref Placed);
+            var num6 = Powers[1].Length - 1;
+            for (var index = 0; index <= num6; ++index)
             {
                 if (Placed[index] || Map.Map[index, 1] != -1)
                     continue;
                 Map.Map[index, 1] = index;
                 Placed[index] = true;
             }
-            int num7 = Powers[1].Length - 1;
-            for (int index = 0; index <= num7; ++index)
+
+            var num7 = Powers[1].Length - 1;
+            for (var index = 0; index <= num7; ++index)
             {
                 if (Placed[index])
                     continue;
@@ -780,19 +812,19 @@ namespace Hero_Designer
         private void map_Simple()
         {
             Map.Init();
-            int Index = 0;
+            var Index = 0;
             do
             {
                 Map.IdxAT[Index] = getAT(Index);
                 Map.IdxSet[Index] = getSetIndex(Index);
                 ++Index;
-            }
-            while (Index <= 1);
-            int num1 = getMax(Powers[0].Length, Powers[1].Length);
+            } while (Index <= 1);
+
+            var num1 = getMax(Powers[0].Length, Powers[1].Length);
             if (num1 > 20)
                 num1 = 20;
-            int num2 = num1;
-            for (int index = 0; index <= num2; ++index)
+            var num2 = num1;
+            for (var index = 0; index <= num2; ++index)
             {
                 if (Powers[0].Length > index)
                     Map.Map[index, 0] = index;
@@ -803,27 +835,24 @@ namespace Hero_Designer
 
         private int mapDescString(string[] iStrings, ref bool[] placed)
         {
-            int num1 = 0;
-            for (int powerIdx = 0; powerIdx <= Powers[1].Length - 1; ++powerIdx)
+            var num1 = 0;
+            for (var powerIdx = 0; powerIdx <= Powers[1].Length - 1; ++powerIdx)
             {
-                bool flag1 = true;
-                for (int index2 = 0; index2 <= iStrings.Length - 1; ++index2)
-                {
+                var flag1 = true;
+                for (var index2 = 0; index2 <= iStrings.Length - 1; ++index2)
                     if (Powers[1][powerIdx].DescShort.IndexOf(iStrings[index2], StringComparison.OrdinalIgnoreCase) < 0)
                         flag1 = false;
-                }
 
                 if (!(flag1 & !placed[powerIdx]))
                     continue;
                 {
-                    for (int index2 = 0; index2 <= Powers[0].Length - 1; ++index2)
+                    for (var index2 = 0; index2 <= Powers[0].Length - 1; ++index2)
                     {
-                        bool flag2 = Map.Map[index2, 1] < 0;
-                        for (int index3 = 0; index3 <= iStrings.Length - 1; ++index3)
-                        {
-                            if (Powers[0][index2].DescShort.IndexOf(iStrings[index3], StringComparison.OrdinalIgnoreCase) < 0)
+                        var flag2 = Map.Map[index2, 1] < 0;
+                        for (var index3 = 0; index3 <= iStrings.Length - 1; ++index3)
+                            if (Powers[0][index2].DescShort
+                                .IndexOf(iStrings[index3], StringComparison.OrdinalIgnoreCase) < 0)
                                 flag2 = false;
-                        }
 
                         if (!flag2)
                             continue;
@@ -833,35 +862,36 @@ namespace Hero_Designer
                     }
                 }
             }
+
             return num1;
         }
 
-        void mapOverride()
+        private void mapOverride()
         {
-            for (int index1 = 0; index1 <= MidsContext.Config.CompOverride.Length - 1; ++index1)
+            for (var index1 = 0; index1 <= MidsContext.Config.CompOverride.Length - 1; ++index1)
             {
-                Enums.CompOverride[] compOverride = MidsContext.Config.CompOverride;
+                var compOverride = MidsContext.Config.CompOverride;
                 mapOverrideDo(compOverride[index1].Powerset, compOverride[index1].Power, compOverride[index1].Override);
             }
         }
 
-        void mapOverrideDo(string iSet, string iPower, string iNewStr)
+        private void mapOverrideDo(string iSet, string iPower, string iNewStr)
         {
-            int index1 = 0;
+            var index1 = 0;
             do
             {
-                int num = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num; ++index2)
-                {
-                    if (Powers[index1][index2].PowerSetID > -1 && string.Equals(Powers[index1][index2].DisplayName, iPower, StringComparison.OrdinalIgnoreCase) & string.Equals(DatabaseAPI.Database.Powersets[Powers[index1][index2].PowerSetID].DisplayName, iSet, StringComparison.OrdinalIgnoreCase))
+                var num = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num; ++index2)
+                    if (Powers[index1][index2].PowerSetID > -1 &&
+                        string.Equals(Powers[index1][index2].DisplayName, iPower, StringComparison.OrdinalIgnoreCase) &
+                        string.Equals(DatabaseAPI.Database.Powersets[Powers[index1][index2].PowerSetID].DisplayName,
+                            iSet, StringComparison.OrdinalIgnoreCase))
                         Powers[index1][index2].DescShort = iNewStr.ToUpper();
-                }
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
         }
 
-        void ResetScale()
+        private void ResetScale()
         {
             tbScaleX.Value = 10;
             Graph.Max = GraphMax;
@@ -870,25 +900,25 @@ namespace Hero_Designer
 
         public void SetLocation()
         {
-            Rectangle rectangle = new Rectangle
+            var rectangle = new Rectangle
             {
                 X = MainModule.MidsController.SzFrmCompare.X,
                 Y = MainModule.MidsController.SzFrmCompare.Y
             };
             if (rectangle.X < 1)
-                rectangle.X = (int)Math.Round((Screen.PrimaryScreen.Bounds.Width - Width) / 2.0);
+                rectangle.X = (int) Math.Round((Screen.PrimaryScreen.Bounds.Width - Width) / 2.0);
             if (rectangle.Y < 32)
-                rectangle.Y = (int)Math.Round((Screen.PrimaryScreen.Bounds.Height - Height) / 2.0);
+                rectangle.Y = (int) Math.Round((Screen.PrimaryScreen.Bounds.Height - Height) / 2.0);
             Top = rectangle.Y;
             Left = rectangle.X;
         }
 
-        void SetScaleLabel()
+        private void SetScaleLabel()
         {
             lblScale.Text = "Scale: 0 - " + Convert.ToString(Graph.ScaleValue, CultureInfo.InvariantCulture);
         }
 
-        void StoreLocation()
+        private void StoreLocation()
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
@@ -896,7 +926,7 @@ namespace Hero_Designer
             MainModule.MidsController.SzFrmCompare.Y = Top;
         }
 
-        void tbScaleX_Scroll(object sender, EventArgs e)
+        private void tbScaleX_Scroll(object sender, EventArgs e)
         {
             Graph.ScaleIndex = tbScaleX.Value;
             SetScaleLabel();
@@ -905,10 +935,14 @@ namespace Hero_Designer
         public void UpdateData()
         {
             btnClose.IA = myParent.Drawing.pImageAttributes;
-            btnClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
+            btnClose.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
             btnClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             chkOnTop.IA = myParent.Drawing.pImageAttributes;
-            chkOnTop.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
+            chkOnTop.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
             chkOnTop.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             if (!Loaded)
                 return;
@@ -916,279 +950,328 @@ namespace Hero_Designer
             DisplayGraph();
         }
 
-        void values_Accuracy()
+        private void values_Accuracy()
         {
-            float num1 = 1f;
-            int index1 = 0;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
-                    bool flag = false;
-                    int num3 = Powers[index1][index2].Effects.Length - 1;
-                    for (int index3 = 0; index3 <= num3; ++index3)
-                    {
+                    var flag = false;
+                    var num3 = Powers[index1][index2].Effects.Length - 1;
+                    for (var index3 = 0; index3 <= num3; ++index3)
                         if (Powers[index1][index2].Effects[index3].RequiresToHitCheck)
                             flag = true;
-                    }
-                    Values[index1][index2] = !(Powers[index1][index2].EntitiesAutoHit == Enums.eEntity.None | flag) ? 0.0f : (float)(Powers[index1][index2].Accuracy * (double)MidsContext.Config.BaseAcc * 100.0);
+                    Values[index1][index2] = !((Powers[index1][index2].EntitiesAutoHit == Enums.eEntity.None) | flag)
+                        ? 0.0f
+                        : (float) (Powers[index1][index2].Accuracy * (double) MidsContext.Config.BaseAcc * 100.0);
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
                     {
-                        Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                        Tips[index1][index2] =
+                            DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                            Powers[index1][index2].DisplayName;
                         if (Matching)
                         {
-                            string[][] tips = Tips;
-                            int index3 = index1;
-                            int index4 = index2;
-                            tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                            var tips = Tips;
+                            var index3 = index1;
+                            var index4 = index2;
+                            tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                                   Convert.ToString(Powers[index1][index2].Level) + "]";
                         }
-                        string[][] tips1 = Tips;
-                        int index5 = index1;
-                        int index6 = index2;
-                        tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Strings.Format(Values[index1][index2], "##0.##") + "% base Accuracy";
-                        string[][] tips2 = Tips;
-                        int index7 = index1;
-                        int index8 = index2;
-                        tips2[index7][index8] = tips2[index7][index8] + "\r\n  (Real Numbers style: " + Strings.Format(Powers[index1][index2].Accuracy, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "x)";
-                        if (num1 < (double)Values[index1][index2])
+
+                        var tips1 = Tips;
+                        var index5 = index1;
+                        var index6 = index2;
+                        tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
+                                                Strings.Format(Values[index1][index2], "##0.##") + "% base Accuracy";
+                        var tips2 = Tips;
+                        var index7 = index1;
+                        var index8 = index2;
+                        tips2[index7][index8] = tips2[index7][index8] + "\r\n  (Real Numbers style: " +
+                                                Strings.Format(Powers[index1][index2].Accuracy,
+                                                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator +
+                                                    "00") + "x)";
+                        if (num1 < (double) Values[index1][index2])
                             num1 = Values[index1][index2];
                     }
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
         }
 
-        void values_Damage()
+        private void values_Damage()
         {
-            float num1 = 1f;
-            ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
+            var num1 = 1f;
+            var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
-            int index1 = 0;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     Values[index1][index2] = Powers[index1][index2].FXGetDamageValue();
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Powers[index1][index2].FXGetDamageString();
-                    if (num1 < (double)Values[index1][index2])
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] =
+                        tips1[index5][index6] + "\r\n  " + Powers[index1][index2].FXGetDamageString();
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                     if (Powers[index1][index2].PowerType != Enums.ePowerType.Toggle)
                         continue;
                     {
-                        string[][] tips2 = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips2[index3][index4] = tips2[index3][index4] + "\r\n  (Applied every " + Convert.ToString(Powers[index1][index2].ActivatePeriod, CultureInfo.InvariantCulture) + "s)";
+                        var tips2 = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips2[index3][index4] = tips2[index3][index4] + "\r\n  (Applied every " +
+                                                Convert.ToString(Powers[index1][index2].ActivatePeriod,
+                                                    CultureInfo.InvariantCulture) + "s)";
                     }
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        void values_DPA()
+        private void values_DPA()
         {
-            float num1 = 1f;
-            ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
+            var num1 = 1f;
+            var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPA;
-            int index1 = 0;
+            var index1 = 0;
             do
             {
-                for (int index2 = 0; index2 <= Powers[index1].Length - 1; ++index2)
+                for (var index2 = 0; index2 <= Powers[index1].Length - 1; ++index2)
                 {
                     Values[index1][index2] = Powers[index1][index2].FXGetDamageValue();
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        tips[index1][index2] = tips[index1][index2] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        tips[index1][index2] = tips[index1][index2] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Powers[index1][index2].FXGetDamageString() + "/s";
-                    if (num1 < (double)Values[index1][index2])
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
+                                            Powers[index1][index2].FXGetDamageString() + "/s";
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
-        void values_DPE()
+        private void values_DPE()
         {
-            float num1 = 1f;
-            ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
+            var num1 = 1f;
+            var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
-            int powIdx = 0;
+            var powIdx = 0;
             do
             {
-                for (int subPowIdx = 0; subPowIdx <= Powers[powIdx].Length - 1; ++subPowIdx)
+                for (var subPowIdx = 0; subPowIdx <= Powers[powIdx].Length - 1; ++subPowIdx)
                 {
                     Values[powIdx][subPowIdx] = Powers[powIdx][subPowIdx].FXGetDamageValue();
                     if (Math.Abs(Values[powIdx][subPowIdx]) < float.Epsilon)
                         continue;
-                    if (Powers[powIdx][subPowIdx].PowerType == Enums.ePowerType.Click && Powers[powIdx][subPowIdx].EndCost > 0.0)
+                    if (Powers[powIdx][subPowIdx].PowerType == Enums.ePowerType.Click &&
+                        Powers[powIdx][subPowIdx].EndCost > 0.0)
                         Values[powIdx][subPowIdx] /= Powers[powIdx][subPowIdx].EndCost;
-                    Tips[powIdx][subPowIdx] = DatabaseAPI.Database.Classes[Powers[powIdx][subPowIdx].ForcedClassID].DisplayName + ":" + Powers[powIdx][subPowIdx].DisplayName;
+                    Tips[powIdx][subPowIdx] =
+                        DatabaseAPI.Database.Classes[Powers[powIdx][subPowIdx].ForcedClassID].DisplayName + ":" +
+                        Powers[powIdx][subPowIdx].DisplayName;
                     if (Matching)
-                        Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " [Level " + Convert.ToString(Powers[powIdx][subPowIdx].Level) + "]";
-                    Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + "\r\n  " + Powers[powIdx][subPowIdx].FXGetDamageString();
-                    if (num1 < (double)Values[powIdx][subPowIdx])
+                        Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " [Level " +
+                                                  Convert.ToString(Powers[powIdx][subPowIdx].Level) + "]";
+                    Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + "\r\n  " +
+                                              Powers[powIdx][subPowIdx].FXGetDamageString();
+                    if (num1 < (double) Values[powIdx][subPowIdx])
                         num1 = Values[powIdx][subPowIdx];
-                    Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " - DPE: " + Strings.Format(Values[powIdx][subPowIdx], "##0.##");
+                    Tips[powIdx][subPowIdx] = Tips[powIdx][subPowIdx] + " - DPE: " +
+                                              Strings.Format(Values[powIdx][subPowIdx], "##0.##");
                 }
+
                 ++powIdx;
-            }
-            while (powIdx <= 1);
+            } while (powIdx <= 1);
+
             GraphMax = num1 * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
         private void values_DPS()
         {
-            float num1 = 1f;
-            ConfigData.EDamageReturn returnValue = MidsContext.Config.DamageMath.ReturnValue;
+            var num1 = 1f;
+            var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPS;
-            int index1 = 0;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     Values[index1][index2] = Powers[index1][index2].FXGetDamageValue();
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Powers[index1][index2].FXGetDamageString() + "/s";
-                    if (num1 < (double)Values[index1][index2])
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
+                                            Powers[index1][index2].FXGetDamageString() + "/s";
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 
         private void values_Duration()
         {
-            float num1 = 1f;
-            int index1 = 0;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int powerCount = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= powerCount; ++index2)
+                var powerCount = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= powerCount; ++index2)
                 {
-                    int durationEffectId = Powers[index1][index2].GetDurationEffectID();
+                    var durationEffectId = Powers[index1][index2].GetDurationEffectID();
                     if (durationEffectId <= -1)
                         continue;
                     Values[index1][index2] = Powers[index1][index2].Effects[durationEffectId].Duration;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Powers[index1][index2].Effects[durationEffectId].BuildEffectString();
-                    if (num1 < (double)Values[index1][index2])
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
+                                            Powers[index1][index2].Effects[durationEffectId].BuildEffectString();
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
         }
 
         private void values_End()
         {
-            float num1 = 1f;
-            int index1 = 0;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     Values[index1][index2] = Powers[index1][index2].EndCost;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  End: " + Strings.Format(Powers[index1][index2].EndCost, "##0.##");
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  End: " +
+                                            Strings.Format(Powers[index1][index2].EndCost, "##0.##");
                     if (Powers[index1][index2].PowerType == Enums.ePowerType.Toggle)
                     {
-                        string[][] tips2 = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
+                        var tips2 = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
                         tips2[index3][index4] = tips2[index3][index4] + " (Per Second)";
                     }
-                    if ((double)num1 < Values[index1][index2])
+
+                    if ((double) num1 < Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
         }
 
         private void values_EPS()
         {
-            float num1 = 1f;
-            int index1 = 0;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     Values[index1][index2] = Powers[index1][index2].EndCost;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
@@ -1197,338 +1280,399 @@ namespace Hero_Designer
                     {
                         case Enums.ePowerType.Click:
                         {
-                            if (Powers[index1][index2].RechargeTime + (double)Powers[index1][index2].CastTime + Powers[index1][index2].InterruptTime > 0.0)
-                                Values[index1][index2] = Powers[index1][index2].EndCost / (Powers[index1][index2].RechargeTime + Powers[index1][index2].CastTime + Powers[index1][index2].InterruptTime);
+                            if (Powers[index1][index2].RechargeTime + (double) Powers[index1][index2].CastTime +
+                                Powers[index1][index2].InterruptTime > 0.0)
+                                Values[index1][index2] = Powers[index1][index2].EndCost /
+                                                         (Powers[index1][index2].RechargeTime +
+                                                          Powers[index1][index2].CastTime +
+                                                          Powers[index1][index2].InterruptTime);
                             break;
                         }
                         case Enums.ePowerType.Toggle:
-                            Values[index1][index2] = Powers[index1][index2].EndCost / Powers[index1][index2].ActivatePeriod;
+                            Values[index1][index2] =
+                                Powers[index1][index2].EndCost / Powers[index1][index2].ActivatePeriod;
                             break;
                     }
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  End: " + Strings.Format(Values[index1][index2], "##0.##");
-                    string[][] tips2 = Tips;
-                    int index7 = index1;
-                    int index8 = index2;
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  End: " +
+                                            Strings.Format(Values[index1][index2], "##0.##");
+                    var tips2 = Tips;
+                    var index7 = index1;
+                    var index8 = index2;
                     tips2[index7][index8] = tips2[index7][index8] + "/s";
-                    if (num1 < (double)Values[index1][index2])
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
         }
 
         private void values_Heal()
         {
-            Archetype archetype = MidsContext.Archetype;
-            float num1 = 1f;
-            int index1 = 0;
+            var archetype = MidsContext.Archetype;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     MidsContext.Archetype = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID];
-                    Enums.ShortFX effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
+                    var effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
                     Values[index1][index2] = effectMagSum.Sum;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
                     Tips[index1][index2] = MidsContext.Archetype.DisplayName + ":" + Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Powers[index1][index2].Effects[effectMagSum.Index[0]].BuildEffectString();
-                    if (num1 < (double)Values[index1][index2])
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
+                                            Powers[index1][index2].Effects[effectMagSum.Index[0]].BuildEffectString();
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
             MidsContext.Archetype = archetype;
         }
 
         private void values_HPE()
         {
-            Archetype archetype = MidsContext.Archetype;
-            float num1 = 1f;
-            int index1 = 0;
+            var archetype = MidsContext.Archetype;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     MidsContext.Archetype = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID];
-                    Enums.ShortFX effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
+                    var effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
                     Values[index1][index2] = effectMagSum.Sum;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
                     if (Powers[index1][index2].EndCost > 0.0)
                         Values[index1][index2] /= Powers[index1][index2].EndCost;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  Heal: " + Strings.Format(Values[index1][index2], "##0.##") + " HP per unit of end.";
-                    if (num1 < (double)Values[index1][index2])
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  Heal: " +
+                                            Strings.Format(Values[index1][index2], "##0.##") + " HP per unit of end.";
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
             MidsContext.Archetype = archetype;
         }
 
         private void values_HPS()
         {
-            Archetype archetype = MidsContext.Archetype;
-            float num1 = 1f;
-            int index1 = 0;
+            var archetype = MidsContext.Archetype;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     MidsContext.Archetype = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID];
-                    Enums.ShortFX effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
+                    var effectMagSum = Powers[index1][index2].GetEffectMagSum(Enums.eEffectType.Heal);
                     Values[index1][index2] = effectMagSum.Sum;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    if (Powers[index1][index2].PowerType == Enums.ePowerType.Click && Powers[index1][index2].RechargeTime + (double)Powers[index1][index2].CastTime + Powers[index1][index2].InterruptTime > 0.0)
-                        Values[index1][index2] /= Powers[index1][index2].RechargeTime + Powers[index1][index2].CastTime + Powers[index1][index2].InterruptTime;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    if (Powers[index1][index2].PowerType == Enums.ePowerType.Click &&
+                        Powers[index1][index2].RechargeTime + (double) Powers[index1][index2].CastTime +
+                        Powers[index1][index2].InterruptTime > 0.0)
+                        Values[index1][index2] /= Powers[index1][index2].RechargeTime +
+                                                  Powers[index1][index2].CastTime +
+                                                  Powers[index1][index2].InterruptTime;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  Heal: " + Strings.Format(Values[index1][index2], "##0.##") + " HP/s";
-                    if (num1 < (double)Values[index1][index2])
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  Heal: " +
+                                            Strings.Format(Values[index1][index2], "##0.##") + " HP/s";
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
             MidsContext.Archetype = archetype;
         }
 
         private void values_MaxTargets()
         {
-            float num1 = 1f;
-            int index1 = 0;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     Values[index1][index2] = Powers[index1][index2].MaxTargets;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
+
                     if (Values[index1][index2] > 1.0)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Convert.ToString(Values[index1][index2], CultureInfo.InvariantCulture) + " Targets Max.";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + "\r\n  " +
+                                               Convert.ToString(Values[index1][index2], CultureInfo.InvariantCulture) +
+                                               " Targets Max.";
                     }
                     else
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + "\r\n  " + Convert.ToString(Values[index1][index2], CultureInfo.InvariantCulture) + " Target Max.";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + "\r\n  " +
+                                               Convert.ToString(Values[index1][index2], CultureInfo.InvariantCulture) +
+                                               " Target Max.";
                     }
-                    if (num1 < (double)Values[index1][index2])
+
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
         }
 
         private void values_Range()
         {
-            float num1 = 1f;
-            int index1 = 0;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
-                    string str = "";
+                    var str = "";
                     switch (Powers[index1][index2].EffectArea)
                     {
                         case Enums.eEffectArea.Character:
-                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range.";
+                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
+                                  "ft range.";
                             Values[index1][index2] = Powers[index1][index2].Range;
                             break;
                         case Enums.eEffectArea.Sphere:
                             Values[index1][index2] = Powers[index1][index2].Radius;
                             if (Powers[index1][index2].Range > 0.0)
                             {
-                                str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range, ";
+                                str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
+                                      "ft range, ";
                                 Values[index1][index2] = Powers[index1][index2].Range;
                             }
-                            str = str + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) + "ft radius.";
+
+                            str = str + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) +
+                                  "ft radius.";
                             break;
                         case Enums.eEffectArea.Cone:
                             Values[index1][index2] = Powers[index1][index2].Range;
-                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range, " + Convert.ToString(Powers[index1][index2].Arc) + " degree cone.";
+                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
+                                  "ft range, " + Convert.ToString(Powers[index1][index2].Arc) + " degree cone.";
                             break;
                         case Enums.eEffectArea.Location:
                             Values[index1][index2] = Powers[index1][index2].Range;
-                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range, " + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) + "ft radius.";
+                            str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
+                                  "ft range, " +
+                                  Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) +
+                                  "ft radius.";
                             break;
                         case Enums.eEffectArea.Volume:
                             Values[index1][index2] = Powers[index1][index2].Radius;
                             if (Powers[index1][index2].Range > 0.0)
                             {
-                                str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) + "ft range, ";
+                                str = Convert.ToString(Powers[index1][index2].Range, CultureInfo.InvariantCulture) +
+                                      "ft range, ";
                                 Values[index1][index2] = Powers[index1][index2].Range;
                             }
-                            str = str + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) + "ft radius.";
+
+                            str = str + Convert.ToString(Powers[index1][index2].Radius, CultureInfo.InvariantCulture) +
+                                  "ft radius.";
                             break;
                     }
 
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
                     tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + str;
-                    if (num1 < (double)Values[index1][index2])
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
         }
 
         private void values_Recharge()
         {
-            float num1 = 1f;
-            int index1 = 0;
+            var num1 = 1f;
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     Values[index1][index2] = Powers[index1][index2].RechargeTime;
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
-                    Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                    Tips[index1][index2] =
+                        DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                        Powers[index1][index2].DisplayName;
                     if (Matching)
                     {
-                        string[][] tips = Tips;
-                        int index3 = index1;
-                        int index4 = index2;
-                        tips[index3][index4] = tips[index3][index4] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                        var tips = Tips;
+                        var index3 = index1;
+                        var index4 = index2;
+                        tips[index3][index4] = tips[index3][index4] + " [Level " +
+                                               Convert.ToString(Powers[index1][index2].Level) + "]";
                     }
-                    string[][] tips1 = Tips;
-                    int index5 = index1;
-                    int index6 = index2;
-                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " + Strings.Format(Values[index1][index2], "##0.##") + "s";
-                    if (num1 < (double)Values[index1][index2])
+
+                    var tips1 = Tips;
+                    var index5 = index1;
+                    var index6 = index2;
+                    tips1[index5][index6] = tips1[index5][index6] + "\r\n  " +
+                                            Strings.Format(Values[index1][index2], "##0.##") + "s";
+                    if (num1 < (double) Values[index1][index2])
                         num1 = Values[index1][index2];
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
         }
 
         private void Values_Universal(Enums.eEffectType iEffectType, bool Sum, bool Debuff)
         {
-            Archetype archetype = MidsContext.Archetype;
-            float num1 = 1f;
-            string str = "";
-            int index1 = 0;
+            var archetype = MidsContext.Archetype;
+            var num1 = 1f;
+            var str = "";
+            var index1 = 0;
             do
             {
-                int num2 = Powers[index1].Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = Powers[index1].Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     MidsContext.Archetype = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID];
-                    Enums.ShortFX effectMagSum = Powers[index1][index2].GetEffectMagSum(iEffectType);
-                    int index3 = 0;
+                    var effectMagSum = Powers[index1][index2].GetEffectMagSum(iEffectType);
+                    var index3 = 0;
                     if (effectMagSum.Present)
                     {
                         if (Debuff)
                         {
-                            int num3 = effectMagSum.Index.Length - 1;
-                            for (int index4 = 0; index4 <= num3; ++index4)
-                            {
+                            var num3 = effectMagSum.Index.Length - 1;
+                            for (var index4 = 0; index4 <= num3; ++index4)
                                 if (effectMagSum.Value[index4] > 0.0)
                                     effectMagSum.Value[index4] = 0.0f;
                                 else
                                     effectMagSum.Value[index4] *= -1f;
-                            }
                             effectMagSum.ReSum();
                             index3 = effectMagSum.Max;
                         }
                         else
                         {
-                            int num3 = effectMagSum.Index.Length - 1;
-                            for (int index4 = 0; index4 <= num3; ++index4)
-                            {
+                            var num3 = effectMagSum.Index.Length - 1;
+                            for (var index4 = 0; index4 <= num3; ++index4)
                                 if (effectMagSum.Value[index4] < 0.0)
                                     effectMagSum.Value[index4] = 0.0f;
-                            }
                             index3 = effectMagSum.Max;
                             effectMagSum.ReSum();
                         }
                     }
+
                     if (!Sum)
                     {
                         if (effectMagSum.Present)
@@ -1541,7 +1685,8 @@ namespace Hero_Designer
                     }
                     else
                     {
-                        if (effectMagSum.Present && Powers[index1][index2].Effects[effectMagSum.Index[index3]].DisplayPercentage)
+                        if (effectMagSum.Present &&
+                            Powers[index1][index2].Effects[effectMagSum.Index[index3]].DisplayPercentage)
                             effectMagSum.Multiply();
                         Values[index1][index2] = effectMagSum.Sum;
                     }
@@ -1549,43 +1694,51 @@ namespace Hero_Designer
                     if (Math.Abs(Values[index1][index2]) < float.Epsilon)
                         continue;
                     {
-                        Tips[index1][index2] = DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" + Powers[index1][index2].DisplayName;
+                        Tips[index1][index2] =
+                            DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName + ":" +
+                            Powers[index1][index2].DisplayName;
                         if (Matching)
                         {
-                            string[][] tips = Tips;
-                            int index4 = index1;
-                            int index5 = index2;
-                            tips[index4][index5] = tips[index4][index5] + " [Level " + Convert.ToString(Powers[index1][index2].Level) + "]";
+                            var tips = Tips;
+                            var index4 = index1;
+                            var index5 = index2;
+                            tips[index4][index5] = tips[index4][index5] + " [Level " +
+                                                   Convert.ToString(Powers[index1][index2].Level) + "]";
                         }
+
                         if (Sum)
                         {
                             str = "";
-                            int num3 = effectMagSum.Index.Length - 1;
-                            for (int index4 = 0; index4 <= num3; ++index4)
+                            var num3 = effectMagSum.Index.Length - 1;
+                            for (var index4 = 0; index4 <= num3; ++index4)
                             {
                                 if (str != "")
                                     str += "\r\n";
-                                str = str + "  " + Powers[index1][index2].Effects[effectMagSum.Index[index4]].BuildEffectString().Replace("\r\n", "\r\n  ");
+                                str = str + "  " + Powers[index1][index2].Effects[effectMagSum.Index[index4]]
+                                    .BuildEffectString().Replace("\r\n", "\r\n  ");
                             }
-                            string[][] tips = Tips;
-                            int index5 = index1;
-                            int index6 = index2;
+
+                            var tips = Tips;
+                            var index5 = index1;
+                            var index6 = index2;
                             tips[index5][index6] = tips[index5][index6] + "\r\n" + str;
                         }
                         else
                         {
-                            string[][] tips = Tips;
-                            int index4 = index1;
-                            int index5 = index2;
+                            var tips = Tips;
+                            var index4 = index1;
+                            var index5 = index2;
                             tips[index4][index5] = tips[index4][index5] + "\r\n  " + str;
                         }
-                        if (num1 < (double)Values[index1][index2])
+
+                        if (num1 < (double) Values[index1][index2])
                             num1 = Values[index1][index2];
                     }
                 }
+
                 ++index1;
-            }
-            while (index1 <= 1);
+            } while (index1 <= 1);
+
             GraphMax = num1 * 1.025f;
             MidsContext.Archetype = archetype;
         }

@@ -13,29 +13,29 @@ namespace Hero_Designer.Forms
 {
     public partial class frmUpdate : Form
     {
-        public string VersionText { get; set; }
-        public string Type { get; set; }
-        private static Uri UpdateFile { get; set; }
-        private static string TempFile { get; set; }
-
-        private Progress<ZipProgress> ZProgress;
-        private Thread thread { get; set; }
-
         private bool DLComplete;
 
         private BackgroundWorker zipExtractor;
 
-        public string RichText
-        {
-            get => richTextBox1.Text;
-            set => richTextBox1.Text = value;
-        }
+        private Progress<ZipProgress> ZProgress;
 
         public frmUpdate()
         {
             InitializeComponent();
             Application.EnableVisualStyles();
             DownloadUpdate();
+        }
+
+        public string VersionText { get; set; }
+        public string Type { get; set; }
+        private static Uri UpdateFile { get; set; }
+        private static string TempFile { get; set; }
+        private Thread thread { get; set; }
+
+        public string RichText
+        {
+            get => richTextBox1.Text;
+            set => richTextBox1.Text = value;
         }
 
         private void DownloadUpdate()
@@ -82,10 +82,7 @@ namespace Hero_Designer.Forms
 
         private void BeginInstall()
         {
-            if (DLComplete)
-            {
-                InstallUpdate(Type);
-            }
+            if (DLComplete) InstallUpdate(Type);
         }
 
         private void InstallUpdate(string updateType)
@@ -98,9 +95,7 @@ namespace Hero_Designer.Forms
                 case "App":
                     ctlProgressBar2.StatusText = $"Installing: Mids {VersionText}";
                     foreach (var filename in Directory.GetFiles(dirLOC, "*.dll"))
-                    {
                         File.Move(filename, $"{filename}.bak");
-                    }
 
                     File.Move(Assembly.GetExecutingAssembly().Location,
                         $"{Assembly.GetExecutingAssembly().Location}.bak");
@@ -132,7 +127,7 @@ namespace Hero_Designer.Forms
             var loc = Assembly.GetExecutingAssembly().Location;
             var dirLOC = Directory.GetParent(loc);
             var dirTmp = $"{Path.GetTempPath()}MidsTemp\\";
-            using ZipArchive zip = ZipFile.OpenRead(TempFile);
+            using var zip = ZipFile.OpenRead(TempFile);
             zip.ExtractToDirectory(dirTmp, ZProgress, true);
             zip.ExtractToDirectory(dirLOC.ToString(), null, true);
         }
@@ -146,10 +141,7 @@ namespace Hero_Designer.Forms
         private void zipExtractor_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             var totalPercent = e.ProgressPercentage;
-            if (totalPercent > ctlProgressBar2.Maximum)
-            {
-                totalPercent = 100;
-            }
+            if (totalPercent > ctlProgressBar2.Maximum) totalPercent = 100;
 
             ctlProgressBar2.Value = totalPercent;
             ctlProgressBar2.Text = $@"{ctlProgressBar2.StatusText}";
@@ -167,6 +159,7 @@ namespace Hero_Designer.Forms
                     var destFile = $"{destinationPath}\\{fileInfo.Name}";
                     File.Copy(fileInfo.FullName, destFile, true);
                 }
+
                 /*else
                 {
                     var subPath = $"{destinationPath}\\{parentDir}\\{fileInfo.Name}";

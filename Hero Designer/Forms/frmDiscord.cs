@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Master_Classes;
 
@@ -16,12 +10,14 @@ namespace Hero_Designer.Forms
 {
     public partial class frmDiscord : Form
     {
-        readonly frmMain _myParent;
+        private readonly frmMain _myParent;
 
         public frmDiscord(ref frmMain iParent)
         {
             InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw,
+                true);
             Load += OnLoad;
             _myParent = iParent;
         }
@@ -31,7 +27,7 @@ namespace Hero_Designer.Forms
             UpdateForm();
         }
 
-        void UpdateForm()
+        private void UpdateForm()
         {
             if (!MidsContext.Config.DiscordAuthorized)
             {
@@ -76,31 +72,33 @@ namespace Hero_Designer.Forms
                 clsOAuth.RequestServers(token?.ToString());
                 PopulateUserData();
             }
+
             Update();
         }
-        void PopulateUserData()
+
+        private void PopulateUserData()
         {
             var userId = clsOAuth.GetCryptedValue("User", "id");
             var userAvatar = clsOAuth.GetCryptedValue("User", "avatar");
-            using WebClient webClient = new WebClient();
-            byte[] bytes = webClient.DownloadData($"https://cdn.discordapp.com/avatars/{userId}/{userAvatar}.png");
-            using MemoryStream memoryStream = new MemoryStream(bytes);
+            using var webClient = new WebClient();
+            var bytes = webClient.DownloadData($"https://cdn.discordapp.com/avatars/{userId}/{userAvatar}.png");
+            using var memoryStream = new MemoryStream(bytes);
             ctlAvatar1.Image = Image.FromStream(memoryStream);
             lblUsername.Text = clsOAuth.GetCryptedValue("User", "username");
             lblDiscriminator.Text = $@"# {clsOAuth.GetCryptedValue("User", "discriminator")}";
             //Text = $@"Export as {clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
         }
 
-        void authButton_Click(object sender, EventArgs e)
+        private void authButton_Click(object sender, EventArgs e)
         {
-            Process.Start("https://discord.com/api/oauth2/authorize?client_id=729018208824066171&redirect_uri=http%3A%2F%2Flocalhost%3A60403&response_type=code&scope=identify%20guilds");
+            Process.Start(
+                "https://discord.com/api/oauth2/authorize?client_id=729018208824066171&redirect_uri=http%3A%2F%2Flocalhost%3A60403&response_type=code&scope=identify%20guilds");
             clsOAuth.InitiateListener();
             UpdateForm();
         }
 
         private void checkedListBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void submitButton_Click(object sender, EventArgs e)

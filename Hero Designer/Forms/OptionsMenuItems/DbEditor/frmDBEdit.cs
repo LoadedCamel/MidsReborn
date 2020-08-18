@@ -13,55 +13,66 @@ namespace Hero_Designer
 {
     public partial class frmDBEdit : Form
     {
-        Button btnClose;
+        private Button btnClose;
 
-        Button btnCSV;
+        private Button btnCSV;
 
-        Button btnDate;
+        private Button btnDate;
 
-        Button btnEditEnh;
+        private Button btnEditEnh;
 
-        Button btnEditEntity;
+        private Button btnEditEntity;
 
-        Button btnEditIOSetPvE;
+        private Button btnEditIOSetPvE;
 
-        Button btnEditIOSetPvP;
+        private Button btnEditIOSetPvP;
 
-        Button btnFileReport;
+        private Button btnFileReport;
 
-        Button btnPSBrowse;
+        private Button btnPSBrowse;
 
-        Button btnRecipe;
+        private Button btnRecipe;
 
-        Button btnSalvage;
-        Button exportIndexes;
-        GroupBox GroupBox1;
-        Label Label1;
-        Label Label11;
-        Label Label13;
-        Label Label15;
-        Label Label2;
-        Label Label3;
-        Label Label4;
-        Label Label5;
-        Label Label6;
-        Label Label7;
-        Label Label9;
-        Label lblCountAT;
-        Label lblCountEnh;
-        Label lblCountFX;
-        Label lblCountIOSet;
-        Label lblCountPS;
-        Label lblCountPwr;
-        Label lblCountRecipe;
-        Label lblCountSalvage;
-        Label lblDate;
-
-        TextBox txtDBVer;
+        private Button btnSalvage;
+        private Button exportIndexes;
+        private GroupBox GroupBox1;
 
 
-        bool Initialized;
-        NumericUpDown UdIssue
+        private bool Initialized;
+        private Label Label1;
+        private Label Label11;
+        private Label Label13;
+        private Label Label15;
+        private Label Label2;
+        private Label Label3;
+        private Label Label4;
+        private Label Label5;
+        private Label Label6;
+        private Label Label7;
+        private Label Label9;
+        private Label lblCountAT;
+        private Label lblCountEnh;
+        private Label lblCountFX;
+        private Label lblCountIOSet;
+        private Label lblCountPS;
+        private Label lblCountPwr;
+        private Label lblCountRecipe;
+        private Label lblCountSalvage;
+        private Label lblDate;
+
+        private TextBox txtDBVer;
+
+        public frmDBEdit()
+        {
+            Load += frmDBEdit_Load;
+            Initialized = false;
+            InitializeComponent();
+            var componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Name = nameof(frmDBEdit);
+        }
+
+        private NumericUpDown UdIssue
         {
             get => udIssue;
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -74,6 +85,7 @@ namespace Hero_Designer
                     udIssue.KeyPress -= pressEventHandler;
                     udIssue.ValueChanged -= eventHandler;
                 }
+
                 udIssue = value;
                 if (udIssue == null)
                     return;
@@ -82,72 +94,62 @@ namespace Hero_Designer
             }
         }
 
-        public frmDBEdit()
-        {
-            Load += frmDBEdit_Load;
-            Initialized = false;
-            InitializeComponent();
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
-            Name = nameof(frmDBEdit);
-        }
-
-        void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
             Hide();
         }
 
-        void btnCSV_Click(object sender, EventArgs e)
+        private void btnCSV_Click(object sender, EventArgs e)
         {
             new frmCSV().ShowDialog();
         }
 
-        void btnDate_Click(object sender, EventArgs e)
+        private void btnDate_Click(object sender, EventArgs e)
         {
             DatabaseAPI.Database.Date = DateTime.Now;
             DisplayInfo();
         }
 
-        void btnEditEnh_Click(object sender, EventArgs e)
+        private void btnEditEnh_Click(object sender, EventArgs e)
         {
             new frmEnhEdit().ShowDialog();
             DisplayInfo();
         }
 
-        void btnEditEntity_Click(object sender, EventArgs e)
+        private void btnEditEntity_Click(object sender, EventArgs e)
         {
             new frmEntityListing().ShowDialog();
         }
 
-        void btnEditIOSet_Click(object sender, EventArgs e)
+        private void btnEditIOSet_Click(object sender, EventArgs e)
         {
             new frmSetListing().ShowDialog();
             DisplayInfo();
         }
 
-        void btnEditIOSetPvP_Click(object sender, EventArgs e)
+        private void btnEditIOSetPvP_Click(object sender, EventArgs e)
         {
             new frmSetListingPvP().ShowDialog();
             DisplayInfo();
         }
 
-        void btnFileReport_Click(object sender, EventArgs e)
+        private void btnFileReport_Click(object sender, EventArgs e)
         {
             Interaction.MsgBox(Files.FileData, MsgBoxStyle.Information, "File Loading Report");
         }
 
-        void btnPSBrowse_Click(object sender, EventArgs e)
+        private void btnPSBrowse_Click(object sender, EventArgs e)
         {
             new frmPowerBrowser().ShowDialog();
             DisplayInfo();
         }
 
-        void btnRecipe_Click(object sender, EventArgs e)
+        private void btnRecipe_Click(object sender, EventArgs e)
         {
             new frmRecipeEdit().ShowDialog();
         }
 
-        void btnSalvage_Click(object sender, EventArgs e)
+        private void btnSalvage_Click(object sender, EventArgs e)
 
         {
             new frmSalvageEdit().ShowDialog();
@@ -165,21 +167,21 @@ namespace Hero_Designer
             lblCountPS.Text = Strings.Format(DatabaseAPI.Database.Powersets.Length, "#,###,##0");
             lblCountPwr.Text = Strings.Format(DatabaseAPI.Database.Power.Length, "#,###,##0");
             txtDBVer.Text = Convert.ToString(DatabaseAPI.Database.Version, CultureInfo.InvariantCulture);
-            int num1 = 0;
-            int num2 = DatabaseAPI.Database.Power.Length - 1;
-            for (int index = 0; index <= num2; ++index)
+            var num1 = 0;
+            var num2 = DatabaseAPI.Database.Power.Length - 1;
+            for (var index = 0; index <= num2; ++index)
                 num1 += DatabaseAPI.Database.Power[index].Effects.Length;
             lblCountFX.Text = Strings.Format(num1, "#,###,##0");
-            int num3 = 0;
-            int num4 = DatabaseAPI.Database.Recipes.Length - 1;
-            for (int index = 0; index <= num4; ++index)
+            var num3 = 0;
+            var num4 = DatabaseAPI.Database.Recipes.Length - 1;
+            for (var index = 0; index <= num4; ++index)
                 num3 += DatabaseAPI.Database.Recipes[index].Item.Length;
             lblCountRecipe.Text = Strings.Format(num3, "#,###,##0");
             lblCountSalvage.Text = Strings.Format(DatabaseAPI.Database.Salvage.Length, "#,###,##0");
             Initialized = true;
         }
 
-        void frmDBEdit_Load(object sender, EventArgs e)
+        private void frmDBEdit_Load(object sender, EventArgs e)
         {
             btnDate.Visible = MidsContext.Config.MasterMode;
             btnCSV.Visible = MidsContext.Config.MasterMode;
@@ -191,22 +193,22 @@ namespace Hero_Designer
             DisplayInfo();
         }
 
-        void txtDBVer_TextChanged(object sender, EventArgs e)
+        private void txtDBVer_TextChanged(object sender, EventArgs e)
         {
-            float num = Convert.ToSingle(txtDBVer.Text);
+            var num = Convert.ToSingle(txtDBVer.Text);
             if (num < 1.0)
                 num = 1f;
             DatabaseAPI.Database.Version = num;
         }
 
-        void udIssue_KeyPress(object sender, KeyPressEventArgs e)
+        private void udIssue_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
         }
 
-        void udIssue_ValueChanged(object sender, EventArgs e)
+        private void udIssue_ValueChanged(object sender, EventArgs e)
         {
             if (!MainModule.MidsController.IsAppInitialized || !Initialized)
                 return;

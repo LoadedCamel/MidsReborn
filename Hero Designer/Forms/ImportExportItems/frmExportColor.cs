@@ -7,31 +7,30 @@ namespace Hero_Designer
 {
     public partial class frmExportColor : Form
     {
-
         public ExportConfig.ColorScheme myScheme;
 
         public frmExportColor(ref ExportConfig.ColorScheme iScheme)
         {
             Load += frmExportColor_Load;
             InitializeComponent();
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmExportColor));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmExportColor));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
             Name = nameof(frmExportColor);
             myScheme.Assign(iScheme);
         }
 
-        void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Hide();
         }
 
-        void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Hide();
         }
 
-        void csHeading_Click(object sender, EventArgs e)
+        private void csHeading_Click(object sender, EventArgs e)
         {
             cPicker.Color = myScheme.Heading;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
@@ -39,7 +38,7 @@ namespace Hero_Designer
             updateColors();
         }
 
-        void csHO_Click(object sender, EventArgs e)
+        private void csHO_Click(object sender, EventArgs e)
         {
             cPicker.Color = myScheme.HOColor;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
@@ -47,7 +46,7 @@ namespace Hero_Designer
             updateColors();
         }
 
-        void csIO_Click(object sender, EventArgs e)
+        private void csIO_Click(object sender, EventArgs e)
         {
             cPicker.Color = myScheme.IOColor;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
@@ -55,7 +54,7 @@ namespace Hero_Designer
             updateColors();
         }
 
-        void csLevel_Click(object sender, EventArgs e)
+        private void csLevel_Click(object sender, EventArgs e)
         {
             cPicker.Color = myScheme.Level;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
@@ -63,7 +62,7 @@ namespace Hero_Designer
             updateColors();
         }
 
-        void csPower_Click(object sender, EventArgs e)
+        private void csPower_Click(object sender, EventArgs e)
         {
             cPicker.Color = myScheme.Power;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
@@ -71,7 +70,7 @@ namespace Hero_Designer
             updateColors();
         }
 
-        void csSet_Click(object sender, EventArgs e)
+        private void csSet_Click(object sender, EventArgs e)
         {
             cPicker.Color = myScheme.SetColor;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
@@ -79,7 +78,7 @@ namespace Hero_Designer
             updateColors();
         }
 
-        void csSlots_Click(object sender, EventArgs e)
+        private void csSlots_Click(object sender, EventArgs e)
         {
             cPicker.Color = myScheme.Slots;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
@@ -87,7 +86,7 @@ namespace Hero_Designer
             updateColors();
         }
 
-        void csTitle_Click(object sender, EventArgs e)
+        private void csTitle_Click(object sender, EventArgs e)
         {
             cPicker.Color = myScheme.Title;
             if (cPicker.ShowDialog(this) == DialogResult.OK)
@@ -95,13 +94,13 @@ namespace Hero_Designer
             updateColors();
         }
 
-        void frmExportColor_Load(object sender, EventArgs e)
+        private void frmExportColor_Load(object sender, EventArgs e)
         {
             txtName.Text = myScheme.SchemeName;
             updateColors();
         }
 
-        void txtName_TextChanged(object sender, EventArgs e)
+        private void txtName_TextChanged(object sender, EventArgs e)
         {
             myScheme.SchemeName = txtName.Text;
         }

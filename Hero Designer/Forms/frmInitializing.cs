@@ -9,15 +9,8 @@ namespace Hero_Designer.Forms
         public frmInitializing()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             Load += On_Load;
-        }
-
-        private void On_Load(object sender, EventArgs e)
-        {
-            FormBorderStyle = FormBorderStyle.None;
-            Width = BackgroundImage.Width;
-            Height = BackgroundImage.Height;
         }
 
         public sealed override string Text
@@ -30,8 +23,12 @@ namespace Hero_Designer.Forms
         {
             if (Label1.InvokeRequired)
             {
-                void Action() => SetMessage(text);
-                Invoke((Action)Action);
+                void Action()
+                {
+                    SetMessage(text);
+                }
+
+                Invoke((Action) Action);
             }
             else
             {
@@ -43,7 +40,14 @@ namespace Hero_Designer.Forms
             }
         }
 
-        void tmrOp_Tick(object sender, EventArgs e)
+        private void On_Load(object sender, EventArgs e)
+        {
+            FormBorderStyle = FormBorderStyle.None;
+            Width = BackgroundImage.Width;
+            Height = BackgroundImage.Height;
+        }
+
+        private void tmrOp_Tick(object sender, EventArgs e)
         {
             if (Opacity < 1.0)
                 Opacity += 0.05;

@@ -16,10 +16,12 @@ namespace Hero_Designer.Forms
         {
             Load += ColorOptions_OnLoad;
             InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ResizeRedraw, true);
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw,
+                true);
             Name = nameof(frmColorOptions);
             var componentResourceManager = new ComponentResourceManager(typeof(frmColorOptions));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
             _myFs.Assign(MidsContext.Config.RtFont);
         }
 
@@ -183,7 +185,7 @@ namespace Hero_Designer.Forms
 
         private void updateColors()
         {
-            ConfigData.FontSettings iFs = new ConfigData.FontSettings();
+            var iFs = new ConfigData.FontSettings();
             BGColor.BackColor = _myFs.ColorBackgroundHero;
             //csVillain.BackColor = _myFs.ColorBackgroundVillain;
             TextColor.BackColor = _myFs.ColorText;
@@ -207,15 +209,33 @@ namespace Hero_Designer.Forms
             richTextBox1.BackColor = _myFs.ColorBackgroundHero;
             MidsContext.Config.RtFont.ColorBackgroundHero = _myFs.ColorPlName;
             MidsContext.Config.RtFont.ColorBackgroundVillain = _myFs.ColorPlSpecial;
-            richTextBox1.Rtf = RTF.StartRTF() + RTF.Color(RTF.ElementID.Invention) + RTF.Underline("Invention Name") + RTF.Crlf() + RTF.Color(RTF.ElementID.Enhancement) + RTF.Italic("Enhancement Text") + RTF.Color(RTF.ElementID.Warning) + " (Alert)" + RTF.Crlf() + RTF.Color(RTF.ElementID.Text) + "  Regular Text" + RTF.Crlf() + RTF.Color(RTF.ElementID.Text) + "  Regular Text" + RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "  Faded Text" + RTF.Crlf() + RTF.Crlf() + RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") + RTF.Color(RTF.ElementID.Text) + "Normal Text" + RTF.Crlf() + RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") + RTF.Color(RTF.ElementID.BackgroundVillain) + "Special Case" + RTF.Crlf() + RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") + RTF.Color(RTF.ElementID.Enhancement) + "Enhanced value" + RTF.Crlf() + RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") + RTF.Color(RTF.ElementID.Invention) + "Invention Effect" + RTF.Crlf() + RTF.EndRTF();
-            _myFs.ColorList = new List<Color> { _myFs.ColorPowerTakenHero, _myFs.ColorPowerTakenDarkHero, _myFs.ColorPowerHighlightHero, _myFs.ColorPowerTakenVillain, _myFs.ColorPowerTakenDarkVillain, _myFs.ColorPowerHighlightVillain };
+            richTextBox1.Rtf = RTF.StartRTF() + RTF.Color(RTF.ElementID.Invention) + RTF.Underline("Invention Name") +
+                               RTF.Crlf() + RTF.Color(RTF.ElementID.Enhancement) + RTF.Italic("Enhancement Text") +
+                               RTF.Color(RTF.ElementID.Warning) + " (Alert)" + RTF.Crlf() +
+                               RTF.Color(RTF.ElementID.Text) + "  Regular Text" + RTF.Crlf() +
+                               RTF.Color(RTF.ElementID.Text) + "  Regular Text" + RTF.Crlf() +
+                               RTF.Color(RTF.ElementID.Faded) + "  Faded Text" + RTF.Crlf() + RTF.Crlf() +
+                               RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") +
+                               RTF.Color(RTF.ElementID.Text) + "Normal Text" + RTF.Crlf() +
+                               RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") +
+                               RTF.Color(RTF.ElementID.BackgroundVillain) + "Special Case" + RTF.Crlf() +
+                               RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") +
+                               RTF.Color(RTF.ElementID.Enhancement) + "Enhanced value" + RTF.Crlf() +
+                               RTF.Color(RTF.ElementID.BackgroundHero) + RTF.Bold("Value Name: ") +
+                               RTF.Color(RTF.ElementID.Invention) + "Invention Effect" + RTF.Crlf() + RTF.EndRTF();
+            _myFs.ColorList = new List<Color>
+            {
+                _myFs.ColorPowerTakenHero, _myFs.ColorPowerTakenDarkHero, _myFs.ColorPowerHighlightHero,
+                _myFs.ColorPowerTakenVillain, _myFs.ColorPowerTakenDarkVillain, _myFs.ColorPowerHighlightVillain
+            };
             ctlColorList1.Colors = _myFs.ColorList;
             ctlColorList1.Items.Clear();
-            List<string> powerColors = new List<string>{"Power Taken (Hero)", "Power Taken Dark (Hero)", "Power Highlight (Hero)", "Power Taken (Villain)", "Power Taken Dark (Villain)", "Power Highlight (Villain)"};
-            foreach (var itemString in powerColors)
+            var powerColors = new List<string>
             {
-                ctlColorList1.Items.Add(itemString);
-            }
+                "Power Taken (Hero)", "Power Taken Dark (Hero)", "Power Highlight (Hero)", "Power Taken (Villain)",
+                "Power Taken Dark (Villain)", "Power Highlight (Villain)"
+            };
+            foreach (var itemString in powerColors) ctlColorList1.Items.Add(itemString);
             ctlColorList1.Invalidate();
             MidsContext.Config.RtFont.Assign(iFs);
         }

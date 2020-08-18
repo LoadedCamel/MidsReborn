@@ -1,4 +1,3 @@
-
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -51,7 +50,8 @@ namespace Hero_Designer
 
                 if (!DatabaseAPI.LoadMainDatabase())
                 {
-                    Interaction.MsgBox("There was an error reading the database. Aborting.", MsgBoxStyle.Critical, "Database Error");
+                    Interaction.MsgBox("There was an error reading the database. Aborting.", MsgBoxStyle.Critical,
+                        "Database Error");
                     ProjectData.EndApp();
                 }
 
@@ -64,12 +64,12 @@ namespace Hero_Designer
                 DatabaseAPI.LoadOrigins();
                 DatabaseAPI.LoadSetTypeStrings();
 
-                iFrm?.SetMessage("Loading Recipe Database...");               
+                iFrm?.SetMessage("Loading Recipe Database...");
                 DatabaseAPI.LoadSalvage();
                 DatabaseAPI.LoadRecipes();
 
                 iFrm?.SetMessage("Loading Graphics...");
-                Task[] taskArray = new Task[9];
+                var taskArray = new Task[9];
                 taskArray[0] = Task.Run(I9Gfx.LoadOriginImages);
                 taskArray[1] = Task.Run(I9Gfx.LoadArchetypeImages);
                 taskArray[2] = Task.Run(I9Gfx.LoadPowersetImages);
@@ -78,7 +78,7 @@ namespace Hero_Designer
                 taskArray[5] = Task.Run(I9Gfx.LoadBorders);
                 taskArray[6] = Task.Run(I9Gfx.LoadSetTypes);
                 taskArray[7] = Task.Run(I9Gfx.LoadEnhTypes);
-                taskArray[8] = Task.Run(I9Gfx.LoadClasses);                
+                taskArray[8] = Task.Run(I9Gfx.LoadClasses);
                 Task.WaitAll(taskArray);
 
                 MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate));
@@ -90,6 +90,7 @@ namespace Hero_Designer
                     DatabaseAPI.AssignSetBonusIndexes();
                     iFrm?.SetMessage("Matching Recipe IDs...");
                 }
+
                 DatabaseAPI.AssignRecipeIDs();
                 GC.Collect();
             }

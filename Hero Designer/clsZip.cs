@@ -12,6 +12,7 @@ namespace Hero_Designer
             Processed = processed;
             CurrentItem = currentItem;
         }
+
         public int Total { get; }
         public int Processed { get; }
         private string CurrentItem { get; }
@@ -24,7 +25,8 @@ namespace Hero_Designer
             ExtractToDirectory(source, destinationDirectoryName, progress, overwrite: false);
         }*/
 
-        public static void ExtractToDirectory(this ZipArchive source, string destinationDirectoryName, IProgress<ZipProgress> progress, bool overwrite)
+        public static void ExtractToDirectory(this ZipArchive source, string destinationDirectoryName,
+            IProgress<ZipProgress> progress, bool overwrite)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -36,14 +38,14 @@ namespace Hero_Designer
             // Rely on Directory.CreateDirectory for validation of destinationDirectoryName.
 
             // Note that this will give us a good DirectoryInfo even if destinationDirectoryName exists:
-            DirectoryInfo di = Directory.CreateDirectory(destinationDirectoryName);
-            string destinationDirectoryFullPath = di.FullName;
+            var di = Directory.CreateDirectory(destinationDirectoryName);
+            var destinationDirectoryFullPath = di.FullName;
 
-            int count = 0;
-            foreach (ZipArchiveEntry entry in source.Entries)
+            var count = 0;
+            foreach (var entry in source.Entries)
             {
                 count++;
-                string fileDestinationPath = Path.GetFullPath(Path.Combine(destinationDirectoryFullPath, entry.FullName));
+                var fileDestinationPath = Path.GetFullPath(Path.Combine(destinationDirectoryFullPath, entry.FullName));
 
                 if (!fileDestinationPath.StartsWith(destinationDirectoryFullPath, StringComparison.OrdinalIgnoreCase))
                     throw new IOException("File is extracting to outside of the folder specified.");

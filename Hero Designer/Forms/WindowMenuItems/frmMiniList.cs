@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -9,10 +8,9 @@ namespace Hero_Designer
 {
     public partial class frmMiniList : Form
     {
-        VScrollBar VScrollBar1;
-
-        readonly frmMain myParent;
+        private readonly frmMain myParent;
         internal ctlPopUp PInfo;
+        private VScrollBar VScrollBar1;
 
         public frmMiniList(frmMain iParent)
         {
@@ -24,30 +22,30 @@ namespace Hero_Designer
             PInfo.MouseEnter += pInfo_MouseEnter;
             Name = nameof(frmMiniList);
             var componentResourceManager = new ComponentResourceManager(typeof(frmMiniList));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
             myParent = iParent;
         }
 
-        void frmMiniList_FormClosed(object sender, FormClosedEventArgs e)
+        private void frmMiniList_FormClosed(object sender, FormClosedEventArgs e)
         {
             myParent.UnSetMiniList();
         }
 
-        void frmMiniList_ResizeEnd(object sender, EventArgs e)
+        private void frmMiniList_ResizeEnd(object sender, EventArgs e)
         {
             VScrollBar1.Height = ClientSize.Height;
             VScrollBar1.Left = ClientSize.Width - VScrollBar1.Width;
             PInfo.Width = ClientSize.Width - VScrollBar1.Width;
         }
 
-        void pInfo_MouseEnter(object sender, EventArgs e)
+        private void pInfo_MouseEnter(object sender, EventArgs e)
         {
             VScrollBar1.Focus();
         }
 
-        void pInfo_MouseWheel(object sender, MouseEventArgs e)
+        private void pInfo_MouseWheel(object sender, MouseEventArgs e)
         {
-            int num = VScrollBar1.Value + e.Delta > 0 ? -1 : 1;
+            var num = VScrollBar1.Value + e.Delta > 0 ? -1 : 1;
             if (num < VScrollBar1.Minimum)
                 num = VScrollBar1.Minimum;
             if (num > VScrollBar1.Maximum - 9)
@@ -61,12 +59,12 @@ namespace Hero_Designer
             PInfo.Width = ClientSize.Width;
         }
 
-        void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            PInfo.ScrollY = (float)(
+            PInfo.ScrollY = (float) (
                 VScrollBar1.Value /
-                (double)(VScrollBar1.Maximum - VScrollBar1.LargeChange) *
-                (PInfo.lHeight - (double)ClientSize.Height));
+                (double) (VScrollBar1.Maximum - VScrollBar1.LargeChange) *
+                (PInfo.lHeight - (double) ClientSize.Height));
         }
     }
 }

@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -20,26 +19,30 @@ namespace Hero_Designer
             Updating = true;
             InitializeComponent();
             Name = nameof(frmSalvageEdit);
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmSalvageEdit));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmSalvageEdit));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
         }
 
         private void AddListItem(int Index)
         {
-            string[] items = new string[4];
-            if (Index > DatabaseAPI.Database.Salvage.Length - 1 | Index < 0)
+            var items = new string[4];
+            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0))
                 return;
             items[0] = DatabaseAPI.Database.Salvage[Index].ExternalName;
-            items[1] = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Origin.GetType(), DatabaseAPI.Database.Salvage[Index].Origin);
-            items[2] = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Rarity.GetType(), DatabaseAPI.Database.Salvage[Index].Rarity);
-            items[3] = Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMin + 1) + " - " + Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMax + 1);
+            items[1] = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Origin.GetType(),
+                DatabaseAPI.Database.Salvage[Index].Origin);
+            items[2] = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Rarity.GetType(),
+                DatabaseAPI.Database.Salvage[Index].Rarity);
+            items[3] = Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMin + 1) + " - " +
+                       Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMax + 1);
             lvSalvage.Items.Add(new ListViewItem(items));
         }
 
-        void btnAdd_Click(object sender, EventArgs e)
+        private void btnAdd_Click(object sender, EventArgs e)
         {
-            IDatabase database = DatabaseAPI.Database;
-            Salvage[] salvageArray = (Salvage[])Utils.CopyArray(database.Salvage, new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
+            var database = DatabaseAPI.Database;
+            var salvageArray =
+                (Salvage[]) Utils.CopyArray(database.Salvage, new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
             database.Salvage = salvageArray;
             DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1] = new Salvage();
             AddListItem(DatabaseAPI.Database.Salvage.Length - 1);
@@ -47,30 +50,31 @@ namespace Hero_Designer
             lvSalvage.Items[lvSalvage.Items.Count - 1].EnsureVisible();
         }
 
-        void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             DatabaseAPI.LoadSalvage();
             Close();
         }
 
-        void btnDelete_Click(object sender, EventArgs e)
+        private void btnDelete_Click(object sender, EventArgs e)
         {
             if (lvSalvage.SelectedItems.Count < 1 || Updating)
                 return;
-            int selectedIndex = lvSalvage.SelectedIndices[0];
-            Salvage[] salvageArray = new Salvage[DatabaseAPI.Database.Salvage.Length - 2 + 1];
-            int index1 = -1;
-            int num1 = DatabaseAPI.Database.Salvage.Length - 1;
-            for (int index2 = 0; index2 <= num1; ++index2)
+            var selectedIndex = lvSalvage.SelectedIndices[0];
+            var salvageArray = new Salvage[DatabaseAPI.Database.Salvage.Length - 2 + 1];
+            var index1 = -1;
+            var num1 = DatabaseAPI.Database.Salvage.Length - 1;
+            for (var index2 = 0; index2 <= num1; ++index2)
             {
                 if (index2 == selectedIndex)
                     continue;
                 ++index1;
                 salvageArray[index1] = new Salvage(ref DatabaseAPI.Database.Salvage[index2]);
             }
+
             DatabaseAPI.Database.Salvage = new Salvage[salvageArray.Length - 1 + 1];
-            int num2 = DatabaseAPI.Database.Salvage.Length - 1;
-            for (int index2 = 0; index2 <= num2; ++index2)
+            var num2 = DatabaseAPI.Database.Salvage.Length - 1;
+            for (var index2 = 0; index2 <= num2; ++index2)
                 DatabaseAPI.Database.Salvage[index2] = new Salvage(ref salvageArray[index2]);
             FillList();
             if (lvSalvage.Items.Count > selectedIndex)
@@ -81,24 +85,25 @@ namespace Hero_Designer
                 lvSalvage.Items[0].Selected = true;
         }
 
-        void btnImport_Click(object sender, EventArgs e)
+        private void btnImport_Click(object sender, EventArgs e)
         {
-            char[] chArray = { '\r' };
-            string[] strArray1 = Clipboard.GetDataObject()?.GetData("System.String", true).ToString().Split(chArray);
+            char[] chArray = {'\r'};
+            var strArray1 = Clipboard.GetDataObject()?.GetData("System.String", true).ToString().Split(chArray);
             chArray[0] = '\t';
             DatabaseAPI.Database.Salvage = new Salvage[0];
-            int num = strArray1.Length - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = strArray1.Length - 1;
+            for (var index = 0; index <= num; ++index)
             {
-                string[] strArray2 = strArray1[index].Split(chArray);
+                var strArray2 = strArray1[index].Split(chArray);
                 if (strArray2.Length <= 7)
                     continue;
-                IDatabase database = DatabaseAPI.Database;
-                Salvage[] salvageArray = (Salvage[])Utils.CopyArray(database.Salvage, new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
+                var database = DatabaseAPI.Database;
+                var salvageArray = (Salvage[]) Utils.CopyArray(database.Salvage,
+                    new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
                 database.Salvage = salvageArray;
                 DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1] = new Salvage();
-                Salvage salvage = DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1];
-                if (!strArray2[0].StartsWith("S") & strArray2[0].Length > 2)
+                var salvage = DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Salvage.Length - 1];
+                if (!strArray2[0].StartsWith("S") & (strArray2[0].Length > 2))
                     strArray2[0] = strArray2[0].Substring(1);
                 salvage.InternalName = strArray2[0];
                 salvage.ExternalName = strArray2[1];
@@ -117,23 +122,27 @@ namespace Hero_Designer
                     salvage.LevelMin = 40;
                     salvage.LevelMax = 52;
                 }
-                salvage.Origin = strArray2[9].IndexOf("Magic", StringComparison.Ordinal) <= -1 ? Salvage.SalvageOrigin.Tech : Salvage.SalvageOrigin.Magic;
-                salvage.Rarity = (Recipe.RecipeRarity)Math.Round(Conversion.Val(strArray2[6]) - 1.0);
+
+                salvage.Origin = strArray2[9].IndexOf("Magic", StringComparison.Ordinal) <= -1
+                    ? Salvage.SalvageOrigin.Tech
+                    : Salvage.SalvageOrigin.Magic;
+                salvage.Rarity = (Recipe.RecipeRarity) Math.Round(Conversion.Val(strArray2[6]) - 1.0);
             }
+
             FillList();
         }
 
-        void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click(object sender, EventArgs e)
         {
             DatabaseAPI.SaveSalvage(MyApplication.GetSerializer());
             Close();
         }
 
-        void cbLevel_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvSalvage.SelectedItems.Count < 1 || Updating)
                 return;
-            int selectedIndex = lvSalvage.SelectedIndices[0];
+            var selectedIndex = lvSalvage.SelectedIndices[0];
             switch (cbLevel.SelectedIndex)
             {
                 case 0:
@@ -149,35 +158,36 @@ namespace Hero_Designer
                     DatabaseAPI.Database.Salvage[selectedIndex].LevelMax = 52;
                     break;
             }
+
             UpdateListItem(selectedIndex);
         }
 
-        void cbOrigin_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbOrigin_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvSalvage.SelectedItems.Count < 1 || Updating)
                 return;
-            int selectedIndex = lvSalvage.SelectedIndices[0];
-            DatabaseAPI.Database.Salvage[selectedIndex].Origin = (Salvage.SalvageOrigin)cbOrigin.SelectedIndex;
+            var selectedIndex = lvSalvage.SelectedIndices[0];
+            DatabaseAPI.Database.Salvage[selectedIndex].Origin = (Salvage.SalvageOrigin) cbOrigin.SelectedIndex;
             UpdateListItem(selectedIndex);
         }
 
-        void cbRarity_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbRarity_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvSalvage.SelectedItems.Count < 1 || Updating)
                 return;
-            int selectedIndex = lvSalvage.SelectedIndices[0];
-            DatabaseAPI.Database.Salvage[selectedIndex].Rarity = (Recipe.RecipeRarity)cbRarity.SelectedIndex;
+            var selectedIndex = lvSalvage.SelectedIndices[0];
+            DatabaseAPI.Database.Salvage[selectedIndex].Rarity = (Recipe.RecipeRarity) cbRarity.SelectedIndex;
             UpdateListItem(selectedIndex);
         }
 
         private void DisplayItem(int Index)
         {
-            if (Index > DatabaseAPI.Database.Salvage.Length - 1 | Index < 0)
+            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0))
                 return;
             Updating = true;
-            cbRarity.SelectedIndex = (int)DatabaseAPI.Database.Salvage[Index].Rarity;
-            cbOrigin.SelectedIndex = (int)DatabaseAPI.Database.Salvage[Index].Origin;
-            int levelMin = DatabaseAPI.Database.Salvage[Index].LevelMin;
+            cbRarity.SelectedIndex = (int) DatabaseAPI.Database.Salvage[Index].Rarity;
+            cbOrigin.SelectedIndex = (int) DatabaseAPI.Database.Salvage[Index].Origin;
+            var levelMin = DatabaseAPI.Database.Salvage[Index].LevelMin;
             if (levelMin < 25)
                 cbLevel.SelectedIndex = 0;
             else if (levelMin < 40)
@@ -193,16 +203,16 @@ namespace Hero_Designer
         {
             lvSalvage.BeginUpdate();
             lvSalvage.Items.Clear();
-            int num = DatabaseAPI.Database.Salvage.Length - 1;
-            for (int Index = 0; Index <= num; ++Index)
+            var num = DatabaseAPI.Database.Salvage.Length - 1;
+            for (var Index = 0; Index <= num; ++Index)
                 AddListItem(Index);
             lvSalvage.EndUpdate();
         }
 
-        void frmSalvageEdit_Load(object sender, EventArgs e)
+        private void frmSalvageEdit_Load(object sender, EventArgs e)
         {
-            Salvage.SalvageOrigin salvageOrigin = Salvage.SalvageOrigin.Tech;
-            Recipe.RecipeRarity recipeRarity = Recipe.RecipeRarity.Common;
+            var salvageOrigin = Salvage.SalvageOrigin.Tech;
+            var recipeRarity = Recipe.RecipeRarity.Common;
             FillList();
             cbRarity.Items.AddRange(Enum.GetNames(recipeRarity.GetType()));
             cbOrigin.Items.AddRange(Enum.GetNames(salvageOrigin.GetType()));
@@ -216,40 +226,43 @@ namespace Hero_Designer
         }
 
         [DebuggerStepThrough]
-
-        void lvSalvage_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvSalvage_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvSalvage.SelectedIndices.Count <= 0)
                 return;
             DisplayItem(lvSalvage.SelectedIndices[0]);
         }
 
-        void txtExternal_TextChanged(object sender, EventArgs e)
+        private void txtExternal_TextChanged(object sender, EventArgs e)
         {
             if (lvSalvage.SelectedItems.Count < 1 || Updating)
                 return;
-            int selectedIndex = lvSalvage.SelectedIndices[0];
+            var selectedIndex = lvSalvage.SelectedIndices[0];
             DatabaseAPI.Database.Salvage[selectedIndex].ExternalName = txtExternal.Text;
             UpdateListItem(selectedIndex);
         }
 
-        void txtInternal_TextChanged(object sender, EventArgs e)
+        private void txtInternal_TextChanged(object sender, EventArgs e)
         {
             if (lvSalvage.SelectedItems.Count < 1 || Updating)
                 return;
-            int selectedIndex = lvSalvage.SelectedIndices[0];
+            var selectedIndex = lvSalvage.SelectedIndices[0];
             DatabaseAPI.Database.Salvage[selectedIndex].ExternalName = txtInternal.Text;
             UpdateListItem(selectedIndex);
         }
 
         private void UpdateListItem(int Index)
         {
-            if (Index > DatabaseAPI.Database.Salvage.Length - 1 | Index < 0)
+            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0))
                 return;
             lvSalvage.Items[Index].SubItems[0].Text = DatabaseAPI.Database.Salvage[Index].ExternalName;
-            lvSalvage.Items[Index].SubItems[1].Text = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Origin.GetType(), DatabaseAPI.Database.Salvage[Index].Origin);
-            lvSalvage.Items[Index].SubItems[2].Text = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Rarity.GetType(), DatabaseAPI.Database.Salvage[Index].Rarity);
-            lvSalvage.Items[Index].SubItems[3].Text = Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMin + 1) + " - " + Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMax + 1);
+            lvSalvage.Items[Index].SubItems[1].Text = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Origin.GetType(),
+                DatabaseAPI.Database.Salvage[Index].Origin);
+            lvSalvage.Items[Index].SubItems[2].Text = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Rarity.GetType(),
+                DatabaseAPI.Database.Salvage[Index].Rarity);
+            lvSalvage.Items[Index].SubItems[3].Text =
+                Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMin + 1) + " - " +
+                Convert.ToString(DatabaseAPI.Database.Salvage[Index].LevelMax + 1);
         }
     }
 }

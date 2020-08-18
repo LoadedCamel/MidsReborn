@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,20 +12,19 @@ namespace Hero_Designer
 {
     public partial class frmImport_SetAssignments : Form
     {
-        Button btnClose;
+        private frmBusy bFrm;
+        private Button btnClose;
 
-        Button btnFile;
+        private Button btnFile;
 
-        Button btnImport;
-        OpenFileDialog dlgBrowse;
-        Label Label8;
-        Label lblDate;
-        Label lblFile;
-        NumericUpDown udRevision;
+        private Button btnImport;
+        private OpenFileDialog dlgBrowse;
 
-        frmBusy bFrm;
-
-        string FullFileName;
+        private string FullFileName;
+        private Label Label8;
+        private Label lblDate;
+        private Label lblFile;
+        private NumericUpDown udRevision;
 
         public frmImport_SetAssignments()
         {
@@ -34,34 +32,34 @@ namespace Hero_Designer
             FullFileName = "";
             InitializeComponent();
             Name = nameof(frmImport_SetAssignments);
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmImport_SetAssignments));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmImport_SetAssignments));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
         }
 
         private void AddSetType(int nIDPower, Enums.eSetType nSetType)
         {
-            if (!(nIDPower > -1 & nIDPower < DatabaseAPI.Database.Power.Length))
+            if (!((nIDPower > -1) & (nIDPower < DatabaseAPI.Database.Power.Length)))
                 return;
-            int num = DatabaseAPI.Database.Power[nIDPower].SetTypes.Length - 1;
-            for (int index = 0; index <= num; ++index)
-            {
+            var num = DatabaseAPI.Database.Power[nIDPower].SetTypes.Length - 1;
+            for (var index = 0; index <= num; ++index)
                 if (DatabaseAPI.Database.Power[nIDPower].SetTypes[index] == nSetType)
                     return;
-            }
-            IPower[] power = DatabaseAPI.Database.Power;
-            Enums.eSetType[] eSetTypeArray = (Enums.eSetType[])Utils.CopyArray(power[nIDPower].SetTypes, new Enums.eSetType[DatabaseAPI.Database.Power[nIDPower].SetTypes.Length + 1]);
+            var power = DatabaseAPI.Database.Power;
+            var eSetTypeArray = (Enums.eSetType[]) Utils.CopyArray(power[nIDPower].SetTypes,
+                new Enums.eSetType[DatabaseAPI.Database.Power[nIDPower].SetTypes.Length + 1]);
             power[nIDPower].SetTypes = eSetTypeArray;
-            DatabaseAPI.Database.Power[nIDPower].SetTypes[DatabaseAPI.Database.Power[nIDPower].SetTypes.Length - 1] = nSetType;
+            DatabaseAPI.Database.Power[nIDPower].SetTypes[DatabaseAPI.Database.Power[nIDPower].SetTypes.Length - 1] =
+                nSetType;
             Array.Sort(DatabaseAPI.Database.Power[nIDPower].SetTypes);
         }
 
-        void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
 
         {
             Close();
         }
 
-        void btnFile_Click(object sender, EventArgs e)
+        private void btnFile_Click(object sender, EventArgs e)
 
         {
             dlgBrowse.FileName = FullFileName;
@@ -71,7 +69,7 @@ namespace Hero_Designer
             DisplayInfo();
         }
 
-        void btnImport_Click(object sender, EventArgs e)
+        private void btnImport_Click(object sender, EventArgs e)
 
         {
             ParseClasses(FullFileName);
@@ -79,7 +77,7 @@ namespace Hero_Designer
             DisplayInfo();
         }
 
-        void BusyHide()
+        private void BusyHide()
 
         {
             if (bFrm == null)
@@ -88,7 +86,7 @@ namespace Hero_Designer
             bFrm = null;
         }
 
-        void BusyMsg(string sMessage)
+        private void BusyMsg(string sMessage)
 
         {
             if (bFrm == null)
@@ -96,18 +94,20 @@ namespace Hero_Designer
                 bFrm = new frmBusy();
                 bFrm.Show(this);
             }
+
             bFrm.SetMessage(sMessage);
         }
 
         private void DisplayInfo()
         {
             lblFile.Text = FileIO.StripPath(FullFileName);
-            lblDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.IOAssignmentVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            udRevision.Value = new Decimal(DatabaseAPI.Database.IOAssignmentVersion.Revision);
+            lblDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.IOAssignmentVersion.RevisionDate,
+                "dd/MMM/yy HH:mm:ss");
+            udRevision.Value = new decimal(DatabaseAPI.Database.IOAssignmentVersion.Revision);
         }
 
 
-        void frmImport_SetAssignments_Load(object sender, EventArgs e)
+        private void frmImport_SetAssignments_Load(object sender, EventArgs e)
 
         {
             FullFileName = DatabaseAPI.Database.IOAssignmentVersion.SourceFile;
@@ -115,12 +115,11 @@ namespace Hero_Designer
         }
 
         [DebuggerStepThrough]
-
-        bool ParseClasses(string iFileName)
+        private bool ParseClasses(string iFileName)
 
         {
-            int num1 = 0;
-            Enums.eSetType eSetType = Enums.eSetType.Untyped;
+            var num1 = 0;
+            var eSetType = Enums.eSetType.Untyped;
             StreamReader iStream;
             try
             {
@@ -129,17 +128,18 @@ namespace Hero_Designer
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
-                int num2 = (int)Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "IO CSV Not Opened");
+                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "IO CSV Not Opened");
                 ProjectData.ClearProjectError();
                 return false;
             }
-            int num3 = 0;
-            int num4 = 0;
-            int num5 = 0;
-            bool[] flagArray = new bool[Enum.GetValues(eSetType.GetType()).Length - 1 + 1];
-            int index1 = -1;
-            int num6 = DatabaseAPI.Database.Power.Length - 1;
-            for (int index2 = 0; index2 <= num6; ++index2)
+
+            var num3 = 0;
+            var num4 = 0;
+            var num5 = 0;
+            var flagArray = new bool[Enum.GetValues(eSetType.GetType()).Length - 1 + 1];
+            var index1 = -1;
+            var num6 = DatabaseAPI.Database.Power.Length - 1;
+            for (var index2 = 0; index2 <= num6; ++index2)
                 DatabaseAPI.Database.Power[index2].SetTypes = new Enums.eSetType[0];
             try
             {
@@ -155,36 +155,41 @@ namespace Hero_Designer
                         BusyMsg(Strings.Format(num3, "###,##0") + " records parsed.");
                         num5 = 0;
                     }
-                    string[] array = CSV.ToArray(iLine);
+
+                    var array = CSV.ToArray(iLine);
                     if (array.Length > 1)
                     {
-                        int num2 = DatabaseAPI.NidFromUidioSet(array[0]);
-                        if (num2 != index1 & index1 > -1)
-                            flagArray[(int)DatabaseAPI.Database.EnhancementSets[index1].SetType] = true;
+                        var num2 = DatabaseAPI.NidFromUidioSet(array[0]);
+                        if ((num2 != index1) & (index1 > -1))
+                            flagArray[(int) DatabaseAPI.Database.EnhancementSets[index1].SetType] = true;
                         index1 = num2;
-                        if (index1 > -1 && !flagArray[(int)DatabaseAPI.Database.EnhancementSets[index1].SetType])
+                        if (index1 > -1 && !flagArray[(int) DatabaseAPI.Database.EnhancementSets[index1].SetType])
                         {
-                            int nIDPower = DatabaseAPI.NidFromUidPower(array[1]);
+                            var nIDPower = DatabaseAPI.NidFromUidPower(array[1]);
                             if (nIDPower > -1)
                                 AddSetType(nIDPower, DatabaseAPI.Database.EnhancementSets[index1].SetType);
                         }
+
                         ++num1;
                     }
                     else
+                    {
                         ++num4;
+                    }
+
                     ++num3;
-                }
-                while (iLine != null);
+                } while (iLine != null);
             }
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
-                Exception exception = ex;
+                var exception = ex;
                 iStream.Close();
-                int num2 = (int)Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "IO CSV Parse Error");
+                var num2 = (int) Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "IO CSV Parse Error");
                 ProjectData.ClearProjectError();
                 return false;
             }
+
             iStream.Close();
             DatabaseAPI.Database.IOAssignmentVersion.SourceFile = dlgBrowse.FileName;
             DatabaseAPI.Database.IOAssignmentVersion.RevisionDate = DateTime.Now;
@@ -192,7 +197,9 @@ namespace Hero_Designer
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             DisplayInfo();
-            int num7 = (int)Interaction.MsgBox("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
+            var num7 = (int) Interaction.MsgBox(
+                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) +
+                "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
     }

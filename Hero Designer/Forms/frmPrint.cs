@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -12,33 +11,38 @@ namespace Hero_Designer
 {
     public partial class frmPrint : Form
     {
-        Print _printer;
+        private Print _printer;
 
         public frmPrint()
         {
             Load += frmPrint_Load;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmPrint));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
             Name = nameof(frmPrint);
         }
 
-        void btnCancel_Click(object sender, EventArgs e) => Close();
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
 
-        void btnLayout_Click(object sender, EventArgs e)
+        private void btnLayout_Click(object sender, EventArgs e)
         {
             dlgSetup.Document = _printer.Document;
             dlgSetup.ShowDialog();
             lblPrinter.Text = _printer.Document.PrinterSettings.PrinterName;
         }
 
-        void btnPrint_Click(object sender, EventArgs e)
+        private void btnPrint_Click(object sender, EventArgs e)
         {
             MidsContext.Config.LastPrinter = _printer.Document.PrinterSettings.PrinterName;
             MidsContext.Config.PrintHistory = chkPrintHistory.Checked;
             MidsContext.Config.DisablePrintProfileEnh = !chkProfileEnh.Checked;
             MidsContext.Config.I9.DisablePrintIOLevels = !chkPrintHistoryEnh.Checked;
-            MidsContext.Config.PrintProfile = !rbProfileShort.Checked ? (!rbProfileLong.Checked ? ConfigData.PrintOptionProfile.None : ConfigData.PrintOptionProfile.MultiPage) : ConfigData.PrintOptionProfile.SinglePage;
+            MidsContext.Config.PrintProfile = !rbProfileShort.Checked
+                ? !rbProfileLong.Checked ? ConfigData.PrintOptionProfile.None : ConfigData.PrintOptionProfile.MultiPage
+                : ConfigData.PrintOptionProfile.SinglePage;
             if (rbProfileNone.Checked & !chkPrintHistory.Checked)
             {
                 Interaction.MsgBox("You have not selected anything to print!", MsgBoxStyle.Information, "Eh?");
@@ -50,7 +54,7 @@ namespace Hero_Designer
             }
         }
 
-        void btnPrinter_Click(object sender, EventArgs e)
+        private void btnPrinter_Click(object sender, EventArgs e)
         {
             new PrintDialog
             {
@@ -59,33 +63,36 @@ namespace Hero_Designer
             lblPrinter.Text = _printer.Document.PrinterSettings.PrinterName;
         }
 
-        void chkPrintHistory_CheckedChanged(object sender, EventArgs e) => chkPrintHistoryEnh.Enabled = chkPrintHistory.Checked;
+        private void chkPrintHistory_CheckedChanged(object sender, EventArgs e)
+        {
+            chkPrintHistoryEnh.Enabled = chkPrintHistory.Checked;
+        }
 
-        void frmPrint_Load(object sender, EventArgs e)
+        private void frmPrint_Load(object sender, EventArgs e)
         {
             if (PrinterSettings.InstalledPrinters.Count < 1)
             {
                 Interaction.MsgBox("There are no printers installed!", MsgBoxStyle.Information, "Buh...");
                 Close();
             }
+
             _printer = new Print();
-            string printerName = "";
-            int printerIndex = -1;
+            var printerName = "";
+            var printerIndex = -1;
             if (_printer.Document.PrinterSettings.IsDefaultPrinter)
                 printerName = _printer.Document.PrinterSettings.PrinterName;
-            for (int index = 0; index <= PrinterSettings.InstalledPrinters.Count - 1; ++index)
-            {
+            for (var index = 0; index <= PrinterSettings.InstalledPrinters.Count - 1; ++index)
                 if (PrinterSettings.InstalledPrinters[index] == MidsContext.Config.LastPrinter)
                 {
                     printerIndex = index;
                     _printer.Document.PrinterSettings.PrinterName = PrinterSettings.InstalledPrinters[index];
                 }
-                else if (PrinterSettings.InstalledPrinters[index] == printerName & printerIndex < 0)
+                else if ((PrinterSettings.InstalledPrinters[index] == printerName) & (printerIndex < 0))
                 {
                     printerIndex = index;
                     _printer.Document.PrinterSettings.PrinterName = PrinterSettings.InstalledPrinters[index];
                 }
-            }
+
             lblPrinter.Text = _printer.Document.PrinterSettings.PrinterName;
             switch (MidsContext.Config.PrintProfile)
             {
@@ -102,6 +109,7 @@ namespace Hero_Designer
                     rbProfileNone.Checked = true;
                     break;
             }
+
             chkPrintHistory.Checked = MidsContext.Config.PrintHistory;
             chkPrintHistoryEnh.Checked = !MidsContext.Config.I9.DisablePrintIOLevels;
             chkPrintHistoryEnh.Enabled = chkPrintHistory.Checked;
@@ -109,6 +117,9 @@ namespace Hero_Designer
             chkProfileEnh.Enabled = rbProfileShort.Checked;
         }
 
-        void rbProfileShort_CheckedChanged(object sender, EventArgs e) => chkProfileEnh.Enabled = rbProfileShort.Checked;
+        private void rbProfileShort_CheckedChanged(object sender, EventArgs e)
+        {
+            chkProfileEnh.Enabled = rbProfileShort.Checked;
+        }
     }
 }

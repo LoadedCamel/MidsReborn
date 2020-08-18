@@ -4,29 +4,26 @@ using Base.Master_Classes;
 
 namespace Hero_Designer
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             try
             {
                 MidsContext.AssertVersioning();
-                using frmMain frmMain = new frmMain();
+                using var frmMain = new frmMain();
                 Application.Run(frmMain);
             }
             catch (Exception ex)
             {
                 var exTarget = ex;
-                while (exTarget?.InnerException != null)
-                {
-                    exTarget = ex.InnerException;
-                }
+                while (exTarget?.InnerException != null) exTarget = ex.InnerException;
 
                 if (exTarget != null)
                     MessageBox.Show(exTarget.Message, exTarget.GetType().Name);

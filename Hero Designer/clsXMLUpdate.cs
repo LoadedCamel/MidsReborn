@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -14,27 +13,51 @@ namespace Hero_Designer
 {
     public class clsXMLUpdate
     {
+        public enum ECheckResponse
+        {
+            NoUpdates,
+            Updates,
+            FailedWithMessage
+        }
+
+        private const string ReadmeUrl =
+            "https://raw.githubusercontent.com/Crytilis/mids-reborn-hero-designer/master/README.md";
+
+        public bool RestartNeeded = false;
         private static bool Mandatory { get; set; }
         private static Version AppVersion { get; set; }
         private static float DbVersion { get; set; }
         private static string ChangeLog { get; set; }
 
-        public bool RestartNeeded = false;
+        public static void BugReportCrytilis()
+        {
+            LaunchBrowser("https://github.com/Reborn-Team/Hero-Designer/issues");
+        }
 
-        public static void BugReportCrytilis() => LaunchBrowser("https://github.com/Reborn-Team/Hero-Designer/issues");
+        public static void DownloadFromDomain()
+        {
+            LaunchBrowser("https://midsreborn.com/download/MRB_Setup.exe");
+        }
 
-        public static void DownloadFromDomain() => LaunchBrowser("https://midsreborn.com/download/MRB_Setup.exe");
+        public static void KoFi()
+        {
+            LaunchBrowser("https://ko-fi.com/metalios");
+        }
 
-        public static void KoFi() { LaunchBrowser("https://ko-fi.com/metalios"); }
-
-        public static void Patreon() { LaunchBrowser("https://www.patreon.com/midsreborn"); }
+        public static void Patreon()
+        {
+            LaunchBrowser("https://www.patreon.com/midsreborn");
+        }
 
         public static void GoToGitHub()
         {
             LaunchBrowser("https://github.com/Reborn-Team/Hero-Designer");
         }
 
-        public static void GoToForums() { LaunchBrowser("https://forums.homecomingservers.com/topic/19963-mids-reborn-hero-designer/"); }
+        public static void GoToForums()
+        {
+            LaunchBrowser("https://forums.homecomingservers.com/topic/19963-mids-reborn-hero-designer/");
+        }
 
         private static void LaunchBrowser(string iUri)
         {
@@ -44,11 +67,11 @@ namespace Hero_Designer
             }
             catch (Win32Exception ex)
             {
-                _ = MessageBox.Show($@"There was an error when starting the systems default web browser. {ex.Message}", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                _ = MessageBox.Show($@"There was an error when starting the systems default web browser. {ex.Message}",
+                    @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 //Interaction.MsgBox(("There was an error starting the default web browser: " + ex.Message), MsgBoxStyle.Exclamation, "Error!");
             }
         }
-        const string ReadmeUrl = "https://raw.githubusercontent.com/Crytilis/mids-reborn-hero-designer/master/README.md";
 
         public static void CheckUpdate()
         {
@@ -60,7 +83,6 @@ namespace Hero_Designer
             //MessageBox.Show(MidsContext.Config.UpdatePath);
             using var xmlReader = XmlReader.Create(MidsContext.Config.UpdatePath, settings);
             while (xmlReader.Read())
-            {
                 try
                 {
                     switch (xmlReader.Name)
@@ -91,18 +113,18 @@ namespace Hero_Designer
                 {
                     MessageBox.Show($"{e.Message}\n{e.StackTrace}", "Error");
                 }
-            }
+
             var cDbVersion = DatabaseAPI.Database.Version;
             if (AppVersion > MidsContext.AppVersion)
             {
                 if (!Mandatory)
                 {
-                    var appResult = MessageBox.Show($@"A new application update is available. Do you wish to update to v{AppVersion}?", @"Application Update available!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    var appResult =
+                        MessageBox.Show(
+                            $@"A new application update is available. Do you wish to update to v{AppVersion}?",
+                            @"Application Update available!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     //MessageBox.Show(ChangeLog);
-                    if (appResult == DialogResult.Yes)
-                    {
-                        Update(UpdateType.App, AppVersion.ToString(), ChangeLog);
-                    }
+                    if (appResult == DialogResult.Yes) Update(UpdateType.App, AppVersion.ToString(), ChangeLog);
                 }
                 else
                 {
@@ -113,11 +135,11 @@ namespace Hero_Designer
             {
                 if (!Mandatory)
                 {
-                    var dbResult = MessageBox.Show($@"A new database update is available. Do you wish to update to v{DbVersion}?", @"Database Update Available!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    var dbResult =
+                        MessageBox.Show($@"A new database update is available. Do you wish to update to v{DbVersion}?",
+                            @"Database Update Available!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     if (dbResult == DialogResult.Yes)
-                    {
                         Update(UpdateType.Database, DbVersion.ToString(CultureInfo.InvariantCulture), ChangeLog);
-                    }
                 }
                 else
                 {
@@ -126,7 +148,8 @@ namespace Hero_Designer
             }
             else
             {
-                MessageBox.Show(@"No update is available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"No update is available at this time.", @"Update Check", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
         }
 
@@ -134,12 +157,11 @@ namespace Hero_Designer
         {
             try
             {
-
-                using WebClient client = new WebClient();
-                Stream stream = client.OpenRead(changeLog);
+                using var client = new WebClient();
+                var stream = client.OpenRead(changeLog);
                 if (stream != null)
                 {
-                    using StreamReader reader = new StreamReader(stream);
+                    using var reader = new StreamReader(stream);
 
                     var content = reader?.ReadToEnd();
 
@@ -159,7 +181,6 @@ namespace Hero_Designer
                 MessageBox.Show($"{e.Message}\n{e.StackTrace}", "Error");
             }
         }
-
 
 
         /*public static (ECheckResponse, string) UpdateCheck()
@@ -222,19 +243,11 @@ namespace Hero_Designer
             Database
         }
 
-        public enum ECheckResponse
-        {
-            NoUpdates,
-            Updates,
-            FailedWithMessage
-        }
-
         protected enum EUpdateType
         {
             None,
             AppUpdate,
             DbUpdate
-
         }
     }
 }

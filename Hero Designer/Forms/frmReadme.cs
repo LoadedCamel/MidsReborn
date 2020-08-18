@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,50 +10,50 @@ namespace Hero_Designer
 {
     public partial class frmReadme : Form
     {
-        PictureBox pbBackground;
-        PictureBox pbBottom;
-        RichTextBox rtfRead;
-        int btnY;
-        bool Loading;
-        Point mouse_offset;
-        readonly string myFile;
-        int rtH;
-        int rtW;
-
-        internal ImageButton BtnClose { get; private set; }
+        private readonly string myFile;
+        private int btnY;
+        private bool Loading;
+        private Point mouse_offset;
+        private PictureBox pbBackground;
+        private PictureBox pbBottom;
+        private RichTextBox rtfRead;
+        private int rtH;
+        private int rtW;
 
         public frmReadme(string iFile)
         {
             Loading = true;
             myFile = "";
             InitializeComponent();
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmReadme));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
-            pbBottom.Image = (Image)componentResourceManager.GetObject("pbBottom.Image");
-            pbBackground.Image = (Image)componentResourceManager.GetObject("pbBackground.Image");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmReadme));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            pbBottom.Image = (Image) componentResourceManager.GetObject("pbBottom.Image");
+            pbBackground.Image = (Image) componentResourceManager.GetObject("pbBackground.Image");
             myFile = iFile;
         }
 
-        void All_MouseMove(MouseEventArgs e)
+        internal ImageButton BtnClose { get; private set; }
+
+        private void All_MouseMove(MouseEventArgs e)
 
         {
             if (e.Button != MouseButtons.Left)
                 return;
-            Point mousePosition = MousePosition;
+            var mousePosition = MousePosition;
             mousePosition.Offset(mouse_offset.X, mouse_offset.Y);
             Location = mousePosition;
         }
 
-        void btnClose_ButtonClicked()
+        private void btnClose_ButtonClicked()
         {
             Close();
         }
 
-        void btnClose_Load(object sender, EventArgs e)
+        private void btnClose_Load(object sender, EventArgs e)
         {
         }
 
-        void frmReadme_Load(object sender, EventArgs e)
+        private void frmReadme_Load(object sender, EventArgs e)
 
         {
             rtW = Size.Width - (rtfRead.Width + rtfRead.Left);
@@ -71,70 +70,70 @@ namespace Hero_Designer
             {
                 rtfRead.Text = "Unable to find " + myFile + "!";
             }
+
             Loading = false;
         }
 
-        void frmReadme_MouseDown(object sender, MouseEventArgs e)
+        private void frmReadme_MouseDown(object sender, MouseEventArgs e)
 
         {
             pbBackground_MouseDown(RuntimeHelpers.GetObjectValue(sender), e);
         }
 
-        void frmReadme_MouseMove(object sender, MouseEventArgs e)
+        private void frmReadme_MouseMove(object sender, MouseEventArgs e)
 
         {
             All_MouseMove(e);
         }
 
-        void frmReadme_Resize(object sender, EventArgs e)
+        private void frmReadme_Resize(object sender, EventArgs e)
 
         {
             if (Loading)
                 return;
-            RichTextBox rtfRead1 = rtfRead;
-            Size size = Size;
-            int num1 = size.Height - (rtH + rtfRead.Top);
+            var rtfRead1 = rtfRead;
+            var size = Size;
+            var num1 = size.Height - (rtH + rtfRead.Top);
             rtfRead1.Height = num1;
-            RichTextBox rtfRead2 = rtfRead;
+            var rtfRead2 = rtfRead;
             size = Size;
-            int num2 = size.Width - (rtW + rtfRead.Left);
+            var num2 = size.Width - (rtW + rtfRead.Left);
             rtfRead2.Width = num2;
-            ImageButton btnClose1 = BtnClose;
+            var btnClose1 = BtnClose;
             size = Size;
-            int num3 = size.Height - btnY;
+            var num3 = size.Height - btnY;
             btnClose1.Top = num3;
-            ImageButton btnClose2 = BtnClose;
+            var btnClose2 = BtnClose;
             size = Size;
-            int num4 = (int)Math.Round((size.Width - BtnClose.Width) / 2.0);
+            var num4 = (int) Math.Round((size.Width - BtnClose.Width) / 2.0);
             btnClose2.Left = num4;
         }
 
         [DebuggerStepThrough]
-
-        void pbBackground_Click(object sender, EventArgs e)
+        private void pbBackground_Click(object sender, EventArgs e)
 
         {
         }
 
-        void pbBackground_MouseDown(object sender, MouseEventArgs e)
+        private void pbBackground_MouseDown(object sender, MouseEventArgs e)
 
         {
             mouse_offset = new Point(-e.X, -e.Y);
         }
 
-        void pbBackground_MouseMove(object sender, MouseEventArgs e)
+        private void pbBackground_MouseMove(object sender, MouseEventArgs e)
 
         {
             All_MouseMove(e);
         }
 
-        void pbBottom_MouseDown(object sender, MouseEventArgs e)
+        private void pbBottom_MouseDown(object sender, MouseEventArgs e)
 
         {
             mouse_offset = new Point(-e.X, -pbBottom.Top + -e.Y);
         }
 
-        void pbBottom_MouseMove(object sender, MouseEventArgs e)
+        private void pbBottom_MouseMove(object sender, MouseEventArgs e)
 
         {
             All_MouseMove(e);

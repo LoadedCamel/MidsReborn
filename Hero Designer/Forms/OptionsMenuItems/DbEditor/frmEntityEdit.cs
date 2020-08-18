@@ -8,8 +8,8 @@ namespace Hero_Designer
 {
     public partial class frmEntityEdit : Form
     {
-        private bool loading;
         public readonly SummonedEntity myEntity;
+        private bool loading;
         private bool Updating;
 
         public frmEntityEdit(SummonedEntity iEntity)
@@ -18,29 +18,32 @@ namespace Hero_Designer
             Updating = false;
             loading = true;
             InitializeComponent();
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmEntityEdit));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmEntityEdit));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
             Label4.Text = componentResourceManager.GetString("Label4.Text");
             Name = nameof(frmEntityEdit);
             myEntity = new SummonedEntity(iEntity);
         }
 
-        void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click(object sender, EventArgs e)
         {
-            int num1 = DatabaseAPI.Database.Entities.Length - 1;
-            for (int index = 0; index <= num1; ++index)
+            var num1 = DatabaseAPI.Database.Entities.Length - 1;
+            for (var index = 0; index <= num1; ++index)
             {
-                if (!(DatabaseAPI.Database.Entities[index].UID.ToLower() == myEntity.UID.ToLower() & index != myEntity.GetNId()))
+                if (!((DatabaseAPI.Database.Entities[index].UID.ToLower() == myEntity.UID.ToLower()) &
+                      (index != myEntity.GetNId())))
                     continue;
-                Interaction.MsgBox(myEntity.UID + " is not unique. Please enter a unique name.", MsgBoxStyle.Information, "Invalid Name");
+                Interaction.MsgBox(myEntity.UID + " is not unique. Please enter a unique name.",
+                    MsgBoxStyle.Information, "Invalid Name");
                 return;
             }
+
             myEntity.UpdateNClassID(DatabaseAPI.NidFromUidClass);
             DialogResult = DialogResult.OK;
             Hide();
         }
 
-        void btnPAdd_Click(object sender, EventArgs e)
+        private void btnPAdd_Click(object sender, EventArgs e)
         {
             myEntity.PAdd();
             PS_FillList();
@@ -48,29 +51,30 @@ namespace Hero_Designer
             lvPower.Items[lvPower.Items.Count - 1].EnsureVisible();
         }
 
-        void btnPDelete_Click(object sender, EventArgs e)
+        private void btnPDelete_Click(object sender, EventArgs e)
         {
             if (lvPower.SelectedItems.Count < 1)
                 return;
-            string[] strArray = new string[myEntity.PowersetFullName.Length];
-            int selectedIndex = lvPower.SelectedIndices[0];
-            int num1 = strArray.Length - 1;
-            for (int index = 0; index <= num1; ++index)
+            var strArray = new string[myEntity.PowersetFullName.Length];
+            var selectedIndex = lvPower.SelectedIndices[0];
+            var num1 = strArray.Length - 1;
+            for (var index = 0; index <= num1; ++index)
             {
                 strArray = new string[index + 1];
                 strArray[index] = myEntity.PowersetFullName[index];
                 strArray[index] = myEntity.PowersetFullName[index];
             }
+
             myEntity.PDelete(selectedIndex);
             PS_FillList();
         }
 
-        void btnPDown_Click(object sender, EventArgs e)
+        private void btnPDown_Click(object sender, EventArgs e)
         {
             if (lvPower.SelectedItems.Count < 1 || lvPower.SelectedIndices[0] > lvPower.Items.Count - 2)
                 return;
-            int selectedIndex = lvPower.SelectedIndices[0];
-            int index = selectedIndex + 1;
+            var selectedIndex = lvPower.SelectedIndices[0];
+            var index = selectedIndex + 1;
             var strArray2 = new[]
             {
                 myEntity.PowersetFullName[selectedIndex],
@@ -83,13 +87,14 @@ namespace Hero_Designer
             lvPower.Items[index].EnsureVisible();
         }
 
-        void btnPUp_Click(object sender, EventArgs e)
+        private void btnPUp_Click(object sender, EventArgs e)
         {
             if (lvPower.SelectedItems.Count < 1 || lvPower.SelectedIndices[0] < 1)
                 return;
-            int selectedIndex = lvPower.SelectedIndices[0];
-            int index = selectedIndex - 1;
-            string[] strArray2 = {
+            var selectedIndex = lvPower.SelectedIndices[0];
+            var index = selectedIndex - 1;
+            string[] strArray2 =
+            {
                 myEntity.PowersetFullName[selectedIndex],
                 myEntity.PowersetFullName[index]
             };
@@ -100,7 +105,7 @@ namespace Hero_Designer
             lvPower.Items[index].EnsureVisible();
         }
 
-        void btnUGAdd_Click(object sender, EventArgs e)
+        private void btnUGAdd_Click(object sender, EventArgs e)
         {
             myEntity.UGAdd();
             UG_FillList();
@@ -108,31 +113,33 @@ namespace Hero_Designer
             lvUpgrade.Items[lvUpgrade.Items.Count - 1].EnsureVisible();
         }
 
-        void btnUGDelete_Click(object sender, EventArgs e)
+        private void btnUGDelete_Click(object sender, EventArgs e)
 
         {
             if (lvUpgrade.SelectedItems.Count < 1)
                 return;
-            string[] strArray = new string[myEntity.UpgradePowerFullName.Length - 1 + 1];
-            int selectedIndex = lvUpgrade.SelectedIndices[0];
-            int num1 = strArray.Length - 1;
-            for (int index = 0; index <= num1; ++index)
+            var strArray = new string[myEntity.UpgradePowerFullName.Length - 1 + 1];
+            var selectedIndex = lvUpgrade.SelectedIndices[0];
+            var num1 = strArray.Length - 1;
+            for (var index = 0; index <= num1; ++index)
             {
                 strArray = new string[index + 1];
                 strArray[index] = myEntity.UpgradePowerFullName[index];
                 strArray[index] = myEntity.UpgradePowerFullName[index];
             }
+
             myEntity.UGDelete(selectedIndex);
             UG_FillList();
         }
 
-        void btnUGDown_Click(object sender, EventArgs e)
+        private void btnUGDown_Click(object sender, EventArgs e)
         {
             if (lvUpgrade.SelectedItems.Count < 1 || lvUpgrade.SelectedIndices[0] > lvUpgrade.Items.Count - 2)
                 return;
-            int selectedIndex = lvUpgrade.SelectedIndices[0];
-            int index = selectedIndex + 1;
-            string[] strArray2 = {
+            var selectedIndex = lvUpgrade.SelectedIndices[0];
+            var index = selectedIndex + 1;
+            string[] strArray2 =
+            {
                 myEntity.UpgradePowerFullName[selectedIndex],
                 myEntity.UpgradePowerFullName[index]
             };
@@ -143,13 +150,14 @@ namespace Hero_Designer
             lvUpgrade.Items[index].EnsureVisible();
         }
 
-        void btnUGUp_Click(object sender, EventArgs e)
+        private void btnUGUp_Click(object sender, EventArgs e)
         {
             if (lvUpgrade.SelectedItems.Count < 1 || lvUpgrade.SelectedIndices[0] < 1)
                 return;
-            int selectedIndex = lvUpgrade.SelectedIndices[0];
-            int index = selectedIndex - 1;
-            string[] strArray2 = {
+            var selectedIndex = lvUpgrade.SelectedIndices[0];
+            var index = selectedIndex - 1;
+            string[] strArray2 =
+            {
                 myEntity.UpgradePowerFullName[selectedIndex],
                 myEntity.UpgradePowerFullName[index]
             };
@@ -160,18 +168,18 @@ namespace Hero_Designer
             lvUpgrade.Items[index].EnsureVisible();
         }
 
-        void cbClass_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbClass_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (loading)
                 return;
             myEntity.ClassName = cbClass.SelectedItem.ToString();
         }
 
-        void cbEntType_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbEntType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (loading)
                 return;
-            myEntity.EntityType = (Enums.eSummonEntity)cbEntType.SelectedIndex;
+            myEntity.EntityType = (Enums.eSummonEntity) cbEntType.SelectedIndex;
         }
 
         private void DisplayInfo()
@@ -180,11 +188,11 @@ namespace Hero_Designer
             UG_FillList();
             txtDisplayName.Text = myEntity.DisplayName;
             txtEntName.Text = myEntity.UID;
-            cbEntType.SelectedIndex = (int)myEntity.EntityType;
+            cbEntType.SelectedIndex = (int) myEntity.EntityType;
             cbClass.SelectedIndex = myEntity.GetNClassId();
         }
 
-        void frmEntityEdit_Load(object sender, EventArgs e)
+        private void frmEntityEdit_Load(object sender, EventArgs e)
         {
             Text = "Editing Entity: " + myEntity.UID;
             cbEntType.BeginUpdate();
@@ -193,8 +201,8 @@ namespace Hero_Designer
             cbEntType.EndUpdate();
             cbClass.BeginUpdate();
             cbClass.Items.Clear();
-            int num = DatabaseAPI.Database.Classes.Length - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = DatabaseAPI.Database.Classes.Length - 1;
+            for (var index = 0; index <= num; ++index)
                 cbClass.Items.Add(DatabaseAPI.Database.Classes[index].ClassName);
             cbClass.EndUpdate();
             UG_GroupList();
@@ -203,14 +211,14 @@ namespace Hero_Designer
             loading = false;
         }
 
-        void lvPower_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvPower_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvPower.SelectedIndices.Count < 1)
                 return;
             PS_DisplaySet(Convert.ToString(myEntity.PowersetFullName[lvPower.SelectedIndices[0]][0]));
         }
 
-        void lvPSGroup_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvPSGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating || lvPSGroup.SelectedItems.Count <= 0)
                 return;
@@ -219,21 +227,21 @@ namespace Hero_Designer
                 lvPSSet.Items[0].Selected = true;
         }
 
-        void lvPSSet_Click(object sender, EventArgs e)
+        private void lvPSSet_Click(object sender, EventArgs e)
         {
             if (Updating)
                 return;
             PS_UpdateItem();
         }
 
-        void lvPSSet_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvPSSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
                 return;
             PS_UpdateItem();
         }
 
-        void lvUGGroup_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvUGGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating || lvUGGroup.SelectedItems.Count <= 0)
                 return;
@@ -242,42 +250,42 @@ namespace Hero_Designer
                 lvUGSet.Items[0].Selected = true;
         }
 
-        void lvUGPower_Click(object sender, EventArgs e)
+        private void lvUGPower_Click(object sender, EventArgs e)
         {
             if (Updating)
                 return;
             PS_UpdateItem();
         }
 
-        void lvUGPower_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvUGPower_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
                 return;
             UG_UpdateItem();
         }
 
-        void lvUGSet_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvUGSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating || lvUGSet.SelectedItems.Count <= 0)
                 return;
             UG_PowerList();
         }
 
-        void lvUpgrade_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvUpgrade_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvUpgrade.SelectedIndices.Count < 1)
                 return;
             UG_DisplayPower(Convert.ToString(myEntity.UpgradePowerFullName[lvUpgrade.SelectedIndices[0]][0]));
         }
 
-        void PS_DisplaySet(string iPower)
+        private void PS_DisplaySet(string iPower)
         {
             Updating = true;
-            string[] strArray = iPower.Split(".".ToCharArray());
+            var strArray = iPower.Split(".".ToCharArray());
             if (strArray.Length > 0)
             {
-                int num = lvPSGroup.Items.Count - 1;
-                for (int index = 0; index <= num; ++index)
+                var num = lvPSGroup.Items.Count - 1;
+                for (var index = 0; index <= num; ++index)
                 {
                     if (!string.Equals(lvPSGroup.Items[index].Text, strArray[0], StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -286,11 +294,12 @@ namespace Hero_Designer
                     break;
                 }
             }
+
             UG_SetList();
             if (strArray.Length > 1)
             {
-                int num = lvPSSet.Items.Count - 1;
-                for (int index = 0; index <= num; ++index)
+                var num = lvPSSet.Items.Count - 1;
+                for (var index = 0; index <= num; ++index)
                 {
                     if (!string.Equals(lvPSSet.Items[index].Text, strArray[1], StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -299,16 +308,17 @@ namespace Hero_Designer
                     break;
                 }
             }
+
             Updating = false;
         }
 
-        void PS_FillList()
+        private void PS_FillList()
         {
             Updating = true;
             lvPower.BeginUpdate();
             lvPower.Items.Clear();
-            int num = myEntity.PowersetFullName.Length - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = myEntity.PowersetFullName.Length - 1;
+            for (var index = 0; index <= num; ++index)
                 lvPower.Items.Add(myEntity.PowersetFullName[index]);
             lvPower.EndUpdate();
             Updating = false;
@@ -317,16 +327,16 @@ namespace Hero_Designer
             lvPower.Items[0].Selected = true;
         }
 
-        void PS_GroupList()
+        private void PS_GroupList()
         {
             lvPSGroup.BeginUpdate();
             lvPSGroup.Items.Clear();
-            foreach (string key in DatabaseAPI.Database.PowersetGroups.Keys)
+            foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
                 lvPSGroup.Items.Add(key);
             lvPSGroup.EndUpdate();
         }
 
-        void PS_SetList()
+        private void PS_SetList()
         {
             lvPSSet.BeginUpdate();
             lvPSSet.Items.Clear();
@@ -336,48 +346,51 @@ namespace Hero_Designer
             }
             else
             {
-                int[] indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(lvPSGroup.SelectedItems[0].Text);
-                int num = indexesByGroupName.Length - 1;
-                for (int index = 0; index <= num; ++index)
+                var indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(lvPSGroup.SelectedItems[0].Text);
+                var num = indexesByGroupName.Length - 1;
+                for (var index = 0; index <= num; ++index)
                 {
                     lvPSSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
-                    lvPSSet.Items[lvPSSet.Items.Count - 1].Tag = DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
+                    lvPSSet.Items[lvPSSet.Items.Count - 1].Tag =
+                        DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
                 }
+
                 lvPSSet.EndUpdate();
             }
         }
 
-        void PS_UpdateItem()
+        private void PS_UpdateItem()
         {
-            if (lvPower.SelectedIndices.Count < 1 | lvPSGroup.SelectedIndices.Count < 1 | lvPSSet.SelectedIndices.Count < 1)
+            if ((lvPower.SelectedIndices.Count < 1) | (lvPSGroup.SelectedIndices.Count < 1) |
+                (lvPSSet.SelectedIndices.Count < 1))
                 return;
-            string str = lvPSGroup.SelectedItems[0].Text + "." + lvPSSet.SelectedItems[0].Text;
+            var str = lvPSGroup.SelectedItems[0].Text + "." + lvPSSet.SelectedItems[0].Text;
             myEntity.PowersetFullName[lvPower.SelectedIndices[0]] = str;
             lvPower.SelectedItems[0].SubItems[0].Text = str;
         }
 
-        void txtDisplayName_TextChanged(object sender, EventArgs e)
+        private void txtDisplayName_TextChanged(object sender, EventArgs e)
         {
             if (loading)
                 return;
             myEntity.DisplayName = txtDisplayName.Text;
         }
 
-        void txtEntName_TextChanged(object sender, EventArgs e)
+        private void txtEntName_TextChanged(object sender, EventArgs e)
         {
             if (loading)
                 return;
             myEntity.UID = txtEntName.Text;
         }
 
-        void UG_DisplayPower(string iPower)
+        private void UG_DisplayPower(string iPower)
         {
             Updating = true;
-            string[] strArray = iPower.Split(".".ToCharArray());
+            var strArray = iPower.Split(".".ToCharArray());
             if (strArray.Length > 0)
             {
-                int num = lvUGGroup.Items.Count - 1;
-                for (int index = 0; index <= num; ++index)
+                var num = lvUGGroup.Items.Count - 1;
+                for (var index = 0; index <= num; ++index)
                 {
                     if (!string.Equals(lvUGGroup.Items[index].Text, strArray[0], StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -386,11 +399,12 @@ namespace Hero_Designer
                     break;
                 }
             }
+
             UG_SetList();
             if (strArray.Length > 1)
             {
-                int num = lvUGSet.Items.Count - 1;
-                for (int index = 0; index <= num; ++index)
+                var num = lvUGSet.Items.Count - 1;
+                for (var index = 0; index <= num; ++index)
                 {
                     if (!string.Equals(lvUGSet.Items[index].Text, strArray[1], StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -399,11 +413,12 @@ namespace Hero_Designer
                     break;
                 }
             }
+
             UG_PowerList();
             if (strArray.Length > 2)
             {
-                int num = lvUGPower.Items.Count - 1;
-                for (int index = 0; index <= num; ++index)
+                var num = lvUGPower.Items.Count - 1;
+                for (var index = 0; index <= num; ++index)
                 {
                     if (!string.Equals(lvUGPower.Items[index].Text, strArray[2], StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -412,16 +427,17 @@ namespace Hero_Designer
                     break;
                 }
             }
+
             Updating = false;
         }
 
-        void UG_FillList()
+        private void UG_FillList()
         {
             Updating = true;
             lvUpgrade.BeginUpdate();
             lvUpgrade.Items.Clear();
-            int num = myEntity.UpgradePowerFullName.Length - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = myEntity.UpgradePowerFullName.Length - 1;
+            for (var index = 0; index <= num; ++index)
                 lvUpgrade.Items.Add(myEntity.UpgradePowerFullName[index]);
             lvUpgrade.EndUpdate();
             Updating = false;
@@ -430,16 +446,16 @@ namespace Hero_Designer
             lvUpgrade.Items[0].Selected = true;
         }
 
-        void UG_GroupList()
+        private void UG_GroupList()
         {
             lvUGGroup.BeginUpdate();
             lvUGGroup.Items.Clear();
-            foreach (string key in DatabaseAPI.Database.PowersetGroups.Keys)
+            foreach (var key in DatabaseAPI.Database.PowersetGroups.Keys)
                 lvUGGroup.Items.Add(key);
             lvUGGroup.EndUpdate();
         }
 
-        void UG_PowerList()
+        private void UG_PowerList()
         {
             lvUGPower.BeginUpdate();
             lvUGPower.Items.Clear();
@@ -449,18 +465,19 @@ namespace Hero_Designer
             }
             else
             {
-                int index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvUGSet.SelectedItems[0].Tag));
+                var index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvUGSet.SelectedItems[0].Tag));
                 if (index1 > -1)
                 {
-                    int num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;
-                    for (int index2 = 0; index2 <= num; ++index2)
+                    var num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;
+                    for (var index2 = 0; index2 <= num; ++index2)
                         lvUGPower.Items.Add(DatabaseAPI.Database.Powersets[index1].Powers[index2].PowerName);
                 }
+
                 lvUGPower.EndUpdate();
             }
         }
 
-        void UG_SetList()
+        private void UG_SetList()
         {
             lvUGSet.BeginUpdate();
             lvUGSet.Items.Clear();
@@ -470,22 +487,26 @@ namespace Hero_Designer
             }
             else
             {
-                int[] indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(lvUGGroup.SelectedItems[0].Text);
-                int num = indexesByGroupName.Length - 1;
-                for (int index = 0; index <= num; ++index)
+                var indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(lvUGGroup.SelectedItems[0].Text);
+                var num = indexesByGroupName.Length - 1;
+                for (var index = 0; index <= num; ++index)
                 {
                     lvUGSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
-                    lvUGSet.Items[lvUGSet.Items.Count - 1].Tag = DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
+                    lvUGSet.Items[lvUGSet.Items.Count - 1].Tag =
+                        DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
                 }
+
                 lvUGSet.EndUpdate();
             }
         }
 
-        void UG_UpdateItem()
+        private void UG_UpdateItem()
         {
-            if (lvUpgrade.SelectedIndices.Count < 1 | lvUGGroup.SelectedIndices.Count < 1 | lvUGSet.SelectedIndices.Count < 1 | lvUGPower.SelectedIndices.Count < 1)
+            if ((lvUpgrade.SelectedIndices.Count < 1) | (lvUGGroup.SelectedIndices.Count < 1) |
+                (lvUGSet.SelectedIndices.Count < 1) | (lvUGPower.SelectedIndices.Count < 1))
                 return;
-            string str = lvUGGroup.SelectedItems[0].Text + "." + lvUGSet.SelectedItems[0].Text + "." + lvUGPower.SelectedItems[0].Text;
+            var str = lvUGGroup.SelectedItems[0].Text + "." + lvUGSet.SelectedItems[0].Text + "." +
+                      lvUGPower.SelectedItems[0].Text;
             myEntity.UpgradePowerFullName[lvUpgrade.SelectedIndices[0]] = str;
             lvUpgrade.SelectedItems[0].SubItems[0].Text = str;
         }

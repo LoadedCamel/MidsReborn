@@ -7,10 +7,10 @@ namespace Hero_Designer
 {
     public partial class frmZStatus : Form
     {
-        Label lblStatus1;
-        Label lblStatus2;
-        Label lblTitle;
-        PictureBox PictureBox1;
+        private Label lblStatus1;
+        private Label lblStatus2;
+        private Label lblTitle;
+        private PictureBox PictureBox1;
 
         public frmZStatus()
         {
@@ -18,11 +18,11 @@ namespace Hero_Designer
             InitializeComponent();
             Name = nameof(frmZStatus);
             var componentResourceManager = new ComponentResourceManager(typeof(frmZStatus));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
-            PictureBox1.Image = (Image)componentResourceManager.GetObject("PictureBox1.Image");
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            PictureBox1.Image = (Image) componentResourceManager.GetObject("PictureBox1.Image");
         }
 
-        void frmZStatus_VisibleChanged(object sender, EventArgs e)
+        private void frmZStatus_VisibleChanged(object sender, EventArgs e)
         {
             Refresh();
         }

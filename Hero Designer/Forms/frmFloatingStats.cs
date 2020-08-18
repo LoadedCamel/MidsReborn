@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -8,9 +7,8 @@ namespace Hero_Designer
 {
     public partial class frmFloatingStats : Form
     {
+        private readonly frmMain myOwner;
         public DataView dvFloat;
-
-        readonly frmMain myOwner;
 
         public frmFloatingStats(frmMain iOwner)
         {
@@ -18,40 +16,52 @@ namespace Hero_Designer
             Load += frmFloatingStats_Load;
             Closed += frmFloatingStats_Closed;
             Name = nameof(frmFloatingStats);
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmFloatingStats));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmFloatingStats));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
             myOwner = iOwner;
         }
 
-        void dvFloat_FloatChanged()
+        private void dvFloat_FloatChanged()
         {
             Close();
         }
 
-        void dvFloat_Load(object sender, EventArgs e)
+        private void dvFloat_Load(object sender, EventArgs e)
         {
         }
 
-        void dvFloat_SizeChange(Size newSize, bool Compact)
+        private void dvFloat_SizeChange(Size newSize, bool Compact)
         {
             ClientSize = newSize;
         }
 
-        void dvFloat_SlotFlip(int powerIndex) => myOwner.DataView_SlotFlip(powerIndex);
+        private void dvFloat_SlotFlip(int powerIndex)
+        {
+            myOwner.DataView_SlotFlip(powerIndex);
+        }
 
-        void dvFloat_SlotUpdate() => myOwner.DataView_SlotUpdate();
+        private void dvFloat_SlotUpdate()
+        {
+            myOwner.DataView_SlotUpdate();
+        }
 
-        void dvFloat_TabChanged(int index) => myOwner.SetDataViewTab(index);
+        private void dvFloat_TabChanged(int index)
+        {
+            myOwner.SetDataViewTab(index);
+        }
 
-        void dvFloat_Unlock() => myOwner.UnlockFloatingStats();
+        private void dvFloat_Unlock()
+        {
+            myOwner.UnlockFloatingStats();
+        }
 
-        void frmFloatingStats_Closed(object sender, EventArgs e)
+        private void frmFloatingStats_Closed(object sender, EventArgs e)
         {
             myOwner.ShowAnchoredDataView();
             Hide();
         }
 
-        void frmFloatingStats_Load(object sender, EventArgs e)
+        private void frmFloatingStats_Load(object sender, EventArgs e)
         {
             dvFloat.MoveDisable = true;
             dvFloat.SetScreenBounds(dvFloat.Bounds);

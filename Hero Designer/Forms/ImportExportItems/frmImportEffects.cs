@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,15 +14,14 @@ namespace Hero_Designer
 {
     public partial class frmImportEffects : Form
     {
-        frmBusy _bFrm;
+        private readonly List<ListViewItem> _currentItems;
+        private frmBusy _bFrm;
 
-        readonly List<ListViewItem> _currentItems;
+        private string _fullFileName;
 
-        string _fullFileName;
+        private List<EffectData> _importBuffer;
 
-        List<EffectData> _importBuffer;
-
-        bool _showUnchanged;
+        private bool _showUnchanged;
 
 
         public frmImportEffects()
@@ -33,44 +31,42 @@ namespace Hero_Designer
             _showUnchanged = true;
             InitializeComponent();
             Name = nameof(frmImportEffects);
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmImportEffects));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmImportEffects));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
             _importBuffer = new List<EffectData>();
             _currentItems = new List<ListViewItem>();
         }
 
-        void btnCheckAll_Click(object sender, EventArgs e)
+        private void btnCheckAll_Click(object sender, EventArgs e)
 
         {
             lstImport.BeginUpdate();
-            int num = lstImport.Items.Count - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = lstImport.Items.Count - 1;
+            for (var index = 0; index <= num; ++index)
                 lstImport.Items[index].Checked = true;
             lstImport.EndUpdate();
         }
 
-        void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
 
         {
             Close();
         }
 
-        void btnEraseAll_Click(object sender, EventArgs e)
+        private void btnEraseAll_Click(object sender, EventArgs e)
 
         {
-            int num1 = DatabaseAPI.Database.Power.Length - 1;
-            for (int index = 0; index <= num1; ++index)
+            var num1 = DatabaseAPI.Database.Power.Length - 1;
+            for (var index = 0; index <= num1; ++index)
                 DatabaseAPI.Database.Power[index].Effects = new IEffect[0];
-            int num2 = _importBuffer.Count - 1;
-            for (int index = 0; index <= num2; ++index)
-            {
+            var num2 = _importBuffer.Count - 1;
+            for (var index = 0; index <= num2; ++index)
                 if (_importBuffer[index].IsValid)
                     _importBuffer[index].IsNew = true;
-            }
-            int num3 = (int)Interaction.MsgBox("All power effects removed!");
+            var num3 = (int) Interaction.MsgBox("All power effects removed!");
         }
 
-        void btnFile_Click(object sender, EventArgs e)
+        private void btnFile_Click(object sender, EventArgs e)
 
         {
             dlgBrowse.FileName = _fullFileName;
@@ -82,27 +78,28 @@ namespace Hero_Designer
                     FillListView();
                 Enabled = true;
             }
+
             BusyHide();
             DisplayInfo();
         }
 
-        void btnImport_Click(object sender, EventArgs e)
+        private void btnImport_Click(object sender, EventArgs e)
 
         {
             ProcessImport();
         }
 
-        void btnUncheckAll_Click(object sender, EventArgs e)
+        private void btnUncheckAll_Click(object sender, EventArgs e)
 
         {
             lstImport.BeginUpdate();
-            int num = lstImport.Items.Count - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = lstImport.Items.Count - 1;
+            for (var index = 0; index <= num; ++index)
                 lstImport.Items[index].Checked = false;
             lstImport.EndUpdate();
         }
 
-        void BusyHide()
+        private void BusyHide()
 
         {
             if (_bFrm == null)
@@ -111,7 +108,7 @@ namespace Hero_Designer
             _bFrm = null;
         }
 
-        void BusyMsg(string sMessage)
+        private void BusyMsg(string sMessage)
 
         {
             if (_bFrm == null)
@@ -119,37 +116,37 @@ namespace Hero_Designer
                 _bFrm = new frmBusy();
                 _bFrm.Show(this);
             }
+
             _bFrm.SetMessage(sMessage);
         }
 
-        void DisplayInfo()
+        private void DisplayInfo()
 
         {
             lblFile.Text = FileIO.StripPath(_fullFileName);
-            lblDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.PowerEffectVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            udRevision.Value = new Decimal(DatabaseAPI.Database.PowerEffectVersion.Revision);
-            int num1 = 0;
-            int num2 = DatabaseAPI.Database.Power.Length - 1;
-            for (int index = 0; index <= num2; ++index)
-            {
+            lblDate.Text = "Date: " +
+                           Strings.Format(DatabaseAPI.Database.PowerEffectVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
+            udRevision.Value = new decimal(DatabaseAPI.Database.PowerEffectVersion.Revision);
+            var num1 = 0;
+            var num2 = DatabaseAPI.Database.Power.Length - 1;
+            for (var index = 0; index <= num2; ++index)
                 if (DatabaseAPI.Database.Power[index].NeverAutoUpdate)
                     ++num1;
-            }
             txtNoAU.Text = Convert.ToString(num1) + " powers locked.";
         }
 
-        void FillListView()
+        private void FillListView()
 
         {
-            string[] items = new string[6];
+            var items = new string[6];
             lstImport.BeginUpdate();
             lstImport.Items.Clear();
-            int num1 = 0;
-            int num2 = 0;
-            int num3 = 0;
-            int num4 = 0;
-            int num5 = _importBuffer.Count - 1;
-            for (int index = 0; index <= num5; ++index)
+            var num1 = 0;
+            var num2 = 0;
+            var num3 = 0;
+            var num4 = 0;
+            var num5 = _importBuffer.Count - 1;
+            for (var index = 0; index <= num5; ++index)
             {
                 ++num1;
                 if (num1 >= 100)
@@ -162,8 +159,9 @@ namespace Hero_Designer
                 if (!_importBuffer[index].IsValid)
                     continue;
                 items[0] = _importBuffer[index].Data.PowerFullName;
-                items[1] = Enum.GetName(_importBuffer[index].Data.EffectType.GetType(), _importBuffer[index].Data.EffectType);
-                bool flag = false;
+                items[1] = Enum.GetName(_importBuffer[index].Data.EffectType.GetType(),
+                    _importBuffer[index].Data.EffectType);
+                var flag = false;
                 if (_importBuffer[index].IsNew)
                 {
                     items[2] = "Yes";
@@ -174,8 +172,12 @@ namespace Hero_Designer
                 else
                 {
                     items[2] = "No";
-                    flag = _importBuffer[index].CheckDifference(ref DatabaseAPI.Database.Power[_importBuffer[index].Index].Effects[_importBuffer[index].Nid], out items[5]);
+                    flag = _importBuffer[index]
+                        .CheckDifference(
+                            ref DatabaseAPI.Database.Power[_importBuffer[index].Index]
+                                .Effects[_importBuffer[index].Nid], out items[5]);
                 }
+
                 if (flag)
                 {
                     items[3] = "Yes";
@@ -184,7 +186,10 @@ namespace Hero_Designer
                     ++num3;
                 }
                 else
+                {
                     items[3] = "No";
+                }
+
                 if (_importBuffer[index].IndexChanged)
                 {
                     items[4] = "Yes (" + Convert.ToString(_importBuffer[index].Nid) + ")";
@@ -193,8 +198,11 @@ namespace Hero_Designer
                     ++num4;
                 }
                 else
+                {
                     items[4] = "No";
-                ListViewItem listViewItem = new ListViewItem(items)
+                }
+
+                var listViewItem = new ListViewItem(items)
                 {
                     Checked = flag | _importBuffer[index].IsNew,
                     Tag = index
@@ -202,41 +210,41 @@ namespace Hero_Designer
                 _currentItems.Add(listViewItem);
                 lstImport.Items.Add(listViewItem);
             }
+
             if (lstImport.Items.Count > 0)
                 lstImport.Items[0].EnsureVisible();
             lstImport.EndUpdate();
             HideUnchanged.Text = "Hide Unchanged";
-            int num6 = (int)Interaction.MsgBox("New: " + Convert.ToString(num2) + "\r\nModified: " + Convert.ToString(num3) + "\r\nRe-Indexed: " + Convert.ToString(num4));
+            var num6 = (int) Interaction.MsgBox("New: " + Convert.ToString(num2) + "\r\nModified: " +
+                                                Convert.ToString(num3) + "\r\nRe-Indexed: " + Convert.ToString(num4));
         }
 
-        void frmImportEffects_Load(object sender, EventArgs e)
+        private void frmImportEffects_Load(object sender, EventArgs e)
 
         {
             _fullFileName = DatabaseAPI.Database.PowerEffectVersion.SourceFile;
             DisplayInfo();
         }
 
-        void HideUnchanged_Click(object sender, EventArgs e)
+        private void HideUnchanged_Click(object sender, EventArgs e)
 
         {
             _showUnchanged = !_showUnchanged;
             lstImport.BeginUpdate();
             lstImport.Items.Clear();
-            int num = _currentItems.Count - 1;
-            for (int index = 0; index <= num; ++index)
-            {
-                if (_showUnchanged | _currentItems[index].SubItems[2].Text == "Yes" | _currentItems[index].SubItems[3].Text == "Yes")
+            var num = _currentItems.Count - 1;
+            for (var index = 0; index <= num; ++index)
+                if (_showUnchanged | (_currentItems[index].SubItems[2].Text == "Yes") |
+                    (_currentItems[index].SubItems[3].Text == "Yes"))
                     lstImport.Items.Add(_currentItems[index]);
-            }
             lstImport.EndUpdate();
         }
 
         [DebuggerStepThrough]
-
-        bool ParseClasses(string iFileName)
+        private bool ParseClasses(string iFileName)
 
         {
-            int num1 = 0;
+            var num1 = 0;
             StreamReader iStream;
             try
             {
@@ -245,18 +253,19 @@ namespace Hero_Designer
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
-                int num2 = (int)Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Power CSV Not Opened");
+                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Power CSV Not Opened");
                 ProjectData.ClearProjectError();
                 return false;
             }
-            int num3 = 0;
-            int num4 = 0;
-            int num5 = 0;
+
+            var num3 = 0;
+            var num4 = 0;
+            var num5 = 0;
             _importBuffer = new List<EffectData>();
-            int num6 = 0;
-            int num7 = -1;
-            int num8 = 0;
-            int index1 = -1;
+            var num6 = 0;
+            var num7 = -1;
+            var num8 = 0;
+            var index1 = -1;
             string iString;
             do
             {
@@ -270,6 +279,7 @@ namespace Hero_Designer
                     Application.DoEvents();
                     num6 = 0;
                 }
+
                 ++index1;
                 _importBuffer.Add(new EffectData(iString));
                 ++num3;
@@ -280,7 +290,7 @@ namespace Hero_Designer
                 else
                 {
                     ++num1;
-                    EffectData effectData = _importBuffer[index1];
+                    var effectData = _importBuffer[index1];
                     if (num7 != effectData.Index)
                     {
                         num7 = effectData.Index;
@@ -288,7 +298,10 @@ namespace Hero_Designer
                         num5 = 0;
                     }
                     else
+                    {
                         ++num8;
+                    }
+
                     effectData.Data.nID = num8;
                     effectData.Nid = num8;
                     if (effectData.Data.nID > DatabaseAPI.Database.Power[effectData.Index].Effects.Length - 1)
@@ -297,7 +310,7 @@ namespace Hero_Designer
                     }
                     else
                     {
-                        int index2 = effectData.Nid - num5;
+                        var index2 = effectData.Nid - num5;
                         if (effectData.CheckSimilar(ref DatabaseAPI.Database.Power[effectData.Index].Effects[index2]))
                         {
                             effectData.Nid = index2;
@@ -309,14 +322,15 @@ namespace Hero_Designer
                         else
                         {
                             effectData.IsNew = true;
-                            int num2 = DatabaseAPI.Database.Power[effectData.Index].Effects.Length - 1;
-                            for (int index3 = 0; index3 <= num2; ++index3)
+                            var num2 = DatabaseAPI.Database.Power[effectData.Index].Effects.Length - 1;
+                            for (var index3 = 0; index3 <= num2; ++index3)
                             {
-                                bool flag = index3 <= effectData.Nid && _importBuffer[index1 - effectData.Nid + index3].Nid == index3;
+                                var flag = index3 <= effectData.Nid &&
+                                           _importBuffer[index1 - effectData.Nid + index3].Nid == index3;
                                 if (!flag)
                                 {
-                                    int nid = effectData.Nid;
-                                    for (int index4 = 0; index4 <= nid; ++index4)
+                                    var nid = effectData.Nid;
+                                    for (var index4 = 0; index4 <= nid; ++index4)
                                     {
                                         if (_importBuffer[index1 - effectData.Nid + index4].Nid != index3)
                                             continue;
@@ -325,7 +339,8 @@ namespace Hero_Designer
                                     }
                                 }
 
-                                if (flag || !effectData.CheckSimilar(ref DatabaseAPI.Database.Power[effectData.Index].Effects[index3]))
+                                if (flag || !effectData.CheckSimilar(ref DatabaseAPI.Database.Power[effectData.Index]
+                                    .Effects[index3]))
                                     continue;
                                 effectData.Nid = index3;
                                 effectData.Data.nID = index3;
@@ -335,26 +350,29 @@ namespace Hero_Designer
                             }
                         }
                     }
+
                     if (effectData.IsNew)
                         ++num5;
                 }
-            }
-            while (iString != null);
+            } while (iString != null);
+
             iStream.Close();
-            int num9 = (int)Interaction.MsgBox("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
+            var num9 = (int) Interaction.MsgBox(
+                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) +
+                "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
 
-        bool ProcessImport()
+        private bool ProcessImport()
 
         {
-            int num1 = 0;
-            int num2 = 0;
+            var num1 = 0;
+            var num2 = 0;
             BusyMsg("Applying...");
             Enabled = false;
-            int num3 = 0;
-            int num4 = lstImport.Items.Count - 1;
-            for (int index = 0; index <= num4; ++index)
+            var num3 = 0;
+            var num4 = lstImport.Items.Count - 1;
+            for (var index = 0; index <= num4; ++index)
             {
                 if (!lstImport.Items[index].Checked)
                     continue;
@@ -368,6 +386,7 @@ namespace Hero_Designer
                 Application.DoEvents();
                 num2 = 0;
             }
+
             Enabled = true;
             BusyMsg("Saving...");
             DatabaseAPI.Database.PowerEffectVersion.SourceFile = dlgBrowse.FileName;
@@ -377,7 +396,9 @@ namespace Hero_Designer
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             BusyHide();
-            int num5 = (int)Interaction.MsgBox("Import of " + Convert.ToString(num1) + " records completed!\r\nOf these, " + Convert.ToString(num3) + " records were found read-only.", MsgBoxStyle.Information, "Done");
+            var num5 = (int) Interaction.MsgBox(
+                "Import of " + Convert.ToString(num1) + " records completed!\r\nOf these, " + Convert.ToString(num3) +
+                " records were found read-only.", MsgBoxStyle.Information, "Done");
             DisplayInfo();
             return false;
         }

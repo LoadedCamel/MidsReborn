@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -11,24 +10,23 @@ namespace Hero_Designer
 {
     public partial class frmSetViewer : Form
     {
-        ImageButton btnClose;
-
-        ImageButton btnSmall;
-
-        ImageButton chkOnTop;
-        ColumnHeader ColumnHeader1;
-        ColumnHeader ColumnHeader2;
-        ColumnHeader ColumnHeader3;
-        ImageList ilSet;
-        Label Label1;
-        Label Label2;
-
-        ListView lstSets;
-        RichTextBox rtApplied;
-        RichTextBox rtxtFX;
-        RichTextBox rtxtInfo;
-
         private readonly frmMain myParent;
+        private ImageButton btnClose;
+
+        private ImageButton btnSmall;
+
+        private ImageButton chkOnTop;
+        private ColumnHeader ColumnHeader1;
+        private ColumnHeader ColumnHeader2;
+        private ColumnHeader ColumnHeader3;
+        private ImageList ilSet;
+        private Label Label1;
+        private Label Label2;
+
+        private ListView lstSets;
+        private RichTextBox rtApplied;
+        private RichTextBox rtxtFX;
+        private RichTextBox rtxtInfo;
 
         public frmSetViewer(frmMain iParent)
         {
@@ -42,12 +40,12 @@ namespace Hero_Designer
             myParent = iParent;
         }
 
-        void btnClose_Click()
+        private void btnClose_Click()
         {
             Close();
         }
 
-        void btnSmall_Click()
+        private void btnSmall_Click()
         {
             if (Width > 600)
             {
@@ -75,37 +73,40 @@ namespace Hero_Designer
             StoreLocation();
         }
 
-        void chkOnTop_CheckedChanged()
+        private void chkOnTop_CheckedChanged()
         {
             TopMost = chkOnTop.Checked;
         }
 
         private void DisplayList()
         {
-            string[] items = new string[3];
+            var items = new string[3];
             lstSets.BeginUpdate();
             lstSets.Items.Clear();
-            int imageIndex = -1;
+            var imageIndex = -1;
             FillImageList();
-            int num1 = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
-            for (int index1 = 0; index1 <= num1; ++index1)
+            var num1 = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
+            for (var index1 = 0; index1 <= num1; ++index1)
             {
-                int num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
-                    I9SetData.sSetInfo[] setInfo = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo;
-                    int index3 = index2;
+                    var setInfo = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo;
+                    var index3 = index2;
                     items[0] = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX].DisplayName;
                     items[1] =
-                        MidsContext.Character.CurrentBuild.Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
+                        MidsContext.Character.CurrentBuild
+                            .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
                             .NIDPowerset <= -1
                             ? ""
                             : DatabaseAPI.Database
                                 .Powersets[
-                                    MidsContext.Character.CurrentBuild.Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
+                                    MidsContext.Character.CurrentBuild
+                                        .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
                                         .NIDPowerset].Powers[
                                     MainModule.MidsController.Toon.CurrentBuild
-                                        .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].IDXPower].DisplayName;
+                                        .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
+                                        .IDXPower].DisplayName;
                     items[2] = Convert.ToString(setInfo[index3].SlottedCount);
                     ++imageIndex;
                     lstSets.Items.Add(new ListViewItem(items, imageIndex));
@@ -119,48 +120,53 @@ namespace Hero_Designer
             FillEffectView();
         }
 
-        void FillEffectView()
+        private void FillEffectView()
         {
-            string str1 = "";
-            int[] numArray = new int[DatabaseAPI.NidPowers("set_bonus").Length - 1 + 1];
-            bool hasOvercap = false;
-            int num1 = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
-            for (int index1 = 0; index1 <= num1; ++index1)
+            var str1 = "";
+            var numArray = new int[DatabaseAPI.NidPowers("set_bonus").Length - 1 + 1];
+            var hasOvercap = false;
+            var num1 = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
+            for (var index1 = 0; index1 <= num1; ++index1)
             {
-                int num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     if (MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].Powers.Length <= 0)
                         continue;
-                    I9SetData.sSetInfo[] setInfo = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo;
-                    int index3 = index2;
-                    EnhancementSet enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX];
-                    string str2 = str1 + RTF.Color(RTF.ElementID.Invention) + RTF.Underline(RTF.Bold(enhancementSet.DisplayName));
-                    if (MidsContext.Character.CurrentBuild.Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].NIDPowerset >
+                    var setInfo = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo;
+                    var index3 = index2;
+                    var enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX];
+                    var str2 = str1 + RTF.Color(RTF.ElementID.Invention) +
+                               RTF.Underline(RTF.Bold(enhancementSet.DisplayName));
+                    if (MidsContext.Character.CurrentBuild
+                            .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].NIDPowerset >
                         -1)
                         str2 = str2 + RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "(" + DatabaseAPI.Database
-                                   .Powersets[
-                                       MidsContext.Character.CurrentBuild
-                                           .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].NIDPowerset]
-                                   .Powers[
-                                       MidsContext.Character.CurrentBuild
-                                           .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].IDXPower].DisplayName + ")";
-                    string str3 = str2 + RTF.Crlf() + RTF.Color(RTF.ElementID.Text);
-                    string str4 = "";
-                    int num3 = enhancementSet.Bonus.Length - 1;
-                    for (int index4 = 0; index4 <= num3; ++index4)
+                            .Powersets[
+                                MidsContext.Character.CurrentBuild
+                                    .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].NIDPowerset]
+                            .Powers[
+                                MidsContext.Character.CurrentBuild
+                                    .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].IDXPower]
+                            .DisplayName + ")";
+                    var str3 = str2 + RTF.Crlf() + RTF.Color(RTF.ElementID.Text);
+                    var str4 = "";
+                    var num3 = enhancementSet.Bonus.Length - 1;
+                    for (var index4 = 0; index4 <= num3; ++index4)
                     {
-                        if (!(setInfo[index3].SlottedCount >= enhancementSet.Bonus[index4].Slotted &
-                              (enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any |
-                               enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                               enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE)))
+                        if (!((setInfo[index3].SlottedCount >= enhancementSet.Bonus[index4].Slotted) &
+                              ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any) |
+                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvE) &
+                                !MidsContext.Config.Inc.DisablePvE) |
+                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvP) &
+                                MidsContext.Config.Inc.DisablePvE))))
                             continue;
                         if (str4 != "")
                             str4 += RTF.Crlf();
-                        bool localOverCap = false;
-                        string str5 = "  " + enhancementSet.GetEffectString(index4, false, true);
-                        int num4 = enhancementSet.Bonus[index4].Index.Length - 1;
-                        for (int index5 = 0; index5 <= num4; ++index5)
+                        var localOverCap = false;
+                        var str5 = "  " + enhancementSet.GetEffectString(index4, false, true);
+                        var num4 = enhancementSet.Bonus[index4].Index.Length - 1;
+                        for (var index5 = 0; index5 <= num4; ++index5)
                         {
                             if (enhancementSet.Bonus[index4].Index[index5] <= -1)
                                 continue;
@@ -170,48 +176,55 @@ namespace Hero_Designer
                         }
 
                         if (localOverCap)
-                            str5 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str5 + " >Cap" + RTF.Color(RTF.ElementID.Text));
+                            str5 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str5 + " >Cap" +
+                                              RTF.Color(RTF.ElementID.Text));
                         if (localOverCap)
                             hasOvercap = true;
                         str4 += str5;
                     }
 
-                    int num5 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].EnhIndexes.Length - 1;
-                    for (int index4 = 0; index4 <= num5; ++index4)
+                    var num5 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].EnhIndexes.Length -
+                               1;
+                    for (var index4 = 0; index4 <= num5; ++index4)
                     {
-                        int index5 = DatabaseAPI.IsSpecialEnh(MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2]
+                        var index5 = DatabaseAPI.IsSpecialEnh(MidsContext.Character.CurrentBuild.SetBonus[index1]
+                            .SetInfo[index2]
                             .EnhIndexes[index4]);
                         if (index5 <= -1)
                             continue;
                         if (str4 != "")
                             str4 += RTF.Crlf();
-                        string str5 = str4 + RTF.Color(RTF.ElementID.Enhancement);
-                        bool localOverCap = false;
-                        string str6 = "  " + DatabaseAPI.Database
-                                          .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                          .GetEffectString(index5, true, true);
-                        int num4 = DatabaseAPI.Database
-                                       .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                       .SpecialBonus[index5].Index.Length - 1;
-                        for (int index6 = 0; index6 <= num4; ++index6)
+                        var str5 = str4 + RTF.Color(RTF.ElementID.Enhancement);
+                        var localOverCap = false;
+                        var str6 = "  " + DatabaseAPI.Database
+                            .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
+                            .GetEffectString(index5, true, true);
+                        var num4 = DatabaseAPI.Database
+                            .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
+                            .SpecialBonus[index5].Index.Length - 1;
+                        for (var index6 = 0; index6 <= num4; ++index6)
                         {
                             if (DatabaseAPI.Database
-                                    .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                    .SpecialBonus[index5].Index[index6] <= -1)
+                                .EnhancementSets[
+                                    MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
+                                .SpecialBonus[index5].Index[index6] <= -1)
                                 continue;
                             ++numArray[
                                 DatabaseAPI.Database
-                                    .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
+                                    .EnhancementSets[
+                                        MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
                                     .SpecialBonus[index5].Index[index6]];
                             if (numArray[
-                                    DatabaseAPI.Database
-                                        .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                        .SpecialBonus[index5].Index[index6]] > 5)
+                                DatabaseAPI.Database
+                                    .EnhancementSets[
+                                        MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
+                                    .SpecialBonus[index5].Index[index6]] > 5)
                                 localOverCap = true;
                         }
 
                         if (localOverCap)
-                            str6 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str6 + " >Cap" + RTF.Color(RTF.ElementID.Text));
+                            str6 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str6 + " >Cap" +
+                                              RTF.Color(RTF.ElementID.Text));
                         if (localOverCap)
                             hasOvercap = true;
                         str4 = str5 + str6;
@@ -226,21 +239,22 @@ namespace Hero_Designer
                 str7 = RTF.Color(RTF.ElementID.Invention) + RTF.Underline(RTF.Bold("Information:")) + RTF.Crlf() +
                        RTF.Color(RTF.ElementID.Text) +
                        "One or more set bonuses have exceeded the 5 bonus cap, and will not affect your stats. Scroll down this list to find bonuses marked as '" +
-                       RTF.Italic(RTF.Color(RTF.ElementID.Warning) + ">Cap") + RTF.Color(RTF.ElementID.Text) + "'" + RTF.Crlf() + RTF.Crlf();
+                       RTF.Italic(RTF.Color(RTF.ElementID.Warning) + ">Cap") + RTF.Color(RTF.ElementID.Text) + "'" +
+                       RTF.Crlf() + RTF.Crlf();
             else
                 str7 = "";
-            string str8 = RTF.StartRTF() + str7 + str1 + RTF.EndRTF();
+            var str8 = RTF.StartRTF() + str7 + str1 + RTF.EndRTF();
             if (rtxtFX.Rtf != str8)
                 rtxtFX.Rtf = str8;
-            IEffect[] cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
+            var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
             Array.Sort(cumulativeSetBonuses);
-            string iStr = "";
-            int num6 = cumulativeSetBonuses.Length - 1;
-            for (int index = 0; index <= num6; ++index)
+            var iStr = "";
+            var num6 = cumulativeSetBonuses.Length - 1;
+            for (var index = 0; index <= num6; ++index)
             {
                 if (iStr != "")
                     iStr += RTF.Crlf();
-                string str2 = cumulativeSetBonuses[index].BuildEffectString(true);
+                var str2 = cumulativeSetBonuses[index].BuildEffectString(true);
                 if (!str2.StartsWith("+"))
                     str2 = "+" + str2;
                 if (str2.IndexOf("Endurance", StringComparison.Ordinal) > -1)
@@ -248,71 +262,73 @@ namespace Hero_Designer
                 iStr += str2;
             }
 
-            string str9 = RTF.StartRTF() + RTF.ToRTF(iStr) + RTF.EndRTF();
+            var str9 = RTF.StartRTF() + RTF.ToRTF(iStr) + RTF.EndRTF();
             if (rtApplied.Rtf == str9)
                 return;
             rtApplied.Rtf = str9;
         }
 
-        void FillImageList()
+        private void FillImageList()
         {
-            Size imageSize1 = ilSet.ImageSize;
-            int width1 = imageSize1.Width;
+            var imageSize1 = ilSet.ImageSize;
+            var width1 = imageSize1.Width;
             imageSize1 = ilSet.ImageSize;
-            int height1 = imageSize1.Height;
-            ExtendedBitmap extendedBitmap = new ExtendedBitmap(width1, height1);
+            var height1 = imageSize1.Height;
+            var extendedBitmap = new ExtendedBitmap(width1, height1);
             ilSet.Images.Clear();
-            int setBonusCount = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
-            for (int index1 = 0; index1 <= setBonusCount; ++index1)
+            var setBonusCount = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
+            for (var index1 = 0; index1 <= setBonusCount; ++index1)
             {
-                int num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
-                for (int index2 = 0; index2 <= num2; ++index2)
+                var num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
+                for (var index2 = 0; index2 <= num2; ++index2)
                 {
                     if (MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX <= -1)
                         continue;
-                    EnhancementSet enhancementSet =
-                        DatabaseAPI.Database.EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX];
+                    var enhancementSet =
+                        DatabaseAPI.Database.EnhancementSets[
+                            MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX];
                     if (enhancementSet.ImageIdx > -1)
                     {
                         extendedBitmap.Graphics.Clear(Color.White);
-                        Graphics graphics = extendedBitmap.Graphics;
+                        var graphics = extendedBitmap.Graphics;
                         I9Gfx.DrawEnhancementSet(ref graphics, enhancementSet.ImageIdx);
                         ilSet.Images.Add(extendedBitmap.Bitmap);
                     }
                     else
                     {
-                        ImageList.ImageCollection images = ilSet.Images;
-                        Size imageSize2 = ilSet.ImageSize;
-                        int width2 = imageSize2.Width;
+                        var images = ilSet.Images;
+                        var imageSize2 = ilSet.ImageSize;
+                        var width2 = imageSize2.Width;
                         imageSize2 = ilSet.ImageSize;
-                        int height2 = imageSize2.Height;
-                        Bitmap bitmap = new Bitmap(width2, height2);
+                        var height2 = imageSize2.Height;
+                        var bitmap = new Bitmap(width2, height2);
                         images.Add(bitmap);
                     }
                 }
             }
         }
 
-        void frmSetViewer_FormClosed(object sender, FormClosedEventArgs e)
+        private void frmSetViewer_FormClosed(object sender, FormClosedEventArgs e)
         {
             myParent.FloatSets(false);
         }
 
-        void frmSetViewer_Load(object sender, EventArgs e)
+        private void frmSetViewer_Load(object sender, EventArgs e)
         {
         }
 
-        void frmSetViewer_Move(object sender, EventArgs e)
+        private void frmSetViewer_Move(object sender, EventArgs e)
         {
             StoreLocation();
         }
 
-        void lstSets_SelectedIndexChanged(object sender, EventArgs e)
+        private void lstSets_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lstSets.SelectedItems.Count < 1)
                 return;
-            rtxtInfo.Rtf = RTF.StartRTF() + EnhancementSetCollection.GetSetInfoLongRTF(Convert.ToInt32(lstSets.SelectedItems[0].Tag),
-                               Convert.ToInt32(lstSets.SelectedItems[0].SubItems[2].Text)) + RTF.EndRTF();
+            rtxtInfo.Rtf = RTF.StartRTF() + EnhancementSetCollection.GetSetInfoLongRTF(
+                Convert.ToInt32(lstSets.SelectedItems[0].Tag),
+                Convert.ToInt32(lstSets.SelectedItems[0].SubItems[2].Text)) + RTF.EndRTF();
         }
 
         public void SetLocation()
@@ -324,16 +340,17 @@ namespace Hero_Designer
             if (rectangle.X < 1)
                 rectangle.X = myParent.Left + 8;
             if (rectangle.Y < 32)
-                rectangle.Y = myParent.Top + (myParent.Height - myParent.ClientSize.Height) + myParent.GetPrimaryBottom();
-            if (MidsContext.Config.ShrinkFrmSets & Width > 600)
+                rectangle.Y = myParent.Top + (myParent.Height - myParent.ClientSize.Height) +
+                              myParent.GetPrimaryBottom();
+            if (MidsContext.Config.ShrinkFrmSets & (Width > 600))
                 btnSmall_Click();
-            else if (!MidsContext.Config.ShrinkFrmSets & Width < 600)
+            else if (!MidsContext.Config.ShrinkFrmSets & (Width < 600))
                 btnSmall_Click();
             Top = rectangle.Y;
             Left = rectangle.X;
         }
 
-        void StoreLocation()
+        private void StoreLocation()
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
@@ -354,13 +371,19 @@ namespace Hero_Designer
             if (rtxtInfo.BackColor != BackColor)
                 rtxtInfo.BackColor = BackColor;
             btnClose.IA = myParent.Drawing.pImageAttributes;
-            btnClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
+            btnClose.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
             btnClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             chkOnTop.IA = myParent.Drawing.pImageAttributes;
-            chkOnTop.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
+            chkOnTop.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
             chkOnTop.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             btnSmall.IA = myParent.Drawing.pImageAttributes;
-            btnSmall.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
+            btnSmall.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
             btnSmall.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
             DisplayList();
         }

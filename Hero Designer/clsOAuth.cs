@@ -1,30 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Runtime.Remoting.Channels;
-using System.Security;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Hosting;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
-using HttpResponse = System.Web.HttpResponse;
 
 namespace Hero_Designer
 {
@@ -46,8 +30,8 @@ namespace Hero_Designer
         {
             try
             {
-                bool isCompleted = false;
-                using HttpListener listener = new HttpListener();
+                var isCompleted = false;
+                using var listener = new HttpListener();
                 listener.Prefixes.Add("http://localhost:60403/");
                 listener.Start();
                 while (!isCompleted)
@@ -60,7 +44,7 @@ namespace Hero_Designer
                     {
                         page = File.ReadAllBytes($"{FileIO.AddSlash(Application.StartupPath)}Web\\unauthorized.html");
                         response.ContentLength64 = page.Length;
-                        Stream output = response.OutputStream;
+                        var output = response.OutputStream;
                         output.Write(page, 0, page.Length);
                         isCompleted = true;
                     }
@@ -68,13 +52,14 @@ namespace Hero_Designer
                     {
                         page = File.ReadAllBytes($"{FileIO.AddSlash(Application.StartupPath)}Web\\authorized.html");
                         response.ContentLength64 = page.Length;
-                        Stream output = response.OutputStream;
+                        var output = response.OutputStream;
                         output.Write(page, 0, page.Length);
                         var accessCode = request.Url.Query.Replace("?code=", "");
                         RequestToken(accessCode);
                         isCompleted = true;
                     }
                 }
+
                 listener.Stop();
             }
             catch (HttpListenerException e)
@@ -101,13 +86,10 @@ namespace Hero_Designer
             var response = client.Execute(request);
             var jDiscordObject = JsonConvert.DeserializeObject<DiscordObject>(response.Content);
             jDiscordObject.DateTime = DateTime.Now;
-            Dictionary<string, object> authDict = new Dictionary<string, object>();
+            var authDict = new Dictionary<string, object>();
 
-            PropertyInfo[] properties = typeof(DiscordObject).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
-            }
+            var properties = typeof(DiscordObject).GetProperties();
+            foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
 
             MidsContext.Config.DAuth = authDict;
             MidsContext.Config.DiscordAuthorized = true;
@@ -126,13 +108,10 @@ namespace Hero_Designer
             var response = client.Execute(request);
             var jDiscordObject = JsonConvert.DeserializeObject<DiscordObject>(response.Content);
             jDiscordObject.DateTime = DateTime.Now;
-            Dictionary<string, object> authDict = new Dictionary<string, object>();
+            var authDict = new Dictionary<string, object>();
 
-            PropertyInfo[] properties = typeof(DiscordObject).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
-            }
+            var properties = typeof(DiscordObject).GetProperties();
+            foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
 
             MidsContext.Config.DAuth = authDict;
         }
@@ -159,12 +138,9 @@ namespace Hero_Designer
             client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
             var response = client.Execute(request);
             var jUserObject = JsonConvert.DeserializeObject<DiscordUser>(response.Content);
-            Dictionary<string, object> userDict = new Dictionary<string, object>();
-            PropertyInfo[] properties = typeof(DiscordUser).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                userDict.Add(property.Name, property.GetValue(jUserObject, null));
-            }
+            var userDict = new Dictionary<string, object>();
+            var properties = typeof(DiscordUser).GetProperties();
+            foreach (var property in properties) userDict.Add(property.Name, property.GetValue(jUserObject, null));
 
             MidsContext.Config.DUser = userDict;
         }
@@ -176,12 +152,9 @@ namespace Hero_Designer
             client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
             var response = client.Execute(request);
             var jUserObject = Deserialize<DiscordServers>(response.Content);
-            Dictionary<string, DiscordServers> serversDict = jUserObject.ToDictionary(m => m.name);
-            List<string> dServersList = new List<string>();
-            foreach (KeyValuePair<string, DiscordServers> entry in serversDict)
-            {
-                dServersList.Add(entry.Value.name);
-            }
+            var serversDict = jUserObject.ToDictionary(m => m.name);
+            var dServersList = new List<string>();
+            foreach (var entry in serversDict) dServersList.Add(entry.Value.name);
 
             MidsContext.Config.DServers = dServersList;
             //MidsContext.Config.DServers = serversDict.ToDictionary(x => x.Key, x => (object)x.Value);
@@ -189,11 +162,12 @@ namespace Hero_Designer
 
         private static string GetCryptoKey()
         {
-            byte[] data1 = Convert.FromBase64String("aHR0cDovL2hvb2tzLm1pZHNyZWJvcm4uY29tOjMwMDA=");
-            byte[] data2 = Convert.FromBase64String("P21SR3V4elElZkJfVTMjdVh3RWV0WjZlRjMqPUNZOGM0cERnWXp0LWVOVz1ROUs2enM1OFA9ZTl2ZWpZJSplUHQ2PXM4eA==");
-            Uri uri = new Uri(Encoding.UTF8.GetString(data1));
-            string param = Encoding.UTF8.GetString(data2);
-            
+            var data1 = Convert.FromBase64String("aHR0cDovL2hvb2tzLm1pZHNyZWJvcm4uY29tOjMwMDA=");
+            var data2 = Convert.FromBase64String(
+                "P21SR3V4elElZkJfVTMjdVh3RWV0WjZlRjMqPUNZOGM0cERnWXp0LWVOVz1ROUs2enM1OFA9ZTl2ZWpZJSplUHQ2PXM4eA==");
+            var uri = new Uri(Encoding.UTF8.GetString(data1));
+            var param = Encoding.UTF8.GetString(data2);
+
             var client = new RestClient(uri);
             var request = new RestRequest("crypto", Method.POST);
             request.AddQueryParameter("token", param);
@@ -207,7 +181,7 @@ namespace Hero_Designer
             return stuff;
         }
     }
-    
+
     public class DiscordObject
     {
         public string access_token { get; set; }
@@ -229,17 +203,13 @@ namespace Hero_Designer
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class DiscordServers
     {
-        [JsonProperty(PropertyName = "id")]
-        public string id { get; set; }
+        [JsonProperty(PropertyName = "id")] public string id { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
-        public string name { get; set; }
+        [JsonProperty(PropertyName = "name")] public string name { get; set; }
 
-        [JsonProperty(PropertyName = "icon")]
-        public string icon { get; set; }
+        [JsonProperty(PropertyName = "icon")] public string icon { get; set; }
 
-        [JsonProperty(PropertyName = "owner")]
-        public bool owner { get; set; }
+        [JsonProperty(PropertyName = "owner")] public bool owner { get; set; }
 
         [JsonProperty(PropertyName = "permissions")]
         public int permissions { get; set; }

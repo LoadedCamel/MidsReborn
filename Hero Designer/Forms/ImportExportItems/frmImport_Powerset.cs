@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,12 +14,11 @@ namespace Hero_Designer
 {
     public partial class frmImport_Powerset : Form
     {
+        private frmBusy bFrm;
 
-        frmBusy bFrm;
+        private string FullFileName;
 
-        string FullFileName;
-
-        PowersetData[] ImportBuffer;
+        private PowersetData[] ImportBuffer;
 
         public frmImport_Powerset()
         {
@@ -28,28 +26,28 @@ namespace Hero_Designer
             FullFileName = "";
             ImportBuffer = new PowersetData[0];
             InitializeComponent();
-            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(frmImport_Powerset));
-            Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+            var componentResourceManager = new ComponentResourceManager(typeof(frmImport_Powerset));
+            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
             Name = nameof(frmImport_Powerset);
         }
 
-        void btnCheckAll_Click(object sender, EventArgs e)
+        private void btnCheckAll_Click(object sender, EventArgs e)
 
         {
             lstImport.BeginUpdate();
-            int num = lstImport.Items.Count - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = lstImport.Items.Count - 1;
+            for (var index = 0; index <= num; ++index)
                 lstImport.Items[index].Checked = true;
             lstImport.EndUpdate();
         }
 
-        void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
 
         {
             Close();
         }
 
-        void btnFile_Click(object sender, EventArgs e)
+        private void btnFile_Click(object sender, EventArgs e)
 
         {
             dlgBrowse.FileName = FullFileName;
@@ -59,27 +57,28 @@ namespace Hero_Designer
                 if (ParseClasses(FullFileName))
                     FillListView();
             }
+
             BusyHide();
             DisplayInfo();
         }
 
-        void btnImport_Click(object sender, EventArgs e)
+        private void btnImport_Click(object sender, EventArgs e)
 
         {
             ProcessImport();
         }
 
-        void btnUncheckAll_Click(object sender, EventArgs e)
+        private void btnUncheckAll_Click(object sender, EventArgs e)
 
         {
             lstImport.BeginUpdate();
-            int num = lstImport.Items.Count - 1;
-            for (int index = 0; index <= num; ++index)
+            var num = lstImport.Items.Count - 1;
+            for (var index = 0; index <= num; ++index)
                 lstImport.Items[index].Checked = false;
             lstImport.EndUpdate();
         }
 
-        void BusyHide()
+        private void BusyHide()
 
         {
             if (bFrm == null)
@@ -88,7 +87,7 @@ namespace Hero_Designer
             bFrm = null;
         }
 
-        void BusyMsg(string sMessage)
+        private void BusyMsg(string sMessage)
 
         {
             if (bFrm == null)
@@ -96,26 +95,29 @@ namespace Hero_Designer
                 bFrm = new frmBusy();
                 bFrm.Show(this);
             }
+
             bFrm.SetMessage(sMessage);
         }
 
         private void DisplayInfo()
         {
             lblFile.Text = FileIO.StripPath(FullFileName);
-            lblDate.Text = "Date: " + Strings.Format(DatabaseAPI.Database.PowersetVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            udRevision.Value = new Decimal(DatabaseAPI.Database.PowersetVersion.Revision);
-            lblCount.Text = "Records: " + Convert.ToString(DatabaseAPI.Database.Powersets.Length, CultureInfo.InvariantCulture);
+            lblDate.Text = "Date: " +
+                           Strings.Format(DatabaseAPI.Database.PowersetVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
+            udRevision.Value = new decimal(DatabaseAPI.Database.PowersetVersion.Revision);
+            lblCount.Text = "Records: " +
+                            Convert.ToString(DatabaseAPI.Database.Powersets.Length, CultureInfo.InvariantCulture);
         }
 
-        void FillListView()
+        private void FillListView()
 
         {
-            string[] items = new string[5];
+            var items = new string[5];
             lstImport.BeginUpdate();
             lstImport.Items.Clear();
-            int num1 = 0;
-            int num2 = ImportBuffer.Length - 1;
-            for (int index = 0; index <= num2; ++index)
+            var num1 = 0;
+            var num2 = ImportBuffer.Length - 1;
+            for (var index = 0; index <= num2; ++index)
             {
                 ++num1;
                 if (num1 >= 100)
@@ -129,7 +131,7 @@ namespace Hero_Designer
                 items[0] = ImportBuffer[index].Data.FullName;
                 items[1] = ImportBuffer[index].Data.GroupName;
                 items[2] = !ImportBuffer[index].IsNew ? "No" : "Yes";
-                bool flag = ImportBuffer[index].CheckDifference(out items[4]);
+                var flag = ImportBuffer[index].CheckDifference(out items[4]);
                 items[3] = !flag ? "No" : "Yes";
                 lstImport.Items.Add(new ListViewItem(items)
                 {
@@ -137,12 +139,13 @@ namespace Hero_Designer
                     Tag = index
                 });
             }
+
             if (lstImport.Items.Count > 0)
                 lstImport.Items[0].EnsureVisible();
             lstImport.EndUpdate();
         }
 
-        void frmImport_Powerset_Load(object sender, EventArgs e)
+        private void frmImport_Powerset_Load(object sender, EventArgs e)
 
         {
             FullFileName = DatabaseAPI.Database.PowersetVersion.SourceFile;
@@ -150,11 +153,10 @@ namespace Hero_Designer
         }
 
         [DebuggerStepThrough]
-
-        bool ParseClasses(string iFileName)
+        private bool ParseClasses(string iFileName)
 
         {
-            int num1 = 0;
+            var num1 = 0;
             StreamReader iStream;
             try
             {
@@ -163,14 +165,15 @@ namespace Hero_Designer
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
-                int num2 = (int)Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Powerset CSV Not Opened");
+                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Powerset CSV Not Opened");
                 ProjectData.ClearProjectError();
                 return false;
             }
-            int num3 = 0;
-            int num4 = 0;
+
+            var num3 = 0;
+            var num4 = 0;
             ImportBuffer = new PowersetData[0];
-            int num5 = 0;
+            var num5 = 0;
             try
             {
                 string iString;
@@ -185,49 +188,56 @@ namespace Hero_Designer
                         BusyMsg(Strings.Format(num3, "###,##0") + " records parsed.");
                         num5 = 0;
                     }
-                    ImportBuffer = (PowersetData[])Utils.CopyArray(ImportBuffer, new PowersetData[ImportBuffer.Length + 1]);
+
+                    ImportBuffer =
+                        (PowersetData[]) Utils.CopyArray(ImportBuffer, new PowersetData[ImportBuffer.Length + 1]);
                     ImportBuffer[ImportBuffer.Length - 1] = new PowersetData(iString);
                     ++num3;
                     if (ImportBuffer[ImportBuffer.Length - 1].IsValid)
                         ++num1;
                     else
                         ++num4;
-                }
-                while (iString != null);
+                } while (iString != null);
             }
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
-                Exception exception = ex;
+                var exception = ex;
                 iStream.Close();
-                int num2 = (int)Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "Powerset Class CSV Parse Error");
+                var num2 = (int) Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical,
+                    "Powerset Class CSV Parse Error");
                 ProjectData.ClearProjectError();
                 return false;
             }
+
             iStream.Close();
-            int num6 = (int)Interaction.MsgBox("Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) + "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
+            var num6 = (int) Interaction.MsgBox(
+                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) +
+                "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
             return true;
         }
 
-        bool ProcessImport()
+        private bool ProcessImport()
 
         {
-            int num1 = 0;
-            int num2 = lstImport.Items.Count - 1;
-            for (int index = 0; index <= num2; ++index)
+            var num1 = 0;
+            var num2 = lstImport.Items.Count - 1;
+            for (var index = 0; index <= num2; ++index)
             {
                 if (!lstImport.Items[index].Checked)
                     continue;
                 ImportBuffer[Convert.ToInt32(lstImport.Items[index].Tag)].Apply();
                 ++num1;
             }
+
             DatabaseAPI.Database.PowersetVersion.SourceFile = dlgBrowse.FileName;
             DatabaseAPI.Database.PowersetVersion.RevisionDate = DateTime.Now;
             DatabaseAPI.Database.PowersetVersion.Revision = Convert.ToInt32(udRevision.Value);
             DatabaseAPI.MatchAllIDs();
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
-            int num3 = (int)Interaction.MsgBox("Import of " + Convert.ToString(num1) + " records completed!", MsgBoxStyle.Information, "Done");
+            var num3 = (int) Interaction.MsgBox("Import of " + Convert.ToString(num1) + " records completed!",
+                MsgBoxStyle.Information, "Done");
             DisplayInfo();
             return false;
         }

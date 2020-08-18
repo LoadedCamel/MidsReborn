@@ -1,4 +1,3 @@
-
 using System;
 using System.Windows.Forms;
 
@@ -6,15 +5,13 @@ namespace Hero_Designer
 {
     public partial class frmOptionListDlg : Form
     {
-        Button Cancel_Button;
-        CheckBox chkRemember;
-        ComboBox cmbAction;
-        Label lblDescript;
+        private Button Cancel_Button;
+        private CheckBox chkRemember;
+        private ComboBox cmbAction;
+        private Label lblDescript;
 
-        Button OK_Button;
-        TableLayoutPanel TableLayoutPanel1;
-
-        private bool? remember => chkRemember?.Checked;
+        private Button OK_Button;
+        private TableLayoutPanel TableLayoutPanel1;
 
         private frmOptionListDlg()
         {
@@ -22,7 +19,9 @@ namespace Hero_Designer
             Name = nameof(frmOptionListDlg);
         }
 
-        void Cancel_Button_Click(object sender, EventArgs e)
+        private bool? remember => chkRemember?.Checked;
+
+        private void Cancel_Button_Click(object sender, EventArgs e)
 
         {
             chkRemember.Checked = false;
@@ -30,18 +29,18 @@ namespace Hero_Designer
             Close();
         }
 
-        void OK_Button_Click(object sender, EventArgs e)
+        private void OK_Button_Click(object sender, EventArgs e)
 
         {
-            DialogResult = (DialogResult)(cmbAction.SelectedIndex + 2);
+            DialogResult = (DialogResult) (cmbAction.SelectedIndex + 2);
             Close();
         }
 
         public static (DialogResult, bool? remember) ShowWithOptions(
-          bool AllowRemember,
-          int DefaultOption,
-          string descript,
-          params string[] OptionList)
+            bool AllowRemember,
+            int DefaultOption,
+            string descript,
+            params string[] OptionList)
         {
             var frm = new frmOptionListDlg
             {
