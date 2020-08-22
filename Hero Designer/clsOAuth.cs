@@ -27,7 +27,7 @@ namespace Hero_Designer
             GetAccessCode();
         }
 
-        public static void GetAccessCode()
+        private static void GetAccessCode()
         {
             try
             {
@@ -63,7 +63,7 @@ namespace Hero_Designer
 
                 listener.Stop();
             }
-            catch (HttpListenerException e)
+            catch (HttpListenerException)
             {
                 //Nothing to see here
             }

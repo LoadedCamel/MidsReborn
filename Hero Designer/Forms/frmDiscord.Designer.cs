@@ -282,15 +282,15 @@ namespace Hero_Designer.Forms
             this.miscCheckedList.FormattingEnabled = true;
             this.miscCheckedList.Items.AddRange(new object[] {
             "Accuracy",
-            "Damage Buff",
+            "Damage",
             "Elusivity",
-            "Endurance (Max)",
+            "Endurance (Maximum)",
             "Endurance (Recovery)",
             "Endurance (Reduction)",
             "Endurance (Usage)",
-            "Hitpoints (Max)",
+            "Haste",
+            "Hitpoints (Maximum)",
             "Hitpoints (Regeneration)",
-            "Recharge",
             "ToHit"});
             this.miscCheckedList.Location = new System.Drawing.Point(371, 32);
             this.miscCheckedList.Name = "miscCheckedList";

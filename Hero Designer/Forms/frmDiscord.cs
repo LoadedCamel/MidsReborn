@@ -103,7 +103,7 @@ namespace Hero_Designer.Forms
 
         private void submitButton_Click(object sender, EventArgs e)
         {
-            clsDiscord.Test();
+            clsDiscord.GatherData();
         }
     }
 }
