@@ -22,7 +22,7 @@ namespace Hero_Designer
 
     public class clsDiscord
     {
-        public static void GatherData()
+        public static void GatherData(Dictionary<string, string> selectedStats)
         {
             var data = new Toon
             {
@@ -107,13 +107,6 @@ namespace Hero_Designer
             var regenHP = $"{Convert.ToDecimal(displayStat.HealthRegenPercent(false)):0.##}% ({Convert.ToDecimal(displayStat.HealthRegenHPPerSec):0.##}/s)";
             statDictionary = new Dictionary<string, string> { { "Hitpoints Regeneration", regenHP } };
             data.Stats.Add("Hitpoints Regeneration", statDictionary);
-            
-            var selectedStats = new Dictionary<string, string>
-            {
-                {"Defense", "Smashing"},
-                {"Resistance", "Fire"},
-                {"Accuracy", "Accuracy"}
-            };
 
             foreach (var item in selectedStats)
             {
@@ -121,9 +114,7 @@ namespace Hero_Designer
                 {
                     foreach (var innerPair in outerPair.Value.Where(innerPair => item.Value == innerPair.Key))
                     {
-                        Console.WriteLine(innerPair.Key != outerPair.Key
-                            ? $"{innerPair.Key} {outerPair.Key} - {innerPair.Value}"
-                            : $"{outerPair.Key} - {innerPair.Value}");
+                        Console.WriteLine(innerPair.Key != outerPair.Key ? $"{innerPair.Key} {outerPair.Key} - {innerPair.Value}" : $"{outerPair.Key} - {innerPair.Value}");
                     }
                 }
             }
