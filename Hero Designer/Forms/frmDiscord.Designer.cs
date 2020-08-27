@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Hero_Designer.Forms
 {
@@ -50,9 +51,9 @@ namespace Hero_Designer.Forms
             this.defenseCheckedList = new System.Windows.Forms.CheckedListBox();
             this.resistCheckedList = new System.Windows.Forms.CheckedListBox();
             this.miscCheckedList = new System.Windows.Forms.CheckedListBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.submitButton = new System.Windows.Forms.Button();
             this.btnImages = new System.Windows.Forms.ImageList(this.components);
+            this.label6 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -181,7 +182,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.42548F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.57452F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 186F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 198F));
             this.tableLayoutPanel1.Controls.Add(this.label3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label4, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label5, 2, 0);
@@ -205,7 +206,7 @@ namespace Hero_Designer.Forms
             this.label3.Location = new System.Drawing.Point(4, 4);
             this.label3.Margin = new System.Windows.Forms.Padding(3);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(167, 21);
+            this.label3.Size = new System.Drawing.Size(161, 21);
             this.label3.TabIndex = 0;
             this.label3.Text = "Defense";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -216,10 +217,10 @@ namespace Hero_Designer.Forms
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.SystemColors.Control;
-            this.label4.Location = new System.Drawing.Point(178, 4);
+            this.label4.Location = new System.Drawing.Point(172, 4);
             this.label4.Margin = new System.Windows.Forms.Padding(3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(186, 21);
+            this.label4.Size = new System.Drawing.Size(180, 21);
             this.label4.TabIndex = 1;
             this.label4.Text = "Resistance";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -230,16 +231,17 @@ namespace Hero_Designer.Forms
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label5.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.Control;
-            this.label5.Location = new System.Drawing.Point(371, 4);
+            this.label5.Location = new System.Drawing.Point(359, 4);
             this.label5.Margin = new System.Windows.Forms.Padding(3);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(181, 21);
+            this.label5.Size = new System.Drawing.Size(193, 21);
             this.label5.TabIndex = 2;
             this.label5.Text = "Misc";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // defenseCheckedList
             // 
+            this.defenseCheckedList.CheckOnClick = true;
             this.defenseCheckedList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.defenseCheckedList.FormattingEnabled = true;
             this.defenseCheckedList.Items.AddRange(new object[] {
@@ -255,11 +257,13 @@ namespace Hero_Designer.Forms
             "AOE"});
             this.defenseCheckedList.Location = new System.Drawing.Point(4, 32);
             this.defenseCheckedList.Name = "defenseCheckedList";
-            this.defenseCheckedList.Size = new System.Drawing.Size(167, 191);
+            this.defenseCheckedList.Size = new System.Drawing.Size(161, 191);
             this.defenseCheckedList.TabIndex = 3;
+            this.defenseCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
             // resistCheckedList
             // 
+            this.resistCheckedList.CheckOnClick = true;
             this.resistCheckedList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resistCheckedList.FormattingEnabled = true;
             this.resistCheckedList.Items.AddRange(new object[] {
@@ -271,13 +275,15 @@ namespace Hero_Designer.Forms
             "Negative",
             "Toxic",
             "Psionic"});
-            this.resistCheckedList.Location = new System.Drawing.Point(178, 32);
+            this.resistCheckedList.Location = new System.Drawing.Point(172, 32);
             this.resistCheckedList.Name = "resistCheckedList";
-            this.resistCheckedList.Size = new System.Drawing.Size(186, 191);
+            this.resistCheckedList.Size = new System.Drawing.Size(180, 191);
             this.resistCheckedList.TabIndex = 4;
+            this.resistCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
             // miscCheckedList
             // 
+            this.miscCheckedList.CheckOnClick = true;
             this.miscCheckedList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.miscCheckedList.FormattingEnabled = true;
             this.miscCheckedList.Items.AddRange(new object[] {
@@ -292,22 +298,11 @@ namespace Hero_Designer.Forms
             "Hitpoints (Maximum)",
             "Hitpoints (Regeneration)",
             "ToHit"});
-            this.miscCheckedList.Location = new System.Drawing.Point(371, 32);
+            this.miscCheckedList.Location = new System.Drawing.Point(359, 32);
             this.miscCheckedList.Name = "miscCheckedList";
-            this.miscCheckedList.Size = new System.Drawing.Size(181, 191);
+            this.miscCheckedList.Size = new System.Drawing.Size(193, 191);
             this.miscCheckedList.TabIndex = 5;
-            this.miscCheckedList.SelectedIndexChanged += new System.EventHandler(this.checkedListBox3_SelectedIndexChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.SystemColors.Control;
-            this.label6.Location = new System.Drawing.Point(358, 242);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(278, 15);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "* You can select up to 6 stats from the above lists *";
+            this.miscCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
             // submitButton
             // 
@@ -315,7 +310,7 @@ namespace Hero_Designer.Forms
             this.submitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.submitButton.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.submitButton.ForeColor = System.Drawing.SystemColors.Control;
-            this.submitButton.ImageKey = "pSlot2.png";
+            this.submitButton.ImageIndex = 0;
             this.submitButton.ImageList = this.btnImages;
             this.submitButton.Location = new System.Drawing.Point(686, 245);
             this.submitButton.Name = "submitButton";
@@ -324,6 +319,8 @@ namespace Hero_Designer.Forms
             this.submitButton.Text = "Submit";
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
+            this.submitButton.MouseEnter += new System.EventHandler(this.submitButton_MouseEnter);
+            this.submitButton.MouseLeave += new System.EventHandler(this.submitButton_MouseLeave);
             // 
             // btnImages
             // 
@@ -332,6 +329,17 @@ namespace Hero_Designer.Forms
             this.btnImages.Images.SetKeyName(0, "pSlot2.png");
             this.btnImages.Images.SetKeyName(1, "pSlot3.png");
             this.btnImages.Images.SetKeyName(2, "pSlot4.png");
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.SystemColors.Control;
+            this.label6.Location = new System.Drawing.Point(237, 249);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(356, 15);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "Note: You must select at least 1 stat in order to submit your build.";
             // 
             // frmDiscord
             // 
@@ -383,8 +391,8 @@ namespace Hero_Designer.Forms
         private System.Windows.Forms.CheckedListBox defenseCheckedList;
         private System.Windows.Forms.CheckedListBox resistCheckedList;
         private System.Windows.Forms.CheckedListBox miscCheckedList;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button submitButton;
         private System.Windows.Forms.ImageList btnImages;
+        private System.Windows.Forms.Label label6;
     }
 }

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Base.Master_Classes;
+using Hero_Designer.Forms;
+using Hero_Designer.Forms.Controls;
+using Newtonsoft.Json;
 
 namespace Hero_Designer
 {
@@ -17,12 +20,18 @@ namespace Hero_Designer
         public string Archetype { get; set; }
         public string Primary { get; set; }
         public string Secondary { get; set; }
-        public Dictionary<string, Dictionary<string, string>> Stats { get; set; }
+        public Dictionary<string, string> Stats { get; set; }
+        public string DataLink { get; set; }
+        public string Description { get; set; }
+        public string SubmittedBy { get; set; }
+        public string SubmittedOn { get; set; }
+
+
     }
 
     public class clsDiscord
     {
-        public static void GatherData(Dictionary<string, string> selectedStats)
+        public static async void GatherData(Dictionary<string, List<string>> selectedStats)
         {
             var data = new Toon
             {
@@ -31,9 +40,11 @@ namespace Hero_Designer
                 Archetype = MidsContext.Character.Archetype.DisplayName,
                 Primary = MidsContext.Character.Powersets[0].DisplayName,
                 Secondary = MidsContext.Character.Powersets[1].DisplayName,
-                Stats = new Dictionary<string, Dictionary<string, string>>()
+                Stats = new Dictionary<string, string>(),
+                DataLink = $"[Click Here to Download]({ShrinkTheDatalink(MidsCharacterFileFormat.MxDBuildSaveHyperlink(false, true))})"
             };
 
+            var gatherData = new Dictionary<string, Dictionary<string, string>>();
             var totalStat = MidsContext.Character.Totals;
             var displayStat = MidsContext.Character.DisplayStats;
             var statDictionary = new Dictionary<string, string>();
@@ -48,10 +59,9 @@ namespace Hero_Designer
                 var stat = $"{Convert.ToDecimal(convMath):0.##}%";
                 statDictionary.Add(damTypes[index], stat);
             }
-            data.Stats.Add("Defense", statDictionary);
+            gatherData.Add("Defense", statDictionary);
+            statDictionary = new Dictionary<string, string>();
             #endregion
-
-            statDictionary.Clear();
 
             #region ResistanceStats
             for (var index = 0; index < totalStat.Res.Length; index++)
@@ -61,73 +71,98 @@ namespace Hero_Designer
                 var stat = $"{Convert.ToDecimal(convMath):0.##}%";
                 statDictionary.Add(damTypes[index], stat);
             }
-            data.Stats.Add("Resistance", statDictionary);
+            gatherData.Add("Resistance", statDictionary);
+            statDictionary = new Dictionary<string, string>();
             #endregion
 
             var acc = $"{Convert.ToDecimal(totalStat.BuffAcc * 100f):0.##}%";
             statDictionary = new Dictionary<string, string> {{"Accuracy", acc}};
-            data.Stats.Add("Accuracy", statDictionary);
+            gatherData.Add("Accuracy", statDictionary);
 
             var dmg = $"{Convert.ToDecimal(totalStat.BuffDam * 100f):0.##}%";
             statDictionary = new Dictionary<string, string> { { "Damage", dmg } };
-            data.Stats.Add("Damage", statDictionary);
+            gatherData.Add("Damage", statDictionary);
 
             var endRdx = $"{Convert.ToDecimal(totalStat.BuffEndRdx * 100f):0.##}%";
             statDictionary = new Dictionary<string, string> { { "Endurance Reduction", endRdx } };
-            data.Stats.Add("Endurance Reduction", statDictionary);
+            gatherData.Add("Endurance Reduction", statDictionary);
 
             var endMax = $"{Convert.ToDecimal(totalStat.EndMax + 100f):0.##}%";
             statDictionary = new Dictionary<string, string> { { "Endurance Maximum", endMax } };
-            data.Stats.Add("Endurance Maximum", statDictionary);
+            gatherData.Add("Endurance Maximum", statDictionary);
 
             var endRec = $"{displayStat.EnduranceRecoveryPercentage(false):###0}% ({Convert.ToDecimal(displayStat.EnduranceRecoveryNumeric):0.##}/s)";
             statDictionary = new Dictionary<string, string> { { "Endurance Recovery", endRec } };
-            data.Stats.Add("Endurance Recovery", statDictionary);
+            gatherData.Add("Endurance Recovery", statDictionary);
 
             var endUse = $"{Convert.ToDecimal(displayStat.EnduranceUsage):0.##}/s";
             statDictionary = new Dictionary<string, string> { { "Endurance Usage", endUse } };
-            data.Stats.Add("Endurance Usage", statDictionary);
+            gatherData.Add("Endurance Usage", statDictionary);
 
             var elusive = $"{Convert.ToDecimal(totalStat.Elusivity * 100):0.##}%";
             statDictionary = new Dictionary<string, string> { { "Elusivity", elusive } };
-            data.Stats.Add("Elusivity", statDictionary);
+            gatherData.Add("Elusivity", statDictionary);
 
             var toHit = $"{Convert.ToDecimal(totalStat.BuffToHit * 100):0.##}%";
             statDictionary = new Dictionary<string, string> { { "ToHit", toHit } };
-            data.Stats.Add("ToHit", statDictionary);
+            gatherData.Add("ToHit", statDictionary);
 
             var globalRech = $"{Convert.ToDecimal(totalStat.BuffHaste * 100):0.##}%";
             statDictionary = new Dictionary<string, string> { { "Haste", globalRech } };
-            data.Stats.Add("Haste", statDictionary);
+            gatherData.Add("Haste", statDictionary);
 
             var maxHP = $"{Convert.ToDecimal(displayStat.HealthHitpointsPercentage):0.##}% ({Convert.ToDecimal(displayStat.HealthHitpointsNumeric(false)):0.##}HP)";
-            statDictionary = new Dictionary<string, string> { { "Hitpoints Max", maxHP } };
-            data.Stats.Add("Hitpoints Maximum", statDictionary);
+            statDictionary = new Dictionary<string, string> { { "Hitpoints Maximum", maxHP } };
+            gatherData.Add("Hitpoints Maximum", statDictionary);
 
             var regenHP = $"{Convert.ToDecimal(displayStat.HealthRegenPercent(false)):0.##}% ({Convert.ToDecimal(displayStat.HealthRegenHPPerSec):0.##}/s)";
             statDictionary = new Dictionary<string, string> { { "Hitpoints Regeneration", regenHP } };
-            data.Stats.Add("Hitpoints Regeneration", statDictionary);
+            gatherData.Add("Hitpoints Regeneration", statDictionary);
 
-            foreach (var item in selectedStats)
+            foreach (var kvp in selectedStats)
             {
-                foreach (var outerPair in data.Stats.Where(outerPair => item.Key == outerPair.Key))
+                switch (kvp.Key)
                 {
-                    foreach (var innerPair in outerPair.Value.Where(innerPair => item.Value == innerPair.Key))
-                    {
-                        Console.WriteLine(innerPair.Key != outerPair.Key ? $"{innerPair.Key} {outerPair.Key} - {innerPair.Value}" : $"{outerPair.Key} - {innerPair.Value}");
-                    }
+                    case "Defense":
+                        foreach (var stat in gatherData[kvp.Key])
+                        {
+                            foreach (var item in kvp.Value)
+                            {
+                                if (item == stat.Key)
+                                {
+                                    data.Stats.Add($"{stat.Key} {kvp.Key}", stat.Value);
+                                }
+                            }
+                        }
+                        break;
+                    case "Resistance":
+                        foreach (var stat in gatherData[kvp.Key])
+                        {
+                            foreach (var item in kvp.Value)
+                            {
+                                if (item == stat.Key)
+                                {
+                                    data.Stats.Add($"{stat.Key} {kvp.Key}", stat.Value);
+                                }
+                            }
+                        }
+                        break;
+                    case "Misc":
+                        foreach (var item in kvp.Value)
+                        {
+                            foreach (var stat in gatherData[item])
+                            {
+                                if (item == stat.Key)
+                                {
+                                    data.Stats.Add(stat.Key, stat.Value);
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 
-            /*foreach (var outerPair in data.Stats)
-            {
-                foreach (var innerPair in outerPair.Value)
-                {
-                    Console.WriteLine(innerPair.Key != outerPair.Key
-                        ? $"{innerPair.Key} {outerPair.Key} - {innerPair.Value}"
-                        : $"{outerPair.Key} - {innerPair.Value}");
-                }
-            }*/
+            await Export(data);
         }
 
         private static int ToonLevel()
@@ -156,8 +191,34 @@ namespace Hero_Designer
             return strHtml;
         }
 
-        public static async Task Export()
+        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
         {
+            if (e.Text.Trim().Length != 0) return;
+            e.Cancel = true;
+            e.Message = "Required";
+        }
+
+        private static async Task Export(Toon dataToon)
+        {
+            var msgResult = MessageBox.Show(@"Would you like to enter a description for people to see?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (msgResult == DialogResult.Yes)
+            {
+                InputBoxResult result = InputBox.Show("Enter a description for your build.", "Build Description", "Enter your description here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+                if (result.OK) { dataToon.Description = result.Text; }
+
+                dataToon.SubmittedBy = $"{clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
+                dataToon.SubmittedOn = DateTime.Now.ToShortDateString();
+                var jsonExport = JsonConvert.SerializeObject(dataToon, Formatting.Indented);
+                Console.WriteLine(jsonExport);
+            }
+            else
+            {
+                dataToon.SubmittedBy = $"{clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
+                dataToon.SubmittedOn = $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}";
+                var jsonExport = JsonConvert.SerializeObject(dataToon, Formatting.Indented);
+                Console.WriteLine(jsonExport);
+                Form.ActiveForm?.Close();
+            }
         }
     }
 }

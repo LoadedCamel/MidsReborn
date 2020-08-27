@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Master_Classes;
 
@@ -11,6 +15,21 @@ namespace Hero_Designer.Forms
     public partial class frmDiscord : Form
     {
         private readonly frmMain _myParent;
+        private int checkedCount;
+        private Dictionary<string, List<string>> SelectedStats { get; set; }
+        private List<string> defList { get; set; }
+        private List<string> resList { get; set; }
+        private List<string> misList { get; set; }
+
+        private int GetCheckedCount()
+        {
+            return checkedCount;
+        }
+
+        private void SetCheckedCount(int value)
+        {
+            checkedCount = value;
+        }
 
         public frmDiscord(ref frmMain iParent)
         {
@@ -71,9 +90,24 @@ namespace Hero_Designer.Forms
                 clsOAuth.RequestUser(token?.ToString());
                 clsOAuth.RequestServers(token?.ToString());
                 PopulateUserData();
+                StatInitializer();
             }
 
             Update();
+        }
+
+        private void StatInitializer()
+        {
+            SelectedStats = new Dictionary<string, List<string>>();
+            defList = new List<string>();
+            resList = new List<string>();
+            misList = new List<string>();
+            submitButton.ImageIndex = MidsContext.Character.IsHero() ? 0 : 2;
+            SetCheckedCount(0);
+            if (GetCheckedCount() == 0)
+            {
+                submitButton.Text = @"Cancel";
+            }
         }
 
         private void PopulateUserData()
@@ -97,13 +131,120 @@ namespace Hero_Designer.Forms
             UpdateForm();
         }
 
-        private void checkedListBox3_SelectedIndexChanged(object sender, EventArgs e)
+        private void CheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            var obj = (CheckedListBox)sender;
+            switch (e.NewValue)
+            {
+                case CheckState.Checked:
+                    SetCheckedCount(GetCheckedCount() + 1);
+                    switch (obj.Name)
+                    {
+                        case "defenseCheckedList":
+                            defList.Add(obj.Items[e.Index].ToString());
+                            if (SelectedStats.ContainsKey("Defense"))
+                            {
+                                SelectedStats["Defense"] = defList;
+                            }
+                            else
+                            {
+                                SelectedStats.Add("Defense", defList);
+                            }
+
+                            break;
+                        case "resistCheckedList":
+                            resList.Add(obj.Items[e.Index].ToString());
+                            if (SelectedStats.ContainsKey("Resistance"))
+                            {
+                                SelectedStats["Resistance"] = resList;
+                            }
+                            else
+                            {
+                                SelectedStats.Add("Resistance", resList);
+                            }
+                            break;
+                        case "miscCheckedList":
+                        {
+                            var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
+                            misList.Add(selectedItem);
+                            if (SelectedStats.ContainsKey("Misc"))
+                            {
+                                SelectedStats["Misc"] = misList;
+                            }
+                            else
+                            {
+                                SelectedStats.Add("Misc", misList);
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                case CheckState.Unchecked:
+                    SetCheckedCount(GetCheckedCount() - 1);
+                    switch (obj.Name)
+                    {
+                        case "defenseCheckedList":
+                            defList.Remove(obj.Items[e.Index].ToString());
+                            foreach (var list in from kvp in SelectedStats from list in SelectedStats.Values where kvp.Key == "Defense" select list)
+                            {
+                                list.Remove(obj.Items[e.Index].ToString());
+                            }
+                            break;
+                        case "resistCheckedList":
+                            resList.Remove(obj.Items[e.Index].ToString());
+                            foreach (var list in from kvp in SelectedStats from list in SelectedStats.Values where kvp.Key == "Resistance" select list)
+                            {
+                                list.Remove(obj.Items[e.Index].ToString());
+                            }
+                            break;
+                        case "miscCheckedList":
+                        {
+                            var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
+                            misList.Remove(selectedItem);
+                            foreach (var list in from kvp in SelectedStats from list in SelectedStats.Values where kvp.Key == "Misc" select list)
+                            {
+                                list.Remove(obj.Items[e.Index].ToString());
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                case CheckState.Indeterminate:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (GetCheckedCount() > 0)
+            {
+                submitButton.Text = @"Submit";
+            }
+        }
+
+        private void submitButton_MouseEnter(object sender, EventArgs e)
+        {
+            submitButton.ImageIndex = 1;
+        }
+
+        private void submitButton_MouseLeave(object sender, EventArgs e)
+        {
+            submitButton.ImageIndex = MidsContext.Character.IsHero() ? 0 : 2;
         }
 
         private void submitButton_Click(object sender, EventArgs e)
         {
-            clsDiscord.GatherData(selectedStats);
+            if (GetCheckedCount() == 0)
+            {
+                Close();
+            }
+            if (GetCheckedCount() > 6)
+            {
+                MessageBox.Show("You have selected too many stats.\r\nNo more than 6 stats can be selected when submitting a build.", @"Unable to Submit", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else if (GetCheckedCount() > 0 && GetCheckedCount() < 7)
+            {
+                clsDiscord.GatherData(SelectedStats);
+            }
         }
     }
 }
