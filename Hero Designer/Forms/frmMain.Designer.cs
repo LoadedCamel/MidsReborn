@@ -127,6 +127,8 @@ namespace Hero_Designer.Forms
             this.tsView2Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView3Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView4Col = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsView5Col = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsView6Col = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewIOLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSOLevels = new System.Windows.Forms.ToolStripMenuItem();
@@ -725,7 +727,7 @@ namespace Hero_Designer.Forms
             this.ToolStripSeparator25.Size = new System.Drawing.Size(237, 6);
             // 
             // tsExportDiscord
-            // 
+            //
             this.tsExportDiscord.Name = "tsExportDiscord";
             this.tsExportDiscord.Size = new System.Drawing.Size(240, 22);
             this.tsExportDiscord.Text = "Export to Discord";
@@ -1067,6 +1069,8 @@ namespace Hero_Designer.Forms
             this.tsView2Col,
             this.tsView3Col,
             this.tsView4Col,
+            this.tsView5Col,
+            this.tsView6Col,
             this.ToolStripSeparator13,
             this.tsViewIOLevels,
             this.tsViewRelative,
@@ -1100,6 +1104,20 @@ namespace Hero_Designer.Forms
             this.tsView4Col.Size = new System.Drawing.Size(282, 22);
             this.tsView4Col.Text = "&4 Columns";
             this.tsView4Col.Click += new System.EventHandler(this.tsView4Col_Click);
+            // 
+            // tsView5Col
+            // 
+            this.tsView5Col.Name = "tsView5Col";
+            this.tsView5Col.Size = new System.Drawing.Size(282, 22);
+            this.tsView5Col.Text = "&5 Columns";
+            this.tsView5Col.Click += new System.EventHandler(this.tsView5Col_Click);
+            // 
+            // tsView6Col
+            // 
+            this.tsView6Col.Name = "tsView6Col";
+            this.tsView6Col.Size = new System.Drawing.Size(282, 22);
+            this.tsView6Col.Text = "&6 Columns";
+            this.tsView6Col.Click += new System.EventHandler(this.tsView6Col_Click);
             // 
             // ToolStripSeparator13
             // 
@@ -2076,6 +2094,8 @@ namespace Hero_Designer.Forms
         ToolStripMenuItem tsView2Col;
         ToolStripMenuItem tsView3Col;
         ToolStripMenuItem tsView4Col;
+        ToolStripMenuItem tsView5Col;
+        ToolStripMenuItem tsView6Col;
         ToolStripMenuItem tsViewActualDamage_New;
         ToolStripMenuItem tsViewData;
         ToolStripMenuItem tsViewDPS_New;

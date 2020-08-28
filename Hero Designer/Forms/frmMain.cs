@@ -216,8 +216,6 @@ namespace Hero_Designer.Forms
                 pnlGFX.BackColor = BackColor;
                 NoUpdate = true;
 
-                //AutoUpdater.ApplicationExitEvent += AutoUpdater_ApplicationExitEvent;
-                //AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
                 if (!this.IsInDesignMode() && !MidsContext.Config.IsInitialized)
                 {
                     MidsContext.Config.CheckForUpdates = false;
@@ -540,7 +538,7 @@ namespace Hero_Designer.Forms
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
-            e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.DrawBackground();
             using var solidBrush = new SolidBrush(SystemColors.ControlText);
             if (e.Index > -1)
@@ -592,7 +590,7 @@ namespace Hero_Designer.Forms
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
-            e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.DrawBackground();
             using var solidBrush = new SolidBrush(Color.Black);
             var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, SetType);
@@ -631,7 +629,7 @@ namespace Hero_Designer.Forms
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
-            e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.DrawBackground();
             //SolidBrush solidBrush = new SolidBrush(SystemColors.ControlText);
             using var solidBrush = new SolidBrush(Color.Black);
@@ -1159,7 +1157,7 @@ namespace Hero_Designer.Forms
                     }
                 }
 
-                rectangle1 = new Rectangle(point1.X + 30 * i, point1.Y, 30, 30);
+                rectangle1 = new Rectangle(point1.X + 30 * i, point1.Y, 40, 40);
                 if (!(num2 > 0.0))
                     continue;
                 var rectangle2 = new Rectangle((int) Math.Round(rectangle1.X + (30.0 - 30.0 * num2) / 2.0),
@@ -1177,7 +1175,7 @@ namespace Hero_Designer.Forms
                 }
                 else
                 {
-                    drawing.bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30,
+                    drawing.bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 40, 40,
                         GraphicsUnit.Pixel, recolorIa);
                 }
 
@@ -5384,6 +5382,12 @@ namespace Hero_Designer.Forms
                 case 4:
                     tsView4Col.Checked = true;
                     break;
+                case 5:
+                    tsView5Col.Checked = true;
+                    break;
+                case 6:
+                    tsView6Col.Checked = true;
+                    break;
             }
         }
 
@@ -5391,6 +5395,8 @@ namespace Hero_Designer.Forms
         {
             tsView3Col.Checked = false;
             tsView4Col.Checked = false;
+            tsView5Col.Checked = false;
+            tsView6Col.Checked = false;
             tsView2Col.Checked = true;
             setColumns(2);
         }
@@ -5399,6 +5405,8 @@ namespace Hero_Designer.Forms
         {
             tsView2Col.Checked = false;
             tsView4Col.Checked = false;
+            tsView5Col.Checked = false;
+            tsView6Col.Checked = false;
             tsView3Col.Checked = true;
             setColumns(3);
         }
@@ -5407,8 +5415,30 @@ namespace Hero_Designer.Forms
         {
             tsView2Col.Checked = false;
             tsView3Col.Checked = false;
+            tsView5Col.Checked = false;
+            tsView6Col.Checked = false;
             tsView4Col.Checked = true;
             setColumns(4);
+        }
+
+        private void tsView5Col_Click(object sender, EventArgs e)
+        {
+            tsView2Col.Checked = false;
+            tsView3Col.Checked = false;
+            tsView4Col.Checked = false;
+            tsView6Col.Checked = false;
+            tsView5Col.Checked = true;
+            setColumns(5);
+        }
+
+        private void tsView6Col_Click(object sender, EventArgs e)
+        {
+            tsView2Col.Checked = false;
+            tsView3Col.Checked = false;
+            tsView4Col.Checked = false;
+            tsView5Col.Checked = false;
+            tsView6Col.Checked = true;
+            setColumns(6);
         }
 
         private void tsViewActualDamage_New_Click(object sender, EventArgs e)

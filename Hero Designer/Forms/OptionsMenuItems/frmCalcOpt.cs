@@ -78,21 +78,10 @@ namespace Hero_Designer.Forms.OptionsMenuItems
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            var cCount = groupBox21.Controls.OfType<CheckBox>().Count(c => c.Checked);
-            if (cCount > 0 && cCount < 3 || cCount > 6)
-            {
-                MessageBox.Show(
-                    @"Incorrect amount of stats selected, please go back and make sure you have 3 to 6 stats selected.",
-                    @"Warning!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                DialogResult = DialogResult.Abort;
-            }
-            else
-            {
-                DialogResult = DialogResult.OK;
-                StoreControls();
-                myParent.DoCalcOptUpdates();
-                Hide();
-            }
+            DialogResult = DialogResult.OK;
+            StoreControls();
+            myParent.DoCalcOptUpdates();
+            Hide();
         }
 
         private void btnSaveFolder_Click(object sender, EventArgs e)
@@ -311,75 +300,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             fcDisplay();
         }
 
-        private void dcExList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (dcExList.SelectedIndex != -1 && !string.IsNullOrWhiteSpace(dcExList.SelectedItem.ToString()))
-                MidsContext.Config.DSelServer = dcExList.SelectedItem.ToString();
-        }
-
-        /*void dcAdd_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(dcServerName.Text))
-                return;
-            dcExList.Items.Add(dcServerName.Text);
-            if (!MidsContext.Config.DServers.Contains(dcServerName.Text))
-                MidsContext.Config.DServers.Add(dcServerName.Text);
-            MidsContext.Config.DSelServer = dcServerName.Text;
-            dcExList.SelectedItem = MidsContext.Config.DSelServer;
-        }
-
-        void dcRemove_Click(object sender, EventArgs e)
-        {
-            if (MidsContext.Config.DSelServer == dcExList.SelectedItem.ToString() && !string.IsNullOrEmpty(dcExList.SelectedItem.ToString()))
-            {
-                MidsContext.Config.DSelServer = "";
-            }
-            if (MidsContext.Config.DServers.Contains(dcExList.SelectedItem.ToString()))
-            {
-                MidsContext.Config.DServers.Remove(dcExList.SelectedItem.ToString());
-            }
-            dcExList.Items.Remove(dcExList.SelectedItem);
-
-        }
-
-        void dcNickName_TextChanged(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(dcNickName.Text))
-            {
-                MidsContext.Config.DNickName = dcNickName.Text;
-            }
-        }
-
-        void dcChannel_TextChanged(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(dcChannel.Text))
-            {
-                MidsContext.Config.DChannel = dcChannel.Text;
-            }
-        }*/
 
         private void InvBot_Click(object sender, EventArgs e)
         {
             var botLink = clsDiscord.ShrinkTheDatalink(
                 "https://discordapp.com/api/oauth2/authorize?client_id=593333282234695701&permissions=18432&redirect_uri=https%3A%2F%2Fmidsreborn.com&scope=bot");
             Process.Start(botLink);
-        }
-
-        private void CheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            foreach (var box in groupBox21.Controls.OfType<CheckBox>())
-            {
-                var boxNum = box.Name.Replace("checkBox", "");
-                var eVal = (Enums.eStats) Convert.ToInt32(boxNum);
-                if (box.Checked)
-                {
-                    if (!useStats.Contains(eVal.ToString())) useStats.Add(eVal.ToString());
-                }
-                else
-                {
-                    if (useStats.Contains(eVal.ToString())) useStats.Remove(eVal.ToString());
-                }
-            }
         }
 
         private void fcNotes_TextChanged(object sender, EventArgs e)
@@ -539,22 +465,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             csPopulateList();
             fcPopulateList();
             PopulateSuppression();
-            MidsContext.Config.DAuth.TryGetValue("access_token", out var token);
-            clsOAuth.RequestUser(token?.ToString());
-            Task.Delay(1000).ContinueWith(t => PopulateUserData());
-        }
-
-        private void PopulateUserData()
-        {
-            var userId = clsOAuth.GetCryptedValue("User", "id");
-            var userName = clsOAuth.GetCryptedValue("User", "username");
-            var userDiscriminator = clsOAuth.GetCryptedValue("User", "discriminator");
-            var userAvatar = clsOAuth.GetCryptedValue("User", "avatar");
-            using var webClient = new WebClient();
-            var bytes = webClient.DownloadData($"https://cdn.discordapp.com/avatars/{userId}/{userAvatar}.png");
-            using var memoryStream = new MemoryStream(bytes);
-            usrAvatar.Image = Image.FromStream(memoryStream);
-            dcNickName.Text = $@"{userName}#{userDiscriminator}";
         }
 
         private void listScenarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -611,13 +521,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             clbSuppression.EndUpdate();
         }
 
-        private void SetStatCheck(string box, bool val)
-        {
-            foreach (var cbox in groupBox21.Controls.OfType<CheckBox>())
-                if (cbox.Name == box)
-                    cbox.Checked = true;
-        }
-
         private void SetControls()
         {
             var config = MidsContext.Config;
@@ -659,15 +562,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             chkTextBold.Checked = config.RtFont.RTFBold;
             chkStatBold.Checked = config.RtFont.PairedBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
-            dcNickName.Text = config.DNickName;
-            //dcChannel.Text = config.DChannel;
-            //commented out for replacement forthcoming
-            /*foreach (var item in config.DServers.Append(config.DSelServer).Where(item => !string.IsNullOrWhiteSpace(item) && !dcExList.Items.Contains(config.DSelServer)).Distinct())
-                dcExList.Items.Add(item);
-            if (!string.IsNullOrWhiteSpace(config.DSelServer))
-                dcExList.SelectedItem = config.DSelServer;*/
             lblSaveFolder.Text = config.GetSaveFolder();
-            foreach (var item in config.CheckedStatBoxes) SetStatCheck(item, true);
             //this.txtUpdatePath.Text = config.UpdatePath;
             chkColorInherent.Checked = !config.DisableDesaturateInherent;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
@@ -871,9 +766,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             config.RtFont.PairedBase = Convert.ToSingle(udStatSize.Value);
             config.RtFont.RTFBold = chkTextBold.Checked;
             config.RtFont.PairedBold = chkStatBold.Checked;
-            var checkStats = groupBox21.Controls.OfType<CheckBox>().Where(r => r.Checked).Select(r => r.Name);
-            config.CheckedStatBoxes = checkStats.ToList();
-            config.CheckedStats = useStats;
             config.DisableLoadLastFileOnStart = !chkLoadLastFile.Checked;
             if (config.DefaultSaveFolderOverride != lblSaveFolder.Text)
             {

@@ -9,6 +9,7 @@ using Base.Display;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Syncfusion.DataSource;
 
 namespace midsControls
 {
@@ -18,9 +19,11 @@ namespace midsControls
 
         private const string GfxPowerFn = "pSlot";
 
+        private const string GfxPowerFn2 = "qSlot";
+
         private const string GfxFileExt = ".png";
 
-        private const string NewSlotName = "Addslot.png";
+        private const string NewSlotName = "Newslot.png";
 
         private const int PaddingX = 7;
 
@@ -119,42 +122,44 @@ namespace midsControls
             //VillainColor = false;
             ScaleValue = 2f;
             Scaling = true;
-            vcCols = 4;
-            vcRowsPowers = 8;
+            vcCols = 6;
+            vcRowsPowers = 16;
             bxPower = new ExtendedBitmap[5];
             checked
             {
                 var num2 = bxPower.Length - 1;
                 for (var i = 0; i <= num2; i++)
-                    bxPower[i] = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + GfxPowerFn +
+                    bxPower[i] = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + GfxPowerFn2 +
                                                     Strings.Trim(Convert.ToString(i)) + GfxFileExt);
 
                 ColorSwitch();
-                InitColumns = MidsContext.Config.Columns;
+                InitColumns = MidsContext.Config.Columns; 
                 SzPower = bxPower[0].Size;
-                szSlot = new Size(30, 30);
+
+                szSlot = new Size(40, 40);
                 szBuffer = GetMaxDrawingArea();
                 var size = new Size(szBuffer.Width, szBuffer.Height);
                 bxBuffer = new ExtendedBitmap(size);
-                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
+                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
                 szBuffer = GetRequiredDrawingArea();
-                bxNewSlot = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + "Addslot.png");
+                bxNewSlot = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + NewSlotName);
                 gTarget = iTarget.CreateGraphics();
                 cTarget = iTarget;
                 gTarget.CompositingMode = CompositingMode.SourceCopy;
                 gTarget.CompositingQuality = CompositingQuality.HighQuality;
                 gTarget.InterpolationMode = InterpolationMode.HighQualityBilinear;
                 gTarget.SmoothingMode = SmoothingMode.HighQuality;
-                gTarget.TextRenderingHint = TextRenderingHint.SystemDefault;
+                gTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-                DefaultFont = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+                DefaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
                 BackColor = iTarget.BackColor;
                 if (szBuffer.Height < cTarget.Height)
-                    gTarget.FillRectangle(new SolidBrush(BackColor), 0, szBuffer.Height, cTarget.Width,
-                        cTarget.Height - szBuffer.Height);
+                {
+                    gTarget.FillRectangle(new SolidBrush(BackColor), 0, szBuffer.Height, cTarget.Width, cTarget.Height - szBuffer.Height);
+                }
             }
         }
 
@@ -184,10 +189,10 @@ namespace midsControls
             {
                 if (value == vcCols)
                     return;
-                if ((value < 2) | (value > 4))
+                if ((value < 2) | (value > 6))
                     return;
                 vcCols = value;
-                vcRowsPowers = checked((int) Math.Round(24.0 / vcCols));
+                vcRowsPowers = checked((int) Math.Round(36.0 / vcCols));
             }
         }
 
@@ -198,32 +203,67 @@ namespace midsControls
             gTarget = iTarget.CreateGraphics();
             cTarget = iTarget;
             //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-            DefaultFont = new Font("Arial", 11f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            DefaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             BackColor = iTarget.BackColor;
         }
 
         private void DrawSplit()
         {
             var pen = new Pen(Color.Goldenrod, 2f);
-            var iValue = 0;
             checked
             {
+                int iValue;
                 switch (vcCols)
                 {
                     case 2:
-                        iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 65;
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue),
-                            ScaleDown(PowerPosition(15).X + SzPower.Width), ScaleDown(iValue));
+                        iValue = 4 + vcRowsPowers * (SzPower.Height + 27);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width), ScaleDown(iValue));
+                        bxBuffer.Graphics.DrawString("Inherent Powers",
+                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            MidsContext.Character.IsHero()
+                                ? new SolidBrush(Color.DodgerBlue)
+                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width) / 2 - 35,
+                            ScaleDown(iValue));
                         break;
                     case 3:
-                        iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 40;
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue),
-                            ScaleDown(PowerPosition(15).X + SzPower.Width + 205), ScaleDown(iValue));
+                        iValue = 4 + vcRowsPowers * (SzPower.Height + 28);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 275), ScaleDown(iValue));
+                        bxBuffer.Graphics.DrawString("Inherent Powers",
+                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            MidsContext.Character.IsHero()
+                                ? new SolidBrush(Color.DodgerBlue)
+                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 275) / 2 - 50,
+                            ScaleDown(iValue));
                         break;
                     case 4:
-                        iValue = 4 + vcRowsPowers * (SzPower.Height + 19) + 30;
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue),
-                            ScaleDown(PowerPosition(15).X + SzPower.Width + 200), ScaleDown(iValue));
+                        iValue = 4 + vcRowsPowers * (SzPower.Height + 30);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 300), ScaleDown(iValue));
+                        bxBuffer.Graphics.DrawString("Inherent Powers",
+                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            MidsContext.Character.IsHero()
+                                ? new SolidBrush(Color.DodgerBlue)
+                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
+                            ScaleDown(iValue));
+                        break;
+                    case 5:
+                        iValue = 4 + vcRowsPowers * (SzPower.Height + 30);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 300), ScaleDown(iValue));
+                        bxBuffer.Graphics.DrawString("Inherent Powers",
+                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            MidsContext.Character.IsHero()
+                                ? new SolidBrush(Color.DodgerBlue)
+                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
+                            ScaleDown(iValue));
+                        break;
+                    case 6:
+                        iValue = 4 + vcRowsPowers * (SzPower.Height + 30);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 550), ScaleDown(iValue));
+                        bxBuffer.Graphics.DrawString("Inherent Powers",
+                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            MidsContext.Character.IsHero()
+                                ? new SolidBrush(Color.DodgerBlue)
+                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
+                            ScaleDown(iValue));
                         break;
                 }
             }
@@ -290,7 +330,8 @@ namespace midsControls
                 if (enhType == Enums.eType.SetO || enhType == Enums.eType.InventO)
                 {
                     var iValue2 = rect;
-                    iValue2.Y -= 3f;
+                    iValue2.Y -= 5f;
+                    iValue2.X -= 4f;
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
                     string relativeLevelNumeric;
                     var enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
@@ -309,8 +350,8 @@ namespace midsControls
                     // or relative level doesn't fit in.
                     if (!string.IsNullOrEmpty(relativeLevelNumeric))
                     {
-                        iValue2.Width += 10f;
-                        iValue2.X -= 5f;
+                        iValue2.Width += 3f;
+                        iValue2.X -= 3f;
                     }
 
                     var iStr = (MidsContext.Config.I9.HideIOLevels
@@ -364,7 +405,7 @@ namespace midsControls
                         slot.Enhancement.RelativeLevel != Enums.eEnhRelative.Even
                     )
                     {
-                        iValue2.Width += 10f;
+                        iValue2.Width += 5f;
                         iValue2.X -= 5f;
                     }
 
@@ -404,12 +445,13 @@ namespace midsControls
             Point point = default;
             checked
             {
+                //position of enh rectangle
                 point.X = (int) Math.Round(result.X + checked(SzPower.Width - szSlot.Width * 6) / 2.0);
-                point.Y = result.Y + 18;
+                point.Y = result.Y + 22;
                 var graphics = bxBuffer.Graphics;
                 Brush brush = new SolidBrush(BackColor);
                 var clipRect = new Rectangle(point.X, point.Y, SzPower.Width, SzPower.Height);
-                graphics.FillRectangle(brush, ScaleDown(clipRect));
+                graphics.FillRectangle(brush, clipRect);
                 var toggling = InterfaceMode == Enums.eInterfaceMode.PowerToggle;
                 if (!toggling)
                 {
@@ -437,6 +479,7 @@ namespace midsControls
                 rectangleF.Width = szSlot.Width;
                 stringFormat.Alignment = StringAlignment.Near;
                 stringFormat.LineAlignment = StringAlignment.Near;
+                stringFormat.FormatFlags = StringFormatFlags.MeasureTrailingSpaces | StringFormatFlags.NoClip;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bool grey;
                 ImageAttributes imageAttr;
@@ -466,7 +509,7 @@ namespace midsControls
                     grey = iSlot.Level >= MidsContext.Config.ForceLevel;
                     imageAttr = GreySlot(grey);
                 }
-
+                //appears to be power size
                 var iValue = new Rectangle(result.X, result.Y, bxPower[(int) ePowerState].Size.Width,
                     bxPower[(int) ePowerState].Size.Height);
                 if (ePowerState == Enums.ePowerState.Used || toggling)
@@ -497,7 +540,7 @@ namespace midsControls
                     clipRect = bxPower[(int) ePowerState].ClipRect;
                     graphics3.DrawImage(bitmap2, destRect2, srcX2, srcY2, width2, clipRect.Height, GraphicsUnit.Pixel);
                 }
-
+                //Toggle Button on powers
                 if (iSlot.CanIncludeForStats())
                 {
                     rectangle.Height = 15;
@@ -530,7 +573,8 @@ namespace midsControls
                 for (var i = 0; i <= iSlot.Slots.Length - 1; i++)
                 {
                     var slot = iSlot.Slots[i];
-                    rectangleF.X = point.X + szSlot.Width * i;
+                    //Controls the spacing between enh
+                    rectangleF.X = point.X + szSlot.Width * i / (float) 1.2;
                     rectangleF.Y = point.Y;
                     if (slot.Enhancement.Enh < 0)
                     {
@@ -552,7 +596,7 @@ namespace midsControls
                         if (inDesigner) continue;
                         var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                         var graphics5 = bxBuffer.Graphics;
-                        var clipRect2 = new Rectangle((int) Math.Round(rectangleF.X), point.Y, 30, 30);
+                        var clipRect2 = new Rectangle((int) Math.Round(rectangleF.X), point.Y, 40, 40);
                         I9Gfx.DrawEnhancementAt(ref graphics5, ScaleDown(clipRect2), enhancement.ImageIdx,
                             I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
                         if ((slot.Enhancement.RelativeLevel == 0) | (slot.Level >= MidsContext.Config.ForceLevel) |
@@ -575,9 +619,12 @@ namespace midsControls
                         var iValue2 = rectangleF;
                         unchecked
                         {
+                            //Controls placement of slot levels
                             iValue2.Y += iValue2.Height;
                             iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                            iValue2.Y -= iValue2.Height;
+                            iValue2.Y -= iValue2.Height - 1;
+                            iValue2.X += iValue2.Width - 5;
+                            iValue2.X -= iValue2.Width - 1;
                         }
 
                         var graphics5 = bxBuffer.Graphics;
@@ -606,6 +653,7 @@ namespace midsControls
 
                 solidBrush = new SolidBrush(Color.Black);
                 stringFormat = new StringFormat();
+                //Text Positioning of Power Names
                 rectangleF.X = result.X + 10;
                 rectangleF.Y = result.Y + 4;
                 rectangleF.Width = SzPower.Width;
@@ -673,7 +721,7 @@ namespace midsControls
                     var graphics5 = bxBuffer.Graphics;
                     graphics5.CompositingQuality = CompositingQuality.HighQuality;
                     graphics5.SmoothingMode = SmoothingMode.HighQuality;
-                    graphics5.TextRenderingHint = TextRenderingHint.SystemDefault;
+                    graphics5.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     graphics5.PageUnit = GraphicsUnit.Pixel;
                     graphics5.InterpolationMode = InterpolationMode.HighQualityBilinear;
                     DrawOutlineText(iStr4, bounds5, whiteSmoke, outline5, bFont5, outlineSpace5, graphics5, false,
@@ -997,7 +1045,7 @@ namespace midsControls
             }
             else
             {
-                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
+                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 ScaleValue = 1f;
                 ResetTarget();
                 Scaling = false;
@@ -1008,7 +1056,7 @@ namespace midsControls
         private void ResetTarget()
         {
             bxBuffer.Graphics.TextRenderingHint =
-                ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.SystemDefault;
+                ScaleValue > 1.125 ? TextRenderingHint.ClearTypeGridFit : TextRenderingHint.ClearTypeGridFit;
             gTarget.Dispose();
             gTarget = cTarget.CreateGraphics();
             gTarget.CompositingQuality = CompositingQuality.HighQuality;
@@ -1639,6 +1687,200 @@ namespace midsControls
                             56, 57, 58, 59
                         }
                     };
+                case 5:
+                    if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
+                        return new[]
+                        {
+                            new[]
+                            {
+                                0, 1, 2, 3, 4
+                            },
+                            new[]
+                            {
+                                5, 6, 7, 8, 9
+                            },
+                            new[]
+                            {
+                                10, 11, 12, 13, 14
+                            },
+                            new[]
+                            {
+                                15, 16, 17, 18, 19
+                            },
+                            new[]
+                            {
+                                20, 21, 22, 23, 24
+                            },
+                            new[]
+                            {
+                                25, 26, 27, 28, 29
+                            },
+                            new[]
+                            {
+                                30, 31, 32, 33, 34
+                            },
+                            new[]
+                            {
+                                35, 36, 37, 38, 39
+                            },
+                            new[]
+                            {
+                                40, 41, 42, 43, 44
+                            },
+                            new[]
+                            {
+                                45, 46, 47, 48, 49
+                            },
+                            new[]
+                            {
+                                50, 51, 52, 53, 54
+                            },
+                            new[]
+                            {
+                                55, 56, 57, 58, 59
+                            }
+                        };
+
+                    return new[]
+                    {
+                        new[]
+                        {
+                            0, 1, 2, 3, 4
+                        },
+                        new[]
+                        {
+                            5, 6, 7, 8, 9
+                        },
+                        new[]
+                        {
+                            10, 11, 12, 13, 14
+                        },
+                        new[]
+                        {
+                            15, 16, 17, 18, 19
+                        },
+                        new[]
+                        {
+                            20, 21, 22, 23, 24
+                        },
+                        new[]
+                        {
+                            25, 26, 27, 28, 29
+                        },
+                        new[]
+                        {
+                            30, 31, 32, 33, 34
+                        },
+                        new[]
+                        {
+                            35, 36, 37, 38, 39
+                        },
+                        new[]
+                        {
+                            40, 41, 42, 43, 44
+                        },
+                        new[]
+                        {
+                            45, 46, 47, 48, 49
+                        },
+                        new[]
+                        {
+                            50, 51, 52, 53, 54
+                        },
+                        new[]
+                        {
+                            55, 56, 57, 58, 59
+                        }
+                    };
+                case 6:
+                    if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
+                        return new[]
+                        {
+                            new[]
+                            {
+                                0, 1, 2, 3, 4, 5
+                            },
+                            new[]
+                            {
+                                6, 7, 8, 9, 10, 11
+                            },
+                            new[]
+                            {
+                                12, 13, 14, 15, 16, 17
+                            },
+                            new[]
+                            {
+                                18, 19, 20, 21, 22, 23
+                            },
+                            new[]
+                            {
+                                24, 25, 26, 27, 28, 29
+                            },
+                            new[]
+                            {
+                                30, 31, 32, 33, 34, 35
+                            },
+                            new[]
+                            {
+                                36, 37, 38, 39, 40, 41
+                            },
+                            new[]
+                            {
+                                42, 43, 44, 45, 46, 47
+                            },
+                            new[]
+                            {
+                                48, 49, 50, 51, 52, 53
+                            },
+                            new[]
+                            {
+                                54, 55, 56, 57, 58, 59
+                            }
+                        };
+
+                    return new[]
+                    {
+                        new[]
+                        {
+                            0, 1, 2, 3, 4, 5
+                        },
+                        new[]
+                        {
+                            6, 7, 8, 9, 10, 11
+                        },
+                        new[]
+                        {
+                            12, 13, 14, 15, 16, 17
+                        },
+                        new[]
+                        {
+                            18, 19, 20, 21, 22, 23
+                        },
+                        new[]
+                        {
+                            24, 25, 26, 27, 28, 29
+                        },
+                        new[]
+                        {
+                            30, 31, 32, 33, 34, 35
+                        },
+                        new[]
+                        {
+                            36, 37, 38, 39, 40, 41
+                        },
+                        new[]
+                        {
+                            42, 43, 44, 45, 46, 47
+                        },
+                        new[]
+                        {
+                            48, 49, 50, 51, 52, 53
+                        },
+                        new[]
+                        {
+                            54, 55, 56, 57, 58, 59
+                        }
+                    };
             }
 
             if (MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic)
@@ -1849,7 +2091,7 @@ namespace midsControls
                         for (var k = 0; k <= inherentGrid[i].Length - 1; k++)
                         {
                             if (displayLocation != inherentGrid[i][k]) continue;
-                            iRow += i;
+                            iRow += i + 1;
                             iCol = k;
                             flag = true;
                             break;
