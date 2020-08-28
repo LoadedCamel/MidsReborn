@@ -9,7 +9,6 @@ using Base.Display;
 using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Syncfusion.DataSource;
 
 namespace midsControls
 {
