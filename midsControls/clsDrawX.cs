@@ -7,8 +7,8 @@ using System.Drawing.Text;
 using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+//using Microsoft.VisualBasic;
+//using Microsoft.VisualBasic.CompilerServices;
 
 namespace midsControls
 {
@@ -128,8 +128,9 @@ namespace midsControls
             {
                 var num2 = bxPower.Length - 1;
                 for (var i = 0; i <= num2; i++)
-                    bxPower[i] = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + GfxPowerFn2 +
-                                                    Strings.Trim(Convert.ToString(i)) + GfxFileExt);
+                {
+                    bxPower[i] = new ExtendedBitmap($"{FileIO.AddSlash(Application.StartupPath)}{GfxPath}{GfxPowerFn2}{Convert.ToString(i).Trim()}{GfxFileExt}");
+                }
 
                 ColorSwitch();
                 InitColumns = MidsContext.Config.Columns; 
@@ -142,14 +143,14 @@ namespace midsControls
                 bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
+                bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 szBuffer = GetRequiredDrawingArea();
                 bxNewSlot = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + NewSlotName);
                 gTarget = iTarget.CreateGraphics();
                 cTarget = iTarget;
                 gTarget.CompositingMode = CompositingMode.SourceCopy;
                 gTarget.CompositingQuality = CompositingQuality.HighQuality;
-                gTarget.InterpolationMode = InterpolationMode.HighQualityBilinear;
+                gTarget.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 gTarget.SmoothingMode = SmoothingMode.HighQuality;
                 gTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
@@ -291,10 +292,7 @@ namespace midsControls
                         DrawPowerSlot(ref value);
                         currentBuild.Powers[index] = value;
                     }
-                    else if (MidsContext.Character.CurrentBuild.Powers[i].Power != null &&
-                             (Operators.CompareString(MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName,
-                                 "Incarnate", false) == 0) |
-                             MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
+                    else if (MidsContext.Character.CurrentBuild.Powers[i].Power != null && (string.CompareOrdinal(MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName, "Incarnate") == 0) | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers3 = currentBuild.Powers;

@@ -2618,9 +2618,13 @@ namespace Hero_Designer.Forms
         private void NewDraw(bool skipDraw = false)
         {
             if (drawing == null)
+            {
                 drawing = new clsDrawX(pnlGFX);
+            }
             else
+            {
                 drawing.ReInit(pnlGFX);
+            }
 
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
             if (drawing != null)
