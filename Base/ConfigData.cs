@@ -117,13 +117,7 @@ public class ConfigData
     public Dictionary<string, object> DUser { get; set; }
     //public Dictionary<string, object> DServers { get; set; }
 
-    public string DNickName { get; set; }
     public List<string> DServers { get; set; }
-    public string DSelServer { get; set; }
-    public string DChannel { get; set; }
-
-    public List<string> CheckedStatBoxes { get; set; } = new List<string>();
-    public List<string> CheckedStats { get; set; } = new List<string>();
 
     public bool DisableDesaturateInherent { get; set; }
     public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Dynamic;
