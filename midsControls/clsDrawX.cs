@@ -638,8 +638,8 @@ namespace midsControls
 
                 if (slotChk > -1 && ePowerState != Enums.ePowerState.Empty && drawNewSlot)
                 {
-                    var clipRect2 = new Rectangle(point.X + szSlot.Width * iSlot.Slots.Length, point.Y, szSlot.Width,
-                        szSlot.Height);
+                    var clipRect2 = new Rectangle(point.X + szSlot.Width * iSlot.Slots.Length, point.Y, 30,
+                        30);
                     RectangleF iValue2 = clipRect2;
                     bxBuffer.Graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(iValue2));
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
