@@ -3,17 +3,21 @@ using Base.Data_Classes;
 
 public class Statistics
 {
+    // Base speeds
     public const float BaseFlyMax = 21f; //BaseFlySpeed is 1.5x the value of other base speeds
+    public const float BaseFlySpeed = 31.5f;
+    public const float BaseJumpHeight = 4f;
+    public const float BaseJumpSpeed = 21f;
+    public const float BaseRunSpeed = 21f;
+    // Unenhanced max speeds
+    public const float MaxFlySpeed = 86f;
     public const float MaxRunSpeed = 135.67f;
     public const float MaxJumpSpeed = 114.4f;
-    public const float MaxFlySpeed = 86f;
+    // Hard cap speeds
     public const float CapRunSpeed = 135.67f;
     public const float CapJumpSpeed = 114.4f;
     public const float CapFlySpeed = 128.99f;
-    public const float BaseRunSpeed = 21f;
-    public const float BaseJumpSpeed = 21f;
-    public const float BaseJumpHeight = 4f;
-    public const float BaseFlySpeed = 31.5f;
+    // Misc
     internal const float BaseMagic = 1.666667f;
     public const float BasePerception = 500f;
     readonly Character _character;
