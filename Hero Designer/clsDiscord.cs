@@ -10,6 +10,7 @@ using Base.Master_Classes;
 using Hero_Designer.Forms;
 using Hero_Designer.Forms.Controls;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace Hero_Designer
 {
@@ -31,6 +32,9 @@ namespace Hero_Designer
 
     public static class clsDiscord
     {
+
+        private const string BOT_API_ENDPOINT = "https://api.midsreborn.com:3001";
+
         public static async void GatherData(Dictionary<string, List<string>> selectedStats)
         {
             var data = new Toon
@@ -219,6 +223,11 @@ namespace Hero_Designer
                 Console.WriteLine(jsonExport);
                 Form.ActiveForm?.Close();
             }
+        }
+
+        private static async Void ConnectBotAPI()
+        {
+            var client = new RestClient(BOT_API_ENDPOINT);
         }
     }
 }
