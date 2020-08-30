@@ -8,7 +8,7 @@ public class Statistics
     public const float MaxFlySpeed = 86f;
     public const float CapRunSpeed = 135.67f;
     public const float CapJumpSpeed = 114.4f;
-    public const float CapFlySpeed = 128.99f;
+    public const float CapFlySpeed = 115.89f;
     public const float BaseRunSpeed = 21f;
     public const float BaseJumpSpeed = 21f;
     public const float BaseJumpHeight = 4f;
