@@ -74,9 +74,7 @@ namespace Hero_Designer.Forms
                 DoneDblClick = false;
             }
 
-            SetStyle(
-                ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw,
-                true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
             Application.EnableVisualStyles();
             foreach (var backup in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.bak")) File.Delete(backup);
@@ -1292,12 +1290,16 @@ namespace Hero_Designer.Forms
                 drawing.ReInit(pnlGfx);
                 pnlGFX = (PictureBox) pnlGfx;
                 pnlGFX.Image = drawing.bxBuffer.Bitmap;
+                pnlGFX.Update();
+                pnlGFX.Refresh();
             }
 
             NoResizeEvent = true;
             drawing.SetScaling(scale < 1.0 ? pnlGFX.Size : drawing.bxBuffer.Size);
             NoResizeEvent = false;
             ReArrange(false);
+            pnlGFX.Update();
+            pnlGFX.Refresh();
         }
 
         private bool doSave()
@@ -2016,7 +2018,7 @@ namespace Hero_Designer.Forms
             I9Popup.pIDX = -1;
             I9Popup.hIDX = -1;
             I9Popup.psIDX = -1;
-            ActivePopupBounds = new Rectangle(0, 0, 1, 1);
+            ActivePopupBounds = new Rectangle(0, 0, 0, 0);
             drawing.Refresh(bounds);
         }
 
@@ -2949,6 +2951,8 @@ namespace Hero_Designer.Forms
 
                     EnhancementModified();
                     LastClickPlacedSlot = false;
+                    pnlGFX.Update();
+                    pnlGFX.Refresh();
                 }
                 else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) &
                          (e.Button == MouseButtons.Left))

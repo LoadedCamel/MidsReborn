@@ -86,6 +86,7 @@ namespace midsControls
             _cHighlight = Color.SlateBlue;
             _cSelected = Color.BlueViolet;
             _nPowerIDX = -1;
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.ContainerControl | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
         }
 

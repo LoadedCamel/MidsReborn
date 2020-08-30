@@ -29,7 +29,7 @@ namespace Hero_Designer
 
     }
 
-    public class clsDiscord
+    public static class clsDiscord
     {
         public static async void GatherData(Dictionary<string, List<string>> selectedStats)
         {

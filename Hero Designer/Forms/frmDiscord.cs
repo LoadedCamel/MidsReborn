@@ -71,21 +71,56 @@ namespace Hero_Designer.Forms
             }
             else
             {
-                Size = new Size(818, 320);
-                Text = @"Export to Discord - Enabled";
-                label1.Visible = true;
-                label2.Visible = true;
-                serverCombo.Visible = true;
-                serverCombo.Enabled = true;
-                channelCombo.Visible = true;
-                channelCombo.Enabled = true;
-                tableLayoutPanel1.Visible = true;
-                tableLayoutPanel1.Enabled = true;
+                var isAuthed = MidsContext.Config.DAuth.TryGetValue("DateTime", out var timestamp);
+                if (isAuthed)
+                {
+                    var authTimestamp = DateTime.Parse(timestamp?.ToString());
+                    var currentTimestamp = DateTime.Now;
+                    var elapsed = (currentTimestamp - authTimestamp).TotalSeconds;
+                    MidsContext.Config.DAuth.TryGetValue("expires_in", out var expires);
+                    if (elapsed >= Convert.ToDouble(expires))
+                    {
+                        MidsContext.Config.DAuth.TryGetValue("refresh_token", out var refreshToken);
+                        var isRefreshed = clsOAuth.RefreshToken(refreshToken?.ToString());
+                        if (isRefreshed)
+                        {
+                            Size = new Size(818, 320);
+                            Text = @"Export to Discord - Enabled";
+                            label1.Visible = true;
+                            label2.Visible = true;
+                            serverCombo.Visible = true;
+                            serverCombo.Enabled = true;
+                            channelCombo.Visible = true;
+                            channelCombo.Enabled = true;
+                            tableLayoutPanel1.Visible = true;
+                            tableLayoutPanel1.Enabled = true;
 
-                authNotice.Visible = false;
-                authNotice.Enabled = false;
-                authButton.Visible = false;
-                authButton.Enabled = false;
+                            authNotice.Visible = false;
+                            authNotice.Enabled = false;
+                            authButton.Visible = false;
+                            authButton.Enabled = false;
+                        }
+                    }
+                    else
+                    {
+                        Size = new Size(818, 320);
+                        Text = @"Export to Discord - Enabled";
+                        label1.Visible = true;
+                        label2.Visible = true;
+                        serverCombo.Visible = true;
+                        serverCombo.Enabled = true;
+                        channelCombo.Visible = true;
+                        channelCombo.Enabled = true;
+                        tableLayoutPanel1.Visible = true;
+                        tableLayoutPanel1.Enabled = true;
+
+                        authNotice.Visible = false;
+                        authNotice.Enabled = false;
+                        authButton.Visible = false;
+                        authButton.Enabled = false;
+                    }
+                }
+
                 MidsContext.Config.DAuth.TryGetValue("access_token", out var token);
                 clsOAuth.RequestUser(token?.ToString());
                 clsOAuth.RequestServers(token?.ToString());

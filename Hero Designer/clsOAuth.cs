@@ -96,7 +96,7 @@ namespace Hero_Designer
             MidsContext.Config.DiscordAuthorized = true;
         }
 
-        public static void RefreshToken(string refreshToken)
+        public static bool RefreshToken(string refreshToken)
         {
             var client = new RestClient(API_ENDPOINT);
             var request = new RestRequest("oauth2/token", Method.POST);
@@ -115,6 +115,7 @@ namespace Hero_Designer
             foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
 
             MidsContext.Config.DAuth = authDict;
+            return true;
         }
 
         public static string GetCryptedValue(string type, string name)
@@ -176,7 +177,7 @@ namespace Hero_Designer
             return response.Content;
         }
 
-        public static List<T> Deserialize<T>(string SerializedJSONString)
+        private static List<T> Deserialize<T>(string SerializedJSONString)
         {
             var stuff = JsonConvert.DeserializeObject<List<T>>(SerializedJSONString);
             return stuff;

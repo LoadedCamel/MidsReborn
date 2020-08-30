@@ -638,8 +638,8 @@ namespace midsControls
 
                 if (slotChk > -1 && ePowerState != Enums.ePowerState.Empty && drawNewSlot)
                 {
-                    var clipRect2 = new Rectangle(point.X + szSlot.Width * iSlot.Slots.Length, point.Y, 30,
-                        30);
+                    //var clipRect2 = new Rectangle(point.X + szSlot.Width * iSlot.Slots.Length, point.Y, 30, 30);
+                    var clipRect2 = new Rectangle(point.X + (szSlot.Width - 5) * iSlot.Slots.Length, point.Y, 30, 30);
                     RectangleF iValue2 = clipRect2;
                     bxBuffer.Graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(iValue2));
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
@@ -720,7 +720,7 @@ namespace midsControls
                     graphics5.SmoothingMode = SmoothingMode.HighQuality;
                     graphics5.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     graphics5.PageUnit = GraphicsUnit.Pixel;
-                    graphics5.InterpolationMode = InterpolationMode.HighQualityBilinear;
+                    graphics5.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     DrawOutlineText(iStr4, bounds5, whiteSmoke, outline5, bFont5, outlineSpace5, graphics5, false,
                         true);
                 }
