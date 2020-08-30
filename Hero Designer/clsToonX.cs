@@ -480,11 +480,11 @@ namespace Hero_Designer
                 Totals.MaxFlySpd = Statistics.CapFlySpeed; //CapFlySpeed includes the limit break from Afterburner
             Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[32], -0.9f) * Statistics.BaseRunSpeed;
             Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[49] * Statistics.BaseRunSpeed;
-            if (Totals.MaxRunSpd > 135.669998168945)
-                Totals.MaxRunSpd = 135.67f;
+            if (Totals.MaxRunSpd > 135.67)
+                Totals.MaxRunSpd = Statistics.MaxRunSpeed;
             Totals.JumpSpd = (float) (Statistics.BaseJumpSpeed + (double) Math.Max(_selfBuffs.Effect[17], -0.9f) * Statistics.BaseJumpSpeed);
-            Totals.MaxJumpSpd = (float) (114.400001525879 + _selfBuffs.Effect[50] * Statistics.BaseJumpSpeed);
-            if (Totals.MaxJumpSpd > 114.400001525879)
+            Totals.MaxJumpSpd = (float) (Statistics.MaxJumpSpeed + _selfBuffs.Effect[50] * Statistics.BaseJumpSpeed);
+            if (Totals.MaxJumpSpd > 114.40)
                 Totals.MaxJumpSpd = Statistics.MaxJumpSpeed;
             Totals.JumpHeight = (float) (4.0 + Math.Max(_selfBuffs.Effect[16], -0.9f) * 4.0);
             Totals.HPMax = _selfBuffs.Effect[14] + Archetype.Hitpoints;
