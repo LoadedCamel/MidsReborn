@@ -475,7 +475,7 @@ namespace Hero_Designer
 
             Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[11], -0.9f) * Statistics.BaseFlySpeed;
             // this number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
-            Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[51] * Statistics.BaseFlySpeed;
+            Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[51] * (Statistics.BaseFlySpeed / 1.5f); //BaseFlySpeed is 1.5x the value of other base speeds
             if (Totals.MaxFlySpd > 128.99)
                 Totals.MaxFlySpd = Statistics.CapFlySpeed; //CapFlySpeed includes the limit break from Afterburner
             Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[32], -0.9f) * Statistics.BaseRunSpeed;
