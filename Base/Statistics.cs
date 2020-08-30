@@ -3,6 +3,7 @@ using Base.Data_Classes;
 
 public class Statistics
 {
+    public const float BaseFlyMax = 21f; //BaseFlySpeed is 1.5x the value of other base speeds
     public const float MaxRunSpeed = 135.67f;
     public const float MaxJumpSpeed = 114.4f;
     public const float MaxFlySpeed = 86f;
