@@ -105,7 +105,7 @@ namespace Hero_Designer.Forms
             dvAnchored.Location = new Point(16, 391);
             dvAnchored.Name = "dvAnchored";
 
-            dvAnchored.Size = new Size(300, 347);
+            dvAnchored.Size = new Size(300, 400);
             dvAnchored.TabIndex = 69;
             dvAnchored.VisibleSize = Enums.eVisibleSize.Full;
             dvAnchored.MouseWheel += frmMain_MouseWheel;

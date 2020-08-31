@@ -582,8 +582,10 @@ namespace midsControls
                             (!iSlot.AllowFrontLoading & (slot.Level < iSlot.Level)))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                            bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(rectangleF));
-                            bxBuffer.Graphics.DrawEllipse(pen, ScaleDown(rectangleF));
+                            var iValue2 = rectangleF;
+                            var iRect = new RectangleF(iValue2.X - 1f, iValue2.Y, iValue2.Width / 1.3f, iValue2.Height / 1.3f);
+                            bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(iRect));
+                            bxBuffer.Graphics.DrawEllipse(pen, ScaleDown(iRect));
                         }
                     }
                     else
@@ -591,17 +593,15 @@ namespace midsControls
                         if (inDesigner) continue;
                         var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                         var graphics5 = bxBuffer.Graphics;
-                        var clipRect2 = new Rectangle((int) Math.Round(rectangleF.X), point.Y, 40, 40);
-                        I9Gfx.DrawEnhancementAt(ref graphics5, ScaleDown(clipRect2), enhancement.ImageIdx,
-                            I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
-                        if ((slot.Enhancement.RelativeLevel == 0) | (slot.Level >= MidsContext.Config.ForceLevel) |
-                            ((InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !iSlot.StatInclude) |
-                            (!iSlot.AllowFrontLoading & (slot.Level < iSlot.Level)))
+                        var clipRect2 = new Rectangle((int) Math.Round(rectangleF.X), point.Y, 30, 30);
+                        I9Gfx.DrawEnhancementAt(ref graphics5, ScaleDown(clipRect2), enhancement.ImageIdx, I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
+                        if ((slot.Enhancement.RelativeLevel == 0) | (slot.Level >= MidsContext.Config.ForceLevel) | ((InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !iSlot.StatInclude) | !iSlot.AllowFrontLoading & (slot.Level < iSlot.Level))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                             var iValue2 = rectangleF;
-                            iValue2.Inflate(1f, 1f);
-                            bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(iValue2));
+                            var iRect = new RectangleF(iValue2.X - 1f, iValue2.Y, iValue2.Width / 1.3f, iValue2.Height / 1.3f);
+                            //iValue2.Inflate(1f, 1f);
+                            bxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(iRect));
                         }
 
                         if (slot.Enhancement.Enh > -1)
@@ -1168,8 +1168,7 @@ namespace midsControls
                 useHeroColors = true;
             VillainColor = !useHeroColors;*/
             pColorMatrix = new ColorMatrix(heroMatrix);
-            if (pImageAttributes == null)
-                pImageAttributes = new ImageAttributes();
+            pImageAttributes ??= new ImageAttributes();
             pImageAttributes.SetColorMatrix(pColorMatrix);
         }
 
@@ -1196,7 +1195,7 @@ namespace midsControls
                     {
                         if (!bypassIa) colorMatrix[r, c] = pColorMatrix[r, c];
 
-                        if (r != 4) colorMatrix[r, c] = (float) (colorMatrix[r, c] / 1.5);
+                        colorMatrix[r, c] = (float) (colorMatrix[r, c] / 1.5);
 
                         c++;
                     } while (c <= 2);
@@ -1244,9 +1243,10 @@ namespace midsControls
                     var c = 0;
                     do
                     {
+                        //controls shading of inherents
                         if (!BypassIA) tCM[r, c] = (pColorMatrix[r, c] + tMM[r, c]) / 2f;
 
-                        if (Grey && r != 4) tCM[r, c] = (float) (tCM[r, c] / 1.5);
+                        if (Grey) tCM[r, c] = (float) (tCM[r, c] / 1.5);
 
                         c++;
                     } while (c <= 2);
@@ -1279,7 +1279,7 @@ namespace midsControls
                         rectangle.Location = PowerPosition(GetVisualIDX(hIdx));
 
                     rectangle.Width = SzPower.Width;
-                    var num = rectangle.Y + 18;
+                    var num = rectangle.Y + 22;
                     num += szSlot.Height;
                     rectangle.Height = num - rectangle.Y;
                     result = rectangle;
@@ -2056,7 +2056,7 @@ namespace midsControls
             {
                 if (powerIdx == -1)
                 {
-                    var num2 = 0;
+                    const int num2 = 0;
                     var num3 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var i = num2; i <= num3; i++)
                     {
@@ -2119,7 +2119,7 @@ namespace midsControls
             {
                 if (iRow >= vcRowsPowers)
                 {
-                    result.X = iCol * (SzPower.Width + 13);
+                    result.X = iCol * (SzPower.Width + 15);
                     result.Y = 6 + iRow * (SzPower.Height + 25);
                 }
                 else
