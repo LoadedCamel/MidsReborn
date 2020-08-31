@@ -5407,6 +5407,7 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView2Col.Checked = true;
             setColumns(2);
+            CenterToScreen();
         }
 
         private void tsView3Col_Click(object sender, EventArgs e)
@@ -5417,6 +5418,7 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView3Col.Checked = true;
             setColumns(3);
+            CenterToScreen();
         }
 
         private void tsView4Col_Click(object sender, EventArgs e)
@@ -5427,6 +5429,7 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView4Col.Checked = true;
             setColumns(4);
+            CenterToScreen();
         }
 
         private void tsView5Col_Click(object sender, EventArgs e)
@@ -5437,6 +5440,7 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView5Col.Checked = true;
             setColumns(5);
+            CenterToScreen();
         }
 
         private void tsView6Col_Click(object sender, EventArgs e)
@@ -5447,6 +5451,7 @@ namespace Hero_Designer.Forms
             tsView5Col.Checked = false;
             tsView6Col.Checked = true;
             setColumns(6);
+            CenterToScreen();
         }
 
         private void tsViewActualDamage_New_Click(object sender, EventArgs e)

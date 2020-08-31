@@ -2959,7 +2959,7 @@ namespace Hero_Designer.Forms
             pnlInfo.Location = new Point(0, 20);
             pnlInfo.Name = "pnlInfo";
 
-            pnlInfo.Size = new Size(300, 328);
+            pnlInfo.Size = new Size(300, 428);
             pnlInfo.TabIndex = 62;
             PowerScaler.BackColor = Color.Black;
             PowerScaler.Border = true;
@@ -3097,7 +3097,7 @@ namespace Hero_Designer.Forms
             pnlFX.Location = new Point(144, 148);
             pnlFX.Name = "pnlFX";
 
-            pnlFX.Size = new Size(300, 320);
+            pnlFX.Size = new Size(300, 420);
             pnlFX.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Pixel);
             pnlFX.TabIndex = 63;
             fx_Title.BackColor = Color.FromArgb(64, 64, 64);
@@ -3214,7 +3214,7 @@ namespace Hero_Designer.Forms
             pnlTotal.Location = new Point(248, 15);
             pnlTotal.Name = "pnlTotal";
 
-            pnlTotal.Size = new Size(300, 319);
+            pnlTotal.Size = new Size(300, 420);
             pnlTotal.TabIndex = 64;
             lblTotal.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTotal.ForeColor = Color.White;
@@ -3429,7 +3429,7 @@ namespace Hero_Designer.Forms
             pnlEnh.Location = new Point(188, 156);
             pnlEnh.Name = "pnlEnh";
 
-            pnlEnh.Size = new Size(300, 320);
+            pnlEnh.Size = new Size(300, 420);
             pnlEnh.TabIndex = 65;
             pnlEnhInactive.BackColor = Color.Black;
 
@@ -3544,7 +3544,7 @@ namespace Hero_Designer.Forms
             Controls.Add(pnlFX);
             Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Pixel, 1);
 
-            Size = new Size(564, 540);
+            Size = new Size(564, 650);
             pnlInfo.ResumeLayout(false);
             pnlFX.ResumeLayout(false);
             pnlTotal.ResumeLayout(false);
