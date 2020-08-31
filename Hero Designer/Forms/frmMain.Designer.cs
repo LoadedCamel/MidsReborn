@@ -1967,6 +1967,7 @@ namespace Hero_Designer.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
+            //this.BackgroundImage = 
             this.ClientSize = new System.Drawing.Size(1160, 834);
             this.Controls.Add(this.i9Picker);
             this.Controls.Add(this.I9Popup);

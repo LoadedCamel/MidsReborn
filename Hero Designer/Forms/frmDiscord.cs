@@ -124,6 +124,7 @@ namespace Hero_Designer.Forms
                 MidsContext.Config.DAuth.TryGetValue("access_token", out var token);
                 clsOAuth.RequestUser(token?.ToString());
                 clsOAuth.RequestServers(token?.ToString());
+                //add servers to list
                 PopulateUserData();
                 StatInitializer();
             }
@@ -131,6 +132,11 @@ namespace Hero_Designer.Forms
             Update();
         }
 
+        private List<string> validServers(List<string> servers)
+        {
+            var dServers = new List<string>();
+            return dServers;
+        }
         private void StatInitializer()
         {
             SelectedStats = new Dictionary<string, List<string>>();
