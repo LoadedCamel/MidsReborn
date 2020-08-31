@@ -225,9 +225,12 @@ namespace Hero_Designer
             }
         }
 
-        private static async Void ConnectBotAPI()
+        private static async void ConnectBotAPI()
         {
             var client = new RestClient(BOT_API_ENDPOINT);
+            var request = new RestRequest("oauth2/token", Method.POST);
+            //request.AddParameter("client_id", CLIENT_ID);
+            //request.AddParameter("client_secret", CLIENT_SECRET);
         }
     }
 }
