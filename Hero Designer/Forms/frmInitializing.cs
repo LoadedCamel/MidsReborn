@@ -9,7 +9,7 @@ namespace Hero_Designer.Forms
         public frmInitializing()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             Load += On_Load;
         }
 
@@ -42,17 +42,23 @@ namespace Hero_Designer.Forms
 
         private void On_Load(object sender, EventArgs e)
         {
-            FormBorderStyle = FormBorderStyle.None;
-            Width = BackgroundImage.Width;
-            Height = BackgroundImage.Height;
+            CenterToScreen();
+            Opacity = 0;
+            tmrOp.Enabled = true;
+            //Width = BackgroundImage.Width;
+            //Height = BackgroundImage.Height;
         }
 
         private void tmrOp_Tick(object sender, EventArgs e)
         {
             if (Opacity < 1.0)
+            {
                 Opacity += 0.05;
+            }
             else
+            {
                 tmrOp.Enabled = false;
+            }
         }
     }
 }
