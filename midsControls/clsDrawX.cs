@@ -18,8 +18,6 @@ namespace midsControls
 
         private const string GfxPowerFn = "pSlot";
 
-        private const string GfxPowerFn2 = "qSlot";
-
         private const string GfxFileExt = ".png";
 
         private const string NewSlotName = "Newslot.png";
@@ -129,7 +127,7 @@ namespace midsControls
                 var num2 = bxPower.Length - 1;
                 for (var i = 0; i <= num2; i++)
                 {
-                    bxPower[i] = new ExtendedBitmap($"{FileIO.AddSlash(Application.StartupPath)}{GfxPath}{GfxPowerFn2}{Convert.ToString(i).Trim()}{GfxFileExt}");
+                    bxPower[i] = new ExtendedBitmap($"{FileIO.AddSlash(Application.StartupPath)}{GfxPath}{GfxPowerFn}{Convert.ToString(i).Trim()}{GfxFileExt}");
                 }
 
                 ColorSwitch();
