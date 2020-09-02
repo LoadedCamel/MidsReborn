@@ -950,7 +950,7 @@ namespace midsControls
 
                     if (!isValid)
                         return -1;
-                    iX = (int) Math.Round(iX - (point.X - EnhOffsetX + checked(SzPower.Width - szSlot.Width * 6) / 2.0));
+                    iX = (int) Math.Round(iX - (point.X - 40 + checked(SzPower.Width - szSlot.Width * 6) / 2.0));
                     for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length - 1; i++)
                         if (iX <= (i + 1) * szSlot.Width)
                             return i;

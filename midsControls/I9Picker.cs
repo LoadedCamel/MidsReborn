@@ -169,7 +169,7 @@ namespace midsControls
             tTip = new ToolTip(components);
             BackColor = Color.Silver;
             Name = "I9Picker";
-            var size = new Size(184, 244);
+            var size = new Size(200, 300);
             Size = size;
         }
 

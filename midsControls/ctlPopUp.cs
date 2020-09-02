@@ -59,6 +59,7 @@ namespace midsControls
         // Token: 0x0600012D RID: 301 RVA: 0x0000AE4C File Offset: 0x0000904C
         public ctlPopUp()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             BackColorChanged += ctlPopUp_BackColorChanged;
             FontChanged += ctlPopUp_FontChanged;
             ForeColorChanged += ctlPopUp_ForeColorChanged;
@@ -224,7 +225,7 @@ namespace midsControls
             myBX = new ExtendedBitmap(Size.Width, pBXHeight);
             myBX.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             myBX.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            myBX.Graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
+            myBX.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
             myBX.Graphics.SmoothingMode = SmoothingMode.HighQuality;
         }
 
