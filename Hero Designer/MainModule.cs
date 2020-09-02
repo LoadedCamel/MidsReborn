@@ -1,10 +1,9 @@
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
@@ -41,25 +40,27 @@ namespace Hero_Designer
                 iFrm?.SetMessage("Loading Powerset Database...");
                 if (!DatabaseAPI.LoadLevelsDatabase())
                 {
-                    Interaction.MsgBox(
-                        "Failed to load Leveling data file! The program is unable to proceed.\r\n" +
-                        "We suggest you re-download the application from https://github.com/Reborn-Team/Hero-Designer/releases",
-                        MsgBoxStyle.Critical, "Error");
-                    ProjectData.EndApp();
+                    MessageBox.Show("Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/Reborn-Team/Hero-Designer/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
                 }
 
                 if (!DatabaseAPI.LoadMainDatabase())
                 {
-                    Interaction.MsgBox("There was an error reading the database. Aborting.", MsgBoxStyle.Critical,
-                        "Database Error");
-                    ProjectData.EndApp();
+                    MessageBox.Show(@"There was an error reading the database. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
                 }
 
                 if (!DatabaseAPI.LoadMaths())
-                    ProjectData.EndApp();
+                {
+                    Application.Exit();
+                }
+
                 iFrm?.SetMessage("Loading Enhancement Database...");
                 if (!DatabaseAPI.LoadEnhancementClasses())
-                    ProjectData.EndApp();
+                {
+                    Application.Exit();
+                }
+
                 DatabaseAPI.LoadEnhancementDb();
                 DatabaseAPI.LoadOrigins();
                 DatabaseAPI.LoadSetTypeStrings();
@@ -84,7 +85,7 @@ namespace Hero_Designer
                 MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate));
                 if (iFrm != null)
                 {
-                    iFrm.Opacity = 1.0;
+                    //iFrm.Opacity = 1.0;
                     DatabaseAPI.MatchAllIDs(iFrm);
                     iFrm?.SetMessage("Matching Set Bonus IDs...");
                     DatabaseAPI.AssignSetBonusIndexes();
