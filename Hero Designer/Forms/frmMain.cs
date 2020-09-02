@@ -1109,8 +1109,8 @@ namespace Hero_Designer.Forms
             Rectangle rectangle1;
             for (var i = 0; i <= num1; ++i)
             {
-                point1.X = (int) Math.Round(point2.X + (drawing.SzPower.Width - drawing.szSlot.Width * 6) / 2.0);
-                point1.Y = point2.Y + 18;
+                point1.X = (int) Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.szSlot.Width * 6) / 2.0);
+                point1.Y = point2.Y + clsDrawX.OffsetY;
                 ++FlipSlotState[i];
                 var num2 = 1f;
                 var powerEntry = MidsContext.Character.CurrentBuild.Powers[FlipPowerID];
@@ -1155,7 +1155,7 @@ namespace Hero_Designer.Forms
                     }
                 }
 
-                rectangle1 = new Rectangle(point1.X + 30 * i, point1.Y, 40, 40);
+                rectangle1 = new Rectangle(point1.X + 30 * i, point1.Y, 30, 30);
                 if (!(num2 > 0.0))
                     continue;
                 var rectangle2 = new Rectangle((int) Math.Round(rectangle1.X + (30.0 - 30.0 * num2) / 2.0),
@@ -1173,7 +1173,7 @@ namespace Hero_Designer.Forms
                 }
                 else
                 {
-                    drawing.bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 40, 40,
+                    drawing.bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectangle2, 0, 0, 30, 30,
                         GraphicsUnit.Pixel, recolorIa);
                 }
 
@@ -1248,7 +1248,7 @@ namespace Hero_Designer.Forms
             return true;
         }
 
-        public void DoRedraw()
+        private void DoRedraw()
         {
             if (drawing == null) return;
             NoResizeEvent = true;
@@ -1266,7 +1266,7 @@ namespace Hero_Designer.Forms
             drawing.FullRedraw();
         }
 
-        public void DoResize()
+        private void DoResize()
         {
             //lblHero.Width = ibRecipe.Left - 4;
             if (NoResizeEvent || drawing == null)
@@ -2954,8 +2954,7 @@ namespace Hero_Designer.Forms
                     pnlGFX.Update();
                     pnlGFX.Refresh();
                 }
-                else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) &
-                         (e.Button == MouseButtons.Left))
+                else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
                 {
                     if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
                     {
@@ -4703,8 +4702,7 @@ namespace Hero_Designer.Forms
             FlipGP = new PowerEntry();
             FlipGP.Assign(MidsContext.Character.CurrentBuild.Powers[iPowerIndex]);
             FlipGP.Slots = Array.Empty<SlotEntry>();
-            if (tmrGfx == null)
-                tmrGfx = new Timer(Container);
+            tmrGfx ??= new Timer(Container!);
             tmrGfx.Interval = FlipInterval;
             FlipActive = true;
             tmrGfx.Enabled = true;

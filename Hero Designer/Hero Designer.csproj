@@ -2103,7 +2103,6 @@
     <Content Include="Web\unauthorized.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\discordauth.png" />
     <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\mrb_splash.png" />
     <None Include="Resources\optSO.Image.png" />
