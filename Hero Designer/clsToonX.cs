@@ -10,8 +10,6 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using midsControls;
 
 namespace Hero_Designer
@@ -50,11 +48,10 @@ namespace Hero_Designer
                 var str1 = edName + ":";
                 var num1 = value[index] * 100f;
                 var num2 = Enhancement.ApplyED(schedule[index], value[index]) * 100f;
-                var str2 = Strings.Format((float) (num1 + afterED[index] * 100.0),
-                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
-                var str3 =
-                    Strings.Format(num2 + afterED[index] * 100f,
-                        "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
+                var str2 = $"{Convert.ToDecimal(num1 + afterED[index] * 100f):0.##}%";
+                var str3 = $"{Convert.ToDecimal(num2 + afterED[index] * 100f):0.##}%";
+                //var str2 = Strings.Format((float) (num1 + afterED[index] * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
+                //var str3 = Strings.Format(num2 + afterED[index] * 100f, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
                 string str4;
                 if ((float) Math.Round(num1 - (double) num2, 3) > 0.0)
                 {
@@ -114,7 +111,7 @@ namespace Hero_Designer
                 }
                 else if (!string.IsNullOrEmpty(message))
                 {
-                    Interaction.MsgBox(message, MsgBoxStyle.Information, "Info");
+                    MessageBox.Show(message, @"Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 ResetLevel();
@@ -215,7 +212,7 @@ namespace Hero_Designer
                 }
                 else if (!string.IsNullOrEmpty(message))
                 {
-                    Interaction.MsgBox(message, MsgBoxStyle.Information, "Info");
+                    MessageBox.Show(message, @"Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
 
@@ -247,7 +244,7 @@ namespace Hero_Designer
                     }
                     else
                     {
-                        Interaction.MsgBox(message, MsgBoxStyle.Critical, "FYI");
+                        MessageBox.Show(message, @"FYI", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
@@ -639,8 +636,9 @@ namespace Hero_Designer
                     effectCount += DatabaseAPI.Database.Power[ret.NIDSubPower[index]].Effects.Length;
 
             var power = ret;
-            var effectArray =
-                (IEffect[]) Utils.CopyArray(power.Effects, new IEffect[ret.Effects.Length + effectCount - 1 + 1]);
+            //var effectArray = (IEffect[]) Utils.CopyArray(power.Effects, new IEffect[ret.Effects.Length + effectCount - 1 + 1]);
+            var effectArray = new IEffect[ret.Effects.Length + effectCount - 1 + 1];
+            Array.Copy(power.Effects, effectArray, power.Effects.Length);
             power.Effects = effectArray;
             foreach (var sp in CurrentBuild.Powers[hIDX].SubPowers.Where(sp => sp.nIDPower > -1 && sp.StatInclude))
                 for (var index2 = 0; index2 <= DatabaseAPI.Database.Power[sp.nIDPower].Effects.Length - 1; ++index2)
@@ -1520,9 +1518,7 @@ namespace Hero_Designer
                 olderFile = nVer;
                 if (olderFile >= 0.899999976158142 && olderFile < 1.0)
                     olderFile = 0.0f;
-                Interaction.MsgBox(
-                    "The data being loaded was saved by an older version of the application, and may not load correctly. Should be OK though.",
-                    MsgBoxStyle.Information, "Just FYI");
+                MessageBox.Show(@"The data being loaded was saved by either an older version of the application, or a different rendition of the application and may not load correctly.", @"FYI", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -1534,30 +1530,30 @@ namespace Hero_Designer
             // only 1 variable closed over: olderFile
             ReadOnlyCollection<int> readPowerEntries(string[] data)
             {
-                var count = (int) Math.Round(Conversion.Val(data[0]));
+                var count = Convert.ToInt32(data[0]);
                 var offset = 1;
                 var indexLookup = new int[count + 1];
                 for (var index2 = 0; index2 <= count; ++index2)
                 {
                     var tPower = new PowerEntry
                     {
-                        Level = (int) Math.Round(Conversion.Val(data[offset]))
+                        Level = Convert.ToInt32(data[offset])
                     };
                     offset += 1;
                     tPower.NIDPowerset = Math.Abs(olderFile - 0.100000001490116) > float.Epsilon
-                        ? Conversion.Val(data[offset]) >= 0.0
-                            ? Powersets[(int) Math.Round(Conversion.Val(data[offset]))].nID
+                        ? Convert.ToInt32(data[offset]) >= 0.0
+                            ? Powersets[Convert.ToInt32(data[offset])].nID
                             : -1
-                        : (int) Math.Round(Conversion.Val(data[offset]));
+                        : Convert.ToInt32(data[offset]);
                     offset += 1;
-                    tPower.IDXPower = (int) Math.Round(Conversion.Val(data[offset]));
+                    tPower.IDXPower = Convert.ToInt32(data[offset]);
                     tPower.NIDPower = !((tPower.NIDPowerset > -1) & (tPower.IDXPower > -1))
                         ? -1
                         : DatabaseAPI.Database.Powersets[tPower.NIDPowerset].Power[tPower.IDXPower];
                     if (Math.Abs(olderFile) < float.Epsilon || olderFile >= 1.0)
                     {
                         offset += +1;
-                        tPower.StatInclude = Math.Abs(Conversion.Val(data[offset])) > float.Epsilon;
+                        tPower.StatInclude = Math.Abs(Convert.ToInt32(data[offset])) > float.Epsilon;
                         offset = offset + 1 + 1;
                     }
 
@@ -1576,16 +1572,16 @@ namespace Hero_Designer
             void readSlotEntries(string[] data, ReadOnlyCollection<int> idxLookup)
             {
                 var offset = 1; // previously line 4665
-                for (var index2 = 0; index2 <= (int) Math.Round(Conversion.Val(data[0])); ++index2)
+                for (var index2 = 0; index2 <= Convert.ToInt32(data[0]); ++index2)
                 {
                     var slotEntry = new SlotEntry
                     {
-                        Level = (int) Math.Round(Conversion.Val(data[offset]))
+                        Level = Convert.ToInt32(data[offset])
                     };
                     offset += 2;
-                    var tPowerID = (int) Math.Round(Conversion.Val(data[offset]));
+                    var tPowerID = Convert.ToInt32(data[offset]);
                     offset += 1;
-                    var tSlotIdx = (int) Math.Round(Conversion.Val(data[offset]));
+                    var tSlotIdx = Convert.ToInt32(data[offset]);
                     offset += 1;
                     if (olderFile > 0.0 && olderFile < 1.0)
                         offset += 2;
@@ -1657,7 +1653,7 @@ namespace Hero_Designer
                 // stage: poolLocks
                 var poolData = IoGrab2(iStream);
                 for (var index = 0; index <= PoolLocked.Length - 1; ++index)
-                    PoolLocked[index] = Math.Abs(Conversion.Val(poolData[index + 1])) > float.Epsilon;
+                    PoolLocked[index] = Math.Abs(Convert.ToInt32(poolData[index + 1])) > float.Epsilon;
             }
 
             // fast forward stream
@@ -1725,9 +1721,7 @@ namespace Hero_Designer
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                Interaction.MsgBox(ex.Message, MsgBoxStyle.Exclamation, "Error!");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -2196,28 +2190,33 @@ namespace Hero_Designer
             var num6 = nBuff.Length - 1;
             for (var index = 0; index <= num6; ++index)
             {
+                PopUp.StringValue[] sContent;
                 if (nBuff[index] > 0.0)
                 {
-                    section.Content =
-                        (PopUp.StringValue[]) Utils.CopyArray(section.Content,
-                            new PopUp.StringValue[section.Content.Length + 1]);
+                    //section.Content = (PopUp.StringValue[]) Utils.CopyArray(section.Content, new PopUp.StringValue[section.Content.Length + 1]);
+                    sContent = new PopUp.StringValue[section.Content.Length + 1];
+                    Array.Copy(section.Content, sContent, section.Content.Length);
+                    section.Content = sContent;
                     section.Content[section.Content.Length - 1] =
                         BuildEDItem(index, nBuff, schedBuff, Enum.GetName(eEnhance.GetType(), index), afterED1);
                 }
 
                 if (nDebuff[index] > 0.0)
                 {
-                    section.Content =
-                        (PopUp.StringValue[]) Utils.CopyArray(section.Content,
-                            new PopUp.StringValue[section.Content.Length + 1]);
+                    //section.Content = (PopUp.StringValue[]) Utils.CopyArray(section.Content, new PopUp.StringValue[section.Content.Length + 1]);
+                    sContent = new PopUp.StringValue[section.Content.Length + 1];
+                    Array.Copy(section.Content, sContent, section.Content.Length);
+                    section.Content = sContent;
                     section.Content[section.Content.Length - 1] = BuildEDItem(index, nDebuff, schedDebuff,
                         Enum.GetName(eEnhance.GetType(), index) + " Debuff", afterED2);
                 }
 
                 if (!(nAny[index] > 0.0))
                     continue;
-                section.Content = (PopUp.StringValue[]) Utils.CopyArray(section.Content,
-                    new PopUp.StringValue[section.Content.Length + 1]);
+                //section.Content = (PopUp.StringValue[]) Utils.CopyArray(section.Content, new PopUp.StringValue[section.Content.Length + 1]);
+                sContent = new PopUp.StringValue[section.Content.Length + 1];
+                Array.Copy(section.Content, sContent, section.Content.Length);
+                section.Content = sContent;
                 section.Content[section.Content.Length - 1] =
                     BuildEDItem(index, nAny, schedAny, Enum.GetName(eEnhance.GetType(), index), afterED3);
             }
@@ -2226,10 +2225,11 @@ namespace Hero_Designer
             {
                 if (!(nMez[index] > 0.0))
                     continue;
-                section.Content = (PopUp.StringValue[]) Utils.CopyArray(section.Content,
-                    new PopUp.StringValue[section.Content.Length + 1]);
-                section.Content[section.Content.Length - 1] =
-                    BuildEDItem(index, nMez, schedMez, Enum.GetName(eMez.GetType(), index), afterED4);
+                //section.Content = (PopUp.StringValue[]) Utils.CopyArray(section.Content, new PopUp.StringValue[section.Content.Length + 1]);
+                var sContent = new PopUp.StringValue[section.Content.Length + 1];
+                Array.Copy(section.Content, sContent, section.Content.Length);
+                section.Content = sContent;
+                section.Content[section.Content.Length - 1] = BuildEDItem(index, nMez, schedMez, Enum.GetName(eMez.GetType(), index), afterED4);
             }
 
             if (MidsContext.Config.DisableAlphaPopup)
@@ -2369,8 +2369,7 @@ namespace Hero_Designer
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message);
                 return false;
             }
 
@@ -2383,16 +2382,18 @@ namespace Hero_Designer
             if (!string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase))
                 return false;
             var asciiEncoding = new ASCIIEncoding();
-            var outSize = (int) Math.Round(Conversion.Val(strArray[1]));
-            var num1 = (int) Math.Round(Conversion.Val(strArray[2]));
-            var num2 = (int) Math.Round(Conversion.Val(strArray[3]));
+            var outSize = Convert.ToInt32(strArray[1]);
+            var num1 = Convert.ToInt32(strArray[2]);
+            var num2 = Convert.ToInt32(strArray[3]);
             using var memoryStream = new MemoryStream();
             using var binaryWriter = new BinaryWriter(memoryStream);
-            var iBytes =
-                (byte[]) Utils.CopyArray(
-                    Zlib.UUDecodeBytes((byte[]) Utils.CopyArray(
-                        asciiEncoding.GetBytes(Zlib.UnbreakString(iStream.ReadToEnd())),
-                        new byte[num2 - 1 + 1])), new byte[num1 - 1 + 1]);
+            //var iBytes = (byte[]) Utils.CopyArray(Zlib.UUDecodeBytes((byte[]) Utils.CopyArray(asciiEncoding.GetBytes(Zlib.UnbreakString(iStream.ReadToEnd())), new byte[num2 - 1 + 1])), new byte[num1 - 1 + 1]);
+            var encoding = asciiEncoding.GetBytes(Zlib.UnbreakString(iStream.ReadToEnd()));
+            var zlibDecode = Zlib.UUDecodeBytes(encoding);
+            var dest1 = new byte[num2 - 1 + 1];
+            Array.Copy(zlibDecode, dest1, zlibDecode.Length);
+            var iBytes = new byte[num1 - 1 + 1];
+            Array.Copy(dest1, iBytes, dest1.Length);
             iBytes = Zlib.UncompressChunk(ref iBytes, outSize);
             binaryWriter.Write(iBytes);
             memoryStream.Seek(0L, SeekOrigin.Begin);
@@ -2418,7 +2419,7 @@ namespace Hero_Designer
             } while (strArray1[0] != Files.Headers.Save.Uncompressed);
 
             strArray1[1] = strArray1[1].Replace(",", ".");
-            var nVer = (float) Conversion.Val(strArray1[1]);
+            var nVer = Convert.ToSingle(strArray1[1]);
             bool flag;
             if (nVer < BuildFormatChange1)
             {
@@ -2428,18 +2429,15 @@ namespace Hero_Designer
             {
                 if ((nVer < BuildFormatChange2) & (Math.Abs(nVer - BuildFormatChange1) > float.Epsilon))
                 {
-                    Interaction.MsgBox(
-                        "The data being loaded was saved by an older version of the application, attempting conversion.",
-                        MsgBoxStyle.Information, "Just FYI");
+                    MessageBox.Show(@"The data being loaded was saved by either an older version or different rendition of the application, attempting conversion.", @"FYI", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (nVer > BuildFormatChange2)
                 {
-                    var num2 = (int) Interaction.MsgBox(
-                        "The data being loaded was saved by a newer version of the application (File format v" +
-                        Strings.Format(nVer, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###") +
-                        ", expected " +
-                        Strings.Format(1.4f, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###") +
-                        "). It may not load correctly.", MsgBoxStyle.Information, "Just FYI");
+                    MessageBox.Show($"The data being loaded was saved by a newer version of the application (File format v {nVer.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###")} expected {1.4f.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###")} ", "Just FYI", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    /*MessageBox.Show(("The data being loaded was saved by a newer version of the application (File format v" +
+                                     Strings.Format(nVer, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###") + ", expected " +
+                                     Strings.Format(1.4f, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0###") +
+                                     "). It may not load correctly."), @"Just FYI", MessageBoxButtons.OK, MessageBoxIcon.Information);*/
                 }
 
                 var strArray2 = IoGrab2(iStream, "|");
@@ -2464,50 +2462,50 @@ namespace Hero_Designer
                     var power = CurrentBuild.Powers[index2];
                     if (index1 + 6 <= strArray4.Length)
                     {
-                        power.StatInclude = Math.Abs(Conversion.Val(strArray4[index1])) > 0.01;
+                        power.StatInclude = Math.Abs(Convert.ToDouble(strArray4[index1])) > 0.01;
                         var index3 = index1 + 1 + 1;
-                        power.Level = (int) Math.Round(Conversion.Val(strArray4[index3]));
+                        power.Level = Convert.ToInt32(strArray4[index3]);
                         var index4 = index3 + 1;
-                        power.NIDPowerset = Conversion.Val(strArray4[index4]) >= 0.0
-                            ? Powersets[(int) Math.Round(Conversion.Val(strArray4[index4]))].nID
+                        power.NIDPowerset = Convert.ToDouble(strArray4[index4]) >= 0.0
+                            ? Powersets[Convert.ToInt32(strArray4[index4])].nID
                             : -1;
                         var index5 = index4 + 1;
-                        power.IDXPower = (int) Math.Round(Conversion.Val(strArray4[index5]));
+                        power.IDXPower = Convert.ToInt32(strArray4[index5]);
                         power.NIDPower = !((power.NIDPowerset > -1) & (power.IDXPower > -1))
                             ? -1
                             : DatabaseAPI.Database.Powersets[power.NIDPowerset].Power[power.IDXPower];
                         var index6 = index5 + 1;
-                        power.Slots = new SlotEntry[(int) Math.Round(Conversion.Val(strArray4[index6])) + 1];
+                        power.Slots = new SlotEntry[Convert.ToInt32(strArray4[index6]) + 1];
                         var index7 = index6 + 1;
                         var num6 = power.Slots.Length - 1;
                         for (var index8 = 0; index8 <= num6; ++index8)
                         {
                             power.Slots[index8].LoadFromString(strArray4[index7], "~");
                             var index9 = index7 + 1;
-                            power.Slots[index8].Level = (int) Math.Round(Conversion.Val(strArray4[index9]));
+                            power.Slots[index8].Level = Convert.ToInt32(strArray4[index9]);
                             index7 = index9 + 1;
                         }
 
-                        power.VariableValue = (int) Math.Round(Conversion.Val(strArray4[index7]));
+                        power.VariableValue = Convert.ToInt32(strArray4[index7]);
                         index1 = index7 + 1;
                         if (!(nVer >= BuildFormatChange2))
                             continue;
                         {
                             power.SubPowers =
-                                new PowerSubEntry[(int) Math.Round(Conversion.Val(strArray4[index1])) + 1];
+                                new PowerSubEntry[Convert.ToInt32(strArray4[index1]) + 1];
                             ++index1;
                             var num7 = power.SubPowers.Length - 1;
                             for (var index8 = 0; index8 <= num7; ++index8)
                             {
                                 power.SubPowers[index8] = new PowerSubEntry
                                 {
-                                    Power = (int) Math.Round(Conversion.Val(strArray4[index1]))
+                                    Power = Convert.ToInt32(strArray4[index1])
                                 };
                                 index1++;
-                                power.SubPowers[index8].Powerset = (int) Math.Round(Conversion.Val(strArray4[index1]));
+                                power.SubPowers[index8].Powerset = Convert.ToInt32(strArray4[index1]);
                                 index1++;
                                 power.SubPowers[index8].StatInclude =
-                                    Math.Abs(Conversion.Val(strArray4[index1])) > 0.01;
+                                    Math.Abs(Convert.ToDouble(strArray4[index1])) > 0.01;
                                 index1++;
                                 power.SubPowers[index8].nIDPower =
                                     !((power.SubPowers[index8].Powerset > -1) & (power.SubPowers[index8].Power > -1))
@@ -2536,15 +2534,13 @@ namespace Hero_Designer
 
         public bool Save(string iFileName)
         {
-            if (Archetype == null)
-                Archetype = DatabaseAPI.Database.Classes[0];
+            Archetype ??= DatabaseAPI.Database.Classes[0];
             if (Origin > Archetype.Origin.Length - 1)
                 Origin = Archetype.Origin.Length - 1;
             var saveText = MidsCharacterFileFormat.MxDBuildSaveString(true, false);
             if (string.IsNullOrWhiteSpace(saveText))
             {
-                Interaction.MsgBox("Save failed - save function returned empty data.", MsgBoxStyle.Exclamation,
-                    "Error");
+                MessageBox.Show(@"Save failed - save function returned empty data.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -2559,9 +2555,7 @@ namespace Hero_Designer
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                Interaction.MsgBox(ex.Message, MsgBoxStyle.Exclamation, "Error!");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -2618,22 +2612,18 @@ namespace Hero_Designer
                 {
                     if (clsUniversalImport.InterpretForumPost(iString))
                     {
-                        Interaction.MsgBox("Forum post interpreted OK!", MsgBoxStyle.Information, "Forum Import");
+                        MessageBox.Show(@"Form post interpreted OK!", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         flag1 = true;
                     }
                     else
                     {
-                        Interaction.MsgBox(
-                            "Unable to interpret data. Please check that you copied the build data from the forum correctly and that it's a valid format.",
-                            MsgBoxStyle.Information, "Forum Import");
+                        MessageBox.Show(@"Unable to interpret data. Please check that you copied the build data from the forum correctly and that it's a valid format.", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         flag1 = false;
                     }
                 }
                 else
                 {
-                    Interaction.MsgBox(
-                        "Unable to recognise data. Please check that you copied the build data from the forum correctly and that it's a valid format.",
-                        MsgBoxStyle.Information, "Forum Import");
+                    MessageBox.Show(@"Unable to recognize data. Please check that you copied the build data from the forum correctly and that it's a valid format.", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     flag1 = false;
                 }
             }
@@ -2646,9 +2636,7 @@ namespace Hero_Designer
                 }
                 catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Interaction.MsgBox(ex.Message, MsgBoxStyle.Exclamation, "Error!");
-                    ProjectData.ClearProjectError();
+                    MessageBox.Show(ex.Message, @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
@@ -2678,24 +2666,20 @@ namespace Hero_Designer
                 }
                 catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Interaction.MsgBox(ex.Message);
+                    MessageBox.Show(ex.Message);
                     streamWriter.Close();
-                    ProjectData.ClearProjectError();
                     return false;
                 }
 
                 Stream mStream = null;
                 if (Load(FileIO.AddSlash(Application.StartupPath) + "import.tmp", ref mStream))
                 {
-                    Interaction.MsgBox("Build data imported!", MsgBoxStyle.Information, "Forum Import");
+                    MessageBox.Show(@"Build data imported!", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     flag1 = true;
                 }
                 else
                 {
-                    Interaction.MsgBox(
-                        "Build data couldn't be imported.  Please check that you copied the build data from the forum correctly.",
-                        MsgBoxStyle.Information, "Forum Import");
+                    MessageBox.Show(@"Build data couldn't be imported.  Please check that you copied the build data from the forum correctly.", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     flag1 = false;
                 }
             }

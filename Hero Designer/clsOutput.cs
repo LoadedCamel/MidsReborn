@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 using Base.Master_Classes;
-using Microsoft.VisualBasic;
 
 namespace Hero_Designer
 {
@@ -27,13 +27,13 @@ namespace Hero_Designer
             if ((MidsContext.Config.ExportTarget < 0) | (MidsContext.Config.Export.FormatCode.Length == 0))
             {
                 MidsContext.Config.Export.ResetCodesToDefaults();
-                Interaction.MsgBox("No formatting codes found, resetting to defaults.", MsgBoxStyle.Information, "Huh");
+                MessageBox.Show(@"No formatting codes found, resetting to defaults.", @"Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if ((MidsContext.Config.ExportScheme < 0) | (MidsContext.Config.Export.ColorSchemes.Length == 0))
             {
                 MidsContext.Config.Export.ResetColorsToDefaults();
-                Interaction.MsgBox("No color schemes found, resetting to defaults.", MsgBoxStyle.Information, "Huh");
+                MessageBox.Show(@"No color schemes found, resetting to defaults.", @"Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (MidsContext.Config.ExportTarget >= MidsContext.Config.Export.FormatCode.Length)
@@ -593,17 +593,8 @@ namespace Hero_Designer
                     ExportConfig.Element.HO => MidsContext.Config.Export.ColorSchemes[idScheme].HOColor,
                     _ => Color.Black
                 };
-                var str2 = Conversion.Hex(color.R);
-                var str3 = Conversion.Hex(color.G);
-                var str4 = Conversion.Hex(color.B);
-                while (str2.Length < 2)
-                    str2 = "0" + str2;
-                while (str3.Length < 2)
-                    str3 = "0" + str3;
-                while (str4.Length < 2)
-                    str4 = "0" + str4;
-                str1 = ExportConfig.FormatCodes.FillCode(MidsContext.Config.Export.FormatCode[idFormat].ColorOn,
-                    "#" + str2 + str3 + str4) + iText + MidsContext.Config.Export.FormatCode[idFormat].ColorOff;
+                var hexString = $"{color.R:X2}{color.G:X2}{color.B:X2}";
+                str1 = ExportConfig.FormatCodes.FillCode(MidsContext.Config.Export.FormatCode[idFormat].ColorOn, "#" + hexString) + iText + MidsContext.Config.Export.FormatCode[idFormat].ColorOff;
             }
 
             return str1;

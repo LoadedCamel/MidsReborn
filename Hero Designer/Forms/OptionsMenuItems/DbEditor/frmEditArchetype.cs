@@ -106,13 +106,13 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 return;
             if (clbOrigin.CheckedItems.Count < 1)
             {
-                var num1 = (int) Interaction.MsgBox("An archetype class must have at least one valid origin!",
-                    MsgBoxStyle.Information, "Oops.");
+                MessageBox.Show("An archetype class must have at least one valid origin!", "Oops", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else if ((cbPriGroup.Text == "") | (cbSecGroup.Text == ""))
             {
-                var num2 = (int) Interaction.MsgBox("You must set a Primary and Secondary Powerset Group!",
-                    MsgBoxStyle.Information, "Oops.");
+                MessageBox.Show("You must set both a Primary and Secondary Powerset Group!", "Oops",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -120,8 +120,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 if (num3 < 1.0)
                 {
                     num3 = 1f;
-                    var num4 = (int) Interaction.MsgBox("Hit Point value of < 1 is invalid. Hit Points set to 1",
-                        MsgBoxStyle.Information);
+                    MessageBox.Show("Hit Point value of less than 1 is invalid. Hit Points set to 1.", "Hit Points",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 MyAT.Hitpoints = (int) Math.Round(num3);
@@ -204,9 +204,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     txtClassName.Text,
                     StringComparison.OrdinalIgnoreCase))
                     continue;
-                var num2 = (int) Interaction.MsgBox(
-                    txtClassName.Text + " is already in use, please select a unique class name.",
-                    MsgBoxStyle.Information, "Name in Use");
+                MessageBox.Show($"{txtClassName.Text} is already in use, please select a unique class name.",
+                    "Name in Use", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
 

@@ -116,10 +116,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             var str = FileIO.StripPath(ImagePicker.FileName);
             if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
             {
-                var num = (int) Interaction.MsgBox(
-                    "You must select an image from the " + I9Gfx.GetEnhancementsPath() +
-                    " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.",
-                    MsgBoxStyle.Information, "Ah...");
+                MessageBox.Show(
+                    $"You must select an image from the {I9Gfx.GetEnhancementsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.",
+                    "Ah...", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {

@@ -46,9 +46,7 @@ namespace Hero_Designer.Forms
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num = (int) Interaction.MsgBox(ex.Message);
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message);
                 return;
             }
 
@@ -320,7 +318,8 @@ namespace Hero_Designer.Forms
         {
             var format = DataFormats.GetFormat("mhdEffectBIN");
             if (!Clipboard.ContainsData(format.Name))
-                Interaction.MsgBox("No effect data on the clipboard!", MsgBoxStyle.Information, "Unable to Paste");
+                MessageBox.Show("No effect data on the clipboard!", "Unable to Paste", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             else
                 using (var memoryStream = new MemoryStream((byte[]) Clipboard.GetDataObject()?.GetData(format.Name) ??
                                                            throw new InvalidOperationException()))

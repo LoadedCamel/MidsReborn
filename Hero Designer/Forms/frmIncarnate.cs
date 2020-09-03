@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+//using Microsoft.VisualBasic;
+//using Microsoft.VisualBasic.CompilerServices;
 using midsControls;
 
 namespace Hero_Designer.Forms
@@ -118,8 +118,7 @@ namespace Hero_Designer.Forms
 
         {
             VScrollBar1.Value = 0;
-            VScrollBar1.Maximum =
-                (int) Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double) Panel1.Height));
+            VScrollBar1.Maximum = (int) Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double) Panel1.Height));
             VScrollBar1_Scroll(VScrollBar1, new ScrollEventArgs(ScrollEventType.EndScroll, 0));
         }
 
@@ -523,16 +522,18 @@ namespace Hero_Designer.Forms
 
         private void PopInfo_MouseWheel(object sender, MouseEventArgs e)
         {
-            var ConVal = Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
-            if (ConVal != -1)
+            if (e.Delta < 0)
             {
-                VScrollBar1.Value =
-                    Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
-                if (VScrollBar1.Value > VScrollBar1.Maximum - 9)
-                    VScrollBar1.Value = VScrollBar1.Maximum - 9;
-                VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender),
-                    new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+                if (VScrollBar1.Value + VScrollBar1.LargeChange <= VScrollBar1.Maximum)
+                {
+                    VScrollBar1.Value += VScrollBar1.LargeChange;
+                }
             }
+            else if (VScrollBar1.Value - VScrollBar1.LargeChange >= VScrollBar1.Minimum)
+            {
+                VScrollBar1.Value -= VScrollBar1.LargeChange;
+            }
+            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender), new ScrollEventArgs(ScrollEventType.EndScroll, VScrollBar1.Value));
         }
 
         private void SetPowerSet(string Setname, ref ImageButton button)

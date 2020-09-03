@@ -33,8 +33,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 if (!((DatabaseAPI.Database.Entities[index].UID.ToLower() == myEntity.UID.ToLower()) &
                       (index != myEntity.GetNId())))
                     continue;
-                Interaction.MsgBox(myEntity.UID + " is not unique. Please enter a unique name.",
-                    MsgBoxStyle.Information, "Invalid Name");
+                MessageBox.Show($"{myEntity.UID} is not unique. Please enter a unique name.", "Invalid Name",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

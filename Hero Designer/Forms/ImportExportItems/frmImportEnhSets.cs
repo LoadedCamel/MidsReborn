@@ -163,8 +163,7 @@ namespace Hero_Designer.Forms.ImportExportItems
                 lstImport.Items[0].EnsureVisible();
             lstImport.EndUpdate();
             HideUnchanged.Text = "Hide Unchanged";
-            var num5 = (int) Interaction.MsgBox("New: " + Convert.ToString(num2) + "\r\nModified: " +
-                                                Convert.ToString(num3));
+            MessageBox.Show($"New: {num2}\r\nModified: {num3}");
         }
 
         private void frmImportEnhSets_Load(object sender, EventArgs e)
@@ -196,9 +195,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Power CSV Not Opened");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "Power CSV Not Opened", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -228,9 +225,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             } while (iString != null);
 
             iStream.Close();
-            var num6 = (int) Interaction.MsgBox(
-                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) +
-                "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
+            MessageBox.Show($"Parse Completed!\r\nTotal Records: {num3}\r\nGood: {num1}\r\nRejected: {num4}",
+                "File Parsed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return true;
         }
 
@@ -257,8 +253,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             BusyHide();
-            Interaction.MsgBox("Import of " + Convert.ToString(num1) + " records completed!", MsgBoxStyle.Information,
-                "Done");
+            MessageBox.Show($"Import of {num1} records completed", "Done", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             DisplayInfo();
             return false;
         }

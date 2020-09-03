@@ -82,8 +82,8 @@ namespace Hero_Designer.Forms
 
         {
             if (lvSets.SelectedIndices.Count <= 0 ||
-                Interaction.MsgBox("Really delete set: " + lvSets.SelectedItems[0].Text + "?",
-                    MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+                MessageBox.Show($"Really delete Set: {lvSets.SelectedItems[0].Text}?", "Are you sure?",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             var selectedIndex = lvSets.SelectedIndices[0];
             DatabaseAPI.Database.EnhancementSets.RemoveAt(selectedIndex);

@@ -85,9 +85,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Power CSV Not Opened");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "Power CSV Not Opened", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -154,11 +152,7 @@ namespace Hero_Designer.Forms.ImportExportItems
 
             iStream.Close();
             Clipboard.SetDataObject(str1);
-            Interaction.MsgBox(
-                "Import Completed!\r\nTotal Records: " + Convert.ToString(num1) + "\r\nGood: " +
-                Convert.ToString(num4) + "\r\nRejected: " + Convert.ToString(num2) +
-                "\r\nRejected List has been placed on the clipboard. Database will be saved when you click OK",
-                MsgBoxStyle.Information, "Import Done");
+            MessageBox.Show($"Import Completed!\r\nTotal Records: {num1}\r\nGood: {num4}\r\nRejected: {num2}\r\nRejected list has been placed on the clipboard. Data will be saved when you click OK.", "Import Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Enabled = true;
             BusyHide();
             var serializer = MyApplication.GetSerializer();

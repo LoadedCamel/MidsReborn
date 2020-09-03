@@ -67,9 +67,7 @@ namespace Hero_Designer
             }
             catch (Win32Exception ex)
             {
-                _ = MessageBox.Show($@"There was an error when starting the systems default web browser. {ex.Message}",
-                    @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                //Interaction.MsgBox(("There was an error starting the default web browser: " + ex.Message), MsgBoxStyle.Exclamation, "Error!");
+                MessageBox.Show($@"There was an error when starting the systems default web browser. {ex.Message}", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 

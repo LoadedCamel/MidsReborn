@@ -63,7 +63,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             for (var index = 0; index <= num2; ++index)
                 if (_importBuffer[index].IsValid)
                     _importBuffer[index].IsNew = true;
-            var num3 = (int) Interaction.MsgBox("All power effects removed!");
+            MessageBox.Show("All power effects removed!");
         }
 
         private void btnFile_Click(object sender, EventArgs e)
@@ -215,8 +215,7 @@ namespace Hero_Designer.Forms.ImportExportItems
                 lstImport.Items[0].EnsureVisible();
             lstImport.EndUpdate();
             HideUnchanged.Text = "Hide Unchanged";
-            var num6 = (int) Interaction.MsgBox("New: " + Convert.ToString(num2) + "\r\nModified: " +
-                                                Convert.ToString(num3) + "\r\nRe-Indexed: " + Convert.ToString(num4));
+            MessageBox.Show($"New: {num2}\r\nModified: {num3}\r\nRe-Indexed: {num4}");
         }
 
         private void frmImportEffects_Load(object sender, EventArgs e)
@@ -252,9 +251,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Power CSV Not Opened");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "Power CSV Not Opened", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -357,9 +354,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             } while (iString != null);
 
             iStream.Close();
-            var num9 = (int) Interaction.MsgBox(
-                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) +
-                "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
+            MessageBox.Show($"Parse Completed!\r\nTotal Records: {num3}\r\nGood: {num1}\r\nRejected: {num4}",
+                "File Parsed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return true;
         }
 
@@ -396,9 +392,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             BusyHide();
-            var num5 = (int) Interaction.MsgBox(
-                "Import of " + Convert.ToString(num1) + " records completed!\r\nOf these, " + Convert.ToString(num3) +
-                " records were found read-only.", MsgBoxStyle.Information, "Done");
+            MessageBox.Show($"Import of {num1} records completed!\r\nOf these, {num3} records were found read-only.",
+                "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DisplayInfo();
             return false;
         }

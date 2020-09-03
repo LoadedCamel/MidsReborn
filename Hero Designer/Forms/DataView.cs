@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
@@ -216,50 +218,38 @@ namespace Hero_Designer.Forms
                 var num2 = Enhancement.ApplyED(schedule[index], value[index]) * 100f;
                 var num3 = num2 + afterED[index] * 100f;
                 var num4 = (float) Math.Round(num1 - (double) num2, 3);
-                var str1 = Strings.Format(num1, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") +
-                           "%";
-                var str2 = Strings.Format(num4, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") +
-                           "%";
-                var str3 = Strings.Format(num3, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") +
-                           "%";
-                var str4 = "Total Effect: " +
-                           Strings.Format((float) (num1 + afterED[index] * 100.0),
-                               "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") +
-                           "%\r\nWith ED Applied: " + str3 +
-                           "\r\n\r\n";
+                var str1 = num1.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
+                var str2 = num4.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
+                var str3 = num3.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
+                var str4 = $"Total Effect: {Convert.ToDecimal(num1 + afterED[index] * 100.0):0.##}%\r\nWith ED Applied: {str3}\r\n\r\n";
+                //var str4 = "Total Effect: " + Strings.Format((float) (num1 + afterED[index] * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%\r\nWith ED Applied: " + str3 + "\r\n\r\n";
                 string iValue;
                 string iTip;
                 if (num4 > 0.0)
                 {
-                    iValue = str3 + "  (Pre-ED: " + Strings.Format((float) (num1 + afterED[index] * 100.0),
-                        "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%)";
+                    iValue = $"{str3} (Pre-ED: {Convert.ToDecimal(num1 + afterED[index] * 100.0):0.##}%)";
                     if (afterED[index] > 0.0)
                         str4 = str4 + "Amount from pre-ED sources: " + str1 + "\r\n";
-                    iTip = str4 + "ED reduction: " + str2 + " (" + Strings.Format(
-                        (float) (num4 / (double) num1 * 100.0),
-                        "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "% of total)\r\n";
+                    iTip = $"{str4} ED reduction: {str2} ({Convert.ToDecimal(num4 / (double)num1 * 100.0):0.##}% of total)\r\n";
+                    //iTip = str4 + "ED reduction: " + str2 + " (" + Strings.Format((float) (num4 / (double) num1 * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "% of total)\r\n";
                     if (iSpecialCase)
-                        iTip = iTip + "The highest level of ED reduction is being applied.\r\nThreshold: " +
-                               Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][2] * 100.0),
-                                   "##0") + "%\r\n";
+                        iTip = $"{iTip} The highest level of ED reduction is being applied.\r\nThreshold: {Convert.ToDecimal(DatabaseAPI.Database.MultED[(int)schedule[index]][2] * 100.0):0.##} %\r\n";
+                        //iTip = iTip + "The highest level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][2] * 100.0), "##0") + "%\r\n";
                     else if (flag2)
-                        iTip = iTip + "The middle level of ED reduction is being applied.\r\nThreshold: " +
-                               Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][1] * 100.0),
-                                   "##0") + "%\r\n";
+                        iTip = $"{iTip} The middle level of ED reduction is being applied.\r\nThreshold: {Convert.ToDecimal(DatabaseAPI.Database.MultED[(int)schedule[index]][1] * 100.0):0.##} %\r\n";
+                    //iTip = iTip + "The middle level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][1] * 100.0), "##0") + "%\r\n";
                     else if (flag1)
-                        iTip = iTip + "The lowest level of ED reduction is being applied.\r\nThreshold: " +
-                               Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][0] * 100.0),
-                                   "##0") + "%\r\n";
+                        iTip = $"{iTip} The lowest level of ED reduction is being applied.\r\nThreshold: {Convert.ToDecimal(DatabaseAPI.Database.MultED[(int)schedule[index]][0] * 100.0):0.##} %\r\n";
+                    //iTip = iTip + "The lowest level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][0] * 100.0), "##0") + "%\r\n";
                     if (afterED[index] > 0.0)
-                        iTip = iTip + "Amount from post-ED sources: " + Strings.Format((float) (afterED[index] * 100.0),
-                            "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%\r\n";
+                        iTip = $"{iTip} Amount from post-ED sources: {Convert.ToDecimal(afterED[index] * 100.0):0.##} %\r\n";
+                    //iTip = iTip + "Amount from post-ED sources: " + Strings.Format((float) (afterED[index] * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%\r\n";
                 }
                 else
                 {
                     iValue = str3;
                     if (afterED[index] > 0.0)
-                        str4 = str4 + "Amount from post-ED sources: " + Strings.Format((float) (afterED[index] * 100.0),
-                            "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%\r\n";
+                        str4 = $"{str4} Amount from post-ED sources: {Convert.ToDecimal(afterED[index] * 100.0):0.##} %\r\n";
                     iTip = str4 + "This effect has not been affected by ED.\r\n";
                 }
 
@@ -719,20 +709,16 @@ namespace Hero_Designer.Forms
                 if ((Math.Abs(accuracy1 - (double) accuracy2) > float.Epsilon) &
                     (Math.Abs(num2 - (double) accuracy2) > float.Epsilon))
                 {
-                    var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " +
-                               Strings.Format(
-                                   (float) (pBase.Accuracy + (pEnh.Accuracy - (double) MidsContext.Config.BaseAcc)),
-                                   "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000") + "x" + str;
+                    var Tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {Convert.ToString(pBase.Accuracy + (pEnh.Accuracy - (double)MidsContext.Config.BaseAcc).ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000"))}x{str}";
+                    //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format((float) (pBase.Accuracy + (pEnh.Accuracy - (double) MidsContext.Config.BaseAcc)), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
                         (float) (MidsContext.Config.BaseAcc * (double) pBase.Accuracy * 100.0), pEnh.Accuracy * 100f,
                         Suffix2, Tip2));
                 }
                 else
                 {
-                    var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " +
-                               Strings.Format(pBase.AccuracyMult,
-                                   "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") +
-                               "x" + str;
+                    var Tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")}x{str}";
+                    //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format(pBase.AccuracyMult, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
                         (float) (MidsContext.Config.BaseAcc * (double) pBase.Accuracy * 100.0),
                         (float) (MidsContext.Config.BaseAcc * (double) pBase.Accuracy * 100.0), Suffix2, Tip2));
@@ -1054,8 +1040,7 @@ namespace Hero_Designer.Forms
             var pen = enhListing.BackColor.B <= 10
                 ? new Pen(Color.FromArgb(byte.MaxValue, 0, 0))
                 : new Pen(Color.FromArgb(0, 0, byte.MaxValue));
-            if (bxFlip == null)
-                bxFlip = new ExtendedBitmap(pnlEnhActive.Width, pnlEnhInactive.Height * 2);
+            bxFlip ??= new ExtendedBitmap(pnlEnhActive.Width, pnlEnhInactive.Height * 2);
             bxFlip.Graphics.Clear(enhListing.BackColor);
             bxFlip.Graphics.DrawRectangle(pen, 0, 0, pnlEnhActive.Width - 1, pnlEnhInactive.Height - 1);
             bxFlip.Graphics.DrawRectangle(pen, 0, pnlEnhInactive.Height, pnlEnhActive.Width - 1,
@@ -1300,21 +1285,14 @@ namespace Hero_Designer.Forms
             var num1 = names.Length - 1;
             for (var dType = 1; dType <= num1; ++dType)
             {
-                var iTip = Strings.Format(displayStats.Defense(dType),
-                               "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") +
-                           "% " + names[dType] + " defense";
+                var iTip = $"{Convert.ToDecimal(displayStats.Defense(dType)):0.##}% {names[dType]} defense";
+                //var iTip = Strings.Format(displayStats.Defense(dType), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " + names[dType] + " defense";
                 if (!((dType != 9) & (dType != 7)))
                     continue;
                 if (numArray1[dType] == 0)
-                    gDef1.AddItem(
-                        names[dType] + ":|" + Strings.Format(displayStats.Defense(dType),
-                            "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%",
-                        displayStats.Defense(dType), 0.0f, iTip);
+                    gDef1.AddItem(names[dType] + ":|" + $"{Convert.ToDecimal(displayStats.Defense(dType)):0.##}%", displayStats.Defense(dType), 0.0f, iTip);
                 else
-                    gDef2.AddItem(
-                        names[dType] + ":|" + Strings.Format(displayStats.Defense(dType),
-                            "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%",
-                        displayStats.Defense(dType), 0.0f, iTip);
+                    gDef2.AddItem(names[dType] + ":|" + $"{Convert.ToDecimal(displayStats.Defense(dType)):0.##}%", displayStats.Defense(dType), 0.0f, iTip);
             }
 
             var num2 = gDef1.GetMaxValue();
@@ -1325,8 +1303,8 @@ namespace Hero_Designer.Forms
             gDef2.Max = num2;
             gDef1.Draw();
             gDef2.Draw();
-            var str = MidsContext.Character.Archetype.DisplayName + " resistance cap: " +
-                      Strings.Format((float) (MidsContext.Character.Archetype.ResCap * 100.0), "###0") + "%";
+            var str = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {Convert.ToDecimal(MidsContext.Character.Archetype.ResCap * 100.0):0.##}%";
+            //var str = MidsContext.Character.Archetype.DisplayName + " resistance cap: " + Strings.Format((float) (MidsContext.Character.Archetype.ResCap * 100.0), "###0") + "%";
             gRes1.Clear();
             gRes2.Clear();
             int[] numArray2 =
@@ -1341,28 +1319,16 @@ namespace Hero_Designer.Forms
                     string iTip;
                     if (MidsContext.Character.TotalsCapped.Res[dType1] <
                         (double) MidsContext.Character.Totals.Res[dType1])
-                        iTip = Strings.Format(displayStats.DamageResistance(dType1, true),
-                                   "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " +
-                               names[dType1] +
-                               " resistance capped at " + Strings.Format(displayStats.DamageResistance(dType1, false),
-                                   "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "%";
+                        iTip =
+                            $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):0.##}% {names[dType1]} resistance capped at {Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%";
+                    //iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " + names[dType1] + " resistance capped at " + Strings.Format(displayStats.DamageResistance(dType1, false), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "%";
                     else
-                        iTip = Strings.Format(displayStats.DamageResistance(dType1, true),
-                                   "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " +
-                               names[dType1] +
-                               " resistance. (" + str + ")";
+                        iTip = $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):0.##}% {names[dType1]} resistance. ({str})";
+                    //iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " + names[dType1] + " resistance. (" + str + ")";
                     if (numArray2[dType1] == 0)
-                        gRes1.AddItem(
-                            names[dType1] + ":|" + Strings.Format(displayStats.DamageResistance(dType1, false),
-                                "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%",
-                            displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true),
-                            iTip);
+                        gRes1.AddItem(names[dType1] + ":|" + $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%", displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
                     else
-                        gRes2.AddItem(
-                            names[dType1] + ":|" + Strings.Format(displayStats.DamageResistance(dType1, false),
-                                "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%",
-                            displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true),
-                            iTip);
+                        gRes2.AddItem(names[dType1] + ":|" + $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%", displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
                 }
 
                 ++dType1;
@@ -1401,31 +1367,12 @@ namespace Hero_Designer.Forms
                         Utilities.FixDP(displayStats.HealthRegenHealthPerSec) +
                         "%\r\nHitPoints regenerated per second at level 50: " +
                         Utilities.FixDP(displayStats.HealthRegenHPPerSec) + " HP";
-            total_Misc.AddItem(new ctlPairedList.ItemPair("Recovery:",
-                Strings.Format(displayStats.EnduranceRecoveryPercentage(false), "###0") + "% (" +
-                Strings.Format(displayStats.EnduranceRecoveryNumeric,
-                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") +
-                "/s)", false, false, false, iTip2));
-            total_Misc.AddItem(new ctlPairedList.ItemPair("Regen:",
-                Strings.Format(displayStats.HealthRegenPercent(false), "###0") + "%",
-                false, false, false, iTip3));
-            total_Misc.AddItem(new ctlPairedList.ItemPair("EndDrain:",
-                Strings.Format(displayStats.EnduranceUsage,
-                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "/s", false,
-                false, false, iTip1));
-            total_Misc.AddItem(new ctlPairedList.ItemPair("+ToHit:",
-                Strings.Format(displayStats.BuffToHit,
-                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%", false, false,
-                false, "This effect is increasing the accuracy of all your powers."));
-            total_Misc.AddItem(new ctlPairedList.ItemPair("+EndRdx:",
-                Strings.Format(displayStats.BuffEndRdx,
-                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%", false, false,
-                false,
-                "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            total_Misc.AddItem(new ctlPairedList.ItemPair("+Recharge:",
-                Strings.Format((float) (displayStats.BuffHaste(false) - 100.0),
-                    "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "%", false, false, false,
-                "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            total_Misc.AddItem(new ctlPairedList.ItemPair("Recovery:", $"{Convert.ToDecimal(displayStats.EnduranceRecoveryPercentage(false)):0.##}% ({Convert.ToDecimal(displayStats.EnduranceRecoveryNumeric):0.##}/s)", false, false, false, iTip2));
+            total_Misc.AddItem(new ctlPairedList.ItemPair("Regen:", $"{Convert.ToDecimal(displayStats.HealthRegenPercent(false)):0.##}%", false, false, false, iTip3));
+            total_Misc.AddItem(new ctlPairedList.ItemPair("EndDrain:", $"{Convert.ToDecimal(displayStats.EnduranceUsage):0.##}/s", false, false, false, iTip1));
+            total_Misc.AddItem(new ctlPairedList.ItemPair("+ToHit:", $"{Convert.ToDecimal(displayStats.BuffToHit):0.##}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
+            total_Misc.AddItem(new ctlPairedList.ItemPair("+EndRdx:", $"{Convert.ToDecimal(displayStats.BuffEndRdx):0.##}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
+            total_Misc.AddItem(new ctlPairedList.ItemPair("+Recharge:", $"{Convert.ToDecimal(displayStats.BuffHaste(false) - 100.0):0.##}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
             total_Misc.Draw();
         }
 
@@ -1791,10 +1738,7 @@ namespace Hero_Designer.Forms
                 var num3 = pBase.Effects[idEffect].MagPercent;
                 if ((pBase.Effects[idEffect].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                     num3 = 0.0f;
-                var iItem = new ctlPairedList.ItemPair("Elusivity:",
-                    Strings.Format(num3, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "%",
-                    false,
-                    pBase.Effects[idEffect].Probability < 1.0, false, iTip);
+                var iItem = new ctlPairedList.ItemPair("Elusivity:", $"{Convert.ToDecimal(num3):0.##}%", false, pBase.Effects[idEffect].Probability < 1.0, false, iTip);
                 iList.AddItem(iItem);
                 var num4 = num1 + 1;
                 if (flag)
@@ -2118,10 +2062,7 @@ namespace Hero_Designer.Forms
                           (pBase.Effects[iTagID].Probability > 0.0) &
                           pBase.Effects[iTagID].CanInclude()) || !pEnh.Effects[iTagID].PvXInclude())
                         continue;
-                    var str = !((pEnh.Effects[iTagID].Duration < 2.0) | (pBase.PowerType == Enums.ePowerType.Auto_))
-                        ? " - " + Strings.Format(pEnh.Effects[iTagID].Duration,
-                            "#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "s"
-                        : string.Empty;
+                    var str = !((pEnh.Effects[iTagID].Duration < 2.0) | (pBase.PowerType == Enums.ePowerType.Auto_)) ? " - " + pEnh.Effects[iTagID].Duration.ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "#") + "s" : string.Empty;
                     if (pBase.Effects[iTagID].Mag > 0.0)
                     {
                         var iAlternate2 =
@@ -2892,6 +2833,7 @@ namespace Hero_Designer.Forms
 
         public void Init()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
         }
 
         private void InitializeComponent()
@@ -3516,7 +3458,7 @@ namespace Hero_Designer.Forms
             lblShrink.TabIndex = 67;
             lblShrink.Text = "y";
             lblShrink.TextAlign = ContentAlignment.MiddleCenter;
-            dbTip.SetToolTip(lblShrink, "Shrink / Expland the Info Display");
+            dbTip.SetToolTip(lblShrink, "Shrink / Expand the Info Display");
             lblShrink.UseCompatibleTextRendering = true;
             lblLock.BackColor = Color.Red;
             lblLock.BorderStyle = BorderStyle.FixedSingle;
@@ -3713,15 +3655,12 @@ namespace Hero_Designer.Forms
                 str1 = "No Valid Tip";
             }
 
-            object[] Arguments =
-            {
-                str1
-            };
-            bool[] CopyBack =
-            {
-                true
-            };
+            object[] Arguments = {str1};
+            bool[] CopyBack = {true};
+
+         
             NewLateBinding.LateCall(Sender, null, "SetTip", Arguments, null, null, CopyBack, true);
+            
             if (!CopyBack[0])
             {
             }
@@ -3730,6 +3669,7 @@ namespace Hero_Designer.Forms
                 var str2 = (string) Convert.ChangeType(RuntimeHelpers.GetObjectValue(Arguments[0]), typeof(string));
             }
         }
+
 
         private void pnlEnhActive_MouseClick(object sender, MouseEventArgs e)
         {

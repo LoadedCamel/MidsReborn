@@ -39,8 +39,8 @@ namespace Hero_Designer.Forms
 
             if (num1 > -1)
             {
-                var num3 = (int) Interaction.MsgBox("An override for that powerset/power already exists!",
-                    MsgBoxStyle.Information, "Can't have duplicates!");
+                MessageBox.Show("An override for that Powerset/Power already exists!", "Cannot have duplicates!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 lstTweaks.SelectedIndex = num1;
             }
             else

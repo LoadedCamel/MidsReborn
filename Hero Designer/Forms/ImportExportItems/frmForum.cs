@@ -165,9 +165,7 @@ namespace Hero_Designer.Forms.ImportExportItems
                 chkDataChunk.Checked | chkAlwaysDataChunk.Checked | chkChunkOnly.Checked)
                 str1 = str1 + str2 + MidsCharacterFileFormat.MxDBuildSaveString(false, true) + sizeOff;
             Clipboard.SetDataObject(str1, true);
-            var num = (int) Interaction.MsgBox(
-                "The build data has been placed on the clipboard and is ready to paste into a forum post. If your forum allows you to disable emoticons/smileys in your post, you should do so.",
-                MsgBoxStyle.Information, "Export Done");
+            MessageBox.Show("The build data has been placed on the clipboard and is ready to paste into a forum post. If your forum allows you to disable emoticons/smileys in your post, you should do so.", "Export Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Hide();
         }
 

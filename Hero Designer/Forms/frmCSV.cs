@@ -1,15 +1,16 @@
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Master_Classes;
 using Hero_Designer.Forms.ImportExportItems;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Hero_Designer.Forms
 {
@@ -47,9 +48,7 @@ namespace Hero_Designer.Forms
 
         private void btnClearSI_Click(object sender, EventArgs e)
         {
-            if (Interaction.MsgBox(
-                "Really set all StaticIndex values to -1?\r\nIf not using qualified names for Save/Load, files will be unopenable until Statics are re-indexed. Full Re-Indexing may result in changed index assignments.",
-                MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") == MsgBoxResult.No)
+            if (MessageBox.Show("Really set all StaticIndex values to -1?\r\nIf not using qualified names for Save/Load, files will be un-openable until Statics are re-indexed. Full Re-Indexing may result in changed index assignments.", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
             var num1 = DatabaseAPI.Database.Power.Length - 1;
             for (var index = 0; index <= num1; ++index)
@@ -57,7 +56,7 @@ namespace Hero_Designer.Forms
             var num2 = DatabaseAPI.Database.Enhancements.Length - 1;
             for (var index = 0; index <= num2; ++index)
                 DatabaseAPI.Database.Enhancements[index].StaticIndex = -1;
-            Interaction.MsgBox("Static Index values cleared.", MsgBoxStyle.Information, "De-Indexing Complete");
+            MessageBox.Show("Static Index values cleared.", "De-Indexing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnDefiance_Click(object sender, EventArgs e)
@@ -155,17 +154,13 @@ namespace Hero_Designer.Forms
             Clipboard.SetText(text);
             try
             {
-                var FileNumber = FileSystem.FreeFile();
-                FileSystem.FileOpen(FileNumber, "StaticIndexes.txt", OpenMode.Output);
-                FileSystem.WriteLine(FileNumber, text);
-                FileSystem.FileClose(FileNumber);
-                var num = (int) Interaction.MsgBox("Copied to clipboard and saved in StaticIndexes.txt");
+                using StreamWriter sw = File.AppendText("StaticIndexes.txt");
+                sw.WriteLine(text);
+                MessageBox.Show(@"Copied to clipboard and saved in StaticIndexes.txt");
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num = (int) Interaction.MsgBox("Copied to clipboard only");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(@"Copied to clipboard only");
             }
         }
 
@@ -192,7 +187,7 @@ namespace Hero_Designer.Forms
         {
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, true);
-            Interaction.MsgBox("Static Index values assigned.", MsgBoxStyle.Information, "Indexing Complete");
+            MessageBox.Show(@"Static Index values assigned.", @"Indexing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void DisplayInfo()

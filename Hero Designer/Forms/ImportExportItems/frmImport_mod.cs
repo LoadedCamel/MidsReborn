@@ -37,26 +37,28 @@ namespace Hero_Designer.Forms.ImportExportItems
                         lblAttribTables.Text, Convert.ToInt32(udAttribRevision.Value)))
                     {
                         DatabaseAPI.Database.AttribMods.Store(MyApplication.GetSerializer());
-                        Interaction.MsgBox(
-                            Convert.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length) +
-                            " modifier tables imported and saved.", MsgBoxStyle.Information, "Done.");
+                        MessageBox.Show(
+                            $"{DatabaseAPI.Database.AttribMods.Modifier.Length} modifier tables imported and saved.",
+                            "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        Interaction.MsgBox("Import failed. attempting reload of binary data file.",
-                            MsgBoxStyle.Information, "Error.");
+                        MessageBox.Show("Import failed, attempting reload of binary data file.", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                         if (DatabaseAPI.Database.AttribMods.Load())
-                            Interaction.MsgBox("Binary reload successful.", MsgBoxStyle.Information, "Done.");
+                            MessageBox.Show("Binary data file reload successful.", "Done", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
                     }
                 }
                 else
                 {
-                    Interaction.MsgBox("Files cannot be found!", MsgBoxStyle.Exclamation, "No Can Do");
+                    MessageBox.Show("Files cannot be found!", "No Can Do", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
                 }
             }
             else
             {
-                Interaction.MsgBox("Files not selected!", MsgBoxStyle.Exclamation, "No Can Do");
+                MessageBox.Show("Files not selected!", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
             DisplayInfo();

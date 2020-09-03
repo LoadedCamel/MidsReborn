@@ -37,11 +37,11 @@ namespace Hero_Designer.Forms.ImportExportItems
                 if (File.Exists(lblAttribIndex.Text) & File.Exists(lblAttribTables.Text))
                     ImportRecipeCSV(lblAttribIndex.Text, lblAttribTables.Text);
                 else
-                    Interaction.MsgBox("Files cannot be found!", MsgBoxStyle.Exclamation, "No Can Do");
+                    MessageBox.Show("Files cannot be found!", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                Interaction.MsgBox("Files not selected!", MsgBoxStyle.Exclamation, "No Can Do");
+                MessageBox.Show("Files not selected!", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Recipe CSVs Not Opened");
+                MessageBox.Show(ex.Message, "Recipe CSVs Not Opened", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -245,24 +245,22 @@ namespace Hero_Designer.Forms.ImportExportItems
                 DatabaseAPI.AssignRecipeSalvageIDs();
                 DatabaseAPI.GuessRecipes();
                 DatabaseAPI.AssignRecipeIDs();
-                Interaction.MsgBox("Done. Recipe-Enhancement links have been guessed.", MsgBoxStyle.Information,
-                    "Import");
+                MessageBox.Show("Done, Recipe-Enhancement links have been guessed.", "Import", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                var exception = ex;
                 iStream1.Close();
                 iStream2.Close();
                 BusyHide();
-                Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "CSV Parse Error");
+                MessageBox.Show(ex.Message, "CSV Parse Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
             BusyHide();
             iStream2.Close();
-            Interaction.MsgBox(
-                "Parse Completed!\r\nTotal Records: " + num5 + "\r\nGood: " + num2 + "\r\nRejected: " + num3,
-                MsgBoxStyle.Information, "File Parsed");
+            MessageBox.Show($"Parse Completed!\r\nTotal Records: {num5}\r\nGood: {num2}\r\nRejected: {num3}",
+                "File Parsed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveRecipes(serializer);
             DatabaseAPI.SaveEnhancementDb(serializer);

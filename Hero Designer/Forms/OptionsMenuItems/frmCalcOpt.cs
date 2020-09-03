@@ -137,8 +137,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
 
         private void csDelete_Click(object sender, EventArgs e)
         {
-            if (csList.Items.Count <= 0 || Interaction.MsgBox("Delete " + csList.SelectedItem + "?",
-                MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (csList.Items.Count <= 0 || MessageBox.Show($"Delete {csList.SelectedItem}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             MidsContext.Config.Export.RemoveScheme(csList.SelectedIndex);
             csPopulateList();
@@ -174,9 +173,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
 
         private void csReset_Click(object sender, EventArgs e)
         {
-            if (Interaction.MsgBox(
-                "This will remove all of the color schemes and replace them with the defaults. Are you sure?",
-                MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (MessageBox.Show("This will remove all of the colors you have set and replace them with the defaults. Do you want to do this?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             MidsContext.Config.Export.ResetColorsToDefaults();
             csPopulateList();
@@ -218,8 +215,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
 
         private void fcDelete_Click(object sender, EventArgs e)
         {
-            if (fcList.Items.Count <= 0 || Interaction.MsgBox("Delete " + fcList.SelectedItem + "?",
-                MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (fcList.Items.Count <= 0 || MessageBox.Show($"Delete {fcList.SelectedItem}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             MidsContext.Config.Export.RemoveCodes(fcList.SelectedIndex);
             fcPopulateList();
@@ -331,9 +327,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
 
         private void fcReset_Click(object sender, EventArgs e)
         {
-            if (Interaction.MsgBox(
-                "This will remove all of the formatting code sets and replace them with the default set. Are you sure?",
-                MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (MessageBox.Show("This will remove all of the formatting code sets and replace them with the default set. Do you want to do this?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             MidsContext.Config.Export.ResetCodesToDefaults();
             fcPopulateList();

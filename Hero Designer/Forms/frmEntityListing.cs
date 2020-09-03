@@ -6,8 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Hero_Designer.My;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+//using Microsoft.VisualBasic;
+//using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer.Forms
 {
@@ -44,11 +44,11 @@ namespace Hero_Designer.Forms
             if (frmEntityEdit.DialogResult != DialogResult.OK)
                 return;
             var database = DatabaseAPI.Database;
-            var summonedEntityArray = (SummonedEntity[]) Utils.CopyArray(database.Entities,
-                new SummonedEntity[DatabaseAPI.Database.Entities.Length + 1]);
+            //var summonedEntityArray = (SummonedEntity[]) Utils.CopyArray(database.Entities, new SummonedEntity[DatabaseAPI.Database.Entities.Length + 1]);
+            var summonedEntityArray = new SummonedEntity[DatabaseAPI.Database.Entities.Length + 1];
+            Array.Copy(database.Entities, summonedEntityArray, DatabaseAPI.Database.Entities.Length);
             database.Entities = summonedEntityArray;
-            DatabaseAPI.Database.Entities[DatabaseAPI.Database.Entities.Length - 1] =
-                new SummonedEntity(frmEntityEdit.myEntity, DatabaseAPI.Database.Entities.Length - 1);
+            DatabaseAPI.Database.Entities[DatabaseAPI.Database.Entities.Length - 1] = new SummonedEntity(frmEntityEdit.myEntity, DatabaseAPI.Database.Entities.Length - 1);
             ListAddItem(DatabaseAPI.Database.Entities.Length - 1);
         }
 
@@ -70,8 +70,8 @@ namespace Hero_Designer.Forms
             if (frmEntityEdit.ShowDialog() != DialogResult.OK)
                 return;
             var database = DatabaseAPI.Database;
-            var summonedEntityArray = (SummonedEntity[]) Utils.CopyArray(database.Entities,
-                new SummonedEntity[DatabaseAPI.Database.Entities.Length + 1]);
+            var summonedEntityArray = new SummonedEntity[DatabaseAPI.Database.Entities.Length + 1];
+            Array.Copy(database.Entities, summonedEntityArray, DatabaseAPI.Database.Entities.Length);
             database.Entities = summonedEntityArray;
             DatabaseAPI.Database.Entities[DatabaseAPI.Database.Entities.Length - 1] =
                 new SummonedEntity(frmEntityEdit.myEntity);
@@ -80,10 +80,7 @@ namespace Hero_Designer.Forms
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (lvEntity.SelectedIndices.Count <= 0 ||
-                Interaction.MsgBox(
-                    "Really delete entity: " + DatabaseAPI.Database.Entities[lvEntity.SelectedIndices[0]].DisplayName +
-                    "?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (lvEntity.SelectedIndices.Count <= 0 || MessageBox.Show("Really delete entity: " + DatabaseAPI.Database.Entities[lvEntity.SelectedIndices[0]].DisplayName + "?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             var summonedEntityArray = new SummonedEntity[DatabaseAPI.Database.Entities.Length - 1 + 1];
             var selectedIndex = lvEntity.SelectedIndices[0];

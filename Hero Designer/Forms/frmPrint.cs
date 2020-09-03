@@ -45,7 +45,8 @@ namespace Hero_Designer.Forms
                 : ConfigData.PrintOptionProfile.SinglePage;
             if (rbProfileNone.Checked & !chkPrintHistory.Checked)
             {
-                Interaction.MsgBox("You have not selected anything to print!", MsgBoxStyle.Information, "Eh?");
+                MessageBox.Show("You have not selected anything to print!", "Eh?", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
             {
@@ -72,7 +73,8 @@ namespace Hero_Designer.Forms
         {
             if (PrinterSettings.InstalledPrinters.Count < 1)
             {
-                Interaction.MsgBox("There are no printers installed!", MsgBoxStyle.Information, "Buh...");
+                MessageBox.Show("There are no printers installed!", "Buh...", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
                 Close();
             }
 

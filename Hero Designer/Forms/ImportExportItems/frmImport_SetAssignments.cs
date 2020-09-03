@@ -127,9 +127,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "IO CSV Not Opened");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "IO CSV Not Opened", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -182,11 +180,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var exception = ex;
                 iStream.Close();
-                var num2 = (int) Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "IO CSV Parse Error");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "IO CSV Parse Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -197,9 +192,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
             DisplayInfo();
-            var num7 = (int) Interaction.MsgBox(
-                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) +
-                "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
+            MessageBox.Show($"Parse Completed!\r\nTotal Records: {num3}\r\nGood: {num1}\r\nRejected: {num4}",
+                "File Parsed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return true;
         }
     }

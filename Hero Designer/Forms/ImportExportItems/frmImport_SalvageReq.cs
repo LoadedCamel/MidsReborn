@@ -95,9 +95,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "IO CSV Not Opened");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "IO CSV Not Opened", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -157,9 +155,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "IO CSV Not Opened");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "IO CSV Not Opened", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -223,20 +219,16 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var exception = ex;
                 iStream2.Close();
-                var num2 = (int) Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "IO CSV Parse Error");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "IO CSV Parse Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveRecipes(serializer);
             DisplayInfo();
-            var num8 = (int) Interaction.MsgBox(
-                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num6) +
-                "\r\nRejected: " + Convert.ToString(num7), MsgBoxStyle.Information, "File Parsed");
+            MessageBox.Show($"Parse Completed!\r\nTotal Records: {num3}\r\nGood: {num6}\r\nRejected: {num7}",
+                "File Parsed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return true;
         }
     }

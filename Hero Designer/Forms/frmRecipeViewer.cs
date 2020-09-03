@@ -663,7 +663,7 @@ namespace Hero_Designer.Forms
             }
 
             Clipboard.SetDataObject(str1, true);
-            var num3 = (int) Interaction.MsgBox("Data copied to clipboard!", MsgBoxStyle.Information, "Done");
+            MessageBox.Show("Data copied to clipboard!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ibClipboard_ButtonClicked()

@@ -56,16 +56,14 @@ namespace Hero_Designer.Forms.ImportExportItems
 
         private void btnEraseAll_Click(object sender, EventArgs e)
         {
-            if (Interaction.MsgBox(
-                "Really wipte the power array. You shouldn't do this if you want to preserve any special power settings.",
-                MsgBoxStyle.YesNo, "Really?") == MsgBoxResult.No)
+            if (MessageBox.Show("Do you really want to wipe the power array?\r\nNote: You shouldn't do this if you want to preserve any special power settings.", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
             DatabaseAPI.Database.Power = new IPower[0];
             var num1 = ImportBuffer.Length - 1;
             for (var index = 0; index <= num1; ++index)
                 if (ImportBuffer[index].IsValid)
                     ImportBuffer[index].IsNew = true;
-            var num2 = (int) Interaction.MsgBox("All powers removed!");
+            MessageBox.Show("All powers removed!");
         }
 
         private void btnFile_Click(object sender, EventArgs e)
@@ -184,9 +182,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             int num3;
             if (index1 != powerArray.Length)
             {
-                var num2 = (int) Interaction.MsgBox("Power array size mismatch! Count: " + Convert.ToString(index1) +
-                                                    " Array Length: " + Convert.ToString(powerArray.Length) +
-                                                    "\r\nNothing deleted.");
+                MessageBox.Show($"Power array size mismatch! Count: {index1} Array Length: {powerArray.Length}\r\nNothing deleted.");
                 num3 = 0;
             }
             else
@@ -262,9 +258,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Power CSV Not Opened");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "Power CSV Not Opened", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -299,18 +293,15 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var exception = ex;
                 iStream.Close();
-                Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "Power Class CSV Parse Error");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "Power Class CSV Parse Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 return false;
             }
 
             iStream.Close();
-            Interaction.MsgBox(
-                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) +
-                "\r\nRejected: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
+            MessageBox.Show($"Parse Completed!\r\nTotal Records: {num3}\r\nGood: {num1}\r\nRejected: {num4}",
+                "File Parsed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return true;
         }
 
@@ -326,13 +317,10 @@ namespace Hero_Designer.Forms.ImportExportItems
                 ++num1;
             }
 
-            if (Interaction.MsgBox("Check for deleted powers?", MsgBoxStyle.YesNo, "Additional Check") ==
-                MsgBoxResult.Yes)
+            if (MessageBox.Show("Check for delted powers?", "Additional Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 var pList = CheckForDeletedPowers();
-                if (pList.Length > 0 &&
-                    Interaction.MsgBox(Convert.ToString(pList.Length) + "  deleted powers found. Delete them?",
-                        MsgBoxStyle.YesNo, "Additional Check") == MsgBoxResult.Yes)
+                if (pList.Length > 0 && MessageBox.Show($"{pList.Length} deleted powers found. Delete them?", "Additional Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     DeletePowers(pList);
             }
 
@@ -342,8 +330,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             DatabaseAPI.MatchAllIDs();
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
-            Interaction.MsgBox("Import of " + Convert.ToString(num1) + " records completed!", MsgBoxStyle.Information,
-                "Done");
+            MessageBox.Show($"Import of {num1} records completed!", "Done", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             DisplayInfo();
             return false;
         }

@@ -1,7 +1,6 @@
 using System;
+using System.Windows.Forms;
 using Base.Master_Classes;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer
 {
@@ -15,7 +14,7 @@ namespace Hero_Designer
         {
             var sPowerLine = new sPowerLine();
             var strArray1 = SmartBreak(iLine, nAT);
-            sPowerLine.Level = (int) Math.Round(Conversion.Val(strArray1[0]));
+            sPowerLine.Level = Convert.ToInt32(strArray1[0]);
             sPowerLine.Power = strArray1[1];
             sPowerLine.Slots = Array.Empty<sSlot>();
             var strArray2 = strArray1[2].Replace(" ", "|").Replace(")", "|").Split('|');
@@ -56,10 +55,10 @@ namespace Hero_Designer
 
                 if (!((num2 > -1) & (startIndex > -1)))
                     continue;
-                sPowerLine.Slots = (sSlot[]) Utils.CopyArray(sPowerLine.Slots, new sSlot[sPowerLine.Slots.Length + 1]);
+                Array.Copy(sPowerLine.Slots, new sSlot[sPowerLine.Slots.Length + 1], sPowerLine.Slots.Length + 1);
+                //sPowerLine.Slots = (sSlot[]) Utils.CopyArray(sPowerLine.Slots, new sSlot[sPowerLine.Slots.Length + 1]);
                 sPowerLine.Slots[sPowerLine.Slots.Length - 1].Enh = iStr.Substring(0, num2).Trim();
-                sPowerLine.Slots[sPowerLine.Slots.Length - 1].Level =
-                    (int) Math.Round(Conversion.Val(iStr.Substring(startIndex).Trim()));
+                sPowerLine.Slots[sPowerLine.Slots.Length - 1].Level = Convert.ToInt32(iStr.Substring(startIndex).Trim());
                 if (iStr.Substring(startIndex).Trim().StartsWith("A"))
                     sPowerLine.Slots[sPowerLine.Slots.Length - 1].Level = sPowerLine.Level;
                 sPowerLine.Slots[sPowerLine.Slots.Length - 1].PowerName = sPowerLine.Power;
@@ -119,7 +118,7 @@ namespace Hero_Designer
             for (var index = 0; index <= num; ++index)
             {
                 var strArray = SmartBreak(haystack[index], iAT);
-                if (Conversion.Val(strArray[0]) > 0.0 && strArray[1].Length > 0 &&
+                if (Convert.ToInt32(strArray[0]) > 0.0 && strArray[1].Length > 0 &&
                     FindPower(strArray[1], iAT).Powerset > -1)
                     return index;
             }
@@ -284,8 +283,8 @@ namespace Hero_Designer
                     iPL.Assign(BreakLine(haystack[index1], MidsContext.Character.Archetype.Idx));
                     if (!((iPL.Level > 0) & (iPL.Power != "")))
                         continue;
-                    sPowerLineArray =
-                        (sPowerLine[]) Utils.CopyArray(sPowerLineArray, new sPowerLine[sPowerLineArray.Length + 1]);
+                    //sPowerLineArray = (sPowerLine[]) Utils.CopyArray(sPowerLineArray, new sPowerLine[sPowerLineArray.Length + 1]);
+                    Array.Copy(sPowerLineArray, new sPowerLine[sPowerLineArray.Length + 1], sPowerLineArray.Length + 1);
                     sPowerLineArray[sPowerLineArray.Length - 1].Assign(iPL);
                 }
 
@@ -379,10 +378,10 @@ namespace Hero_Designer
                             sPowerLineArray[index1].Slots[index2].Enh.IndexOf("-I:", StringComparison.Ordinal) <= -1
                                 ? sPowerLineArray[index1].Slots[index2].Enh.IndexOf(":", StringComparison.Ordinal) <=
                                   -1 ? MidsContext.Config.I9.DefaultIOLevel :
-                                (int) Math.Round(Conversion.Val(sPowerLineArray[index1].Slots[index2].Enh
+                                (int) Math.Round(Convert.ToInt32(sPowerLineArray[index1].Slots[index2].Enh
                                     .Substring(sPowerLineArray[index1].Slots[index2].Enh
                                         .IndexOf(":", StringComparison.Ordinal) + 1)) - 1.0)
-                                : (int) Math.Round(Conversion.Val(sPowerLineArray[index1].Slots[index2].Enh
+                                : (int) Math.Round(Convert.ToInt32(sPowerLineArray[index1].Slots[index2].Enh
                                     .Substring(sPowerLineArray[index1].Slots[index2].Enh
                                         .IndexOf(":", StringComparison.Ordinal) + 1)) - 1.0);
                         slots[index5].Level = index2 != 0
@@ -400,10 +399,7 @@ namespace Hero_Designer
             catch (Exception ex)
             {
                 MidsContext.Config.BuildMode = buildMode;
-                Interaction.MsgBox(
-                    "Unable to import from forum post:\r\n" + ex.Message +
-                    "\r\n\r\nCheck the build was copied correctly.",
-                    MsgBoxStyle.Information, "Forum Import Filter");
+                MessageBox.Show($"Unable to import from forum post:\r\n{ex.Message}\r\n\r\nCheck that the build was copied correctly.", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
         }
@@ -604,7 +600,8 @@ namespace Hero_Designer
                     start = SeekSep(haystack[index1], num2, false);
                     if (num2 <= -1)
                         continue;
-                    strArray = (string[]) Utils.CopyArray(strArray, new string[strArray.Length + 1]);
+                    //strArray = (string[]) Utils.CopyArray(strArray, new string[strArray.Length + 1]);
+                    Array.Copy(strArray, new string[strArray.Length + 1], strArray.Length + 1);
                     strArray[strArray.Length - 1] = start <= -1
                         ? haystack[index1].Substring(num2).Trim()
                         : haystack[index1].Substring(num2, start - num2).Trim();

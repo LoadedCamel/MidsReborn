@@ -135,7 +135,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnFileReport_Click(object sender, EventArgs e)
         {
-            Interaction.MsgBox(Files.FileData, MsgBoxStyle.Information, "File Loading Report");
+            MessageBox.Show(Files.FileData, "File Loading Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnPSBrowse_Click(object sender, EventArgs e)

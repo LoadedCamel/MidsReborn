@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+//using Microsoft.VisualBasic;
+//using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_Designer.Forms
 {
@@ -67,8 +68,9 @@ namespace Hero_Designer.Forms
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             var enh = myEnh;
-            var sEffectArray =
-                (Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
+            //var sEffectArray = (Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
+            var sEffectArray = new Enums.sEffect[myEnh.Effect.Length + 1];
+            Array.Copy(enh.Effect, sEffectArray, myEnh.Effect.Length + 1);
             enh.Effect = sEffectArray;
             var effect = myEnh.Effect;
             var index = myEnh.Effect.Length - 1;
@@ -188,8 +190,8 @@ namespace Hero_Designer.Forms
             var index1 = DatabaseAPI.NidFromUidPower(power.FullName);
             if (index1 < 0)
             {
-                var num1 = (int) Interaction.MsgBox("Unknown error caused an invalid PowerIndex return value.",
-                    MsgBoxStyle.Exclamation, "Wha?");
+                MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -221,7 +223,7 @@ namespace Hero_Designer.Forms
                                "\r\nThe following powers referenced this power and were updated:\r\n" + str1 +
                                "\r\n\r\nThis list has been placed on the clipboard.";
                     Clipboard.SetDataObject(str2, true);
-                    var num4 = (int) Interaction.MsgBox(str2);
+                    MessageBox.Show(str2);
                 }
             }
         }
@@ -254,10 +256,7 @@ namespace Hero_Designer.Forms
             var str = FileIO.StripPath(ImagePicker.FileName);
             if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
             {
-                var num = (int) Interaction.MsgBox(
-                    "You must select an image from the " + I9Gfx.GetEnhancementsPath() +
-                    " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.",
-                    MsgBoxStyle.Information, "Ah...");
+                MessageBox.Show("You must select an image from the " + I9Gfx.GetEnhancementsPath() + " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", "Ah...", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -680,8 +679,7 @@ namespace Hero_Designer.Forms
 
                 if (!flag)
                 {
-                    var num2 = (int) Interaction.MsgBox("This effect has already been added!", MsgBoxStyle.Information,
-                        "There can be only one.");
+                    MessageBox.Show(@"This effect has already been added!", @"There can be only one.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
 
@@ -732,14 +730,14 @@ namespace Hero_Designer.Forms
 
             if (!flag)
             {
-                var num1 = (int) Interaction.MsgBox("This effect has already been added!", MsgBoxStyle.Information,
-                    "There can be only one.");
+                MessageBox.Show(@"This effect has already been added!", @"There can be only one.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
                 var enh = myEnh;
-                var sEffectArray =
-                    (Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
+                //var sEffectArray =(Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
+                var sEffectArray = new Enums.sEffect[myEnh.Effect.Length + 1];
+                Array.Copy(enh.Effect, sEffectArray, myEnh.Effect.Length + 1);
                 enh.Effect = sEffectArray;
                 var effect = myEnh.Effect;
                 var index = myEnh.Effect.Length - 1;
@@ -802,15 +800,10 @@ namespace Hero_Designer.Forms
         {
             cbSched.BeginUpdate();
             cbSched.Items.Clear();
-            var Style = "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##";
-            cbSched.Items.Add("A (" + Strings.Format((float) (DatabaseAPI.Database.MultSO[0][0] * 100.0), Style) +
-                              "%)");
-            cbSched.Items.Add("B (" + Strings.Format((float) (DatabaseAPI.Database.MultSO[0][1] * 100.0), Style) +
-                              "%)");
-            cbSched.Items.Add("C (" + Strings.Format((float) (DatabaseAPI.Database.MultSO[0][2] * 100.0), Style) +
-                              "%)");
-            cbSched.Items.Add("D (" + Strings.Format((float) (DatabaseAPI.Database.MultSO[0][3] * 100.0), Style) +
-                              "%)");
+            cbSched.Items.Add($"A ({Convert.ToDecimal(DatabaseAPI.Database.MultSO[0][0] * 100f):0.##}%)");
+            cbSched.Items.Add($"B ({Convert.ToDecimal(DatabaseAPI.Database.MultSO[0][1] * 100f):0.##}%)");
+            cbSched.Items.Add($"C ({Convert.ToDecimal(DatabaseAPI.Database.MultSO[0][2] * 100f):0.##}%)");
+            cbSched.Items.Add($"D ({Convert.ToDecimal(DatabaseAPI.Database.MultSO[0][3] * 100f):0.##}%)");
             cbSched.EndUpdate();
         }
 
@@ -1039,7 +1032,9 @@ namespace Hero_Designer.Forms
                     if (flag)
                         return;
                     var enh = myEnh;
-                    var numArray = (int[]) Utils.CopyArray(enh.ClassID, new int[myEnh.ClassID.Length + 1]);
+                    //var numArray = (int[]) Utils.CopyArray(enh.ClassID, new int[myEnh.ClassID.Length + 1]);
+                    var numArray = new int[myEnh.ClassID.Length + 1];
+                    Array.Copy(enh.ClassID, numArray, myEnh.ClassID.Length + 1);
                     enh.ClassID = numArray;
                     myEnh.ClassID[myEnh.ClassID.Length - 1] = num5;
                     Array.Sort(myEnh.ClassID);
@@ -1108,7 +1103,7 @@ namespace Hero_Designer.Forms
             if (rbModOther.Checked)
             {
                 txtModOther.Enabled = true;
-                myEnh.Effect[selectedIndex].Multiplier = (float) Conversion.Val(txtModOther.Text);
+                myEnh.Effect[selectedIndex].Multiplier = Convert.ToSingle(txtModOther.Text);
                 txtModOther.SelectAll();
                 txtModOther.Select();
             }
@@ -1205,7 +1200,7 @@ namespace Hero_Designer.Forms
                 return;
             var selectedIndex = lstSelected.SelectedIndex;
             if (myEnh.Effect[selectedIndex].Mode == Enums.eEffMode.Enhancement && rbModOther.Checked)
-                myEnh.Effect[selectedIndex].Multiplier = (float) Conversion.Val(txtModOther.Text);
+                myEnh.Effect[selectedIndex].Multiplier = Convert.ToSingle(txtModOther.Text);
         }
 
         private void txtNameFull_TextChanged(object sender, EventArgs e)
@@ -1238,7 +1233,7 @@ namespace Hero_Designer.Forms
         {
             if (Loading)
                 return;
-            var num = (float) Conversion.Val(txtProb.Text);
+            var num = Convert.ToSingle(txtProb.Text);
             if (num > 1.0)
                 num = 1f;
             if (num < 0.0)
@@ -1296,7 +1291,7 @@ namespace Hero_Designer.Forms
         private void udMaxLevel_Leave(object sender, EventArgs e)
 
         {
-            SetMaxLevel((int) Math.Round(Conversion.Val(udMaxLevel.Text)));
+            SetMaxLevel(Convert.ToInt32(udMaxLevel.Text));
             myEnh.LevelMax = Convert.ToInt32(decimal.Subtract(udMaxLevel.Value, new decimal(1)));
         }
 
@@ -1312,7 +1307,7 @@ namespace Hero_Designer.Forms
         private void udMinLevel_Leave(object sender, EventArgs e)
 
         {
-            SetMinLevel((int) Math.Round(Conversion.Val(udMinLevel.Text)));
+            SetMinLevel(Convert.ToInt32(udMinLevel.Text));
             myEnh.LevelMin = Convert.ToInt32(decimal.Subtract(udMinLevel.Value, new decimal(1)));
         }
 

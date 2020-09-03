@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -126,9 +127,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (lvEnh.SelectedIndices.Count <= 0 ||
-                Interaction.MsgBox("Really delete enhancement: " + lvEnh.SelectedItems[0].Text + "?",
-                    MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Are you sure?") != MsgBoxResult.Yes)
+            if (lvEnh.SelectedIndices.Count <= 0 || MessageBox.Show($"Really delete enhancement: {lvEnh.SelectedItems[0].Text}?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             var enhancementArray = new Enhancement[DatabaseAPI.Database.Enhancements.Length - 1 + 1];
             var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
@@ -138,15 +137,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             if (enh.nIDSet > -1)
             {
                 //Remove it from the enhancement set too.
-                var newEnhancementSet = new List<int>();
-                for (var i = 0; i < DatabaseAPI.Database.EnhancementSets[enh.nIDSet].Enhancements.Length; i++)
-                {
-                    var staticIndex = DatabaseAPI.Database.EnhancementSets[enh.nIDSet].Enhancements[i];
-                    if (staticIndex != enh.StaticIndex)
-                        newEnhancementSet.Add(staticIndex);
-                }
 
-                DatabaseAPI.Database.EnhancementSets[enh.nIDSet].Enhancements = newEnhancementSet.ToArray();
+                DatabaseAPI.Database.EnhancementSets[enh.nIDSet].Enhancements = DatabaseAPI.Database.EnhancementSets[enh.nIDSet].Enhancements.Where(staticIndex => staticIndex != enh.StaticIndex).ToArray();
             }
 
             for (var index2 = 0; index2 <= num1; ++index2)

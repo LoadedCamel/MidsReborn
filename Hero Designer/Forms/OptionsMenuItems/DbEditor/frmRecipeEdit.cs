@@ -126,8 +126,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             this.EventHandlerWithCatch(() =>
             {
-                if (Interaction.MsgBox("Really erase all stored recipes and attempt import?",
-                    MsgBoxStyle.YesNo | MsgBoxStyle.Question, "Careful...") != MsgBoxResult.Yes)
+                if (MessageBox.Show("Really erase all stored recipes and attempt import?", "Careful...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
                 char[] delimiter = {'\r'};
                 var strArray1 = Clipboard.GetDataObject()?.GetData("System.String", true).ToString().Split(delimiter);
@@ -203,8 +202,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 DatabaseAPI.GuessRecipes();
                 DatabaseAPI.AssignRecipeIDs();
                 FillList();
-                Interaction.MsgBox("Done. Recipe-Enhancement links have been guessed.", MsgBoxStyle.Information,
-                    "Import");
+                MessageBox.Show("Done, Recipe-Enhancement links have been guessed.", "Import", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             });
         }
 

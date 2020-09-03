@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
+using Hero_Designer.Forms.Controls;
 using Import;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -56,12 +57,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 return;
             if (new PowerData(str.Replace("\t", ",")).IsValid)
             {
-                Interaction.MsgBox("Import successful.");
+                MessageBox.Show("Import successful.");
                 refresh_PowerData();
             }
             else
             {
-                Interaction.MsgBox("Import failed. No changes made.");
+                MessageBox.Show("Import failed. No changes made.");
             }
         }
 
@@ -83,7 +84,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             var setName = myPower.SetName;
             if (!Clipboard.ContainsData(format.Name))
             {
-                Interaction.MsgBox("No power data on the clipboard!", MsgBoxStyle.Information, "Unable to Paste");
+                MessageBox.Show("No power data on the clipboard!", "Unable to Paste", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
             {
@@ -205,17 +207,25 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lvFX.SelectedIndex = selectedIndex - 1;
         }
 
+        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
+        {
+            if (e.Text.Trim().Length != 0) return;
+            e.Cancel = true;
+            e.Message = "Required";
+        }
         private void btnMutexAdd_Click(object sender, EventArgs e)
         {
-            var b = Interaction.InputBox("Please enter a new group name. It must be different to all the others",
-                "Add Mutex Group", "New_Group").Replace(" ", "_");
+            string b = null;
+            InputBoxResult result = InputBox.Show("Enter a description for your build.", "Add Mutex Group", "New Group", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (result.OK) { b = result.Text.Replace(" ", "_"); }
             var count = clbMutex.Items.Count;
             var index = 0;
             if (index > count)
                 return;
             if (string.Equals(clbMutex.Items[index].ToString(), b, StringComparison.OrdinalIgnoreCase))
             {
-                Interaction.MsgBox("'" + b + "' is not unique!", MsgBoxStyle.Information, "Unable to add");
+                MessageBox.Show($"'{b}' is not unique!", "Unable to add", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
             {
@@ -231,12 +241,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             if (string.IsNullOrWhiteSpace(power.GroupName) | string.IsNullOrWhiteSpace(power.SetName) |
                 string.IsNullOrWhiteSpace(power.PowerName))
             {
-                _ = MessageBox.Show(@$"Power name ({power.FullName}) is invalid.", @"No Can Do", MessageBoxButtons.OK,
+                MessageBox.Show(@$"Power name ({power.FullName}) is invalid.", @"No Can Do", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
             else if (!PowerFullNameIsUnique(Convert.ToString(power.PowerIndex, CultureInfo.InvariantCulture)))
             {
-                _ = MessageBox.Show(@$"Power name ({power.FullName}) already exists. Please enter a unique name.",
+                MessageBox.Show(@$"Power name ({power.FullName}) already exists. Please enter a unique name.",
                     @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
@@ -1316,8 +1326,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void lblStaticIndex_Click(object sender, EventArgs e)
         {
-            var s = Interaction.InputBox("Insert new static index for this power.", "",
-                Convert.ToString(myPower.StaticIndex, CultureInfo.InvariantCulture));
+            string s = null;
+            InputBoxResult result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (result.OK) { s = result.Text; }
             try
             {
                 var num1 = 1;
@@ -1325,7 +1336,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
                 if (num1 < 0)
                 {
-                    Interaction.MsgBox("The static index cannot be a negative number.", MsgBoxStyle.Exclamation);
+                    MessageBox.Show("The static index cannot be a negative number.", "Cannot assign index",
+                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
@@ -1335,9 +1347,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                Interaction.MsgBox(ex.Message);
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -1634,9 +1644,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void rbPrAdd_Click(object sender, EventArgs e)
         {
-            if (Interaction.MsgBox(
-                "If this power is required to be present, click 'Yes'.\r\nIf this power must NOT be present, click 'No'.",
-                MsgBoxStyle.YesNo, "Query") == MsgBoxResult.No)
+            if (MessageBox.Show("If this power is required to be present, click 'Yes'.\r\nIf this power is NOT required to be present, click 'No'.", "Query", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 myPower.Requires.PowerIDNot = (string[][]) Utils.CopyArray(myPower.Requires.PowerIDNot,
                     new string[myPower.Requires.PowerIDNot.Length + 1][]);

@@ -56,14 +56,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lblNameFull.Text = ps.GroupName + "." + ps.SetName;
             if ((ps.GroupName == "") | (ps.SetName == ""))
             {
-                var num1 = (int) Interaction.MsgBox("Powerset name '" + ps.FullName + " is invalid.",
-                    MsgBoxStyle.Exclamation, "No Can Do");
+                MessageBox.Show($"Powerset name '{ps.FullName}' is invalid.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (!PowersetFullNameIsUnique(Convert.ToString(ps.nID)))
             {
-                var num2 = (int) Interaction.MsgBox(
-                    "Powerset name '" + ps.FullName + " already exists, please enter a unique name.",
-                    MsgBoxStyle.Exclamation, "No Can Do");
+                MessageBox.Show($"Powerset name '{ps.FullName}' already exists, please enter a unique name.", "No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -84,10 +81,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             var str = FileIO.StripPath(ImagePicker.FileName);
             if (!File.Exists(FileIO.AddSlash(ImagePicker.InitialDirectory) + str))
             {
-                var num = (int) Interaction.MsgBox(
-                    "You must select an image from the " + I9Gfx.GetPowersetsPath() +
-                    " folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.",
-                    MsgBoxStyle.Information, "Ah...");
+                MessageBox.Show(
+                    $"You must select an image from the {I9Gfx.GetPowersetsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it the folder and then select it.",
+                    "Ah...", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {

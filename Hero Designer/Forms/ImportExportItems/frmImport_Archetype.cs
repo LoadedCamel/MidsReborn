@@ -113,9 +113,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var num2 = (int) Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "Archetype Class CSV Not Opened");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "Archetype Class CSV Not Opened", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -142,19 +141,15 @@ namespace Hero_Designer.Forms.ImportExportItems
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
-                var exception = ex;
                 iStream.Close();
-                var num2 = (int) Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical,
-                    "Archetype Class CSV Parse Error");
-                ProjectData.ClearProjectError();
+                MessageBox.Show(ex.Message, "Archetype Class CSV Parse Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 return false;
             }
 
             iStream.Close();
-            var num5 = (int) Interaction.MsgBox(
-                "Parse Completed!\r\nTotal Records: " + Convert.ToString(num3) + "\r\nGood: " + Convert.ToString(num1) +
-                "\r\nBad: " + Convert.ToString(num4), MsgBoxStyle.Information, "File Parsed");
+            MessageBox.Show($"Parse Completed!\r\nTotal Records: {num3}\r\nGood: {num1}\r\nRejected: {num4}",
+                "File Parsed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return true;
         }
 
@@ -176,8 +171,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             DatabaseAPI.Database.ArchetypeVersion.Revision = Convert.ToInt32(udATRevision.Value);
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.SaveMainDatabase(serializer);
-            var num3 = (int) Interaction.MsgBox("Import of " + Convert.ToString(num1) + " classes completed!",
-                MsgBoxStyle.Information, "Done");
+            MessageBox.Show($"Import of {num1} classes completed!", "Done", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             DisplayInfo();
             return false;
         }
