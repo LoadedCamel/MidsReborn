@@ -411,15 +411,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
             using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             if (index == 3)
-                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
+                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[3].Bitmap : _myParent.Drawing.bxPower[5].Bitmap, destRect, 0, 0,
                     rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             else
-                extendedBitmap.Graphics.DrawImage(
-                    MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[2].Bitmap
-                        : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                    GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             var height = bFont.GetHeight(e.Graphics) + 2f;
             var Bounds = new RectangleF(0.0f, (float) ((tab0.Height - (double) height) / 2.0), tab0.Width, height);
             var graphics = extendedBitmap.Graphics;

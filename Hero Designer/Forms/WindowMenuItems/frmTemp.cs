@@ -136,7 +136,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             ibClose.ImageOff = MidsContext.Character.IsHero()
                 ? _myParent.Drawing.bxPower[2].Bitmap
                 : _myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = _myParent.Drawing.bxPower[3].Bitmap;
+            ibClose.ImageOn = MidsContext.Character.IsHero()
+                ? _myParent.Drawing.bxPower[3].Bitmap
+                : _myParent.Drawing.bxPower[5].Bitmap;
             var iPopup = new PopUp.PopupData();
             var index = iPopup.Add();
             iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);

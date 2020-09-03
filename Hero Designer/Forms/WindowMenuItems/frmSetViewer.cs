@@ -374,17 +374,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
             btnClose.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            btnClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            btnClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             chkOnTop.IA = myParent.Drawing.pImageAttributes;
             chkOnTop.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            chkOnTop.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            chkOnTop.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             btnSmall.IA = myParent.Drawing.pImageAttributes;
             btnSmall.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            btnSmall.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            btnSmall.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             DisplayList();
         }
     }

@@ -171,12 +171,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             ibClose.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
             ibTopmost.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
         }
 
         private void ibClear_ButtonClicked()
@@ -369,22 +369,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
             ibClose.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
             ibTopmost.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             ibClear.IA = myParent.Drawing.pImageAttributes;
             ibClear.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibClear.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            ibClear.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             ibAutoMode.IA = myParent.Drawing.pImageAttributes;
             ibAutoMode.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibAutoMode.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            ibAutoMode.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             FillPowerList();
         }
 

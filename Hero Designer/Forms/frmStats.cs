@@ -1391,12 +1391,12 @@ namespace Hero_Designer.Forms
             btnClose.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            btnClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            btnClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             chkOnTop.IA = myParent.Drawing.pImageAttributes;
             chkOnTop.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            chkOnTop.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            chkOnTop.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             Graph.BackColor = BackColor;
             if (NewData)
                 NewSets();

@@ -137,6 +137,7 @@ namespace Hero_Designer.Forms
             var dServers = new List<string>();
             return dServers;
         }
+
         private void StatInitializer()
         {
             SelectedStats = new Dictionary<string, List<string>>();
@@ -264,7 +265,7 @@ namespace Hero_Designer.Forms
 
         private void submitButton_MouseEnter(object sender, EventArgs e)
         {
-            submitButton.ImageIndex = 1;
+            submitButton.ImageIndex = MidsContext.Character.IsHero() ? 1 : 3;
         }
 
         private void submitButton_MouseLeave(object sender, EventArgs e)

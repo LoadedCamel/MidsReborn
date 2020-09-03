@@ -1186,7 +1186,9 @@ namespace Hero_Designer.Forms
                 }
 
                 if (!((myDataView == null) | (i9Slot1 == null) | (i9Slot2 == null)))
+                {
                     myDataView.FlipStage(i, Enh1, Enh2, num2, powerEntry.NIDPower, i9Slot1.Grade, i9Slot2.Grade);
+                }
             }
 
             rectangle1 = new Rectangle(point1.X - 1, point1.Y - 1, drawing.SzPower.Width + 1,
@@ -5032,13 +5034,13 @@ namespace Hero_Designer.Forms
                 {
                     IA = drawing.pImageAttributes,
                     ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = drawing.bxPower[3].Bitmap
+                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
                 },
                 IBExport =
                 {
                     IA = drawing.pImageAttributes,
                     ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = drawing.bxPower[3].Bitmap
+                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
                 }
             };
             frmForum1.ShowDialog(this);
@@ -5132,13 +5134,13 @@ namespace Hero_Designer.Forms
                 {
                     IA = drawing.pImageAttributes,
                     ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = drawing.bxPower[3].Bitmap
+                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
                 },
                 IBExport =
                 {
                     IA = drawing.pImageAttributes,
                     ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = drawing.bxPower[3].Bitmap
+                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
                 }
             };
             frmForum1.ShowDialog(this);
@@ -5226,7 +5228,7 @@ namespace Hero_Designer.Forms
                 {
                     IA = drawing.pImageAttributes,
                     ImageOff = MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    ImageOn = drawing.bxPower[3].Bitmap
+                    ImageOn = MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap
                 }
             };
             FloatTop(false);
@@ -5594,7 +5596,7 @@ namespace Hero_Designer.Forms
             foreach (var ib in ibs)
                 ib.SetImages(drawing.pImageAttributes,
                     MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    drawing.bxPower[3].Bitmap);
+                    MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap);
 
             foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
@@ -5809,7 +5811,7 @@ namespace Hero_Designer.Forms
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
             if (ePowerState == Enums.ePowerState.Open)
-                dmBuffer.Graphics.DrawImage(drawing.bxPower[(int) ePowerState].Bitmap, destRect, 0, 0, rectangle.Width,
+                dmBuffer.Graphics.DrawImage(MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap, destRect, 0, 0, rectangle.Width,
                     rectangle.Height,
                     GraphicsUnit.Pixel);
             else

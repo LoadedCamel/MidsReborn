@@ -182,7 +182,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.42548F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.57452F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 198F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel1.Controls.Add(this.label3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label4, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label5, 2, 0);
@@ -206,7 +206,7 @@ namespace Hero_Designer.Forms
             this.label3.Location = new System.Drawing.Point(4, 4);
             this.label3.Margin = new System.Windows.Forms.Padding(3);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(161, 21);
+            this.label3.Size = new System.Drawing.Size(160, 21);
             this.label3.TabIndex = 0;
             this.label3.Text = "Defense";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -217,10 +217,10 @@ namespace Hero_Designer.Forms
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.SystemColors.Control;
-            this.label4.Location = new System.Drawing.Point(172, 4);
+            this.label4.Location = new System.Drawing.Point(171, 4);
             this.label4.Margin = new System.Windows.Forms.Padding(3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(180, 21);
+            this.label4.Size = new System.Drawing.Size(179, 21);
             this.label4.TabIndex = 1;
             this.label4.Text = "Resistance";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -231,10 +231,10 @@ namespace Hero_Designer.Forms
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label5.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.Control;
-            this.label5.Location = new System.Drawing.Point(359, 4);
+            this.label5.Location = new System.Drawing.Point(357, 4);
             this.label5.Margin = new System.Windows.Forms.Padding(3);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(193, 21);
+            this.label5.Size = new System.Drawing.Size(195, 21);
             this.label5.TabIndex = 2;
             this.label5.Text = "Misc";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -257,7 +257,7 @@ namespace Hero_Designer.Forms
             "AOE"});
             this.defenseCheckedList.Location = new System.Drawing.Point(4, 32);
             this.defenseCheckedList.Name = "defenseCheckedList";
-            this.defenseCheckedList.Size = new System.Drawing.Size(161, 191);
+            this.defenseCheckedList.Size = new System.Drawing.Size(160, 191);
             this.defenseCheckedList.TabIndex = 3;
             this.defenseCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
@@ -275,9 +275,9 @@ namespace Hero_Designer.Forms
             "Negative",
             "Toxic",
             "Psionic"});
-            this.resistCheckedList.Location = new System.Drawing.Point(172, 32);
+            this.resistCheckedList.Location = new System.Drawing.Point(171, 32);
             this.resistCheckedList.Name = "resistCheckedList";
-            this.resistCheckedList.Size = new System.Drawing.Size(180, 191);
+            this.resistCheckedList.Size = new System.Drawing.Size(179, 191);
             this.resistCheckedList.TabIndex = 4;
             this.resistCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
@@ -298,9 +298,9 @@ namespace Hero_Designer.Forms
             "Hitpoints (Maximum)",
             "Hitpoints (Regeneration)",
             "ToHit"});
-            this.miscCheckedList.Location = new System.Drawing.Point(359, 32);
+            this.miscCheckedList.Location = new System.Drawing.Point(357, 32);
             this.miscCheckedList.Name = "miscCheckedList";
-            this.miscCheckedList.Size = new System.Drawing.Size(193, 191);
+            this.miscCheckedList.Size = new System.Drawing.Size(195, 191);
             this.miscCheckedList.TabIndex = 5;
             this.miscCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
@@ -329,6 +329,7 @@ namespace Hero_Designer.Forms
             this.btnImages.Images.SetKeyName(0, "pSlot2.png");
             this.btnImages.Images.SetKeyName(1, "pSlot3.png");
             this.btnImages.Images.SetKeyName(2, "pSlot4.png");
+            this.btnImages.Images.SetKeyName(3, "pSlot5.png");
             // 
             // label6
             // 

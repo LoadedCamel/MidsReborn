@@ -196,10 +196,8 @@ namespace Hero_Designer.Forms
             foreach (var button in buttonArray)
             {
                 button.IA = myParent.Drawing.pImageAttributes;
-                button.ImageOff = MidsContext.Character.IsHero()
-                    ? myParent.Drawing.bxPower[2].Bitmap
-                    : myParent.Drawing.bxPower[4].Bitmap;
-                button.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+                button.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
+                button.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             }
 
             BackColor = myParent.BackColor;
@@ -211,10 +209,8 @@ namespace Hero_Designer.Forms
             UpdateLLColours(ref llRight);
             LLRight = llRight;
             ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = myParent.Drawing.bxPower[3].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
+            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
             var iPopup = new PopUp.PopupData();
             var index = iPopup.Add();
             iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);

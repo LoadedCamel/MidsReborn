@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.IO;
 using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
@@ -70,7 +72,7 @@ namespace midsControls
             },
             new[]
             {
-                0.75f, 0, 0, 0.175f, 0, 0
+                0.75f, 0, 0, 0.175f, 0
             },
             new[]
             {
@@ -84,7 +86,8 @@ namespace midsControls
 
         private readonly ExtendedBitmap bxNewSlot;
 
-        public readonly ExtendedBitmap[] bxPower;
+        //public readonly ExtendedBitmap[] bxPower;
+        public readonly List<ExtendedBitmap> bxPower;
 
         private Color BackColor;
 
@@ -123,13 +126,14 @@ namespace midsControls
             Scaling = true;
             vcCols = 6;
             vcRowsPowers = 24;
-            bxPower = new ExtendedBitmap[5];
+            bxPower = new List<ExtendedBitmap>();
             checked
             {
-                var num2 = bxPower.Length - 1;
-                for (var i = 0; i <= num2; i++)
+                var filePath = $"{FileIO.AddSlash(Application.StartupPath)}{GfxPath}";
+                DirectoryInfo directoryInfo = new DirectoryInfo(filePath);
+                foreach (var file in directoryInfo.GetFiles($"{GfxPowerFn}*{GfxFileExt}"))
                 {
-                    bxPower[i] = new ExtendedBitmap($"{FileIO.AddSlash(Application.StartupPath)}{GfxPath}{GfxPowerFn}{Convert.ToString(i).Trim()}{GfxFileExt}");
+                    bxPower.Add(new ExtendedBitmap($"{filePath}{file}"));
                 }
 
                 ColorSwitch();
@@ -538,13 +542,27 @@ namespace midsControls
                     Graphics graphics2 = bxBuffer.Graphics;
                     Image bitmap = !MidsContext.Character.IsHero()
                         ? bxPower[4].Bitmap
-                        : bxPower[(int)ePowerState].Bitmap;
+                        : bxPower[2].Bitmap;
                     Rectangle destRect = ScaleDown(iValue);
                     int srcX = 0;
                     int srcY = 0;
                     int width = bxPower[(int)ePowerState].ClipRect.Width;
                     Rectangle clipRect2 = bxPower[(int)ePowerState].ClipRect;
                     graphics2.DrawImage(bitmap, destRect, srcX, srcY, width, clipRect2.Height, GraphicsUnit.Pixel, imageAttr);
+                }
+                else if (ePowerState == Enums.ePowerState.Open)
+                {
+                    Graphics graphics3 = bxBuffer.Graphics;
+                    Image bitmap2 = !MidsContext.Character.IsHero()
+                        ? bxPower[5].Bitmap
+                        : bxPower[3].Bitmap;
+                    //Image bitmap2 = bxPower[(int)ePowerState].Bitmap;
+                    Rectangle destRect2 = ScaleDown(iValue);
+                    int srcX2 = 0;
+                    int srcY2 = 0;
+                    int width2 = bxPower[(int)ePowerState].ClipRect.Width;
+                    clipRect = bxPower[(int)ePowerState].ClipRect;
+                    graphics3.DrawImage(bitmap2, destRect2, srcX2, srcY2, width2, clipRect.Height, GraphicsUnit.Pixel);
                 }
                 else
                 {
