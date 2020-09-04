@@ -26,7 +26,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             ImportBuffer = new PowerData[0];
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmImport_Power));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmImport_Power);
         }
 

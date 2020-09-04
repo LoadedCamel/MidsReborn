@@ -21,7 +21,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             FullFileName = "";
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmImport_EnhancementEffects));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmImport_EnhancementEffects);
         }
 

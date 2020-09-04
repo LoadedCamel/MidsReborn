@@ -18,7 +18,7 @@ namespace Hero_Designer.Forms
             InitializeComponent();
             Name = nameof(frmZStatus);
             var componentResourceManager = new ComponentResourceManager(typeof(frmZStatus));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             PictureBox1.Image = (Image) componentResourceManager.GetObject("PictureBox1.Image");
         }
 

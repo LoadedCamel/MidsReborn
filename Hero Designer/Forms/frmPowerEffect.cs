@@ -22,7 +22,7 @@ namespace Hero_Designer.Forms
             InitializeComponent();
             Load += frmPowerEffect_Load;
             var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             if (iFX != null) myFX = (IEffect) iFX.Clone();
         }
 

@@ -38,7 +38,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             ReqChanging = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEditPower));
-            Icon = (Icon) componentResourceManager.GetObject("$this.icon", CultureInfo.InvariantCulture);
+            Icon = Resources.reborn;
             Name = nameof(frmEditPower);
             myPower = new Power(iPower);
             backup_Requires = new Requirement(myPower.Requires);

@@ -46,7 +46,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             Label5.Text = componentResourceManager.GetString("Label5.Text");
             myTip.SetToolTip(udExHigh, componentResourceManager.GetString("udExHigh.ToolTip"));
             Label15.Text = componentResourceManager.GetString("Label15.Text");
-            Icon = (Icon) componentResourceManager.GetObject("reborn_wicon");
+            Icon = Resources.reborn;
             myParent = iParent;
         }
 

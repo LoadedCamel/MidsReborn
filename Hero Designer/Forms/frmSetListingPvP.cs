@@ -20,7 +20,7 @@ namespace Hero_Designer.Forms
             InitializeComponent();
             Name = nameof(frmSetListingPvP);
             var componentResourceManager = new ComponentResourceManager(typeof(frmSetListingPvP));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
+            Icon = Resources.reborn;
         }
 
         private void AddListItem(int Index)

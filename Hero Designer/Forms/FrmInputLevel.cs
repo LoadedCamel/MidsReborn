@@ -19,7 +19,7 @@ namespace Hero_Designer.Forms
             InitializeComponent();
             Name = nameof(FrmInputLevel);
             var componentResourceManager = new ComponentResourceManager(typeof(FrmInputLevel));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             myparent = iParent;
             longFormat = iLF;
             mode2 = iMode2;

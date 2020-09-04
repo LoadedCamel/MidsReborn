@@ -29,8 +29,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Name = nameof(frmSetEditPvP);
             var componentResourceManager = new ComponentResourceManager(typeof(frmSetEditPvP));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
-            btnImage.Image = (Image) componentResourceManager.GetObject("btnImage.Image");
+            Icon = Resources.reborn;
+            btnImage.Image = Resources.enhData;
             mySet = new EnhancementSet(iSet);
         }
 

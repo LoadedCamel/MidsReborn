@@ -21,7 +21,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             Loading = true;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEditPowerset));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
+            Icon = Resources.reborn;
             Name = nameof(frmEditPowerset);
             myPS = new Powerset(iSet);
         }

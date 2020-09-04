@@ -18,7 +18,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             Load += frmImport_Recipe_Load;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmImport_Recipe));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmImport_Recipe);
         }
 

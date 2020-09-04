@@ -19,7 +19,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             loading = true;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEntityEdit));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Label4.Text = componentResourceManager.GetString("Label4.Text");
             Name = nameof(frmEntityEdit);
             myEntity = new SummonedEntity(iEntity);

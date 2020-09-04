@@ -23,7 +23,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             InitializeComponent();
             Name = nameof(frmImportPowerLevels);
             var componentResourceManager = new ComponentResourceManager(typeof(frmImportPowerLevels));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void btnClose_Click(object sender, EventArgs e)

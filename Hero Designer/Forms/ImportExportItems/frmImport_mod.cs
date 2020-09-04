@@ -16,7 +16,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             InitializeComponent();
             Name = nameof(frmImport_mod);
             var componentResourceManager = new ComponentResourceManager(typeof(frmImport_mod));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void btnAttribIndex_Click(object sender, EventArgs e)

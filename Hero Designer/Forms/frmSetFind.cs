@@ -30,7 +30,7 @@ namespace Hero_Designer.Forms
             setBonusList = new int[0];
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmSetFind));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmSetFind);
             ibClose.ButtonClicked += ibClose_ButtonClicked;
             ibTopmost.ButtonClicked += ibTopmost_ButtonClicked;

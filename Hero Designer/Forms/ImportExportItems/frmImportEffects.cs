@@ -32,7 +32,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             InitializeComponent();
             Name = nameof(frmImportEffects);
             var componentResourceManager = new ComponentResourceManager(typeof(frmImportEffects));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             _importBuffer = new List<EffectData>();
             _currentItems = new List<ListViewItem>();
         }

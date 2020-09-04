@@ -68,7 +68,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             Initialized = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmDBEdit);
         }
 

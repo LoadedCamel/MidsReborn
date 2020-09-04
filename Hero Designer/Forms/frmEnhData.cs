@@ -40,13 +40,12 @@ namespace Hero_Designer.Forms
             pnlClassList.Paint += pnlClassList_Paint;
             pnlClassList.MouseDown += pnlClassList_MouseDown;
             var componentResourceManager = new ComponentResourceManager(typeof(frmEnhData));
-            btnImage.Image = (Image) componentResourceManager.GetObject("btnImage.Image", CultureInfo.InvariantCulture);
-            typeSet.Image = (Image) componentResourceManager.GetObject("typeSet.Image", CultureInfo.InvariantCulture);
-            typeIO.Image = (Image) componentResourceManager.GetObject("typeIO.Image", CultureInfo.InvariantCulture);
-            typeRegular.Image =
-                (Image) componentResourceManager.GetObject("typeRegular.Image", CultureInfo.InvariantCulture);
-            typeHO.Image = (Image) componentResourceManager.GetObject("typeHO.Image", CultureInfo.InvariantCulture);
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
+            btnImage.Image = Resources.enhData;
+            typeSet.Image = Resources.enhData;
+            typeIO.Image = Resources.enhData;
+            typeRegular.Image = Resources.enhData;
+            typeHO.Image = Resources.enhData;
+            Icon = Resources.reborn;
             Name = nameof(frmEnhData);
             myEnh = new Enhancement(iEnh);
             if (newStaticIndex > 0)

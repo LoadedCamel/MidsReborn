@@ -41,7 +41,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             _locked = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmPrestige));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmPrestige);
             _myParent = iParent;
             _myPowers = iPowers;

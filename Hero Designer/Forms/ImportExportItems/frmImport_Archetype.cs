@@ -26,7 +26,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             InitializeComponent();
             Name = nameof(frmImport_Archetype);
             var componentResourceManager = new ComponentResourceManager(typeof(frmImport_Archetype));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void btnATFile_Click(object sender, EventArgs e)

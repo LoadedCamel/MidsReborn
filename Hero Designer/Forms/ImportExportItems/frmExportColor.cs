@@ -14,7 +14,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             Load += frmExportColor_Load;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmExportColor));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmExportColor);
             myScheme.Assign(iScheme);
         }

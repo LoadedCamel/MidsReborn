@@ -22,7 +22,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Name = nameof(frmEnhEdit);
             var componentResourceManager = new ComponentResourceManager(typeof(frmEnhEdit));
-            Icon = (Icon) componentResourceManager.GetObject("$this.icon", CultureInfo.InvariantCulture);
+            Icon = Resources.reborn;
         }
 
         private void AddListItem(int Index)

@@ -31,7 +31,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             InitializeComponent();
             Name = nameof(frmImportEnhSets);
             var componentResourceManager = new ComponentResourceManager(typeof(frmImportEnhSets));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             _importBuffer = new List<EnhSetData>();
             _currentItems = new List<ListViewItem>();
         }

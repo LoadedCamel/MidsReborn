@@ -21,7 +21,7 @@ namespace Hero_Designer.Forms
                 true);
             Name = nameof(frmColorOptions);
             var componentResourceManager = new ComponentResourceManager(typeof(frmColorOptions));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
+            Icon = Resources.reborn;
             _myFs.Assign(MidsContext.Config.RtFont);
         }
 

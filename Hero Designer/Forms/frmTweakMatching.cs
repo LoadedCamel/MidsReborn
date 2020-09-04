@@ -20,7 +20,7 @@ namespace Hero_Designer.Forms
             InitializeComponent();
             Name = nameof(frmTweakMatching);
             var componentResourceManager = new ComponentResourceManager(typeof(frmTweakMatching));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

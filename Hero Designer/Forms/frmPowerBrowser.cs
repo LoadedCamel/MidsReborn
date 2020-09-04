@@ -41,7 +41,7 @@ namespace Hero_Designer.Forms
             InitializeComponent();
             Name = nameof(frmPowerBrowser);
             var componentResourceManager = new ComponentResourceManager(typeof(frmPowerBrowser));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
+            Icon = Resources.reborn;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

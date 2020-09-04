@@ -35,7 +35,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             Load += frmSetViewer_Load;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmSetViewer));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmSetViewer);
             myParent = iParent;
         }

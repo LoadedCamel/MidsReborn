@@ -117,18 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="myTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="myTip.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="myTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="cPicker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  </data>
+  <data name="cPicker.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>102, 17</value>
-  </metadata>
-  <metadata name="fbdSave.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  </data>
+  <data name="fbdSave.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>192, 17</value>
-  </metadata>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="optDO.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Resources\optDO.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -156,6 +154,6 @@ Note that this also affects how Scrapper damage is displayed when Critical Hit i
 Where an attack has a chance to do additional damage:</value>
   </data>
   <data name="udExHigh.ToolTip" xml:space="preserve">
-    <value>Set this to the level of your character. This setting will not reduce the number of slots/powers placed to match the level. Powers available after the level set ehre will still be calculated unless you disable them.</value>
+    <value>Set this to the level of your character. This setting will not reduce the number of slots/powers placed to match the level. Powers available after the level set here will still be calculated unless you disable them.</value>
   </data>
 </root>

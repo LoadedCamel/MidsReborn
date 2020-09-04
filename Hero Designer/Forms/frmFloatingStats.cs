@@ -17,7 +17,7 @@ namespace Hero_Designer.Forms
             Closed += frmFloatingStats_Closed;
             Name = nameof(frmFloatingStats);
             var componentResourceManager = new ComponentResourceManager(typeof(frmFloatingStats));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             myOwner = iOwner;
         }
 

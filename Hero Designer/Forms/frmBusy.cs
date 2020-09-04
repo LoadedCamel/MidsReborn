@@ -13,7 +13,7 @@ namespace Hero_Designer.Forms
         {
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmBusy));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmBusy);
         }
 

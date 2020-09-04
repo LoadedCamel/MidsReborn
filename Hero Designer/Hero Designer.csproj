@@ -239,9 +239,6 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmRecipeEdit.Designer.cs">
       <DependentUpon>frmRecipeEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmReadme.Designer.cs">
-      <DependentUpon>frmReadme.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmPrint.Designer.cs">
       <DependentUpon>frmPrint.cs</DependentUpon>
     </Compile>
@@ -1919,6 +1916,9 @@
     <Content Include="Images\pSlot4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\pSlot5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Sets\AccDefDeb.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2096,6 +2096,9 @@
     <Content Include="Images\Unknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\enhData.png" />
+    <None Include="Resources\PictureBox1.Image.png" />
+    <None Include="Resources\pbTitle.Image.png" />
     <Content Include="Web\authorized.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2293,9 +2296,6 @@
     <Compile Include="Forms\frmPrint.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmReadme.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmRecipeEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2457,9 +2457,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPrint.resx">
       <DependentUpon>frmPrint.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmReadme.resx">
-      <DependentUpon>frmReadme.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmRecipeEdit.resx">
       <DependentUpon>frmRecipeEdit.cs</DependentUpon>

@@ -30,7 +30,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             InitializeComponent();
             Name = nameof(frmImport_SetBonusAssignment);
             var componentResourceManager = new ComponentResourceManager(typeof(frmImport_SetBonusAssignment));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void btnClose_Click(object sender, EventArgs e)

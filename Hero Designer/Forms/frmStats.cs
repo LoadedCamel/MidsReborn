@@ -58,7 +58,7 @@ namespace Hero_Designer.Forms
             chkOnTop.ButtonClicked += chkOnTop_CheckedChanged;
             Name = nameof(frmStats);
             var componentResourceManager = new ComponentResourceManager(typeof(frmStats));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             myParent = iParent;
         }
 

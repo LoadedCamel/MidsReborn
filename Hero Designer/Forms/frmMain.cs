@@ -117,8 +117,7 @@ namespace Hero_Designer.Forms
             dvAnchored.Moved += dvAnchored_Move;
             dvAnchored.TabChanged += dvAnchored_TabChanged;
             var componentResourceManager = new ComponentResourceManager(typeof(frmMain));
-            var icon = (Icon) componentResourceManager.GetObject("$this.Icon");
-            Icon = icon;
+            Icon = Resources.reborn;
             Name = nameof(frmMain);
         }
 
@@ -5220,7 +5219,7 @@ namespace Hero_Designer.Forms
             FloatUpdate();
         }
 
-        private void tsHelp_Click(object sender, EventArgs e)
+        /*private void tsHelp_Click(object sender, EventArgs e)
         {
             using var frmReadme = new frmReadme(OS.GetApplicationPath() + "readme.rtf")
             {
@@ -5234,7 +5233,7 @@ namespace Hero_Designer.Forms
             FloatTop(false);
             frmReadme.ShowDialog(this);
             FloatTop(true);
-        }
+        }*/
 
         private void tsHelperLong_Click(object sender, EventArgs e)
         {

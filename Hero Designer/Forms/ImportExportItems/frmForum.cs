@@ -24,7 +24,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             Name = nameof(frmForum);
             var componentResourceManager = new ComponentResourceManager(typeof(frmForum));
             pbTitle.Image = (Image) componentResourceManager.GetObject("pbTitle.Image");
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         internal ImageButton IBCancel { get; private set; }

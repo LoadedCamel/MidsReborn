@@ -35,7 +35,7 @@ namespace Hero_Designer.Forms
             InitializeComponent();
             Name = nameof(frmRecipeViewer);
             var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeViewer));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             RecipeInfo.MouseWheel += RecipeInfo_MouseWheel;
             RecipeInfo.MouseEnter += RecipeInfo_MouseEnter;
             lvPower.MouseEnter += lvPower_MouseEnter;

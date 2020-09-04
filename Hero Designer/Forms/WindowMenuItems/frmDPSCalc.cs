@@ -58,7 +58,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             InitializeComponent();
             Name = nameof(frmDPSCalc);
             var componentResourceManager = new ComponentResourceManager(typeof(frmDPSCalc));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             myParent = iParent;
             bxRecipe = new ExtendedBitmap(I9Gfx.GetRecipeName());
         }

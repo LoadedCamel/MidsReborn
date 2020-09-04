@@ -52,7 +52,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             InitializeComponent();
             Name = nameof(frmTotals);
             var componentResourceManager = new ComponentResourceManager(typeof(frmTotals));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             _myParent = iParent;
         }
 

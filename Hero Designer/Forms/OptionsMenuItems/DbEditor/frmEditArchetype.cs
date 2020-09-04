@@ -83,7 +83,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             ONDuplicate = false;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEditArchetype));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             Name = nameof(frmEditArchetype);
             MyAT = new Archetype(iAT);
             OriginalName = MyAT.ClassName;

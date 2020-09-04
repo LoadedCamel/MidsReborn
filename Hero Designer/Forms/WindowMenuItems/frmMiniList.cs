@@ -22,7 +22,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             PInfo.MouseEnter += pInfo_MouseEnter;
             Name = nameof(frmMiniList);
             var componentResourceManager = new ComponentResourceManager(typeof(frmMiniList));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             myParent = iParent;
         }
 

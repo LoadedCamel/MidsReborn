@@ -20,7 +20,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             NoUpdate = true;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeEdit));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void AddListItem(int Index)

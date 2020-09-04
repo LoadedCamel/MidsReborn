@@ -32,7 +32,7 @@ namespace Hero_Designer.Forms
             Load += frmEntityListing_Load;
             InitializeComponent();
             var componentResourceManager = new ComponentResourceManager(typeof(frmEntityListing));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon", CultureInfo.InvariantCulture);
+            Icon = Resources.reborn;
             Name = nameof(frmEntityListing);
         }
 

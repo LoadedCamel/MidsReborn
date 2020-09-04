@@ -24,7 +24,7 @@ namespace Hero_Designer.Forms
             InitializeComponent();
             Name = nameof(frmCSV);
             var componentResourceManager = new ComponentResourceManager(typeof(frmCSV));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void frmCSV_Load(object sender, EventArgs e)

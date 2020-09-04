@@ -20,7 +20,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Name = nameof(frmSalvageEdit);
             var componentResourceManager = new ComponentResourceManager(typeof(frmSalvageEdit));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void AddListItem(int Index)

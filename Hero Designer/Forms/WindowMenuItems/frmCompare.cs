@@ -86,7 +86,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             Name = nameof(frmCompare);
             myParent = iFrm;
             var componentResourceManager = new ComponentResourceManager(typeof(frmCompare));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void btnClose_ButtonClicked()

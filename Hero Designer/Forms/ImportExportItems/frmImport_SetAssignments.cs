@@ -33,7 +33,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             InitializeComponent();
             Name = nameof(frmImport_SetAssignments);
             var componentResourceManager = new ComponentResourceManager(typeof(frmImport_SetAssignments));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
         }
 
         private void AddSetType(int nIDPower, Enums.eSetType nSetType)

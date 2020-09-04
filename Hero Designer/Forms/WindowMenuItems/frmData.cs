@@ -23,7 +23,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             InitializeComponent();
             Name = nameof(frmData);
             var componentResourceManager = new ComponentResourceManager(typeof(frmData));
-            Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
+            Icon = Resources.reborn;
             _onClosing = onClosing;
         }
 
