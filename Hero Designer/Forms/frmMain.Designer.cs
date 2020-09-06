@@ -1968,7 +1968,7 @@ namespace Hero_Designer.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             //this.BackgroundImage = 
-            this.ClientSize = new System.Drawing.Size(1160, 834);
+            this.ClientSize = new System.Drawing.Size(1293, 835);
             this.Controls.Add(this.i9Picker);
             this.Controls.Add(this.I9Popup);
             this.Controls.Add(this.lblLockedSecondary);
@@ -2019,7 +2019,7 @@ namespace Hero_Designer.Forms
             this.ForeColor = System.Drawing.Color.White;
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;
-            this.MinimumSize = new System.Drawing.Size(1160, 834);
+            this.MinimumSize = new System.Drawing.Size(1293, 835);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hero Designer";

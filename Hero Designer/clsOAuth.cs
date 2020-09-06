@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -92,8 +93,25 @@ namespace Hero_Designer
             var properties = typeof(DiscordObject).GetProperties();
             foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
 
-            MidsContext.Config.DAuth = authDict;
             MidsContext.Config.DiscordAuthorized = true;
+            var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token");
+            if (key != null)
+            {
+                foreach (var kvp in authDict)
+                {
+                    key.SetValue(kvp.Key, kvp.Value);
+                }
+                key.Close();
+            }
+            else
+            {
+                key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token");
+                foreach (var kvp in authDict)
+                {
+                    key?.SetValue(kvp.Key, kvp.Value);
+                }
+                key?.Close();
+            }
         }
 
         public static bool RefreshToken(string refreshToken)
@@ -114,7 +132,32 @@ namespace Hero_Designer
             var properties = typeof(DiscordObject).GetProperties();
             foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
 
-            MidsContext.Config.DAuth = authDict;
+            try
+            {
+                var subKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token", true);
+                if (subKey != null)
+                {
+                    foreach (var kvp in authDict)
+                    {
+                        subKey.SetValue(kvp.Key, kvp.Value);
+                    }
+                }
+                else
+                {
+                    subKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token", true);
+                    foreach (var kvp in authDict)
+                    {
+                        subKey?.SetValue(kvp.Key, kvp.Value);
+                    }
+                }
+                subKey?.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
+
+            //MidsContext.Config.DAuth = authDict;
             return true;
         }
 
@@ -144,7 +187,32 @@ namespace Hero_Designer
             var properties = typeof(DiscordUser).GetProperties();
             foreach (var property in properties) userDict.Add(property.Name, property.GetValue(jUserObject, null));
 
-            MidsContext.Config.DUser = userDict;
+            //MidsContext.Config.DUser = userDict;
+            try
+            {
+                var subKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\User", true);
+                if (subKey != null)
+                {
+                    foreach (var kvp in userDict)
+                    {
+                        subKey.SetValue(kvp.Key, kvp.Value);
+                    }
+                }
+                else
+                {
+                    subKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\User", true);
+                    foreach (var kvp in userDict)
+                    {
+                        subKey.SetValue(kvp.Key, kvp.Value);
+                    }
+                }
+
+                subKey.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
         }
 
         public static void RequestServers(string tokenString)
@@ -153,28 +221,86 @@ namespace Hero_Designer
             var request = new RestRequest("users/@me/guilds", Method.GET);
             client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
             var response = client.Execute(request);
-            var jUserObject = Deserialize<DiscordServers>(response.Content);
-            var serversDict = jUserObject.ToDictionary(m => m.name);
+            var jServerObject = Deserialize<DiscordServerObject>(response.Content);
+            var serverCount = jServerObject.Count;
+            MidsContext.Config.DServerCount = serverCount;
+            var serversDict = new Dictionary<string, Dictionary<string, string>>();
+            for (var i = 0; i < serverCount; i++)
+            {
+                var serverInfo = new DiscordServerInfo {ServerNumber = $"Server{i}", Name = jServerObject[i].name, Id = jServerObject[i].id};
+                serversDict.Add(serverInfo.ServerNumber, new Dictionary<string, string>());
+                serversDict[serverInfo.ServerNumber].Add("name", serverInfo.Name);
+                serversDict[serverInfo.ServerNumber].Add("id", serverInfo.Id);
+            }
+            var serverWrite = jServerObject.ToDictionary(x => x.name);
             var dServersList = new List<string>();
-            foreach (var entry in serversDict) dServersList.Add(entry.Value.name);
-
+            foreach (var entry in serverWrite) dServersList.Add(entry.Value.name);
             MidsContext.Config.DServers = dServersList;
-            //MidsContext.Config.DServers = serversDict.ToDictionary(x => x.Key, x => (object)x.Value);
+            try
+            {
+                foreach (var oKvp in serversDict)
+                {
+                    var subKey = Registry.CurrentUser.OpenSubKey($@"SOFTWARE\RebornTeam\Mids Reborn\Servers\{oKvp.Key}", true);
+                    if (subKey != null)
+                    {
+                        foreach (var iKvp in oKvp.Value)
+                        {
+                            subKey.SetValue(iKvp.Key, iKvp.Value);
+                        }
+                    }
+                    else
+                    {
+                        subKey = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\RebornTeam\Mids Reborn\Servers\{oKvp.Key}", true);
+                        foreach (var iKvp in oKvp.Value)
+                        {
+                            subKey?.SetValue(iKvp.Key, iKvp.Value);
+                        }
+                    }
+                    subKey?.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
+            //var dServersList = new List<string>();
+            //foreach (var entry in serversDict) dServersList.Add(entry.Value.name);
+            //MidsContext.Config.DServers2 = serversDict.ToDictionary(x => , x => (object)x.Value);
         }
 
-        private static string GetCryptoKey()
+        public static void RequestServerChannels(string tokenString, int serverCount)
         {
-            var data1 = Convert.FromBase64String("aHR0cDovL2hvb2tzLm1pZHNyZWJvcm4uY29tOjMwMDA=");
-            var data2 = Convert.FromBase64String(
-                "P21SR3V4elElZkJfVTMjdVh3RWV0WjZlRjMqPUNZOGM0cERnWXp0LWVOVz1ROUs2enM1OFA9ZTl2ZWpZJSplUHQ2PXM4eA==");
-            var uri = new Uri(Encoding.UTF8.GetString(data1));
-            var param = Encoding.UTF8.GetString(data2);
+            for (var index = 0; index < serverCount; index++)
+            {
+                try
+                {
+                    Console.WriteLine($"Server{index}");
+                    var aOpenSubKey = Registry.CurrentUser.OpenSubKey($@"SOFTWARE\RebornTeam\Mids Reborn\Servers\Server{index}", true);
+                    if (aOpenSubKey != null)
+                    {
+                        var sID = aOpenSubKey.GetValue("id");
+                        var client = new RestClient(API_ENDPOINT);
+                        var request = new RestRequest($@"guilds/{sID}/channels", Method.GET);
+                        client.Authenticator =
+                            new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
+                        var response = client.Execute(request);
+                        var jServerObject = Deserialize<DiscordServerChannels>(response.Content);
+                        var jChannelDict = jServerObject
+                            .Where(x => x.guild_id == Convert.ToInt32(sID) && x.type == 0)
+                            .ToDictionary(y => y.name);
+                        foreach (var channel in jChannelDict)
+                        {
+                            Console.WriteLine($"{channel.Key} - {channel.Value.name} - {channel.Value.type}");
+                        }
+                    }
 
-            var client = new RestClient(uri);
-            var request = new RestRequest("crypto", Method.POST);
-            request.AddQueryParameter("token", param);
-            var response = client.Execute(request);
-            return response.Content;
+                    aOpenSubKey?.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
+                }
+            }
         }
 
         private static List<T> Deserialize<T>(string SerializedJSONString)

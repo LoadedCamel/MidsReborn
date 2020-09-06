@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Master_Classes;
+using Microsoft.Win32;
 
 namespace Hero_Designer.Forms
 {
@@ -71,18 +72,41 @@ namespace Hero_Designer.Forms
             }
             else
             {
-                var isAuthed = MidsContext.Config.DAuth.TryGetValue("DateTime", out var timestamp);
-                if (isAuthed)
+                var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token");
+                if (key != null)
                 {
-                    var authTimestamp = DateTime.Parse(timestamp?.ToString());
-                    var currentTimestamp = DateTime.Now;
-                    var elapsed = (currentTimestamp - authTimestamp).TotalSeconds;
-                    MidsContext.Config.DAuth.TryGetValue("expires_in", out var expires);
-                    if (elapsed >= Convert.ToDouble(expires))
+                    var authDate = key.GetValueNames().Contains("DateTime");
+                    if (authDate)
                     {
-                        MidsContext.Config.DAuth.TryGetValue("refresh_token", out var refreshToken);
-                        var isRefreshed = clsOAuth.RefreshToken(refreshToken?.ToString());
-                        if (isRefreshed)
+                        var timestamp = key.GetValue("DateTime");
+                        var authTimestamp = DateTime.Parse(timestamp?.ToString());
+                        var currentTimestamp = DateTime.Now;
+                        var elapsed = (currentTimestamp - authTimestamp).TotalSeconds;
+                        var expires = key.GetValue("expires_in");
+                        if (elapsed >= Convert.ToDouble(expires))
+                        {
+                            var refreshToken = key.GetValue("refresh_token");
+                            var isRefreshed = clsOAuth.RefreshToken(refreshToken?.ToString());
+                            if (isRefreshed)
+                            {
+                                Size = new Size(818, 320);
+                                Text = @"Export to Discord - Enabled";
+                                label1.Visible = true;
+                                label2.Visible = true;
+                                serverCombo.Visible = true;
+                                serverCombo.Enabled = true;
+                                channelCombo.Visible = true;
+                                channelCombo.Enabled = true;
+                                tableLayoutPanel1.Visible = true;
+                                tableLayoutPanel1.Enabled = true;
+
+                                authNotice.Visible = false;
+                                authNotice.Enabled = false;
+                                authButton.Visible = false;
+                                authButton.Enabled = false;
+                            }
+                        }
+                        else
                         {
                             Size = new Size(818, 320);
                             Text = @"Export to Discord - Enabled";
@@ -101,32 +125,15 @@ namespace Hero_Designer.Forms
                             authButton.Enabled = false;
                         }
                     }
-                    else
-                    {
-                        Size = new Size(818, 320);
-                        Text = @"Export to Discord - Enabled";
-                        label1.Visible = true;
-                        label2.Visible = true;
-                        serverCombo.Visible = true;
-                        serverCombo.Enabled = true;
-                        channelCombo.Visible = true;
-                        channelCombo.Enabled = true;
-                        tableLayoutPanel1.Visible = true;
-                        tableLayoutPanel1.Enabled = true;
-
-                        authNotice.Visible = false;
-                        authNotice.Enabled = false;
-                        authButton.Visible = false;
-                        authButton.Enabled = false;
-                    }
+                    var token = key.GetValue("access_token");
+                    clsOAuth.RequestUser(token?.ToString());
+                    clsOAuth.RequestServers(token?.ToString());
+                    //clsOAuth.RequestServerChannels(token?.ToString(), MidsContext.Config.DServerCount);
+                    //add servers to list
+                    PopulateUserData();
+                    StatInitializer();
+                    key.Close();
                 }
-
-                MidsContext.Config.DAuth.TryGetValue("access_token", out var token);
-                clsOAuth.RequestUser(token?.ToString());
-                clsOAuth.RequestServers(token?.ToString());
-                //add servers to list
-                PopulateUserData();
-                StatInitializer();
             }
 
             Update();
@@ -154,14 +161,20 @@ namespace Hero_Designer.Forms
 
         private void PopulateUserData()
         {
-            var userId = clsOAuth.GetCryptedValue("User", "id");
-            var userAvatar = clsOAuth.GetCryptedValue("User", "avatar");
+            var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\User");
+            var userId = key?.GetValue("id");
+            //var userId = clsOAuth.GetCryptedValue("User", "id");
+            //var userAvatar = clsOAuth.GetCryptedValue("User", "avatar");
+            var userAvatar = key?.GetValue("avatar");
             using var webClient = new WebClient();
             var bytes = webClient.DownloadData($"https://cdn.discordapp.com/avatars/{userId}/{userAvatar}.png");
             using var memoryStream = new MemoryStream(bytes);
             ctlAvatar1.Image = Image.FromStream(memoryStream);
-            lblUsername.Text = clsOAuth.GetCryptedValue("User", "username");
-            lblDiscriminator.Text = $@"# {clsOAuth.GetCryptedValue("User", "discriminator")}";
+            lblUsername.Text = key?.GetValue("username").ToString();
+            lblDiscriminator.Text = key?.GetValue("discriminator").ToString();
+            key?.Close();
+            //lblUsername.Text = clsOAuth.GetCryptedValue("User", "username");
+            //lblDiscriminator.Text = $@"# {clsOAuth.GetCryptedValue("User", "discriminator")}";
             //Text = $@"Export as {clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
         }
 

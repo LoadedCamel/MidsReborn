@@ -35,7 +35,7 @@ namespace Hero_Designer
 
         private const string BOT_API_ENDPOINT = "https://api.midsreborn.com:3001";
 
-        public static async void GatherData(Dictionary<string, List<string>> selectedStats)
+        public static void GatherData(Dictionary<string, List<string>> selectedStats)
         {
             var data = new Toon
             {
@@ -166,7 +166,7 @@ namespace Hero_Designer
                 }
             }
 
-            await Export(data);
+            Export(data);
         }
 
         private static int ToonLevel()
@@ -179,15 +179,11 @@ namespace Hero_Designer
         public static string ShrinkTheDatalink(string strUrl)
         {
             var url = "http://tinyurl.com/api-create.php?url=" + strUrl;
-
             var objWebRequest = (HttpWebRequest) WebRequest.Create(url);
             objWebRequest.Method = "GET";
             using var objWebResponse = (HttpWebResponse) objWebRequest.GetResponse();
-            var srReader =
-                new StreamReader(objWebResponse.GetResponseStream() ?? throw new InvalidOperationException());
-
+            var srReader = new StreamReader(objWebResponse.GetResponseStream() ?? throw new InvalidOperationException());
             var strHtml = srReader.ReadToEnd();
-
             srReader.Close();
             objWebResponse.Close();
             objWebRequest.Abort();
@@ -202,7 +198,7 @@ namespace Hero_Designer
             e.Message = "Required";
         }
 
-        private static async Task Export(Toon dataToon)
+        private static void Export(Toon dataToon)
         {
             var msgResult = MessageBox.Show(@"Would you like to enter a description for people to see?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (msgResult == DialogResult.Yes)
@@ -210,14 +206,14 @@ namespace Hero_Designer
                 InputBoxResult result = InputBox.Show("Enter a description for your build.", "Build Description", "Enter your description here", InputBox.InputBoxIcon.Info, inputBox_Validating);
                 if (result.OK) { dataToon.Description = result.Text; }
 
-                dataToon.SubmittedBy = $"{clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
+                //dataToon.SubmittedBy = $"{clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
                 dataToon.SubmittedOn = DateTime.Now.ToShortDateString();
                 var jsonExport = JsonConvert.SerializeObject(dataToon, Formatting.Indented);
                 Console.WriteLine(jsonExport);
             }
             else
             {
-                dataToon.SubmittedBy = $"{clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
+                //dataToon.SubmittedBy = $"{clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
                 dataToon.SubmittedOn = $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}";
                 var jsonExport = JsonConvert.SerializeObject(dataToon, Formatting.Indented);
                 Console.WriteLine(jsonExport);
@@ -225,12 +221,24 @@ namespace Hero_Designer
             }
         }
 
-        private static async void ConnectBotAPI()
+        private static void ValidateServers()
         {
             var client = new RestClient(BOT_API_ENDPOINT);
-            var request = new RestRequest("oauth2/token", Method.POST);
-            //request.AddParameter("client_id", CLIENT_ID);
-            //request.AddParameter("client_secret", CLIENT_SECRET);
+            var request = new RestRequest("v2/servers/validate", Method.POST);
+            request.AddParameter("server_list", MidsContext.Config.DServers);
+            var response = client.Execute(request);
+            var jValidatedServers = JsonConvert.DeserializeObject<ValidatedServers>(response.Content);
+            var serversDict = new Dictionary<string, object>();
+            var properties = typeof(ValidatedServers).GetProperties();
+            foreach (var property in properties) serversDict.Add(property.Name, property.GetValue(jValidatedServers, null));
+            MidsContext.Config.DValidatedServers = serversDict;
         }
+    }
+
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    public class ValidatedServers
+    {
+        public string name { get; set; }
+        public List<string> channels { get; set; }
     }
 }

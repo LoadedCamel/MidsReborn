@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 public interface ISerialize
 {
@@ -111,13 +112,12 @@ public class ConfigData
     public Enums.CompOverride[] CompOverride { get; set; }
 
     public bool DiscordAuthorized { get; set; }
-    public List<object> CryptedList { get; set; }
     public Dictionary<string, object> DAuth { get; set; }
-
+    public Dictionary<string, object> DValidatedServers { get; set; }
     public Dictionary<string, object> DUser { get; set; }
     //public Dictionary<string, object> DServers { get; set; }
-
     public List<string> DServers { get; set; }
+    public int DServerCount { get; set; }
 
     public bool DisableDesaturateInherent { get; set; }
     public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Dynamic;
@@ -241,174 +241,172 @@ public class ConfigData
     {
         //using (FileStream fileStream = new FileStream(iFilename, FileMode.Open, FileAccess.Read))
         {
-            using (var reader = new BinaryReader(File.Open(iFilename, FileMode.Open, FileAccess.Read)))
+            using var reader = new BinaryReader(File.Open(iFilename, FileMode.Open, FileAccess.Read));
+            float version;
+            switch (reader.ReadString())
             {
-                float version;
-                switch (reader.ReadString())
-                {
-                    // legacy string, refers to something specific in files, do not change
-                    case "Mids' Hero Designer Config":
-                        version = 0.9f;
-                        break;
-                    // legacy string, refers to something specific in files, do not change
-                    // here's something F# doesn't do easily(fallthrough where one branch has a when variable declared)
-                    case "Mids' Hero Designer Config V2":
-                    case string x when x == header:
-                        version = reader.ReadSingle();
-                        break;
-                    default:
-                        MessageBox.Show("Config file was missing a header! Using defaults.");
-                        reader.Close();
-                        //fileStream.Close();
-                        return;
-                }
+                // legacy string, refers to something specific in files, do not change
+                case "Mids' Hero Designer Config":
+                    version = 0.9f;
+                    break;
+                // legacy string, refers to something specific in files, do not change
+                // here's something F# doesn't do easily(fallthrough where one branch has a when variable declared)
+                case "Mids' Hero Designer Config V2":
+                case { } x when x == header:
+                    version = reader.ReadSingle();
+                    break;
+                default:
+                    MessageBox.Show("Config file was missing a header! Using defaults.");
+                    reader.Close();
+                    //fileStream.Close();
+                    return;
+            }
 
-                /* Commenting out for now - will remove later
+            /* Commenting out for now - will remove later
                 this.DNickName = reader.ReadString();
                 this.DSelServer = reader.ReadString();
                 this.DChannel = reader.ReadString();*/
-                NoToolTips = reader.ReadBoolean();
-                BaseAcc = reader.ReadSingle();
-                double num3 = reader.ReadSingle();
-                double num4 = reader.ReadSingle();
-                double num5 = reader.ReadSingle();
-                double num6 = reader.ReadSingle();
-                double num7 = reader.ReadSingle();
-                CalcEnhLevel = (Enums.eEnhRelative) reader.ReadInt32();
-                CalcEnhOrigin = (Enums.eEnhGrade) reader.ReadInt32();
-                ExempHigh = reader.ReadInt32();
-                ExempLow = reader.ReadInt32();
-                Inc.DisablePvE = !reader.ReadBoolean();
+            NoToolTips = reader.ReadBoolean();
+            BaseAcc = reader.ReadSingle();
+            double num3 = reader.ReadSingle();
+            double num4 = reader.ReadSingle();
+            double num5 = reader.ReadSingle();
+            double num6 = reader.ReadSingle();
+            double num7 = reader.ReadSingle();
+            CalcEnhLevel = (Enums.eEnhRelative) reader.ReadInt32();
+            CalcEnhOrigin = (Enums.eEnhGrade) reader.ReadInt32();
+            ExempHigh = reader.ReadInt32();
+            ExempLow = reader.ReadInt32();
+            Inc.DisablePvE = !reader.ReadBoolean();
+            reader.ReadBoolean();
+            DamageMath.Calculate = (EDamageMath) reader.ReadInt32();
+            reader.ReadSingle();
+            if (version < 1.24000000953674)
                 reader.ReadBoolean();
-                DamageMath.Calculate = (EDamageMath) reader.ReadInt32();
-                reader.ReadSingle();
-                if (version < 1.24000000953674)
-                    reader.ReadBoolean();
-                else
-                    reader.ReadInt32();
-                DamageMath.ReturnValue = (EDamageReturn) reader.ReadInt32();
-                DisableDataDamageGraph = !reader.ReadBoolean();
-                DataDamageGraphPercentageOnly = reader.ReadBoolean();
-                DataGraphType = (Enums.eDDGraph) reader.ReadInt32();
-                ExportScheme = reader.ReadInt32();
-                ExportTarget = reader.ReadInt32();
-                if (version >= 1.24000000953674)
-                {
-                    ExportBonusTotals = reader.ReadBoolean();
-                    ExportBonusList = reader.ReadBoolean();
-                }
-
-                //this._hideOriginEnhancements =
-                reader.ReadBoolean();
-                DisableVillainColors = !reader.ReadBoolean();
-                CheckForUpdates = reader.ReadBoolean();
-                Columns = reader.ReadInt32();
-                _lastSize.Width = reader.ReadInt32();
-                _lastSize.Height = reader.ReadInt32();
-                DvState = (Enums.eVisibleSize) reader.ReadInt32();
-                StatGraphStyle = (Enums.GraphStyle) reader.ReadInt32();
-                if (version >= 1.0)
-                    IsInitialized = !reader.ReadBoolean();
-                if (version >= 1.10000002384186)
-                    ForceLevel = reader.ReadInt32();
-                if (version >= 1.20000004768372)
-                {
-                    I9.DefaultIOLevel = reader.ReadInt32();
-                    if (I9.DefaultIOLevel > 49)
-                        I9.DefaultIOLevel = 49;
-                    I9.HideIOLevels = !reader.ReadBoolean();
-                    I9.IgnoreEnhFX = !reader.ReadBoolean();
-                    I9.IgnoreSetBonusFX = !reader.ReadBoolean();
-                    I9.ExportIOLevels = reader.ReadBoolean();
-                    I9.DisablePrintIOLevels = !reader.ReadBoolean();
-                    I9.DisableExportCompress = !reader.ReadBoolean();
-                    I9.DisableExportDataChunk = !reader.ReadBoolean();
-                    I9.ExportStripEnh = reader.ReadBoolean();
-                    I9.ExportStripSetNames = reader.ReadBoolean();
-                    I9.ExportExtraSep = reader.ReadBoolean();
-                    PrintInColor = reader.ReadBoolean();
-                    //this._printScheme = 
-                    reader.ReadInt32();
-                }
-
-                if (version >= 1.21000003814697)
-                {
-                    RtFont.PairedBase = reader.ReadSingle();
-                    RtFont.PairedBold = reader.ReadBoolean();
-                    RtFont.RTFBase = reader.ReadInt32();
-                    RtFont.RTFBold = reader.ReadBoolean();
-                    RtFont.ColorBackgroundHero = reader.ReadRGB();
-                    RtFont.ColorBackgroundVillain = reader.ReadRGB();
-                    RtFont.ColorEnhancement = reader.ReadRGB();
-                    RtFont.ColorFaded = reader.ReadRGB();
-                    RtFont.ColorInvention = reader.ReadRGB();
-                    RtFont.ColorInventionInv = reader.ReadRGB();
-                    RtFont.ColorText = reader.ReadRGB();
-                    RtFont.ColorWarning = reader.ReadRGB();
-                    RtFont.ColorPlName = reader.ReadRGB();
-                    RtFont.ColorPlSpecial = reader.ReadRGB();
-                }
-
-                if (version >= 1.22000002861023)
-                {
-                    ShowSlotLevels = reader.ReadBoolean();
-                    DisableLoadLastFileOnStart = !reader.ReadBoolean();
-                    LastFileName = reader.ReadString();
-                    RtFont.ColorPowerAvailable = reader.ReadRGB();
-                    RtFont.ColorPowerDisabled = reader.ReadRGB();
-                    RtFont.ColorPowerTakenHero = reader.ReadRGB();
-                    RtFont.ColorPowerTakenDarkHero = reader.ReadRGB();
-                    RtFont.ColorPowerHighlightHero = reader.ReadRGB();
-                    RtFont.ColorPowerTakenVillain = reader.ReadRGB();
-                    RtFont.ColorPowerTakenDarkVillain = reader.ReadRGB();
-                    RtFont.ColorPowerHighlightVillain = reader.ReadRGB();
-                }
-
-                if (version >= 1.23000001907349)
-                {
-                    Tips = new Tips(reader);
-                    DefaultSaveFolderOverride = reader.ReadString();
-                }
-
-                if (version >= 1.24000000953674)
-                {
-                    EnhanceVisibility = reader.ReadBoolean();
-                    reader.ReadBoolean();
-                    BuildMode = (Enums.dmModes) reader.ReadInt32();
-                    BuildOption = (Enums.dmItem) reader.ReadInt32();
-                    //this.UpdatePath =
-                    reader.ReadString();
-                    //if (string.IsNullOrEmpty(this.UpdatePath))
-                    //    this.UpdatePath = "https://midsreborn.com/mids_updates/";
-                }
-
-                if (version >= 1.25)
-                {
-                    ShowEnhRel = reader.ReadBoolean();
-                    ShowRelSymbols = reader.ReadBoolean();
-                    DisableShowPopup = !reader.ReadBoolean();
-                    if (version >= 1.32000005245209)
-                        DisableAlphaPopup = !reader.ReadBoolean();
-                    PopupRecipes = reader.ReadBoolean();
-                    ShoppingListIncludesRecipes = reader.ReadBoolean();
-                    PrintProfile = (PrintOptionProfile) reader.ReadInt32();
-                    PrintHistory = reader.ReadBoolean();
-                    LastPrinter = reader.ReadString();
-                    DisablePrintProfileEnh = !reader.ReadBoolean();
-                    DisableDesaturateInherent = !reader.ReadBoolean();
-                    DisableRepeatOnMiddleClick = !reader.ReadBoolean();
-                }
-
-                if (version >= 1.25999999046326)
-                    DisableExportHex = !reader.ReadBoolean();
-                if (version >= 1.26999998092651)
-                    SpeedFormat = (Enums.eSpeedMeasure) reader.ReadInt32();
-                if (version >= 1.27999997138977)
-                    SaveFolderChecked = reader.ReadBoolean();
-                if (version >= 1.28999996185303)
-                    UseArcanaTime = reader.ReadBoolean(); //this is correct
-                CreateDefaultSaveFolder();
+            else
+                reader.ReadInt32();
+            DamageMath.ReturnValue = (EDamageReturn) reader.ReadInt32();
+            DisableDataDamageGraph = !reader.ReadBoolean();
+            DataDamageGraphPercentageOnly = reader.ReadBoolean();
+            DataGraphType = (Enums.eDDGraph) reader.ReadInt32();
+            ExportScheme = reader.ReadInt32();
+            ExportTarget = reader.ReadInt32();
+            if (version >= 1.24000000953674)
+            {
+                ExportBonusTotals = reader.ReadBoolean();
+                ExportBonusList = reader.ReadBoolean();
             }
+
+            //this._hideOriginEnhancements =
+            reader.ReadBoolean();
+            DisableVillainColors = !reader.ReadBoolean();
+            CheckForUpdates = reader.ReadBoolean();
+            Columns = reader.ReadInt32();
+            _lastSize.Width = reader.ReadInt32();
+            _lastSize.Height = reader.ReadInt32();
+            DvState = (Enums.eVisibleSize) reader.ReadInt32();
+            StatGraphStyle = (Enums.GraphStyle) reader.ReadInt32();
+            if (version >= 1.0)
+                IsInitialized = !reader.ReadBoolean();
+            if (version >= 1.10000002384186)
+                ForceLevel = reader.ReadInt32();
+            if (version >= 1.20000004768372)
+            {
+                I9.DefaultIOLevel = reader.ReadInt32();
+                if (I9.DefaultIOLevel > 49)
+                    I9.DefaultIOLevel = 49;
+                I9.HideIOLevels = !reader.ReadBoolean();
+                I9.IgnoreEnhFX = !reader.ReadBoolean();
+                I9.IgnoreSetBonusFX = !reader.ReadBoolean();
+                I9.ExportIOLevels = reader.ReadBoolean();
+                I9.DisablePrintIOLevels = !reader.ReadBoolean();
+                I9.DisableExportCompress = !reader.ReadBoolean();
+                I9.DisableExportDataChunk = !reader.ReadBoolean();
+                I9.ExportStripEnh = reader.ReadBoolean();
+                I9.ExportStripSetNames = reader.ReadBoolean();
+                I9.ExportExtraSep = reader.ReadBoolean();
+                PrintInColor = reader.ReadBoolean();
+                //this._printScheme = 
+                reader.ReadInt32();
+            }
+
+            if (version >= 1.21000003814697)
+            {
+                RtFont.PairedBase = reader.ReadSingle();
+                RtFont.PairedBold = reader.ReadBoolean();
+                RtFont.RTFBase = reader.ReadInt32();
+                RtFont.RTFBold = reader.ReadBoolean();
+                RtFont.ColorBackgroundHero = reader.ReadRGB();
+                RtFont.ColorBackgroundVillain = reader.ReadRGB();
+                RtFont.ColorEnhancement = reader.ReadRGB();
+                RtFont.ColorFaded = reader.ReadRGB();
+                RtFont.ColorInvention = reader.ReadRGB();
+                RtFont.ColorInventionInv = reader.ReadRGB();
+                RtFont.ColorText = reader.ReadRGB();
+                RtFont.ColorWarning = reader.ReadRGB();
+                RtFont.ColorPlName = reader.ReadRGB();
+                RtFont.ColorPlSpecial = reader.ReadRGB();
+            }
+
+            if (version >= 1.22000002861023)
+            {
+                ShowSlotLevels = reader.ReadBoolean();
+                DisableLoadLastFileOnStart = !reader.ReadBoolean();
+                LastFileName = reader.ReadString();
+                RtFont.ColorPowerAvailable = reader.ReadRGB();
+                RtFont.ColorPowerDisabled = reader.ReadRGB();
+                RtFont.ColorPowerTakenHero = reader.ReadRGB();
+                RtFont.ColorPowerTakenDarkHero = reader.ReadRGB();
+                RtFont.ColorPowerHighlightHero = reader.ReadRGB();
+                RtFont.ColorPowerTakenVillain = reader.ReadRGB();
+                RtFont.ColorPowerTakenDarkVillain = reader.ReadRGB();
+                RtFont.ColorPowerHighlightVillain = reader.ReadRGB();
+            }
+
+            if (version >= 1.23000001907349)
+            {
+                Tips = new Tips(reader);
+                DefaultSaveFolderOverride = reader.ReadString();
+            }
+
+            if (version >= 1.24000000953674)
+            {
+                EnhanceVisibility = reader.ReadBoolean();
+                reader.ReadBoolean();
+                BuildMode = (Enums.dmModes) reader.ReadInt32();
+                BuildOption = (Enums.dmItem) reader.ReadInt32();
+                //this.UpdatePath =
+                reader.ReadString();
+                //if (string.IsNullOrEmpty(this.UpdatePath))
+                //    this.UpdatePath = "https://midsreborn.com/mids_updates/";
+            }
+
+            if (version >= 1.25)
+            {
+                ShowEnhRel = reader.ReadBoolean();
+                ShowRelSymbols = reader.ReadBoolean();
+                DisableShowPopup = !reader.ReadBoolean();
+                if (version >= 1.32000005245209)
+                    DisableAlphaPopup = !reader.ReadBoolean();
+                PopupRecipes = reader.ReadBoolean();
+                ShoppingListIncludesRecipes = reader.ReadBoolean();
+                PrintProfile = (PrintOptionProfile) reader.ReadInt32();
+                PrintHistory = reader.ReadBoolean();
+                LastPrinter = reader.ReadString();
+                DisablePrintProfileEnh = !reader.ReadBoolean();
+                DisableDesaturateInherent = !reader.ReadBoolean();
+                DisableRepeatOnMiddleClick = !reader.ReadBoolean();
+            }
+
+            if (version >= 1.25999999046326)
+                DisableExportHex = !reader.ReadBoolean();
+            if (version >= 1.26999998092651)
+                SpeedFormat = (Enums.eSpeedMeasure) reader.ReadInt32();
+            if (version >= 1.27999997138977)
+                SaveFolderChecked = reader.ReadBoolean();
+            if (version >= 1.28999996185303)
+                UseArcanaTime = reader.ReadBoolean(); //this is correct
+            CreateDefaultSaveFolder();
         }
     }
 
@@ -700,4 +698,24 @@ public class ConfigData
             PairedBold = false;
         }
     }
+}
+public class DiscordServerObject
+{
+    [JsonProperty(PropertyName = "id")] public string id { get; set; }
+    [JsonProperty(PropertyName = "name")] public string name { get; set; }
+}
+
+public class DiscordServerInfo
+{
+   public string ServerNumber { get; set; }
+   public string Name { get; set; }
+   public string Id { get; set; }
+}
+
+public class DiscordServerChannels
+{
+    [JsonProperty(PropertyName = "id")] public string id { get; set; }
+    [JsonProperty(PropertyName = "name")] public string name { get; set; }
+    [JsonProperty(PropertyName = "type")] public int type { get; set; }
+    [JsonProperty(PropertyName = "guild_id")] public int guild_id { get; set; }
 }
