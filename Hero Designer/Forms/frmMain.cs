@@ -269,6 +269,8 @@ namespace Hero_Designer.Forms
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
                 lblATLocked.Location = new Point(cbAT.Location.X, cbAT.Location.Y);
                 lblATLocked.Size = new Size(cbAT.Width, cbAT.Height);
+                lblATLocked.BorderStyle = BorderStyle.None;
+                lblATLocked.FlatStyle = FlatStyle.Flat;
                 lblATLocked.Visible = false;
                 lblLocked0.Location = cbPool0.Location;
                 lblLocked0.Size = cbPool0.Size;
@@ -1849,8 +1851,11 @@ namespace Hero_Designer.Forms
         private void frmMain_Maximize(object sender, EventArgs e)
         {
             if (WindowState != LastState)
+            {
                 frmMain_Resize(RuntimeHelpers.GetObjectValue(sender), e);
+            }
             LastState = WindowState;
+
         }
 
         private void frmMain_MouseWheel(object sender, MouseEventArgs e)
@@ -2299,7 +2304,8 @@ namespace Hero_Designer.Forms
             if (MainModule.MidsController.Toon == null)
                 return;
             var destRect = new RectangleF(1f, (lblATLocked.Height - 17) / 2f, 16f, 16f);
-            --destRect.Y;
+            destRect.Y += 1;
+            destRect.X += 2;
             var srcRect = new RectangleF(MidsContext.Character.Archetype.Idx * 16, 0.0f, 16f, 16f);
             var graphics = e.Graphics;
             graphics.DrawImage(I9Gfx.Archetypes.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
@@ -2877,6 +2883,8 @@ namespace Hero_Designer.Forms
             {
                 var index = drawing.WhichSlot(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                 var sIDX = drawing.WhichEnh(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
+                //var index = drawing.WhichSlot(e.X, e.Y);
+                //var sIDX = drawing.WhichEnh(e.X, e.Y);
                 if ((index < 0) | (index >= MidsContext.Character.CurrentBuild.Powers.Count))
                 {
                     HidePopup();

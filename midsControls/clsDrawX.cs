@@ -30,11 +30,13 @@ namespace midsControls
 
         public const int OffsetY = 23;
 
-        public const int EnhOffsetX = 30;
+        private const int EnhOffsetX = 30;
 
         private const int OffsetInherent = 10;
 
         private const int vcPowers = 24;
+
+        private const int icoOffset = 32;
 
         public static readonly float[][] heroMatrix =
         {
@@ -139,24 +141,38 @@ namespace midsControls
                 ColorSwitch();
                 InitColumns = MidsContext.Config.Columns; 
                 SzPower = bxPower[0].Size;
-
+                foreach (var pg in bxPower)
+                {
+                    pg.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    pg.Graphics.InterpolationMode = InterpolationMode.Bicubic;
+                    pg.Graphics.CompositingMode = CompositingMode.SourceOver;
+                    pg.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+                    pg.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    pg.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                    pg.Graphics.PageUnit = GraphicsUnit.Pixel;
+                }
                 szSlot = new Size(30, 30);
                 szBuffer = GetMaxDrawingArea();
                 var size = new Size(szBuffer.Width, szBuffer.Height);
                 bxBuffer = new ExtendedBitmap(size);
-                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-                bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
+                bxBuffer.Graphics.PageUnit = GraphicsUnit.Pixel;
                 szBuffer = GetRequiredDrawingArea();
                 bxNewSlot = new ExtendedBitmap(FileIO.AddSlash(Application.StartupPath) + GfxPath + NewSlotName);
                 gTarget = iTarget.CreateGraphics();
-                cTarget = iTarget;
-                gTarget.CompositingMode = CompositingMode.SourceCopy;
+                gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 gTarget.CompositingQuality = CompositingQuality.HighQuality;
                 gTarget.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                gTarget.SmoothingMode = SmoothingMode.HighQuality;
                 gTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                gTarget.SmoothingMode = SmoothingMode.HighQuality;
+                gTarget.CompositingMode = CompositingMode.SourceOver;
+                gTarget.PageUnit = GraphicsUnit.Pixel;
+                cTarget = iTarget;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
                 DefaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
                 BackColor = iTarget.BackColor;
@@ -196,7 +212,7 @@ namespace midsControls
                 if ((value < 2) | (value > 6))
                     return;
                 vcCols = value;
-                vcRowsPowers = checked(vcPowers / vcCols);
+                vcRowsPowers = vcPowers / vcCols;
             }
         }
 
@@ -205,6 +221,13 @@ namespace midsControls
         public void ReInit(Control iTarget)
         {
             gTarget = iTarget.CreateGraphics();
+            gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            gTarget.CompositingQuality = CompositingQuality.HighQuality;
+            gTarget.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            gTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            gTarget.SmoothingMode = SmoothingMode.HighQuality;
+            gTarget.CompositingMode = CompositingMode.SourceOver;
+            gTarget.PageUnit = GraphicsUnit.Pixel;
             cTarget = iTarget;
             //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
             DefaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
@@ -223,7 +246,7 @@ namespace midsControls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width) / 2 - 35,
@@ -233,7 +256,7 @@ namespace midsControls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 28);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 275), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 275) / 2 - 50,
@@ -243,7 +266,7 @@ namespace midsControls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 30);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 300), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
@@ -253,7 +276,7 @@ namespace midsControls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 30);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 300), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
@@ -263,7 +286,7 @@ namespace midsControls
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 30);
                         bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 550), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
-                            new Font("Arial", 13f, FontStyle.Bold, GraphicsUnit.Pixel),
+                            new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
                                 : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
@@ -439,6 +462,7 @@ namespace midsControls
 
         public Point DrawPowerSlot(ref PowerEntry iSlot, bool singleDraw = false)
         {
+
             Pen pen = new Pen(Color.FromArgb(128, 0, 0, 0), 1f);
             string text = string.Empty;
             string text2 = string.Empty;
@@ -454,14 +478,13 @@ namespace midsControls
             int slotChk = MidsContext.Character.SlotCheck(iSlot);
             Enums.ePowerState ePowerState = iSlot.State;
             bool canPlaceSlot = MidsContext.Character.CanPlaceSlot;
-            bool drawNewSlot = iSlot.Power != null && (iSlot.State != Enums.ePowerState.Empty && canPlaceSlot) && iSlot.Slots.Length < 6 &&
-                               singleDraw && iSlot.Power.Slottable & InterfaceMode != Enums.eInterfaceMode.PowerToggle;
+            bool drawNewSlot = iSlot.Power != null && (iSlot.State != Enums.ePowerState.Empty && canPlaceSlot) && iSlot.Slots.Length < 6 && singleDraw && iSlot.Power.Slottable & InterfaceMode != Enums.eInterfaceMode.PowerToggle;
             Point result = PowerPosition(iSlot);
             Point point = default;
             checked
             {
                 //Position of enhancements drawing
-                point.X = (int)Math.Round(result.X - EnhOffsetX + (checked(SzPower.Width - (szSlot.Width * 6)) / 2.0));
+                point.X = (int)Math.Round(result.X - EnhOffsetX + checked(SzPower.Width - szSlot.Width * 6) / 2.0);
                 point.Y = result.Y + OffsetY;
                 //
                 Graphics graphics = bxBuffer.Graphics;
@@ -481,8 +504,7 @@ namespace midsControls
                             && iSlot.Slots.Length < 6
                             && iSlot.Power.Slottable)
                             ePowerState = Enums.ePowerState.Open;
-                        else if (iSlot.Chosen & !canPlaceSlot & InterfaceMode != Enums.eInterfaceMode.PowerToggle &
-                                 Highlight == MidsContext.Character.CurrentBuild.Powers.IndexOf(iSlot))
+                        else if (iSlot.Chosen & !canPlaceSlot & InterfaceMode != Enums.eInterfaceMode.PowerToggle & Highlight == MidsContext.Character.CurrentBuild.Powers.IndexOf(iSlot))
                         {
                             ePowerState = Enums.ePowerState.Open;
                         }
@@ -497,7 +519,6 @@ namespace midsControls
                 rectangleF.Width = szSlot.Width;
                 stringFormat.Alignment = StringAlignment.Center;
                 stringFormat.LineAlignment = StringAlignment.Center;
-                bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bool grey;
                 ImageAttributes imageAttr;
                 if (toggling)
@@ -540,9 +561,7 @@ namespace midsControls
                     }
 
                     Graphics graphics2 = bxBuffer.Graphics;
-                    Image bitmap = !MidsContext.Character.IsHero()
-                        ? bxPower[4].Bitmap
-                        : bxPower[2].Bitmap;
+                    Image bitmap = !MidsContext.Character.IsHero() ? bxPower[4].Bitmap : bxPower[2].Bitmap;
                     Rectangle destRect = ScaleDown(iValue);
                     int srcX = 0;
                     int srcY = 0;
@@ -553,9 +572,7 @@ namespace midsControls
                 else if (ePowerState == Enums.ePowerState.Open)
                 {
                     Graphics graphics3 = bxBuffer.Graphics;
-                    Image bitmap2 = !MidsContext.Character.IsHero()
-                        ? bxPower[5].Bitmap
-                        : bxPower[3].Bitmap;
+                    Image bitmap2 = !MidsContext.Character.IsHero() ? bxPower[5].Bitmap : bxPower[3].Bitmap;
                     //Image bitmap2 = bxPower[(int)ePowerState].Bitmap;
                     Rectangle destRect2 = ScaleDown(iValue);
                     int srcX2 = 0;
@@ -608,13 +625,13 @@ namespace midsControls
                 {
                     var slot = iSlot.Slots[i];
                     // Spacing between enhancements?
-                    rectangleF.X = point.X + szSlot.Width * i;
+                    rectangleF.X = point.X + (szSlot.Width + 2) * i;
                     rectangleF.Y = point.Y;
                     //
                     if (slot.Enhancement.Enh < 0)
                     {
-                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, 30, 30);
-                        bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, 30, 30, GraphicsUnit.Pixel, pImageAttributes);
+                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, szSlot.Width, szSlot.Height);
+                        bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, szSlot.Width, szSlot.Height, GraphicsUnit.Pixel, pImageAttributes);
                         if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
                             (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
                             (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
@@ -629,7 +646,7 @@ namespace midsControls
                         if (inDesigner) continue;
                         IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                         Graphics graphics6 = bxBuffer.Graphics;
-                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, 30, 30);
+                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, szSlot.Width, szSlot.Height);
                         I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect2), enhancement.ImageIdx, I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
                         if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
                             (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
@@ -671,7 +688,7 @@ namespace midsControls
                 //Draws the new slot hover
                 if (slotChk > -1 && (ePowerState != Enums.ePowerState.Empty && drawNewSlot))
                 {
-                    Rectangle clipRect2 = new Rectangle(point.X + szSlot.Width * (iSlot.Slots.Length), point.Y, szSlot.Width, szSlot.Height);
+                    Rectangle clipRect2 = new Rectangle(point.X + (szSlot.Width + 2) * (iSlot.Slots.Length), point.Y, szSlot.Width, szSlot.Height);
                     RectangleF iValue2 = clipRect2;
                     bxBuffer.Graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(iValue2));
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
@@ -755,9 +772,9 @@ namespace midsControls
                     Graphics graphics5 = bxBuffer.Graphics;
                     graphics5.CompositingQuality = CompositingQuality.HighQuality;
                     graphics5.SmoothingMode = SmoothingMode.HighQuality;
-                    graphics5.TextRenderingHint = TextRenderingHint.SystemDefault;
+                    graphics5.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     graphics5.PageUnit = GraphicsUnit.Pixel;
-                    graphics5.InterpolationMode = InterpolationMode.HighQualityBilinear;
+                    graphics5.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     DrawOutlineText(iStr4, bounds5, whiteSmoke, outline5, bFont5, outlineSpace5, graphics5, false, true);
                 }
                 else
@@ -919,7 +936,7 @@ namespace midsControls
                         point = PowerPosition(GetVisualIDX(i));
                     else
                         point = PowerPosition(i);
-                    if (iX >= point.X && iY >= point.Y && iX < SzPower.Width + point.X && iY < point.Y + SzPower.Height + PaddingY)
+                    if (iX >= point.X && iY >= point.Y && iX < SzPower.Width + point.X && iY < point.Y + SzPower.Height + (PaddingY/2))
                         return i;
                 }
 
@@ -941,7 +958,7 @@ namespace midsControls
                     else
                         point = PowerPosition(i);
 
-                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + PaddingY)
+                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + (PaddingY/2))
                         continue;
                     oPower = i;
                     break;
@@ -951,7 +968,7 @@ namespace midsControls
                     return -1;
                 {
                     var isValid = false;
-                    if (iY >= point.Y + 18)
+                    if (iY >= point.Y -10)
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset > -1)
                         {
@@ -968,10 +985,13 @@ namespace midsControls
 
                     if (!isValid)
                         return -1;
-                    iX = (int) Math.Round(iX - (point.X - 40 + checked(SzPower.Width - szSlot.Width * 6) / 2.0));
+                    iX -= point.X - checked(SzPower.Width - icoOffset * 8);
                     for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length - 1; i++)
-                        if (iX <= (i + 1) * szSlot.Width)
+                    {
+                        var iZ = (i + 1) * icoOffset;
+                        if (iX <= iZ)
                             return i;
+                    }
 
                     return -1;
                 }
@@ -1066,6 +1086,7 @@ namespace midsControls
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
                 if (!(Math.Abs(ScaleValue - scaleValue) > float.Epsilon))
                     return;
                 FullRedraw();
@@ -1073,6 +1094,7 @@ namespace midsControls
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
             }
             else
             {
@@ -1087,11 +1109,12 @@ namespace midsControls
         private void ResetTarget()
         {
             bxBuffer.Graphics.TextRenderingHint =
-                ScaleValue > 1.125 ? TextRenderingHint.ClearTypeGridFit : TextRenderingHint.ClearTypeGridFit;
+                ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.ClearTypeGridFit;
             gTarget.Dispose();
             gTarget = cTarget.CreateGraphics();
+            gTarget.InterpolationMode = InterpolationMode.HighQualityBicubic;
             gTarget.CompositingQuality = CompositingQuality.HighQuality;
-            gTarget.CompositingMode = CompositingMode.SourceCopy;
+            gTarget.CompositingMode = CompositingMode.SourceOver;
             gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             gTarget.SmoothingMode = SmoothingMode.HighQuality;
         }
