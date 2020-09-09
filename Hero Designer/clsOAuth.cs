@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms;
@@ -94,24 +93,7 @@ namespace Hero_Designer
             foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
 
             MidsContext.Config.DiscordAuthorized = true;
-            var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token");
-            if (key != null)
-            {
-                foreach (var kvp in authDict)
-                {
-                    key.SetValue(kvp.Key, kvp.Value);
-                }
-                key.Close();
-            }
-            else
-            {
-                key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token");
-                foreach (var kvp in authDict)
-                {
-                    key?.SetValue(kvp.Key, kvp.Value);
-                }
-                key?.Close();
-            }
+            MidsContext.ConfigSp.Auth = authDict;
         }
 
         public static bool RefreshToken(string refreshToken)
@@ -132,32 +114,7 @@ namespace Hero_Designer
             var properties = typeof(DiscordObject).GetProperties();
             foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
 
-            try
-            {
-                var subKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token", true);
-                if (subKey != null)
-                {
-                    foreach (var kvp in authDict)
-                    {
-                        subKey.SetValue(kvp.Key, kvp.Value);
-                    }
-                }
-                else
-                {
-                    subKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\Token", true);
-                    foreach (var kvp in authDict)
-                    {
-                        subKey?.SetValue(kvp.Key, kvp.Value);
-                    }
-                }
-                subKey?.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
-            }
-
-            //MidsContext.Config.DAuth = authDict;
+            MidsContext.ConfigSp.Auth = authDict;
             return true;
         }
 
@@ -166,10 +123,10 @@ namespace Hero_Designer
             switch (type)
             {
                 case "Auth":
-                    MidsContext.Config.DAuth.TryGetValue(name, out var authValue);
+                    MidsContext.ConfigSp.Auth.TryGetValue(name, out var authValue);
                     return authValue?.ToString();
                 case "User":
-                    MidsContext.Config.DUser.TryGetValue(name, out var userValue);
+                    MidsContext.ConfigSp.User.TryGetValue(name, out var userValue);
                     return userValue?.ToString();
                 default:
                     return null;
@@ -187,32 +144,7 @@ namespace Hero_Designer
             var properties = typeof(DiscordUser).GetProperties();
             foreach (var property in properties) userDict.Add(property.Name, property.GetValue(jUserObject, null));
 
-            //MidsContext.Config.DUser = userDict;
-            try
-            {
-                var subKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\User", true);
-                if (subKey != null)
-                {
-                    foreach (var kvp in userDict)
-                    {
-                        subKey.SetValue(kvp.Key, kvp.Value);
-                    }
-                }
-                else
-                {
-                    subKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\RebornTeam\Mids Reborn\User", true);
-                    foreach (var kvp in userDict)
-                    {
-                        subKey.SetValue(kvp.Key, kvp.Value);
-                    }
-                }
-
-                subKey.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
-            }
+            MidsContext.ConfigSp.User = userDict;
         }
 
         public static void RequestServers(string tokenString)
@@ -223,7 +155,7 @@ namespace Hero_Designer
             var response = client.Execute(request);
             var jServerObject = Deserialize<DiscordServerObject>(response.Content);
             var serverCount = jServerObject.Count;
-            MidsContext.Config.DServerCount = serverCount;
+            MidsContext.ConfigSp.ServerCount = serverCount;
             var serversDict = new Dictionary<string, Dictionary<string, string>>();
             for (var i = 0; i < serverCount; i++)
             {
@@ -235,37 +167,8 @@ namespace Hero_Designer
             var serverWrite = jServerObject.ToDictionary(x => x.name);
             var dServersList = new List<string>();
             foreach (var entry in serverWrite) dServersList.Add(entry.Value.name);
-            MidsContext.Config.DServers = dServersList;
-            try
-            {
-                foreach (var oKvp in serversDict)
-                {
-                    var subKey = Registry.CurrentUser.OpenSubKey($@"SOFTWARE\RebornTeam\Mids Reborn\Servers\{oKvp.Key}", true);
-                    if (subKey != null)
-                    {
-                        foreach (var iKvp in oKvp.Value)
-                        {
-                            subKey.SetValue(iKvp.Key, iKvp.Value);
-                        }
-                    }
-                    else
-                    {
-                        subKey = Registry.CurrentUser.CreateSubKey($@"SOFTWARE\RebornTeam\Mids Reborn\Servers\{oKvp.Key}", true);
-                        foreach (var iKvp in oKvp.Value)
-                        {
-                            subKey?.SetValue(iKvp.Key, iKvp.Value);
-                        }
-                    }
-                    subKey?.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
-            }
-            //var dServersList = new List<string>();
-            //foreach (var entry in serversDict) dServersList.Add(entry.Value.name);
-            //MidsContext.Config.DServers2 = serversDict.ToDictionary(x => , x => (object)x.Value);
+            MidsContext.ConfigSp.Servers = serversDict;
+            MidsContext.ConfigSp.ServerList = dServersList;
         }
 
         public static void RequestServerChannels(string tokenString, int serverCount)
@@ -303,9 +206,9 @@ namespace Hero_Designer
             }
         }
 
-        private static List<T> Deserialize<T>(string SerializedJSONString)
+        private static List<T> Deserialize<T>(string serializedJsonString)
         {
-            var stuff = JsonConvert.DeserializeObject<List<T>>(SerializedJSONString);
+            var stuff = JsonConvert.DeserializeObject<List<T>>(serializedJsonString);
             return stuff;
         }
     }

@@ -42,6 +42,7 @@ namespace Hero_Designer.Forms
                 !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
                 ConfigData.Initialize(MyApplication.GetSerializer());
+                ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
@@ -222,6 +223,11 @@ namespace Hero_Designer.Forms
                     MidsContext.Config.DefaultSaveFolderOverride = null;
                     MidsContext.Config.CreateDefaultSaveFolder();
                     MidsContext.Config.IsInitialized = true;
+                }
+
+                if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
+                {
+                    MidsContext.ConfigSp.IsInitialized = true;
                 }
 
                 var args = Environment.GetCommandLineArgs();
@@ -1831,6 +1837,7 @@ namespace Hero_Designer.Forms
         {
             MidsContext.Config.LastSize = Size;
             MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
+            MidsContext.ConfigSp.SaveConfig(MyApplication.GetSerializer());
         }
 
         private void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -5064,16 +5071,16 @@ namespace Hero_Designer.Forms
 
         private void tsExportDiscord_Click(object sender, EventArgs e)
         {
-            var flag = false;
-            if (fDiscord == null)
-                flag = true;
-            else if (fDiscord.IsDisposed)
-                flag = true;
-            if (flag)
+            try
             {
                 var iParent = this;
                 fDiscord = new frmDiscord(ref iParent);
                 fDiscord.ShowDialog(this);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
             }
         }
 
