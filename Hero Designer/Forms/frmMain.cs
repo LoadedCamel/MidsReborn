@@ -5608,10 +5608,20 @@ namespace Hero_Designer.Forms
                 ibPopup, ibRecipe, ibAccolade
             };
             foreach (var ib in ibs)
-                ib.SetImages(drawing.pImageAttributes,
-                    MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap);
-
+            {
+                if (ib.Name != "heroVillain")
+                {
+                    ib.SetImages(drawing.pImageAttributes,
+                        MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
+                        MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap);
+                }
+                else
+                {
+                    ib.SetImages(drawing.pImageAttributes,
+                        MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap,
+                        MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap);
+                }
+            }
             foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
                 llControl.ScrollBarColor = MidsContext.Character.IsHero()
