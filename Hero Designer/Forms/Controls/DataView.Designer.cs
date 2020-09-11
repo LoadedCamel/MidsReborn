@@ -730,7 +730,8 @@ namespace Hero_Designer.Forms.Controls
             this.lblLock.TabIndex = 68;
             this.lblLock.Text = "[Unlock]";
             this.lblLock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.dbTip.SetToolTip(this.lblLock, $"The info display is currently locked to display a specific power, click here to unlock it to display powers as you hover the mouse over them.");
+            dbTip.SetToolTip(lblLock,
+                "The info display is currently locked to display a specific power, click here to unlock it to display powers as you hover the mouse over them.");
             this.lblLock.Click += new EventHandler(lblLock_Click);
             // 
             // DataView
