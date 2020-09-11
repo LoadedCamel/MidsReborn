@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using midsControls;
 
@@ -84,6 +85,8 @@ namespace Hero_Designer.Forms.Controls
             this.pnlTabs.Name = "pnlTabs";
             this.pnlTabs.Size = new System.Drawing.Size(300, 20);
             this.pnlTabs.TabIndex = 61;
+            this.pnlTabs.MouseDown += new MouseEventHandler(pnlTabs_MouseDown);
+            this.pnlTabs.Paint += new PaintEventHandler(pnlTabs_Paint);
             // 
             // pnlInfo
             // 
@@ -133,6 +136,7 @@ namespace Hero_Designer.Forms.Controls
             this.PowerScaler.Style = Enums.GraphStyle.baseOnly;
             this.PowerScaler.TabIndex = 71;
             this.PowerScaler.TextWidth = 80;
+            this.PowerScaler.BarClick += new ctlMultiGraph.BarClickEventHandler(PowerScaler_BarClick);
             // 
             // info_txtSmall
             // 
@@ -204,6 +208,7 @@ namespace Hero_Designer.Forms.Controls
             this.info_DataList.Size = new System.Drawing.Size(292, 104);
             this.info_DataList.TabIndex = 19;
             this.info_DataList.ValueWidth = 55;
+            this.info_DataList.ItemHover += new ctlPairedList.ItemHoverEventHandler(PairedList_Hover);
             // 
             // Info_txtLarge
             // 
@@ -230,6 +235,8 @@ namespace Hero_Designer.Forms.Controls
             this.info_Title.Size = new System.Drawing.Size(252, 16);
             this.info_Title.TabIndex = 69;
             this.info_Title.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.info_Title.MouseDown += new MouseEventHandler(Title_MouseDown);
+            this.info_Title.MouseMove += new MouseEventHandler(Title_MouseMove);
             // 
             // pnlFX
             // 
@@ -289,6 +296,7 @@ namespace Hero_Designer.Forms.Controls
             this.fx_List3.Size = new System.Drawing.Size(292, 72);
             this.fx_List3.TabIndex = 27;
             this.fx_List3.ValueWidth = 55;
+            this.fx_List3.ItemHover += new ctlPairedList.ItemHoverEventHandler(PairedList_Hover);
             // 
             // fx_lblHead2
             // 
@@ -331,6 +339,7 @@ namespace Hero_Designer.Forms.Controls
             this.fx_List2.Size = new System.Drawing.Size(292, 72);
             this.fx_List2.TabIndex = 24;
             this.fx_List2.ValueWidth = 55;
+            this.fx_List2.ItemHover += new ctlPairedList.ItemHoverEventHandler(PairedList_Hover);
             // 
             // fx_List1
             // 
@@ -351,6 +360,7 @@ namespace Hero_Designer.Forms.Controls
             this.fx_List1.Size = new System.Drawing.Size(292, 92);
             this.fx_List1.TabIndex = 23;
             this.fx_List1.ValueWidth = 60;
+            this.fx_List1.ItemHover += new ctlPairedList.ItemHoverEventHandler(PairedList_Hover);
             // 
             // pnlTotal
             // 
@@ -528,6 +538,8 @@ namespace Hero_Designer.Forms.Controls
             this.total_Title.Size = new System.Drawing.Size(252, 16);
             this.total_Title.TabIndex = 70;
             this.total_Title.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.total_Title.MouseMove += new MouseEventHandler(Title_MouseMove);
+            this.total_Title.MouseDown += new MouseEventHandler(Title_MouseDown);
             // 
             // total_lblMisc
             // 
@@ -559,6 +571,7 @@ namespace Hero_Designer.Forms.Controls
             this.total_Misc.Size = new System.Drawing.Size(292, 60);
             this.total_Misc.TabIndex = 27;
             this.total_Misc.ValueWidth = 55;
+            this.total_Misc.ItemHover += new ctlPairedList.ItemHoverEventHandler(PairedList_Hover);
             // 
             // total_lblRes
             // 
@@ -603,6 +616,9 @@ namespace Hero_Designer.Forms.Controls
             this.pnlEnhInactive.Name = "pnlEnhInactive";
             this.pnlEnhInactive.Size = new System.Drawing.Size(292, 38);
             this.pnlEnhInactive.TabIndex = 74;
+            this.pnlEnhInactive.Paint += new PaintEventHandler(pnlEnhInactive_Paint);
+            this.pnlEnhInactive.MouseMove += new MouseEventHandler(pnlEnhInactive_MouseMove);
+            this.pnlEnhInactive.MouseClick += new MouseEventHandler(pnlEnhInactive_MouseClick);
             // 
             // pnlEnhActive
             // 
@@ -612,6 +628,9 @@ namespace Hero_Designer.Forms.Controls
             this.pnlEnhActive.Name = "pnlEnhActive";
             this.pnlEnhActive.Size = new System.Drawing.Size(292, 38);
             this.pnlEnhActive.TabIndex = 73;
+            this.pnlEnhActive.Paint += new PaintEventHandler(pnlEnhActive_Paint);
+            this.pnlEnhActive.MouseMove += new MouseEventHandler(pnlEnhActive_MouseMove);
+            this.pnlEnhActive.MouseClick += new MouseEventHandler(pnlEnhActive_MouseClick);
             // 
             // enhNameDisp
             // 
@@ -644,6 +663,7 @@ namespace Hero_Designer.Forms.Controls
             this.enhListing.Size = new System.Drawing.Size(292, 192);
             this.enhListing.TabIndex = 71;
             this.enhListing.ValueWidth = 65;
+            this.enhListing.ItemHover += new ctlPairedList.ItemHoverEventHandler(PairedList_Hover);
             // 
             // Enh_Title
             // 
@@ -656,6 +676,8 @@ namespace Hero_Designer.Forms.Controls
             this.Enh_Title.Size = new System.Drawing.Size(252, 16);
             this.Enh_Title.TabIndex = 70;
             this.Enh_Title.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.Enh_Title.MouseMove += new MouseEventHandler(Title_MouseMove);
+            this.Enh_Title.MouseDown += new MouseEventHandler(Title_MouseDown);
             // 
             // dbTip
             // 
@@ -677,6 +699,7 @@ namespace Hero_Designer.Forms.Controls
             this.lblFloat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.dbTip.SetToolTip(this.lblFloat, "Make Floating Window");
             this.lblFloat.UseCompatibleTextRendering = true;
+            this.lblFloat.Click += new EventHandler(lblFloat_Click);
             // 
             // lblShrink
             // 
@@ -692,6 +715,8 @@ namespace Hero_Designer.Forms.Controls
             this.lblShrink.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.dbTip.SetToolTip(this.lblShrink, "Shrink / Expand the Info Display");
             this.lblShrink.UseCompatibleTextRendering = true;
+            this.lblShrink.DoubleClick += new EventHandler(lblShrink_DoubleClick);
+            this.lblShrink.Click += new EventHandler(lblShrink_Click);
             // 
             // lblLock
             // 
@@ -705,8 +730,8 @@ namespace Hero_Designer.Forms.Controls
             this.lblLock.TabIndex = 68;
             this.lblLock.Text = "[Unlock]";
             this.lblLock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.dbTip.SetToolTip(this.lblLock, "The info display is currently locked to display a specific power, click here to u" +
-        "nlock it to display powers as you hover the mouse over them.");
+            this.dbTip.SetToolTip(this.lblLock, $"The info display is currently locked to display a specific power, click here to unlock it to display powers as you hover the mouse over them.");
+            this.lblLock.Click += new EventHandler(lblLock_Click);
             // 
             // DataView
             // 
