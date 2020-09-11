@@ -80,6 +80,12 @@
     <Compile Include="clsOAuth.cs" />
     <Compile Include="clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
+    <Compile Include="Forms\Controls\DataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\DataView.Designer.cs">
+      <DependentUpon>DataView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Controls\InfoPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -2099,6 +2105,7 @@
     <None Include="Resources\enhData.png" />
     <None Include="Resources\PictureBox1.Image.png" />
     <None Include="Resources\pbTitle.Image.png" />
+    <None Include="Resources\MRB_Concept.png" />
     <Content Include="Web\authorized.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

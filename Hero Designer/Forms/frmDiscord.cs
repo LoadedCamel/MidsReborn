@@ -8,7 +8,6 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Master_Classes;
-using Microsoft.Win32;
 
 namespace Hero_Designer.Forms
 {
