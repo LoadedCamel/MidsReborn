@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
+using Hero_Designer.Forms.Controls;
 using midsControls;
 
 namespace Hero_Designer.Forms

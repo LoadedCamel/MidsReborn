@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Hero_Designer.Forms.Controls;
 
 namespace Hero_Designer.Forms
 {

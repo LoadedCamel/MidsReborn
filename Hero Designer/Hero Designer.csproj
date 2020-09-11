@@ -2117,6 +2117,9 @@
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
+    <EmbeddedResource Include="Forms\Controls\DataView.resx">
+      <DependentUpon>DataView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Controls\InfoPanel.resx">
       <DependentUpon>InfoPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -2180,9 +2183,6 @@
     <Compile Include="clsToonX.cs" />
     <Compile Include="clsUniversalImport.cs" />
     <Compile Include="clsXMLUpdate.cs" />
-    <Compile Include="Forms\DataView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Forms\WindowMenuItems\frmAccolade.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2342,9 +2342,6 @@
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\DataView.resx">
-      <DependentUpon>DataView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmAccolade.resx">
       <DependentUpon>frmAccolade.cs</DependentUpon>
     </EmbeddedResource>

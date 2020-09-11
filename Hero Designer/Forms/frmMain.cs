@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
+using Hero_Designer.Forms.Controls;
 using Hero_Designer.Forms.ImportExportItems;
 using Hero_Designer.Forms.OptionsMenuItems;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;

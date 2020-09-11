@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
@@ -21,6 +16,20 @@ namespace Hero_Designer.Forms.Controls
 {
     public partial class DataView : UserControl
     {
+        /*internal ctlDamageDisplay Info_Damage
+        {
+            get;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            private set;
+        }
+
+        internal override RichTextBox Info_txtLarge
+        {
+            get;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            private set;
+        }*/
+
         public delegate void FloatChangeEventHandler();
 
         public delegate void MovedEventHandler();
@@ -75,8 +84,7 @@ namespace Hero_Designer.Forms.Controls
             InitializeComponent();
             BackColorChanged += DataView_BackColorChanged;
             Load += DataView_Load;
-            Name = nameof(Forms.DataView);
-            InitializeComponent();
+            Name = nameof(DataView);
         }
 
         public bool DrawVillain
@@ -124,19 +132,19 @@ namespace Hero_Designer.Forms.Controls
             set { }
         }
 
-        public event Forms.DataView.FloatChangeEventHandler FloatChange;
+        public event FloatChangeEventHandler FloatChange;
 
-        public event Forms.DataView.MovedEventHandler Moved;
+        public event MovedEventHandler Moved;
 
-        public event Forms.DataView.SizeChangeEventHandler SizeChange;
+        public event SizeChangeEventHandler SizeChange;
 
-        public event Forms.DataView.SlotFlipEventHandler SlotFlip;
+        public event SlotFlipEventHandler SlotFlip;
 
-        public event Forms.DataView.SlotUpdateEventHandler SlotUpdate;
+        public event SlotUpdateEventHandler SlotUpdate;
 
-        public event Forms.DataView.TabChangedEventHandler TabChanged;
+        public event TabChangedEventHandler TabChanged;
 
-        public event Forms.DataView.Unlock_ClickEventHandler Unlock_Click;
+        public event Unlock_ClickEventHandler Unlock_Click;
 
         private static ctlPairedList.ItemPair BuildEDItem(
             int index,
@@ -1394,24 +1402,20 @@ namespace Hero_Designer.Forms.Controls
             for (var index = 0; index <= num; ++index)
             {
                 rect = new Rectangle(rect.Width * index, 2, 70, pnlTabs.Height - 2);
-                layoutRectangle = new RectangleF(rect.X,
-                    rect.Y + (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0),
-                    rect.Width, font1.GetHeight(graphics));
+                layoutRectangle = new RectangleF(rect.X, rect.Y + (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
                 extendedBitmap.Graphics.DrawRectangle(pen, rect);
                 extendedBitmap.Graphics.DrawString(Pages[index], font1, solidBrush1, layoutRectangle, format);
             }
 
             rect = new Rectangle(70 * TabPage, 0, 70, pnlTabs.Height);
-            layoutRectangle = new RectangleF(rect.X, (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0),
-                rect.Width,
-                font1.GetHeight(graphics));
+            layoutRectangle = new RectangleF(rect.X, (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
             extendedBitmap.Graphics.FillRectangle(solidBrush3, rect);
             extendedBitmap.Graphics.DrawRectangle(pen, rect);
             extendedBitmap.Graphics.DrawString(Pages[TabPage], font2, solidBrush1, layoutRectangle, format);
             graphics.DrawImageUnscaled(extendedBitmap.Bitmap, 0, 0);
         }
 
-        private int effects_BuffDebuff(Label iLabel, ctlPairedList iList)
+        private int effects_BuffDebuff(Control iLabel, ctlPairedList iList)
         {
             var effectMagSum1 = pBase.GetEffectMagSum(Enums.eEffectType.ToHit);
             var effectMagSum2 = pEnh.GetEffectMagSum(Enums.eEffectType.ToHit);
@@ -2775,7 +2779,7 @@ namespace Hero_Designer.Forms.Controls
 
         public void Init()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor | ControlStyles.UserPaint, true);
         }
 
         private static bool IsMezEffect(string iStr)
