@@ -1279,22 +1279,25 @@ namespace Hero_Designer.Forms
         private void DoResize()
         {
             //lblHero.Width = ibRecipe.Left - 4;
-            if (NoResizeEvent || drawing == null)
-                return;
-            var num1 = ClientSize.Width - pnlGFXFlow.Left;
-            var num2 = ClientSize.Height - pnlGFXFlow.Top;
-            pnlGFXFlow.Width = num1;
-            pnlGFXFlow.Height = num2;
+            if (NoResizeEvent || drawing == null) return;
+
+            var clientWidth = ClientSize.Width - pnlGFXFlow.Left; // num1
+            var clientHeight = ClientSize.Height - pnlGFXFlow.Top; // num2
+            pnlGFXFlow.Width = clientWidth;
+            pnlGFXFlow.Height = clientHeight;
             var scale = 1.0;
             var drawingArea = drawing.GetDrawingArea();
-            var num5 = num1 - 30;
-            if (num5 < drawingArea.Width)
-                scale = num5 / (double) drawingArea.Width;
-            var num6 = (int) Math.Round(drawingArea.Height * scale);
-            pnlGFX.Width = num5;
-            pnlGFX.Height = num6;
-            if (drawing.Scaling && Math.Abs(scale - 1.0) < float.Epsilon || Math.Abs(scale - 1.0) > float.Epsilon)
-            {
+            var drawingWidth = clientWidth - 30; // num5
+            if (drawingWidth < drawingArea.Width)
+                scale = drawingWidth / (double) drawingArea.Width;
+            var drawingHeight = (int) Math.Round(drawingArea.Height * scale);
+            pnlGFX.Width = drawingWidth;
+            pnlGFX.Height = drawingHeight;
+            //MessageBox.Show("W: " + Convert.ToString(pnlGFX.Width, null) + "\n" +
+            //                "H: " + Convert.ToString(pnlGFX.Height, null) + "\n" +
+            //                "Scale - 1: " + Convert.ToString(Math.Abs(scale - 1.0), null));
+            //if (drawing.Scaling && Math.Abs(scale - 1.0) < float.Epsilon || Math.Abs(scale - 1.0) > float.Epsilon)
+            //{
                 drawing.bxBuffer.Size = pnlGFX.Size;
                 Control pnlGfx = pnlGFX;
                 drawing.ReInit(pnlGfx);
@@ -1302,7 +1305,7 @@ namespace Hero_Designer.Forms
                 pnlGFX.Image = drawing.bxBuffer.Bitmap;
                 pnlGFX.Update();
                 pnlGFX.Refresh();
-            }
+            //}
 
             NoResizeEvent = true;
             drawing.SetScaling(scale < 1.0 ? pnlGFX.Size : drawing.bxBuffer.Size);
@@ -4208,9 +4211,10 @@ namespace Hero_Designer.Forms
         {
             MidsContext.Config.Columns = columns;
             drawing.Columns = columns;
-            DoResize();
-            DoRedraw();
+            drawing.InitInherentGridStacks();
+            //DoResize();
             SetFormWidth();
+            DoRedraw();
         }
 
         private void SetDamageMenuCheckMarks()
