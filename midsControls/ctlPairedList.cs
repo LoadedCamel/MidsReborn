@@ -206,8 +206,7 @@ namespace midsControls
                     var num7 = MyItems.Length - 1;
                     for (var i = num6; i <= num7; i++)
                     {
-                        var location = new PointF(num * num5 - 9,
-                            rectangleF.Height * num4 + checked(LinePadding * num4));
+                        var location = new PointF(num * num5 - 9, rectangleF.Height * num4 + checked(LinePadding * num4));
                         rectangleF.Location = location;
                         rectangleF.Width = num3;
                         stringFormat.Alignment = StringAlignment.Far;
@@ -228,8 +227,7 @@ namespace midsControls
                         if ((Operators.CompareString(text, "", false) != 0) & !text.EndsWith(":")) text += ":";
 
                         bxBuffer.Graphics.DrawString(text, font, brush, rectangleF, stringFormat);
-                        location = new PointF(num * num5 + num3 - 10,
-                            rectangleF.Height * num4 + checked(LinePadding * num4));
+                        location = new PointF(num * num5 + num3 - 10, rectangleF.Height * num4 + checked(LinePadding * num4));
                         rectangleF.Location = location;
                         rectangleF.Width = num2 + 12;
                         if (Highlightable & (CurrentHighlight == i))

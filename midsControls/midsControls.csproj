@@ -40,21 +40,11 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Syncfusion.Core.WinForms, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.DataSource.WinForms, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Grid.Base, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Grid.Windows, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
-    <Reference Include="Syncfusion.GridCommon.WinForms, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.SfListView.WinForms, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
-    <Reference Include="Syncfusion.Shared.Base, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Shared.Windows, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.SpellChecker.Base, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Tools.Base, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Tools.Windows, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Windows.Forms" />
@@ -89,8 +79,20 @@
     <Compile Include="ctlPairedList.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ctlPairedListNew.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlPairedListNew.Designer.cs">
+      <DependentUpon>ctlPairedListNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="ctlPopUp.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlTableList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlTableList.designer.cs">
+      <DependentUpon>ctlTableList.cs</DependentUpon>
     </Compile>
     <Compile Include="GFXLabel.cs">
       <SubType>UserControl</SubType>
@@ -129,7 +131,13 @@
     <EmbeddedResource Include="ctlDamageDisplay.resources" />
     <EmbeddedResource Include="ctlMultiGraph.resources" />
     <EmbeddedResource Include="ctlPairedList.resources" />
+    <EmbeddedResource Include="ctlPairedListNew.resx">
+      <DependentUpon>ctlPairedListNew.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctlPopUp.resources" />
+    <EmbeddedResource Include="ctlTableList.resx">
+      <DependentUpon>ctlTableList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GFXLabel.resources" />
     <EmbeddedResource Include="I9Picker.resources" />
     <EmbeddedResource Include="ImageButton.resources" />
