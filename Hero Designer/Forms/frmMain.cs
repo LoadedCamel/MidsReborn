@@ -359,6 +359,7 @@ namespace Hero_Designer.Forms
                 PriSec_ExpandChanged(true);
                 loading = false;
                 UpdateControls(true);
+                CenterToScreen();
                 if (this.IsInDesignMode())
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
@@ -585,6 +586,7 @@ namespace Hero_Designer.Forms
                 return;
             NewToon(false);
             SetFormHeight();
+            //PerformAutoScale();
             SetAncilPoolHeight();
             GetBestDamageValues();
         }
@@ -1246,6 +1248,7 @@ namespace Hero_Designer.Forms
             NewDraw();
             UpdateControls();
             SetFormHeight();
+            PerformAutoScale();
             myDataView.Clear();
             MidsContext.Character.ResetLevel();
             PowerModified(false);
@@ -1260,15 +1263,21 @@ namespace Hero_Designer.Forms
 
         private void DoRedraw()
         {
-            if (drawing == null) return;
+            if (drawing == null)
+            {
+                return;
+            }
             NoResizeEvent = true;
             var width = pnlGFXFlow.Width;
             var scale = 1.0;
             var drawingArea = drawing.GetDrawingArea();
-            var num3 = width - 30;
-            if (num3 < drawingArea.Width)
-                scale = num3 / (double) drawingArea.Width;
-            pnlGFX.Width = num3;
+            var flowWidth = width;
+            if (flowWidth < drawingArea.Width)
+            {
+                scale = flowWidth / (double) drawingArea.Width;
+            }
+
+            pnlGFX.Width = flowWidth - 10;
             pnlGFX.Height = (int) Math.Round(drawingArea.Height * scale);
             pnlGFX.Update();
             pnlGFXFlow.Update();
@@ -1287,25 +1296,19 @@ namespace Hero_Designer.Forms
             pnlGFXFlow.Height = clientHeight;
             var scale = 1.0;
             var drawingArea = drawing.GetDrawingArea();
-            var drawingWidth = clientWidth - 30; // num5
+            var drawingWidth = pnlGFXFlow.Width - 30; // num5
             if (drawingWidth < drawingArea.Width)
                 scale = drawingWidth / (double) drawingArea.Width;
             var drawingHeight = (int) Math.Round(drawingArea.Height * scale);
             pnlGFX.Width = drawingWidth;
             pnlGFX.Height = drawingHeight;
-            //MessageBox.Show("W: " + Convert.ToString(pnlGFX.Width, null) + "\n" +
-            //                "H: " + Convert.ToString(pnlGFX.Height, null) + "\n" +
-            //                "Scale - 1: " + Convert.ToString(Math.Abs(scale - 1.0), null));
-            //if (drawing.Scaling && Math.Abs(scale - 1.0) < float.Epsilon || Math.Abs(scale - 1.0) > float.Epsilon)
-            //{
-                drawing.bxBuffer.Size = pnlGFX.Size;
-                Control pnlGfx = pnlGFX;
-                drawing.ReInit(pnlGfx);
-                pnlGFX = (PictureBox) pnlGfx;
-                pnlGFX.Image = drawing.bxBuffer.Bitmap;
-                pnlGFX.Update();
-                pnlGFX.Refresh();
-            //}
+            drawing.bxBuffer.Size = pnlGFX.Size;
+            Control pnlGfx = pnlGFX;
+            drawing.ReInit(pnlGfx);
+            pnlGFX = (PictureBox) pnlGfx;
+            pnlGFX.Image = drawing.bxBuffer.Bitmap;
+            pnlGFX.Update();
+            pnlGFX.Refresh();
 
             NoResizeEvent = true;
             drawing.SetScaling(scale < 1.0 ? pnlGFX.Size : drawing.bxBuffer.Size);
@@ -4211,10 +4214,18 @@ namespace Hero_Designer.Forms
         {
             MidsContext.Config.Columns = columns;
             drawing.Columns = columns;
-            drawing.InitInherentGridStacks();
-            //DoResize();
+            DoResize();
             SetFormWidth();
             DoRedraw();
+            pnlGFXFlow.AutoScroll = false;
+            pnlGFXFlow.HorizontalScroll.Enabled = false;
+            pnlGFXFlow.HorizontalScroll.Visible = false;
+            pnlGFXFlow.HorizontalScroll.Maximum = 0;
+            pnlGFXFlow.AutoScroll = true;
+            CenterToScreen();
+            Console.WriteLine($"pnlGFX Width: {pnlGFX.Width}\r\npnlGFX Height {pnlGFX.Height}");
+            Console.WriteLine($"pnlGFXFlow Width: {pnlGFXFlow.Width}\r\npnlGFXFlow Height {pnlGFXFlow.Height}");
+            //PerformAutoScale();
         }
 
         private void SetDamageMenuCheckMarks()
@@ -4304,28 +4315,50 @@ namespace Hero_Designer.Forms
         private void SetFormWidth(bool ToFull = false)
         {
             NoResizeEvent = true;
-            var num1 = Width - ClientSize.Width;
+            /*var initialWidth = Width - ClientSize.Width;
+            //int modifiedWidth;
             if (!MainModule.MidsController.IsAppInitialized)
-                return;
-            var num2 = (MidsContext.Config.Columns != 2
-                ? num1 + drawing.GetRequiredDrawingArea().Width + pnlGFXFlow.Left
-                : !ToFull
-                    ? num1 + pnlGFXFlow.Left + drawing.ScaleDown(drawing.GetRequiredDrawingArea().Width)
-                    : num1 + drawing.GetRequiredDrawingArea().Width + pnlGFXFlow.Left) + 8;
-            if (Screen.PrimaryScreen.WorkingArea.Width > num2)
             {
-                Width = num2;
+                return;
+            }
+
+            var num2 = (MidsContext.Config.Columns != 2 ? initialWidth + drawing.GetRequiredDrawingArea().Width + pnlGFXFlow.Left
+                : !ToFull
+                    ? initialWidth + pnlGFXFlow.Left + drawing.ScaleDown(drawing.GetDrawingArea().Width)
+                    : initialWidth + drawing.GetDrawingArea().Width + pnlGFXFlow.Left) + 8;
+
+            if (Screen.FromControl(this).WorkingArea.Width > num2)
+            {
+                Width = num2 - 30;
             }
             else
             {
-                var workingArea = Screen.PrimaryScreen.WorkingArea;
+                var workingArea = Screen.FromControl(this).WorkingArea;
                 if (workingArea.Width <= num2)
                 {
-                    workingArea = Screen.PrimaryScreen.WorkingArea;
-                    Width = workingArea.Width - num1;
+                    workingArea = Screen.FromControl(this).WorkingArea;
+                    Width = workingArea.Width - initialWidth;
                 }
+            }*/
+            Height = 857;
+            switch (MidsContext.Config.Columns)
+            {
+                case 2:
+                    Width = 1071;
+                    break;
+                case 3:
+                    Width = 1318;
+                    break;
+                case 4:
+                    Width = 1588;
+                    break;
+                case 5:
+                    Width = 1849;
+                    break;
+                case 6:
+                    Width = 1900;
+                    break;
             }
-
             NoResizeEvent = false;
             DoResize();
         }
@@ -5426,7 +5459,6 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView2Col.Checked = true;
             setColumns(2);
-            CenterToScreen();
         }
 
         private void tsView3Col_Click(object sender, EventArgs e)
@@ -5437,7 +5469,6 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView3Col.Checked = true;
             setColumns(3);
-            CenterToScreen();
         }
 
         private void tsView4Col_Click(object sender, EventArgs e)
@@ -5448,7 +5479,6 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView4Col.Checked = true;
             setColumns(4);
-            CenterToScreen();
         }
 
         private void tsView5Col_Click(object sender, EventArgs e)
@@ -5459,7 +5489,6 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView5Col.Checked = true;
             setColumns(5);
-            CenterToScreen();
         }
 
         private void tsView6Col_Click(object sender, EventArgs e)
@@ -5470,7 +5499,6 @@ namespace Hero_Designer.Forms
             tsView5Col.Checked = false;
             tsView6Col.Checked = true;
             setColumns(6);
-            CenterToScreen();
         }
 
         private void tsViewActualDamage_New_Click(object sender, EventArgs e)

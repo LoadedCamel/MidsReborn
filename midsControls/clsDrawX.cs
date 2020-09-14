@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
+using System.Diagnostics;
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
 
@@ -39,8 +37,6 @@ namespace midsControls
         private const int vcPowers = 24;
 
         private const int icoOffset = 32;
-
-        private int[] InherentGridColumns = new int[6];
 
         public static readonly float[][] heroMatrix =
         {
@@ -133,7 +129,6 @@ namespace midsControls
             vcCols = 6;
             vcRowsPowers = 24;
             bxPower = new List<ExtendedBitmap>();
-            InitInherentGridStacks();
             checked
             {
                 var filePath = $"{FileIO.AddSlash(Application.StartupPath)}{GfxPath}";
@@ -249,52 +244,52 @@ namespace midsControls
                 {
                     case 2:
                         iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width), ScaleDown(iValue));
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
                             new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
-                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width) / 2 - 35,
+                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
                             ScaleDown(iValue));
                         break;
                     case 3:
-                        iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 28);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 275), ScaleDown(iValue));
+                        iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
                             new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
-                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 275) / 2 - 50,
+                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
                             ScaleDown(iValue));
                         break;
                     case 4:
-                        iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 30);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 300), ScaleDown(iValue));
+                        iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
                             new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
-                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
+                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
                             ScaleDown(iValue));
                         break;
                     case 5:
-                        iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 30);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 300), ScaleDown(iValue));
+                        iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 48);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
                             new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
-                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
+                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
                             ScaleDown(iValue));
                         break;
                     case 6:
-                        iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 30);
-                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(PowerPosition(15).X + SzPower.Width + 550), ScaleDown(iValue));
+                        iValue = OffsetInherent + vcRowsPowers * (SzPower.Height + 27);
+                        bxBuffer.Graphics.DrawLine(pen, 2, ScaleDown(iValue), ScaleDown(GetDrawingArea().Width), ScaleDown(iValue));
                         bxBuffer.Graphics.DrawString("Inherent Powers",
                             new Font("Arial", 13f, FontStyle.Regular, GraphicsUnit.Pixel),
                             MidsContext.Character.IsHero()
                                 ? new SolidBrush(Color.DodgerBlue)
-                                : new SolidBrush(Color.Red), ScaleDown(PowerPosition(15).X + SzPower.Width + 300) / 2 - 75,
+                                : new SolidBrush(Color.Red), ScaleDown(GetDrawingArea().Width / 2 - 50),
                             ScaleDown(iValue));
                         break;
                 }
@@ -306,7 +301,6 @@ namespace midsControls
             checked
             {
                 for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
-                {
                     if (MidsContext.Character.CanPlaceSlot & (Highlight == i))
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
@@ -325,9 +319,7 @@ namespace midsControls
                         DrawPowerSlot(ref value);
                         currentBuild.Powers[index] = value;
                     }
-                    else if (MidsContext.Character.CurrentBuild.Powers[i].Power != null &&
-                             (string.CompareOrdinal(MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName,
-                                 "Incarnate") == 0) | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
+                    else if (MidsContext.Character.CurrentBuild.Powers[i].Power != null && (string.CompareOrdinal(MidsContext.Character.CurrentBuild.Powers[i].Power.GroupName, "Incarnate") == 0) | MidsContext.Character.CurrentBuild.Powers[i].Power.IncludeFlag)
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
                         var powers3 = currentBuild.Powers;
@@ -336,7 +328,6 @@ namespace midsControls
                         DrawPowerSlot(ref value);
                         currentBuild.Powers[index] = value;
                     }
-                }
 
                 Application.DoEvents();
                 DrawSplit();
@@ -706,7 +697,7 @@ namespace midsControls
                         Color.FromArgb(0, 255, 255), Color.FromArgb(192, 0, 0, 0), font, 1f, bxBuffer.Graphics);
                 }
                 //
-                solidBrush = new SolidBrush(Color.Black);
+                solidBrush = new SolidBrush(Color.White);
                 stringFormat = new StringFormat();
                 rectangleF.X = result.X + 10;
                 rectangleF.Y = result.Y + 4;
@@ -748,7 +739,8 @@ namespace midsControls
                                 break;
                         }
 
-                        solidBrush = new SolidBrush(Color.Black);
+                        solidBrush = !MidsContext.Character.IsHero() ? new SolidBrush(Color.White) : new SolidBrush(Color.Black);
+
                         text = iSlot.Virtual
                             ? iSlot.Name
                             : string.Concat("(", Convert.ToString(iSlot.Level + 1), ") ", iSlot.Name, " ", text2);
@@ -774,8 +766,10 @@ namespace midsControls
                 {
                     string iStr4 = text;
                     RectangleF bounds5 = ScaleDown(rectangleF);
-                    Color whiteSmoke = Color.WhiteSmoke;
-                    Color outline5 = Color.FromArgb(192, 0, 0, 0);
+                    Color outlineColor = Color.Black;
+                    Color textColor = Color.White;
+                    //outlineColor = Color.FromArgb(192, 0, 0, 0);
+                    //outlineColor = Color.FromArgb(192, 0, 0, 0);
                     Font bFont5 = font;
                     float outlineSpace5 = 1f;
                     Graphics graphics5 = bxBuffer.Graphics;
@@ -784,7 +778,7 @@ namespace midsControls
                     graphics5.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     graphics5.PageUnit = GraphicsUnit.Pixel;
                     graphics5.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    DrawOutlineText(iStr4, bounds5, whiteSmoke, outline5, bFont5, outlineSpace5, graphics5, false, true);
+                    DrawOutlineText(iStr4, bounds5, textColor, outlineColor, bFont5, outlineSpace5, graphics5, false, true);
                 }
                 else
                 {
@@ -1366,19 +1360,6 @@ namespace midsControls
         private Point PowerPosition(int powerEntryIdx)
         {
             return PowerPosition(MidsContext.Character.CurrentBuild.Powers[powerEntryIdx]);
-        }
-
-        public void InitInherentGridStacks()
-        {
-            for (int i = 0; i < InherentGridColumns.Length; i++)
-            {
-                InherentGridColumns[i] = 0;
-            }
-        }
-
-        private void StackInherentGridColumn(int column)
-        {
-            if (column < InherentGridColumns.Length) InherentGridColumns[column]++;
         }
 
         private int[][] GetInherentGrid()
@@ -2129,109 +2110,10 @@ namespace midsControls
             };
         }
 
+
         public Point PowerPosition(PowerEntry powerEntry, int displayLocation = -1)
         {
-            int powerIdx = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry);
-            int[][] inherentGrid = GetInherentGrid();
-            bool flag = false;
-            int iRow = 0; 
-            int iCol = 0;
-            int iRowOffset = 0;
-
-            Dictionary<int, List<string>> inherentColumnPositions = new Dictionary<int, List<string>>();
-            inherentColumnPositions.Add(0, new List<string>(new [] {"Brawl", "Quick Form", "Combo ", "Sprint", "Rest", " Ally"})); // Main group, Lore
-            inherentColumnPositions.Add(1, new List<string>(new[] { "Swift", "Hurdle", "Health", "Stamina", " Judgement", " Invocation", " Epiphany" }));  // Judgement, Destiny
-            inherentColumnPositions.Add(2, new List<string>(new[] { "Bright Nova ", "Dark Nova ", " Interface", " Conversion", " Graft", " Embodiment" }));  // Interface, Hybrid, Kheld primary morphs
-            inherentColumnPositions.Add(3, new List<string>(new[] { "White Dwarf ", "Black Dwarf " })); // Kheld secondary morphs
-            inherentColumnPositions.Add(4, new List<string>(new[] { "Energy Flight", "Combat Flight", "Shadow Step", "Shadow Recall" })); // Kheld inherents
-            inherentColumnPositions.Add(5, new List<string>(new[] { "Prestige Power Slide", "Prestige Power Dash", "prestige Power Quick", "Prestige Power Surge", "Ninja Run" })); // Prestige runs
-
-            // Main powers
-            if (powerEntry.Chosen)
-            {
-                iRow = (int) Math.Floor((double) powerIdx / MidsContext.Config.Columns);
-                iCol = powerIdx % MidsContext.Config.Columns;
-
-                return CRtoXY(iCol, iRow);
-            }
-
-            // Inherents
-            if ((double) MidsContext.Character.CurrentBuild.Powers.Count / MidsContext.Config.Columns > double.Epsilon)
-            {
-                iRowOffset = 1;
-            }
-
-            int inherentCol = 0;
-            for (int i = 0; i < inherentColumnPositions.Count; i++)
-            {
-                string v = inherentColumnPositions[i].FirstOrDefault(e => powerEntry.Name.StartsWith(e) || powerEntry.Name.EndsWith(e));
-                if (!string.IsNullOrEmpty(v))
-                {
-                    inherentCol = Math.Min(i, MidsContext.Config.Columns);
-                }
-            }
-
-            if (!powerEntry.Chosen)
-            {
-                if (displayLocation == -1 && powerEntry.Power != null)
-                    displayLocation = powerEntry.Power.DisplayLocation;
-
-                if (displayLocation <= -1)
-                {
-                    Console.WriteLine("PowerPosition(): " + Convert.ToString(powerIdx, null) +
-                                      " Name: " + Convert.ToString(powerEntry.Name, null) +
-                                      " DisplayLocation: " + Convert.ToString(powerEntry.Power.DisplayLocation, null) + 
-                                      " InherentGridColumns[" + Convert.ToString(inherentCol, null) + "]: " + InherentGridColumns[inherentCol] + 
-                                      " C: " + Convert.ToString(inherentCol, null) + 
-                                      " R: " + Convert.ToString(iRow + iRowOffset, null));
-
-                    iRow = iRow + iRowOffset + InherentGridColumns[inherentCol];
-                    StackInherentGridColumn(inherentCol);
-
-                    return CRtoXY(inherentCol, iRow);
-                }
-
-                iRow = vcRowsPowers;
-                for (int i = 0; i < inherentGrid.Length; i++)
-                {
-                    for (int k = 0; k < inherentGrid[i].Length; k++)
-                    {
-                        if (displayLocation != inherentGrid[i][k]) continue;
-                        iRow += i + 1;
-                        //iCol = k;
-                        flag = true;
-                        break;
-                    }
-
-                    if (flag) break;
-                }
-            }
-
-            else if (powerIdx > -1)
-            {
-                for (int i = 1; i <= vcCols; i++)
-                {
-                    if (powerIdx >= vcRowsPowers * i) continue;
-
-                    iCol = i - 1;
-                    iRow = powerIdx - vcRowsPowers * iCol;
-                    break;
-                }
-            }
-
-            Console.WriteLine("PowerPosition(): " + Convert.ToString(powerIdx, null) +
-                              " Name: " + Convert.ToString(powerEntry.Name, null) +
-                              " DisplayLocation: " + Convert.ToString(powerEntry.Power.DisplayLocation, null) +
-                              " InherentGridColumns[" + Convert.ToString(inherentCol, null) + "]: " + InherentGridColumns[inherentCol] +
-                              " C: " + Convert.ToString(inherentCol, null) +
-                              " R: " + Convert.ToString(iRow + iRowOffset, null));
-
-            iRow = iRow + iRowOffset + InherentGridColumns[inherentCol];
-            StackInherentGridColumn(inherentCol);
-
-            return CRtoXY(inherentCol, iRow);
-
-            /*var powerIdx = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry);
+            var powerIdx = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry);
             checked
             {
                 if (powerIdx == -1)
@@ -2240,15 +2122,14 @@ namespace midsControls
                     var num3 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var i = num2; i <= num3; i++)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[i].Power.PowerIndex !=
-                            powerEntry.Power.PowerIndex ||
-                            MidsContext.Character.CurrentBuild.Powers[i].Level != powerEntry.Level)
+                        if (MidsContext.Character.CurrentBuild.Powers[i].Power.PowerIndex != powerEntry.Power.PowerIndex || MidsContext.Character.CurrentBuild.Powers[i].Level != powerEntry.Level)
                             continue;
                         powerIdx = i;
                         break;
                     }
                 }
 
+                //Inherent Grid
                 var inherentGrid = GetInherentGrid();
                 var flag = false;
                 var iRow = 0;
@@ -2266,8 +2147,17 @@ namespace midsControls
                         for (var k = 0; k <= inherentGrid[i].Length - 1; k++)
                         {
                             if (displayLocation != inherentGrid[i][k]) continue;
-                            iRow += i + 1;
-                            iCol = k;
+                            if (vcCols != 5)
+                            {
+                                iRow += i + 1;
+                                iCol = k;
+                            }
+                            else
+                            {
+                                iRow += i + 2;
+                                iCol = k;
+                            }
+
                             flag = true;
                             break;
                         }
@@ -2275,26 +2165,31 @@ namespace midsControls
                         if (flag) break;
                     }
                 }
-
+                // Main Powers
                 else if (powerIdx > -1)
                 {
                     for (var i = 1; i <= vcCols; i++)
                     {
-                        if (powerIdx >= vcRowsPowers * i)
+                        if (vcCols == 5)
                         {
-                            Console.WriteLine("Hitting grid limit with power " + Convert.ToString(powerIdx, null) + " - " + powerEntry.Name);
-                            continue;
+                            iCol = (int)Math.Floor((double)powerIdx / vcCols);
+                            iRow = powerIdx % vcCols;
                         }
-
-                        iCol = i - 1;
-                        iRow = powerIdx - vcRowsPowers * iCol;
+                        else
+                        {
+                            if (powerIdx >= vcRowsPowers * i)
+                                continue;
+                            iCol = i - 1;
+                            iRow = powerIdx - vcRowsPowers * iCol;
+                        }
                         break;
                     }
                 }
 
                 return CRtoXY(iCol, iRow);
-            }*/
+            }
         }
+
 
         private Point CRtoXY(int iCol, int iRow)
         {
@@ -2368,7 +2263,7 @@ namespace midsControls
             vcRowsPowers = checked(vcPowers / vcCols);
         }
 
-        public Size GetRequiredDrawingArea()
+        private Size GetRequiredDrawingArea()
         {
             var maxY = -1;
             var maxX = -1;
@@ -2394,9 +2289,18 @@ namespace midsControls
                 }
                 else
                 {
-                    var point2 = PowerPosition(MidsContext.Character.CurrentBuild.LastPower);
-                    var size = new Size(point2.X + SzPower.Width, point2.Y + SzPower.Height + PaddingY + OffsetInherent);
-                    result = size;
+                    if (vcCols != 5)
+                    {
+                        var point2 = PowerPosition(MidsContext.Character.CurrentBuild.LastPower);
+                        var size = new Size(point2.X + SzPower.Width, point2.Y + SzPower.Height + PaddingY + OffsetInherent);
+                        result = size;
+                    }
+                    else
+                    {
+                        var point2 = PowerPosition(MidsContext.Character.CurrentBuild.LastPower);
+                        var size = new Size(point2.X + SzPower.Width, point2.Y + SzPower.Height + PaddingY + OffsetInherent);
+                        result = size;
+                    }
                 }
 
                 return result;
