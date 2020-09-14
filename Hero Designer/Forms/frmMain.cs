@@ -4223,9 +4223,7 @@ namespace Hero_Designer.Forms
             pnlGFXFlow.HorizontalScroll.Maximum = 0;
             pnlGFXFlow.AutoScroll = true;
             CenterToScreen();
-            Console.WriteLine($"pnlGFX Width: {pnlGFX.Width}\r\npnlGFX Height {pnlGFX.Height}");
-            Console.WriteLine($"pnlGFXFlow Width: {pnlGFXFlow.Width}\r\npnlGFXFlow Height {pnlGFXFlow.Height}");
-            //PerformAutoScale();
+            PerformAutoScale();
         }
 
         private void SetDamageMenuCheckMarks()
