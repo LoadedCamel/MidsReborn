@@ -102,7 +102,7 @@ namespace Hero_Designer.Forms
             dvAnchored.BackColor = Color.Black;
             dvAnchored.DrawVillain = false;
             dvAnchored.Floating = false;
-            dvAnchored.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dvAnchored.Font = new Font("Arial", 10.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 
             dvAnchored.Location = new Point(16, 391);
             dvAnchored.Name = "dvAnchored";
@@ -118,6 +118,7 @@ namespace Hero_Designer.Forms
             dvAnchored.SlotFlip += DataView_SlotFlip;
             dvAnchored.Moved += dvAnchored_Move;
             dvAnchored.TabChanged += dvAnchored_TabChanged;
+
             var componentResourceManager = new ComponentResourceManager(typeof(frmMain));
             Icon = Resources.reborn;
             Name = nameof(frmMain);
@@ -5792,14 +5793,10 @@ namespace Hero_Designer.Forms
             for (var index = 0; index <= num2; ++index)
                 llSecondary.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
             heroVillain.Checked = !MidsContext.Character.IsHero();
-            dvAnchored.SetLocation(
-                new Point(llPrimary.Left,
-                    llPrimary.Top + raGreater(llPrimary.SizeNormal.Height, llSecondary.SizeNormal.Height) + 5),
-                ForceComplete);
+            dvAnchored.SetLocation(new Point(llPrimary.Left, llPrimary.Top + raGreater(llPrimary.SizeNormal.Height, llSecondary.SizeNormal.Height) + 5), ForceComplete);
             llPrimary.SuspendRedraw = false;
             llSecondary.SuspendRedraw = false;
-            if (myDataView != null &&
-                (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
+            if (myDataView != null && (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
                 dvAnchored_TabChanged(myDataView.TabPageIndex);
             if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
             {

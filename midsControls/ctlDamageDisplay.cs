@@ -402,15 +402,15 @@ namespace midsControls
         private void DrawGraph()
         {
             var height = Font.GetHeight(bxBuffer.Graphics);
-            var rectangle = new Rectangle(0, 0, Width, Height);
-            var rect = new Rectangle(0, 0, Width, Height);
+            var rectangle = new Rectangle(0, 0, Width, Height - 5);
+            var rect = new Rectangle(0, 0, Width, Height - 15);
             checked
             {
                 if (pStyle == (Enums.eDDStyle) 3) rect.Height = (int) Math.Round(rect.Height - height);
 
-                var rectangle2 = new Rectangle(phPadding, pvPadding, Width - phPadding * 2,
-                    rect.Height - pvPadding * 2);
+                var rectangle2 = new Rectangle(phPadding, pvPadding, Width - phPadding * 2, rect.Height - pvPadding * 2 - 20);
                 var brush = new LinearGradientBrush(rect, pFadeBackStart, pFadeBackEnd, 0f);
+                rect.Height -= 20;
                 bxBuffer.Graphics.FillRectangle(brush, rect);
                 if (!(Math.Abs(nBase) > float.Epsilon))
                     return;
@@ -522,13 +522,13 @@ namespace midsControls
         {
             var layoutRectangle = new RectangleF(0f, 0f, 0f, 0f);
             var stringFormat = new StringFormat();
-            var height = Font.GetHeight(myGFX) + 6;
+            var height = Font.GetHeight(myGFX) + 10;
             bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             layoutRectangle.X = checked(bounds.X + phPadding);
             if (pStyle == (Enums.eDDStyle) 3)
-                layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f + 2f;
+                layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f + 2f + 2f;
             else
-                layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f - 1f;
+                layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f - 1f - 10f;
 
             layoutRectangle.Width = checked(bounds.Width - phPadding * 2);
             layoutRectangle.Height = bounds.Height;
@@ -551,7 +551,7 @@ namespace midsControls
             {
                 bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 //Font font = new Font(Font.Name, Font.Size * (layoutRectangle.Width / sizeF.Width), Font.Style, GraphicsUnit.Point);
-                var font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
+                var font = new Font("Arial", 9.25f, FontStyle.Bold, GraphicsUnit.Point);
                 bxBuffer.Graphics.DrawString(pString, font, brush, layoutRectangle, stringFormat);
             }
             else
@@ -566,7 +566,7 @@ namespace midsControls
         {
             if (bxBuffer == null)
                 return;
-            var rectangle = new Rectangle(0, -2, Width, Height);
+            var rectangle = new Rectangle(0, 2, Width, Height);
             Brush brush = new SolidBrush(BackColor);
             bxBuffer.Graphics.FillRectangle(brush, rectangle);
             if (pStyle != 0)

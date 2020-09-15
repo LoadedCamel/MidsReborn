@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -73,7 +74,7 @@ namespace Hero_Designer.Forms.Controls
             TabPage = 0;
             Pages = new[]
             {
-                "Info", "Effects", "Totals", "Enhance"
+                "INFO", "EFFECTS", "TOTALS", "ENHANCE"
             };
             pLastScaleVal = -1;
             Lock = false;
@@ -81,10 +82,11 @@ namespace Hero_Designer.Forms.Controls
             HistoryIDX = -1;
             Compact = false;
             bxFlip = null;
-            InitializeComponent();
+            //InitializeComponent();
             BackColorChanged += DataView_BackColorChanged;
             Load += DataView_Load;
             Name = nameof(DataView);
+            InitializeComponent();
         }
 
         public bool DrawVillain
@@ -129,7 +131,11 @@ namespace Hero_Designer.Forms.Controls
         {
             get => !Compact ? Enums.eVisibleSize.Full : Enums.eVisibleSize.Compact;
             // why is this ignored?
-            set { }
+            set
+            {
+                if (!Enum.IsDefined(typeof(Enums.eVisibleSize), value))
+                    throw new InvalidEnumArgumentException(nameof(value), (int) value, typeof(Enums.eVisibleSize));
+            }
         }
 
         public event FloatChangeEventHandler FloatChange;
@@ -262,7 +268,7 @@ namespace Hero_Designer.Forms.Controls
             enhListing.Height = Info_Damage.Bottom - (enhListing.Top + (pnlEnhActive.Height + 4) * 2);
             pnlEnhActive.Top = enhListing.Bottom + 4;
             pnlEnhInactive.Top = pnlEnhActive.Bottom + 4;
-            pnlInfo.Height = Info_Damage.Bottom + 10;
+            pnlInfo.Height = Info_Damage.Bottom + 4;
             pnlEnh.Height = pnlInfo.Height;
             Height = pnlInfo.Bottom;
             Compact = true;
@@ -837,7 +843,7 @@ namespace Hero_Designer.Forms.Controls
             }
             else
             {
-                lblDmg.Text = str1 + ":";
+                lblDmg.Text = $"{str1}:";
                 var damageValue2 = pEnh.FXGetDamageValue();
                 var num2 = damageValue1 * (1f + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
                 Info_Damage.nBaseVal = damageValue1;
@@ -862,22 +868,22 @@ namespace Hero_Designer.Forms.Controls
                     case Enums.eDDGraph.Simple:
                         var infoDamage1 = Info_Damage;
                         infoDamage1.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage1.Style = Enums.eDDStyle.Text;
+                        infoDamage1.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Enhanced:
                         var infoDamage2 = Info_Damage;
                         infoDamage2.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage2.Style = Enums.eDDStyle.Text;
+                        infoDamage2.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Both:
                         var infoDamage3 = Info_Damage;
                         infoDamage3.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage3.Style = Enums.eDDStyle.Text;
+                        infoDamage3.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Stacked:
                         var infoDamage4 = Info_Damage;
                         infoDamage4.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage4.Style = Enums.eDDStyle.Text;
+                        infoDamage4.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                 }
             }
@@ -3030,17 +3036,24 @@ namespace Hero_Designer.Forms.Controls
                 PowerScaler.Top = Info_txtLarge.Bottom - PowerScaler.Height;
                 info_DataList.Top = Info_txtLarge.Bottom + 4;
             }
-
+            //Controls Dataview Sizing for Info panel.
+            Info_Damage.ColorBackEnd = Color.Black;
+            Info_Damage.ColorBackStart = Color.Black;
+            Info_Damage.ColorBaseEnd = Color.LawnGreen;
+            Info_Damage.ColorBaseStart = Color.Green;
+            Info_Damage.ColorEnhEnd = Color.Crimson;
+            Info_Damage.ColorEnhStart = Color.DarkRed;
+            
             info_DataList.Height = 104;
             lblDmg.Visible = true;
             lblDmg.Top = info_DataList.Bottom + 4;
             Info_Damage.Top = lblDmg.Bottom + 4;
             Info_Damage.PaddingV = 1;
-            Info_Damage.Height = 46;
+            Info_Damage.Height = 75;
             enhListing.Height = Info_Damage.Bottom - (enhListing.Top + (pnlEnhActive.Height + 4) * 2);
             pnlEnhActive.Top = enhListing.Bottom + 4;
             pnlEnhInactive.Top = pnlEnhActive.Bottom + 4;
-            pnlInfo.Height = Info_Damage.Bottom + 10;
+            pnlInfo.Height = Info_Damage.Bottom + 20;
             pnlEnh.Height = pnlInfo.Height;
             Height = pnlInfo.Bottom;
             Compact = false;
@@ -3070,7 +3083,7 @@ namespace Hero_Designer.Forms.Controls
             lblFloat.BackColor = BackColor;
             lblShrink.BackColor = BackColor;
             info_DataList.Draw();
-            Info_Damage.Draw();
+            Info_Damage.Draw(); //Drawing controls
             fx_List1.Draw();
             fx_List2.Draw();
             fx_List3.Draw();
