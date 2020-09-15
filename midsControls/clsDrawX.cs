@@ -550,7 +550,7 @@ namespace midsControls
                     grey = (iSlot.Level >= MidsContext.Config.ForceLevel);
                     imageAttr = GreySlot(grey);
                 }
-                // Power slot position/sizing?
+                // Power position/sizing?
                 Rectangle iValue = new Rectangle(result.X, result.Y, bxPower[(int)ePowerState].Size.Width, bxPower[(int)ePowerState].Size.Height);
                 //
                 if (ePowerState == Enums.ePowerState.Used || toggling)
@@ -624,13 +624,13 @@ namespace midsControls
                 for (var i = 0; i <= iSlot.Slots.Length - 1; i++)
                 {
                     var slot = iSlot.Slots[i];
-                    // Spacing between enhancements?
+                    // Enhancment spacing and position?
                     rectangleF.X = point.X + (szSlot.Width + 2) * i;
                     rectangleF.Y = point.Y;
                     //
                     if (slot.Enhancement.Enh < 0)
                     {
-                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, szSlot.Width, szSlot.Height);
+                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, szSlot.Width, szSlot.Height); // New slot rectangle
                         bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, szSlot.Width, szSlot.Height, GraphicsUnit.Pixel, pImageAttributes);
                         if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
                             (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
@@ -696,7 +696,7 @@ namespace midsControls
                     DrawOutlineText(Convert.ToString(slotChk + 1), ScaleDown(iValue2),
                         Color.FromArgb(0, 255, 255), Color.FromArgb(192, 0, 0, 0), font, 1f, bxBuffer.Graphics);
                 }
-                //
+                //Power name text positioning
                 solidBrush = new SolidBrush(Color.White);
                 stringFormat = new StringFormat();
                 rectangleF.X = result.X + 10;
@@ -971,7 +971,7 @@ namespace midsControls
                     return -1;
                 {
                     var isValid = false;
-                    if (iY >= point.Y -10)
+                    if (iY >= point.Y + OffsetY) // Y boundary of enhancments
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset > -1)
                         {
@@ -988,7 +988,7 @@ namespace midsControls
 
                     if (!isValid)
                         return -1;
-                    iX -= point.X - checked(SzPower.Width - icoOffset * 8);
+                    iX -= point.X - checked(SzPower.Width - icoOffset * 8); //X boundary of enhancments
                     for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length - 1; i++)
                     {
                         var iZ = (i + 1) * icoOffset;
@@ -1353,7 +1353,7 @@ namespace midsControls
 
         public bool WithinPowerBar(Rectangle pBounds, Point e)
         {
-            pBounds.Height = SzPower.Height + 5;
+            pBounds.Height = SzPower.Height;
             return e.X >= pBounds.Left && e.X < pBounds.Right && e.Y >= pBounds.Top && e.Y < pBounds.Bottom;
         }
 
