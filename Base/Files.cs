@@ -21,6 +21,7 @@ public static class Files
     //public const string PatchRtf = "patch.rtf";
     private const string MxdbFileConfig = "Config.mhd";
     private const string JsonFileConfig = "Config.json";
+    private const string JsonFileConfigSP = "ConfigSP.json";
 
     public const string RoamingFolder = "Data\\";
     public static string FileData = string.Empty;
@@ -34,6 +35,12 @@ public static class Files
             //var fp = Path.Combine(Application.StartupPath, Path.Combine("Data", JsonFileConfig));
             return $"{dirLOC}{JsonFileConfig}";
         }
+    }
+
+    internal static string GetConfigSpFile()
+    {
+        var sPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\RebornTeam\";
+        return $"{sPath}{JsonFileConfigSP}";
     }
 
     private static string FNameConfig => SelectDataFileLoad(MxdbFileConfig);

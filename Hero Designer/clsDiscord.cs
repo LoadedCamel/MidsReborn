@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Base.Master_Classes;
-using Hero_Designer.Forms;
 using Hero_Designer.Forms.Controls;
 using Newtonsoft.Json;
 using RestSharp;
@@ -225,13 +221,13 @@ namespace Hero_Designer
         {
             var client = new RestClient(BOT_API_ENDPOINT);
             var request = new RestRequest("v2/servers/validate", Method.POST);
-            request.AddParameter("server_list", MidsContext.Config.DServers);
+            request.AddParameter("server_list", MidsContext.ConfigSp.ServerList);
             var response = client.Execute(request);
             var jValidatedServers = JsonConvert.DeserializeObject<ValidatedServers>(response.Content);
             var serversDict = new Dictionary<string, object>();
             var properties = typeof(ValidatedServers).GetProperties();
             foreach (var property in properties) serversDict.Add(property.Name, property.GetValue(jValidatedServers, null));
-            MidsContext.Config.DValidatedServers = serversDict;
+            MidsContext.ConfigSp.ValidatedServers = serversDict;
         }
     }
 

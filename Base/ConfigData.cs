@@ -112,13 +112,6 @@ public class ConfigData
     public Enums.CompOverride[] CompOverride { get; set; }
 
     public bool DiscordAuthorized { get; set; }
-    public Dictionary<string, object> DAuth { get; set; }
-    public Dictionary<string, object> DValidatedServers { get; set; }
-    public Dictionary<string, object> DUser { get; set; }
-    //public Dictionary<string, object> DServers { get; set; }
-    public List<string> DServers { get; set; }
-    public int DServerCount { get; set; }
-
     public bool DisableDesaturateInherent { get; set; }
     public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Dynamic;
     public Enums.dmItem BuildOption { get; set; } = Enums.dmItem.Slot;
@@ -495,24 +488,20 @@ public class ConfigData
 
     private void LoadOverrides()
     {
-        using (var fileStream = new FileStream(Files.SelectDataFileLoad("Compare.mhd"), FileMode.Open, FileAccess.Read))
+        using var fileStream = new FileStream(Files.SelectDataFileLoad("Compare.mhd"), FileMode.Open, FileAccess.Read);
+        using var binaryReader = new BinaryReader(fileStream);
+        if (binaryReader.ReadString() != "Mids' Hero Designer Comparison Overrides")
         {
-            using (var binaryReader = new BinaryReader(fileStream))
+            MessageBox.Show("Overrides file was missing a header! Not loading powerset comparison overrides.");
+        }
+        else
+        {
+            CompOverride = new Enums.CompOverride[binaryReader.ReadInt32() + 1];
+            for (var index = 0; index <= CompOverride.Length - 1; ++index)
             {
-                if (binaryReader.ReadString() != "Mids' Hero Designer Comparison Overrides")
-                {
-                    MessageBox.Show("Overrides file was missing a header! Not loading powerset comparison overrides.");
-                }
-                else
-                {
-                    CompOverride = new Enums.CompOverride[binaryReader.ReadInt32() + 1];
-                    for (var index = 0; index <= CompOverride.Length - 1; ++index)
-                    {
-                        CompOverride[index].Powerset = binaryReader.ReadString();
-                        CompOverride[index].Power = binaryReader.ReadString();
-                        CompOverride[index].Override = binaryReader.ReadString();
-                    }
-                }
+                CompOverride[index].Powerset = binaryReader.ReadString();
+                CompOverride[index].Power = binaryReader.ReadString();
+                CompOverride[index].Override = binaryReader.ReadString();
             }
         }
     }
@@ -562,19 +551,15 @@ public class ConfigData
         var fn = Files.SelectDataFileLoad("Compare.mhd");
         SaveRawOverrides(serializer, fn, OverrideNames);
 
-        using (var fileStream = new FileStream(fn, FileMode.Create))
+        using var fileStream = new FileStream(fn, FileMode.Create);
+        using var binaryWriter = new BinaryWriter(fileStream);
+        binaryWriter.Write(OverrideNames);
+        binaryWriter.Write(CompOverride.Length - 1);
+        for (var index = 0; index <= CompOverride.Length - 1; ++index)
         {
-            using (var binaryWriter = new BinaryWriter(fileStream))
-            {
-                binaryWriter.Write(OverrideNames);
-                binaryWriter.Write(CompOverride.Length - 1);
-                for (var index = 0; index <= CompOverride.Length - 1; ++index)
-                {
-                    binaryWriter.Write(CompOverride[index].Powerset);
-                    binaryWriter.Write(CompOverride[index].Power);
-                    binaryWriter.Write(CompOverride[index].Override);
-                }
-            }
+            binaryWriter.Write(CompOverride[index].Powerset);
+            binaryWriter.Write(CompOverride[index].Power);
+            binaryWriter.Write(CompOverride[index].Override);
         }
     }
 
@@ -698,24 +683,4 @@ public class ConfigData
             PairedBold = false;
         }
     }
-}
-public class DiscordServerObject
-{
-    [JsonProperty(PropertyName = "id")] public string id { get; set; }
-    [JsonProperty(PropertyName = "name")] public string name { get; set; }
-}
-
-public class DiscordServerInfo
-{
-   public string ServerNumber { get; set; }
-   public string Name { get; set; }
-   public string Id { get; set; }
-}
-
-public class DiscordServerChannels
-{
-    [JsonProperty(PropertyName = "id")] public string id { get; set; }
-    [JsonProperty(PropertyName = "name")] public string name { get; set; }
-    [JsonProperty(PropertyName = "type")] public int type { get; set; }
-    [JsonProperty(PropertyName = "guild_id")] public int guild_id { get; set; }
 }

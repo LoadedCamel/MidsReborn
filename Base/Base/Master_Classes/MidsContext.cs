@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Base.Data_Classes;
 
 namespace Base.Master_Classes
@@ -25,6 +26,8 @@ namespace Base.Master_Classes
         public static Character Character;
 
         public static ConfigData Config => ConfigData.Current;
+
+        public static ConfigDataSpecial ConfigSp => ConfigDataSpecial.Current;
 
         public static void AssertVersioning()
         {

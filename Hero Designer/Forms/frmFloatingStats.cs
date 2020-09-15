@@ -8,7 +8,6 @@ namespace Hero_Designer.Forms
     public partial class frmFloatingStats : Form
     {
         private readonly frmMain myOwner;
-        public DataView dvFloat;
 
         public frmFloatingStats(frmMain iOwner)
         {

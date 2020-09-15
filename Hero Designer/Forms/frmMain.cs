@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
+using Hero_Designer.Forms.Controls;
 using Hero_Designer.Forms.ImportExportItems;
 using Hero_Designer.Forms.OptionsMenuItems;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
@@ -42,6 +43,7 @@ namespace Hero_Designer.Forms
                 !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
                 ConfigData.Initialize(MyApplication.GetSerializer());
+                ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
@@ -100,7 +102,7 @@ namespace Hero_Designer.Forms
             dvAnchored.BackColor = Color.Black;
             dvAnchored.DrawVillain = false;
             dvAnchored.Floating = false;
-            dvAnchored.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dvAnchored.Font = new Font("Arial", 10.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 
             dvAnchored.Location = new Point(16, 391);
             dvAnchored.Name = "dvAnchored";
@@ -116,6 +118,7 @@ namespace Hero_Designer.Forms
             dvAnchored.SlotFlip += DataView_SlotFlip;
             dvAnchored.Moved += dvAnchored_Move;
             dvAnchored.TabChanged += dvAnchored_TabChanged;
+
             var componentResourceManager = new ComponentResourceManager(typeof(frmMain));
             Icon = Resources.reborn;
             Name = nameof(frmMain);
@@ -222,6 +225,11 @@ namespace Hero_Designer.Forms
                     MidsContext.Config.DefaultSaveFolderOverride = null;
                     MidsContext.Config.CreateDefaultSaveFolder();
                     MidsContext.Config.IsInitialized = true;
+                }
+
+                if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
+                {
+                    MidsContext.ConfigSp.IsInitialized = true;
                 }
 
                 var args = Environment.GetCommandLineArgs();
@@ -352,6 +360,7 @@ namespace Hero_Designer.Forms
                 PriSec_ExpandChanged(true);
                 loading = false;
                 UpdateControls(true);
+                CenterToScreen();
                 if (this.IsInDesignMode())
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
@@ -578,6 +587,7 @@ namespace Hero_Designer.Forms
                 return;
             NewToon(false);
             SetFormHeight();
+            //PerformAutoScale();
             SetAncilPoolHeight();
             GetBestDamageValues();
         }
@@ -1239,6 +1249,7 @@ namespace Hero_Designer.Forms
             NewDraw();
             UpdateControls();
             SetFormHeight();
+            PerformAutoScale();
             myDataView.Clear();
             MidsContext.Character.ResetLevel();
             PowerModified(false);
@@ -1253,15 +1264,21 @@ namespace Hero_Designer.Forms
 
         private void DoRedraw()
         {
-            if (drawing == null) return;
+            if (drawing == null)
+            {
+                return;
+            }
             NoResizeEvent = true;
             var width = pnlGFXFlow.Width;
             var scale = 1.0;
             var drawingArea = drawing.GetDrawingArea();
-            var num3 = width - 30;
-            if (num3 < drawingArea.Width)
-                scale = num3 / (double) drawingArea.Width;
-            pnlGFX.Width = num3;
+            var flowWidth = width;
+            if (flowWidth < drawingArea.Width)
+            {
+                scale = flowWidth / (double) drawingArea.Width;
+            }
+
+            pnlGFX.Width = flowWidth - 10;
             pnlGFX.Height = (int) Math.Round(drawingArea.Height * scale);
             pnlGFX.Update();
             pnlGFXFlow.Update();
@@ -1272,30 +1289,27 @@ namespace Hero_Designer.Forms
         private void DoResize()
         {
             //lblHero.Width = ibRecipe.Left - 4;
-            if (NoResizeEvent || drawing == null)
-                return;
-            var num1 = ClientSize.Width - pnlGFXFlow.Left;
-            var num2 = ClientSize.Height - pnlGFXFlow.Top;
-            pnlGFXFlow.Width = num1;
-            pnlGFXFlow.Height = num2;
+            if (NoResizeEvent || drawing == null) return;
+
+            var clientWidth = ClientSize.Width - pnlGFXFlow.Left; // num1
+            var clientHeight = ClientSize.Height - pnlGFXFlow.Top; // num2
+            pnlGFXFlow.Width = clientWidth;
+            pnlGFXFlow.Height = clientHeight;
             var scale = 1.0;
             var drawingArea = drawing.GetDrawingArea();
-            var num5 = num1 - 30;
-            if (num5 < drawingArea.Width)
-                scale = num5 / (double) drawingArea.Width;
-            var num6 = (int) Math.Round(drawingArea.Height * scale);
-            pnlGFX.Width = num5;
-            pnlGFX.Height = num6;
-            if (drawing.Scaling && Math.Abs(scale - 1.0) < float.Epsilon || Math.Abs(scale - 1.0) > float.Epsilon)
-            {
-                drawing.bxBuffer.Size = pnlGFX.Size;
-                Control pnlGfx = pnlGFX;
-                drawing.ReInit(pnlGfx);
-                pnlGFX = (PictureBox) pnlGfx;
-                pnlGFX.Image = drawing.bxBuffer.Bitmap;
-                pnlGFX.Update();
-                pnlGFX.Refresh();
-            }
+            var drawingWidth = pnlGFXFlow.Width - 30; // num5
+            if (drawingWidth < drawingArea.Width)
+                scale = drawingWidth / (double) drawingArea.Width;
+            var drawingHeight = (int) Math.Round(drawingArea.Height * scale);
+            pnlGFX.Width = drawingWidth;
+            pnlGFX.Height = drawingHeight;
+            drawing.bxBuffer.Size = pnlGFX.Size;
+            Control pnlGfx = pnlGFX;
+            drawing.ReInit(pnlGfx);
+            pnlGFX = (PictureBox) pnlGfx;
+            pnlGFX.Image = drawing.bxBuffer.Bitmap;
+            pnlGFX.Update();
+            pnlGFX.Refresh();
 
             NoResizeEvent = true;
             drawing.SetScaling(scale < 1.0 ? pnlGFX.Size : drawing.bxBuffer.Size);
@@ -1831,6 +1845,7 @@ namespace Hero_Designer.Forms
         {
             MidsContext.Config.LastSize = Size;
             MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
+            MidsContext.ConfigSp.SaveConfig(MyApplication.GetSerializer());
         }
 
         private void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -4201,8 +4216,15 @@ namespace Hero_Designer.Forms
             MidsContext.Config.Columns = columns;
             drawing.Columns = columns;
             DoResize();
-            DoRedraw();
             SetFormWidth();
+            DoRedraw();
+            pnlGFXFlow.AutoScroll = false;
+            pnlGFXFlow.HorizontalScroll.Enabled = false;
+            pnlGFXFlow.HorizontalScroll.Visible = false;
+            pnlGFXFlow.HorizontalScroll.Maximum = 0;
+            pnlGFXFlow.AutoScroll = true;
+            CenterToScreen();
+            PerformAutoScale();
         }
 
         private void SetDamageMenuCheckMarks()
@@ -4292,28 +4314,50 @@ namespace Hero_Designer.Forms
         private void SetFormWidth(bool ToFull = false)
         {
             NoResizeEvent = true;
-            var num1 = Width - ClientSize.Width;
+            /*var initialWidth = Width - ClientSize.Width;
+            //int modifiedWidth;
             if (!MainModule.MidsController.IsAppInitialized)
-                return;
-            var num2 = (MidsContext.Config.Columns != 2
-                ? num1 + drawing.GetRequiredDrawingArea().Width + pnlGFXFlow.Left
-                : !ToFull
-                    ? num1 + pnlGFXFlow.Left + drawing.ScaleDown(drawing.GetRequiredDrawingArea().Width)
-                    : num1 + drawing.GetRequiredDrawingArea().Width + pnlGFXFlow.Left) + 8;
-            if (Screen.PrimaryScreen.WorkingArea.Width > num2)
             {
-                Width = num2;
+                return;
+            }
+
+            var num2 = (MidsContext.Config.Columns != 2 ? initialWidth + drawing.GetRequiredDrawingArea().Width + pnlGFXFlow.Left
+                : !ToFull
+                    ? initialWidth + pnlGFXFlow.Left + drawing.ScaleDown(drawing.GetDrawingArea().Width)
+                    : initialWidth + drawing.GetDrawingArea().Width + pnlGFXFlow.Left) + 8;
+
+            if (Screen.FromControl(this).WorkingArea.Width > num2)
+            {
+                Width = num2 - 30;
             }
             else
             {
-                var workingArea = Screen.PrimaryScreen.WorkingArea;
+                var workingArea = Screen.FromControl(this).WorkingArea;
                 if (workingArea.Width <= num2)
                 {
-                    workingArea = Screen.PrimaryScreen.WorkingArea;
-                    Width = workingArea.Width - num1;
+                    workingArea = Screen.FromControl(this).WorkingArea;
+                    Width = workingArea.Width - initialWidth;
                 }
+            }*/
+            Height = 857;
+            switch (MidsContext.Config.Columns)
+            {
+                case 2:
+                    Width = 1071;
+                    break;
+                case 3:
+                    Width = 1318;
+                    break;
+                case 4:
+                    Width = 1588;
+                    break;
+                case 5:
+                    Width = 1849;
+                    break;
+                case 6:
+                    Width = 1900;
+                    break;
             }
-
             NoResizeEvent = false;
             DoResize();
         }
@@ -5064,16 +5108,16 @@ namespace Hero_Designer.Forms
 
         private void tsExportDiscord_Click(object sender, EventArgs e)
         {
-            var flag = false;
-            if (fDiscord == null)
-                flag = true;
-            else if (fDiscord.IsDisposed)
-                flag = true;
-            if (flag)
+            try
             {
                 var iParent = this;
                 fDiscord = new frmDiscord(ref iParent);
                 fDiscord.ShowDialog(this);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
             }
         }
 
@@ -5414,7 +5458,6 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView2Col.Checked = true;
             setColumns(2);
-            CenterToScreen();
         }
 
         private void tsView3Col_Click(object sender, EventArgs e)
@@ -5425,7 +5468,6 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView3Col.Checked = true;
             setColumns(3);
-            CenterToScreen();
         }
 
         private void tsView4Col_Click(object sender, EventArgs e)
@@ -5436,7 +5478,6 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView4Col.Checked = true;
             setColumns(4);
-            CenterToScreen();
         }
 
         private void tsView5Col_Click(object sender, EventArgs e)
@@ -5447,7 +5488,6 @@ namespace Hero_Designer.Forms
             tsView6Col.Checked = false;
             tsView5Col.Checked = true;
             setColumns(5);
-            CenterToScreen();
         }
 
         private void tsView6Col_Click(object sender, EventArgs e)
@@ -5458,7 +5498,6 @@ namespace Hero_Designer.Forms
             tsView5Col.Checked = false;
             tsView6Col.Checked = true;
             setColumns(6);
-            CenterToScreen();
         }
 
         private void tsViewActualDamage_New_Click(object sender, EventArgs e)
@@ -5601,10 +5640,20 @@ namespace Hero_Designer.Forms
                 ibPopup, ibRecipe, ibAccolade
             };
             foreach (var ib in ibs)
-                ib.SetImages(drawing.pImageAttributes,
-                    MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
-                    MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap);
-
+            {
+                if (ib.Name != "heroVillain")
+                {
+                    ib.SetImages(drawing.pImageAttributes,
+                        MidsContext.Character.IsHero() ? drawing.bxPower[2].Bitmap : drawing.bxPower[4].Bitmap,
+                        MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap);
+                }
+                else
+                {
+                    ib.SetImages(drawing.pImageAttributes,
+                        MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap,
+                        MidsContext.Character.IsHero() ? drawing.bxPower[3].Bitmap : drawing.bxPower[5].Bitmap);
+                }
+            }
             foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
                 llControl.ScrollBarColor = MidsContext.Character.IsHero()
@@ -5744,14 +5793,10 @@ namespace Hero_Designer.Forms
             for (var index = 0; index <= num2; ++index)
                 llSecondary.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
             heroVillain.Checked = !MidsContext.Character.IsHero();
-            dvAnchored.SetLocation(
-                new Point(llPrimary.Left,
-                    llPrimary.Top + raGreater(llPrimary.SizeNormal.Height, llSecondary.SizeNormal.Height) + 5),
-                ForceComplete);
+            dvAnchored.SetLocation(new Point(llPrimary.Left, llPrimary.Top + raGreater(llPrimary.SizeNormal.Height, llSecondary.SizeNormal.Height) + 5), ForceComplete);
             llPrimary.SuspendRedraw = false;
             llSecondary.SuspendRedraw = false;
-            if (myDataView != null &&
-                (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
+            if (myDataView != null && (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
                 dvAnchored_TabChanged(myDataView.TabPageIndex);
             if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
             {

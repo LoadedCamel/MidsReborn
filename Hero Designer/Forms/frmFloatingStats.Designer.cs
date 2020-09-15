@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Hero_Designer.Forms.Controls;
 
 namespace Hero_Designer.Forms
 {
@@ -30,10 +31,11 @@ namespace Hero_Designer.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
-
+            //this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
+            this.components = new System.ComponentModel.Container();
             this.dvFloat = new DataView();
             this.SuspendLayout();
+
             this.dvFloat.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
             this.dvFloat.DrawVillain = false;
             this.dvFloat.Floating = true;
@@ -68,5 +70,6 @@ namespace Hero_Designer.Forms
 
 
         #endregion
+        public DataView dvFloat;
     }
 }

@@ -1,12 +1,10 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
@@ -15,10 +13,24 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using midsControls;
 
-namespace Hero_Designer.Forms
+namespace Hero_Designer.Forms.Controls
 {
-    public class DataView : UserControl
+    public partial class DataView : UserControl
     {
+        /*internal ctlDamageDisplay Info_Damage
+        {
+            get;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            private set;
+        }
+
+        internal override RichTextBox Info_txtLarge
+        {
+            get;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            private set;
+        }*/
+
         public delegate void FloatChangeEventHandler();
 
         public delegate void MovedEventHandler();
@@ -44,64 +56,16 @@ namespace Hero_Designer.Forms
         private bool bFloating;
         private ExtendedBitmap bxFlip;
         private bool Compact;
-
-        private IContainer components;
-        private ToolTip dbTip;
-        private GFXLabel Enh_Title;
-        private ctlPairedList enhListing;
-        private GFXLabel enhNameDisp;
-        private Label fx_lblHead1;
-        private Label fx_lblHead2;
-        private Label fx_LblHead3;
-        private ctlPairedList fx_List1;
-        private ctlPairedList fx_List2;
-        private ctlPairedList fx_List3;
-        private GFXLabel fx_Title;
-        private ctlMultiGraph gDef1;
-        private ctlMultiGraph gDef2;
-        private ctlMultiGraph gRes1;
-        private ctlMultiGraph gRes2;
-
         private int HistoryIDX;
-        private ctlPairedList info_DataList;
-        private GFXLabel info_Title;
-        private RichTextBox info_txtSmall;
-        private Label lblDmg;
-        private Label lblFloat;
-        private Label lblLock;
-        private Label lblShrink;
-        private Label lblTotal;
-
         private bool Lock;
-
         private Point mouse_offset;
-
         public bool MoveDisable;
-
         private IPower pBase;
-
         private IPower pEnh;
-
         private int pLastScaleVal;
-        private Panel pnlEnh;
-        private Panel pnlEnhActive;
-        private Panel pnlEnhInactive;
-        private Panel pnlFX;
-        private Panel pnlInfo;
-        private Panel pnlTabs;
-        private Panel pnlTotal;
-        private ctlMultiGraph PowerScaler;
-
         private Rectangle ScreenBounds;
-
         public Rectangle SnapLocation;
         public int TabPage;
-        private Label total_lblDef;
-        private Label total_lblMisc;
-        private Label total_lblRes;
-        private ctlPairedList total_Misc;
-        private GFXLabel total_Title;
-
         private bool VillainColor;
 
         public DataView()
@@ -110,7 +74,7 @@ namespace Hero_Designer.Forms
             TabPage = 0;
             Pages = new[]
             {
-                "Info", "Effects", "Totals", "Enhance"
+                "INFO", "EFFECTS", "TOTALS", "ENHANCE"
             };
             pLastScaleVal = -1;
             Lock = false;
@@ -118,10 +82,11 @@ namespace Hero_Designer.Forms
             HistoryIDX = -1;
             Compact = false;
             bxFlip = null;
-            InitializeComponent();
+            //InitializeComponent();
             BackColorChanged += DataView_BackColorChanged;
             Load += DataView_Load;
             Name = nameof(DataView);
+            InitializeComponent();
         }
 
         public bool DrawVillain
@@ -158,20 +123,6 @@ namespace Hero_Designer.Forms
             }
         }
 
-        internal ctlDamageDisplay Info_Damage
-        {
-            get;
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            private set;
-        }
-
-        internal RichTextBox Info_txtLarge
-        {
-            get;
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            private set;
-        }
-
         public bool IsDocked => (SnapLocation.X == Location.X) & (SnapLocation.Y == Location.Y);
 
         public int TabPageIndex => TabPage;
@@ -180,7 +131,11 @@ namespace Hero_Designer.Forms
         {
             get => !Compact ? Enums.eVisibleSize.Full : Enums.eVisibleSize.Compact;
             // why is this ignored?
-            set { }
+            set
+            {
+                if (!Enum.IsDefined(typeof(Enums.eVisibleSize), value))
+                    throw new InvalidEnumArgumentException(nameof(value), (int) value, typeof(Enums.eVisibleSize));
+            }
         }
 
         public event FloatChangeEventHandler FloatChange;
@@ -204,9 +159,9 @@ namespace Hero_Designer.Forms
             string Name,
             float[] afterED)
         {
-            var flag1 = value[index] > (double) DatabaseAPI.Database.MultED[(int) schedule[index]][0];
-            var flag2 = value[index] > (double) DatabaseAPI.Database.MultED[(int) schedule[index]][1];
-            var iSpecialCase = value[index] > (double) DatabaseAPI.Database.MultED[(int) schedule[index]][2];
+            var flag1 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][0];
+            var flag2 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][1];
+            var iSpecialCase = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][2];
             ctlPairedList.ItemPair itemPair;
             if (value[index] <= 0.0)
             {
@@ -218,7 +173,7 @@ namespace Hero_Designer.Forms
                 var num1 = value[index] * 100f;
                 var num2 = Enhancement.ApplyED(schedule[index], value[index]) * 100f;
                 var num3 = num2 + afterED[index] * 100f;
-                var num4 = (float) Math.Round(num1 - (double) num2, 3);
+                var num4 = (float)Math.Round(num1 - (double)num2, 3);
                 var str1 = num1.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
                 var str2 = num4.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
                 var str3 = num3.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
@@ -235,7 +190,7 @@ namespace Hero_Designer.Forms
                     //iTip = str4 + "ED reduction: " + str2 + " (" + Strings.Format((float) (num4 / (double) num1 * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "% of total)\r\n";
                     if (iSpecialCase)
                         iTip = $"{iTip} The highest level of ED reduction is being applied.\r\nThreshold: {Convert.ToDecimal(DatabaseAPI.Database.MultED[(int)schedule[index]][2] * 100.0):0.##} %\r\n";
-                        //iTip = iTip + "The highest level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][2] * 100.0), "##0") + "%\r\n";
+                    //iTip = iTip + "The highest level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][2] * 100.0), "##0") + "%\r\n";
                     else if (flag2)
                         iTip = $"{iTip} The middle level of ED reduction is being applied.\r\nThreshold: {Convert.ToDecimal(DatabaseAPI.Database.MultED[(int)schedule[index]][1] * 100.0):0.##} %\r\n";
                     //iTip = iTip + "The middle level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][1] * 100.0), "##0") + "%\r\n";
@@ -313,7 +268,7 @@ namespace Hero_Designer.Forms
             enhListing.Height = Info_Damage.Bottom - (enhListing.Top + (pnlEnhActive.Height + 4) * 2);
             pnlEnhActive.Top = enhListing.Bottom + 4;
             pnlEnhInactive.Top = pnlEnhActive.Bottom + 4;
-            pnlInfo.Height = Info_Damage.Bottom + 10;
+            pnlInfo.Height = Info_Damage.Bottom + 4;
             pnlEnh.Height = pnlInfo.Height;
             Height = pnlInfo.Bottom;
             Compact = true;
@@ -389,7 +344,7 @@ namespace Hero_Designer.Forms
                         numArray1[index] = 0.0f;
                         numArray2[index] = 0.0f;
                         numArray3[index] = 0.0f;
-                        schedule1[index] = Enhancement.GetSchedule((Enums.eEnhance) index);
+                        schedule1[index] = Enhancement.GetSchedule((Enums.eEnhance)index);
                         schedule2[index] = schedule1[index];
                         schedule3[index] = schedule1[index];
                     }
@@ -437,7 +392,7 @@ namespace Hero_Designer.Forms
                                         numArray1[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
                                             .Powers[inToonHistory]
                                             .Slots[index1].Enhancement
-                                            .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
+                                            .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
                                         break;
                                     case Enums.eBuffDebuff.DeBuffOnly:
                                         if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) &
@@ -445,7 +400,7 @@ namespace Hero_Designer.Forms
                                             numArray2[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
                                                 .Powers[inToonHistory]
                                                 .Slots[index1].Enhancement
-                                                .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1,
+                                                .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1,
                                                     -1f);
 
                                         break;
@@ -453,7 +408,7 @@ namespace Hero_Designer.Forms
                                         numArray3[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
                                             .Powers[inToonHistory]
                                             .Slots[index1].Enhancement
-                                            .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
+                                            .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
                                         break;
                                 }
                         }
@@ -535,11 +490,11 @@ namespace Hero_Designer.Forms
                                     case Enums.eEffectType.Mez:
                                         if (effect.IgnoreED)
                                         {
-                                            afterED4[(int) effect.MezType] += effect.Mag;
+                                            afterED4[(int)effect.MezType] += effect.Mag;
                                             break;
                                         }
 
-                                        numArray4[(int) effect.MezType] += effect.Mag;
+                                        numArray4[(int)effect.MezType] += effect.Mag;
                                         break;
                                     default:
                                         var index2 = effect.ETModifies != Enums.eEffectType.RechargeTime
@@ -665,7 +620,7 @@ namespace Hero_Designer.Forms
             var Tip1 = string.Empty;
             if (pBase.PowerType == Enums.ePowerType.Click)
             {
-                if ((pEnh.ToggleCost > 0.0) & (pEnh.RechargeTime + (double) pEnh.CastTime + pEnh.InterruptTime > 0.0))
+                if ((pEnh.ToggleCost > 0.0) & (pEnh.RechargeTime + (double)pEnh.CastTime + pEnh.InterruptTime > 0.0))
                     Tip1 = "Effective end drain per second: " +
                            Utilities.FixDP(pEnh.ToggleCost / (pEnh.RechargeTime + pEnh.CastTime + pEnh.InterruptTime)) +
                            "/s";
@@ -707,13 +662,13 @@ namespace Hero_Designer.Forms
                     Suffix2 += "*";
                 }
 
-                if ((Math.Abs(accuracy1 - (double) accuracy2) > float.Epsilon) &
-                    (Math.Abs(num2 - (double) accuracy2) > float.Epsilon))
+                if ((Math.Abs(accuracy1 - (double)accuracy2) > float.Epsilon) &
+                    (Math.Abs(num2 - (double)accuracy2) > float.Epsilon))
                 {
                     var Tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {Convert.ToString(pBase.Accuracy + (pEnh.Accuracy - (double)MidsContext.Config.BaseAcc).ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000"))}x{str}";
                     //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format((float) (pBase.Accuracy + (pEnh.Accuracy - (double) MidsContext.Config.BaseAcc)), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00000") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
-                        (float) (MidsContext.Config.BaseAcc * (double) pBase.Accuracy * 100.0), pEnh.Accuracy * 100f,
+                        (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0), pEnh.Accuracy * 100f,
                         Suffix2, Tip2));
                 }
                 else
@@ -721,8 +676,8 @@ namespace Hero_Designer.Forms
                     var Tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.AccuracyMult.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00")}x{str}";
                     //var Tip2 = "Accuracy multiplier without other buffs (Real Numbers style): " + Strings.Format(pBase.AccuracyMult, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "x" + str;
                     info_DataList.AddItem(FastItem(ShortStr("Accuracy", "Acc"),
-                        (float) (MidsContext.Config.BaseAcc * (double) pBase.Accuracy * 100.0),
-                        (float) (MidsContext.Config.BaseAcc * (double) pBase.Accuracy * 100.0), Suffix2, Tip2));
+                        (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0),
+                        (float)(MidsContext.Config.BaseAcc * (double)pBase.Accuracy * 100.0), Suffix2, Tip2));
                 }
             }
             else
@@ -774,7 +729,7 @@ namespace Hero_Designer.Forms
                     pBase.Effects[durationEffectId].SpecialCase != Enums.eSpecialCase.None,
                     durationEffectId));
                 var iAlternate =
-                    Math.Abs(pBase.Effects[durationEffectId].Mag - (double) pEnh.Effects[durationEffectId].Mag) >
+                    Math.Abs(pBase.Effects[durationEffectId].Mag - (double)pEnh.Effects[durationEffectId].Mag) >
                     float.Epsilon;
                 info_DataList.AddItem(new ctlPairedList.ItemPair("Mag:",
                     Convert.ToString(pEnh.Effects[durationEffectId].Mag, CultureInfo.InvariantCulture), iAlternate,
@@ -800,51 +755,51 @@ namespace Hero_Designer.Forms
                         switch (pBase.Effects[rankedEffects[ID]].EffectType)
                         {
                             case Enums.eEffectType.EntCreate:
-                            {
-                                rankedEffect.Name = "Summon";
-                                if (pBase.Effects[rankedEffects[ID]].nSummon > -1)
                                 {
-                                    rankedEffect.Value = DatabaseAPI.Database
-                                        .Entities[pBase.Effects[rankedEffects[ID]].nSummon].DisplayName;
-                                }
-                                else
-                                {
-                                    rankedEffect.Value = pBase.Effects[rankedEffects[ID]].Summon;
-                                    if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                        rankedEffect.Value =
-                                            rankedEffect.Value.Replace("MastermindPets_", string.Empty);
-                                    if (rankedEffect.Value.StartsWith("Pets_"))
-                                        rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
-                                    if (rankedEffect.Value.StartsWith("Villain_Pets_"))
-                                        rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
-                                }
+                                    rankedEffect.Name = "Summon";
+                                    if (pBase.Effects[rankedEffects[ID]].nSummon > -1)
+                                    {
+                                        rankedEffect.Value = DatabaseAPI.Database
+                                            .Entities[pBase.Effects[rankedEffects[ID]].nSummon].DisplayName;
+                                    }
+                                    else
+                                    {
+                                        rankedEffect.Value = pBase.Effects[rankedEffects[ID]].Summon;
+                                        if (rankedEffect.Value.StartsWith("MastermindPets_"))
+                                            rankedEffect.Value =
+                                                rankedEffect.Value.Replace("MastermindPets_", string.Empty);
+                                        if (rankedEffect.Value.StartsWith("Pets_"))
+                                            rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
+                                        if (rankedEffect.Value.StartsWith("Villain_Pets_"))
+                                            rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
+                                    }
 
-                                --num3;
-                                break;
-                            }
+                                    --num3;
+                                    break;
+                                }
                             case Enums.eEffectType.RevokePower:
-                            {
-                                rankedEffect.Name = "Revoke";
-                                if (pBase.Effects[rankedEffects[ID]].nSummon > -1)
                                 {
-                                    rankedEffect.Value = DatabaseAPI.Database
-                                        .Entities[pBase.Effects[rankedEffects[ID]].nSummon].DisplayName;
-                                }
-                                else
-                                {
-                                    rankedEffect.Value = pBase.Effects[rankedEffects[ID]].Summon;
-                                    if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                        rankedEffect.Value =
-                                            rankedEffect.Value.Replace("MastermindPets_", string.Empty);
-                                    if (rankedEffect.Value.StartsWith("Pets_"))
-                                        rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
-                                    if (rankedEffect.Value.StartsWith("Villain_Pets_"))
-                                        rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
-                                }
+                                    rankedEffect.Name = "Revoke";
+                                    if (pBase.Effects[rankedEffects[ID]].nSummon > -1)
+                                    {
+                                        rankedEffect.Value = DatabaseAPI.Database
+                                            .Entities[pBase.Effects[rankedEffects[ID]].nSummon].DisplayName;
+                                    }
+                                    else
+                                    {
+                                        rankedEffect.Value = pBase.Effects[rankedEffects[ID]].Summon;
+                                        if (rankedEffect.Value.StartsWith("MastermindPets_"))
+                                            rankedEffect.Value =
+                                                rankedEffect.Value.Replace("MastermindPets_", string.Empty);
+                                        if (rankedEffect.Value.StartsWith("Pets_"))
+                                            rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
+                                        if (rankedEffect.Value.StartsWith("Villain_Pets_"))
+                                            rankedEffect.Value = rankedEffect.Value.Replace("Villain_Pets_", string.Empty);
+                                    }
 
-                                --num3;
-                                break;
-                            }
+                                    --num3;
+                                    break;
+                                }
                             default:
                                 rankedEffect.Name = ShortStr(
                                     Enums.GetEffectName(pBase.Effects[rankedEffects[ID]].EffectType),
@@ -853,8 +808,8 @@ namespace Hero_Designer.Forms
                         }
                     else
                         rankedEffect.Name = ShortStr(
-                            Enums.GetMezName((Enums.eMezShort) pBase.Effects[rankedEffects[ID]].MezType),
-                            Enums.GetMezNameShort((Enums.eMezShort) pBase.Effects[rankedEffects[ID]].MezType));
+                            Enums.GetMezName((Enums.eMezShort)pBase.Effects[rankedEffects[ID]].MezType),
+                            Enums.GetMezNameShort((Enums.eMezShort)pBase.Effects[rankedEffects[ID]].MezType));
                 }
 
                 info_DataList.AddItem(rankedEffect);
@@ -888,13 +843,13 @@ namespace Hero_Designer.Forms
             }
             else
             {
-                lblDmg.Text = str1 + ":";
+                lblDmg.Text = $"{str1}:";
                 var damageValue2 = pEnh.FXGetDamageValue();
                 var num2 = damageValue1 * (1f + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
                 Info_Damage.nBaseVal = damageValue1;
                 Info_Damage.nMaxEnhVal = num2;
                 Info_Damage.nEnhVal = damageValue2;
-                if (Math.Abs(damageValue2 - (double) damageValue1) > float.Epsilon)
+                if (Math.Abs(damageValue2 - (double)damageValue1) > float.Epsilon)
                     Info_Damage.Text = pEnh.FXGetDamageString() + " (" + Utilities.FixDP(damageValue1) + ")";
                 else
                     Info_Damage.Text = pBase.FXGetDamageString();
@@ -913,22 +868,22 @@ namespace Hero_Designer.Forms
                     case Enums.eDDGraph.Simple:
                         var infoDamage1 = Info_Damage;
                         infoDamage1.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage1.Style = Enums.eDDStyle.Text;
+                        infoDamage1.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Enhanced:
                         var infoDamage2 = Info_Damage;
                         infoDamage2.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage2.Style = Enums.eDDStyle.Text;
+                        infoDamage2.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Both:
                         var infoDamage3 = Info_Damage;
                         infoDamage3.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage3.Style = Enums.eDDStyle.Text;
+                        infoDamage3.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                     case Enums.eDDGraph.Stacked:
                         var infoDamage4 = Info_Damage;
                         infoDamage4.TextAlign = Enums.eDDAlign.Center;
-                        infoDamage4.Style = Enums.eDDStyle.Text;
+                        infoDamage4.Style = Enums.eDDStyle.TextUnderGraph;
                         break;
                 }
             }
@@ -1061,7 +1016,7 @@ namespace Hero_Designer.Forms
                 ref var local1 = ref rectangle1;
                 var width = num1;
                 var size = bxFlip.Size;
-                var height = (int) Math.Round(size.Height / 2.0);
+                var height = (int)Math.Round(size.Height / 2.0);
                 local1 = new Rectangle(-4, 0, width, height);
                 using var solidBrush1 = new SolidBrush(enhListing.NameColor);
                 format.Alignment = StringAlignment.Far;
@@ -1078,7 +1033,7 @@ namespace Hero_Designer.Forms
                     ref var local2 = ref iDest;
                     var x1 = num1 + 30 * index;
                     size = bxFlip.Size;
-                    var y1 = (int) Math.Round((size.Height / 2.0 - 30.0) / 2.0);
+                    var y1 = (int)Math.Round((size.Height / 2.0 - 30.0) / 2.0);
                     local2 = new Rectangle(x1, y1, 30, 30);
                     var rectangle2 = new Rectangle();
                     ref var local3 = ref rectangle2;
@@ -1087,7 +1042,7 @@ namespace Hero_Designer.Forms
                     var num3 = size.Height / 2.0;
                     size = bxFlip.Size;
                     var num4 = (size.Height / 2.0 - 30.0) / 2.0;
-                    var y2 = (int) Math.Round(num3 + num4);
+                    var y2 = (int)Math.Round(num3 + num4);
                     local3 = new Rectangle(x2, y2, 30, 30);
                     RectangleF bounds;
                     Rectangle destRect;
@@ -1298,7 +1253,7 @@ namespace Hero_Designer.Forms
 
             var num2 = gDef1.GetMaxValue();
             var maxValue1 = gDef2.GetMaxValue();
-            if (maxValue1 > (double) num2)
+            if (maxValue1 > (double)num2)
                 num2 = maxValue1;
             gDef1.Max = num2;
             gDef2.Max = num2;
@@ -1319,7 +1274,7 @@ namespace Hero_Designer.Forms
                 {
                     string iTip;
                     if (MidsContext.Character.TotalsCapped.Res[dType1] <
-                        (double) MidsContext.Character.Totals.Res[dType1])
+                        (double)MidsContext.Character.Totals.Res[dType1])
                         iTip =
                             $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):0.##}% {names[dType1]} resistance capped at {Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%";
                     //iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " + names[dType1] + " resistance capped at " + Strings.Format(displayStats.DamageResistance(dType1, false), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "%";
@@ -1337,7 +1292,7 @@ namespace Hero_Designer.Forms
 
             var num3 = gRes1.GetMaxValue();
             var maxValue2 = gRes2.GetMaxValue();
-            if (maxValue2 > (double) num3)
+            if (maxValue2 > (double)num3)
                 num3 = maxValue2;
             gRes1.Max = num3;
             gRes2.Max = num3;
@@ -1350,7 +1305,7 @@ namespace Hero_Designer.Forms
             {
                 iTip1 = "Net Endurance Gain (Recovery - Drain): " + Utilities.FixDP(displayStats.EnduranceRecoveryNet) +
                         "/s.";
-                if (Math.Abs(displayStats.EnduranceRecoveryNet - (double) displayStats.EnduranceRecoveryNumeric) >
+                if (Math.Abs(displayStats.EnduranceRecoveryNet - (double)displayStats.EnduranceRecoveryNumeric) >
                     float.Epsilon)
                     iTip1 = iTip1 + "\r\nTime to go from 0-100% end (using net gain): " +
                             Utilities.FixDP(displayStats.EnduranceTimeToFullNet) + "s.";
@@ -1377,7 +1332,7 @@ namespace Hero_Designer.Forms
             total_Misc.Draw();
         }
 
-        protected override void Dispose(bool disposing)
+        /*protected override void Dispose(bool disposing)
         {
             if (disposing)
                 components?.Dispose();
@@ -1391,7 +1346,7 @@ namespace Hero_Designer.Forms
             }
 
             base.Dispose(disposing);
-        }
+        }*/
 
         private void DoPaint()
         {
@@ -1453,24 +1408,20 @@ namespace Hero_Designer.Forms
             for (var index = 0; index <= num; ++index)
             {
                 rect = new Rectangle(rect.Width * index, 2, 70, pnlTabs.Height - 2);
-                layoutRectangle = new RectangleF(rect.X,
-                    rect.Y + (float) ((rect.Height - (double) font1.GetHeight(graphics)) / 2.0),
-                    rect.Width, font1.GetHeight(graphics));
+                layoutRectangle = new RectangleF(rect.X, rect.Y + (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
                 extendedBitmap.Graphics.DrawRectangle(pen, rect);
                 extendedBitmap.Graphics.DrawString(Pages[index], font1, solidBrush1, layoutRectangle, format);
             }
 
             rect = new Rectangle(70 * TabPage, 0, 70, pnlTabs.Height);
-            layoutRectangle = new RectangleF(rect.X, (float) ((rect.Height - (double) font1.GetHeight(graphics)) / 2.0),
-                rect.Width,
-                font1.GetHeight(graphics));
+            layoutRectangle = new RectangleF(rect.X, (float)((rect.Height - (double)font1.GetHeight(graphics)) / 2.0), rect.Width, font1.GetHeight(graphics));
             extendedBitmap.Graphics.FillRectangle(solidBrush3, rect);
             extendedBitmap.Graphics.DrawRectangle(pen, rect);
             extendedBitmap.Graphics.DrawString(Pages[TabPage], font2, solidBrush1, layoutRectangle, format);
             graphics.DrawImageUnscaled(extendedBitmap.Bitmap, 0, 0);
         }
 
-        private int effects_BuffDebuff(Label iLabel, ctlPairedList iList)
+        private int effects_BuffDebuff(Control iLabel, ctlPairedList iList)
         {
             var effectMagSum1 = pBase.GetEffectMagSum(Enums.eEffectType.ToHit);
             var effectMagSum2 = pEnh.GetEffectMagSum(Enums.eEffectType.ToHit);
@@ -1509,7 +1460,7 @@ namespace Hero_Designer.Forms
             var str1 = string.Empty;
             if (effectMagSum10.Present)
                 str1 = pBase.Effects[effectMagSum10.Index[0]].ETModifies == Enums.eEffectType.Mez
-                    ? Enums.GetMezNameShort((Enums.eMezShort) pBase.Effects[effectMagSum10.Index[0]].MezType)
+                    ? Enums.GetMezNameShort((Enums.eMezShort)pBase.Effects[effectMagSum10.Index[0]].MezType)
                     : Enums.GetEffectNameShort(pBase.Effects[effectMagSum10.Index[0]].ETModifies);
             iList.ValueWidth = 55;
             int num1;
@@ -1627,7 +1578,7 @@ namespace Hero_Designer.Forms
                                 var str3 = pBase.Effects[effectMagSum10.Index[index]].ETModifies ==
                                            Enums.eEffectType.Mez
                                     ? Enums.GetMezNameShort(
-                                        (Enums.eMezShort) pBase.Effects[effectMagSum10.Index[index]].MezType)
+                                        (Enums.eMezShort)pBase.Effects[effectMagSum10.Index[index]].MezType)
                                     : Enums.GetEffectNameShort(pBase.Effects[effectMagSum10.Index[index]].ETModifies);
                                 var str4 = !string.Equals(str3, "EnduranceDiscount", StringComparison.OrdinalIgnoreCase)
                                     ? !string.Equals(str3, "RechargeTime", StringComparison.OrdinalIgnoreCase)
@@ -1674,8 +1625,8 @@ namespace Hero_Designer.Forms
                                 else
                                 {
                                     if (num3 == -1)
-                                        num3 = (int) Math.Round(effectMagSum10.Value[0]);
-                                    else if ((num3 > 0) & (Math.Abs(num3 - (double) effectMagSum10.Value[iIndex]) >
+                                        num3 = (int)Math.Round(effectMagSum10.Value[0]);
+                                    else if ((num3 > 0) & (Math.Abs(num3 - (double)effectMagSum10.Value[iIndex]) >
                                                            float.Epsilon))
                                         num3 = -2;
                                     ++iIndex;
@@ -2067,16 +2018,16 @@ namespace Hero_Designer.Forms
                     if (pBase.Effects[iTagID].Mag > 0.0)
                     {
                         var iAlternate2 =
-                            (Math.Abs(pBase.Effects[iTagID].Duration - (double) pEnh.Effects[iTagID].Duration) >
+                            (Math.Abs(pBase.Effects[iTagID].Duration - (double)pEnh.Effects[iTagID].Duration) >
                              float.Epsilon) |
                             (!Enums.MezDurationEnhancable(pBase.Effects[iTagID].MezType) &
-                             (Math.Abs(pEnh.Effects[iTagID].Mag - (double) pBase.Effects[iTagID].Mag) > float.Epsilon));
+                             (Math.Abs(pEnh.Effects[iTagID].Mag - (double)pBase.Effects[iTagID].Mag) > float.Epsilon));
                         var iValue = "Mag " + Utilities.FixDP(pEnh.Effects[iTagID].Mag) + str;
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0";
                         var iItem = new ctlPairedList.ItemPair(
-                            CapString(names[(int) pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2,
+                            CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2,
                             (pBase.Effects[iTagID].Probability < 1.0) |
                             (pBase.Effects[iTagID].SpecialCase == Enums.eSpecialCase.Combo),
                             pBase.Effects[iTagID].SpecialCase != Enums.eSpecialCase.None, iTagID);
@@ -2093,7 +2044,7 @@ namespace Hero_Designer.Forms
                             Enums.eSuppress.None)
                             iValue = "0%";
                         var iItem = new ctlPairedList.ItemPair(
-                            CapString(names[(int) pBase.Effects[iTagID].MezType], 7) + ":", iValue, false,
+                            CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, false,
                             (pBase.Effects[iTagID].Probability < 1.0) |
                             (pBase.Effects[iTagID].SpecialCase == Enums.eSpecialCase.Combo),
                             pBase.Effects[iTagID].SpecialCase != Enums.eSpecialCase.None, iTagID);
@@ -2104,16 +2055,16 @@ namespace Hero_Designer.Forms
                     else
                     {
                         var iAlternate2 =
-                            (Math.Abs(pBase.Effects[iTagID].Duration - (double) pEnh.Effects[iTagID].Duration) >
+                            (Math.Abs(pBase.Effects[iTagID].Duration - (double)pEnh.Effects[iTagID].Duration) >
                              float.Epsilon) |
                             (!Enums.MezDurationEnhancable(pBase.Effects[iTagID].MezType) &
-                             (Math.Abs(pEnh.Effects[iTagID].Mag - (double) pBase.Effects[iTagID].Mag) > float.Epsilon));
+                             (Math.Abs(pEnh.Effects[iTagID].Mag - (double)pBase.Effects[iTagID].Mag) > float.Epsilon));
                         var iValue = "Mag " + Utilities.FixDP(pEnh.Effects[iTagID].Mag) + str;
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0";
                         var iItem = new ctlPairedList.ItemPair(
-                            CapString(names[(int) pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2,
+                            CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2,
                             pBase.Effects[iTagID].Probability < 1.0,
                             pBase.Effects[iTagID].SpecialCase != Enums.eSpecialCase.None, iTagID);
                         iList.AddItem(iItem);
@@ -2136,7 +2087,7 @@ namespace Hero_Designer.Forms
                         !((pBase.Effects[iTagID].EffectType == Enums.eEffectType.MezResist) &
                           (pBase.Effects[iTagID].Probability > 0.0)))
                         continue;
-                    var str = (double) pEnh.Effects[iTagID].Duration >= 15.0
+                    var str = (double)pEnh.Effects[iTagID].Duration >= 15.0
                         ? " - " + Utilities.FixDP(pEnh.Effects[iTagID].Duration) + "s"
                         : string.Empty;
                     var iValue = Convert.ToString(pBase.Effects[iTagID].MagPercent, CultureInfo.InvariantCulture) +
@@ -2144,7 +2095,7 @@ namespace Hero_Designer.Forms
                     if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
                         iValue = "0%";
                     var iItem = new ctlPairedList.ItemPair(
-                        CapString("-" + names[(int) pBase.Effects[iTagID].MezType], 7) + ":", iValue, false, false,
+                        CapString("-" + names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, false, false,
                         false, iTagID);
                     iList.AddItem(iItem);
                     if (pBase.Effects[iTagID].isEnhancementEffect)
@@ -2225,70 +2176,70 @@ namespace Hero_Designer.Forms
             var iSub1 = Enums.eDamage.Smashing;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub1, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub1], def1[(int) iSub1], def2[(int) iSub1], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub1], def1[(int)iSub1], def2[(int)iSub1], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub2 = Enums.eDamage.Fire;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub2, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub2], def1[(int) iSub2], def2[(int) iSub2], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub2], def1[(int)iSub2], def2[(int)iSub2], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub3 = Enums.eDamage.Lethal;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub3, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub3], def1[(int) iSub3], def2[(int) iSub3], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub3], def1[(int)iSub3], def2[(int)iSub3], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub4 = Enums.eDamage.Cold;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub4, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub4], def1[(int) iSub4], def2[(int) iSub4], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub4], def1[(int)iSub4], def2[(int)iSub4], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub5 = Enums.eDamage.Energy;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub5, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub5], def1[(int) iSub5], def2[(int) iSub5], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub5], def1[(int)iSub5], def2[(int)iSub5], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub6 = Enums.eDamage.Melee;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub6, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub6], def1[(int) iSub6], def2[(int) iSub6], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub6], def1[(int)iSub6], def2[(int)iSub6], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub7 = Enums.eDamage.Negative;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub7, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub7], def1[(int) iSub7], def2[(int) iSub7], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub7], def1[(int)iSub7], def2[(int)iSub7], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub8 = Enums.eDamage.Ranged;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub8, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub8], def1[(int) iSub8], def2[(int) iSub8], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub8], def1[(int)iSub8], def2[(int)iSub8], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub9 = Enums.eDamage.Psionic;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub9, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub9], def1[(int) iSub9], def2[(int) iSub9], "%", false, true, false,
+            fx_List1.AddItem(FastItem(names[(int)iSub9], def1[(int)iSub9], def2[(int)iSub9], "%", false, true, false,
                 false, effectMagSum));
             if (sFXCheck(effectMagSum))
                 fx_List1.SetUnique();
             var iSub10 = Enums.eDamage.AoE;
             if (multiple)
                 effectMagSum.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Defense, iSub10, true));
-            fx_List1.AddItem(FastItem(names[(int) iSub10], def1[(int) iSub10], def2[(int) iSub10], "%", false, true,
+            fx_List1.AddItem(FastItem(names[(int)iSub10], def1[(int)iSub10], def2[(int)iSub10], "%", false, true,
                 false, false,
                 effectMagSum));
             if (sFXCheck(effectMagSum))
@@ -2344,49 +2295,49 @@ namespace Hero_Designer.Forms
                 res2[index1] *= 100f;
             var iSub1 = Enums.eDamage.Smashing;
             shortFx.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Resistance, iSub1, true));
-            ctlPairedList.AddItem(FastItem(names[(int) iSub1], res1[(int) iSub1], res2[(int) iSub1], "%", false, true,
+            ctlPairedList.AddItem(FastItem(names[(int)iSub1], res1[(int)iSub1], res2[(int)iSub1], "%", false, true,
                 false, false, shortFx));
             if (sFXCheck(shortFx))
                 ctlPairedList.SetUnique();
             var iSub2 = Enums.eDamage.Fire;
             shortFx.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Resistance, iSub2, true));
-            ctlPairedList.AddItem(FastItem(names[(int) iSub2], res1[(int) iSub2], res2[(int) iSub2], "%", false, true,
+            ctlPairedList.AddItem(FastItem(names[(int)iSub2], res1[(int)iSub2], res2[(int)iSub2], "%", false, true,
                 false, false, shortFx));
             if (sFXCheck(shortFx))
                 ctlPairedList.SetUnique();
             var iSub3 = Enums.eDamage.Lethal;
             shortFx.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Resistance, iSub3, true));
-            ctlPairedList.AddItem(FastItem(names[(int) iSub3], res1[(int) iSub3], res2[(int) iSub3], "%", false, true,
+            ctlPairedList.AddItem(FastItem(names[(int)iSub3], res1[(int)iSub3], res2[(int)iSub3], "%", false, true,
                 false, false, shortFx));
             if (sFXCheck(shortFx))
                 ctlPairedList.SetUnique();
             var iSub4 = Enums.eDamage.Cold;
             shortFx.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Resistance, iSub4, true));
-            ctlPairedList.AddItem(FastItem(names[(int) iSub4], res1[(int) iSub4], res2[(int) iSub4], "%", false, true,
+            ctlPairedList.AddItem(FastItem(names[(int)iSub4], res1[(int)iSub4], res2[(int)iSub4], "%", false, true,
                 false, false, shortFx));
             if (sFXCheck(shortFx))
                 ctlPairedList.SetUnique();
             var iSub5 = Enums.eDamage.Energy;
             shortFx.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Resistance, iSub5, true));
-            ctlPairedList.AddItem(FastItem(names[(int) iSub5], res1[(int) iSub5], res2[(int) iSub5], "%", false, true,
+            ctlPairedList.AddItem(FastItem(names[(int)iSub5], res1[(int)iSub5], res2[(int)iSub5], "%", false, true,
                 false, false, shortFx));
             if (sFXCheck(shortFx))
                 ctlPairedList.SetUnique();
             var iSub6 = Enums.eDamage.Psionic;
             shortFx.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Resistance, iSub6, true));
-            ctlPairedList.AddItem(FastItem(names[(int) iSub6], res1[(int) iSub6], res2[(int) iSub6], "%", false, true,
+            ctlPairedList.AddItem(FastItem(names[(int)iSub6], res1[(int)iSub6], res2[(int)iSub6], "%", false, true,
                 false, false, shortFx));
             if (sFXCheck(shortFx))
                 ctlPairedList.SetUnique();
             var iSub7 = Enums.eDamage.Negative;
             shortFx.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Resistance, iSub7, true));
-            ctlPairedList.AddItem(FastItem(names[(int) iSub7], res1[(int) iSub7], res2[(int) iSub7], "%", false, true,
+            ctlPairedList.AddItem(FastItem(names[(int)iSub7], res1[(int)iSub7], res2[(int)iSub7], "%", false, true,
                 false, false, shortFx));
             if (sFXCheck(shortFx))
                 ctlPairedList.SetUnique();
             var iSub8 = Enums.eDamage.Toxic;
             shortFx.Assign(pEnh.GetDamageMagSum(Enums.eEffectType.Resistance, iSub8, true));
-            ctlPairedList.AddItem(FastItem(names[(int) iSub8], res1[(int) iSub8], res2[(int) iSub8], "%", false, true,
+            ctlPairedList.AddItem(FastItem(names[(int)iSub8], res1[(int)iSub8], res2[(int)iSub8], "%", false, true,
                 false, false, shortFx));
         }
 
@@ -2434,7 +2385,7 @@ namespace Hero_Designer.Forms
             else
             {
                 bool iAlternate;
-                if (Math.Abs(s1.Sum - (double) s2.Sum) > float.Epsilon)
+                if (Math.Abs(s1.Sum - (double)s2.Sum) > float.Epsilon)
                 {
                     if (!SkipBase)
                         iValue = iValue + " (" + Utilities.FixDP(s1.Sum) + ")";
@@ -2475,7 +2426,7 @@ namespace Hero_Designer.Forms
             else
             {
                 bool iAlternate;
-                if (Math.Abs(s1 - (double) s2) > float.Epsilon)
+                if (Math.Abs(s1 - (double)s2) > float.Epsilon)
                 {
                     if (!SkipBase)
                         iValue = iValue + " (" + Utilities.FixDP(s1) + ")";
@@ -2516,7 +2467,7 @@ namespace Hero_Designer.Forms
             else
             {
                 bool iAlternate;
-                if (Math.Abs(s1 - (double) s2) > float.Epsilon)
+                if (Math.Abs(s1 - (double)s2) > float.Epsilon)
                 {
                     if (!SkipBase)
                         iValue = iValue + " (" + Utilities.FixDP(s1) + ")";
@@ -2554,7 +2505,7 @@ namespace Hero_Designer.Forms
             else
             {
                 bool iAlternate;
-                if (Math.Abs(s1 - (double) s2) > float.Epsilon)
+                if (Math.Abs(s1 - (double)s2) > float.Epsilon)
                 {
                     if (!SkipBase)
                         iValue = iValue + " (" + Utilities.FixDP(s1) + ")";
@@ -2592,12 +2543,12 @@ namespace Hero_Designer.Forms
             var size = bxFlip.Size;
             var x = size.Width - 188 + 30 * Index;
             size = bxFlip.Size;
-            var y1 = (int) Math.Round((size.Height / 2.0 - 30.0) / 2.0);
+            var y1 = (int)Math.Round((size.Height / 2.0 - 30.0) / 2.0);
             local1 = new Rectangle(x, y1, 30, 30);
             var destRect = rectangle1;
             bxFlip.Graphics.FillRectangle(solidBrush1, rectangle1);
-            var rectangle2 = new Rectangle((int) Math.Round(rectangle1.X + (30.0 - 30.0 * State) / 2.0), rectangle1.Y,
-                (int) Math.Round(30.0 * State), 30);
+            var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30.0 - 30.0 * State) / 2.0), rectangle1.Y,
+                (int)Math.Round(30.0 * State), 30);
             Graphics graphics;
             if (Enh1 > -1)
             {
@@ -2616,11 +2567,11 @@ namespace Hero_Designer.Forms
             double y2 = rectangle1.Y;
             size = bxFlip.Size;
             var num1 = size.Height / 2.0;
-            var num2 = (int) Math.Round(y2 + num1);
+            var num2 = (int)Math.Round(y2 + num1);
             local2.Y = num2;
             bxFlip.Graphics.FillRectangle(solidBrush1, rectangle1);
-            rectangle2 = new Rectangle((int) Math.Round(rectangle1.X + (30.0 - 30.0 * State) / 2.0), rectangle1.Y,
-                (int) Math.Round(30.0 * State), 30);
+            rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30.0 - 30.0 * State) / 2.0), rectangle1.Y,
+                (int)Math.Round(30.0 * State), 30);
             if (Enh2 > -1)
             {
                 graphics = bxFlip.Graphics;
@@ -2677,8 +2628,8 @@ namespace Hero_Designer.Forms
                 var names = Enum.GetNames(eEffectTypeShort.GetType());
                 Title = pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Enhancement
                     ? pBase.Effects[Index[ID]].EffectType != Enums.eEffectType.Mez
-                        ? names[(int) pBase.Effects[Index[ID]].EffectType]
-                        : Enums.GetMezName((Enums.eMezShort) pBase.Effects[Index[ID]].MezType)
+                        ? names[(int)pBase.Effects[Index[ID]].EffectType]
+                        : Enums.GetMezName((Enums.eMezShort)pBase.Effects[Index[ID]].MezType)
                     : pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.EnduranceDiscount
                         ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.RechargeTime
                             ? pBase.Effects[Index[ID]].ETModifies != Enums.eEffectType.Mez
@@ -2702,8 +2653,8 @@ namespace Hero_Designer.Forms
                         s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         Tag2
                             .Assign(shortFx);
-                        shortFx.Sum = (float) (shortFx.Sum / (double) MidsContext.Archetype.Hitpoints * 100.0);
-                        s2.Sum = (float) (s2.Sum / (double) MidsContext.Archetype.Hitpoints * 100.0);
+                        shortFx.Sum = (float)(shortFx.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                        s2.Sum = (float)(s2.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Heal:
@@ -2711,8 +2662,8 @@ namespace Hero_Designer.Forms
                         s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
                         Tag2
                             .Assign(shortFx);
-                        shortFx.Sum = (float) (shortFx.Sum / (double) MidsContext.Archetype.Hitpoints * 100.0);
-                        s2.Sum = (float) (s2.Sum / (double) MidsContext.Archetype.Hitpoints * 100.0);
+                        shortFx.Sum = (float)(shortFx.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
+                        s2.Sum = (float)(s2.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Absorb:
@@ -2738,54 +2689,54 @@ namespace Hero_Designer.Forms
                         Suffix = "%";
                         break;
                     default:
-                    {
-                        if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Mez) &
-                            ((pBase.Effects[Index[ID]].MezType == Enums.eMez.Taunt) |
-                             (pBase.Effects[Index[ID]].MezType == Enums.eMez.Placate)))
                         {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Duration);
-                            Tag2
-                                .Assign(shortFx);
-                            Suffix = "s";
-                        }
-                        else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying)
-                        {
-                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf,
-                                onlyTarget));
-                            s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf, onlyTarget));
-                            Tag2
-                                .Assign(shortFx);
-                        }
-                        else if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect) |
-                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement))
-                        {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
-                            Tag2
-                                .Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf,
+                            if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Mez) &
+                                ((pBase.Effects[Index[ID]].MezType == Enums.eMez.Taunt) |
+                                 (pBase.Effects[Index[ID]].MezType == Enums.eMez.Placate)))
+                            {
+                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
+                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Duration);
+                                Tag2
+                                    .Assign(shortFx);
+                                Suffix = "s";
+                            }
+                            else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying)
+                            {
+                                shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf,
                                     onlyTarget));
-                        }
-                        else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
-                        {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Absorbed_Duration);
-                            Tag2
-                                .Assign(shortFx);
-                        }
-                        else
-                        {
-                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
-                            Tag2
-                                .Assign(shortFx);
-                        }
+                                s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf, onlyTarget));
+                                Tag2
+                                    .Assign(shortFx);
+                            }
+                            else if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff) |
+                                     (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense) |
+                                     (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance) |
+                                     (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect) |
+                                     (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement))
+                            {
+                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
+                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                                Tag2
+                                    .Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf,
+                                        onlyTarget));
+                            }
+                            else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
+                            {
+                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
+                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Absorbed_Duration);
+                                Tag2
+                                    .Assign(shortFx);
+                            }
+                            else
+                            {
+                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
+                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                                Tag2
+                                    .Assign(shortFx);
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                 }
 
                 if (pBase.Effects[Index[ID]].DisplayPercentage)
@@ -2834,718 +2785,7 @@ namespace Hero_Designer.Forms
 
         public void Init()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
-        }
-
-        private void InitializeComponent()
-        {
-            components = new Container();
-            pnlTabs = new Panel();
-            pnlInfo = new Panel();
-            PowerScaler = new ctlMultiGraph();
-            info_txtSmall = new RichTextBox();
-            lblDmg = new Label();
-            Info_Damage = new ctlDamageDisplay();
-            info_DataList = new ctlPairedList();
-            Info_txtLarge = new RichTextBox();
-            info_Title = new GFXLabel();
-            pnlFX = new Panel();
-            fx_Title = new GFXLabel();
-            fx_LblHead3 = new Label();
-            fx_List3 = new ctlPairedList();
-            fx_lblHead2 = new Label();
-            fx_lblHead1 = new Label();
-            fx_List2 = new ctlPairedList();
-            fx_List1 = new ctlPairedList();
-            pnlTotal = new Panel();
-            lblTotal = new Label();
-            gRes2 = new ctlMultiGraph();
-            gRes1 = new ctlMultiGraph();
-            gDef2 = new ctlMultiGraph();
-            gDef1 = new ctlMultiGraph();
-            total_Title = new GFXLabel();
-            total_lblMisc = new Label();
-            total_Misc = new ctlPairedList();
-            total_lblRes = new Label();
-            total_lblDef = new Label();
-            pnlEnh = new Panel();
-            pnlEnhInactive = new Panel();
-            pnlEnhActive = new Panel();
-            enhNameDisp = new GFXLabel();
-            enhListing = new ctlPairedList();
-            Enh_Title = new GFXLabel();
-            dbTip = new ToolTip(components);
-            lblFloat = new Label();
-            lblShrink = new Label();
-            lblLock = new Label();
-            pnlInfo.SuspendLayout();
-            pnlFX.SuspendLayout();
-            pnlTotal.SuspendLayout();
-            pnlEnh.SuspendLayout();
-            SuspendLayout();
-            pnlTabs.BackColor = Color.FromArgb(64, 64, 64);
-
-            pnlTabs.Location = new Point(0, 0);
-            pnlTabs.Name = "pnlTabs";
-
-            pnlTabs.Size = new Size(300, 20);
-            pnlTabs.TabIndex = 61;
-            pnlInfo.BackColor = Color.Navy;
-            pnlInfo.Controls.Add(PowerScaler);
-            pnlInfo.Controls.Add(info_txtSmall);
-            pnlInfo.Controls.Add(lblDmg);
-            pnlInfo.Controls.Add(Info_Damage);
-            pnlInfo.Controls.Add(info_DataList);
-            pnlInfo.Controls.Add(Info_txtLarge);
-            pnlInfo.Controls.Add(info_Title);
-
-            pnlInfo.Location = new Point(0, 20);
-            pnlInfo.Name = "pnlInfo";
-
-            pnlInfo.Size = new Size(300, 428);
-            pnlInfo.TabIndex = 62;
-            PowerScaler.BackColor = Color.Black;
-            PowerScaler.Border = true;
-            PowerScaler.Clickable = true;
-            PowerScaler.ColorBase = Color.FromArgb(64, byte.MaxValue, 64);
-            PowerScaler.ColorEnh = Color.Yellow;
-            PowerScaler.ColorFadeEnd = Color.FromArgb(0, 192, 0);
-            PowerScaler.ColorFadeStart = Color.Black;
-            PowerScaler.ColorHighlight = Color.Gray;
-            PowerScaler.ColorLines = Color.Black;
-            PowerScaler.ColorMarkerInner = Color.Red;
-            PowerScaler.ColorMarkerOuter = Color.Black;
-            PowerScaler.Dual = false;
-            PowerScaler.Font = new Font("Arial", 9f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
-            PowerScaler.ForcedMax = 0.0f;
-            PowerScaler.ForeColor = Color.FromArgb(192, 192, byte.MaxValue);
-            PowerScaler.Highlight = true;
-            PowerScaler.ItemHeight = 10;
-            PowerScaler.Lines = true;
-
-            PowerScaler.Location = new Point(4, 145);
-            PowerScaler.MarkerValue = 0.0f;
-            PowerScaler.Max = 100f;
-            PowerScaler.Name = "PowerScaler";
-            PowerScaler.PaddingX = 2f;
-            PowerScaler.PaddingY = 2f;
-            PowerScaler.ScaleHeight = 32;
-            PowerScaler.ScaleIndex = 8;
-            PowerScaler.ShowScale = false;
-
-            PowerScaler.Size = new Size(292, 15);
-            PowerScaler.Style = Enums.GraphStyle.baseOnly;
-            PowerScaler.TabIndex = 71;
-            PowerScaler.TextWidth = 80;
-            info_txtSmall.BackColor = Color.FromArgb(64, 64, 64);
-            info_txtSmall.BorderStyle = BorderStyle.None;
-            info_txtSmall.Cursor = Cursors.Arrow;
-            info_txtSmall.ForeColor = Color.White;
-
-            info_txtSmall.Location = new Point(4, 24);
-            info_txtSmall.Name = "info_txtSmall";
-            info_txtSmall.ReadOnly = true;
-            info_txtSmall.ScrollBars = RichTextBoxScrollBars.None;
-
-            info_txtSmall.Size = new Size(292, 32);
-            info_txtSmall.TabIndex = 70;
-            info_txtSmall.Text = "info_Rich";
-            lblDmg.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblDmg.ForeColor = Color.White;
-
-            lblDmg.Location = new Point(4, 272);
-            lblDmg.Name = "lblDmg";
-
-            lblDmg.Size = new Size(292, 15);
-            lblDmg.TabIndex = 15;
-            lblDmg.Text = "Damage:";
-            lblDmg.TextAlign = ContentAlignment.MiddleCenter;
-            Info_Damage.BackColor = Color.FromArgb(64, 64, 64);
-            Info_Damage.ColorBackEnd = Color.Red;
-            Info_Damage.ColorBackStart = Color.Black;
-            Info_Damage.ColorBaseEnd = Color.Blue;
-            Info_Damage.ColorBaseStart = Color.Blue;
-            Info_Damage.ColorEnhEnd = Color.Yellow;
-            Info_Damage.ColorEnhStart = Color.Yellow;
-            Info_Damage.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel, 1);
-            Info_Damage.GraphType = Enums.eDDGraph.Enhanced;
-
-            Info_Damage.Location = new Point(2, 284);
-            Info_Damage.Name = "Info_Damage";
-            Info_Damage.nBaseVal = 100f;
-            Info_Damage.nEnhVal = 150f;
-            Info_Damage.nHighBase = 200f;
-            Info_Damage.nHighEnh = 214f;
-            Info_Damage.nMaxEnhVal = 207f;
-            Info_Damage.PaddingH = 1;
-            Info_Damage.PaddingV = 1;
-
-            Info_Damage.Size = new Size(295, 56);
-            Info_Damage.Style = Enums.eDDStyle.Text;
-            Info_Damage.TabIndex = 20;
-            Info_Damage.TextAlign = Enums.eDDAlign.Left;
-            Info_Damage.TextColor = Color.FromArgb(192, 192, byte.MaxValue);
-            info_DataList.BackColor = Color.FromArgb(0, 0, 32);
-            info_DataList.Columns = 2;
-            info_DataList.DoHighlight = true;
-            info_DataList.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Pixel, 1);
-            info_DataList.ForceBold = false;
-            info_DataList.HighlightColor = Color.FromArgb(128, 128, byte.MaxValue);
-            info_DataList.HighlightTextColor = Color.Black;
-            info_DataList.ItemColor = Color.White;
-            info_DataList.ItemColorAlt = Color.Lime;
-            info_DataList.ItemColorSpecCase = Color.Red;
-            info_DataList.ItemColorSpecial = Color.FromArgb(128, 128, byte.MaxValue);
-
-            info_DataList.Location = new Point(4, 164);
-            info_DataList.Name = "info_DataList";
-            info_DataList.NameColor = Color.FromArgb(192, 192, byte.MaxValue);
-
-            info_DataList.Size = new Size(292, 104);
-            info_DataList.TabIndex = 19;
-            info_DataList.ValueWidth = 55;
-            Info_txtLarge.BackColor = Color.FromArgb(64, 64, 64);
-            Info_txtLarge.BorderStyle = BorderStyle.None;
-            Info_txtLarge.Cursor = Cursors.Arrow;
-            Info_txtLarge.ForeColor = Color.White;
-
-            Info_txtLarge.Location = new Point(4, 60);
-            Info_txtLarge.Name = "Info_txtLarge";
-            Info_txtLarge.ReadOnly = true;
-            Info_txtLarge.ScrollBars = RichTextBoxScrollBars.ForcedVertical;
-
-            Info_txtLarge.Size = new Size(292, 87);
-            Info_txtLarge.TabIndex = 69;
-            Info_txtLarge.Text = "info_Rich";
-            info_Title.BackColor = Color.FromArgb(64, 64, 64);
-            info_Title.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            info_Title.ForeColor = Color.White;
-            info_Title.InitialText = "Title";
-
-            info_Title.Location = new Point(24, 4);
-            info_Title.Name = "info_Title";
-
-            info_Title.Size = new Size(252, 16);
-            info_Title.TabIndex = 69;
-            info_Title.TextAlign = ContentAlignment.TopCenter;
-            pnlFX.BackColor = Color.Indigo;
-            pnlFX.Controls.Add(fx_Title);
-            pnlFX.Controls.Add(fx_LblHead3);
-            pnlFX.Controls.Add(fx_List3);
-            pnlFX.Controls.Add(fx_lblHead2);
-            pnlFX.Controls.Add(fx_lblHead1);
-            pnlFX.Controls.Add(fx_List2);
-            pnlFX.Controls.Add(fx_List1);
-
-            pnlFX.Location = new Point(144, 148);
-            pnlFX.Name = "pnlFX";
-
-            pnlFX.Size = new Size(300, 420);
-            pnlFX.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Pixel);
-            pnlFX.TabIndex = 63;
-            fx_Title.BackColor = Color.FromArgb(64, 64, 64);
-            fx_Title.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            fx_Title.ForeColor = Color.White;
-            fx_Title.InitialText = "Title";
-
-            fx_Title.Location = new Point(24, 4);
-            fx_Title.Name = "fx_Title";
-
-            fx_Title.Size = new Size(252, 16);
-            fx_Title.TabIndex = 70;
-            fx_Title.TextAlign = ContentAlignment.TopCenter;
-            fx_LblHead3.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            fx_LblHead3.ForeColor = Color.White;
-
-            fx_LblHead3.Location = new Point(4, 228);
-            fx_LblHead3.Name = "fx_LblHead3";
-
-            fx_LblHead3.Size = new Size(292, 16);
-            fx_LblHead3.TabIndex = 28;
-            fx_LblHead3.Text = "Misc Effects:";
-            fx_LblHead3.TextAlign = ContentAlignment.MiddleLeft;
-            fx_List3.BackColor = Color.FromArgb(64, 64, 64);
-            fx_List3.Columns = 2;
-            fx_List3.DoHighlight = true;
-            //fx_List3.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 178);
-            fx_List3.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Pixel, 1);
-            fx_List3.ForceBold = false;
-            fx_List3.HighlightColor = Color.FromArgb(128, 128, byte.MaxValue);
-            fx_List3.HighlightTextColor = Color.Black;
-            fx_List3.ItemColor = Color.White;
-            fx_List3.ItemColorAlt = Color.Lime;
-            fx_List3.ItemColorSpecCase = Color.Red;
-            fx_List3.ItemColorSpecial = Color.FromArgb(128, 128, byte.MaxValue);
-
-            fx_List3.Location = new Point(4, 244);
-            fx_List3.Name = "fx_List3";
-            fx_List3.NameColor = Color.FromArgb(192, 192, byte.MaxValue);
-
-            fx_List3.Size = new Size(292, 72);
-            fx_List3.TabIndex = 27;
-            fx_List3.ValueWidth = 55;
-            fx_lblHead2.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            fx_lblHead2.ForeColor = Color.White;
-
-            fx_lblHead2.Location = new Point(4, 136);
-            fx_lblHead2.Name = "fx_lblHead2";
-
-            fx_lblHead2.Size = new Size(292, 16);
-            fx_lblHead2.TabIndex = 26;
-            fx_lblHead2.Text = "Secondary Effects:";
-            fx_lblHead2.TextAlign = ContentAlignment.MiddleLeft;
-            fx_lblHead1.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            fx_lblHead1.ForeColor = Color.White;
-
-            fx_lblHead1.Location = new Point(4, 24);
-            fx_lblHead1.Name = "fx_lblHead1";
-
-            fx_lblHead1.Size = new Size(292, 16);
-            fx_lblHead1.TabIndex = 25;
-            fx_lblHead1.Text = "Primary Effects:";
-            fx_lblHead1.TextAlign = ContentAlignment.MiddleLeft;
-            fx_List2.BackColor = Color.FromArgb(64, 64, 64);
-            fx_List2.Columns = 2;
-            fx_List2.DoHighlight = true;
-            fx_List2.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Pixel, 1);
-            fx_List2.ForceBold = false;
-            fx_List2.HighlightColor = Color.FromArgb(128, 128, byte.MaxValue);
-            fx_List2.HighlightTextColor = Color.Black;
-            fx_List2.ItemColor = Color.White;
-            fx_List2.ItemColorAlt = Color.Lime;
-            fx_List2.ItemColorSpecCase = Color.Red;
-            fx_List2.ItemColorSpecial = Color.FromArgb(128, 128, byte.MaxValue);
-
-            fx_List2.Location = new Point(4, 152);
-            fx_List2.Name = "fx_List2";
-            fx_List2.NameColor = Color.FromArgb(192, 192, byte.MaxValue);
-
-            fx_List2.Size = new Size(292, 72);
-            fx_List2.TabIndex = 24;
-            fx_List2.ValueWidth = 55;
-            fx_List1.BackColor = Color.FromArgb(64, 64, 64);
-            fx_List1.Columns = 2;
-            fx_List1.DoHighlight = true;
-            fx_List1.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Pixel, 1);
-            fx_List1.ForceBold = false;
-            fx_List1.HighlightColor = Color.FromArgb(128, 128, byte.MaxValue);
-            fx_List1.HighlightTextColor = Color.Black;
-            fx_List1.ItemColor = Color.White;
-            fx_List1.ItemColorAlt = Color.Lime;
-            fx_List1.ItemColorSpecCase = Color.Red;
-            fx_List1.ItemColorSpecial = Color.FromArgb(128, 128, byte.MaxValue);
-
-            fx_List1.Location = new Point(4, 40);
-            fx_List1.Name = "fx_List1";
-            fx_List1.NameColor = Color.FromArgb(192, 192, byte.MaxValue);
-
-            fx_List1.Size = new Size(292, 92);
-            fx_List1.TabIndex = 23;
-            fx_List1.ValueWidth = 60;
-            pnlTotal.BackColor = Color.Green;
-            pnlTotal.Controls.Add(lblTotal);
-            pnlTotal.Controls.Add(gRes2);
-            pnlTotal.Controls.Add(gRes1);
-            pnlTotal.Controls.Add(gDef2);
-            pnlTotal.Controls.Add(gDef1);
-            pnlTotal.Controls.Add(total_Title);
-            pnlTotal.Controls.Add(total_lblMisc);
-            pnlTotal.Controls.Add(total_Misc);
-            pnlTotal.Controls.Add(total_lblRes);
-            pnlTotal.Controls.Add(total_lblDef);
-
-            pnlTotal.Location = new Point(248, 15);
-            pnlTotal.Name = "pnlTotal";
-
-            pnlTotal.Size = new Size(300, 420);
-            pnlTotal.TabIndex = 64;
-            lblTotal.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTotal.ForeColor = Color.White;
-
-            lblTotal.Location = new Point(4, 300);
-            lblTotal.Name = "lblTotal";
-
-            lblTotal.Size = new Size(292, 16);
-            lblTotal.TabIndex = 75;
-            lblTotal.Text = "Click the 'View Totals' button for more.";
-            lblTotal.TextAlign = ContentAlignment.MiddleCenter;
-            gRes2.BackColor = Color.Black;
-            gRes2.Border = true;
-            gRes2.Clickable = false;
-            gRes2.ColorBase = Color.FromArgb(0, 192, 192);
-            gRes2.ColorEnh = Color.FromArgb(byte.MaxValue, 128, 128);
-            gRes2.ColorFadeEnd = Color.Teal;
-            gRes2.ColorFadeStart = Color.Black;
-            gRes2.ColorHighlight = Color.Gray;
-            gRes2.ColorLines = Color.Black;
-            gRes2.ColorMarkerInner = Color.Black;
-            gRes2.ColorMarkerOuter = Color.Yellow;
-            gRes2.Dual = false;
-            gRes2.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
-            gRes2.ForcedMax = 0.0f;
-            gRes2.ForeColor = Color.FromArgb(192, 192, byte.MaxValue);
-            gRes2.Highlight = true;
-            gRes2.ItemHeight = 13;
-            gRes2.Lines = true;
-
-            gRes2.Location = new Point(150, 152);
-            gRes2.MarkerValue = 0.0f;
-            gRes2.Max = 100f;
-            gRes2.Name = "gRes2";
-            gRes2.PaddingX = 2f;
-            gRes2.PaddingY = 4f;
-            gRes2.ScaleHeight = 32;
-            gRes2.ScaleIndex = 8;
-            gRes2.ShowScale = false;
-
-            gRes2.Size = new Size(146, 72);
-            gRes2.Style = Enums.GraphStyle.Stacked;
-            gRes2.TabIndex = 74;
-            gRes2.TextWidth = 100;
-            gRes1.BackColor = Color.Black;
-            gRes1.Border = true;
-            gRes1.Clickable = false;
-            gRes1.ColorBase = Color.FromArgb(0, 192, 192);
-            gRes1.ColorEnh = Color.FromArgb(byte.MaxValue, 128, 128);
-            gRes1.ColorFadeEnd = Color.Teal;
-            gRes1.ColorFadeStart = Color.Black;
-            gRes1.ColorHighlight = Color.Gray;
-            gRes1.ColorLines = Color.Black;
-            gRes1.ColorMarkerInner = Color.Black;
-            gRes1.ColorMarkerOuter = Color.Yellow;
-            gRes1.Dual = false;
-            gRes1.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
-            gRes1.ForcedMax = 0.0f;
-            gRes1.ForeColor = Color.FromArgb(192, 192, byte.MaxValue);
-            gRes1.Highlight = true;
-            gRes1.ItemHeight = 13;
-            gRes1.Lines = true;
-
-            gRes1.Location = new Point(4, 152);
-            gRes1.MarkerValue = 0.0f;
-            gRes1.Max = 100f;
-            gRes1.Name = "gRes1";
-            gRes1.PaddingX = 2f;
-            gRes1.PaddingY = 4f;
-            gRes1.ScaleHeight = 32;
-            gRes1.ScaleIndex = 8;
-            gRes1.ShowScale = false;
-
-            gRes1.Size = new Size(146, 72);
-            gRes1.Style = Enums.GraphStyle.Stacked;
-            gRes1.TabIndex = 73;
-            gRes1.TextWidth = 100;
-            gDef2.BackColor = Color.Black;
-            gDef2.Border = true;
-            gDef2.Clickable = false;
-            gDef2.ColorBase = Color.FromArgb(192, 0, 192);
-            gDef2.ColorEnh = Color.Yellow;
-            gDef2.ColorFadeEnd = Color.Purple;
-            gDef2.ColorFadeStart = Color.Black;
-            gDef2.ColorHighlight = Color.Gray;
-            gDef2.ColorLines = Color.Black;
-            gDef2.ColorMarkerInner = Color.Black;
-            gDef2.ColorMarkerOuter = Color.Yellow;
-            gDef2.Dual = false;
-            gDef2.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
-            gDef2.ForcedMax = 0.0f;
-            gDef2.ForeColor = Color.FromArgb(192, 192, byte.MaxValue);
-            gDef2.Highlight = true;
-            gDef2.ItemHeight = 13;
-            gDef2.Lines = true;
-
-            gDef2.Location = new Point(150, 40);
-            gDef2.MarkerValue = 0.0f;
-            gDef2.Max = 100f;
-            gDef2.Name = "gDef2";
-            gDef2.PaddingX = 2f;
-            gDef2.PaddingY = 4f;
-            gDef2.ScaleHeight = 32;
-            gDef2.ScaleIndex = 8;
-            gDef2.ShowScale = false;
-
-            gDef2.Size = new Size(146, 92);
-            gDef2.Style = Enums.GraphStyle.baseOnly;
-            gDef2.TabIndex = 72;
-            gDef2.TextWidth = 100;
-            gDef1.BackColor = Color.Black;
-            gDef1.Border = true;
-            gDef1.Clickable = false;
-            gDef1.ColorBase = Color.FromArgb(192, 0, 192);
-            gDef1.ColorEnh = Color.Yellow;
-            gDef1.ColorFadeEnd = Color.Purple;
-            gDef1.ColorFadeStart = Color.Black;
-            gDef1.ColorHighlight = Color.Gray;
-            gDef1.ColorLines = Color.Black;
-            gDef1.ColorMarkerInner = Color.Black;
-            gDef1.ColorMarkerOuter = Color.Yellow;
-            gDef1.Dual = false;
-            gDef1.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
-            gDef1.ForcedMax = 0.0f;
-            gDef1.ForeColor = Color.FromArgb(192, 192, byte.MaxValue);
-            gDef1.Highlight = true;
-            gDef1.ItemHeight = 13;
-            gDef1.Lines = true;
-
-            gDef1.Location = new Point(4, 40);
-            gDef1.MarkerValue = 0.0f;
-            gDef1.Max = 100f;
-            gDef1.Name = "gDef1";
-            gDef1.PaddingX = 2f;
-            gDef1.PaddingY = 4f;
-            gDef1.ScaleHeight = 32;
-            gDef1.ScaleIndex = 8;
-            gDef1.ShowScale = false;
-
-            gDef1.Size = new Size(146, 92);
-            gDef1.Style = Enums.GraphStyle.baseOnly;
-            gDef1.TabIndex = 71;
-            gDef1.TextWidth = 100;
-            total_Title.BackColor = Color.FromArgb(64, 64, 64);
-            total_Title.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            total_Title.ForeColor = Color.White;
-            total_Title.InitialText = "Cumulative Totals (For Self)";
-
-            total_Title.Location = new Point(24, 4);
-            total_Title.Name = "total_Title";
-
-            total_Title.Size = new Size(252, 16);
-            total_Title.TabIndex = 70;
-            total_Title.TextAlign = ContentAlignment.TopCenter;
-            total_lblMisc.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            total_lblMisc.ForeColor = Color.White;
-
-            total_lblMisc.Location = new Point(4, 228);
-            total_lblMisc.Name = "total_lblMisc";
-
-            total_lblMisc.Size = new Size(292, 16);
-            total_lblMisc.TabIndex = 28;
-            total_lblMisc.Text = "Misc Effects:";
-            total_lblMisc.TextAlign = ContentAlignment.MiddleLeft;
-            total_Misc.BackColor = Color.FromArgb(64, 64, 64);
-            total_Misc.Columns = 2;
-            total_Misc.DoHighlight = true;
-            total_Misc.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 178);
-            total_Misc.ForceBold = false;
-            total_Misc.HighlightColor = Color.FromArgb(128, 128, byte.MaxValue);
-            total_Misc.HighlightTextColor = Color.Black;
-            total_Misc.ItemColor = Color.White;
-            total_Misc.ItemColorAlt = Color.Lime;
-            total_Misc.ItemColorSpecCase = Color.Red;
-            total_Misc.ItemColorSpecial = Color.FromArgb(128, 128, byte.MaxValue);
-
-            total_Misc.Location = new Point(4, 244);
-            total_Misc.Name = "total_Misc";
-            total_Misc.NameColor = Color.FromArgb(192, 192, byte.MaxValue);
-
-            total_Misc.Size = new Size(292, 60);
-            total_Misc.TabIndex = 27;
-            total_Misc.ValueWidth = 55;
-            total_lblRes.BackColor = Color.Green;
-            total_lblRes.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            total_lblRes.ForeColor = Color.White;
-
-            total_lblRes.Location = new Point(4, 136);
-            total_lblRes.Name = "total_lblRes";
-
-            total_lblRes.Size = new Size(292, 16);
-            total_lblRes.TabIndex = 26;
-            total_lblRes.Text = "Resistance:";
-            total_lblRes.TextAlign = ContentAlignment.MiddleLeft;
-            total_lblDef.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            total_lblDef.ForeColor = Color.White;
-
-            total_lblDef.Location = new Point(4, 24);
-            total_lblDef.Name = "total_lblDef";
-
-            total_lblDef.Size = new Size(292, 16);
-            total_lblDef.TabIndex = 25;
-            total_lblDef.Text = "Defense:";
-            total_lblDef.TextAlign = ContentAlignment.MiddleLeft;
-            pnlEnh.BackColor = Color.Teal;
-            pnlEnh.Controls.Add(pnlEnhInactive);
-            pnlEnh.Controls.Add(pnlEnhActive);
-            pnlEnh.Controls.Add(enhNameDisp);
-            pnlEnh.Controls.Add(enhListing);
-            pnlEnh.Controls.Add(Enh_Title);
-
-            pnlEnh.Location = new Point(188, 156);
-            pnlEnh.Name = "pnlEnh";
-
-            pnlEnh.Size = new Size(300, 420);
-            pnlEnh.TabIndex = 65;
-            pnlEnhInactive.BackColor = Color.Black;
-
-            pnlEnhInactive.Location = new Point(4, 279);
-            pnlEnhInactive.Name = "pnlEnhInactive";
-
-            pnlEnhInactive.Size = new Size(292, 38);
-            pnlEnhInactive.TabIndex = 74;
-            pnlEnhActive.BackColor = Color.Black;
-            pnlEnhActive.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-
-            pnlEnhActive.Location = new Point(4, 239);
-            pnlEnhActive.Name = "pnlEnhActive";
-
-            pnlEnhActive.Size = new Size(292, 38);
-            pnlEnhActive.TabIndex = 73;
-            enhNameDisp.BackColor = Color.FromArgb(64, 64, 64);
-            enhNameDisp.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            enhNameDisp.ForeColor = Color.White;
-            enhNameDisp.InitialText = "Title";
-
-            enhNameDisp.Location = new Point(4, 24);
-            enhNameDisp.Name = "enhNameDisp";
-
-            enhNameDisp.Size = new Size(292, 16);
-            enhNameDisp.TabIndex = 72;
-            enhNameDisp.TextAlign = ContentAlignment.TopCenter;
-            enhListing.BackColor = Color.FromArgb(0, 0, 32);
-            enhListing.Columns = 1;
-            enhListing.DoHighlight = true;
-            enhListing.Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 178);
-            enhListing.ForceBold = false;
-            enhListing.HighlightColor = Color.FromArgb(128, 128, byte.MaxValue);
-            enhListing.HighlightTextColor = Color.Black;
-            enhListing.ItemColor = Color.White;
-            enhListing.ItemColorAlt = Color.Yellow;
-            enhListing.ItemColorSpecCase = Color.Red;
-            enhListing.ItemColorSpecial = Color.FromArgb(128, 128, byte.MaxValue);
-
-            enhListing.Location = new Point(4, 44);
-            enhListing.Name = "enhListing";
-            enhListing.NameColor = Color.FromArgb(192, 192, byte.MaxValue);
-
-            enhListing.Size = new Size(292, 192);
-            enhListing.TabIndex = 71;
-            enhListing.ValueWidth = 65;
-            Enh_Title.BackColor = Color.FromArgb(64, 64, 64);
-            Enh_Title.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Enh_Title.ForeColor = Color.White;
-            Enh_Title.InitialText = "Title";
-
-            Enh_Title.Location = new Point(24, 4);
-            Enh_Title.Name = "Enh_Title";
-
-            Enh_Title.Size = new Size(252, 16);
-            Enh_Title.TabIndex = 70;
-            Enh_Title.TextAlign = ContentAlignment.TopCenter;
-            dbTip.AutoPopDelay = 15000;
-            dbTip.InitialDelay = 350;
-            dbTip.ReshowDelay = 100;
-            lblFloat.BackColor = Color.FromArgb(64, 64, 64);
-            lblFloat.BorderStyle = BorderStyle.FixedSingle;
-            lblFloat.Font = new Font("Arial", 11f, FontStyle.Bold, GraphicsUnit.Pixel, 2);
-            lblFloat.ForeColor = Color.White;
-
-            lblFloat.Location = new Point(4, 24);
-            lblFloat.Name = "lblFloat";
-
-            lblFloat.Size = new Size(16, 16);
-            lblFloat.TabIndex = 66;
-            lblFloat.Text = "F";
-            lblFloat.TextAlign = ContentAlignment.MiddleCenter;
-            dbTip.SetToolTip(lblFloat, "Make Floating Window");
-            lblFloat.UseCompatibleTextRendering = true;
-            lblShrink.BackColor = Color.FromArgb(64, 64, 64);
-            lblShrink.BorderStyle = BorderStyle.FixedSingle;
-            lblShrink.Font = new Font("Wingdings", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 2);
-            lblShrink.ForeColor = Color.White;
-
-            lblShrink.Location = new Point(280, 24);
-            lblShrink.Name = "lblShrink";
-
-            lblShrink.Size = new Size(16, 16);
-            lblShrink.TabIndex = 67;
-            lblShrink.Text = "y";
-            lblShrink.TextAlign = ContentAlignment.MiddleCenter;
-            dbTip.SetToolTip(lblShrink, "Shrink / Expand the Info Display");
-            lblShrink.UseCompatibleTextRendering = true;
-            lblLock.BackColor = Color.Red;
-            lblLock.BorderStyle = BorderStyle.FixedSingle;
-            lblLock.Font = new Font("Arial", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblLock.ForeColor = Color.White;
-
-            lblLock.Location = new Point(220, 24);
-            lblLock.Name = "lblLock";
-
-            lblLock.Size = new Size(56, 16);
-            lblLock.TabIndex = 68;
-            lblLock.Text = "[Unlock]";
-            lblLock.TextAlign = ContentAlignment.MiddleCenter;
-            dbTip.SetToolTip(lblLock,
-                "The info display is currently locked to display a specific power, click here to unlock it to display powers as you hover the mouse over them.");
-            AutoScaleMode = AutoScaleMode.Dpi;
-            BackColor = Color.FromArgb(0, 0, 32);
-            Controls.Add(lblLock);
-            Controls.Add(lblFloat);
-            Controls.Add(lblShrink);
-            Controls.Add(pnlTabs);
-            Controls.Add(pnlInfo);
-            Controls.Add(pnlTotal);
-            Controls.Add(pnlEnh);
-            Controls.Add(pnlFX);
-            Font = new Font("Arial", 8.25f, FontStyle.Regular, GraphicsUnit.Pixel, 1);
-
-            Size = new Size(564, 650);
-            pnlInfo.ResumeLayout(false);
-            pnlFX.ResumeLayout(false);
-            pnlTotal.ResumeLayout(false);
-            pnlEnh.ResumeLayout(false);
-            //adding events
-
-            // Enh_Title events
-            Enh_Title.MouseMove += Title_MouseMove;
-            Enh_Title.MouseDown += Title_MouseDown;
-
-            PowerScaler.BarClick += PowerScaler_BarClick;
-            enhListing.ItemHover += PairedList_Hover;
-            fx_List1.ItemHover += PairedList_Hover;
-            fx_List2.ItemHover += PairedList_Hover;
-            fx_List3.ItemHover += PairedList_Hover;
-
-            // fx_Title events
-            fx_Title.MouseMove += Title_MouseMove;
-            fx_Title.MouseDown += Title_MouseDown;
-
-            info_DataList.ItemHover += PairedList_Hover;
-
-            // info_Title events
-            info_Title.MouseMove += Title_MouseMove;
-            info_Title.MouseDown += Title_MouseDown;
-
-            lblFloat.Click += lblFloat_Click;
-            lblLock.Click += lblLock_Click;
-
-            // lblShrink events
-            lblShrink.DoubleClick += lblShrink_DoubleClick;
-            lblShrink.Click += lblShrink_Click;
-
-
-            // pnlEnhActive events
-            pnlEnhActive.Paint += pnlEnhActive_Paint;
-            pnlEnhActive.MouseMove += pnlEnhActive_MouseMove;
-            pnlEnhActive.MouseClick += pnlEnhActive_MouseClick;
-
-
-            // pnlEnhInactive events
-            pnlEnhInactive.Paint += pnlEnhInactive_Paint;
-            pnlEnhInactive.MouseMove += pnlEnhInactive_MouseMove;
-            pnlEnhInactive.MouseClick += pnlEnhInactive_MouseClick;
-
-
-            // pnlTabs events
-            pnlTabs.MouseDown += pnlTabs_MouseDown;
-            pnlTabs.Paint += pnlTabs_Paint;
-
-            total_Misc.ItemHover += PairedList_Hover;
-
-            // total_Title events
-            total_Title.MouseMove += Title_MouseMove;
-            total_Title.MouseDown += Title_MouseDown;
-
-            // finished with events
-            ResumeLayout(false);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor | ControlStyles.UserPaint, true);
         }
 
         private static bool IsMezEffect(string iStr)
@@ -3602,7 +2842,7 @@ namespace Hero_Designer.Forms
             for (var index = 0; index <= num2; ++index)
             {
                 var rectangle = new Rectangle(num1 + 30 * index,
-                    (int) Math.Round((bxFlip.Size.Height / 2.0 - 30.0) / 2.0), 30, 30);
+                    (int)Math.Round((bxFlip.Size.Height / 2.0 - 30.0) / 2.0), 30, 30);
                 if ((iX > rectangle.X) & (iX < rectangle.X + rectangle.Width) &&
                     (iY > rectangle.Y) & (iY < rectangle.Y + rectangle.Height))
                     return index;
@@ -3656,18 +2896,18 @@ namespace Hero_Designer.Forms
                 str1 = "No Valid Tip";
             }
 
-            object[] Arguments = {str1};
-            bool[] CopyBack = {true};
+            object[] Arguments = { str1 };
+            bool[] CopyBack = { true };
 
-         
+
             NewLateBinding.LateCall(Sender, null, "SetTip", Arguments, null, null, CopyBack, true);
-            
+
             if (!CopyBack[0])
             {
             }
             else
             {
-                var str2 = (string) Convert.ChangeType(RuntimeHelpers.GetObjectValue(Arguments[0]), typeof(string));
+                var str2 = (string)Convert.ChangeType(RuntimeHelpers.GetObjectValue(Arguments[0]), typeof(string));
             }
         }
 
@@ -3753,7 +2993,7 @@ namespace Hero_Designer.Forms
 
         private void PowerScaler_BarClick(float Value)
         {
-            var num = (int) Math.Round(Value);
+            var num = (int)Math.Round(Value);
             if (num < pBase.VariableMin)
                 num = pBase.VariableMin;
             if (num > pBase.VariableMax)
@@ -3796,17 +3036,24 @@ namespace Hero_Designer.Forms
                 PowerScaler.Top = Info_txtLarge.Bottom - PowerScaler.Height;
                 info_DataList.Top = Info_txtLarge.Bottom + 4;
             }
-
+            //Controls Dataview Sizing for Info panel.
+            Info_Damage.ColorBackEnd = Color.Black;
+            Info_Damage.ColorBackStart = Color.Black;
+            Info_Damage.ColorBaseEnd = Color.LawnGreen;
+            Info_Damage.ColorBaseStart = Color.Green;
+            Info_Damage.ColorEnhEnd = Color.Crimson;
+            Info_Damage.ColorEnhStart = Color.DarkRed;
+            
             info_DataList.Height = 104;
             lblDmg.Visible = true;
             lblDmg.Top = info_DataList.Bottom + 4;
             Info_Damage.Top = lblDmg.Bottom + 4;
             Info_Damage.PaddingV = 1;
-            Info_Damage.Height = 46;
+            Info_Damage.Height = 75;
             enhListing.Height = Info_Damage.Bottom - (enhListing.Top + (pnlEnhActive.Height + 4) * 2);
             pnlEnhActive.Top = enhListing.Bottom + 4;
             pnlEnhInactive.Top = pnlEnhActive.Bottom + 4;
-            pnlInfo.Height = Info_Damage.Bottom + 10;
+            pnlInfo.Height = Info_Damage.Bottom + 20;
             pnlEnh.Height = pnlInfo.Height;
             Height = pnlInfo.Bottom;
             Compact = false;
@@ -3836,7 +3083,7 @@ namespace Hero_Designer.Forms
             lblFloat.BackColor = BackColor;
             lblShrink.BackColor = BackColor;
             info_DataList.Draw();
-            Info_Damage.Draw();
+            Info_Damage.Draw(); //Drawing controls
             fx_List1.Draw();
             fx_List2.Draw();
             fx_List3.Draw();
@@ -3955,7 +3202,7 @@ namespace Hero_Designer.Forms
                         (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
                         str2 = str2 + RTF.Color(RTF.ElementID.Enhancement) +
                                Strings.Format(
-                                   (float) (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0), "##0") +
+                                   (float)(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0), "##0") +
                                "% chance of ";
                 }
                 else
@@ -4014,7 +3261,7 @@ namespace Hero_Designer.Forms
                         (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
                         str1 = str1 + RTF.Color(RTF.ElementID.Enhancement) +
                                Strings.Format(
-                                   (float) (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0), "##0") +
+                                   (float)(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0), "##0") +
                                "% chance of ";
                 }
                 else
@@ -4165,7 +3412,7 @@ namespace Hero_Designer.Forms
             {
                 info_Title.Text = DatabaseAPI.Database.EnhancementSets[iSet].DisplayName;
                 var str1 = DatabaseAPI.Database.SetTypeStringLong[
-                    (int) DatabaseAPI.Database.EnhancementSets[iSet].SetType];
+                    (int)DatabaseAPI.Database.EnhancementSets[iSet].SetType];
                 if (!Compact)
                     str1 += RTF.Crlf();
                 var str2 = DatabaseAPI.Database.EnhancementSets[iSet].LevelMin !=
@@ -4196,7 +3443,7 @@ namespace Hero_Designer.Forms
 
         private string ShortStr(string full, string brief)
         {
-            return (double) info_DataList.Font.Size <= (double) (68f / (float) full.Length) ? full : brief;
+            return (double)info_DataList.Font.Size <= (double)(68f / (float)full.Length) ? full : brief;
         }
 
         private void SizeRefresh()
@@ -4320,5 +3567,6 @@ namespace Hero_Designer.Forms
             var moved = Moved;
             moved?.Invoke();
         }
+
     }
 }

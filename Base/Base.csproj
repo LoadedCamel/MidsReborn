@@ -41,6 +41,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ConfigDataSpecial.cs" />
     <Compile Include="HeroViewerBase.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Schema.cs" />

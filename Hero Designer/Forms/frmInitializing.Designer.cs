@@ -32,7 +32,6 @@ namespace Hero_Designer.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmInitializing));
             this.Label1 = new System.Windows.Forms.Label();
             this.tmrOp = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
@@ -43,9 +42,9 @@ namespace Hero_Designer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Label1.BackColor = System.Drawing.Color.Transparent;
             this.Label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Label1.Font = new System.Drawing.Font("Arial Black", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label1.ForeColor = System.Drawing.Color.Gold;
-            this.Label1.Location = new System.Drawing.Point(206, 220);
+            this.Label1.Location = new System.Drawing.Point(197, -7);
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(292, 34);
             this.Label1.TabIndex = 2;
@@ -62,7 +61,7 @@ namespace Hero_Designer.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.BackgroundImage = Resources.splash;
+            this.BackgroundImage = global::Hero_Designer.Resources.MRB_Concept;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(645, 363);
             this.Controls.Add(this.Label1);
@@ -72,7 +71,7 @@ namespace Hero_Designer.Forms
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmInitializing";
-            this.TransparencyKey = System.Drawing.SystemColors.Control;
+            this.TransparencyKey = System.Drawing.Color.Red;
             this.ResumeLayout(false);
 
         }

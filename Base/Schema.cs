@@ -1,7 +1,7 @@
 ﻿public class RawSaveResult
 {
-    internal int Hash;
-    internal int Length;
+    internal readonly int Hash;
+    internal readonly int Length;
 
     public RawSaveResult(int length, int hash)
     {
@@ -12,10 +12,10 @@
 
 public class FHash
 {
-    internal string Archetype;
-    internal string Fullname;
-    internal int Hash;
-    internal int Length;
+    internal readonly string Archetype;
+    internal readonly string Fullname;
+    internal readonly int Hash;
+    internal readonly int Length;
 
     public FHash(string archetype, string fullname, int length, int hash)
     {
