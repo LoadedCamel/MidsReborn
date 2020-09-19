@@ -779,6 +779,13 @@ public static class Enums
         Sentinel
     }
 
+    public enum eSpecialOperator
+    {
+        None,
+        And,
+        Or
+    }
+
     public enum eSpecialCase
     {
         None,

@@ -10,7 +10,8 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.IO_Classes;
 using Base.Master_Classes;
-using Newtonsoft.Json;
+using LiteDB;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 public static class DatabaseAPI
 {
@@ -889,29 +890,33 @@ public static class DatabaseAPI
         var otherPath = Path.Combine(dbPath, "Other");
         var toWrite = new List<FHash>();
         foreach (var path in new[] {dbPath, playerPath, otherPath}.Where(p => !Directory.Exists(p)))
+        {
             Directory.CreateDirectory(path);
+        }
         var metadataPath = Path.Combine(Path.GetDirectoryName(fn), "db_metadata" + Path.GetExtension(fn));
         var (hasPrevious, prev) = ConfigData.LoadRawMhd<FHash[]>(serializer, metadataPath);
         foreach (var ps in archPowersets)
         {
             var at = Database.Classes.FirstOrDefault(cl => ps.nArchetype != -1 && cl.Idx == ps.nArchetype);
-            var at2 = Database.Classes.Length > ps.nArchetype && ps.nArchetype != -1
-                ? Database.Classes[ps.nArchetype]
-                : null;
+            var at2 = Database.Classes.Length > ps.nArchetype && ps.nArchetype != -1 ? Database.Classes[ps.nArchetype] : null;
             if (ps.FullName?.Length == 0 || ps.FullName?.Length > 100)
+            {
                 continue;
+            }
 
             if (ps.FullName?.Contains(";") == true || string.IsNullOrWhiteSpace(ps.FullName))
+            {
                 Console.Error.WriteLine("hmmm:" + ps.DisplayName);
-            var psFn = Path.Combine(ps.nArchetype >= 0 ? playerPath : otherPath,
-                ps.ATClass + "_" + ps.FullName + Path.GetExtension(fn));
-            if (psFn.Length > 240) continue;
-            var psPrevious = hasPrevious
-                ? prev.FirstOrDefault(psm => psm.Fullname == ps.FullName && psm.Archetype == ps.ATClass)
-                : null;
-            var lastSaveResult = hasPrevious && psPrevious != null
-                ? new RawSaveResult(hash: psPrevious.Hash, length: psPrevious.Length)
-                : null;
+            }
+
+            var psFn = Path.Combine(ps.nArchetype >= 0 ? playerPath : otherPath, ps.ATClass + "_" + ps.FullName + Path.GetExtension(fn));
+            if (psFn.Length > 240)
+            {
+                continue;
+            }
+
+            var psPrevious = hasPrevious ? prev.FirstOrDefault(psm => psm.Fullname == ps.FullName && psm.Archetype == ps.ATClass) : null;
+            var lastSaveResult = hasPrevious && psPrevious != null ? new RawSaveResult(hash: psPrevious.Hash, length: psPrevious.Length) : null;
             var saveresult = ConfigData.SaveRawMhd(serializer, ps, psFn, lastSaveResult);
             toWrite.Add(new FHash(
                 fullname: ps.FullName,
@@ -950,6 +955,7 @@ public static class DatabaseAPI
             writer.Write(Database.Issue);
             writer.Write("BEGIN:ARCHETYPES");
             Database.ArchetypeVersion.StoreTo(writer);
+            Console.WriteLine(Database.ArchetypeVersion);
             writer.Write(Database.Classes.Length - 1);
             for (var index = 0; index <= Database.Classes.Length - 1; ++index)
                 Database.Classes[index].StoreTo(ref writer);

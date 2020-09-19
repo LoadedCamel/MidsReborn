@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 public interface IEffect : IComparable, ICloneable
@@ -62,6 +63,12 @@ public interface IEffect : IComparable, ICloneable
     bool Resistible { get; set; }
 
     Enums.eSpecialCase SpecialCase { get; set; }
+
+    Enums.eSpecialCase SpecialCase2 { get; set; }
+
+    Enums.eSpecialOperator SpecialOperator { get; set; }
+
+    Enums.eSpecialCase[] SpecialCases { get; set; }
 
     string UIDClassName { get; set; }
 

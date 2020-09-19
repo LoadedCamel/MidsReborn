@@ -52,6 +52,9 @@ namespace Base.Data_Classes
             Buffable = true;
             Resistible = true;
             SpecialCase = Enums.eSpecialCase.None;
+            SpecialOperator = Enums.eSpecialOperator.None;
+            SpecialCase2 = Enums.eSpecialCase.None;
+            SpecialCases = new Enums.eSpecialCase[0];
             UIDClassName = string.Empty;
             nIDClassName = -1;
             PvMode = Enums.ePvX.Any;
@@ -95,6 +98,8 @@ namespace Base.Data_Classes
             Buffable = reader.ReadBoolean();
             Resistible = reader.ReadBoolean();
             SpecialCase = (Enums.eSpecialCase) reader.ReadInt32();
+            //SpecialOperator = (Enums.eSpecialOperator) reader.ReadInt32();
+            //SpecialCase2 = (Enums.eSpecialCase)reader.ReadInt32();
             VariableModifiedOverride = reader.ReadBoolean();
             PvMode = (Enums.ePvX) reader.ReadInt32();
             ToWho = (Enums.eToWho) reader.ReadInt32();
@@ -144,6 +149,8 @@ namespace Base.Data_Classes
             Buffable = template.Buffable;
             Resistible = template.Resistible;
             SpecialCase = template.SpecialCase;
+            SpecialOperator = template.SpecialOperator;
+            SpecialCase2 = template.SpecialCase2;
             VariableModifiedOverride = template.VariableModifiedOverride;
             isEnhancementEffect = template.isEnhancementEffect;
             PvMode = template.PvMode;
@@ -452,6 +459,12 @@ namespace Base.Data_Classes
         public bool Resistible { get; set; }
 
         public Enums.eSpecialCase SpecialCase { get; set; }
+
+        public Enums.eSpecialCase SpecialCase2 { get; set; }
+
+        public Enums.eSpecialOperator SpecialOperator { get; set; }
+
+        public Enums.eSpecialCase[] SpecialCases { get; set; }
 
         public string UIDClassName { get; set; }
 
@@ -1170,9 +1183,21 @@ namespace Base.Data_Classes
                 }
             }
 
-            if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
+            if (SpecialOperator != Enums.eSpecialOperator.None)
             {
-                sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
+                if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance & SpecialCase2 != Enums.eSpecialCase.None & SpecialCase2 != Enums.eSpecialCase.Defiance)
+                {
+                    sSpecial = $"{Enum.GetName(SpecialCase.GetType(), SpecialCase)} {Enum.GetName(SpecialOperator.GetType(), SpecialOperator)} {Enum.GetName(SpecialCase2.GetType(), SpecialCase2)}";
+                    //sSpecial = $"{nameof(SpecialCase)} {nameof(SpecialOperator)} {nameof(SpecialCase2)}";
+                    //sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
+                }
+            }
+            else
+            {
+                if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
+                {
+                    sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
+                }
             }
 
             if (!simple || Scale > 0 && EffectType == Enums.eEffectType.Mez)
@@ -1504,6 +1529,8 @@ namespace Base.Data_Classes
             writer.Write(Buffable);
             writer.Write(Resistible);
             writer.Write((int) SpecialCase);
+            writer.Write((int)SpecialOperator);
+            writer.Write((int)SpecialCase2);
             writer.Write(VariableModifiedOverride);
             writer.Write((int) PvMode);
             writer.Write((int) ToWho);
