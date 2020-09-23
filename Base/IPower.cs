@@ -142,6 +142,8 @@ public interface IPower : IComparable
 
     bool VariableEnabled { get; set; }
 
+    bool VariableOverride { get; set; }
+
     string VariableName { get; set; }
 
     int VariableMin { get; set; }

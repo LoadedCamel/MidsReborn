@@ -163,6 +163,7 @@ namespace Base.Data_Classes
             Level = template.Level;
             AllowFrontLoading = template.AllowFrontLoading;
             VariableEnabled = template.VariableEnabled;
+            VariableOverride = template.VariableOverride;
             VariableName = template.VariableName;
             VariableMin = template.VariableMin;
             VariableMax = template.VariableMax;
@@ -279,6 +280,7 @@ namespace Base.Data_Classes
             Level = reader.ReadInt32();
             AllowFrontLoading = reader.ReadBoolean();
             VariableEnabled = reader.ReadBoolean();
+            VariableOverride = reader.ReadBoolean();
             VariableName = reader.ReadString();
             VariableMin = reader.ReadInt32();
             VariableMax = reader.ReadInt32();
@@ -461,6 +463,8 @@ namespace Base.Data_Classes
 
         public bool VariableEnabled { get; set; }
 
+        public bool VariableOverride { get; set; }
+
         public string VariableName { get; set; }
 
         public int VariableMin { get; set; }
@@ -626,6 +630,7 @@ namespace Base.Data_Classes
             writer.Write(Level);
             writer.Write(AllowFrontLoading);
             writer.Write(VariableEnabled);
+            writer.Write(VariableOverride);
             writer.Write(VariableName);
             writer.Write(VariableMin);
             writer.Write(VariableMax);

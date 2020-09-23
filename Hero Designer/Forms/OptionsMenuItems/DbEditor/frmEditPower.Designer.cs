@@ -32,12 +32,13 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
             this.tcPower = new System.Windows.Forms.TabControl();
             this.tpText = new System.Windows.Forms.TabPage();
             this.chkNoAUReq = new System.Windows.Forms.CheckBox();
             this.chkNoAutoUpdate = new System.Windows.Forms.CheckBox();
             this.GroupBox4 = new System.Windows.Forms.GroupBox();
+            this.lblInherentType = new System.Windows.Forms.Label();
+            this.cbInherentType = new System.Windows.Forms.ComboBox();
             this.chkSortOverride = new System.Windows.Forms.CheckBox();
             this.chkSubInclude = new System.Windows.Forms.CheckBox();
             this.chkAlwaysToggle = new System.Windows.Forms.CheckBox();
@@ -217,8 +218,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnFullPaste = new System.Windows.Forms.Button();
             this.btnFullCopy = new System.Windows.Forms.Button();
             this.btnCSVImport = new System.Windows.Forms.Button();
-            this.cbInherentType = new System.Windows.Forms.ComboBox();
-            this.lblInherentType = new System.Windows.Forms.Label();
+            this.overideScale = new System.Windows.Forms.CheckBox();
             this.tcPower.SuspendLayout();
             this.tpText.SuspendLayout();
             this.GroupBox4.SuspendLayout();
@@ -321,6 +321,35 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.GroupBox4.TabStop = false;
             this.GroupBox4.Text = "MxD Special Flags";
             // 
+            // lblInherentType
+            // 
+            this.lblInherentType.AutoSize = true;
+            this.lblInherentType.Location = new System.Drawing.Point(6, 151);
+            this.lblInherentType.Name = "lblInherentType";
+            this.lblInherentType.Size = new System.Drawing.Size(75, 14);
+            this.lblInherentType.TabIndex = 44;
+            this.lblInherentType.Text = "Inherent Type:";
+            // 
+            // cbInherentType
+            // 
+            this.cbInherentType.Enabled = false;
+            this.cbInherentType.FormattingEnabled = true;
+            this.cbInherentType.Items.AddRange(new object[] {
+            "None",
+            "Accolade",
+            "Class",
+            "Incarnate",
+            "Inherent",
+            "Pet",
+            "Power",
+            "Powerset",
+            "Temp"});
+            this.cbInherentType.Location = new System.Drawing.Point(87, 148);
+            this.cbInherentType.Name = "cbInherentType";
+            this.cbInherentType.Size = new System.Drawing.Size(121, 22);
+            this.cbInherentType.TabIndex = 43;
+            this.cbInherentType.SelectedIndexChanged += new System.EventHandler(this.cbInherentType_SelectedIndexChanged);
+            // 
             // chkSortOverride
             // 
             this.chkSortOverride.Location = new System.Drawing.Point(6, 96);
@@ -385,8 +414,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtVisualLocation.Size = new System.Drawing.Size(76, 20);
             this.txtVisualLocation.TabIndex = 5;
             this.txtVisualLocation.Text = "0";
-            this.txtVisualLocation.Leave += new EventHandler(this.txtVisualLocation_Leave);
-            this.txtVisualLocation.TextChanged += new EventHandler(this.txtVisualLocation_TextChanged);
+            this.txtVisualLocation.TextChanged += new System.EventHandler(this.txtVisualLocation_TextChanged);
+            this.txtVisualLocation.Leave += new System.EventHandler(this.txtVisualLocation_Leave);
             // 
             // GroupBox7
             // 
@@ -513,6 +542,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             // GroupBox3
             // 
+            this.GroupBox3.Controls.Add(this.overideScale);
             this.GroupBox3.Controls.Add(this.Label28);
             this.GroupBox3.Controls.Add(this.udScaleMax);
             this.GroupBox3.Controls.Add(this.Label27);
@@ -542,7 +572,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.udScaleMax.Name = "udScaleMax";
             this.udScaleMax.Size = new System.Drawing.Size(63, 20);
             this.udScaleMax.TabIndex = 3;
-            this.udScaleMax.ValueChanged += new EventHandler(this.udScaleMax_ValueChanged);
+            this.udScaleMax.ValueChanged += new System.EventHandler(this.udScaleMax_ValueChanged);
             this.udScaleMax.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udScaleMax_KeyPress);
             this.udScaleMax.Leave += new System.EventHandler(this.udScaleMax_Leave);
             // 
@@ -561,9 +591,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.udScaleMin.Name = "udScaleMin";
             this.udScaleMin.Size = new System.Drawing.Size(63, 20);
             this.udScaleMin.TabIndex = 2;
-            this.udScaleMin.ValueChanged += new EventHandler(this.udScaleMin_ValueChanged);
-            this.udScaleMin.Leave += new EventHandler(this.udScaleMin_Leave);
-            this.udScaleMin.KeyPress += new KeyPressEventHandler(this.udScaleMin_KeyPress);
+            this.udScaleMin.ValueChanged += new System.EventHandler(this.udScaleMin_ValueChanged);
+            this.udScaleMin.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udScaleMin_KeyPress);
+            this.udScaleMin.Leave += new System.EventHandler(this.udScaleMin_Leave);
             // 
             // Label26
             // 
@@ -670,9 +700,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbNameSet.Name = "cbNameSet";
             this.cbNameSet.Size = new System.Drawing.Size(196, 22);
             this.cbNameSet.TabIndex = 2;
-            this.cbNameSet.Leave += new EventHandler(cbNameSet_Leave);
-            this.cbNameSet.SelectedIndexChanged += new EventHandler(cbNameSet_SelectedIndexChanged);
-            this.cbNameSet.TextChanged += new EventHandler(cbNameSet_TextChanged);
+            this.cbNameSet.SelectedIndexChanged += new System.EventHandler(this.cbNameSet_SelectedIndexChanged);
+            this.cbNameSet.TextChanged += new System.EventHandler(this.cbNameSet_TextChanged);
+            this.cbNameSet.Leave += new System.EventHandler(this.cbNameSet_Leave);
             // 
             // txtNameDisplay
             // 
@@ -690,9 +720,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbNameGroup.Name = "cbNameGroup";
             this.cbNameGroup.Size = new System.Drawing.Size(196, 22);
             this.cbNameGroup.TabIndex = 1;
-            this.cbNameGroup.Leave += new EventHandler(cbNameGroup_Leave);
-            this.cbNameGroup.SelectedIndexChanged += new EventHandler(cbNameGroup_SelectedIndexChanged);
-            this.cbNameGroup.TextChanged += new EventHandler(cbNameGroup_TextChanged);
+            this.cbNameGroup.SelectedIndexChanged += new System.EventHandler(this.cbNameGroup_SelectedIndexChanged);
+            this.cbNameGroup.TextChanged += new System.EventHandler(this.cbNameGroup_TextChanged);
+            this.cbNameGroup.Leave += new System.EventHandler(this.cbNameGroup_Leave);
             // 
             // Label22
             // 
@@ -719,8 +749,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtNamePower.Size = new System.Drawing.Size(196, 20);
             this.txtNamePower.TabIndex = 3;
             this.txtNamePower.Text = "PowerName";
-            this.txtNamePower.TextChanged += new EventHandler(this.txtNamePower_TextChanged);
-            this.txtNamePower.Leave += new EventHandler(this.txtNamePower_Leave);
+            this.txtNamePower.TextChanged += new System.EventHandler(this.txtNamePower_TextChanged);
+            this.txtNamePower.Leave += new System.EventHandler(this.txtNamePower_Leave);
             // 
             // Label33
             // 
@@ -821,7 +851,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtLifeTimeReal.TabIndex = 116;
             this.txtLifeTimeReal.Text = "1";
             this.txtLifeTimeReal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtLifeTimeReal.TextChanged += new EventHandler(this.txtLifeTimeReal_TextChanged);
+            this.txtLifeTimeReal.TextChanged += new System.EventHandler(this.txtLifeTimeReal_TextChanged);
             this.txtLifeTimeReal.Leave += new System.EventHandler(this.txtLifeTimeReal_Leave);
             // 
             // Label44
@@ -850,7 +880,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtLifeTimeGame.TabIndex = 113;
             this.txtLifeTimeGame.Text = "1";
             this.txtLifeTimeGame.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtLifeTimeGame.TextChanged += new EventHandler(this.txtLifeTimeGame_TextChanged);
+            this.txtLifeTimeGame.TextChanged += new System.EventHandler(this.txtLifeTimeGame_TextChanged);
             this.txtLifeTimeGame.Leave += new System.EventHandler(this.txtLifeTimeGame_Leave);
             // 
             // Label42
@@ -879,7 +909,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtUseageTime.TabIndex = 110;
             this.txtUseageTime.Text = "1";
             this.txtUseageTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtUseageTime.TextChanged += new EventHandler(this.txtUseageTime_TextChanged);
+            this.txtUseageTime.TextChanged += new System.EventHandler(this.txtUseageTime_TextChanged);
             this.txtUseageTime.Leave += new System.EventHandler(this.txtUseageTime_Leave);
             // 
             // Label41
@@ -899,8 +929,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtNumCharges.TabIndex = 107;
             this.txtNumCharges.Text = "1";
             this.txtNumCharges.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtNumCharges.TextChanged += new EventHandler(this.txtNumCharges_TextChanged);
-            this.txtNumCharges.Leave += new EventHandler(this.txtNumCharges_Leave);
+            this.txtNumCharges.TextChanged += new System.EventHandler(this.txtNumCharges_TextChanged);
+            this.txtNumCharges.Leave += new System.EventHandler(this.txtNumCharges_Leave);
             // 
             // chkIgnoreStrength
             // 
@@ -941,8 +971,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtRangeSec.TabIndex = 8;
             this.txtRangeSec.Text = "1.0";
             this.txtRangeSec.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtRangeSec.TextChanged += new EventHandler(this.txtRangeSec_TextChanged);
-            this.txtRangeSec.Leave += new EventHandler(this.txtRangeSec_Leave);
+            this.txtRangeSec.TextChanged += new System.EventHandler(this.txtRangeSec_TextChanged);
+            this.txtRangeSec.Leave += new System.EventHandler(this.txtRangeSec_Leave);
             // 
             // Label18
             // 
@@ -1118,8 +1148,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtMaxTargets.TabIndex = 11;
             this.txtMaxTargets.Text = "1";
             this.txtMaxTargets.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtMaxTargets.TextChanged += new System.EventHandler(this.txtMaxTargets_TextChanged);
             this.txtMaxTargets.Leave += new System.EventHandler(this.txtMaxTargets_Leave);
-            this.txtMaxTargets.TextChanged += new EventHandler(this.txtMaxTargets_TextChanged);
             // 
             // lblEndCost
             // 
@@ -1228,8 +1258,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtArc.TabIndex = 10;
             this.txtArc.Text = "1";
             this.txtArc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtArc.TextChanged += new System.EventHandler(this.txtArc_TextChanged);
             this.txtArc.Leave += new System.EventHandler(this.txtArc_Leave);
-            this.txtArc.TextChanged += new EventHandler(this.txtArc_TextChanged);
             // 
             // Label15
             // 
@@ -1248,8 +1278,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtRadius.TabIndex = 9;
             this.txtRadius.Text = "1";
             this.txtRadius.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtRadius.TextChanged += new System.EventHandler(this.txtRadius_TextChanged);
             this.txtRadius.Leave += new System.EventHandler(this.txtRadius_Leave);
-            this.txtRadius.TextChanged += new EventHandler(this.txtRadius_TextChanged);
             // 
             // txtLevel
             // 
@@ -1259,8 +1289,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtLevel.TabIndex = 0;
             this.txtLevel.Text = "1";
             this.txtLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtLevel.TextChanged += new System.EventHandler(this.txtLevel_TextChanged);
             this.txtLevel.Leave += new System.EventHandler(this.txtLevel_Leave);
-            this.txtLevel.TextChanged += new EventHandler(this.txtLevel_TextChanged);
             // 
             // cbEffectArea
             // 
@@ -1303,8 +1333,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtEndCost.TabIndex = 6;
             this.txtEndCost.Text = "1.0";
             this.txtEndCost.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtEndCost.Leave += new EventHandler(this.txtEndCost_Leave);
-            this.txtEndCost.TextChanged += new EventHandler(this.txtEndCost_TextChanged);
+            this.txtEndCost.TextChanged += new System.EventHandler(this.txtEndCost_TextChanged);
+            this.txtEndCost.Leave += new System.EventHandler(this.txtEndCost_Leave);
             // 
             // Label10
             // 
@@ -1323,8 +1353,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtActivate.TabIndex = 5;
             this.txtActivate.Text = "1.0";
             this.txtActivate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtActivate.TextChanged += new System.EventHandler(this.txtActivate_TextChanged);
             this.txtActivate.Leave += new System.EventHandler(this.txtActivate_Leave);
-            this.txtActivate.TextChanged += new EventHandler(this.txtActivate_TextChanged);
             // 
             // Label11
             // 
@@ -1343,8 +1373,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtRechargeTime.TabIndex = 4;
             this.txtRechargeTime.Text = "1.0";
             this.txtRechargeTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtRechargeTime.TextChanged += new System.EventHandler(this.txtRechargeTime_TextChanged);
             this.txtRechargeTime.Leave += new System.EventHandler(this.txtRechargeTime_Leave);
-            this.txtRechargeTime.TextChanged += new EventHandler(this.txtRechargeTime_TextChanged);
             // 
             // Label8
             // 
@@ -1363,8 +1393,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtCastTime.TabIndex = 3;
             this.txtCastTime.Text = "1.0";
             this.txtCastTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCastTime.TextChanged += new System.EventHandler(this.txtCastTime_TextChanged);
             this.txtCastTime.Leave += new System.EventHandler(this.txtCastTime_Leave);
-            this.txtCastTime.TextChanged += new EventHandler(this.txtCastTime_TextChanged);
             // 
             // Label9
             // 
@@ -1383,8 +1413,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtInterrupt.TabIndex = 2;
             this.txtInterrupt.Text = "1.0";
             this.txtInterrupt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtInterrupt.Leave += new EventHandler(this.txtInterrupt_Leave);
-            this.txtInterrupt.TextChanged += new EventHandler(this.txtInterrupt_TextChanged);
+            this.txtInterrupt.TextChanged += new System.EventHandler(this.txtInterrupt_TextChanged);
+            this.txtInterrupt.Leave += new System.EventHandler(this.txtInterrupt_Leave);
             // 
             // Label7
             // 
@@ -1403,8 +1433,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtRange.TabIndex = 7;
             this.txtRange.Text = "1.0";
             this.txtRange.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtRange.Leave += new EventHandler(this.txtRange_Leave);
-            this.txtRange.TextChanged += new EventHandler(this.txtRange_TextChanged);
+            this.txtRange.TextChanged += new System.EventHandler(this.txtRange_TextChanged);
+            this.txtRange.Leave += new System.EventHandler(this.txtRange_Leave);
             // 
             // Label6
             // 
@@ -1423,8 +1453,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.txtAcc.TabIndex = 1;
             this.txtAcc.Text = "1.0";
             this.txtAcc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtAcc.TextChanged += new System.EventHandler(this.txtAcc_TextChanged);
             this.txtAcc.Leave += new System.EventHandler(this.txtAcc_Leave);
-            this.txtAcc.TextChanged += new EventHandler(this.txtAcc_TextChanged);
             // 
             // cbPowerType
             // 
@@ -1605,9 +1635,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.pbEnhancements.Size = new System.Drawing.Size(780, 40);
             this.pbEnhancements.TabIndex = 43;
             this.pbEnhancements.TabStop = false;
-            this.pbEnhancements.MouseDown += new MouseEventHandler(this.pbEnhancements_MouseDown);
-            this.pbEnhancements.MouseMove += new MouseEventHandler(this.pbEnhancements_Hover);
-            this.pbEnhancements.Paint += new PaintEventHandler(this.pbEnhancements_Paint);
+            this.pbEnhancements.Paint += new System.Windows.Forms.PaintEventHandler(this.pbEnhancements_Paint);
+            this.pbEnhancements.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbEnhancements_MouseDown);
+            this.pbEnhancements.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbEnhancements_Hover);
             // 
             // chkPRFrontLoad
             // 
@@ -1626,9 +1656,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.pbEnhancementList.Size = new System.Drawing.Size(316, 220);
             this.pbEnhancementList.TabIndex = 44;
             this.pbEnhancementList.TabStop = false;
-            this.pbEnhancementList.MouseDown += new MouseEventHandler(this.pbEnhancementList_MouseDown);
-            this.pbEnhancementList.MouseMove += new MouseEventHandler(this.pbEnhancementList_Hover);
-            this.pbEnhancementList.Paint += new PaintEventHandler(this.pbEnhancementList_Paint);
+            this.pbEnhancementList.Paint += new System.Windows.Forms.PaintEventHandler(this.pbEnhancementList_Paint);
+            this.pbEnhancementList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbEnhancementList_MouseDown);
+            this.pbEnhancementList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbEnhancementList_Hover);
             // 
             // lblEnhName
             // 
@@ -1676,9 +1706,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.pbInvSetList.Size = new System.Drawing.Size(316, 220);
             this.pbInvSetList.TabIndex = 91;
             this.pbInvSetList.TabStop = false;
-            this.pbInvSetList.MouseMove += new MouseEventHandler(this.pbInvSetList_MouseMove);
-            this.pbInvSetList.MouseDown += new MouseEventHandler(this.pbInvSetList_MouseDown);
-            this.pbInvSetList.Paint += new PaintEventHandler(this.pbInvSetList_Paint);
+            this.pbInvSetList.Paint += new System.Windows.Forms.PaintEventHandler(this.pbInvSetList_Paint);
+            this.pbInvSetList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbInvSetList_MouseDown);
+            this.pbInvSetList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbInvSetList_MouseMove);
             // 
             // pbInvSetUsed
             // 
@@ -1688,9 +1718,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.pbInvSetUsed.Size = new System.Drawing.Size(780, 40);
             this.pbInvSetUsed.TabIndex = 90;
             this.pbInvSetUsed.TabStop = false;
-            this.pbInvSetUsed.MouseDown += new MouseEventHandler(this.pbInvSetUsed_MouseDown);
-            this.pbInvSetUsed.MouseMove += new MouseEventHandler(this.pbInvSetUsed_MouseMove);
-            this.pbInvSetUsed.Paint += new PaintEventHandler(this.pbInvSetUsed_Paint);
+            this.pbInvSetUsed.Paint += new System.Windows.Forms.PaintEventHandler(this.pbInvSetUsed_Paint);
+            this.pbInvSetUsed.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbInvSetUsed_MouseDown);
+            this.pbInvSetUsed.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbInvSetUsed_MouseMove);
             // 
             // tpPreReq
             // 
@@ -2223,34 +2253,16 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnCSVImport.UseVisualStyleBackColor = true;
             this.btnCSVImport.Click += new System.EventHandler(this.btnCSVImport_Click);
             // 
-            // cbInherentType
+            // overideScale
             // 
-            this.cbInherentType.Enabled = false;
-            this.cbInherentType.FormattingEnabled = true;
-            this.cbInherentType.Items.AddRange(new object[] {
-            "None",
-            "Accolade",
-            "Class",
-            "Incarnate",
-            "Inherent",
-            "Pet",
-            "Power",
-            "Powerset",
-            "Temp"});
-            this.cbInherentType.Location = new System.Drawing.Point(87, 148);
-            this.cbInherentType.Name = "cbInherentType";
-            this.cbInherentType.Size = new System.Drawing.Size(121, 22);
-            this.cbInherentType.TabIndex = 43;
-            this.cbInherentType.SelectedIndexChanged += new EventHandler(this.cbInherentType_SelectedIndexChanged);
-            // 
-            // lblInherentType
-            // 
-            this.lblInherentType.AutoSize = true;
-            this.lblInherentType.Location = new System.Drawing.Point(6, 151);
-            this.lblInherentType.Name = "lblInherentType";
-            this.lblInherentType.Size = new System.Drawing.Size(75, 14);
-            this.lblInherentType.TabIndex = 44;
-            this.lblInherentType.Text = "Inherent Type:";
+            this.overideScale.AutoSize = true;
+            this.overideScale.Location = new System.Drawing.Point(182, 20);
+            this.overideScale.Name = "overideScale";
+            this.overideScale.Size = new System.Drawing.Size(125, 18);
+            this.overideScale.TabIndex = 8;
+            this.overideScale.Text = "Override scaling limit";
+            this.overideScale.UseVisualStyleBackColor = true;
+            this.overideScale.CheckedChanged += new System.EventHandler(this.overideScale_CheckedChanged);
             // 
             // frmEditPower
             // 
@@ -2495,5 +2507,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         NumericUpDown udScaleMin;
         ComboBox cbInherentType;
         Label lblInherentType;
+        private CheckBox overideScale;
     }
 }

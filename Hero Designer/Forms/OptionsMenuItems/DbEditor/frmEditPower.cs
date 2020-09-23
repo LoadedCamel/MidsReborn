@@ -263,8 +263,17 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                             myPower.VariableMax = 1;
                     }
 
-                    if ((myPower.MaxTargets > 1) & (myPower.MaxTargets != myPower.VariableMax))
-                        myPower.VariableMax = myPower.MaxTargets;
+                    if (!myPower.VariableOverride)
+                    {
+                        if ((myPower.MaxTargets > 1) & (myPower.MaxTargets != myPower.VariableMax))
+                        {
+                            myPower.VariableMax = myPower.MaxTargets;
+                        }
+                    }
+                    else
+                    {
+                        myPower.VariableMax = Convert.ToInt32(udScaleMax.Value);
+                    }
                 }
 
                 myPower.GroupMembership = new string[clbMutex.CheckedItems.Count - 1 + 1];
@@ -667,7 +676,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             myPower.VariableEnabled = chkScale.Checked;
             udScaleMax.Enabled = myPower.VariableEnabled;
             udScaleMin.Enabled = myPower.VariableEnabled;
+            overideScale.Enabled = myPower.VariableEnabled;
             txtScaleName.Enabled = myPower.VariableEnabled;
+        }
+
+        private void overideScale_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Updating)
+                return;
+            myPower.VariableOverride = overideScale.Checked;
         }
 
         private void chkSortOverride_CheckedChanged(object sender, EventArgs e)
@@ -1086,6 +1103,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             udScaleMax.Value = new decimal(power.VariableMax);
             txtScaleName.Text = power.VariableName;
             chkScale.Checked = power.VariableEnabled;
+            overideScale.Checked = power.VariableOverride;
             chkBuffCycle.Checked = power.ClickBuff;
             chkAlwaysToggle.Checked = power.AlwaysToggle;
             chkGraphFix.Checked = myPower.SkipMax;
@@ -2460,5 +2478,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             myPower.VariableMin = Convert.ToInt32(udScaleMin.Value);
             CheckScaleValues();
         }
+
+        
     }
 }

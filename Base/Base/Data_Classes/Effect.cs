@@ -1528,9 +1528,11 @@ namespace Base.Data_Classes
             writer.Write((int) Suppression);
             writer.Write(Buffable);
             writer.Write(Resistible);
+            //
             writer.Write((int) SpecialCase);
-            writer.Write((int)SpecialOperator);
-            writer.Write((int)SpecialCase2);
+            //writer.Write((int)SpecialOperator);
+            //writer.Write((int)SpecialCase2);
+            //
             writer.Write(VariableModifiedOverride);
             writer.Write((int) PvMode);
             writer.Write((int) ToWho);
