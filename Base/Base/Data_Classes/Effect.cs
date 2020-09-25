@@ -1327,10 +1327,7 @@ namespace Base.Data_Classes
                     break;
                 case Enums.eEffectType.Mez:
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
-                    if (Duration > 0 &
-                        (simple == false |
-                         (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback &
-                          MezType != Enums.eMez.Knockup)))
+                    if (Duration > 0 & (simple == false | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
                         sDuration = Utilities.FixDP(Duration) + " second ";
                     if (noMag == false)
                         sMag = " (Mag " + sMag + ")";
@@ -1352,7 +1349,7 @@ namespace Base.Data_Classes
                     {
                         tSpStr = Enums.GetMezName((Enums.eMezShort)MezType);
                     }
-                    else if (ETModifies == Enums.eEffectType.Defense | ETModifies == Enums.eEffectType.Resistance)
+                    else if (ETModifies == Enums.eEffectType.Defense | ETModifies == Enums.eEffectType.Resistance | ETModifies == Enums.eEffectType.Damage)
                     {
                         tSpStr = Enums.GetDamageName(DamageType) + " " + Enums.GetEffectName(ETModifies);
                     }

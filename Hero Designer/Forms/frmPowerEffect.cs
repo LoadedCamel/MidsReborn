@@ -424,7 +424,14 @@ namespace Hero_Designer.Forms
                 return;
             var fx = myFX;
             if ((fx.EffectType == Enums.eEffectType.Enhancement) & (fx.ETModifies == Enums.eEffectType.Mez))
+            {
                 fx.MezType = (Enums.eMez) lvSubSub.SelectedIndices[0];
+            }
+            if ((fx.EffectType == Enums.eEffectType.Enhancement) & (fx.ETModifies == Enums.eEffectType.Damage) | (fx.ETModifies == Enums.eEffectType.Defense))
+            {
+                fx.DamageType = (Enums.eDamage) lvSubSub.SelectedIndices[0];
+            }
+
             UpdateFXText();
         }
 
@@ -717,13 +724,20 @@ namespace Hero_Designer.Forms
             lvSubSub.Items.Clear();
             var strArray = new string[0];
             var fx = myFX;
-            if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) &
-                (fx.ETModifies == Enums.eEffectType.Mez))
+            if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) & (fx.ETModifies == Enums.eEffectType.Mez))
             {
                 lvSubSub.Columns[0].Text = "Mez Type";
                 strArray = Enum.GetNames(fx.MezType.GetType());
                 index1 = (int) fx.MezType;
             }
+
+            if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) & (fx.ETModifies == Enums.eEffectType.Defense) | (fx.ETModifies == Enums.eEffectType.Damage))
+            {
+                lvSubSub.Columns[0].Text = @"Damage Type";
+                strArray = Enum.GetNames(fx.DamageType.GetType());
+                index1 = (int) fx.DamageType;
+            }
+
 
             if (strArray.Length > 0)
             {
