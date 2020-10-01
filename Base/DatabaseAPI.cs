@@ -10,7 +10,8 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.IO_Classes;
 using Base.Master_Classes;
-using LiteDB;
+using Newtonsoft.Json;
+using Zstandard.Net;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 public static class DatabaseAPI
@@ -929,10 +930,207 @@ public static class DatabaseAPI
         ConfigData.SaveRawMhd(serializer, toWrite, metadataPath, null);
     }
 
+
+    private static readonly List<string> DataFile = new List<string>
+    {
+        $"{Application.StartupPath}\\Data\\Database\\Archetypes.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\AttribMods.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Enhancments.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\EnhancmentClasses.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\EnhancmentSets.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Entities.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Levels.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Maths.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Metadata.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Origins.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Powersets.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\PowersetGroups.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Powers.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Recipes.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\Salvage.mhd",
+        $"{Application.StartupPath}\\Data\\Database\\SetTypes.mhd",
+    };
+
+    private static void SaveNewDatabase(object obj, int dbFile)
+    {
+        var dInfo = new FileInfo(DataFile[dbFile]).Directory?.FullName;
+        if (dInfo != null)
+        {
+            Directory.CreateDirectory(dInfo);
+        }
+        using var fs = new FileStream(DataFile[dbFile], FileMode.OpenOrCreate);
+        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        var json = JsonConvert.SerializeObject(obj, settings);
+        var input = Encoding.Unicode.GetBytes(json);
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(mStream, CompressionMode.Compress) { CompressionLevel = 11 };
+        compressionStream.Write(input, 0, input.Length);
+        compressionStream.Close();
+        var compressed = mStream.ToArray();
+        fs.Write(compressed, 0, compressed.Length);
+        fs.Close();
+    }
+    public static void MergeDatabaseFile()
+    {
+        LoadClasses(0);
+        LoadEnhancements(2);
+        LoadEnhancementClasses(3);
+        LoadEnhancementSets(4);
+        LoadEntities(5);
+        LoadPowersets(10);
+        LoadPowersetGroups(11);
+        LoadPowers(12);
+        LoadRecipeData(13);
+        LoadSalvageData(14);
+    }
+
+    public static void LoadClasses(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.Classes = JsonConvert.DeserializeObject<Archetype[]>(output, settings);
+    }
+
+    public static void LoadEnhancements(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters = {
+                new AbstractConverter<Enhancement, IEnhancement>()
+            }
+        };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.Enhancements = JsonConvert.DeserializeObject<IEnhancement[]>(output, settings);
+    }
+
+    public static void LoadEnhancementClasses(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters = {
+                new AbstractConverter<Enhancement, IEnhancement>()
+            }
+        };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.EnhancementClasses = JsonConvert.DeserializeObject<Enums.sEnhClass[]>(output, settings);
+    }
+
+    public static void LoadEnhancementSets(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.EnhancementSets = JsonConvert.DeserializeObject<EnhancementSetCollection>(output);
+    }
+
+    public static void LoadEntities(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters = {
+                new AbstractConverter<Enhancement, IEnhancement>()
+            }
+        };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.Entities = JsonConvert.DeserializeObject<SummonedEntity[]>(output, settings);
+    }
+
+    public static void LoadPowersets(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.Powersets = JsonConvert.DeserializeObject<IPowerset[]>(output, settings);
+    }
+
+    public static void LoadPowersetGroups(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters = {
+                new AbstractConverter<Powerset, IPowerset>()
+            }
+        };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        var powersetGroups = JsonConvert.DeserializeObject<Dictionary<string, PowersetGroup>>(output, settings);
+        Database.PowersetGroups = powersetGroups;
+    }
+
+    public static void LoadPowers(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters = {
+                new AbstractConverter<Power, IPower>()
+            }
+        };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.Power = JsonConvert.DeserializeObject<IPower[]>(output, settings);
+    }
+
+    public static void LoadRecipeData(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.Recipes = JsonConvert.DeserializeObject<Recipe[]>(output, settings);
+    }
+
+    public static void LoadSalvageData(int dbFile)
+    {
+        using var fs = new FileStream(DataFile[dbFile], FileMode.Open);
+        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        using var mStream = new MemoryStream();
+        using var compressionStream = new ZstandardStream(fs, CompressionMode.Decompress);
+        compressionStream.CopyTo(mStream);
+        var output = Encoding.Unicode.GetString(mStream.ToArray());
+        Database.Salvage = JsonConvert.DeserializeObject<Salvage[]>(output, settings);
+    }
+
+
     public static void SaveMainDatabase(ISerialize serializer)
     {
         var path = Files.SelectDataFileSave(Files.MxdbFileDB);
         //SaveMainDbRaw(serializer, path, MainDbName);
+        //MergeDatabaseFile();
         FileStream fileStream;
         BinaryWriter writer;
         try
@@ -2279,4 +2477,16 @@ public static class DatabaseAPI
         SaveMainDatabase(serializer);
         SaveEnhancementDb(serializer);
     }
+}
+
+public class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
+{
+    public override Boolean CanConvert(Type objectType)
+        => objectType == typeof(TAbstract);
+
+    public override Object ReadJson(JsonReader reader, Type type, Object value, JsonSerializer jser)
+        => jser.Deserialize<TReal>(reader);
+
+    public override void WriteJson(JsonWriter writer, Object value, JsonSerializer jser)
+        => jser.Serialize(writer, value);
 }
