@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.IO_Classes;
@@ -1128,9 +1129,10 @@ public static class DatabaseAPI
 
     public static void SaveMainDatabase(ISerialize serializer)
     {
+        //MergeDatabaseFile();
+        //Task.Delay(1500);
         var path = Files.SelectDataFileSave(Files.MxdbFileDB);
         //SaveMainDbRaw(serializer, path, MainDbName);
-        //MergeDatabaseFile();
         FileStream fileStream;
         BinaryWriter writer;
         try
