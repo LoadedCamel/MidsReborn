@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -56,6 +57,7 @@ namespace Hero_Designer.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            UpdateFXText();
             StoreSuppression();
             DialogResult = DialogResult.OK;
             Hide();
@@ -105,9 +107,33 @@ namespace Hero_Designer.Forms
         private void cbFXSpecialCase_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Loading)
+            {
                 return;
+            }
+            //Case1 = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
             myFX.SpecialCase = (Enums.eSpecialCase) cbFXSpecialCase.SelectedIndex;
-            UpdateFXText();
+            //UpdateFXText();
+        }
+
+        private void cbFXSpecialCase2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+            {
+                return;
+            }
+            //Case2 = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
+            myFX.SpecialCase2 = (Enums.eSpecialCase) cbFXSpecialCase2.SelectedIndex;
+            //UpdateFXText();
+        }
+
+        private void cbFXOperator_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+            {
+                return;
+            }
+            //CaseOp = (Enums.eSpecialOperator)cbFXOperator.SelectedIndex;
+            myFX.SpecialOperator = (Enums.eSpecialOperator)cbFXOperator.SelectedIndex;
         }
 
         private void cbModifier_SelectedIndexChanged(object sender, EventArgs e)
@@ -245,6 +271,8 @@ namespace Hero_Designer.Forms
         {
             cbFXClass.BeginUpdate();
             cbFXSpecialCase.BeginUpdate();
+            cbFXOperator.BeginUpdate();
+            cbFXSpecialCase2.BeginUpdate();
             cbPercentageOverride.BeginUpdate();
             cbAttribute.BeginUpdate();
             cbAspect.BeginUpdate();
@@ -259,6 +287,8 @@ namespace Hero_Designer.Forms
             cbAffects.Items.Clear();
             cbFXClass.Items.AddRange(Enum.GetNames(myFX.EffectClass.GetType()));
             cbFXSpecialCase.Items.AddRange(Enum.GetNames(myFX.SpecialCase.GetType()));
+            cbFXOperator.Items.AddRange(Enum.GetNames(myFX.SpecialOperator.GetType()));
+            cbFXSpecialCase2.Items.AddRange(Enum.GetNames(myFX.SpecialCase.GetType()));
             cbPercentageOverride.Items.Add("Auto");
             cbPercentageOverride.Items.Add("Yes");
             cbPercentageOverride.Items.Add("No");
@@ -272,6 +302,8 @@ namespace Hero_Designer.Forms
             cbAffects.Items.Add("Self");
             cbFXClass.EndUpdate();
             cbFXSpecialCase.EndUpdate();
+            cbFXOperator.EndUpdate();
+            cbFXSpecialCase2.EndUpdate();
             cbPercentageOverride.EndUpdate();
             cbAttribute.EndUpdate();
             cbAspect.EndUpdate();
@@ -392,7 +424,14 @@ namespace Hero_Designer.Forms
                 return;
             var fx = myFX;
             if ((fx.EffectType == Enums.eEffectType.Enhancement) & (fx.ETModifies == Enums.eEffectType.Mez))
+            {
                 fx.MezType = (Enums.eMez) lvSubSub.SelectedIndices[0];
+            }
+            if ((fx.EffectType == Enums.eEffectType.Enhancement) & (fx.ETModifies == Enums.eEffectType.Damage) | (fx.ETModifies == Enums.eEffectType.Defense))
+            {
+                fx.DamageType = (Enums.eDamage) lvSubSub.SelectedIndices[0];
+            }
+
             UpdateFXText();
         }
 
@@ -685,13 +724,20 @@ namespace Hero_Designer.Forms
             lvSubSub.Items.Clear();
             var strArray = new string[0];
             var fx = myFX;
-            if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) &
-                (fx.ETModifies == Enums.eEffectType.Mez))
+            if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) & (fx.ETModifies == Enums.eEffectType.Mez))
             {
                 lvSubSub.Columns[0].Text = "Mez Type";
                 strArray = Enum.GetNames(fx.MezType.GetType());
                 index1 = (int) fx.MezType;
             }
+
+            if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) & (fx.ETModifies == Enums.eEffectType.Defense) | (fx.ETModifies == Enums.eEffectType.Damage))
+            {
+                lvSubSub.Columns[0].Text = @"Damage Type";
+                strArray = Enum.GetNames(fx.DamageType.GetType());
+                index1 = (int) fx.DamageType;
+            }
+
 
             if (strArray.Length > 0)
             {

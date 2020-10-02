@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -91,6 +92,8 @@ namespace Hero_Designer.Forms
             this.txtOverride = new System.Windows.Forms.TextBox();
             this.Label11 = new System.Windows.Forms.Label();
             this.txtPPM = new System.Windows.Forms.TextBox();
+            this.cbFXSpecialCase2 = new System.Windows.Forms.ComboBox();
+            this.cbFXOperator = new System.Windows.Forms.ComboBox();
             this.GroupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -308,11 +311,11 @@ namespace Hero_Designer.Forms
             // 
             // Label30
             // 
-            this.Label30.Location = new System.Drawing.Point(408, 597);
+            this.Label30.Location = new System.Drawing.Point(320, 596);
             this.Label30.Name = "Label30";
-            this.Label30.Size = new System.Drawing.Size(76, 20);
+            this.Label30.Size = new System.Drawing.Size(92, 20);
             this.Label30.TabIndex = 105;
-            this.Label30.Text = "Special Case:";
+            this.Label30.Text = "Special Case(s):";
             this.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbFXClass
@@ -327,7 +330,7 @@ namespace Hero_Designer.Forms
             // cbFXSpecialCase
             // 
             this.cbFXSpecialCase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXSpecialCase.Location = new System.Drawing.Point(489, 597);
+            this.cbFXSpecialCase.Location = new System.Drawing.Point(418, 597);
             this.cbFXSpecialCase.Name = "cbFXSpecialCase";
             this.cbFXSpecialCase.Size = new System.Drawing.Size(136, 22);
             this.cbFXSpecialCase.TabIndex = 94;
@@ -663,10 +666,30 @@ namespace Hero_Designer.Forms
             this.txtPPM.TextChanged += new System.EventHandler(this.txtPPM_TextChanged);
             this.txtPPM.Leave += new System.EventHandler(this.txtPPM_Leave);
             // 
+            // cbFXSpecialCase2
+            // 
+            this.cbFXSpecialCase2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFXSpecialCase2.Location = new System.Drawing.Point(630, 597);
+            this.cbFXSpecialCase2.Name = "cbFXSpecialCase2";
+            this.cbFXSpecialCase2.Size = new System.Drawing.Size(136, 22);
+            this.cbFXSpecialCase2.TabIndex = 156;
+            this.cbFXSpecialCase2.SelectedIndexChanged += new EventHandler(cbFXSpecialCase2_SelectedIndexChanged);
+            // 
+            // cbFXOperator
+            // 
+            this.cbFXOperator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFXOperator.Location = new System.Drawing.Point(562, 597);
+            this.cbFXOperator.Name = "cbFXOperator";
+            this.cbFXOperator.Size = new System.Drawing.Size(62, 22);
+            this.cbFXOperator.TabIndex = 157;
+            this.cbFXOperator.SelectedIndexChanged += new EventHandler(cbFXOperator_SelectedIndexChanged);
+            // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(971, 626);
+            this.Controls.Add(this.cbFXOperator);
+            this.Controls.Add(this.cbFXSpecialCase2);
             this.Controls.Add(this.Label11);
             this.Controls.Add(this.txtPPM);
             this.Controls.Add(this.txtOverride);
@@ -798,5 +821,7 @@ namespace Hero_Designer.Forms
         TextBox txtFXTicks;
         TextBox txtOverride;
         TextBox txtPPM;
+        private ComboBox cbFXSpecialCase2;
+        private ComboBox cbFXOperator;
     }
 }
