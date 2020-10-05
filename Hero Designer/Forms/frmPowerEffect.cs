@@ -760,5 +760,10 @@ namespace Hero_Designer.Forms
 
             lvSubSub.EndUpdate();
         }
+
+        private void Label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

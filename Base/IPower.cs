@@ -215,6 +215,10 @@ public interface IPower : IComparable
 
     bool HasMutexID(int index);
 
+    bool Active { get; set; }
+
+    bool Taken { get; set; }
+
     bool HasDefEffects();
 
     bool HasResEffects();

@@ -196,6 +196,11 @@ namespace Base.Data_Classes
                 return num;
             }
         }
+
+        public static void ParseCase()
+        {
+            Console.WriteLine(nameof(BoxingBuff));
+        }
         /*public int SlotsRemaining
         {
             get
@@ -491,8 +496,30 @@ namespace Base.Data_Classes
 
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power == null || power.Power == null || !power.StatInclude) continue;
+                if (power == null || power.Power == null) continue;
+                var powName = power.Power.PowerName;
+                switch (powName)
+                {
+                    default:
+                        power.Power.Taken = power.Chosen;
 
+                        if (!power.StatInclude)
+                        {
+                            power.Power.Active = false;
+                        }
+                        else if (power.StatInclude && !power.HasProc())
+                        {
+                            power.Power.Active = true;
+                        }
+
+                        break;
+                }
+                Console.WriteLine($"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
+            }
+
+            foreach (var power in CurrentBuild.Powers)
+            {
+                if (power == null || power.Power == null || !power.StatInclude) continue;
                 switch (power.Power.PowerName.ToUpper())
                 {
                     case "TIME_CRAWL":

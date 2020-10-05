@@ -321,6 +321,8 @@ namespace Base.Data_Classes
             }
 
             HiddenPower = reader.ReadBoolean();
+            Active = reader.ReadBoolean();
+            Taken = reader.ReadBoolean();
         }
 
         public IPowerset GetPowerSet()
@@ -568,6 +570,9 @@ namespace Base.Data_Classes
             return false;
         }
 
+        public bool Active { get; set; } = false;
+        public bool Taken { get; set; } = false;
+
         public void StoreTo(ref BinaryWriter writer)
         {
             writer.Write(StaticIndex);
@@ -662,6 +667,8 @@ namespace Base.Data_Classes
             for (var index = 0; index <= Effects.Length - 1; ++index)
                 Effects[index].StoreTo(ref writer);
             writer.Write(HiddenPower);
+            writer.Write(Active);
+            writer.Write(Taken);
         }
 
         public float FXGetDamageValue()
