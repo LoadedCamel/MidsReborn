@@ -93,7 +93,7 @@ namespace Hero_Designer.Forms
             this.lvPower.Location = new System.Drawing.Point(587, 37);
             this.lvPower.MultiSelect = false;
             this.lvPower.Name = "lvPower";
-            this.lvPower.Size = new System.Drawing.Size(400, 429);
+            this.lvPower.Size = new System.Drawing.Size(454, 429);
             this.lvPower.TabIndex = 21;
             this.lvPower.UseCompatibleStateImageBehavior = false;
             this.lvPower.View = System.Windows.Forms.View.Details;
@@ -108,7 +108,7 @@ namespace Hero_Designer.Forms
             // ColumnHeader5
             // 
             this.ColumnHeader5.Text = "Name";
-            this.ColumnHeader5.Width = 108;
+            this.ColumnHeader5.Width = 180;
             // 
             // ColumnHeader7
             // 
@@ -125,7 +125,6 @@ namespace Hero_Designer.Forms
             this.lvSet.FullRowSelect = true;
             this.lvSet.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSet.HideSelection = false;
-            this.lvSet.HoverSelection = true;
             this.lvSet.Location = new System.Drawing.Point(251, 37);
             this.lvSet.MultiSelect = false;
             this.lvSet.Name = "lvSet";
@@ -145,7 +144,7 @@ namespace Hero_Designer.Forms
             // ColumnHeader4
             // 
             this.ColumnHeader4.Text = "Name";
-            this.ColumnHeader4.Width = 115;
+            this.ColumnHeader4.Width = 133;
             // 
             // ColumnHeader6
             // 
@@ -208,7 +207,7 @@ namespace Hero_Designer.Forms
             // 
             // btnPowerSort
             // 
-            this.btnPowerSort.Location = new System.Drawing.Point(239, 44);
+            this.btnPowerSort.Location = new System.Drawing.Point(293, 44);
             this.btnPowerSort.Name = "btnPowerSort";
             this.btnPowerSort.Size = new System.Drawing.Size(75, 23);
             this.btnPowerSort.TabIndex = 26;
@@ -244,7 +243,7 @@ namespace Hero_Designer.Forms
             // 
             // btnPowerAdd
             // 
-            this.btnPowerAdd.Location = new System.Drawing.Point(320, 15);
+            this.btnPowerAdd.Location = new System.Drawing.Point(374, 15);
             this.btnPowerAdd.Name = "btnPowerAdd";
             this.btnPowerAdd.Size = new System.Drawing.Size(75, 23);
             this.btnPowerAdd.TabIndex = 30;
@@ -254,7 +253,7 @@ namespace Hero_Designer.Forms
             // 
             // btnPowerDelete
             // 
-            this.btnPowerDelete.Location = new System.Drawing.Point(239, 15);
+            this.btnPowerDelete.Location = new System.Drawing.Point(293, 15);
             this.btnPowerDelete.Name = "btnPowerDelete";
             this.btnPowerDelete.Size = new System.Drawing.Size(75, 23);
             this.btnPowerDelete.TabIndex = 31;
@@ -264,7 +263,7 @@ namespace Hero_Designer.Forms
             // 
             // btnPowerClone
             // 
-            this.btnPowerClone.Location = new System.Drawing.Point(320, 44);
+            this.btnPowerClone.Location = new System.Drawing.Point(374, 44);
             this.btnPowerClone.Name = "btnPowerClone";
             this.btnPowerClone.Size = new System.Drawing.Size(75, 23);
             this.btnPowerClone.TabIndex = 33;
@@ -274,7 +273,7 @@ namespace Hero_Designer.Forms
             // 
             // btnPowerEdit
             // 
-            this.btnPowerEdit.Location = new System.Drawing.Point(320, 73);
+            this.btnPowerEdit.Location = new System.Drawing.Point(374, 73);
             this.btnPowerEdit.Name = "btnPowerEdit";
             this.btnPowerEdit.Size = new System.Drawing.Size(75, 23);
             this.btnPowerEdit.TabIndex = 32;
@@ -453,7 +452,7 @@ namespace Hero_Designer.Forms
             this.pnlPower.Controls.Add(this.btnPowerAdd);
             this.pnlPower.Location = new System.Drawing.Point(587, 494);
             this.pnlPower.Name = "pnlPower";
-            this.pnlPower.Size = new System.Drawing.Size(400, 105);
+            this.pnlPower.Size = new System.Drawing.Size(454, 105);
             this.pnlPower.TabIndex = 49;
             // 
             // lblSet
@@ -503,7 +502,7 @@ namespace Hero_Designer.Forms
             // frmPowerBrowser
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(999, 651);
+            this.ClientSize = new System.Drawing.Size(1053, 651);
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
