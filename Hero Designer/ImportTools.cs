@@ -309,12 +309,13 @@ namespace Hero_Designer
                 else if (m2.Success)
                 {
                     // Empty slot
-                    e = new RawEnhData();
-                    e.InternalName = "Empty";
-                    e.Level = 0;
-                    e.Boosters = 0;
-                    e.HasCatalyst = false;
-                    e.eData = -1;
+                    e = new RawEnhData() {
+                        InternalName = "Empty",
+                        Level = 0,
+                        Boosters = 0,
+                        HasCatalyst = false,
+                        eData = -1
+                    };
                     p.Slots.Add(e);
                 }
                 else if (m3.Success)
@@ -328,6 +329,7 @@ namespace Hero_Designer
                         : 0;
                     e.HasCatalyst = DatabaseAPI.EnhHasCatalyst(m3.Groups[1].Value);
                     e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
+                    
                     p.Slots.Add(e);
                 }
             }
