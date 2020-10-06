@@ -127,6 +127,12 @@
     <Compile Include="ListLabelV3.Designer.cs">
       <DependentUpon>ListLabelV3.cs</DependentUpon>
     </Compile>
+    <Compile Include="ctlDataGraph.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlDataGraph.Designer.cs">
+      <DependentUpon>ctlDataGraph.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ctlDamageDisplay.resources" />
