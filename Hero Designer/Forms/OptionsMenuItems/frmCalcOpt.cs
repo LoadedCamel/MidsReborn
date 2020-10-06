@@ -39,9 +39,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             InitializeComponent();
             Name = nameof(frmCalcOpt);
             var componentResourceManager = new ComponentResourceManager(typeof(frmCalcOpt));
-            optTO.Image = (Image) componentResourceManager.GetObject("optTO.Image");
-            optDO.Image = (Image) componentResourceManager.GetObject("optDO.Image");
-            optSO.Image = (Image) componentResourceManager.GetObject("optSO.Image");
+            optTO.Image = (Image)componentResourceManager.GetObject("optTO.Image");
+            optDO.Image = (Image)componentResourceManager.GetObject("optDO.Image");
+            optSO.Image = (Image)componentResourceManager.GetObject("optSO.Image");
             Label9.Text = componentResourceManager.GetString("Label9.Text");
             Label5.Text = componentResourceManager.GetString("Label5.Text");
             myTip.SetToolTip(udExHigh, componentResourceManager.GetString("udExHigh.ToolTip"));
@@ -103,7 +103,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
 
         private void clbSuppression_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var values = (int[]) Enum.GetValues(MidsContext.Config.Suppression.GetType());
+            var values = (int[])Enum.GetValues(MidsContext.Config.Suppression.GetType());
             MidsContext.Config.Suppression = Enums.eSuppress.None;
             var num = clbSuppression.CheckedIndices.Count - 1;
             for (var index = 0; index <= num; ++index)
@@ -112,7 +112,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
 
         private void cmbAction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            defActs[listScenarios.SelectedIndex] = (short) cmbAction.SelectedIndex;
+            defActs[listScenarios.SelectedIndex] = (short)cmbAction.SelectedIndex;
         }
 
         private void csAdd_Click(object sender, EventArgs e)
@@ -459,10 +459,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             csPopulateList();
             fcPopulateList();
             PopulateSuppression();
-
-            // https://stackoverflow.com/a/3991946
-            lblFileAssoc.Text = lblFileAssoc.Text.Replace("HeroDesigner", Application.ProductName);
-            lblAssocStatus.Text = "Status: " + (!FileAssociation.GetIsAssociated(Application.ExecutablePath) ? "Not " : "") + "associated";
         }
 
         private void listScenarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -511,11 +507,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             clbSuppression.BeginUpdate();
             clbSuppression.Items.Clear();
             var names = Enum.GetNames(MidsContext.Config.Suppression.GetType());
-            var values = (int[]) Enum.GetValues(MidsContext.Config.Suppression.GetType());
+            var values = (int[])Enum.GetValues(MidsContext.Config.Suppression.GetType());
             var num = names.Length - 1;
             for (var index = 0; index <= num; ++index)
                 clbSuppression.Items.Add(names[index],
-                    (MidsContext.Config.Suppression & (Enums.eSuppress) values[index]) != Enums.eSuppress.None);
+                    (MidsContext.Config.Suppression & (Enums.eSuppress)values[index]) != Enums.eSuppress.None);
             clbSuppression.EndUpdate();
         }
 
@@ -525,7 +521,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             optSO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.SingleO;
             optDO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.DualO;
             optTO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.TrainingO;
-            cbEnhLevel.SelectedIndex = (int) config.CalcEnhLevel;
+            cbEnhLevel.SelectedIndex = (int)config.CalcEnhLevel;
             udExHigh.Value = new decimal(config.ExempHigh);
             udExLow.Value = new decimal(config.ExempLow);
             udForceLevel.Value = new decimal(config.ForceLevel);
@@ -730,7 +726,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
                 config.CalcEnhOrigin = Enums.eEnhGrade.DualO;
             else if (optTO.Checked)
                 config.CalcEnhOrigin = Enums.eEnhGrade.TrainingO;
-            config.CalcEnhLevel = (Enums.eEnhRelative) cbEnhLevel.SelectedIndex;
+            config.CalcEnhLevel = (Enums.eEnhRelative)cbEnhLevel.SelectedIndex;
             config.ExempHigh = Convert.ToInt32(udExHigh.Value);
             config.ExempLow = Convert.ToInt32(udExLow.Value);
             if (config.ExempHigh < config.ExempLow)
@@ -787,14 +783,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems
                 config.DragDropScenarioAction[index] = defActs[index];
                 ++index;
             } while (index <= 19);
-        }
-
-        private void btnFileAssoc_Click(object sender, EventArgs e)
-        {
-            FileAssociation.AddToOpenResult result = FileAssociation.AddToOpenWithLists(Application.ExecutablePath);
-            if (result != FileAssociation.AddToOpenResult.Success)
-                MessageBox.Show("Error setting file associations: unauthorized registry access.", "Oh snap",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

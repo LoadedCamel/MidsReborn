@@ -216,7 +216,6 @@ public class Modifiers : ICloneable
         {
             for (var index = 0; index < Table.Length; ++index)
                 Table[index] = new float[0];
-            }
         }
 
         public ModifierTable(int archetypesListLength)

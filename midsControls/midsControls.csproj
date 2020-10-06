@@ -95,6 +95,12 @@
     <Compile Include="ctlTableList.designer.cs">
       <DependentUpon>ctlTableList.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditableLabel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditableLabel.Designer.cs">
+      <DependentUpon>EditableLabel.cs</DependentUpon>
+    </Compile>
     <Compile Include="GFXLabel.cs">
       <SubType>UserControl</SubType>
     </Compile>

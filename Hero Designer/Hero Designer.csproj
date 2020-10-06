@@ -78,10 +78,10 @@
   <PropertyGroup />
   <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
-    <Compile Include="DataGraph.cs" />
     <Compile Include="clsOAuth.cs" />
     <Compile Include="clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
+    <Compile Include="FileAssociation.cs" />
     <Compile Include="Forms\Controls\DataView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -103,16 +103,20 @@
     <Compile Include="Forms\frmDiscord.Designer.cs">
       <DependentUpon>frmDiscord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.Designer.cs">
+      <DependentUpon>frmEditAttribMod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WindowMenuItems\frmPrestige.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmPrestige.Designer.cs">
       <DependentUpon>frmPrestige.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportTools.cs" />
     <Compile Include="GenFreebies.cs" />
     <Compile Include="BuildImportTools.cs" />
-    <Compile Include="FileAssocation.cs" />
     <Compile Include="Forms\frmColorOptions.cs">
       <SubType>Form</SubType>
     </Compile>

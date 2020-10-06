@@ -23,7 +23,7 @@ namespace Hero_Designer
                 using frmMain f = new frmMain();
                 Application.Run(f);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 try
                 {
