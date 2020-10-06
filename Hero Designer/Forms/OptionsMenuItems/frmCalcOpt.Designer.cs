@@ -1522,6 +1522,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // TabPage5
             // 
+            this.TabPage5.Controls.Add(this.lblAssocStatus);
+            this.TabPage5.Controls.Add(this.lblFileAssoc);
+            this.TabPage5.Controls.Add(this.btnFileAssoc);
             this.TabPage5.Controls.Add(this.cbUpdateURL);
             this.TabPage5.Controls.Add(this.lblUpdateURL);
             this.TabPage5.Controls.Add(this.btnSaveFolderReset);
@@ -1549,14 +1552,14 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             "http://keepers.dk/mids/update.xml",
             "http://keepers.dk/mids/update_beta.xml",
             "http://keepers.dk/mids/update_dev.xml"});
-            this.cbUpdateURL.Location = new System.Drawing.Point(17, 200);
+            this.cbUpdateURL.Location = new System.Drawing.Point(77, 180);
             this.cbUpdateURL.Name = "cbUpdateURL";
-            this.cbUpdateURL.Size = new System.Drawing.Size(593, 22);
+            this.cbUpdateURL.Size = new System.Drawing.Size(528, 22);
             this.cbUpdateURL.TabIndex = 67;
             // 
             // lblUpdateURL
             // 
-            this.lblUpdateURL.Location = new System.Drawing.Point(8, 175);
+            this.lblUpdateURL.Location = new System.Drawing.Point(5, 179);
             this.lblUpdateURL.Name = "lblUpdateURL";
             this.lblUpdateURL.Size = new System.Drawing.Size(168, 24);
             this.lblUpdateURL.TabIndex = 65;
@@ -1576,9 +1579,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // lblSaveFolder
             // 
             this.lblSaveFolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblSaveFolder.Location = new System.Drawing.Point(17, 270);
+            this.lblSaveFolder.Location = new System.Drawing.Point(125, 270);
             this.lblSaveFolder.Name = "lblSaveFolder";
-            this.lblSaveFolder.Size = new System.Drawing.Size(593, 22);
+            this.lblSaveFolder.Size = new System.Drawing.Size(485, 22);
             this.lblSaveFolder.TabIndex = 63;
             this.lblSaveFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblSaveFolder.UseMnemonic = false;
@@ -1595,17 +1598,17 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // chkLoadLastFile
             // 
-            this.chkLoadLastFile.Location = new System.Drawing.Point(17, 295);
+            this.chkLoadLastFile.Location = new System.Drawing.Point(17, 298);
             this.chkLoadLastFile.Name = "chkLoadLastFile";
-            this.chkLoadLastFile.Size = new System.Drawing.Size(156, 16);
+            this.chkLoadLastFile.Size = new System.Drawing.Size(156, 18);
             this.chkLoadLastFile.TabIndex = 61;
             this.chkLoadLastFile.Text = "Load last build on startup";
             // 
             // Label1
             // 
-            this.Label1.Location = new System.Drawing.Point(5, 246);
+            this.Label1.Location = new System.Drawing.Point(5, 268);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(168, 24);
+            this.Label1.Size = new System.Drawing.Size(114, 24);
             this.Label1.TabIndex = 8;
             this.Label1.Text = "Save Mids Builds To:";
             this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1836,6 +1839,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.GroupBox12.PerformLayout();
             this.GroupBox11.ResumeLayout(false);
             this.TabPage5.ResumeLayout(false);
+            this.TabPage5.PerformLayout();
             this.GroupBox16.ResumeLayout(false);
             this.GroupBox1.ResumeLayout(false);
             this.TabPage1.ResumeLayout(false);
@@ -1992,5 +1996,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems
         private ComboBox cbUpdateURL;
         private CheckBox chkShowSOLevels;
         private CheckBox chkEnableDmgGraph;
+        private Label lblFileAssoc;
+        private Button btnFileAssoc;
+        private Label lblAssocStatus;
     }
 }
