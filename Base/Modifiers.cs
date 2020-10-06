@@ -1,8 +1,9 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
-public class Modifiers
+public class Modifiers : ICloneable
 {
     private const string StoreName = "Mids' Hero Designer Attribute Modifier Tables";
     public ModifierTable[] Modifier = new ModifierTable[0];
@@ -10,6 +11,11 @@ public class Modifiers
     public DateTime RevisionDate = new DateTime(0L);
     public string SourceIndex = string.Empty;
     public string SourceTables = string.Empty;
+
+    public object Clone()
+    {
+        return MemberwiseClone();
+    }
 
     public bool ImportModifierTablefromCSV(string baseFn, string tableFn, int iRevision)
     {
@@ -210,6 +216,16 @@ public class Modifiers
         {
             for (var index = 0; index < Table.Length; ++index)
                 Table[index] = new float[0];
+            }
+        }
+
+        public ModifierTable(int archetypesListLength)
+        {
+            for (int index = 0; index < Table.Length; ++index)
+            {
+                Table[index] = new float[archetypesListLength];
+                Table[index] = Enumerable.Repeat(0f, archetypesListLength).ToArray();
+            }
         }
 
         public void StoreTo(BinaryWriter writer)

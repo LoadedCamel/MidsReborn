@@ -77,6 +77,7 @@
   <PropertyGroup />
   <PropertyGroup />
   <ItemGroup>
+    <Compile Include="DataGraph.cs" />
     <Compile Include="clsOAuth.cs" />
     <Compile Include="clsZip.cs" />
     <Compile Include="clsDiscord.cs" />

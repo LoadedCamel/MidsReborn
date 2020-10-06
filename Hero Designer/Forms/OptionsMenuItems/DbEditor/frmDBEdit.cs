@@ -101,7 +101,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnCSV_Click(object sender, EventArgs e)
         {
-            new frmCSV().ShowDialog();
+            using frmCSV f = new frmCSV();
+            f.ShowDialog();
         }
 
         private void btnDate_Click(object sender, EventArgs e)
@@ -112,24 +113,32 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnEditEnh_Click(object sender, EventArgs e)
         {
-            new frmEnhEdit().ShowDialog();
+            using frmEnhEdit f = new frmEnhEdit();
+            f.ShowDialog();
             DisplayInfo();
         }
 
         private void btnEditEntity_Click(object sender, EventArgs e)
         {
-            new frmEntityListing().ShowDialog();
+            using frmEntityListing f = new frmEntityListing();
+            f.ShowDialog();
         }
 
         private void btnEditIOSet_Click(object sender, EventArgs e)
         {
-            new frmSetListing().ShowDialog();
+            using (frmSetListing f = new frmSetListing())
+            {
+                f.ShowDialog();
+            }
             DisplayInfo();
         }
 
         private void btnEditIOSetPvP_Click(object sender, EventArgs e)
         {
-            new frmSetListingPvP().ShowDialog();
+            using (frmSetListingPvP f = new frmSetListingPvP())
+            {
+                f.ShowDialog();
+            };
             DisplayInfo();
         }
 
@@ -140,25 +149,29 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnPSBrowse_Click(object sender, EventArgs e)
         {
-            new frmPowerBrowser().ShowDialog();
+            using (frmPowerBrowser f = new frmPowerBrowser())
+            {
+                f.ShowDialog();
+            }
             DisplayInfo();
         }
 
         private void btnRecipe_Click(object sender, EventArgs e)
         {
-            new frmRecipeEdit().ShowDialog();
+            using frmRecipeEdit f = new frmRecipeEdit();
+            f.ShowDialog();
         }
 
         private void btnSalvage_Click(object sender, EventArgs e)
 
         {
-            new frmSalvageEdit().ShowDialog();
+            using frmSalvageEdit f = new frmSalvageEdit();
+            f.ShowDialog();
         }
 
         private void DisplayInfo()
         {
-            if (MainModule.MidsController.Toon == null)
-                return;
+            if (MainModule.MidsController.Toon == null) return;
             lblDate.Text = Strings.Format(DatabaseAPI.Database.Date, "dd/MM/yyyy");
             UdIssue.Value = Convert.ToDecimal(DatabaseAPI.Database.Issue);
             lblCountAT.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length, CultureInfo.InvariantCulture);
@@ -203,15 +216,13 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void udIssue_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!MainModule.MidsController.IsAppInitialized)
-                return;
+            if (!MainModule.MidsController.IsAppInitialized) return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
         }
 
         private void udIssue_ValueChanged(object sender, EventArgs e)
         {
-            if (!MainModule.MidsController.IsAppInitialized || !Initialized)
-                return;
+            if (!MainModule.MidsController.IsAppInitialized || !Initialized) return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
         }
 
@@ -223,7 +234,14 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnJsonImporter_Click(object sender, EventArgs e)
         {
-            new frmJsonImportMain().ShowDialog();
+            using frmJsonImportMain f = new frmJsonImportMain();
+            f.ShowDialog();
+        }
+
+        private void btnAttribModEdit_Click(object sender, EventArgs e)
+        {
+            using frmEditAttribMod f = new frmEditAttribMod();
+            f.ShowDialog();
         }
     }
 }
