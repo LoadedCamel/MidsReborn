@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Base;
 using Base.Data_Classes;
+using Hero_Designer.My;
 using midsControls;
 using ContentAlignment = System.Drawing.ContentAlignment;
 
@@ -28,17 +30,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lblRevision.Text = Convert.ToString(TempAttribMods.Revision, null);
             lblRevisionDate.Text = TempAttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
 
-            listBoxTables.BeginUpdate();
-            listBoxTables.Items.Clear();
-            listBoxTables.Items.AddRange(TempAttribMods.Modifier.Select(e => e.ID).ToArray());
-            listBoxTables.SelectedIndex = 0;
-            listBoxTables.EndUpdate();
-
-            cbArchetype.BeginUpdate();
-            cbArchetype.Items.Clear();
-            cbArchetype.Items.AddRange(Database.Instance.Classes.Select(e => e.ClassName).ToArray()); // e.DisplayName + e.ClassName is too long!
-            cbArchetype.SelectedIndex = 0;
-            cbArchetype.EndUpdate();
+            UpdateModifiersList();
+            UpdateClassesList();
 
             InitializeDataGrid();
             PopulateTableGrid(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
@@ -74,11 +67,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             };
             _ = TempAttribMods.Modifier.Append(table);
 
-            listBoxTables.BeginUpdate();
-            listBoxTables.Items.Clear();
-            listBoxTables.Items.AddRange(TempAttribMods.Modifier.Select(e => e.ID).ToArray());
-            listBoxTables.SelectedIndex = table.BaseIndex;
-            listBoxTables.EndUpdate();
+            UpdateModifiersList(table.BaseIndex);
         }
 
         private void bnRemoveTable_Click(object sender, EventArgs e)
@@ -90,37 +79,35 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             }
 
             TempAttribMods.Modifier.RemoveLast();
-
-            listBoxTables.BeginUpdate();
-            listBoxTables.Items.Clear();
-            listBoxTables.Items.AddRange(TempAttribMods.Modifier.Select(e => e.ID).ToArray());
-            listBoxTables.SelectedIndex = listBoxTables.Items.Count - 1;
-            listBoxTables.EndUpdate();
+            UpdateClassesList(listBoxTables.Items.Count - 1);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-
+            Database.Instance.AttribMods = (Modifiers)TempAttribMods.Clone();
+            Database.Instance.AttribMods.Store(MyApplication.GetSerializer());
+            
+            Close();
         }
 
         private void btnImportCsv_Click(object sender, EventArgs e)
         {
-
+            // Todo
         }
 
         private void btnImportJson_Click(object sender, EventArgs e)
         {
-
+            // Todo
         }
 
         private void btnImportDef_Click(object sender, EventArgs e)
         {
-
+            // Todo
         }
 
         private void dgCellsLabel_MouseEnter(object sender, EventArgs e)
@@ -156,6 +143,41 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 (float)Convert.ToDecimal(lbl.Text, null);
         }
 
+        private void lblRevision_ValueChanged(object sender, EventArgs e)
+        {
+            bool res = int.TryParse(lblRevision.Text.Trim(), out TempAttribMods.Revision);
+            lblRevision.Text = res ? lblRevision.Text.Trim() : Convert.ToString(TempAttribMods.Revision, null);
+        }
+
+        private void lblRevisionDate_TextChanged(object sender, EventArgs e)
+        {
+            bool res = DateTime.TryParseExact(
+                lblRevisionDate.Text.Trim(),
+                "dd/mm/yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal,
+                out TempAttribMods.RevisionDate);
+            lblRevisionDate.Text = res ? lblRevisionDate.Text.Trim() : TempAttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
+        }
+
+        private void lblRevisionDate_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            /*
+             https://docs.microsoft.com/en-us/dotnet/framework/winforms/user-input-validation-in-windows-forms?redirectedfrom=MSDN
+             The Validating event is supplied an object of type CancelEventArgs.
+             If you determine that the control's data is not valid,
+             you can cancel the Validating event by setting this object's Cancel property to true.
+             If you do not set the Cancel property,
+             Windows Forms will assume that validation succeeded for that control,
+             and raise the Validated event.
+            */
+        }
+
+        private void lblRevision_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
         #endregion
 
         // VB's InputBox() clone
@@ -166,30 +188,33 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             {
                 Text = promptText,
                 AutoSize = true,
-                Bounds = new Rectangle(9, 20, 372, 13)
+                Bounds = new Rectangle(9, 10, 372, 13)
             };
 
             using TextBox textBox = new TextBox()
             {
                 Text = value,
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top,
-                Bounds = new Rectangle(12, 36, 372, 20)
+                TextAlign = HorizontalAlignment.Left,
+                Anchor = AnchorStyles.Left | AnchorStyles.Top,
+                Bounds = new Rectangle(12, 26, 372, 20)
             };
 
             using Button buttonOk = new Button()
             {
                 Text = "OK",
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
-                Bounds = new Rectangle(228, 72, 75, 23),
-                DialogResult = DialogResult.OK
+                Bounds = new Rectangle(228, 62, 75, 23),
+                DialogResult = DialogResult.OK,
+                TextAlign = ContentAlignment.MiddleCenter
             };
 
             using Button buttonCancel = new Button()
             {
                 Text = "Cancel",
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
-                Bounds = new Rectangle(309, 72, 75, 23),
-                DialogResult = DialogResult.Cancel
+                Bounds = new Rectangle(309, 62, 75, 23),
+                DialogResult = DialogResult.Cancel,
+                TextAlign = ContentAlignment.MiddleCenter
             };
 
             using Form inputBoxFrm = new Form()
@@ -199,16 +224,37 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 MinimizeBox = false,
                 MaximizeBox = false,
                 ShowInTaskbar = false,
-                Text = title
+                Text = title,
+                ClientSize = new Size(390, 90)
             };
 
-            inputBoxFrm.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
-            inputBoxFrm.ClientSize = new Size(Math.Max(300, label.Right + 10), inputBoxFrm.ClientSize.Height);
+            inputBoxFrm.Controls.AddRange(new Control[] {label, textBox, buttonOk, buttonCancel});
 
             DialogResult dialogResult = inputBoxFrm.ShowDialog();
             value = textBox.Text;
 
             return dialogResult;
+        }
+
+        private void UpdateModifiersList(int selectedIndex = 0)
+        {
+            listBoxTables.BeginUpdate();
+            listBoxTables.Items.Clear();
+            // as object[] required to soft-cast from string[] to object[]
+            // (VS may object this)
+            listBoxTables.Items.AddRange(TempAttribMods.Modifier.Select(e => e.ID).ToArray() as object[]);
+            listBoxTables.SelectedIndex = selectedIndex;
+            listBoxTables.EndUpdate();
+        }
+
+        private void UpdateClassesList(int selectedIndex = 0)
+        {
+            cbArchetype.BeginUpdate();
+            cbArchetype.Items.Clear();
+            // e.DisplayName + e.ClassName is too long!
+            cbArchetype.Items.AddRange(Database.Instance.Classes.Select(e => e.ClassName).ToArray() as object[]);
+            cbArchetype.SelectedIndex = selectedIndex;
+            cbArchetype.EndUpdate();
         }
 
         private void UpdateDataDisplay()
@@ -220,6 +266,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         }
 
         // 'Cause Designer is not happy if one touch his things. Boo.
+        // So instead of putting the labels array initialize routine in the form designer it goes here.
+        // Different ways, same result, I guess...
         private void InitializeDataGrid()
         {
             SuspendLayout();

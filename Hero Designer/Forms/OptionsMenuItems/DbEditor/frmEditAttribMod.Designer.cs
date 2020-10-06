@@ -342,6 +342,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             0,
             0,
             0});
+            this.lblRevision.ValueChanged += new System.EventHandler(this.lblRevision_ValueChanged);
+            this.lblRevision.Validating += new System.ComponentModel.CancelEventHandler(this.lblRevision_Validating);
             // 
             // lblRevisionDate
             // 
@@ -350,6 +352,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.lblRevisionDate.Size = new System.Drawing.Size(91, 20);
             this.lblRevisionDate.TabIndex = 29;
             this.lblRevisionDate.Text = "DD/MM/AAAA";
+            this.lblRevisionDate.TextChanged += new System.EventHandler(this.lblRevisionDate_TextChanged);
+            this.lblRevisionDate.Validating += new System.ComponentModel.CancelEventHandler(this.lblRevisionDate_Validating);
             // 
             // pbGraph
             // 
