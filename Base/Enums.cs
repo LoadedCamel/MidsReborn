@@ -997,6 +997,37 @@ public static class Enums
         Ancillary = 7
     }
 
+    // clsToonX::GBD_Totals() stat types
+    // for _selfBuff.Effect[n] and _selfEnhance.Effect[n]
+    public enum eStatType
+    {
+        // _selfBuffs.Effect
+        FlySpeed = 11,
+        HPMax = 14,
+        JumpHeight = 16,
+        JumpSpeed = 17,
+        Perception = 23,
+        EndRec = 26,
+        HPRegen = 27,
+        RunSpeed = 32,
+        StealthPvE = 36,
+        StealthPvP = 37,
+        ThreatLevel = 39,
+        ToHit = 40,
+        Elusivity = 44,
+        MaxRunSpeed = 49,
+        MaxJumpSpeed = 50,
+        MaxFlySpeed = 51,
+        Absorb = 66,
+
+        // _selfEnhance.Effect //
+        BuffEndRdx = 8,
+        Haste = 25,
+
+        // Any //
+        BuffAcc = 1
+    }
+
     public static bool MezDurationEnhancable(eMez mezEnum)
     {
         return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized ||

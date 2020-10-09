@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -6,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using System.Linq;
 using Base.Display;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -525,11 +527,13 @@ namespace midsControls
                 if (Items.Length < 1)
                 {
                     var num = 0;
+                    var rng = new Random();
                     do
                     {
-                        AddItemPair("Value " + Convert.ToString(num), "Value " + Convert.ToString(num) + "b",
-                            (int) Math.Round(Conversion.Int(101f * VBMath.Rnd() + 0f)),
-                            (int) Math.Round(Conversion.Int(101f * VBMath.Rnd() + 0f)), Convert.ToString(num));
+                        AddItemPair("Value " + Convert.ToString(num, null), "Value " + Convert.ToString(num, null) + "b",
+                            rng.Next(0, 101),
+                            rng.Next(0, 101),
+                            Convert.ToString(num, null));
                         num++;
                     } while (num <= 60);
                 }
@@ -544,8 +548,12 @@ namespace midsControls
         {
             checked
             {
-                Items = (GraphItem[]) Utils.CopyArray(Items, new GraphItem[Items.Length + 1]);
-                Items[Items.Length - 1] = new GraphItem(sName, nBase, nEnh, iTip);
+                //Items = (GraphItem[]) Utils.CopyArray(Items, new GraphItem[Items.Length + 1]);
+                //Items[Items.Length - 1] = new GraphItem(sName, nBase, nEnh, iTip);
+
+                List<GraphItem> ItemsList = Items.ToList();
+                ItemsList.Add(new GraphItem(sName, nBase, nEnh, iTip));
+                Items = ItemsList.ToArray();
             }
         }
 
@@ -554,8 +562,12 @@ namespace midsControls
         {
             checked
             {
-                Items = (GraphItem[]) Utils.CopyArray(Items, new GraphItem[Items.Length + 1]);
-                Items[Items.Length - 1] = new GraphItem(sName, sName2, nBase, nEnh, iTip);
+                //Items = (GraphItem[]) Utils.CopyArray(Items, new GraphItem[Items.Length + 1]);
+                //Items[Items.Length - 1] = new GraphItem(sName, sName2, nBase, nEnh, iTip);
+
+                List<GraphItem> ItemsList = Items.ToList();
+                ItemsList.Add(new GraphItem(sName, sName2, nBase, nEnh, iTip));
+                Items = ItemsList.ToArray();
             }
         }
 
@@ -570,18 +582,16 @@ namespace midsControls
         {
             checked
             {
-                if (NoDraw)
-                    return;
-                if (!Loaded)
-                    return;
+                if (NoDraw) return;
+                if (!Loaded) return;
+
                 myGFX = null;
                 myGFX = CreateGraphics();
                 bxBuffer = new ExtendedBitmap(Size);
-                if (bxBuffer.Graphics == null)
-                    return;
+                if (bxBuffer.Graphics == null) return;
+
                 bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                bxBuffer.Graphics.FillRectangle(new SolidBrush(BackColor), 0, 0, bxBuffer.Size.Width,
-                    bxBuffer.Size.Height);
+                bxBuffer.Graphics.FillRectangle(new SolidBrush(BackColor), 0, 0, bxBuffer.Size.Width, bxBuffer.Size.Height);
                 var rectangle = new Rectangle(nameWidth, 0, Width - nameWidth - 1, Height - 1);
                 var brush = new LinearGradientBrush(rectangle, pBlendColor1, pBlendColor2, 0f);
                 var brush2 = new SolidBrush(ForeColor);
@@ -594,9 +604,7 @@ namespace midsControls
                 bxBuffer.Graphics.FillRectangle(brush, rectangle);
                 Draw_Scale(ref rectangle);
                 Draw_Highlight(rectangle);
-                var num = 0;
-                var num2 = Items.Length - 1;
-                for (var i = num; i <= num2; i++)
+                for (var i = 0; i < Items.Length; i++)
                 {
                     var num3 = yPadding + i * (pItemHeight + yPadding);
                     if (!DualName | (Operators.CompareString(Items[i].Name, Items[i].Name2, false) == 0))
@@ -608,7 +616,7 @@ namespace midsControls
                             text.IndexOf(":", StringComparison.Ordinal) < 0) text += ":";
 
                         var num4 = (int) Math.Round(checked(rectangle.Top + num3) +
-                                                    (pItemHeight - Font.GetHeight(bxBuffer.Graphics)) / 2f);
+                                                    (pItemHeight - Font.GetHeight(bxBuffer.Graphics)) / 2);
                         var num5 = text.IndexOf("|", StringComparison.Ordinal);
                         var layoutRectangle = new RectangleF(0f, num4, Width - rectangle.Width - xPadding,
                             ItemHeight + yPadding * 2);
@@ -1111,11 +1119,14 @@ namespace midsControls
             // Token: 0x04000060 RID: 96
             public readonly float valueEnh;
 
+            public readonly float valueAbsorbed;
+
             // Token: 0x060000D0 RID: 208 RVA: 0x00009514 File Offset: 0x00007714
             public GraphItem(string iName, float Base, float Enh, string iTip = "")
             {
                 valueBase = Base;
                 valueEnh = Enh;
+                valueAbsorbed = 0;
                 Name = iName;
                 Name2 = "";
                 Tip = iTip;
@@ -1126,6 +1137,17 @@ namespace midsControls
             {
                 valueBase = Base;
                 valueEnh = Enh;
+                valueAbsorbed = 0;
+                Name = iName;
+                Name2 = iName2;
+                Tip = iTip;
+            }
+
+            public GraphItem(string iName, string iName2, float Base, float Enh, float Absorbed, string iTip = "")
+            {
+                valueBase = Base;
+                valueEnh = Enh;
+                valueAbsorbed = Absorbed;
                 Name = iName;
                 Name2 = iName2;
                 Tip = iTip;

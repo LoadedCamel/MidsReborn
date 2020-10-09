@@ -97,6 +97,12 @@
     <Compile Include="Forms\Controls\InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmTotalsV2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmTotalsV2.Designer.cs">
+      <DependentUpon>frmTotalsV2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmDiscord.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2169,6 +2175,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmTemp.resx">
       <DependentUpon>frmTemp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WindowMenuItems\frmTotalsV2.resx">
+      <DependentUpon>frmTotalsV2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="reborn.ico" />
     <Reference Include="Microsoft.VisualBasic" />

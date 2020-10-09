@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -482,35 +483,41 @@ namespace Hero_Designer
 
             for (var index = 0; index <= _selfBuffs.DebuffResistance.Length - 1; ++index)
                 Totals.DebuffRes[index] = _selfBuffs.DebuffResistance[index] * 100f;
-            Totals.Elusivity = _selfBuffs.Effect[44];
+            Totals.Elusivity = _selfBuffs.Effect[(int)Enums.eStatType.Elusivity];
             Totals.EndMax = _selfBuffs.MaxEnd;
-            Totals.BuffAcc = _selfEnhance.Effect[1] + _selfBuffs.Effect[1];
-            Totals.BuffEndRdx = _selfEnhance.Effect[8];
-            Totals.BuffHaste = _selfEnhance.Effect[25];
-            Totals.BuffToHit = _selfBuffs.Effect[40];
-            Totals.Perception = (float) (Statistics.BasePerception * (1.0 + _selfBuffs.Effect[23]));
-            Totals.StealthPvE = _selfBuffs.Effect[36];
-            Totals.StealthPvP = _selfBuffs.Effect[37];
-            Totals.ThreatLevel = _selfBuffs.Effect[39];
-            Totals.HPRegen = _selfBuffs.Effect[27];
-            Totals.EndRec = _selfBuffs.Effect[26];
+            Totals.BuffAcc = _selfEnhance.Effect[(int)Enums.eStatType.BuffAcc] + _selfBuffs.Effect[(int)Enums.eStatType.BuffAcc];
+            Totals.BuffEndRdx = _selfEnhance.Effect[(int)Enums.eStatType.BuffEndRdx];
+            Totals.BuffHaste = _selfEnhance.Effect[(int)Enums.eStatType.Haste];
+            Totals.BuffToHit = _selfBuffs.Effect[(int)Enums.eStatType.ToHit];
+            Totals.Perception = (float) (Statistics.BasePerception * (1.0 + _selfBuffs.Effect[(int)Enums.eStatType.Perception]));
+            Totals.StealthPvE = _selfBuffs.Effect[(int)Enums.eStatType.StealthPvE];
+            Totals.StealthPvP = _selfBuffs.Effect[(int)Enums.eStatType.StealthPvP];
+            Totals.ThreatLevel = _selfBuffs.Effect[(int)Enums.eStatType.ThreatLevel];
+            Totals.HPRegen = _selfBuffs.Effect[(int)Enums.eStatType.HPRegen];
+            Totals.EndRec = _selfBuffs.Effect[(int)Enums.eStatType.EndRec];
+            Totals.Absorb = _selfBuffs.Effect[(int)Enums.eStatType.Absorb];
+            Debug.WriteLine("----------------------");
+            for (var index = 0; index < _selfBuffs.Effect.Length; index++)
+            {
+                Debug.WriteLine("Effect #" + Convert.ToString(index, null) + ": " + Convert.ToString(_selfBuffs.Effect[index], null));
+            }
 
-            Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[11], -0.9f) * Statistics.BaseFlySpeed;
+            Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
             // this number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
-            Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[51] * Statistics.BaseFlySpeed;
+            Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseFlySpeed;
             if (Totals.MaxFlySpd > 128.990005493164)
                 Totals.MaxFlySpd = 128.99f;
-            Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[32], -0.9f) * Statistics.BaseRunSpeed;
-            Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[49] * Statistics.BaseRunSpeed;
+            Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f) * Statistics.BaseRunSpeed;
+            Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] * Statistics.BaseRunSpeed;
             if (Totals.MaxRunSpd > 135.669998168945)
                 Totals.MaxRunSpd = 135.67f;
             Totals.JumpSpd = (float) (Statistics.BaseJumpSpeed +
-                                      (double) Math.Max(_selfBuffs.Effect[17], -0.9f) * Statistics.BaseJumpSpeed);
-            Totals.MaxJumpSpd = (float) (114.400001525879 + _selfBuffs.Effect[50] * Statistics.BaseJumpSpeed);
+                                      (double) Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f) * Statistics.BaseJumpSpeed);
+            Totals.MaxJumpSpd = (float) (114.400001525879 + _selfBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] * Statistics.BaseJumpSpeed);
             if (Totals.MaxJumpSpd > 114.400001525879)
                 Totals.MaxJumpSpd = Statistics.MaxJumpSpeed;
-            Totals.JumpHeight = (float) (4.0 + Math.Max(_selfBuffs.Effect[16], -0.9f) * 4.0);
-            Totals.HPMax = _selfBuffs.Effect[14] + Archetype.Hitpoints;
+            Totals.JumpHeight = (float) (4.0 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4.0);
+            Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + Archetype.Hitpoints;
             if (!canFly)
                 Totals.FlySpd = 0.0f;
             var maxDmgBuff = -1000f;
@@ -545,7 +552,10 @@ namespace Hero_Designer
             for (var index = 0; index <= num11; ++index)
                 TotalsCapped.Res[index] = Math.Min(TotalsCapped.Res[index], Archetype.ResCap);
             if (Archetype.HPCap > 0.0)
+            {
                 TotalsCapped.HPMax = Math.Min(TotalsCapped.HPMax, Archetype.HPCap);
+                TotalsCapped.Absorb = Math.Min(TotalsCapped.Absorb, TotalsCapped.HPMax);
+            }
             TotalsCapped.RunSpd = Math.Min(TotalsCapped.RunSpd, 135.67f);
             TotalsCapped.JumpSpd = Math.Min(TotalsCapped.JumpSpd, 114.4f);
             TotalsCapped.FlySpd = Math.Min(TotalsCapped.FlySpd, 86f);
