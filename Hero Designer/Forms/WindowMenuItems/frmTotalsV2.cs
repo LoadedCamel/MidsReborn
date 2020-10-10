@@ -1,131 +1,202 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Base.Display;
+using Base.Master_Classes;
+using midsControls;
 
-namespace Hero_Designer.Forms
+/*
+Regen (cap): 28;111;28 (L=44%)
+Regen (base): 51;204;51
+Regen: 64;255;64 (L=100%)
+Max HP (cap): 10;38;10 (L=15%)
+Max HP (base): 31;130;31 (L=51%, -20)
+Max HP: 44;180;44 (L=71%, -29)
+Absorb: Gainsboro
+
+EndRec (cap): 13;63;112 (-56)
+EndRec (base): 24;114;204 (-20)
+EndRec: 30;144;255 (DodgerBlue)
+
+EndUse: 149;203;255
+
+MaxEnd (base): 47;125;204 (-20)
+MaxEnd: 59;158;255
+
+
+Inner Labels: 192;192;255
+Resistance Caps: 255;128;128
+
+EndRec (cap):
+panel16
+
+EndRec (base):
+panel39
+
+EndRec:
+panel40
+
+EndUse:
+panel17
+
+MaxEnd (base):
+panel18
+
+MaxEnd:
+panel41
+
+
+defense:
+panel3 - panel12
+
+Resistance (caps):
+panel13, 19-25
+
+Resistance (main):
+panel26-33
+
+Regen (cap):
+panel14
+
+Regen (base):
+panel34
+
+Regen:
+panel36
+
+Max HP (cap):
+panel15
+
+Max HP (base):
+panel35
+
+Max HP:
+panel37
+
+Absorb:
+panel38
+
+------------------
+
+Values:
+
+Defense:
+label15-24
+
+Resistance:
+label33-40
+
+Regen:
+label43
+
+Max HP:
+label44
+
+EndRec:
+label48
+
+EndUse:
+label49
+
+MaxEnd:
+label50
+*/
+
+namespace Hero_Designer.Forms.WindowMenuItems
 {
-    public partial class frmTotalsV2 : Form
+    public partial class frmTotalTest : Form
     {
-        public frmTotalsV2()
+        private readonly frmMain _myParent;
+        private bool _keepOnTop;
+
+        public frmTotalTest(ref frmMain iParent)
         {
+            Load += OnLoad;
+            _keepOnTop = true;
             InitializeComponent();
+            _myParent = iParent;
         }
 
-        private void frmTotalsV2_Load(object sender, EventArgs e)
+        private void OnLoad(object sender, EventArgs e)
         {
-            barRegen.Refresh();
-            barMaxHp.Refresh();
-            barEndRec.Refresh();
-            barEndUse.Refresh();
-            barMaxEnd.Refresh();
-
-            panelDefBg.Refresh();
-            panelResBg.Refresh();
-
-            panelRegenBg.Refresh();
-            panelHpBg.Refresh();
-            panelEndRecBg.Refresh();
-            panelEndUseBg.Refresh();
-            panelMaxEndBg.Refresh();
+            CenterToParent();
         }
 
-        private void barRegen_Paint(object sender, PaintEventArgs e)
+        private void PbCloseClick(object sender, EventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, barRegen.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
+            Close();
         }
 
-        private void barMaxHp_Paint(object sender, PaintEventArgs e)
+        private void PbClosePaint(object sender, PaintEventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, barMaxHp.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
+            if (_myParent?.Drawing == null)
+                return;
+            var iStr = "Close";
+            var rectangle = new Rectangle();
+            ref var local = ref rectangle;
+            var size = MidsContext.Character.IsHero()
+                ? _myParent.Drawing.bxPower[2].Size
+                : _myParent.Drawing.bxPower[4].Size;
+            var width = size.Width;
+            size = MidsContext.Character.IsHero()
+                ? _myParent.Drawing.bxPower[2].Size
+                : _myParent.Drawing.bxPower[4].Size;
+            var height1 = size.Height;
+            local = new Rectangle(0, 0, width, height1);
+            var destRect = new Rectangle(0, 0, 105, 22);
+            using var stringFormat = new StringFormat();
+            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            stringFormat.Alignment = StringAlignment.Center;
+            stringFormat.LineAlignment = StringAlignment.Center;
+            using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            extendedBitmap.Graphics.Clear(BackColor);
+            extendedBitmap.Graphics.DrawImage(
+                MidsContext.Character.IsHero()
+                    ? _myParent.Drawing.bxPower[2].Bitmap
+                    : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+            var height2 = bFont.GetHeight(e.Graphics) + 2f;
+            var Bounds = new RectangleF(0.0f, (float)((22 - (double)height2) / 2.0), 105, height2);
+            var graphics = extendedBitmap.Graphics;
+            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
-        private void barEndRec_Paint(object sender, PaintEventArgs e)
+        private void PbTopMostClick(object sender, EventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, barEndRec.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
+            _keepOnTop = !_keepOnTop;
+            TopMost = _keepOnTop;
+            pbTopMost.Refresh();
         }
 
-        private void barEndUse_Paint(object sender, PaintEventArgs e)
+        private void PbTopMostPaint(object sender, PaintEventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, barEndUse.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
-        }
-
-        private void barMaxEnd_Paint(object sender, PaintEventArgs e)
-        {
-            ControlPaint.DrawBorder(e.Graphics, barMaxEnd.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
-        }
-
-        private void panelDefBg_Paint(object sender, PaintEventArgs e)
-        {
-            Point startPoint = new Point(0, 0);
-            Point endPoint = new Point(panelDefBg.ClientRectangle.Width, 0);
-
-            LinearGradientBrush lgb = new LinearGradientBrush(startPoint, endPoint, Color.Black, Color.FromArgb(127, 0, 127));
-            e.Graphics.FillRectangle(lgb, 0, 0, panelDefBg.ClientRectangle.Width, panelDefBg.ClientRectangle.Height);
-
-            ControlPaint.DrawBorder(e.Graphics, barEndUse.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
-        }
-
-        private void panelResBg_Paint(object sender, PaintEventArgs e)
-        {
-            Point startPoint = new Point(0, 0);
-            Point endPoint = new Point(panelResBg.ClientRectangle.Width, 0);
-
-            LinearGradientBrush lgb = new LinearGradientBrush(startPoint, endPoint, Color.Black, Color.FromArgb(0, 127, 0));
-            e.Graphics.FillRectangle(lgb, 0, 0, panelResBg.ClientRectangle.Width, panelResBg.ClientRectangle.Height);
-
-            ControlPaint.DrawBorder(e.Graphics, barEndUse.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
-        }
-
-        private void panelRegenBg_Paint(object sender, PaintEventArgs e)
-        {
-            Point startPoint = new Point(0, 0);
-            Point endPoint = new Point(panelResBg.ClientRectangle.Width, 0);
-
-            LinearGradientBrush lgb = new LinearGradientBrush(startPoint, endPoint, Color.Black, Color.FromArgb(0, 191, 0));
-            e.Graphics.FillRectangle(lgb, 0, 0, panelRegenBg.ClientRectangle.Width, panelRegenBg.ClientRectangle.Height);
-        }
-
-        private void panelHpBg_Paint(object sender, PaintEventArgs e)
-        {
-            Point startPoint = new Point(0, 0);
-            Point endPoint = new Point(panelResBg.ClientRectangle.Width, 0);
-
-            LinearGradientBrush lgb = new LinearGradientBrush(startPoint, endPoint, Color.Black, Color.FromArgb(64, 127, 64));
-            e.Graphics.FillRectangle(lgb, 0, 0, panelHpBg.ClientRectangle.Width, panelHpBg.ClientRectangle.Height);
-        }
-
-        private void panelEndRecBg_Paint(object sender, PaintEventArgs e)
-        {
-            Point startPoint = new Point(0, 0);
-            Point endPoint = new Point(panelEndRecBg.ClientRectangle.Width, 0);
-
-            LinearGradientBrush lgb = new LinearGradientBrush(startPoint, endPoint, Color.Black, Color.FromArgb(64, 127, 64));
-            e.Graphics.FillRectangle(lgb, 0, 0, panelEndRecBg.ClientRectangle.Width, panelEndRecBg.ClientRectangle.Height);
-        }
-
-        private void panelEndUseBg_Paint(object sender, PaintEventArgs e)
-        {
-            Point startPoint = new Point(0, 0);
-            Point endPoint = new Point(panelEndUseBg.ClientRectangle.Width, 0);
-
-            LinearGradientBrush lgb = new LinearGradientBrush(startPoint, endPoint, Color.Black, Color.FromArgb(64, 127, 64));
-            e.Graphics.FillRectangle(lgb, 0, 0, panelEndUseBg.ClientRectangle.Width, panelEndUseBg.ClientRectangle.Height);
-        }
-
-        private void panelMaxEndBg_Paint(object sender, PaintEventArgs e)
-        {
-            Point startPoint = new Point(0, 0);
-            Point endPoint = new Point(panelMaxEndBg.ClientRectangle.Width, 0);
-
-            LinearGradientBrush lgb = new LinearGradientBrush(startPoint, endPoint, Color.Black, Color.FromArgb(64, 127, 64));
-            e.Graphics.FillRectangle(lgb, 0, 0, panelMaxEndBg.ClientRectangle.Width, panelMaxEndBg.ClientRectangle.Height);
+            if (_myParent?.Drawing == null)
+                return;
+            var index = 2;
+            if (_keepOnTop)
+                index = 3;
+            var iStr = "Keep On top";
+            var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
+                _myParent.Drawing.bxPower[index].Size.Height);
+            var destRect = new Rectangle(0, 0, 105, 22);
+            using var stringFormat = new StringFormat();
+            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            stringFormat.Alignment = StringAlignment.Center;
+            stringFormat.LineAlignment = StringAlignment.Center;
+            using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            extendedBitmap.Graphics.Clear(BackColor);
+            if (index == 3)
+                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
+                    rectangle.Width, rectangle.Height, GraphicsUnit.Pixel);
+            else
+                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
+                    rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+            var height = bFont.GetHeight(e.Graphics) + 2f;
+            var Bounds = new RectangleF(0.0f, (float)((22 - (double)height) / 2.0), 105, height);
+            var graphics = extendedBitmap.Graphics;
+            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
     }
 }
