@@ -32,7 +32,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTotals));
             this.lblDef = new System.Windows.Forms.Label();
             this.lblRes = new System.Windows.Forms.Label();
             this.lblRegenRec = new System.Windows.Forms.Label();
@@ -1012,7 +1011,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(1024, 603);
             this.MinimumSize = new System.Drawing.Size(240, 200);
             this.Name = "frmTotals";
