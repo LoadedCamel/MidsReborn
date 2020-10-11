@@ -7,7 +7,7 @@ using midsControls;
 
 /*
 Regen (cap): 28;111;28 (L=44%)
-Regen (base): 51;204;51
+Regen (base): 51;204;51 (L=80%)
 Regen: 64;255;64 (L=100%)
 Max HP (cap): 10;38;10 (L=15%)
 Max HP (base): 31;130;31 (L=51%, -20)
@@ -26,6 +26,108 @@ MaxEnd: 59;158;255
 
 Inner Labels: 192;192;255
 Resistance Caps: 255;128;128
+
+Movement (cap): 0;48;32 (L=19%)
+Movement (base): 0;140;94 (L=55%)
+Movement: 0;192;128 (L=75%)
+
+Haste (cap): 112;56;0 (L=44%)
+Haste (base): 204;102;0 (L=80%)
+Haste: 255;128;0
+
+ToHit: 255;255;128
+
+Damage (base): 204;0;0(L=80%)
+Damage: 255;0;0
+
+EndRdx: 65;105;225
+
+Threat (base): 113;86;168
+Threat: 147;112;219
+
+Elusivity:
+panel88
+
+Threat:
+panel84
+
+Threat (base):
+panel83
+
+EndRdx:
+panel80
+
+Damage (base):
+panel76
+
+Damage:
+panel77
+
+Accuracy:
+panel70
+
+ToHit:
+panel67
+
+Haste (cap):
+panel74
+
+Haste (base):
+panel54
+
+Haste:
+panel55
+
+----------------------
+
+Stealth (PvE):
+panel65
+
+Stealth (PvP):
+panel62
+
+Perception:
+panel59
+
+----------------------
+
+Run speed (cap):
+panel51
+
+Run speed (base):
+panel42
+
+Run speed:
+panel46
+
+Jump speed (cap):
+panel50
+
+Jump speed (base):
+panel43
+
+Jump speed:
+panel47
+
+Jump height (cap):
+panel49
+
+Jump height:
+panel52
+
+Jump height (base):
+panel44
+
+Fly (cap):
+panel48
+
+Fly (base):
+panel45
+
+Fly:
+panel53
+
+---------------------------------
 
 EndRec (cap):
 panel16
@@ -100,6 +202,48 @@ label49
 
 MaxEnd:
 label50
+
+Run:
+label70
+
+Jump speed:
+label59
+
+Jump height:
+label58
+
+Fly:
+label57
+
+Stealth (PvE):
+label66
+
+Stealth (PvP):
+label54
+
+Perception:
+label53
+
+Haste:
+label74
+
+ToHit:
+label67
+
+Accuracy:
+label71
+
+Damage:
+label73
+
+EndRdx:
+label76
+
+Threat:
+label78
+
+Elusivity:
+label80
 */
 
 namespace Hero_Designer.Forms.WindowMenuItems

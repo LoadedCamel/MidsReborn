@@ -138,6 +138,106 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label15 = new System.Windows.Forms.Label();
             this.tabPageAdv5 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.tabPageAdv6 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
+            this.gradientPanel5 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.label57 = new System.Windows.Forms.Label();
+            this.panel48 = new System.Windows.Forms.Panel();
+            this.label58 = new System.Windows.Forms.Label();
+            this.panel49 = new System.Windows.Forms.Panel();
+            this.label59 = new System.Windows.Forms.Label();
+            this.panel50 = new System.Windows.Forms.Panel();
+            this.label60 = new System.Windows.Forms.Label();
+            this.panel51 = new System.Windows.Forms.Panel();
+            this.label61 = new System.Windows.Forms.Label();
+            this.label62 = new System.Windows.Forms.Label();
+            this.label63 = new System.Windows.Forms.Label();
+            this.label70 = new System.Windows.Forms.Label();
+            this.panel42 = new System.Windows.Forms.Panel();
+            this.panel43 = new System.Windows.Forms.Panel();
+            this.panel44 = new System.Windows.Forms.Panel();
+            this.panel45 = new System.Windows.Forms.Panel();
+            this.panel46 = new System.Windows.Forms.Panel();
+            this.panel47 = new System.Windows.Forms.Panel();
+            this.panel52 = new System.Windows.Forms.Panel();
+            this.panel53 = new System.Windows.Forms.Panel();
+            this.label51 = new System.Windows.Forms.Label();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.gradientPanel6 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.label53 = new System.Windows.Forms.Label();
+            this.panel57 = new System.Windows.Forms.Panel();
+            this.panel58 = new System.Windows.Forms.Panel();
+            this.panel59 = new System.Windows.Forms.Panel();
+            this.label54 = new System.Windows.Forms.Label();
+            this.panel60 = new System.Windows.Forms.Panel();
+            this.panel61 = new System.Windows.Forms.Panel();
+            this.panel62 = new System.Windows.Forms.Panel();
+            this.label55 = new System.Windows.Forms.Label();
+            this.panel63 = new System.Windows.Forms.Panel();
+            this.panel64 = new System.Windows.Forms.Panel();
+            this.panel65 = new System.Windows.Forms.Panel();
+            this.label56 = new System.Windows.Forms.Label();
+            this.label64 = new System.Windows.Forms.Label();
+            this.label66 = new System.Windows.Forms.Label();
+            this.label52 = new System.Windows.Forms.Label();
+            this.gradientPanel7 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.gradientPanel8 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.label69 = new System.Windows.Forms.Label();
+            this.panel72 = new System.Windows.Forms.Panel();
+            this.panel73 = new System.Windows.Forms.Panel();
+            this.panel74 = new System.Windows.Forms.Panel();
+            this.label74 = new System.Windows.Forms.Label();
+            this.panel54 = new System.Windows.Forms.Panel();
+            this.panel55 = new System.Windows.Forms.Panel();
+            this.gradientPanel9 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+            this.label65 = new System.Windows.Forms.Label();
+            this.panel56 = new System.Windows.Forms.Panel();
+            this.panel66 = new System.Windows.Forms.Panel();
+            this.panel67 = new System.Windows.Forms.Panel();
+            this.label67 = new System.Windows.Forms.Label();
+            this.gradientPanel10 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+            this.label68 = new System.Windows.Forms.Label();
+            this.panel68 = new System.Windows.Forms.Panel();
+            this.panel69 = new System.Windows.Forms.Panel();
+            this.panel70 = new System.Windows.Forms.Panel();
+            this.label71 = new System.Windows.Forms.Label();
+            this.gradientPanel11 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.label72 = new System.Windows.Forms.Label();
+            this.panel71 = new System.Windows.Forms.Panel();
+            this.panel75 = new System.Windows.Forms.Panel();
+            this.panel76 = new System.Windows.Forms.Panel();
+            this.label73 = new System.Windows.Forms.Label();
+            this.panel77 = new System.Windows.Forms.Panel();
+            this.gradientPanel12 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+            this.label75 = new System.Windows.Forms.Label();
+            this.panel78 = new System.Windows.Forms.Panel();
+            this.panel79 = new System.Windows.Forms.Panel();
+            this.panel80 = new System.Windows.Forms.Panel();
+            this.label76 = new System.Windows.Forms.Label();
+            this.gradientPanel13 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
+            this.label77 = new System.Windows.Forms.Label();
+            this.panel81 = new System.Windows.Forms.Panel();
+            this.panel82 = new System.Windows.Forms.Panel();
+            this.panel83 = new System.Windows.Forms.Panel();
+            this.label78 = new System.Windows.Forms.Label();
+            this.panel84 = new System.Windows.Forms.Panel();
+            this.gradientPanel14 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
+            this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
+            this.label79 = new System.Windows.Forms.Label();
+            this.panel85 = new System.Windows.Forms.Panel();
+            this.panel86 = new System.Windows.Forms.Panel();
+            this.panel87 = new System.Windows.Forms.Panel();
+            this.label80 = new System.Windows.Forms.Label();
+            this.label81 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopMost)).BeginInit();
             this.panel1.SuspendLayout();
@@ -173,6 +273,68 @@ namespace Hero_Designer.Forms.WindowMenuItems
             ((System.ComponentModel.ISupportInitialize)(this.gradientPanel1)).BeginInit();
             this.gradientPanel1.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
+            this.tabPageAdv5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel5)).BeginInit();
+            this.gradientPanel5.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
+            this.panel48.SuspendLayout();
+            this.panel49.SuspendLayout();
+            this.panel50.SuspendLayout();
+            this.panel51.SuspendLayout();
+            this.panel42.SuspendLayout();
+            this.panel43.SuspendLayout();
+            this.panel44.SuspendLayout();
+            this.panel45.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel6)).BeginInit();
+            this.gradientPanel6.SuspendLayout();
+            this.tableLayoutPanel6.SuspendLayout();
+            this.panel57.SuspendLayout();
+            this.panel58.SuspendLayout();
+            this.panel60.SuspendLayout();
+            this.panel61.SuspendLayout();
+            this.panel63.SuspendLayout();
+            this.panel64.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel7)).BeginInit();
+            this.gradientPanel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel8)).BeginInit();
+            this.gradientPanel8.SuspendLayout();
+            this.tableLayoutPanel7.SuspendLayout();
+            this.panel72.SuspendLayout();
+            this.panel73.SuspendLayout();
+            this.panel74.SuspendLayout();
+            this.panel54.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel9)).BeginInit();
+            this.gradientPanel9.SuspendLayout();
+            this.tableLayoutPanel8.SuspendLayout();
+            this.panel56.SuspendLayout();
+            this.panel66.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel10)).BeginInit();
+            this.gradientPanel10.SuspendLayout();
+            this.tableLayoutPanel9.SuspendLayout();
+            this.panel68.SuspendLayout();
+            this.panel69.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel11)).BeginInit();
+            this.gradientPanel11.SuspendLayout();
+            this.tableLayoutPanel10.SuspendLayout();
+            this.panel71.SuspendLayout();
+            this.panel75.SuspendLayout();
+            this.panel76.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel12)).BeginInit();
+            this.gradientPanel12.SuspendLayout();
+            this.tableLayoutPanel11.SuspendLayout();
+            this.panel78.SuspendLayout();
+            this.panel79.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel13)).BeginInit();
+            this.gradientPanel13.SuspendLayout();
+            this.tableLayoutPanel12.SuspendLayout();
+            this.panel81.SuspendLayout();
+            this.panel82.SuspendLayout();
+            this.panel83.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel14)).BeginInit();
+            this.gradientPanel14.SuspendLayout();
+            this.tableLayoutPanel13.SuspendLayout();
+            this.panel85.SuspendLayout();
+            this.panel86.SuspendLayout();
             this.SuspendLayout();
             // 
             // pbClose
@@ -1435,6 +1597,16 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             // tabPageAdv5
             // 
+            this.tabPageAdv5.Controls.Add(this.label81);
+            this.tabPageAdv5.Controls.Add(this.gradientPanel7);
+            this.tabPageAdv5.Controls.Add(this.label52);
+            this.tabPageAdv5.Controls.Add(this.gradientPanel6);
+            this.tabPageAdv5.Controls.Add(this.radioButton4);
+            this.tabPageAdv5.Controls.Add(this.radioButton3);
+            this.tabPageAdv5.Controls.Add(this.radioButton2);
+            this.tabPageAdv5.Controls.Add(this.radioButton1);
+            this.tabPageAdv5.Controls.Add(this.label51);
+            this.tabPageAdv5.Controls.Add(this.gradientPanel5);
             this.tabPageAdv5.Image = null;
             this.tabPageAdv5.ImageSize = new System.Drawing.Size(16, 16);
             this.tabPageAdv5.Location = new System.Drawing.Point(0, 24);
@@ -1456,6 +1628,1205 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tabPageAdv6.TabIndex = 3;
             this.tabPageAdv6.Text = "Status Protections";
             this.tabPageAdv6.ThemesEnabled = false;
+            // 
+            // gradientPanel5
+            // 
+            this.gradientPanel5.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(127)))), ((int)(((byte)(95))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel5.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel5.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(227)))), ((int)(((byte)(170)))));
+            this.gradientPanel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel5.CanApplyTheme = false;
+            this.gradientPanel5.Controls.Add(this.tableLayoutPanel5);
+            this.gradientPanel5.Location = new System.Drawing.Point(8, 28);
+            this.gradientPanel5.Name = "gradientPanel5";
+            this.gradientPanel5.Size = new System.Drawing.Size(515, 83);
+            this.gradientPanel5.TabIndex = 1;
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel5.ColumnCount = 3;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel5.Controls.Add(this.label57, 1, 3);
+            this.tableLayoutPanel5.Controls.Add(this.panel48, 2, 3);
+            this.tableLayoutPanel5.Controls.Add(this.label58, 1, 2);
+            this.tableLayoutPanel5.Controls.Add(this.panel49, 2, 2);
+            this.tableLayoutPanel5.Controls.Add(this.label59, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.panel50, 2, 1);
+            this.tableLayoutPanel5.Controls.Add(this.label60, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.panel51, 2, 0);
+            this.tableLayoutPanel5.Controls.Add(this.label61, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.label62, 0, 2);
+            this.tableLayoutPanel5.Controls.Add(this.label63, 0, 3);
+            this.tableLayoutPanel5.Controls.Add(this.label70, 1, 0);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 4;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(506, 77);
+            this.tableLayoutPanel5.TabIndex = 11;
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label57.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label57.Location = new System.Drawing.Point(133, 57);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(85, 20);
+            this.label57.TabIndex = 13;
+            this.label57.Text = "100.00 mph";
+            this.label57.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel48
+            // 
+            this.panel48.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel48.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel48.Controls.Add(this.panel45);
+            this.panel48.Location = new System.Drawing.Point(224, 60);
+            this.panel48.Name = "panel48";
+            this.panel48.Size = new System.Drawing.Size(277, 13);
+            this.panel48.TabIndex = 3;
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label58.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label58.Location = new System.Drawing.Point(133, 38);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(85, 19);
+            this.label58.TabIndex = 12;
+            this.label58.Text = "100.00 ft";
+            this.label58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel49
+            // 
+            this.panel49.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel49.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel49.Controls.Add(this.panel44);
+            this.panel49.Location = new System.Drawing.Point(224, 41);
+            this.panel49.Name = "panel49";
+            this.panel49.Size = new System.Drawing.Size(277, 13);
+            this.panel49.TabIndex = 2;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label59.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label59.Location = new System.Drawing.Point(133, 19);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(85, 19);
+            this.label59.TabIndex = 11;
+            this.label59.Text = "100.00 mph";
+            this.label59.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel50
+            // 
+            this.panel50.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel50.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel50.Controls.Add(this.panel43);
+            this.panel50.Location = new System.Drawing.Point(224, 22);
+            this.panel50.Name = "panel50";
+            this.panel50.Size = new System.Drawing.Size(277, 13);
+            this.panel50.TabIndex = 1;
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label60.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label60.Location = new System.Drawing.Point(3, 0);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(124, 19);
+            this.label60.TabIndex = 0;
+            this.label60.Text = "Run Speed:";
+            this.label60.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel51
+            // 
+            this.panel51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel51.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel51.Controls.Add(this.panel42);
+            this.panel51.Location = new System.Drawing.Point(224, 3);
+            this.panel51.Name = "panel51";
+            this.panel51.Size = new System.Drawing.Size(277, 13);
+            this.panel51.TabIndex = 0;
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label61.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label61.Location = new System.Drawing.Point(3, 19);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(124, 19);
+            this.label61.TabIndex = 1;
+            this.label61.Text = "Jump Speed:";
+            this.label61.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label62.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label62.Location = new System.Drawing.Point(3, 38);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(124, 19);
+            this.label62.TabIndex = 2;
+            this.label62.Text = "Jump Height:";
+            this.label62.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label63.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label63.Location = new System.Drawing.Point(3, 57);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(124, 20);
+            this.label63.TabIndex = 3;
+            this.label63.Text = "Fly:";
+            this.label63.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label70.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label70.Location = new System.Drawing.Point(133, 0);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(85, 19);
+            this.label70.TabIndex = 10;
+            this.label70.Text = "100.00 mph";
+            this.label70.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel42
+            // 
+            this.panel42.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel42.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel42.Controls.Add(this.panel46);
+            this.panel42.Location = new System.Drawing.Point(-1, -1);
+            this.panel42.Name = "panel42";
+            this.panel42.Size = new System.Drawing.Size(277, 13);
+            this.panel42.TabIndex = 1;
+            // 
+            // panel43
+            // 
+            this.panel43.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel43.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel43.Controls.Add(this.panel47);
+            this.panel43.Location = new System.Drawing.Point(-1, -1);
+            this.panel43.Name = "panel43";
+            this.panel43.Size = new System.Drawing.Size(277, 13);
+            this.panel43.TabIndex = 2;
+            // 
+            // panel44
+            // 
+            this.panel44.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel44.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel44.Controls.Add(this.panel52);
+            this.panel44.Location = new System.Drawing.Point(-1, -1);
+            this.panel44.Name = "panel44";
+            this.panel44.Size = new System.Drawing.Size(277, 13);
+            this.panel44.TabIndex = 3;
+            // 
+            // panel45
+            // 
+            this.panel45.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel45.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel45.Controls.Add(this.panel53);
+            this.panel45.Location = new System.Drawing.Point(-1, -1);
+            this.panel45.Name = "panel45";
+            this.panel45.Size = new System.Drawing.Size(277, 13);
+            this.panel45.TabIndex = 4;
+            // 
+            // panel46
+            // 
+            this.panel46.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.panel46.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel46.Location = new System.Drawing.Point(-1, -1);
+            this.panel46.Name = "panel46";
+            this.panel46.Size = new System.Drawing.Size(277, 13);
+            this.panel46.TabIndex = 2;
+            // 
+            // panel47
+            // 
+            this.panel47.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.panel47.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel47.Location = new System.Drawing.Point(-1, -1);
+            this.panel47.Name = "panel47";
+            this.panel47.Size = new System.Drawing.Size(277, 13);
+            this.panel47.TabIndex = 3;
+            // 
+            // panel52
+            // 
+            this.panel52.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.panel52.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel52.Location = new System.Drawing.Point(-1, -1);
+            this.panel52.Name = "panel52";
+            this.panel52.Size = new System.Drawing.Size(277, 13);
+            this.panel52.TabIndex = 4;
+            // 
+            // panel53
+            // 
+            this.panel53.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.panel53.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel53.Location = new System.Drawing.Point(-1, -1);
+            this.panel53.Name = "panel53";
+            this.panel53.Size = new System.Drawing.Size(277, 13);
+            this.panel53.TabIndex = 5;
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.ForeColor = System.Drawing.Color.White;
+            this.label51.Location = new System.Drawing.Point(8, 9);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(78, 16);
+            this.label51.TabIndex = 4;
+            this.label51.Text = "Movement:";
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.ForeColor = System.Drawing.Color.White;
+            this.radioButton1.Location = new System.Drawing.Point(21, 123);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(55, 20);
+            this.radioButton1.TabIndex = 5;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "MPH";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.ForeColor = System.Drawing.Color.White;
+            this.radioButton2.Location = new System.Drawing.Point(151, 123);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(53, 20);
+            this.radioButton2.TabIndex = 6;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "KPH";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.ForeColor = System.Drawing.Color.White;
+            this.radioButton3.Location = new System.Drawing.Point(270, 123);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(82, 20);
+            this.radioButton3.TabIndex = 7;
+            this.radioButton3.TabStop = true;
+            this.radioButton3.Text = "Feet/Sec";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.ForeColor = System.Drawing.Color.White;
+            this.radioButton4.Location = new System.Drawing.Point(420, 123);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(96, 20);
+            this.radioButton4.TabIndex = 8;
+            this.radioButton4.TabStop = true;
+            this.radioButton4.Text = "Meters/Sec";
+            this.radioButton4.UseVisualStyleBackColor = true;
+            // 
+            // gradientPanel6
+            // 
+            this.gradientPanel6.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(61)))), ((int)(((byte)(138))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel6.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel6.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(124)))), ((int)(((byte)(104)))), ((int)(((byte)(237)))));
+            this.gradientPanel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel6.CanApplyTheme = false;
+            this.gradientPanel6.Controls.Add(this.tableLayoutPanel6);
+            this.gradientPanel6.Location = new System.Drawing.Point(9, 180);
+            this.gradientPanel6.Name = "gradientPanel6";
+            this.gradientPanel6.Size = new System.Drawing.Size(515, 64);
+            this.gradientPanel6.TabIndex = 9;
+            // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel6.ColumnCount = 3;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel6.Controls.Add(this.label53, 1, 2);
+            this.tableLayoutPanel6.Controls.Add(this.panel57, 2, 2);
+            this.tableLayoutPanel6.Controls.Add(this.label54, 1, 1);
+            this.tableLayoutPanel6.Controls.Add(this.panel60, 2, 1);
+            this.tableLayoutPanel6.Controls.Add(this.label55, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.panel63, 2, 0);
+            this.tableLayoutPanel6.Controls.Add(this.label56, 0, 1);
+            this.tableLayoutPanel6.Controls.Add(this.label64, 0, 2);
+            this.tableLayoutPanel6.Controls.Add(this.label66, 1, 0);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.RowCount = 3;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(506, 58);
+            this.tableLayoutPanel6.TabIndex = 11;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label53.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label53.Location = new System.Drawing.Point(133, 38);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(85, 20);
+            this.label53.TabIndex = 12;
+            this.label53.Text = "100.00 ft";
+            this.label53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel57
+            // 
+            this.panel57.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel57.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel57.Controls.Add(this.panel58);
+            this.panel57.Location = new System.Drawing.Point(224, 41);
+            this.panel57.Name = "panel57";
+            this.panel57.Size = new System.Drawing.Size(277, 13);
+            this.panel57.TabIndex = 2;
+            // 
+            // panel58
+            // 
+            this.panel58.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel58.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel58.Controls.Add(this.panel59);
+            this.panel58.Location = new System.Drawing.Point(-1, -1);
+            this.panel58.Name = "panel58";
+            this.panel58.Size = new System.Drawing.Size(277, 13);
+            this.panel58.TabIndex = 3;
+            // 
+            // panel59
+            // 
+            this.panel59.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(100)))), ((int)(((byte)(153)))));
+            this.panel59.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel59.Location = new System.Drawing.Point(-1, -1);
+            this.panel59.Name = "panel59";
+            this.panel59.Size = new System.Drawing.Size(277, 13);
+            this.panel59.TabIndex = 4;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label54.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label54.Location = new System.Drawing.Point(133, 19);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(85, 19);
+            this.label54.TabIndex = 11;
+            this.label54.Text = "100.00 ft";
+            this.label54.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel60
+            // 
+            this.panel60.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel60.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel60.Controls.Add(this.panel61);
+            this.panel60.Location = new System.Drawing.Point(224, 22);
+            this.panel60.Name = "panel60";
+            this.panel60.Size = new System.Drawing.Size(277, 13);
+            this.panel60.TabIndex = 1;
+            // 
+            // panel61
+            // 
+            this.panel61.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel61.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel61.Controls.Add(this.panel62);
+            this.panel61.Location = new System.Drawing.Point(-1, -1);
+            this.panel61.Name = "panel61";
+            this.panel61.Size = new System.Drawing.Size(277, 13);
+            this.panel61.TabIndex = 2;
+            // 
+            // panel62
+            // 
+            this.panel62.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(121)))), ((int)(((byte)(136)))));
+            this.panel62.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel62.Location = new System.Drawing.Point(-1, -1);
+            this.panel62.Name = "panel62";
+            this.panel62.Size = new System.Drawing.Size(277, 13);
+            this.panel62.TabIndex = 3;
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label55.Location = new System.Drawing.Point(3, 0);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(124, 19);
+            this.label55.TabIndex = 0;
+            this.label55.Text = "PvE:";
+            this.label55.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel63
+            // 
+            this.panel63.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel63.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel63.Controls.Add(this.panel64);
+            this.panel63.Location = new System.Drawing.Point(224, 3);
+            this.panel63.Name = "panel63";
+            this.panel63.Size = new System.Drawing.Size(277, 13);
+            this.panel63.TabIndex = 0;
+            // 
+            // panel64
+            // 
+            this.panel64.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel64.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel64.Controls.Add(this.panel65);
+            this.panel64.Location = new System.Drawing.Point(-1, -1);
+            this.panel64.Name = "panel64";
+            this.panel64.Size = new System.Drawing.Size(277, 13);
+            this.panel64.TabIndex = 1;
+            // 
+            // panel65
+            // 
+            this.panel65.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(121)))), ((int)(((byte)(136)))));
+            this.panel65.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel65.Location = new System.Drawing.Point(-1, -1);
+            this.panel65.Name = "panel65";
+            this.panel65.Size = new System.Drawing.Size(277, 13);
+            this.panel65.TabIndex = 2;
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label56.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label56.Location = new System.Drawing.Point(3, 19);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(124, 19);
+            this.label56.TabIndex = 1;
+            this.label56.Text = "PvP:";
+            this.label56.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label64.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label64.Location = new System.Drawing.Point(3, 38);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(124, 20);
+            this.label64.TabIndex = 2;
+            this.label64.Text = "Perception:";
+            this.label64.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label66
+            // 
+            this.label66.AutoSize = true;
+            this.label66.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label66.Location = new System.Drawing.Point(133, 0);
+            this.label66.Name = "label66";
+            this.label66.Size = new System.Drawing.Size(85, 19);
+            this.label66.TabIndex = 10;
+            this.label66.Text = "100.00 ft";
+            this.label66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.ForeColor = System.Drawing.Color.White;
+            this.label52.Location = new System.Drawing.Point(8, 161);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(57, 16);
+            this.label52.TabIndex = 10;
+            this.label52.Text = "Stealth:";
+            // 
+            // gradientPanel7
+            // 
+            this.gradientPanel7.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(0)))), ((int)(((byte)(32))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel7.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel7.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
+            this.gradientPanel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel7.CanApplyTheme = false;
+            this.gradientPanel7.Controls.Add(this.gradientPanel14);
+            this.gradientPanel7.Controls.Add(this.gradientPanel13);
+            this.gradientPanel7.Controls.Add(this.gradientPanel12);
+            this.gradientPanel7.Controls.Add(this.gradientPanel11);
+            this.gradientPanel7.Controls.Add(this.gradientPanel10);
+            this.gradientPanel7.Controls.Add(this.gradientPanel9);
+            this.gradientPanel7.Controls.Add(this.gradientPanel8);
+            this.gradientPanel7.Location = new System.Drawing.Point(9, 285);
+            this.gradientPanel7.Name = "gradientPanel7";
+            this.gradientPanel7.Size = new System.Drawing.Size(515, 251);
+            this.gradientPanel7.TabIndex = 11;
+            // 
+            // gradientPanel8
+            // 
+            this.gradientPanel8.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(62)))), ((int)(((byte)(0))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel8.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel8.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(81)))), ((int)(((byte)(0)))));
+            this.gradientPanel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel8.CanApplyTheme = false;
+            this.gradientPanel8.Controls.Add(this.tableLayoutPanel7);
+            this.gradientPanel8.Location = new System.Drawing.Point(3, 6);
+            this.gradientPanel8.Name = "gradientPanel8";
+            this.gradientPanel8.Size = new System.Drawing.Size(510, 27);
+            this.gradientPanel8.TabIndex = 2;
+            // 
+            // tableLayoutPanel7
+            // 
+            this.tableLayoutPanel7.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel7.ColumnCount = 3;
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel7.Controls.Add(this.label69, 0, 0);
+            this.tableLayoutPanel7.Controls.Add(this.panel72, 2, 0);
+            this.tableLayoutPanel7.Controls.Add(this.label74, 1, 0);
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+            this.tableLayoutPanel7.RowCount = 1;
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(506, 22);
+            this.tableLayoutPanel7.TabIndex = 11;
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label69.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label69.Location = new System.Drawing.Point(3, 0);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(124, 22);
+            this.label69.TabIndex = 0;
+            this.label69.Text = "Haste:";
+            this.label69.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel72
+            // 
+            this.panel72.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel72.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel72.Controls.Add(this.panel73);
+            this.panel72.Location = new System.Drawing.Point(224, 3);
+            this.panel72.Name = "panel72";
+            this.panel72.Size = new System.Drawing.Size(277, 13);
+            this.panel72.TabIndex = 0;
+            // 
+            // panel73
+            // 
+            this.panel73.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel73.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel73.Controls.Add(this.panel74);
+            this.panel73.Location = new System.Drawing.Point(-1, -1);
+            this.panel73.Name = "panel73";
+            this.panel73.Size = new System.Drawing.Size(277, 13);
+            this.panel73.TabIndex = 1;
+            // 
+            // panel74
+            // 
+            this.panel74.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(56)))), ((int)(((byte)(0)))));
+            this.panel74.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel74.Controls.Add(this.panel54);
+            this.panel74.Location = new System.Drawing.Point(-1, -1);
+            this.panel74.Name = "panel74";
+            this.panel74.Size = new System.Drawing.Size(277, 13);
+            this.panel74.TabIndex = 2;
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label74.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label74.Location = new System.Drawing.Point(133, 0);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(85, 22);
+            this.label74.TabIndex = 10;
+            this.label74.Text = "100.00%";
+            this.label74.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel54
+            // 
+            this.panel54.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(102)))), ((int)(((byte)(0)))));
+            this.panel54.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel54.Controls.Add(this.panel55);
+            this.panel54.Location = new System.Drawing.Point(-1, -1);
+            this.panel54.Name = "panel54";
+            this.panel54.Size = new System.Drawing.Size(277, 13);
+            this.panel54.TabIndex = 3;
+            // 
+            // panel55
+            // 
+            this.panel55.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.panel55.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel55.Location = new System.Drawing.Point(-1, -1);
+            this.panel55.Name = "panel55";
+            this.panel55.Size = new System.Drawing.Size(277, 13);
+            this.panel55.TabIndex = 4;
+            // 
+            // gradientPanel9
+            // 
+            this.gradientPanel9.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(0))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel9.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel9.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(0)))));
+            this.gradientPanel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel9.CanApplyTheme = false;
+            this.gradientPanel9.Controls.Add(this.tableLayoutPanel8);
+            this.gradientPanel9.Location = new System.Drawing.Point(3, 40);
+            this.gradientPanel9.Name = "gradientPanel9";
+            this.gradientPanel9.Size = new System.Drawing.Size(510, 27);
+            this.gradientPanel9.TabIndex = 3;
+            // 
+            // tableLayoutPanel8
+            // 
+            this.tableLayoutPanel8.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel8.ColumnCount = 3;
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel8.Controls.Add(this.label65, 0, 0);
+            this.tableLayoutPanel8.Controls.Add(this.panel56, 2, 0);
+            this.tableLayoutPanel8.Controls.Add(this.label67, 1, 0);
+            this.tableLayoutPanel8.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
+            this.tableLayoutPanel8.RowCount = 1;
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(506, 22);
+            this.tableLayoutPanel8.TabIndex = 11;
+            // 
+            // label65
+            // 
+            this.label65.AutoSize = true;
+            this.label65.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label65.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label65.Location = new System.Drawing.Point(3, 0);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(124, 22);
+            this.label65.TabIndex = 0;
+            this.label65.Text = "ToHit:";
+            this.label65.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel56
+            // 
+            this.panel56.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel56.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel56.Controls.Add(this.panel66);
+            this.panel56.Location = new System.Drawing.Point(224, 3);
+            this.panel56.Name = "panel56";
+            this.panel56.Size = new System.Drawing.Size(277, 13);
+            this.panel56.TabIndex = 0;
+            // 
+            // panel66
+            // 
+            this.panel66.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel66.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel66.Controls.Add(this.panel67);
+            this.panel66.Location = new System.Drawing.Point(-1, -1);
+            this.panel66.Name = "panel66";
+            this.panel66.Size = new System.Drawing.Size(277, 13);
+            this.panel66.TabIndex = 1;
+            // 
+            // panel67
+            // 
+            this.panel67.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.panel67.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel67.Location = new System.Drawing.Point(-1, -1);
+            this.panel67.Name = "panel67";
+            this.panel67.Size = new System.Drawing.Size(277, 13);
+            this.panel67.TabIndex = 2;
+            // 
+            // label67
+            // 
+            this.label67.AutoSize = true;
+            this.label67.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label67.Location = new System.Drawing.Point(133, 0);
+            this.label67.Name = "label67";
+            this.label67.Size = new System.Drawing.Size(85, 22);
+            this.label67.TabIndex = 10;
+            this.label67.Text = "+100.00%";
+            this.label67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // gradientPanel10
+            // 
+            this.gradientPanel10.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(124)))), ((int)(((byte)(124)))), ((int)(((byte)(0))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel10.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel10.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(227)))), ((int)(((byte)(0)))));
+            this.gradientPanel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel10.CanApplyTheme = false;
+            this.gradientPanel10.Controls.Add(this.tableLayoutPanel9);
+            this.gradientPanel10.Location = new System.Drawing.Point(3, 75);
+            this.gradientPanel10.Name = "gradientPanel10";
+            this.gradientPanel10.Size = new System.Drawing.Size(510, 27);
+            this.gradientPanel10.TabIndex = 4;
+            // 
+            // tableLayoutPanel9
+            // 
+            this.tableLayoutPanel9.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel9.ColumnCount = 3;
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel9.Controls.Add(this.label68, 0, 0);
+            this.tableLayoutPanel9.Controls.Add(this.panel68, 2, 0);
+            this.tableLayoutPanel9.Controls.Add(this.label71, 1, 0);
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+            this.tableLayoutPanel9.RowCount = 1;
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(506, 22);
+            this.tableLayoutPanel9.TabIndex = 11;
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label68.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label68.Location = new System.Drawing.Point(3, 0);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(124, 22);
+            this.label68.TabIndex = 0;
+            this.label68.Text = "Accuracy:";
+            this.label68.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel68
+            // 
+            this.panel68.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel68.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel68.Controls.Add(this.panel69);
+            this.panel68.Location = new System.Drawing.Point(224, 3);
+            this.panel68.Name = "panel68";
+            this.panel68.Size = new System.Drawing.Size(277, 13);
+            this.panel68.TabIndex = 0;
+            // 
+            // panel69
+            // 
+            this.panel69.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel69.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel69.Controls.Add(this.panel70);
+            this.panel69.Location = new System.Drawing.Point(-1, -1);
+            this.panel69.Name = "panel69";
+            this.panel69.Size = new System.Drawing.Size(277, 13);
+            this.panel69.TabIndex = 1;
+            // 
+            // panel70
+            // 
+            this.panel70.BackColor = System.Drawing.Color.Yellow;
+            this.panel70.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel70.Location = new System.Drawing.Point(-1, -1);
+            this.panel70.Name = "panel70";
+            this.panel70.Size = new System.Drawing.Size(277, 13);
+            this.panel70.TabIndex = 2;
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label71.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label71.Location = new System.Drawing.Point(133, 0);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(85, 22);
+            this.label71.TabIndex = 10;
+            this.label71.Text = "+100.00%";
+            this.label71.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // gradientPanel11
+            // 
+            this.gradientPanel11.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(61)))), ((int)(((byte)(61))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel11.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel11.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(113)))), ((int)(((byte)(113)))));
+            this.gradientPanel11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel11.CanApplyTheme = false;
+            this.gradientPanel11.Controls.Add(this.tableLayoutPanel10);
+            this.gradientPanel11.Location = new System.Drawing.Point(3, 111);
+            this.gradientPanel11.Name = "gradientPanel11";
+            this.gradientPanel11.Size = new System.Drawing.Size(510, 27);
+            this.gradientPanel11.TabIndex = 5;
+            // 
+            // tableLayoutPanel10
+            // 
+            this.tableLayoutPanel10.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel10.ColumnCount = 3;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel10.Controls.Add(this.label72, 0, 0);
+            this.tableLayoutPanel10.Controls.Add(this.panel71, 2, 0);
+            this.tableLayoutPanel10.Controls.Add(this.label73, 1, 0);
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 1;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(506, 22);
+            this.tableLayoutPanel10.TabIndex = 11;
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label72.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label72.Location = new System.Drawing.Point(3, 0);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(124, 22);
+            this.label72.TabIndex = 0;
+            this.label72.Text = "Damage:";
+            this.label72.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel71
+            // 
+            this.panel71.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel71.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel71.Controls.Add(this.panel75);
+            this.panel71.Location = new System.Drawing.Point(224, 3);
+            this.panel71.Name = "panel71";
+            this.panel71.Size = new System.Drawing.Size(277, 13);
+            this.panel71.TabIndex = 0;
+            // 
+            // panel75
+            // 
+            this.panel75.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel75.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel75.Controls.Add(this.panel76);
+            this.panel75.Location = new System.Drawing.Point(-1, -1);
+            this.panel75.Name = "panel75";
+            this.panel75.Size = new System.Drawing.Size(277, 13);
+            this.panel75.TabIndex = 1;
+            // 
+            // panel76
+            // 
+            this.panel76.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.panel76.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel76.Controls.Add(this.panel77);
+            this.panel76.Location = new System.Drawing.Point(-1, -1);
+            this.panel76.Name = "panel76";
+            this.panel76.Size = new System.Drawing.Size(277, 13);
+            this.panel76.TabIndex = 2;
+            // 
+            // label73
+            // 
+            this.label73.AutoSize = true;
+            this.label73.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label73.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label73.Location = new System.Drawing.Point(133, 0);
+            this.label73.Name = "label73";
+            this.label73.Size = new System.Drawing.Size(85, 22);
+            this.label73.TabIndex = 10;
+            this.label73.Text = "+100.00%";
+            this.label73.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel77
+            // 
+            this.panel77.BackColor = System.Drawing.Color.Red;
+            this.panel77.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel77.Location = new System.Drawing.Point(-1, -1);
+            this.panel77.Name = "panel77";
+            this.panel77.Size = new System.Drawing.Size(277, 13);
+            this.panel77.TabIndex = 3;
+            // 
+            // gradientPanel12
+            // 
+            this.gradientPanel12.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(89)))), ((int)(((byte)(204))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel12.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel12.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(112)))), ((int)(((byte)(255)))));
+            this.gradientPanel12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel12.CanApplyTheme = false;
+            this.gradientPanel12.Controls.Add(this.tableLayoutPanel11);
+            this.gradientPanel12.Location = new System.Drawing.Point(3, 147);
+            this.gradientPanel12.Name = "gradientPanel12";
+            this.gradientPanel12.Size = new System.Drawing.Size(510, 27);
+            this.gradientPanel12.TabIndex = 6;
+            // 
+            // tableLayoutPanel11
+            // 
+            this.tableLayoutPanel11.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel11.ColumnCount = 3;
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel11.Controls.Add(this.label75, 0, 0);
+            this.tableLayoutPanel11.Controls.Add(this.panel78, 2, 0);
+            this.tableLayoutPanel11.Controls.Add(this.label76, 1, 0);
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
+            this.tableLayoutPanel11.RowCount = 1;
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(506, 22);
+            this.tableLayoutPanel11.TabIndex = 11;
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label75.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label75.Location = new System.Drawing.Point(3, 0);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(124, 22);
+            this.label75.TabIndex = 0;
+            this.label75.Text = "EndRdx:";
+            this.label75.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel78
+            // 
+            this.panel78.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel78.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel78.Controls.Add(this.panel79);
+            this.panel78.Location = new System.Drawing.Point(224, 3);
+            this.panel78.Name = "panel78";
+            this.panel78.Size = new System.Drawing.Size(277, 13);
+            this.panel78.TabIndex = 0;
+            // 
+            // panel79
+            // 
+            this.panel79.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel79.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel79.Controls.Add(this.panel80);
+            this.panel79.Location = new System.Drawing.Point(-1, -1);
+            this.panel79.Name = "panel79";
+            this.panel79.Size = new System.Drawing.Size(277, 13);
+            this.panel79.TabIndex = 1;
+            // 
+            // panel80
+            // 
+            this.panel80.BackColor = System.Drawing.Color.RoyalBlue;
+            this.panel80.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel80.Location = new System.Drawing.Point(-1, -1);
+            this.panel80.Name = "panel80";
+            this.panel80.Size = new System.Drawing.Size(277, 13);
+            this.panel80.TabIndex = 2;
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label76.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label76.Location = new System.Drawing.Point(133, 0);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(85, 22);
+            this.label76.TabIndex = 10;
+            this.label76.Text = "+100.00%";
+            this.label76.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // gradientPanel13
+            // 
+            this.gradientPanel13.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(61)))), ((int)(((byte)(138))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel13.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel13.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(119)))), ((int)(((byte)(100)))), ((int)(((byte)(227)))));
+            this.gradientPanel13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel13.CanApplyTheme = false;
+            this.gradientPanel13.Controls.Add(this.tableLayoutPanel12);
+            this.gradientPanel13.Location = new System.Drawing.Point(3, 182);
+            this.gradientPanel13.Name = "gradientPanel13";
+            this.gradientPanel13.Size = new System.Drawing.Size(510, 27);
+            this.gradientPanel13.TabIndex = 7;
+            // 
+            // tableLayoutPanel12
+            // 
+            this.tableLayoutPanel12.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel12.ColumnCount = 3;
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel12.Controls.Add(this.label77, 0, 0);
+            this.tableLayoutPanel12.Controls.Add(this.panel81, 2, 0);
+            this.tableLayoutPanel12.Controls.Add(this.label78, 1, 0);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
+            this.tableLayoutPanel12.RowCount = 1;
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(506, 22);
+            this.tableLayoutPanel12.TabIndex = 11;
+            // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label77.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label77.Location = new System.Drawing.Point(3, 0);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(124, 22);
+            this.label77.TabIndex = 0;
+            this.label77.Text = "Threat level:";
+            this.label77.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel81
+            // 
+            this.panel81.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel81.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel81.Controls.Add(this.panel82);
+            this.panel81.Location = new System.Drawing.Point(224, 3);
+            this.panel81.Name = "panel81";
+            this.panel81.Size = new System.Drawing.Size(277, 13);
+            this.panel81.TabIndex = 0;
+            // 
+            // panel82
+            // 
+            this.panel82.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel82.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel82.Controls.Add(this.panel83);
+            this.panel82.Location = new System.Drawing.Point(-1, -1);
+            this.panel82.Name = "panel82";
+            this.panel82.Size = new System.Drawing.Size(277, 13);
+            this.panel82.TabIndex = 1;
+            // 
+            // panel83
+            // 
+            this.panel83.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(113)))), ((int)(((byte)(86)))), ((int)(((byte)(168)))));
+            this.panel83.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel83.Controls.Add(this.panel84);
+            this.panel83.Location = new System.Drawing.Point(-1, -1);
+            this.panel83.Name = "panel83";
+            this.panel83.Size = new System.Drawing.Size(277, 13);
+            this.panel83.TabIndex = 2;
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label78.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label78.Location = new System.Drawing.Point(133, 0);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(85, 22);
+            this.label78.TabIndex = 10;
+            this.label78.Text = "100.00%";
+            this.label78.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panel84
+            // 
+            this.panel84.BackColor = System.Drawing.Color.MediumPurple;
+            this.panel84.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel84.Location = new System.Drawing.Point(-1, -1);
+            this.panel84.Name = "panel84";
+            this.panel84.Size = new System.Drawing.Size(277, 13);
+            this.panel84.TabIndex = 3;
+            // 
+            // gradientPanel14
+            // 
+            this.gradientPanel14.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
+            System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(0)))), ((int)(((byte)(127))))),
+            System.Drawing.Color.Black,
+            System.Drawing.Color.Black});
+            this.gradientPanel14.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.gradientPanel14.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(0)))), ((int)(((byte)(227)))));
+            this.gradientPanel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPanel14.CanApplyTheme = false;
+            this.gradientPanel14.Controls.Add(this.tableLayoutPanel13);
+            this.gradientPanel14.Location = new System.Drawing.Point(3, 216);
+            this.gradientPanel14.Name = "gradientPanel14";
+            this.gradientPanel14.Size = new System.Drawing.Size(510, 27);
+            this.gradientPanel14.TabIndex = 8;
+            // 
+            // tableLayoutPanel13
+            // 
+            this.tableLayoutPanel13.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel13.ColumnCount = 3;
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel13.Controls.Add(this.label79, 0, 0);
+            this.tableLayoutPanel13.Controls.Add(this.panel85, 2, 0);
+            this.tableLayoutPanel13.Controls.Add(this.label80, 1, 0);
+            this.tableLayoutPanel13.Location = new System.Drawing.Point(4, 3);
+            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
+            this.tableLayoutPanel13.RowCount = 1;
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(506, 22);
+            this.tableLayoutPanel13.TabIndex = 11;
+            // 
+            // label79
+            // 
+            this.label79.AutoSize = true;
+            this.label79.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label79.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label79.Location = new System.Drawing.Point(3, 0);
+            this.label79.Name = "label79";
+            this.label79.Size = new System.Drawing.Size(124, 22);
+            this.label79.TabIndex = 0;
+            this.label79.Text = "Elusivity:";
+            this.label79.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel85
+            // 
+            this.panel85.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.panel85.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel85.Controls.Add(this.panel86);
+            this.panel85.Location = new System.Drawing.Point(224, 3);
+            this.panel85.Name = "panel85";
+            this.panel85.Size = new System.Drawing.Size(277, 13);
+            this.panel85.TabIndex = 0;
+            // 
+            // panel86
+            // 
+            this.panel86.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.panel86.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel86.Controls.Add(this.panel87);
+            this.panel86.Location = new System.Drawing.Point(-1, -1);
+            this.panel86.Name = "panel86";
+            this.panel86.Size = new System.Drawing.Size(277, 13);
+            this.panel86.TabIndex = 1;
+            // 
+            // panel87
+            // 
+            this.panel87.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.panel87.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel87.Location = new System.Drawing.Point(-1, -1);
+            this.panel87.Name = "panel87";
+            this.panel87.Size = new System.Drawing.Size(277, 13);
+            this.panel87.TabIndex = 2;
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label80.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label80.Location = new System.Drawing.Point(133, 0);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(85, 22);
+            this.label80.TabIndex = 10;
+            this.label80.Text = "100.00%";
+            this.label80.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.ForeColor = System.Drawing.Color.White;
+            this.label81.Location = new System.Drawing.Point(9, 272);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(40, 16);
+            this.label81.TabIndex = 12;
+            this.label81.Text = "Misc:";
             // 
             // frmTotalTest
             // 
@@ -1508,6 +2879,78 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.gradientPanel1.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
+            this.tabPageAdv5.ResumeLayout(false);
+            this.tabPageAdv5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel5)).EndInit();
+            this.gradientPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
+            this.panel48.ResumeLayout(false);
+            this.panel49.ResumeLayout(false);
+            this.panel50.ResumeLayout(false);
+            this.panel51.ResumeLayout(false);
+            this.panel42.ResumeLayout(false);
+            this.panel43.ResumeLayout(false);
+            this.panel44.ResumeLayout(false);
+            this.panel45.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel6)).EndInit();
+            this.gradientPanel6.ResumeLayout(false);
+            this.tableLayoutPanel6.ResumeLayout(false);
+            this.tableLayoutPanel6.PerformLayout();
+            this.panel57.ResumeLayout(false);
+            this.panel58.ResumeLayout(false);
+            this.panel60.ResumeLayout(false);
+            this.panel61.ResumeLayout(false);
+            this.panel63.ResumeLayout(false);
+            this.panel64.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel7)).EndInit();
+            this.gradientPanel7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel8)).EndInit();
+            this.gradientPanel8.ResumeLayout(false);
+            this.tableLayoutPanel7.ResumeLayout(false);
+            this.tableLayoutPanel7.PerformLayout();
+            this.panel72.ResumeLayout(false);
+            this.panel73.ResumeLayout(false);
+            this.panel74.ResumeLayout(false);
+            this.panel54.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel9)).EndInit();
+            this.gradientPanel9.ResumeLayout(false);
+            this.tableLayoutPanel8.ResumeLayout(false);
+            this.tableLayoutPanel8.PerformLayout();
+            this.panel56.ResumeLayout(false);
+            this.panel66.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel10)).EndInit();
+            this.gradientPanel10.ResumeLayout(false);
+            this.tableLayoutPanel9.ResumeLayout(false);
+            this.tableLayoutPanel9.PerformLayout();
+            this.panel68.ResumeLayout(false);
+            this.panel69.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel11)).EndInit();
+            this.gradientPanel11.ResumeLayout(false);
+            this.tableLayoutPanel10.ResumeLayout(false);
+            this.tableLayoutPanel10.PerformLayout();
+            this.panel71.ResumeLayout(false);
+            this.panel75.ResumeLayout(false);
+            this.panel76.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel12)).EndInit();
+            this.gradientPanel12.ResumeLayout(false);
+            this.tableLayoutPanel11.ResumeLayout(false);
+            this.tableLayoutPanel11.PerformLayout();
+            this.panel78.ResumeLayout(false);
+            this.panel79.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel13)).EndInit();
+            this.gradientPanel13.ResumeLayout(false);
+            this.tableLayoutPanel12.ResumeLayout(false);
+            this.tableLayoutPanel12.PerformLayout();
+            this.panel81.ResumeLayout(false);
+            this.panel82.ResumeLayout(false);
+            this.panel83.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gradientPanel14)).EndInit();
+            this.gradientPanel14.ResumeLayout(false);
+            this.tableLayoutPanel13.ResumeLayout(false);
+            this.tableLayoutPanel13.PerformLayout();
+            this.panel85.ResumeLayout(false);
+            this.panel86.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1618,5 +3061,105 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private Panel panel39;
         private Panel panel40;
         private Panel panel41;
+        private Label label52;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel6;
+        private TableLayoutPanel tableLayoutPanel6;
+        private Label label53;
+        private Panel panel57;
+        private Panel panel58;
+        private Panel panel59;
+        private Label label54;
+        private Panel panel60;
+        private Panel panel61;
+        private Panel panel62;
+        private Label label55;
+        private Panel panel63;
+        private Panel panel64;
+        private Panel panel65;
+        private Label label56;
+        private Label label64;
+        private Label label66;
+        private RadioButton radioButton4;
+        private RadioButton radioButton3;
+        private RadioButton radioButton2;
+        private RadioButton radioButton1;
+        private Label label51;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel5;
+        private TableLayoutPanel tableLayoutPanel5;
+        private Label label57;
+        private Panel panel48;
+        private Panel panel45;
+        private Panel panel53;
+        private Label label58;
+        private Panel panel49;
+        private Panel panel44;
+        private Panel panel52;
+        private Label label59;
+        private Panel panel50;
+        private Panel panel43;
+        private Panel panel47;
+        private Label label60;
+        private Panel panel51;
+        private Panel panel42;
+        private Panel panel46;
+        private Label label61;
+        private Label label62;
+        private Label label63;
+        private Label label70;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel7;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel13;
+        private TableLayoutPanel tableLayoutPanel12;
+        private Label label77;
+        private Panel panel81;
+        private Panel panel82;
+        private Panel panel83;
+        private Label label78;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel12;
+        private TableLayoutPanel tableLayoutPanel11;
+        private Label label75;
+        private Panel panel78;
+        private Panel panel79;
+        private Panel panel80;
+        private Label label76;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel11;
+        private TableLayoutPanel tableLayoutPanel10;
+        private Label label72;
+        private Panel panel71;
+        private Panel panel75;
+        private Panel panel76;
+        private Panel panel77;
+        private Label label73;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel10;
+        private TableLayoutPanel tableLayoutPanel9;
+        private Label label68;
+        private Panel panel68;
+        private Panel panel69;
+        private Panel panel70;
+        private Label label71;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel9;
+        private TableLayoutPanel tableLayoutPanel8;
+        private Label label65;
+        private Panel panel56;
+        private Panel panel66;
+        private Panel panel67;
+        private Label label67;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel8;
+        private TableLayoutPanel tableLayoutPanel7;
+        private Label label69;
+        private Panel panel72;
+        private Panel panel73;
+        private Panel panel74;
+        private Panel panel54;
+        private Panel panel55;
+        private Label label74;
+        private Label label81;
+        private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel14;
+        private TableLayoutPanel tableLayoutPanel13;
+        private Label label79;
+        private Panel panel85;
+        private Panel panel86;
+        private Panel panel87;
+        private Label label80;
+        private Panel panel84;
     }
 }
