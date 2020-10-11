@@ -5574,7 +5574,10 @@ namespace Hero_Designer.Forms
 
         private void tsViewTotals_Click(object sender, EventArgs e)
         {
-            FloatTotals(true);
+            //FloatTotals(true);
+            var iParent = this;
+            frmTotalsV2 totalTest = new frmTotalsV2(ref iParent);
+            totalTest.ShowDialog();
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
