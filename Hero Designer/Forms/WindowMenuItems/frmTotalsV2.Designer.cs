@@ -5,7 +5,7 @@ using midsControls;
 
 namespace Hero_Designer.Forms.WindowMenuItems
 {
-    partial class frmTotalTest
+    partial class frmTotalsV2
     {
         /// <summary>
         /// Required designer variable.

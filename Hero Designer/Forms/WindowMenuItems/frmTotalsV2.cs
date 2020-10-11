@@ -248,12 +248,12 @@ label80
 
 namespace Hero_Designer.Forms.WindowMenuItems
 {
-    public partial class frmTotalTest : Form
+    public partial class frmTotalsV2 : Form
     {
         private readonly frmMain _myParent;
         private bool _keepOnTop;
 
-        public frmTotalTest(ref frmMain iParent)
+        public frmTotalsV2(ref frmMain iParent)
         {
             Load += OnLoad;
             _keepOnTop = true;
