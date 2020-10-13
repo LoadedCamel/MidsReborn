@@ -5,253 +5,226 @@ using Base.Display;
 using Base.Master_Classes;
 using midsControls;
 
-/*
-Regen (cap): 28;111;28 (L=44%)
-Regen (base): 51;204;51 (L=80%)
-Regen: 64;255;64 (L=100%)
-Max HP (cap): 10;38;10 (L=15%)
-Max HP (base): 31;130;31 (L=51%, -20)
-Max HP: 44;180;44 (L=71%, -29)
-Absorb: Gainsboro
-
-EndRec (cap): 13;63;112 (-56)
-EndRec (base): 24;114;204 (-20)
-EndRec: 30;144;255 (DodgerBlue)
-
-EndUse: 149;203;255
-
-MaxEnd (base): 47;125;204 (-20)
-MaxEnd: 59;158;255
-
-
-Inner Labels: 192;192;255
-Resistance Caps: 255;128;128
-
-Movement (cap): 0;48;32 (L=19%)
-Movement (base): 0;140;94 (L=55%)
-Movement: 0;192;128 (L=75%)
-
-Haste (cap): 112;56;0 (L=44%)
-Haste (base): 204;102;0 (L=80%)
-Haste: 255;128;0
-
-ToHit: 255;255;128
-
-Damage (base): 204;0;0(L=80%)
-Damage: 255;0;0
-
-EndRdx: 65;105;225
-
-Threat (base): 113;86;168
-Threat: 147;112;219
-
-Elusivity:
-panel88
-
-Threat:
-panel84
-
-Threat (base):
-panel83
-
-EndRdx:
-panel80
-
-Damage (base):
-panel76
-
-Damage:
-panel77
-
-Accuracy:
-panel70
-
-ToHit:
-panel67
-
-Haste (cap):
-panel74
-
-Haste (base):
-panel54
-
-Haste:
-panel55
-
-----------------------
-
-Stealth (PvE):
-panel65
-
-Stealth (PvP):
-panel62
-
-Perception:
-panel59
-
-----------------------
-
-Run speed (cap):
-panel51
-
-Run speed (base):
-panel42
-
-Run speed:
-panel46
-
-Jump speed (cap):
-panel50
-
-Jump speed (base):
-panel43
-
-Jump speed:
-panel47
-
-Jump height (cap):
-panel49
-
-Jump height:
-panel52
-
-Jump height (base):
-panel44
-
-Fly (cap):
-panel48
-
-Fly (base):
-panel45
-
-Fly:
-panel53
-
----------------------------------
-
-EndRec (cap):
-panel16
-
-EndRec (base):
-panel39
-
-EndRec:
-panel40
-
-EndUse:
-panel17
-
-MaxEnd (base):
-panel18
-
-MaxEnd:
-panel41
-
-
-defense:
-panel3 - panel12
-
-Resistance (caps):
-panel13, 19-25
-
-Resistance (main):
-panel26-33
-
-Regen (cap):
-panel14
-
-Regen (base):
-panel34
-
-Regen:
-panel36
-
-Max HP (cap):
-panel15
-
-Max HP (base):
-panel35
-
-Max HP:
-panel37
-
-Absorb:
-panel38
-
-------------------
-
-Values:
-
-Defense:
-label15-24
-
-Resistance:
-label33-40
-
-Regen:
-label43
-
-Max HP:
-label44
-
-EndRec:
-label48
-
-EndUse:
-label49
-
-MaxEnd:
-label50
-
-Run:
-label70
-
-Jump speed:
-label59
-
-Jump height:
-label58
-
-Fly:
-label57
-
-Stealth (PvE):
-label66
-
-Stealth (PvP):
-label54
-
-Perception:
-label53
-
-Haste:
-label74
-
-ToHit:
-label67
-
-Accuracy:
-label71
-
-Damage:
-label73
-
-EndRdx:
-label76
-
-Threat:
-label78
-
-Elusivity:
-label80
-*/
-
 namespace Hero_Designer.Forms.WindowMenuItems
 {
     public partial class frmTotalsV2 : Form
     {
+        private class LayeredBar
+        {
+            private Panel? BaseVal;
+            private Panel? OverCap;
+            private Panel Bar;
+            private Panel? Overlay1;
+            private Panel? Overlay2;
+            private Label Value;
+            private int MaxWidth;
+
+            public LayeredBar(ref Panel bar, ref Label value, int barMaxWidth)
+            {
+                Bar = bar;
+                Value = value;
+                MaxWidth = barMaxWidth;
+
+                BaseVal = null;
+                OverCap = null;
+                Overlay1 = null;
+                Overlay2 = null;
+            }
+
+            public LayeredBar(ref Panel bar, ref Label value, int barMaxWidth,
+                ref Panel overCap)
+            {
+                Bar = bar;
+                Value = value;
+                MaxWidth = barMaxWidth;
+                OverCap = overCap;
+
+                BaseVal = null;
+                Overlay1 = null;
+                Overlay2 = null;
+            }
+
+            public LayeredBar(ref Panel bar, ref Label value, int barMaxWidth, int dummmy,
+                ref Panel baseVal)
+            {
+                Bar = bar;
+                Value = value;
+                MaxWidth = barMaxWidth;
+                BaseVal = baseVal;
+
+                OverCap = null;
+                Overlay1 = null;
+                Overlay2 = null;
+            }
+
+            public LayeredBar(ref Panel bar, ref Label value, int barMaxWidth,
+                ref Panel baseVal, ref Panel overCap)
+            {
+                Bar = bar;
+                Value = value;
+                MaxWidth = barMaxWidth;
+                BaseVal = baseVal;
+                OverCap = overCap;
+
+                Overlay1 = null;
+                Overlay2 = null;
+            }
+
+            public LayeredBar(ref Panel bar, ref Label value, int barMaxWidth,
+                ref Panel baseVal, ref Panel overCap, ref Panel overlay1)
+            {
+                Bar = bar;
+                Value = value;
+                MaxWidth = barMaxWidth;
+                BaseVal = baseVal;
+                OverCap = overCap;
+                Overlay1 = overlay1;
+
+                Overlay2 = null;
+            }
+
+            public LayeredBar(ref Panel bar, ref Label value, int barMaxWidth,
+                ref Panel baseVal, ref Panel overCap, ref Panel overlay1, ref Panel overlay2)
+            {
+                Bar = bar;
+                Value = value;
+                MaxWidth = barMaxWidth;
+                BaseVal = baseVal;
+                OverCap = overCap;
+                Overlay1 = overlay1;
+                Overlay2 = overlay2;
+            }
+        }
+
         private readonly frmMain _myParent;
         private bool _keepOnTop;
+        private LayeredBar[] Bars;
+        private readonly int BarMaxWidth = 277;
+
+        private void InitBars()
+        {
+            Bars = new []
+            {
+                #region LayeredBars declaration
+                // Defense
+                new LayeredBar(ref panel3, ref label15, BarMaxWidth),
+                new LayeredBar(ref panel4, ref label16, BarMaxWidth),
+                new LayeredBar(ref panel5, ref label17, BarMaxWidth),
+                new LayeredBar(ref panel6, ref label18, BarMaxWidth),
+                new LayeredBar(ref panel7, ref label19, BarMaxWidth),
+                new LayeredBar(ref panel8, ref label20, BarMaxWidth),
+                new LayeredBar(ref panel9, ref label21, BarMaxWidth),
+                new LayeredBar(ref panel10, ref label22, BarMaxWidth),
+                new LayeredBar(ref panel11, ref label23, BarMaxWidth),
+                new LayeredBar(ref panel12, ref label24, BarMaxWidth),
+
+                // Resistance
+                new LayeredBar(ref panel26, ref label33, BarMaxWidth, ref panel13),
+                new LayeredBar(ref panel27, ref label34, BarMaxWidth, ref panel19),
+                new LayeredBar(ref panel28, ref label35, BarMaxWidth, ref panel20),
+                new LayeredBar(ref panel29, ref label36, BarMaxWidth, ref panel21),
+                new LayeredBar(ref panel30, ref label37, BarMaxWidth, ref panel22),
+                new LayeredBar(ref panel31, ref label38, BarMaxWidth, ref panel23),
+                new LayeredBar(ref panel32, ref label39, BarMaxWidth, ref panel24),
+                new LayeredBar(ref panel33, ref label40, BarMaxWidth, ref panel25),
+
+                // Regen/HP
+                new LayeredBar(ref panel36, ref label43, BarMaxWidth, ref panel34, ref panel14),
+                new LayeredBar(ref panel37, ref label44, BarMaxWidth, ref panel35, ref panel15, ref panel38),
+
+                // Endurance
+                new LayeredBar(ref panel40, ref label48, BarMaxWidth, ref panel39, ref panel16),
+                new LayeredBar(ref panel17, ref label49, BarMaxWidth),
+                new LayeredBar(ref panel41, ref label50, BarMaxWidth, 0, ref panel18),
+
+                // Movement
+                new LayeredBar(ref panel46, ref label70, BarMaxWidth, ref panel42, ref panel51),
+                new LayeredBar(ref panel47, ref label59, BarMaxWidth, ref panel43, ref panel50),
+                new LayeredBar(ref panel52, ref label58, BarMaxWidth, ref panel44, ref panel49),
+                new LayeredBar(ref panel53, ref label57, BarMaxWidth, ref panel45, ref panel48),
+
+                // Stealth/Perception
+                new LayeredBar(ref panel65, ref label66, BarMaxWidth),
+                new LayeredBar(ref panel52, ref label54, BarMaxWidth),
+                new LayeredBar(ref panel59, ref label53, BarMaxWidth),
+
+                // Haste
+                new LayeredBar(ref panel55, ref label74, BarMaxWidth, ref panel54, ref panel74),
+
+                // ToHit
+                new LayeredBar(ref panel67, ref label67, BarMaxWidth),
+                
+                // Accuracy
+                new LayeredBar(ref panel70, ref label71, BarMaxWidth),
+                
+                // Damage
+                new LayeredBar(ref panel77, ref label73, BarMaxWidth, 0, ref panel76),
+                
+                // EndRdx
+                new LayeredBar(ref panel80, ref label76, BarMaxWidth),
+                
+                // Threat Level
+                new LayeredBar(ref panel84, ref label78, BarMaxWidth, 0, ref panel83),
+                
+                // Elusivity
+                new LayeredBar(ref panel88, ref label80, BarMaxWidth),
+
+                // Status protection
+                new LayeredBar(ref panel97, ref label89, BarMaxWidth),
+                new LayeredBar(ref panel94, ref label84, BarMaxWidth),
+                new LayeredBar(ref panel91, ref label83, BarMaxWidth),
+                new LayeredBar(ref panel88, ref label82, BarMaxWidth),
+                new LayeredBar(ref panel89, ref label97, BarMaxWidth),
+                new LayeredBar(ref panel90, ref label98, BarMaxWidth),
+                new LayeredBar(ref panel92, ref label99, BarMaxWidth),
+                new LayeredBar(ref panel93, ref label100, BarMaxWidth),
+                new LayeredBar(ref panel95, ref label101, BarMaxWidth),
+                new LayeredBar(ref panel96, ref label102, BarMaxWidth),
+                new LayeredBar(ref panel98, ref label103, BarMaxWidth),
+
+                // Status resistance
+                new LayeredBar(ref panel102, ref label126, BarMaxWidth),
+                new LayeredBar(ref panel101, ref label121, BarMaxWidth),
+                new LayeredBar(ref panel100, ref label120, BarMaxWidth),
+                new LayeredBar(ref panel99, ref label119, BarMaxWidth),
+                new LayeredBar(ref panel103, ref label127, BarMaxWidth),
+                new LayeredBar(ref panel104, ref label111, BarMaxWidth),
+                new LayeredBar(ref panel105, ref label110, BarMaxWidth),
+                new LayeredBar(ref panel106, ref label109, BarMaxWidth),
+                new LayeredBar(ref panel107, ref label108, BarMaxWidth),
+                new LayeredBar(ref panel108, ref label107, BarMaxWidth),
+                new LayeredBar(ref panel109, ref label106, BarMaxWidth),
+
+                // Debuff resistance
+                new LayeredBar(ref panel113, ref label149, BarMaxWidth),
+                new LayeredBar(ref panel112, ref label144, BarMaxWidth),
+                new LayeredBar(ref panel111, ref label143, BarMaxWidth),
+                new LayeredBar(ref panel110, ref label142, BarMaxWidth),
+                new LayeredBar(ref panel114, ref label150, BarMaxWidth),
+                new LayeredBar(ref panel115, ref label134, BarMaxWidth),
+                new LayeredBar(ref panel116, ref label133, BarMaxWidth)
+                #endregion
+            };
+
+        }
+
+        private void SetTabPanelColorScheme()
+        {
+            if (MidsContext.Character.IsHero())
+            {
+                tabControlAdv2.InactiveTabColor = Color.DodgerBlue;
+                tabControlAdv2.TabPanelBackColor = Color.DodgerBlue;
+                tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
+                tabControlAdv2.ActiveTabColor = Color.Goldenrod;
+            }
+            else
+            {
+                tabControlAdv2.InactiveTabColor = Color.FromArgb(193, 23, 23);
+                tabControlAdv2.TabPanelBackColor = Color.FromArgb(193, 23, 23);
+                tabControlAdv2.FixedSingleBorderColor = Color.FromArgb(198, 128, 29);
+                tabControlAdv2.ActiveTabColor = Color.FromArgb(198, 128, 29);
+            }
+        }
 
         public frmTotalsV2(ref frmMain iParent)
         {
@@ -259,6 +232,16 @@ namespace Hero_Designer.Forms.WindowMenuItems
             _keepOnTop = true;
             InitializeComponent();
             _myParent = iParent;
+
+            // Tab Foreground Colors don't stick in the designer.
+            // Note: default colors will be used anyway.
+            // This may only cause issues if a custom
+            // Windows theme is in use.
+            tabControlAdv2.ActiveTabForeColor = Color.White;
+            tabControlAdv2.InActiveTabForeColor = Color.Black;
+
+            InitBars();
+            SetTabPanelColorScheme();
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -273,8 +256,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void PbClosePaint(object sender, PaintEventArgs e)
         {
-            if (_myParent?.Drawing == null)
-                return;
+            if (_myParent?.Drawing == null) return;
+
             var iStr = "Close";
             var rectangle = new Rectangle();
             ref var local = ref rectangle;
@@ -299,10 +282,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     ? _myParent.Drawing.bxPower[2].Bitmap
                     : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                 GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-            var height2 = bFont.GetHeight(e.Graphics) + 2f;
-            var Bounds = new RectangleF(0.0f, (float)((22 - (double)height2) / 2.0), 105, height2);
+            var height2 = bFont.GetHeight(e.Graphics) + 2;
+            var Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -315,11 +298,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void PbTopMostPaint(object sender, PaintEventArgs e)
         {
-            if (_myParent?.Drawing == null)
-                return;
+            if (_myParent?.Drawing == null) return;
+
             var index = 2;
-            if (_keepOnTop)
-                index = 3;
+            if (_keepOnTop) index = 3;
             var iStr = "Keep On top";
             var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
                 _myParent.Drawing.bxPower[index].Size.Height);
@@ -336,10 +318,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
             else
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
                     rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-            var height = bFont.GetHeight(e.Graphics) + 2f;
-            var Bounds = new RectangleF(0.0f, (float)((22 - (double)height) / 2.0), 105, height);
+            var height = bFont.GetHeight(e.Graphics) + 2;
+            var Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
     }

@@ -1028,6 +1028,101 @@ public static class Enums
         BuffAcc = 1
     }
 
+    public enum eBarGroup
+    {
+        Defense = 0,
+        Resistance = 1,
+        HP = 2,
+        Endurance = 3,
+
+        Movement = 4,
+        Stealth = 5,
+        MiscBuffs = 6,
+
+        StatusProtection = 7,
+        StatusResistance = 8,
+
+        DebuffResistance = 9
+    }
+
+    public enum eBarType
+    {
+        DefenseSmashing = 0,
+        DefenseLethal = 1,
+        DefenseFire = 2,
+        DefenseCold = 3,
+        DefenseEnergy = 4,
+        DefenseNegative = 5,
+        DefensePsionic = 6,
+        DefenseMelee = 7,
+        DefenseAoE = 8,
+        
+        ResistanceSmashing = 9,
+        ResistanceLethal = 10,
+        ResistanceFire = 11,
+        ResistanceCold = 12,
+        ResistanceEnergy = 13,
+        ResistanceNegative = 14,
+        ResistanceToxic = 15,
+        ResistancePsionic = 16,
+
+        Regeneration = 17,
+        MaxHPAbsorb = 18,
+        EndRec = 19,
+        EndUse = 20,
+        MaxEnd = 21,
+
+        RunSpeed = 22,
+        JumpSpeed = 23,
+        JumpHeight = 24,
+        FlySpeed = 25,
+
+        StealthPvE = 26,
+        StealthPvP = 27,
+        Perception = 28,
+
+        Haste = 29,
+        ToHit = 30,
+        Accuracy = 31,
+        Damage = 32,
+        EndRdx = 33,
+        ThreatLevel = 34,
+        Elusivity = 35,
+
+        MezProtectionHold = 36,
+        MezProtectionStunned = 37,
+        MezProtectionSleep = 38,
+        MezProtectionImmob = 39,
+        MezProtectionKnockback = 40,
+        MezProtectionRepel = 41,
+        MezProtectionConfuse = 42,
+        MezProtectionFear = 43,
+        MezProtectionTaunt = 44,
+        MezProtectionPlacate = 45,
+        MezProtectionTeleport = 46,
+
+        MezResistanceHold = 47,
+        MezResistanceStunned = 48,
+        MezResistanceSleep = 49,
+        MezResistanceImmob = 50,
+        MezResistanceKnockback = 51,
+        MezResistanceRepel = 52,
+        MezResistanceConfuse = 53,
+        MezResistanceFear = 54,
+        MesResistanceTaunt = 55,
+        MezResistancePlacate = 56,
+        MezResistanceTeleport = 57,
+
+        DebuffResistanceDefense = 58,
+        DebuffResistanceEndurance = 59,
+        DebuffResistanceRecovery = 60,
+        DebuffResistancePerception = 61,
+        DebuffResistanceToHit = 62,
+        DebuffResistanceRechargeTime = 63,
+        DebuffResistanceSpeedRunning = 64,
+        DebuffResistanceRegen = 65
+    }
+
     public static bool MezDurationEnhancable(eMez mezEnum)
     {
         return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized ||
