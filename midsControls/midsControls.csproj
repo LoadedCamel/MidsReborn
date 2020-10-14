@@ -134,9 +134,18 @@
     <Compile Include="ctlDataGraph.Designer.cs">
       <DependentUpon>ctlDataGraph.cs</DependentUpon>
     </Compile>
+    <Compile Include="ctlLayeredBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlLayeredBar.Designer.cs">
+      <DependentUpon>ctlLayeredBar.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ctlDamageDisplay.resources" />
+    <EmbeddedResource Include="ctlLayeredBar.resx">
+      <DependentUpon>ctlLayeredBar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctlMultiGraph.resources" />
     <EmbeddedResource Include="ctlPairedList.resources" />
     <EmbeddedResource Include="ctlPairedListNew.resx">
