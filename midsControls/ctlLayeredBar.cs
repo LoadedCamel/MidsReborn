@@ -17,10 +17,14 @@ namespace midsControls
         private Color _Overlay1Color = Color.Magenta;
         private Color _Overlay2Color = Color.Magenta;
 
+        // https://stackoverflow.com/a/34299931
+        protected override Size DefaultSize => new Size(277, 13);
+
+        #region Properties
         // https://www.codeproject.com/Tips/403782/Making-an-overridden-Text-property-visible-in-the
         [Description("Enable over cap bar"), Category("Layout"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool EnableOverCap
         {
             get => _EnableOverCap;
@@ -44,7 +48,7 @@ namespace midsControls
             }
         }
 
-        [Description("Enable overlay #1"), Category("Layout"),
+        [Description("Enable overlay #1 bar"), Category("Layout"),
         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool EnableOverlay1
@@ -57,7 +61,7 @@ namespace midsControls
             }
         }
 
-        [Description("Enable overlay #2"), Category("Layout"),
+        [Description("Enable overlay #2 bar"), Category("Layout"),
         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool EnableOverlay2
@@ -169,15 +173,16 @@ namespace midsControls
                 _Overlay2Color = value;
             }
         }
+        #endregion
 
         private int Value2Pixels(float value)
         {
-            return (int)Math.Round(277 / Math.Abs(MaximumBarValue - MinimumBarValue) * (value - MinimumBarValue));
+            return (int)Math.Round(Width / Math.Abs(MaximumBarValue - MinimumBarValue) * (value - MinimumBarValue));
         }
 
         private int Value2Pixels(float value, float vMax)
         {
-            return (int)Math.Round(277 / Math.Abs(vMax - MinimumBarValue) * (value - MinimumBarValue));
+            return (int)Math.Round(Width / Math.Abs(vMax - MinimumBarValue) * (value - MinimumBarValue));
         }
 
         public void SetValues(float value)
@@ -206,9 +211,6 @@ namespace midsControls
             if (EnableBaseValue)
             {
                 // auxValue: baseValue
-                // if (base < value) => base.index = 2; value.index = 1;
-                // if (base > value) => base.index = 1; value.index = 2;
-
                 if (auxValue < mainValue)
                 {
                     panel2.Parent.Controls.SetChildIndex(panel2, 2);
