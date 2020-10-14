@@ -7,10 +7,17 @@ namespace midsControls
 {
     public partial class ctlLayeredBar : UserControl
     {
-        private bool _EnableOverCap;
-        private bool _EnableBaseValue;
-        private bool _EnableOverlay1;
-        private bool _EnableOverlay2;
+        private bool _EnableOverCap; // false
+        private bool _EnableBaseValue; // false
+        private bool _EnableOverlay1; // false
+        private bool _EnableOverlay2; // false
+        private float _ValueUncapped = 100;
+        private float _ValueBase = 100;
+        private float _Value = 100;
+        private float _ValueOverlay1 = 100;
+        private float _ValueOverlay2 = 100;
+        private float _MinimumValue; // = 0
+        private float _MaximumValue = 100;
         private Color _OverCapColor = Color.Magenta;
         private Color _BaseValueColor = Color.Magenta;
         private Color _BarColor = Color.Magenta;
@@ -18,7 +25,10 @@ namespace midsControls
         private Color _Overlay2Color = Color.Magenta;
 
         // https://stackoverflow.com/a/34299931
+        // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
         protected override Size DefaultSize => new Size(277, 13);
+        protected override Padding DefaultMargin => new Padding(3);
+        public new static Color DefaultBackColor => Color.Transparent;
 
         #region Properties
         // https://www.codeproject.com/Tips/403782/Making-an-overridden-Text-property-visible-in-the
@@ -49,8 +59,8 @@ namespace midsControls
         }
 
         [Description("Enable overlay #1 bar"), Category("Layout"),
-        Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool EnableOverlay1
         {
             get => _EnableOverlay1;
@@ -62,8 +72,8 @@ namespace midsControls
         }
 
         [Description("Enable overlay #2 bar"), Category("Layout"),
-        Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool EnableOverlay2
         {
             get => _EnableOverlay2;
@@ -75,44 +85,100 @@ namespace midsControls
         }
 
         [Description("Minimum bar value"), Category("Data"),
-        Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public float MinimumBarValue { get; set; }
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public float MinimumBarValue
+        {
+            get => _MinimumValue;
+            set
+            {
+                _MinimumValue = value;
+                SetValues();
+            }
+        }
 
         [Description("Maximum bar value"), Category("Data"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public float MaximumBarValue { get; set; }
+        public float MaximumBarValue
+        {
+            get => _MaximumValue;
+            set
+            {
+                _MaximumValue = value;
+                SetValues();
+            }
+        }
 
         [Description("Main bar value"), Category("Data"),
-        Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public float BarValue { get; set; }
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public float ValueMainBar
+        {
+            get => _Value;
+            set
+            {
+                _Value = value;
+                SetValues();
+            }
+        }
 
         [Description("Over cap value"), Category("Data"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public float OverCapValue { get; set; }
+        public float ValueOverCap
+        {
+            get => _ValueUncapped;
+            set
+            {
+                _ValueUncapped = value;
+                SetValues();
+            }
+        }
 
         [Description("Base value"), Category("Data"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public float BaseValue { get; set; }
+        public float ValueBase
+        {
+            get => _ValueBase;
+            set
+            {
+                _ValueBase = value;
+                SetValues();
+            }
+        }
 
         [Description("Overlay #1 value"), Category("Data"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public float Overlay1Value { get; set; }
+        public float ValueOverlay1
+        {
+            get => _ValueOverlay1;
+            set
+            {
+                _ValueOverlay1 = value;
+                SetValues();
+            }
+        }
 
         [Description("Overlay #2 value"), Category("Data"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public float Overlay2Value { get; set; }
+        public float ValueOverlay2
+        {
+            get => _ValueOverlay2;
+            set
+            {
+                _ValueOverlay2 = value;
+                SetValues();
+            }
+        }
 
         [Description("Over cap bar color"), Category("Appearance"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public Color OverCapColor
+        public Color ColorOverCap
         {
             get => _OverCapColor;
             set
@@ -125,7 +191,7 @@ namespace midsControls
         [Description("Base value bar color"), Category("Appearance"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public Color BaseValueColor
+        public Color ColorBaseValue
         {
             get => _BaseValueColor;
             set
@@ -138,7 +204,7 @@ namespace midsControls
         [Description("Main bar color"), Category("Appearance"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public Color BarColor
+        public Color ColorMainBar
         {
             get => _BarColor;
             set
@@ -151,7 +217,7 @@ namespace midsControls
         [Description("Overlay #1 bar color"), Category("Appearance"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public Color Overlay1Color
+        public Color ColorOverlay1
         {
             get => _Overlay1Color;
             set
@@ -164,7 +230,7 @@ namespace midsControls
         [Description("Overlay #2 bar color"), Category("Appearance"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public Color Overlay2Color
+        public Color ColorOverlay2
         {
             get => _Overlay2Color;
             set
@@ -183,6 +249,11 @@ namespace midsControls
         private int Value2Pixels(float value, float vMax)
         {
             return (int)Math.Round(Width / Math.Abs(vMax - MinimumBarValue) * (value - MinimumBarValue));
+        }
+
+        public void SetValues()
+        {
+            SetValues(_Value, _ValueBase, _ValueUncapped, _ValueOverlay1, _ValueOverlay2);
         }
 
         public void SetValues(float value)

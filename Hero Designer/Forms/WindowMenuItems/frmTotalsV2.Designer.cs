@@ -335,6 +335,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel115 = new System.Windows.Forms.Panel();
             this.panel116 = new System.Windows.Forms.Panel();
             this.label150 = new System.Windows.Forms.Label();
+            this.ctlLayeredBar1 = new midsControls.ctlLayeredBar();
+            this.ctlLayeredBar2 = new midsControls.ctlLayeredBar();
+            this.ctlLayeredBar3 = new midsControls.ctlLayeredBar();
+            this.ctlLayeredBar4 = new midsControls.ctlLayeredBar();
+            this.ctlLayeredBar5 = new midsControls.ctlLayeredBar();
+            this.ctlLayeredBar6 = new midsControls.ctlLayeredBar();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopMost)).BeginInit();
             this.panel1.SuspendLayout();
@@ -556,7 +562,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 59.11111F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.88889F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 284F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 285F));
             this.tableLayoutPanel1.Controls.Add(this.label50, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.label49, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.panel16, 2, 0);
@@ -583,7 +589,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label50.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label50.Location = new System.Drawing.Point(133, 38);
             this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(84, 19);
+            this.label50.Size = new System.Drawing.Size(83, 19);
             this.label50.TabIndex = 11;
             this.label50.Text = "100.00%";
             this.label50.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -595,7 +601,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label49.Location = new System.Drawing.Point(133, 19);
             this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(84, 19);
+            this.label49.Size = new System.Drawing.Size(83, 19);
             this.label49.TabIndex = 10;
             this.label49.Text = "100.00%";
             this.label49.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -605,7 +611,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(63)))), ((int)(((byte)(112)))));
             this.panel16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel16.Controls.Add(this.panel39);
-            this.panel16.Location = new System.Drawing.Point(223, 3);
+            this.panel16.Location = new System.Drawing.Point(222, 3);
             this.panel16.Name = "panel16";
             this.panel16.Size = new System.Drawing.Size(274, 13);
             this.panel16.TabIndex = 3;
@@ -634,7 +640,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(125)))), ((int)(((byte)(204)))));
             this.panel18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel18.Controls.Add(this.panel41);
-            this.panel18.Location = new System.Drawing.Point(223, 41);
+            this.panel18.Location = new System.Drawing.Point(222, 41);
             this.panel18.Name = "panel18";
             this.panel18.Size = new System.Drawing.Size(274, 13);
             this.panel18.TabIndex = 5;
@@ -652,7 +658,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(149)))), ((int)(((byte)(203)))), ((int)(((byte)(255)))));
             this.panel17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel17.Location = new System.Drawing.Point(223, 22);
+            this.panel17.Location = new System.Drawing.Point(222, 22);
             this.panel17.Name = "panel17";
             this.panel17.Size = new System.Drawing.Size(274, 13);
             this.panel17.TabIndex = 4;
@@ -700,7 +706,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label48.Location = new System.Drawing.Point(133, 0);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(84, 19);
+            this.label48.Size = new System.Drawing.Size(83, 19);
             this.label48.TabIndex = 9;
             this.label48.Text = "100.00%";
             this.label48.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -921,7 +927,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel3.ColumnCount = 3;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 286F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
             this.tableLayoutPanel3.Controls.Add(this.label40, 1, 7);
             this.tableLayoutPanel3.Controls.Add(this.label39, 1, 6);
             this.tableLayoutPanel3.Controls.Add(this.label38, 1, 5);
@@ -968,7 +974,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label40.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label40.Location = new System.Drawing.Point(131, 133);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(84, 19);
+            this.label40.Size = new System.Drawing.Size(83, 19);
             this.label40.TabIndex = 24;
             this.label40.Text = "100.00%";
             this.label40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -980,7 +986,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label39.Location = new System.Drawing.Point(131, 114);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(84, 19);
+            this.label39.Size = new System.Drawing.Size(83, 19);
             this.label39.TabIndex = 23;
             this.label39.Text = "100.00%";
             this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -992,7 +998,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label38.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label38.Location = new System.Drawing.Point(131, 95);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(84, 19);
+            this.label38.Size = new System.Drawing.Size(83, 19);
             this.label38.TabIndex = 22;
             this.label38.Text = "100.00%";
             this.label38.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1004,7 +1010,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label37.Location = new System.Drawing.Point(131, 76);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(84, 19);
+            this.label37.Size = new System.Drawing.Size(83, 19);
             this.label37.TabIndex = 21;
             this.label37.Text = "100.00%";
             this.label37.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1016,7 +1022,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label36.Location = new System.Drawing.Point(131, 57);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(84, 19);
+            this.label36.Size = new System.Drawing.Size(83, 19);
             this.label36.TabIndex = 20;
             this.label36.Text = "100.00%";
             this.label36.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1028,7 +1034,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label35.Location = new System.Drawing.Point(131, 38);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(84, 19);
+            this.label35.Size = new System.Drawing.Size(83, 19);
             this.label35.TabIndex = 19;
             this.label35.Text = "100.00%";
             this.label35.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1040,7 +1046,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label34.Location = new System.Drawing.Point(131, 19);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(84, 19);
+            this.label34.Size = new System.Drawing.Size(83, 19);
             this.label34.TabIndex = 18;
             this.label34.Text = "100.00%";
             this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1050,7 +1056,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.panel13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel13.Controls.Add(this.panel26);
-            this.panel13.Location = new System.Drawing.Point(221, 3);
+            this.panel13.Location = new System.Drawing.Point(220, 3);
             this.panel13.Name = "panel13";
             this.panel13.Size = new System.Drawing.Size(276, 13);
             this.panel13.TabIndex = 1;
@@ -1069,7 +1075,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel25.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.panel25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel25.Controls.Add(this.panel33);
-            this.panel25.Location = new System.Drawing.Point(221, 136);
+            this.panel25.Location = new System.Drawing.Point(220, 136);
             this.panel25.Name = "panel25";
             this.panel25.Size = new System.Drawing.Size(276, 13);
             this.panel25.TabIndex = 8;
@@ -1088,7 +1094,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.panel19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel19.Controls.Add(this.panel27);
-            this.panel19.Location = new System.Drawing.Point(221, 22);
+            this.panel19.Location = new System.Drawing.Point(220, 22);
             this.panel19.Name = "panel19";
             this.panel19.Size = new System.Drawing.Size(276, 13);
             this.panel19.TabIndex = 2;
@@ -1107,7 +1113,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel24.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.panel24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel24.Controls.Add(this.panel32);
-            this.panel24.Location = new System.Drawing.Point(221, 117);
+            this.panel24.Location = new System.Drawing.Point(220, 117);
             this.panel24.Name = "panel24";
             this.panel24.Size = new System.Drawing.Size(276, 13);
             this.panel24.TabIndex = 7;
@@ -1126,7 +1132,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.panel20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel20.Controls.Add(this.panel28);
-            this.panel20.Location = new System.Drawing.Point(221, 41);
+            this.panel20.Location = new System.Drawing.Point(220, 41);
             this.panel20.Name = "panel20";
             this.panel20.Size = new System.Drawing.Size(276, 13);
             this.panel20.TabIndex = 3;
@@ -1145,7 +1151,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel23.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.panel23.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel23.Controls.Add(this.panel31);
-            this.panel23.Location = new System.Drawing.Point(221, 98);
+            this.panel23.Location = new System.Drawing.Point(220, 98);
             this.panel23.Name = "panel23";
             this.panel23.Size = new System.Drawing.Size(276, 13);
             this.panel23.TabIndex = 6;
@@ -1164,7 +1170,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel21.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.panel21.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel21.Controls.Add(this.panel29);
-            this.panel21.Location = new System.Drawing.Point(221, 60);
+            this.panel21.Location = new System.Drawing.Point(220, 60);
             this.panel21.Name = "panel21";
             this.panel21.Size = new System.Drawing.Size(276, 13);
             this.panel21.TabIndex = 4;
@@ -1183,7 +1189,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel22.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.panel22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel22.Controls.Add(this.panel30);
-            this.panel22.Location = new System.Drawing.Point(221, 79);
+            this.panel22.Location = new System.Drawing.Point(220, 79);
             this.panel22.Name = "panel22";
             this.panel22.Size = new System.Drawing.Size(276, 13);
             this.panel22.TabIndex = 5;
@@ -1300,7 +1306,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label33.Location = new System.Drawing.Point(131, 0);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(84, 19);
+            this.label33.Size = new System.Drawing.Size(83, 19);
             this.label33.TabIndex = 17;
             this.label33.Text = "100.00%";
             this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1327,7 +1333,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel4.ColumnCount = 3;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel4.Controls.Add(this.label24, 1, 9);
             this.tableLayoutPanel4.Controls.Add(this.panel12, 2, 9);
             this.tableLayoutPanel4.Controls.Add(this.label23, 1, 8);
@@ -1381,7 +1387,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label24.Location = new System.Drawing.Point(131, 171);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(84, 19);
+            this.label24.Size = new System.Drawing.Size(83, 19);
             this.label24.TabIndex = 19;
             this.label24.Text = "100.00%";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1390,7 +1396,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel12.BackColor = System.Drawing.Color.Magenta;
             this.panel12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel12.Location = new System.Drawing.Point(221, 174);
+            this.panel12.Location = new System.Drawing.Point(220, 174);
             this.panel12.Name = "panel12";
             this.panel12.Size = new System.Drawing.Size(277, 13);
             this.panel12.TabIndex = 9;
@@ -1402,7 +1408,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label23.Location = new System.Drawing.Point(131, 152);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(84, 19);
+            this.label23.Size = new System.Drawing.Size(83, 19);
             this.label23.TabIndex = 18;
             this.label23.Text = "100.00%";
             this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1411,7 +1417,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel11.BackColor = System.Drawing.Color.Magenta;
             this.panel11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel11.Location = new System.Drawing.Point(221, 155);
+            this.panel11.Location = new System.Drawing.Point(220, 155);
             this.panel11.Name = "panel11";
             this.panel11.Size = new System.Drawing.Size(277, 13);
             this.panel11.TabIndex = 8;
@@ -1423,7 +1429,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label22.Location = new System.Drawing.Point(131, 133);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(84, 19);
+            this.label22.Size = new System.Drawing.Size(83, 19);
             this.label22.TabIndex = 17;
             this.label22.Text = "100.00%";
             this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1432,7 +1438,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel10.BackColor = System.Drawing.Color.Magenta;
             this.panel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel10.Location = new System.Drawing.Point(221, 136);
+            this.panel10.Location = new System.Drawing.Point(220, 136);
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(277, 13);
             this.panel10.TabIndex = 7;
@@ -1444,7 +1450,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label21.Location = new System.Drawing.Point(131, 114);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(84, 19);
+            this.label21.Size = new System.Drawing.Size(83, 19);
             this.label21.TabIndex = 16;
             this.label21.Text = "100.00%";
             this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1453,7 +1459,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel9.BackColor = System.Drawing.Color.Magenta;
             this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel9.Location = new System.Drawing.Point(221, 117);
+            this.panel9.Location = new System.Drawing.Point(220, 117);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(277, 13);
             this.panel9.TabIndex = 6;
@@ -1465,7 +1471,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label20.Location = new System.Drawing.Point(131, 95);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(84, 19);
+            this.label20.Size = new System.Drawing.Size(83, 19);
             this.label20.TabIndex = 15;
             this.label20.Text = "100.00%";
             this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1474,7 +1480,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel8.BackColor = System.Drawing.Color.Magenta;
             this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel8.Location = new System.Drawing.Point(221, 98);
+            this.panel8.Location = new System.Drawing.Point(220, 98);
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(277, 13);
             this.panel8.TabIndex = 5;
@@ -1486,7 +1492,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label19.Location = new System.Drawing.Point(131, 76);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(84, 19);
+            this.label19.Size = new System.Drawing.Size(83, 19);
             this.label19.TabIndex = 14;
             this.label19.Text = "100.00%";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1495,7 +1501,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel7.BackColor = System.Drawing.Color.Magenta;
             this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel7.Location = new System.Drawing.Point(221, 79);
+            this.panel7.Location = new System.Drawing.Point(220, 79);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(277, 13);
             this.panel7.TabIndex = 4;
@@ -1507,7 +1513,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label18.Location = new System.Drawing.Point(131, 57);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(84, 19);
+            this.label18.Size = new System.Drawing.Size(83, 19);
             this.label18.TabIndex = 13;
             this.label18.Text = "100.00%";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1516,7 +1522,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel6.BackColor = System.Drawing.Color.Magenta;
             this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel6.Location = new System.Drawing.Point(221, 60);
+            this.panel6.Location = new System.Drawing.Point(220, 60);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(277, 13);
             this.panel6.TabIndex = 3;
@@ -1528,7 +1534,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label17.Location = new System.Drawing.Point(131, 38);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(84, 19);
+            this.label17.Size = new System.Drawing.Size(83, 19);
             this.label17.TabIndex = 12;
             this.label17.Text = "100.00%";
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1537,7 +1543,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel5.BackColor = System.Drawing.Color.Magenta;
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel5.Location = new System.Drawing.Point(221, 41);
+            this.panel5.Location = new System.Drawing.Point(220, 41);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(277, 13);
             this.panel5.TabIndex = 2;
@@ -1549,7 +1555,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label16.Location = new System.Drawing.Point(131, 19);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(84, 19);
+            this.label16.Size = new System.Drawing.Size(83, 19);
             this.label16.TabIndex = 11;
             this.label16.Text = "100.00%";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1558,7 +1564,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel4.BackColor = System.Drawing.Color.Magenta;
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Location = new System.Drawing.Point(221, 22);
+            this.panel4.Location = new System.Drawing.Point(220, 22);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(277, 13);
             this.panel4.TabIndex = 1;
@@ -1579,7 +1585,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel3.BackColor = System.Drawing.Color.Magenta;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Location = new System.Drawing.Point(221, 3);
+            this.panel3.Location = new System.Drawing.Point(220, 3);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(277, 13);
             this.panel3.TabIndex = 0;
@@ -1699,7 +1705,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label15.Location = new System.Drawing.Point(131, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(84, 19);
+            this.label15.Size = new System.Drawing.Size(83, 19);
             this.label15.TabIndex = 10;
             this.label15.Text = "100.00%";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1780,7 +1786,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel13.ColumnCount = 3;
             this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel13.Controls.Add(this.label79, 0, 0);
             this.tableLayoutPanel13.Controls.Add(this.panel85, 2, 0);
             this.tableLayoutPanel13.Controls.Add(this.label80, 1, 0);
@@ -1808,7 +1814,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel85.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel85.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel85.Controls.Add(this.panel86);
-            this.panel85.Location = new System.Drawing.Point(221, 3);
+            this.panel85.Location = new System.Drawing.Point(220, 3);
             this.panel85.Name = "panel85";
             this.panel85.Size = new System.Drawing.Size(277, 13);
             this.panel85.TabIndex = 0;
@@ -1839,7 +1845,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label80.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label80.Location = new System.Drawing.Point(131, 0);
             this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(84, 22);
+            this.label80.Size = new System.Drawing.Size(83, 22);
             this.label80.TabIndex = 10;
             this.label80.Text = "100.00%";
             this.label80.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1866,7 +1872,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel12.ColumnCount = 3;
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel12.Controls.Add(this.label77, 0, 0);
             this.tableLayoutPanel12.Controls.Add(this.panel81, 2, 0);
             this.tableLayoutPanel12.Controls.Add(this.label78, 1, 0);
@@ -1894,7 +1900,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel81.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel81.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel81.Controls.Add(this.panel82);
-            this.panel81.Location = new System.Drawing.Point(221, 3);
+            this.panel81.Location = new System.Drawing.Point(220, 3);
             this.panel81.Name = "panel81";
             this.panel81.Size = new System.Drawing.Size(277, 13);
             this.panel81.TabIndex = 0;
@@ -1935,7 +1941,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label78.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label78.Location = new System.Drawing.Point(131, 0);
             this.label78.Name = "label78";
-            this.label78.Size = new System.Drawing.Size(84, 22);
+            this.label78.Size = new System.Drawing.Size(83, 22);
             this.label78.TabIndex = 10;
             this.label78.Text = "100.00%";
             this.label78.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1962,7 +1968,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel11.ColumnCount = 3;
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel11.Controls.Add(this.label75, 0, 0);
             this.tableLayoutPanel11.Controls.Add(this.panel78, 2, 0);
             this.tableLayoutPanel11.Controls.Add(this.label76, 1, 0);
@@ -1990,7 +1996,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel78.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel78.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel78.Controls.Add(this.panel79);
-            this.panel78.Location = new System.Drawing.Point(221, 3);
+            this.panel78.Location = new System.Drawing.Point(220, 3);
             this.panel78.Name = "panel78";
             this.panel78.Size = new System.Drawing.Size(277, 13);
             this.panel78.TabIndex = 0;
@@ -2021,7 +2027,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label76.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label76.Location = new System.Drawing.Point(131, 0);
             this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(84, 22);
+            this.label76.Size = new System.Drawing.Size(83, 22);
             this.label76.TabIndex = 10;
             this.label76.Text = "+100.00%";
             this.label76.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2048,7 +2054,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel10.ColumnCount = 3;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel10.Controls.Add(this.label72, 0, 0);
             this.tableLayoutPanel10.Controls.Add(this.panel71, 2, 0);
             this.tableLayoutPanel10.Controls.Add(this.label73, 1, 0);
@@ -2076,7 +2082,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel71.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel71.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel71.Controls.Add(this.panel75);
-            this.panel71.Location = new System.Drawing.Point(221, 3);
+            this.panel71.Location = new System.Drawing.Point(220, 3);
             this.panel71.Name = "panel71";
             this.panel71.Size = new System.Drawing.Size(277, 13);
             this.panel71.TabIndex = 0;
@@ -2117,7 +2123,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label73.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label73.Location = new System.Drawing.Point(131, 0);
             this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(84, 22);
+            this.label73.Size = new System.Drawing.Size(83, 22);
             this.label73.TabIndex = 10;
             this.label73.Text = "+100.00%";
             this.label73.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2144,7 +2150,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel9.ColumnCount = 3;
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel9.Controls.Add(this.label68, 0, 0);
             this.tableLayoutPanel9.Controls.Add(this.panel68, 2, 0);
             this.tableLayoutPanel9.Controls.Add(this.label71, 1, 0);
@@ -2172,7 +2178,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel68.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel68.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel68.Controls.Add(this.panel69);
-            this.panel68.Location = new System.Drawing.Point(221, 3);
+            this.panel68.Location = new System.Drawing.Point(220, 3);
             this.panel68.Name = "panel68";
             this.panel68.Size = new System.Drawing.Size(277, 13);
             this.panel68.TabIndex = 0;
@@ -2203,7 +2209,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label71.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label71.Location = new System.Drawing.Point(131, 0);
             this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(84, 22);
+            this.label71.Size = new System.Drawing.Size(83, 22);
             this.label71.TabIndex = 10;
             this.label71.Text = "+100.00%";
             this.label71.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2230,7 +2236,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel8.ColumnCount = 3;
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel8.Controls.Add(this.label65, 0, 0);
             this.tableLayoutPanel8.Controls.Add(this.panel56, 2, 0);
             this.tableLayoutPanel8.Controls.Add(this.label67, 1, 0);
@@ -2258,7 +2264,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel56.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel56.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel56.Controls.Add(this.panel66);
-            this.panel56.Location = new System.Drawing.Point(221, 3);
+            this.panel56.Location = new System.Drawing.Point(220, 3);
             this.panel56.Name = "panel56";
             this.panel56.Size = new System.Drawing.Size(277, 13);
             this.panel56.TabIndex = 0;
@@ -2289,7 +2295,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label67.Location = new System.Drawing.Point(131, 0);
             this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(84, 22);
+            this.label67.Size = new System.Drawing.Size(83, 22);
             this.label67.TabIndex = 10;
             this.label67.Text = "+100.00%";
             this.label67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2316,7 +2322,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel7.ColumnCount = 3;
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel7.Controls.Add(this.label69, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.panel72, 2, 0);
             this.tableLayoutPanel7.Controls.Add(this.label74, 1, 0);
@@ -2344,7 +2350,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel72.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel72.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel72.Controls.Add(this.panel73);
-            this.panel72.Location = new System.Drawing.Point(221, 3);
+            this.panel72.Location = new System.Drawing.Point(220, 3);
             this.panel72.Name = "panel72";
             this.panel72.Size = new System.Drawing.Size(277, 13);
             this.panel72.TabIndex = 0;
@@ -2395,7 +2401,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label74.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label74.Location = new System.Drawing.Point(131, 0);
             this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(84, 22);
+            this.label74.Size = new System.Drawing.Size(83, 22);
             this.label74.TabIndex = 10;
             this.label74.Text = "100.00%";
             this.label74.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2432,7 +2438,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel6.ColumnCount = 3;
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel6.Controls.Add(this.label53, 1, 2);
             this.tableLayoutPanel6.Controls.Add(this.panel57, 2, 2);
             this.tableLayoutPanel6.Controls.Add(this.label54, 1, 1);
@@ -2458,7 +2464,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label53.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label53.Location = new System.Drawing.Point(131, 38);
             this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(84, 20);
+            this.label53.Size = new System.Drawing.Size(83, 20);
             this.label53.TabIndex = 12;
             this.label53.Text = "100.00 ft";
             this.label53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2468,7 +2474,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel57.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel57.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel57.Controls.Add(this.panel58);
-            this.panel57.Location = new System.Drawing.Point(221, 41);
+            this.panel57.Location = new System.Drawing.Point(220, 41);
             this.panel57.Name = "panel57";
             this.panel57.Size = new System.Drawing.Size(277, 13);
             this.panel57.TabIndex = 2;
@@ -2499,7 +2505,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label54.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label54.Location = new System.Drawing.Point(131, 19);
             this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(84, 19);
+            this.label54.Size = new System.Drawing.Size(83, 19);
             this.label54.TabIndex = 11;
             this.label54.Text = "100.00 ft";
             this.label54.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2509,7 +2515,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel60.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel60.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel60.Controls.Add(this.panel61);
-            this.panel60.Location = new System.Drawing.Point(221, 22);
+            this.panel60.Location = new System.Drawing.Point(220, 22);
             this.panel60.Name = "panel60";
             this.panel60.Size = new System.Drawing.Size(277, 13);
             this.panel60.TabIndex = 1;
@@ -2550,7 +2556,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel63.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel63.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel63.Controls.Add(this.panel64);
-            this.panel63.Location = new System.Drawing.Point(221, 3);
+            this.panel63.Location = new System.Drawing.Point(220, 3);
             this.panel63.Name = "panel63";
             this.panel63.Size = new System.Drawing.Size(277, 13);
             this.panel63.TabIndex = 0;
@@ -2605,7 +2611,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label66.Location = new System.Drawing.Point(131, 0);
             this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(84, 19);
+            this.label66.Size = new System.Drawing.Size(83, 19);
             this.label66.TabIndex = 10;
             this.label66.Text = "100.00 ft";
             this.label66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2690,7 +2696,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel5.ColumnCount = 3;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel5.Controls.Add(this.label57, 1, 3);
             this.tableLayoutPanel5.Controls.Add(this.panel48, 2, 3);
             this.tableLayoutPanel5.Controls.Add(this.label58, 1, 2);
@@ -2720,7 +2726,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label57.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label57.Location = new System.Drawing.Point(131, 57);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(84, 20);
+            this.label57.Size = new System.Drawing.Size(83, 20);
             this.label57.TabIndex = 13;
             this.label57.Text = "100.00 mph";
             this.label57.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2730,7 +2736,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel48.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel48.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel48.Controls.Add(this.panel45);
-            this.panel48.Location = new System.Drawing.Point(221, 60);
+            this.panel48.Location = new System.Drawing.Point(220, 60);
             this.panel48.Name = "panel48";
             this.panel48.Size = new System.Drawing.Size(277, 13);
             this.panel48.TabIndex = 3;
@@ -2761,7 +2767,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label58.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label58.Location = new System.Drawing.Point(131, 38);
             this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(84, 19);
+            this.label58.Size = new System.Drawing.Size(83, 19);
             this.label58.TabIndex = 12;
             this.label58.Text = "100.00 ft";
             this.label58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2771,7 +2777,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel49.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel49.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel49.Controls.Add(this.panel44);
-            this.panel49.Location = new System.Drawing.Point(221, 41);
+            this.panel49.Location = new System.Drawing.Point(220, 41);
             this.panel49.Name = "panel49";
             this.panel49.Size = new System.Drawing.Size(277, 13);
             this.panel49.TabIndex = 2;
@@ -2802,7 +2808,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label59.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label59.Location = new System.Drawing.Point(131, 19);
             this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(84, 19);
+            this.label59.Size = new System.Drawing.Size(83, 19);
             this.label59.TabIndex = 11;
             this.label59.Text = "100.00 mph";
             this.label59.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2812,7 +2818,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel50.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel50.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel50.Controls.Add(this.panel43);
-            this.panel50.Location = new System.Drawing.Point(221, 22);
+            this.panel50.Location = new System.Drawing.Point(220, 22);
             this.panel50.Name = "panel50";
             this.panel50.Size = new System.Drawing.Size(277, 13);
             this.panel50.TabIndex = 1;
@@ -2853,7 +2859,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.panel51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
             this.panel51.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel51.Controls.Add(this.panel42);
-            this.panel51.Location = new System.Drawing.Point(221, 3);
+            this.panel51.Location = new System.Drawing.Point(220, 3);
             this.panel51.Name = "panel51";
             this.panel51.Size = new System.Drawing.Size(277, 13);
             this.panel51.TabIndex = 0;
@@ -2920,7 +2926,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label70.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label70.Location = new System.Drawing.Point(131, 0);
             this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(84, 19);
+            this.label70.Size = new System.Drawing.Size(83, 19);
             this.label70.TabIndex = 10;
             this.label70.Text = "100.00 mph";
             this.label70.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2973,7 +2979,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel15.ColumnCount = 3;
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel15.Controls.Add(this.label106, 1, 10);
             this.tableLayoutPanel15.Controls.Add(this.label107, 1, 9);
             this.tableLayoutPanel15.Controls.Add(this.label108, 1, 8);
@@ -3031,7 +3037,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label106.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label106.Location = new System.Drawing.Point(131, 196);
             this.label106.Name = "label106";
-            this.label106.Size = new System.Drawing.Size(84, 20);
+            this.label106.Size = new System.Drawing.Size(83, 20);
             this.label106.TabIndex = 12;
             this.label106.Text = "100.00%";
             this.label106.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3043,7 +3049,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label107.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label107.Location = new System.Drawing.Point(131, 176);
             this.label107.Name = "label107";
-            this.label107.Size = new System.Drawing.Size(84, 20);
+            this.label107.Size = new System.Drawing.Size(83, 20);
             this.label107.TabIndex = 12;
             this.label107.Text = "100.00%";
             this.label107.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3055,7 +3061,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label108.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label108.Location = new System.Drawing.Point(131, 156);
             this.label108.Name = "label108";
-            this.label108.Size = new System.Drawing.Size(84, 20);
+            this.label108.Size = new System.Drawing.Size(83, 20);
             this.label108.TabIndex = 12;
             this.label108.Text = "100.00%";
             this.label108.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3067,7 +3073,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label109.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label109.Location = new System.Drawing.Point(131, 136);
             this.label109.Name = "label109";
-            this.label109.Size = new System.Drawing.Size(84, 20);
+            this.label109.Size = new System.Drawing.Size(83, 20);
             this.label109.TabIndex = 12;
             this.label109.Text = "100.00%";
             this.label109.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3079,7 +3085,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label110.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label110.Location = new System.Drawing.Point(131, 116);
             this.label110.Name = "label110";
-            this.label110.Size = new System.Drawing.Size(84, 20);
+            this.label110.Size = new System.Drawing.Size(83, 20);
             this.label110.TabIndex = 12;
             this.label110.Text = "100.00%";
             this.label110.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3091,7 +3097,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label111.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label111.Location = new System.Drawing.Point(131, 96);
             this.label111.Name = "label111";
-            this.label111.Size = new System.Drawing.Size(84, 20);
+            this.label111.Size = new System.Drawing.Size(83, 20);
             this.label111.TabIndex = 12;
             this.label111.Text = "100.00%";
             this.label111.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3187,7 +3193,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label119.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label119.Location = new System.Drawing.Point(131, 57);
             this.label119.Name = "label119";
-            this.label119.Size = new System.Drawing.Size(84, 19);
+            this.label119.Size = new System.Drawing.Size(83, 19);
             this.label119.TabIndex = 13;
             this.label119.Text = "100.00%";
             this.label119.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3196,7 +3202,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel99.BackColor = System.Drawing.Color.Yellow;
             this.panel99.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel99.Location = new System.Drawing.Point(221, 60);
+            this.panel99.Location = new System.Drawing.Point(220, 60);
             this.panel99.Name = "panel99";
             this.panel99.Size = new System.Drawing.Size(277, 13);
             this.panel99.TabIndex = 3;
@@ -3208,7 +3214,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label120.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label120.Location = new System.Drawing.Point(131, 38);
             this.label120.Name = "label120";
-            this.label120.Size = new System.Drawing.Size(84, 19);
+            this.label120.Size = new System.Drawing.Size(83, 19);
             this.label120.TabIndex = 12;
             this.label120.Text = "100.00%";
             this.label120.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3217,7 +3223,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel100.BackColor = System.Drawing.Color.Yellow;
             this.panel100.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel100.Location = new System.Drawing.Point(221, 41);
+            this.panel100.Location = new System.Drawing.Point(220, 41);
             this.panel100.Name = "panel100";
             this.panel100.Size = new System.Drawing.Size(277, 13);
             this.panel100.TabIndex = 2;
@@ -3229,7 +3235,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label121.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label121.Location = new System.Drawing.Point(131, 19);
             this.label121.Name = "label121";
-            this.label121.Size = new System.Drawing.Size(84, 19);
+            this.label121.Size = new System.Drawing.Size(83, 19);
             this.label121.TabIndex = 11;
             this.label121.Text = "100.00%";
             this.label121.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3238,7 +3244,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel101.BackColor = System.Drawing.Color.Yellow;
             this.panel101.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel101.Location = new System.Drawing.Point(221, 22);
+            this.panel101.Location = new System.Drawing.Point(220, 22);
             this.panel101.Name = "panel101";
             this.panel101.Size = new System.Drawing.Size(277, 13);
             this.panel101.TabIndex = 1;
@@ -3259,7 +3265,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel102.BackColor = System.Drawing.Color.Yellow;
             this.panel102.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel102.Location = new System.Drawing.Point(221, 3);
+            this.panel102.Location = new System.Drawing.Point(220, 3);
             this.panel102.Name = "panel102";
             this.panel102.Size = new System.Drawing.Size(277, 13);
             this.panel102.TabIndex = 0;
@@ -3307,7 +3313,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label126.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label126.Location = new System.Drawing.Point(131, 0);
             this.label126.Name = "label126";
-            this.label126.Size = new System.Drawing.Size(84, 19);
+            this.label126.Size = new System.Drawing.Size(83, 19);
             this.label126.TabIndex = 10;
             this.label126.Text = "100.00%";
             this.label126.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3316,7 +3322,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel103.BackColor = System.Drawing.Color.Yellow;
             this.panel103.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel103.Location = new System.Drawing.Point(221, 79);
+            this.panel103.Location = new System.Drawing.Point(220, 79);
             this.panel103.Name = "panel103";
             this.panel103.Size = new System.Drawing.Size(277, 13);
             this.panel103.TabIndex = 14;
@@ -3325,7 +3331,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel104.BackColor = System.Drawing.Color.Yellow;
             this.panel104.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel104.Location = new System.Drawing.Point(221, 99);
+            this.panel104.Location = new System.Drawing.Point(220, 99);
             this.panel104.Name = "panel104";
             this.panel104.Size = new System.Drawing.Size(277, 13);
             this.panel104.TabIndex = 15;
@@ -3334,7 +3340,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel105.BackColor = System.Drawing.Color.Yellow;
             this.panel105.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel105.Location = new System.Drawing.Point(221, 119);
+            this.panel105.Location = new System.Drawing.Point(220, 119);
             this.panel105.Name = "panel105";
             this.panel105.Size = new System.Drawing.Size(277, 13);
             this.panel105.TabIndex = 16;
@@ -3343,7 +3349,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel106.BackColor = System.Drawing.Color.Yellow;
             this.panel106.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel106.Location = new System.Drawing.Point(221, 139);
+            this.panel106.Location = new System.Drawing.Point(220, 139);
             this.panel106.Name = "panel106";
             this.panel106.Size = new System.Drawing.Size(277, 13);
             this.panel106.TabIndex = 17;
@@ -3352,7 +3358,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel107.BackColor = System.Drawing.Color.Yellow;
             this.panel107.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel107.Location = new System.Drawing.Point(221, 159);
+            this.panel107.Location = new System.Drawing.Point(220, 159);
             this.panel107.Name = "panel107";
             this.panel107.Size = new System.Drawing.Size(277, 13);
             this.panel107.TabIndex = 18;
@@ -3361,7 +3367,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel108.BackColor = System.Drawing.Color.Yellow;
             this.panel108.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel108.Location = new System.Drawing.Point(221, 179);
+            this.panel108.Location = new System.Drawing.Point(220, 179);
             this.panel108.Name = "panel108";
             this.panel108.Size = new System.Drawing.Size(277, 13);
             this.panel108.TabIndex = 19;
@@ -3370,7 +3376,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel109.BackColor = System.Drawing.Color.Yellow;
             this.panel109.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel109.Location = new System.Drawing.Point(221, 199);
+            this.panel109.Location = new System.Drawing.Point(220, 199);
             this.panel109.Name = "panel109";
             this.panel109.Size = new System.Drawing.Size(277, 13);
             this.panel109.TabIndex = 20;
@@ -3382,7 +3388,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label127.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label127.Location = new System.Drawing.Point(131, 76);
             this.label127.Name = "label127";
-            this.label127.Size = new System.Drawing.Size(84, 20);
+            this.label127.Size = new System.Drawing.Size(83, 20);
             this.label127.TabIndex = 11;
             this.label127.Text = "100.00%";
             this.label127.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3419,7 +3425,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel14.ColumnCount = 3;
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel14.Controls.Add(this.label103, 1, 10);
             this.tableLayoutPanel14.Controls.Add(this.label102, 1, 9);
             this.tableLayoutPanel14.Controls.Add(this.label101, 1, 8);
@@ -3477,7 +3483,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label103.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label103.Location = new System.Drawing.Point(131, 196);
             this.label103.Name = "label103";
-            this.label103.Size = new System.Drawing.Size(84, 20);
+            this.label103.Size = new System.Drawing.Size(83, 20);
             this.label103.TabIndex = 12;
             this.label103.Text = "30";
             this.label103.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3489,7 +3495,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label102.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label102.Location = new System.Drawing.Point(131, 176);
             this.label102.Name = "label102";
-            this.label102.Size = new System.Drawing.Size(84, 20);
+            this.label102.Size = new System.Drawing.Size(83, 20);
             this.label102.TabIndex = 12;
             this.label102.Text = "30";
             this.label102.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3501,7 +3507,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label101.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label101.Location = new System.Drawing.Point(131, 156);
             this.label101.Name = "label101";
-            this.label101.Size = new System.Drawing.Size(84, 20);
+            this.label101.Size = new System.Drawing.Size(83, 20);
             this.label101.TabIndex = 12;
             this.label101.Text = "30";
             this.label101.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3513,7 +3519,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label100.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label100.Location = new System.Drawing.Point(131, 136);
             this.label100.Name = "label100";
-            this.label100.Size = new System.Drawing.Size(84, 20);
+            this.label100.Size = new System.Drawing.Size(83, 20);
             this.label100.TabIndex = 12;
             this.label100.Text = "30";
             this.label100.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3525,7 +3531,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label99.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label99.Location = new System.Drawing.Point(131, 116);
             this.label99.Name = "label99";
-            this.label99.Size = new System.Drawing.Size(84, 20);
+            this.label99.Size = new System.Drawing.Size(83, 20);
             this.label99.TabIndex = 12;
             this.label99.Text = "30";
             this.label99.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3537,7 +3543,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label98.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label98.Location = new System.Drawing.Point(131, 96);
             this.label98.Name = "label98";
-            this.label98.Size = new System.Drawing.Size(84, 20);
+            this.label98.Size = new System.Drawing.Size(83, 20);
             this.label98.TabIndex = 12;
             this.label98.Text = "30";
             this.label98.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3633,7 +3639,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label82.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label82.Location = new System.Drawing.Point(131, 57);
             this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(84, 19);
+            this.label82.Size = new System.Drawing.Size(83, 19);
             this.label82.TabIndex = 13;
             this.label82.Text = "30";
             this.label82.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3642,7 +3648,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel88.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel88.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel88.Location = new System.Drawing.Point(221, 60);
+            this.panel88.Location = new System.Drawing.Point(220, 60);
             this.panel88.Name = "panel88";
             this.panel88.Size = new System.Drawing.Size(277, 13);
             this.panel88.TabIndex = 3;
@@ -3654,7 +3660,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label83.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label83.Location = new System.Drawing.Point(131, 38);
             this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(84, 19);
+            this.label83.Size = new System.Drawing.Size(83, 19);
             this.label83.TabIndex = 12;
             this.label83.Text = "30";
             this.label83.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3663,7 +3669,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel91.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel91.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel91.Location = new System.Drawing.Point(221, 41);
+            this.panel91.Location = new System.Drawing.Point(220, 41);
             this.panel91.Name = "panel91";
             this.panel91.Size = new System.Drawing.Size(277, 13);
             this.panel91.TabIndex = 2;
@@ -3675,7 +3681,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label84.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label84.Location = new System.Drawing.Point(131, 19);
             this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(84, 19);
+            this.label84.Size = new System.Drawing.Size(83, 19);
             this.label84.TabIndex = 11;
             this.label84.Text = "30";
             this.label84.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3684,7 +3690,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel94.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel94.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel94.Location = new System.Drawing.Point(221, 22);
+            this.panel94.Location = new System.Drawing.Point(220, 22);
             this.panel94.Name = "panel94";
             this.panel94.Size = new System.Drawing.Size(277, 13);
             this.panel94.TabIndex = 1;
@@ -3705,7 +3711,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel97.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel97.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel97.Location = new System.Drawing.Point(221, 3);
+            this.panel97.Location = new System.Drawing.Point(220, 3);
             this.panel97.Name = "panel97";
             this.panel97.Size = new System.Drawing.Size(277, 13);
             this.panel97.TabIndex = 0;
@@ -3753,7 +3759,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label89.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label89.Location = new System.Drawing.Point(131, 0);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(84, 19);
+            this.label89.Size = new System.Drawing.Size(83, 19);
             this.label89.TabIndex = 10;
             this.label89.Text = "30";
             this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3762,7 +3768,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel89.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel89.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel89.Location = new System.Drawing.Point(221, 79);
+            this.panel89.Location = new System.Drawing.Point(220, 79);
             this.panel89.Name = "panel89";
             this.panel89.Size = new System.Drawing.Size(277, 13);
             this.panel89.TabIndex = 14;
@@ -3771,7 +3777,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel90.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel90.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel90.Location = new System.Drawing.Point(221, 99);
+            this.panel90.Location = new System.Drawing.Point(220, 99);
             this.panel90.Name = "panel90";
             this.panel90.Size = new System.Drawing.Size(277, 13);
             this.panel90.TabIndex = 15;
@@ -3780,7 +3786,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel92.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel92.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel92.Location = new System.Drawing.Point(221, 119);
+            this.panel92.Location = new System.Drawing.Point(220, 119);
             this.panel92.Name = "panel92";
             this.panel92.Size = new System.Drawing.Size(277, 13);
             this.panel92.TabIndex = 16;
@@ -3789,7 +3795,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel93.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel93.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel93.Location = new System.Drawing.Point(221, 139);
+            this.panel93.Location = new System.Drawing.Point(220, 139);
             this.panel93.Name = "panel93";
             this.panel93.Size = new System.Drawing.Size(277, 13);
             this.panel93.TabIndex = 17;
@@ -3798,7 +3804,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel95.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel95.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel95.Location = new System.Drawing.Point(221, 159);
+            this.panel95.Location = new System.Drawing.Point(220, 159);
             this.panel95.Name = "panel95";
             this.panel95.Size = new System.Drawing.Size(277, 13);
             this.panel95.TabIndex = 18;
@@ -3807,7 +3813,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel96.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel96.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel96.Location = new System.Drawing.Point(221, 179);
+            this.panel96.Location = new System.Drawing.Point(220, 179);
             this.panel96.Name = "panel96";
             this.panel96.Size = new System.Drawing.Size(277, 13);
             this.panel96.TabIndex = 19;
@@ -3816,7 +3822,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel98.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.panel98.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel98.Location = new System.Drawing.Point(221, 199);
+            this.panel98.Location = new System.Drawing.Point(220, 199);
             this.panel98.Name = "panel98";
             this.panel98.Size = new System.Drawing.Size(277, 13);
             this.panel98.TabIndex = 20;
@@ -3828,13 +3834,19 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label97.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label97.Location = new System.Drawing.Point(131, 76);
             this.label97.Name = "label97";
-            this.label97.Size = new System.Drawing.Size(84, 20);
+            this.label97.Size = new System.Drawing.Size(83, 20);
             this.label97.TabIndex = 11;
             this.label97.Text = "30";
             this.label97.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tabPageAdv1
             // 
+            this.tabPageAdv1.Controls.Add(this.ctlLayeredBar6);
+            this.tabPageAdv1.Controls.Add(this.ctlLayeredBar5);
+            this.tabPageAdv1.Controls.Add(this.ctlLayeredBar4);
+            this.tabPageAdv1.Controls.Add(this.ctlLayeredBar3);
+            this.tabPageAdv1.Controls.Add(this.ctlLayeredBar2);
+            this.tabPageAdv1.Controls.Add(this.ctlLayeredBar1);
             this.tabPageAdv1.Controls.Add(this.label128);
             this.tabPageAdv1.Controls.Add(this.gradientPanel17);
             this.tabPageAdv1.Image = null;
@@ -3879,7 +3891,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel16.ColumnCount = 3;
             this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 62.10046F));
             this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 37.89954F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 288F));
             this.tableLayoutPanel16.Controls.Add(this.label133, 1, 6);
             this.tableLayoutPanel16.Controls.Add(this.label134, 1, 5);
             this.tableLayoutPanel16.Controls.Add(this.label139, 0, 6);
@@ -3919,7 +3931,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label133.AutoSize = true;
             this.label133.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label133.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label133.Location = new System.Drawing.Point(139, 116);
+            this.label133.Location = new System.Drawing.Point(138, 116);
             this.label133.Name = "label133";
             this.label133.Size = new System.Drawing.Size(76, 20);
             this.label133.TabIndex = 12;
@@ -3931,7 +3943,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label134.AutoSize = true;
             this.label134.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label134.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label134.Location = new System.Drawing.Point(139, 96);
+            this.label134.Location = new System.Drawing.Point(138, 96);
             this.label134.Name = "label134";
             this.label134.Size = new System.Drawing.Size(76, 20);
             this.label134.TabIndex = 12;
@@ -3945,7 +3957,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label139.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label139.Location = new System.Drawing.Point(3, 116);
             this.label139.Name = "label139";
-            this.label139.Size = new System.Drawing.Size(130, 20);
+            this.label139.Size = new System.Drawing.Size(129, 20);
             this.label139.TabIndex = 3;
             this.label139.Text = "Regen:";
             this.label139.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3957,7 +3969,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label140.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label140.Location = new System.Drawing.Point(3, 96);
             this.label140.Name = "label140";
-            this.label140.Size = new System.Drawing.Size(130, 20);
+            this.label140.Size = new System.Drawing.Size(129, 20);
             this.label140.TabIndex = 3;
             this.label140.Text = "SpeedRunning:";
             this.label140.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3969,7 +3981,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label141.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label141.Location = new System.Drawing.Point(3, 76);
             this.label141.Name = "label141";
-            this.label141.Size = new System.Drawing.Size(130, 20);
+            this.label141.Size = new System.Drawing.Size(129, 20);
             this.label141.TabIndex = 3;
             this.label141.Text = "RechargeTime:";
             this.label141.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3979,7 +3991,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label142.AutoSize = true;
             this.label142.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label142.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label142.Location = new System.Drawing.Point(139, 57);
+            this.label142.Location = new System.Drawing.Point(138, 57);
             this.label142.Name = "label142";
             this.label142.Size = new System.Drawing.Size(76, 19);
             this.label142.TabIndex = 13;
@@ -3990,7 +4002,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel110.BackColor = System.Drawing.Color.Cyan;
             this.panel110.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel110.Location = new System.Drawing.Point(221, 60);
+            this.panel110.Location = new System.Drawing.Point(220, 60);
             this.panel110.Name = "panel110";
             this.panel110.Size = new System.Drawing.Size(277, 13);
             this.panel110.TabIndex = 3;
@@ -4000,7 +4012,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label143.AutoSize = true;
             this.label143.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label143.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label143.Location = new System.Drawing.Point(139, 38);
+            this.label143.Location = new System.Drawing.Point(138, 38);
             this.label143.Name = "label143";
             this.label143.Size = new System.Drawing.Size(76, 19);
             this.label143.TabIndex = 12;
@@ -4011,7 +4023,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel111.BackColor = System.Drawing.Color.Cyan;
             this.panel111.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel111.Location = new System.Drawing.Point(221, 41);
+            this.panel111.Location = new System.Drawing.Point(220, 41);
             this.panel111.Name = "panel111";
             this.panel111.Size = new System.Drawing.Size(277, 13);
             this.panel111.TabIndex = 2;
@@ -4021,7 +4033,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label144.AutoSize = true;
             this.label144.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label144.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label144.Location = new System.Drawing.Point(139, 19);
+            this.label144.Location = new System.Drawing.Point(138, 19);
             this.label144.Name = "label144";
             this.label144.Size = new System.Drawing.Size(76, 19);
             this.label144.TabIndex = 11;
@@ -4032,7 +4044,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel112.BackColor = System.Drawing.Color.Cyan;
             this.panel112.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel112.Location = new System.Drawing.Point(221, 22);
+            this.panel112.Location = new System.Drawing.Point(220, 22);
             this.panel112.Name = "panel112";
             this.panel112.Size = new System.Drawing.Size(277, 13);
             this.panel112.TabIndex = 1;
@@ -4044,7 +4056,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label145.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label145.Location = new System.Drawing.Point(3, 0);
             this.label145.Name = "label145";
-            this.label145.Size = new System.Drawing.Size(130, 19);
+            this.label145.Size = new System.Drawing.Size(129, 19);
             this.label145.TabIndex = 0;
             this.label145.Text = "Defense:";
             this.label145.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -4053,7 +4065,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel113.BackColor = System.Drawing.Color.Cyan;
             this.panel113.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel113.Location = new System.Drawing.Point(221, 3);
+            this.panel113.Location = new System.Drawing.Point(220, 3);
             this.panel113.Name = "panel113";
             this.panel113.Size = new System.Drawing.Size(277, 13);
             this.panel113.TabIndex = 0;
@@ -4065,7 +4077,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label146.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label146.Location = new System.Drawing.Point(3, 19);
             this.label146.Name = "label146";
-            this.label146.Size = new System.Drawing.Size(130, 19);
+            this.label146.Size = new System.Drawing.Size(129, 19);
             this.label146.TabIndex = 1;
             this.label146.Text = "Endurance:";
             this.label146.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -4077,7 +4089,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label147.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label147.Location = new System.Drawing.Point(3, 38);
             this.label147.Name = "label147";
-            this.label147.Size = new System.Drawing.Size(130, 19);
+            this.label147.Size = new System.Drawing.Size(129, 19);
             this.label147.TabIndex = 2;
             this.label147.Text = "PerceptionRadius:";
             this.label147.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -4089,7 +4101,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label148.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label148.Location = new System.Drawing.Point(3, 57);
             this.label148.Name = "label148";
-            this.label148.Size = new System.Drawing.Size(130, 19);
+            this.label148.Size = new System.Drawing.Size(129, 19);
             this.label148.TabIndex = 3;
             this.label148.Text = "ToHit:";
             this.label148.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -4099,7 +4111,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label149.AutoSize = true;
             this.label149.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label149.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label149.Location = new System.Drawing.Point(139, 0);
+            this.label149.Location = new System.Drawing.Point(138, 0);
             this.label149.Name = "label149";
             this.label149.Size = new System.Drawing.Size(76, 19);
             this.label149.TabIndex = 10;
@@ -4110,7 +4122,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel114.BackColor = System.Drawing.Color.Cyan;
             this.panel114.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel114.Location = new System.Drawing.Point(221, 79);
+            this.panel114.Location = new System.Drawing.Point(220, 79);
             this.panel114.Name = "panel114";
             this.panel114.Size = new System.Drawing.Size(277, 13);
             this.panel114.TabIndex = 14;
@@ -4119,7 +4131,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel115.BackColor = System.Drawing.Color.Cyan;
             this.panel115.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel115.Location = new System.Drawing.Point(221, 99);
+            this.panel115.Location = new System.Drawing.Point(220, 99);
             this.panel115.Name = "panel115";
             this.panel115.Size = new System.Drawing.Size(277, 13);
             this.panel115.TabIndex = 15;
@@ -4128,7 +4140,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.panel116.BackColor = System.Drawing.Color.Cyan;
             this.panel116.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel116.Location = new System.Drawing.Point(221, 119);
+            this.panel116.Location = new System.Drawing.Point(220, 119);
             this.panel116.Name = "panel116";
             this.panel116.Size = new System.Drawing.Size(277, 13);
             this.panel116.TabIndex = 16;
@@ -4138,12 +4150,156 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label150.AutoSize = true;
             this.label150.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label150.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label150.Location = new System.Drawing.Point(139, 76);
+            this.label150.Location = new System.Drawing.Point(138, 76);
             this.label150.Name = "label150";
             this.label150.Size = new System.Drawing.Size(76, 20);
             this.label150.TabIndex = 11;
             this.label150.Text = "100.00%";
             this.label150.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // ctlLayeredBar1
+            // 
+            this.ctlLayeredBar1.BackColor = System.Drawing.Color.Transparent;
+            this.ctlLayeredBar1.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar1.ColorMainBar = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar1.ColorOverCap = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar1.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar1.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar1.EnableBaseValue = false;
+            this.ctlLayeredBar1.EnableOverCap = false;
+            this.ctlLayeredBar1.EnableOverlay1 = false;
+            this.ctlLayeredBar1.EnableOverlay2 = false;
+            this.ctlLayeredBar1.Location = new System.Drawing.Point(8, 258);
+            this.ctlLayeredBar1.MaximumBarValue = 100F;
+            this.ctlLayeredBar1.MinimumBarValue = 0F;
+            this.ctlLayeredBar1.Name = "ctlLayeredBar1";
+            this.ctlLayeredBar1.Size = new System.Drawing.Size(277, 15);
+            this.ctlLayeredBar1.TabIndex = 7;
+            this.ctlLayeredBar1.ValueBase = 100F;
+            this.ctlLayeredBar1.ValueMainBar = 100F;
+            this.ctlLayeredBar1.ValueOverCap = 100F;
+            this.ctlLayeredBar1.ValueOverlay1 = 100F;
+            this.ctlLayeredBar1.ValueOverlay2 = 100F;
+            // 
+            // ctlLayeredBar2
+            // 
+            this.ctlLayeredBar2.BackColor = System.Drawing.Color.Transparent;
+            this.ctlLayeredBar2.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar2.ColorMainBar = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar2.ColorOverCap = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar2.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar2.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar2.EnableBaseValue = false;
+            this.ctlLayeredBar2.EnableOverCap = false;
+            this.ctlLayeredBar2.EnableOverlay1 = false;
+            this.ctlLayeredBar2.EnableOverlay2 = false;
+            this.ctlLayeredBar2.Location = new System.Drawing.Point(8, 298);
+            this.ctlLayeredBar2.MaximumBarValue = 100F;
+            this.ctlLayeredBar2.MinimumBarValue = 0F;
+            this.ctlLayeredBar2.Name = "ctlLayeredBar2";
+            this.ctlLayeredBar2.Size = new System.Drawing.Size(277, 15);
+            this.ctlLayeredBar2.TabIndex = 8;
+            this.ctlLayeredBar2.ValueBase = 100F;
+            this.ctlLayeredBar2.ValueMainBar = 100F;
+            this.ctlLayeredBar2.ValueOverCap = 100F;
+            this.ctlLayeredBar2.ValueOverlay1 = 100F;
+            this.ctlLayeredBar2.ValueOverlay2 = 100F;
+            // 
+            // ctlLayeredBar3
+            // 
+            this.ctlLayeredBar3.BackColor = System.Drawing.Color.Transparent;
+            this.ctlLayeredBar3.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar3.ColorMainBar = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar3.ColorOverCap = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar3.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar3.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar3.EnableBaseValue = false;
+            this.ctlLayeredBar3.EnableOverCap = false;
+            this.ctlLayeredBar3.EnableOverlay1 = false;
+            this.ctlLayeredBar3.EnableOverlay2 = false;
+            this.ctlLayeredBar3.Location = new System.Drawing.Point(8, 339);
+            this.ctlLayeredBar3.MaximumBarValue = 100F;
+            this.ctlLayeredBar3.MinimumBarValue = 0F;
+            this.ctlLayeredBar3.Name = "ctlLayeredBar3";
+            this.ctlLayeredBar3.Size = new System.Drawing.Size(277, 15);
+            this.ctlLayeredBar3.TabIndex = 9;
+            this.ctlLayeredBar3.ValueBase = 100F;
+            this.ctlLayeredBar3.ValueMainBar = 100F;
+            this.ctlLayeredBar3.ValueOverCap = 100F;
+            this.ctlLayeredBar3.ValueOverlay1 = 100F;
+            this.ctlLayeredBar3.ValueOverlay2 = 100F;
+            // 
+            // ctlLayeredBar4
+            // 
+            this.ctlLayeredBar4.BackColor = System.Drawing.Color.Transparent;
+            this.ctlLayeredBar4.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar4.ColorMainBar = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar4.ColorOverCap = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar4.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar4.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar4.EnableBaseValue = false;
+            this.ctlLayeredBar4.EnableOverCap = false;
+            this.ctlLayeredBar4.EnableOverlay1 = false;
+            this.ctlLayeredBar4.EnableOverlay2 = false;
+            this.ctlLayeredBar4.Location = new System.Drawing.Point(8, 382);
+            this.ctlLayeredBar4.MaximumBarValue = 100F;
+            this.ctlLayeredBar4.MinimumBarValue = 0F;
+            this.ctlLayeredBar4.Name = "ctlLayeredBar4";
+            this.ctlLayeredBar4.Size = new System.Drawing.Size(277, 15);
+            this.ctlLayeredBar4.TabIndex = 10;
+            this.ctlLayeredBar4.ValueBase = 100F;
+            this.ctlLayeredBar4.ValueMainBar = 100F;
+            this.ctlLayeredBar4.ValueOverCap = 100F;
+            this.ctlLayeredBar4.ValueOverlay1 = 100F;
+            this.ctlLayeredBar4.ValueOverlay2 = 100F;
+            // 
+            // ctlLayeredBar5
+            // 
+            this.ctlLayeredBar5.BackColor = System.Drawing.Color.Transparent;
+            this.ctlLayeredBar5.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar5.ColorMainBar = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar5.ColorOverCap = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar5.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar5.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar5.EnableBaseValue = false;
+            this.ctlLayeredBar5.EnableOverCap = false;
+            this.ctlLayeredBar5.EnableOverlay1 = false;
+            this.ctlLayeredBar5.EnableOverlay2 = false;
+            this.ctlLayeredBar5.Location = new System.Drawing.Point(8, 423);
+            this.ctlLayeredBar5.MaximumBarValue = 100F;
+            this.ctlLayeredBar5.MinimumBarValue = 0F;
+            this.ctlLayeredBar5.Name = "ctlLayeredBar5";
+            this.ctlLayeredBar5.Size = new System.Drawing.Size(277, 15);
+            this.ctlLayeredBar5.TabIndex = 11;
+            this.ctlLayeredBar5.ValueBase = 100F;
+            this.ctlLayeredBar5.ValueMainBar = 100F;
+            this.ctlLayeredBar5.ValueOverCap = 100F;
+            this.ctlLayeredBar5.ValueOverlay1 = 100F;
+            this.ctlLayeredBar5.ValueOverlay2 = 100F;
+            // 
+            // ctlLayeredBar6
+            // 
+            this.ctlLayeredBar6.BackColor = System.Drawing.Color.Transparent;
+            this.ctlLayeredBar6.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar6.ColorMainBar = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar6.ColorOverCap = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar6.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar6.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.ctlLayeredBar6.EnableBaseValue = false;
+            this.ctlLayeredBar6.EnableOverCap = false;
+            this.ctlLayeredBar6.EnableOverlay1 = false;
+            this.ctlLayeredBar6.EnableOverlay2 = false;
+            this.ctlLayeredBar6.Location = new System.Drawing.Point(8, 468);
+            this.ctlLayeredBar6.MaximumBarValue = 100F;
+            this.ctlLayeredBar6.MinimumBarValue = 0F;
+            this.ctlLayeredBar6.Name = "ctlLayeredBar6";
+            this.ctlLayeredBar6.Size = new System.Drawing.Size(277, 15);
+            this.ctlLayeredBar6.TabIndex = 12;
+            this.ctlLayeredBar6.ValueBase = 100F;
+            this.ctlLayeredBar6.ValueMainBar = 100F;
+            this.ctlLayeredBar6.ValueOverCap = 100F;
+            this.ctlLayeredBar6.ValueOverlay1 = 100F;
+            this.ctlLayeredBar6.ValueOverlay2 = 100F;
             // 
             // frmTotalsV2
             // 
@@ -4591,5 +4747,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private Panel panel115;
         private Panel panel116;
         private Label label150;
+        private ctlLayeredBar ctlLayeredBar6;
+        private ctlLayeredBar ctlLayeredBar5;
+        private ctlLayeredBar ctlLayeredBar4;
+        private ctlLayeredBar ctlLayeredBar3;
+        private ctlLayeredBar ctlLayeredBar2;
+        private ctlLayeredBar ctlLayeredBar1;
     }
 }
