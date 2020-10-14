@@ -7,16 +7,16 @@ namespace midsControls
 {
     public partial class ctlLayeredBar : UserControl
     {
-        private bool _EnableOverCap; // false
-        private bool _EnableBaseValue; // false
-        private bool _EnableOverlay1; // false
-        private bool _EnableOverlay2; // false
+        private bool _EnableOverCap;
+        private bool _EnableBaseValue;
+        private bool _EnableOverlay1;
+        private bool _EnableOverlay2;
         private float _ValueUncapped = 100;
         private float _ValueBase = 100;
         private float _Value = 100;
         private float _ValueOverlay1 = 100;
         private float _ValueOverlay2 = 100;
-        private float _MinimumValue; // = 0
+        private float _MinimumValue;
         private float _MaximumValue = 100;
         private Color _OverCapColor = Color.Magenta;
         private Color _BaseValueColor = Color.Magenta;
@@ -42,6 +42,7 @@ namespace midsControls
             {
                 panel1.Visible = value;
                 _EnableOverCap = value;
+                Refresh();
             }
         }
 
@@ -55,6 +56,7 @@ namespace midsControls
             {
                 panel2.Visible = value;
                 _EnableBaseValue = value;
+                Refresh();
             }
         }
 
@@ -68,6 +70,7 @@ namespace midsControls
             {
                 panel4.Visible = value;
                 _EnableOverlay1 = value;
+                Refresh();
             }
         }
 
@@ -81,6 +84,7 @@ namespace midsControls
             {
                 panel5.Visible = value;
                 _EnableOverlay2 = value;
+                Refresh();
             }
         }
 
@@ -93,7 +97,7 @@ namespace midsControls
             set
             {
                 _MinimumValue = value;
-                SetValues();
+                SetValues(true);
             }
         }
 
@@ -106,7 +110,7 @@ namespace midsControls
             set
             {
                 _MaximumValue = value;
-                SetValues();
+                SetValues(true);
             }
         }
 
@@ -119,7 +123,7 @@ namespace midsControls
             set
             {
                 _Value = value;
-                SetValues();
+                SetValues(true);
             }
         }
 
@@ -132,7 +136,7 @@ namespace midsControls
             set
             {
                 _ValueUncapped = value;
-                SetValues();
+                SetValues(true);
             }
         }
 
@@ -145,7 +149,7 @@ namespace midsControls
             set
             {
                 _ValueBase = value;
-                SetValues();
+                SetValues(true);
             }
         }
 
@@ -158,7 +162,7 @@ namespace midsControls
             set
             {
                 _ValueOverlay1 = value;
-                SetValues();
+                SetValues(true);
             }
         }
 
@@ -171,7 +175,7 @@ namespace midsControls
             set
             {
                 _ValueOverlay2 = value;
-                SetValues();
+                SetValues(true);
             }
         }
 
@@ -185,6 +189,7 @@ namespace midsControls
             {
                 panel1.BackColor = value;
                 _OverCapColor = value;
+                Refresh();
             }
         }
 
@@ -198,6 +203,7 @@ namespace midsControls
             {
                 panel2.BackColor = value;
                 _BaseValueColor = value;
+                Refresh();
             }
         }
 
@@ -211,6 +217,7 @@ namespace midsControls
             {
                 panel3.BackColor = value;
                 _BarColor = value;
+                Refresh();
             }
         }
 
@@ -224,6 +231,7 @@ namespace midsControls
             {
                 panel4.BackColor = value;
                 _Overlay1Color = value;
+                Refresh();
             }
         }
 
@@ -237,28 +245,60 @@ namespace midsControls
             {
                 panel5.BackColor = value;
                 _Overlay2Color = value;
+                Refresh();
             }
         }
         #endregion
 
         private int Value2Pixels(float value)
         {
-            return (int)Math.Round(Width / Math.Abs(MaximumBarValue - MinimumBarValue) * (value - MinimumBarValue));
+            return (int)Math.Round(Width / Math.Abs(_MaximumValue - _MinimumValue) * (value - _MinimumValue));
         }
 
         private int Value2Pixels(float value, float vMax)
         {
-            return (int)Math.Round(Width / Math.Abs(vMax - MinimumBarValue) * (value - MinimumBarValue));
+            return (int)Math.Round(Width / Math.Abs(vMax - _MinimumValue) * (value - _MinimumValue));
         }
 
         public void SetValues()
         {
-            SetValues(_Value, _ValueBase, _ValueUncapped, _ValueOverlay1, _ValueOverlay2);
+            if (_EnableOverlay2)
+                SetValues(_Value, _ValueBase, _ValueUncapped, _ValueOverlay1, _ValueOverlay2);
+
+            else if (_EnableOverlay1)
+                SetValues(_Value, _ValueBase, _ValueUncapped, _ValueOverlay1);
+
+            else if (_EnableOverCap && _EnableBaseValue)
+                SetValues(_Value, _ValueBase, _ValueUncapped);
+
+            else if (_EnableOverCap)
+                SetValues(_Value, _ValueUncapped);
+
+            else if (_EnableBaseValue)
+                SetValues(_Value, _ValueBase);
+
+            else
+                SetValues(_Value);
+        }
+
+        public void SetValues(bool refresh)
+        {
+            SetValues();
+            if (refresh) Refresh();
         }
 
         public void SetValues(float value)
         {
             panel3.Width = Value2Pixels(value);
+
+        }
+
+        // z = 1 --> bottom
+        // z = 5 --> top
+        // JavaScript-style (reverse of C#-style)
+        private void SetZIndex(Control ctl, int z)
+        {
+            ctl.Parent.Controls.SetChildIndex(ctl, 6 - Math.Max(0, Math.Min(z, 6)));
         }
 
         public void SetValues(float mainValue, float auxValue)
@@ -274,7 +314,21 @@ namespace midsControls
                 }
                 else
                 {
-                    panel1.Width = panel3.Width = Value2Pixels(mainValue);
+                    panel1.Width = Value2Pixels(mainValue);
+                    panel3.Width = Value2Pixels(mainValue);
+                }
+
+                if (auxValue < mainValue)
+                {
+                    //SetZIndex(panel1, 1);
+                    //SetZIndex(panel3, 3);
+                    panel3.Width = Value2Pixels(mainValue - auxValue);
+                    panel3.Location = new Point(Value2Pixels(auxValue), 0);
+                }
+                else
+                {
+                    panel3.Width = Value2Pixels(mainValue);
+                    panel3.Location = new Point(0, 0);
                 }
             }
 
@@ -284,17 +338,18 @@ namespace midsControls
                 // auxValue: baseValue
                 if (auxValue < mainValue)
                 {
-                    panel2.Parent.Controls.SetChildIndex(panel2, 2);
-                    panel3.Parent.Controls.SetChildIndex(panel3, 1);
+                    //SetZIndex(panel2, 2);
+                    //SetZIndex(panel3, 1);
+                    panel3.Width = Value2Pixels(mainValue - auxValue);
+                    panel3.Location = new Point(Value2Pixels(auxValue), 0);
                 }
                 else
                 {
-                    panel2.Parent.Controls.SetChildIndex(panel2, 1);
-                    panel3.Parent.Controls.SetChildIndex(panel3, 2);
+                    panel3.Width = Value2Pixels(mainValue);
+                    panel3.Location = new Point(0, 0);
                 }
 
                 panel2.Width = Value2Pixels(auxValue);
-                panel3.Width = Value2Pixels(mainValue);
             }
         }
 
@@ -312,17 +367,18 @@ namespace midsControls
                 panel3.Width = Value2Pixels(mainValue);
             }
 
-            panel1.Parent.Controls.SetChildIndex(panel1, 1);
-
             if (baseValue < mainValue)
             {
-                panel2.Parent.Controls.SetChildIndex(panel2, 3);
-                panel3.Parent.Controls.SetChildIndex(panel3, 2);
+                //SetZIndex(panel2, 3);
+                //SetZIndex(panel3, 2);
+                panel3.Width = Value2Pixels(mainValue - baseValue);
+                panel3.Location = new Point(Value2Pixels(baseValue), 0);
             }
             else
             {
-                panel2.Parent.Controls.SetChildIndex(panel2, 2);
-                panel3.Parent.Controls.SetChildIndex(panel3, 3);
+                //SetZIndex(panel2, 2);
+                //SetZIndex(panel3, 3);
+                panel3.Location = new Point(0, 0);
             }
 
             panel2.Width = Value2Pixels(baseValue);
@@ -331,22 +387,26 @@ namespace midsControls
         public void SetValues(float mainValue, float baseValue, float uncappedValue, float overlay1Value)
         {
             SetValues(mainValue, baseValue, uncappedValue);
-
-            panel4.Parent.Controls.SetChildIndex(panel4, 4);
             panel4.Width = Value2Pixels(overlay1Value);
         }
 
         public void SetValues(float mainValue, float baseValue, float uncappedValue, float overlay1Value, float overlay2Value)
         {
             SetValues(mainValue, baseValue, uncappedValue, overlay1Value);
-
-            panel4.Parent.Controls.SetChildIndex(panel5, 5);
             panel5.Width = Value2Pixels(overlay2Value);
         }
 
         public ctlLayeredBar()
         {
             InitializeComponent();
+            
+            SetZIndex(panel1, 1);
+            SetZIndex(panel2, 2);
+            SetZIndex(panel3, 3);
+            SetZIndex(panel4, 4);
+            SetZIndex(panel5, 5);
+ 
+            SetValues(true);
         }
     }
 }
