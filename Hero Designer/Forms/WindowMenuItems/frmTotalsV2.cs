@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
 using midsControls;
+using Syncfusion.Windows.Forms.Tools;
 
 namespace Hero_Designer.Forms.WindowMenuItems
 {
@@ -100,6 +104,43 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private bool _keepOnTop;
         private LayeredBar[] Bars;
         private readonly int BarMaxWidth = 277;
+
+        public Control StatControl(string tab, int panel, string type, int control)
+        {
+            var regEx = new Regex(@"^\d+");
+            var page = tabControlAdv2.Controls.OfType<TabPageAdv>().First(t => t.Text.Contains(tab));
+            var gradientList = page.Controls.OfType<GradientPanel>().ToList();
+            var gradientPanels = gradientList.OrderBy(x => x.Name).ToList();
+            var tablePanels = gradientPanels[panel - 1].Controls.OfType<TableLayoutPanel>().ToList();
+
+            switch (type)
+            {
+                case "Bar":
+                    var controls = new List<Control>();
+                    for (var rowIndex = 0; rowIndex < tablePanels[0].RowCount; rowIndex++)
+                    {
+                        var tControl = tablePanels[0].GetControlFromPosition(2, rowIndex);
+                        controls.Add(tControl);
+                    }
+                    var barList = controls.OfType<Panel>().ToList();
+                    var bars = barList.OrderBy(x => regEx.Match(x.Name).Value).ToList();
+                    
+                    return bars[control - 1];
+                case "Label":
+                    controls = new List<Control>();
+                    for (var rowIndex = 0; rowIndex < tablePanels[0].RowCount; rowIndex++)
+                    {
+                        var tControl = tablePanels[0].GetControlFromPosition(1, rowIndex);
+                        controls.Add(tControl);
+                    }
+                    var labelList = controls.OfType<Label>().ToList();
+                    var labels = labelList.OrderBy(x => regEx.Match(x.Name).Value).ToList();
+                    
+                    return labels[control - 1];
+            }
+
+            return null;
+        }
 
         private void InitBars()
         {
