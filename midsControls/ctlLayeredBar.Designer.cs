@@ -93,6 +93,8 @@ namespace midsControls
             this.Controls.Add(this.panel1);
             this.Name = "ctlLayeredBar";
             this.Size = new System.Drawing.Size(277, 15);
+            this.Load += new System.EventHandler(this.ctlLayeredBar_Load);
+            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.ctlLayeredBar_Layout);
             this.ResumeLayout(false);
 
         }
