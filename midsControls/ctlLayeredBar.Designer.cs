@@ -86,11 +86,11 @@ namespace midsControls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel5);
+            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Name = "ctlLayeredBar";
             this.Size = new System.Drawing.Size(277, 15);
             this.ResumeLayout(false);

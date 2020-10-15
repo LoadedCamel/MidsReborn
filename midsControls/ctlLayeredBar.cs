@@ -42,7 +42,7 @@ namespace midsControls
             {
                 panel1.Visible = value;
                 _EnableOverCap = value;
-                Refresh();
+                SetValues(true);
             }
         }
 
@@ -56,7 +56,7 @@ namespace midsControls
             {
                 panel2.Visible = value;
                 _EnableBaseValue = value;
-                Refresh();
+                SetValues(true);
             }
         }
 
@@ -70,7 +70,7 @@ namespace midsControls
             {
                 panel4.Visible = value;
                 _EnableOverlay1 = value;
-                Refresh();
+                SetValues(true);
             }
         }
 
@@ -84,7 +84,7 @@ namespace midsControls
             {
                 panel5.Visible = value;
                 _EnableOverlay2 = value;
-                Refresh();
+                SetValues(true);
             }
         }
 
@@ -298,17 +298,17 @@ namespace midsControls
         // JavaScript-style (reverse of C#-style)
         private void SetZIndex(Control ctl, int z)
         {
-            ctl.Parent.Controls.SetChildIndex(ctl, 6 - Math.Max(0, Math.Min(z, 6)));
+            ctl.Parent.Controls.SetChildIndex(ctl, 6 - z);
         }
 
         public void SetValues(float mainValue, float auxValue)
         {
-            if (EnableOverCap)
+            if (_EnableOverCap)
             {
                 // auxValue: overCapValue
                 if (auxValue > mainValue)
                 {
-                    float relativeMax = Math.Max(MaximumBarValue, auxValue);
+                    float relativeMax = Math.Max(_MaximumValue, auxValue);
                     panel1.Width = Value2Pixels(auxValue, relativeMax);
                     panel3.Width = Value2Pixels(mainValue, relativeMax);
                 }
@@ -333,7 +333,7 @@ namespace midsControls
             }
 
             // http://csharphelper.com/blog/2014/08/change-control-stacking-order-in-c/
-            if (EnableBaseValue)
+            if (_EnableBaseValue)
             {
                 // auxValue: baseValue
                 if (auxValue < mainValue)
@@ -400,11 +400,11 @@ namespace midsControls
         {
             InitializeComponent();
             
-            SetZIndex(panel1, 1);
-            SetZIndex(panel2, 2);
-            SetZIndex(panel3, 3);
-            SetZIndex(panel4, 4);
-            SetZIndex(panel5, 5);
+            //SetZIndex(panel1, 1);
+            //SetZIndex(panel2, 2);
+            //SetZIndex(panel3, 3);
+            //SetZIndex(panel4, 4);
+            //SetZIndex(panel5, 5);
  
             SetValues(true);
         }
