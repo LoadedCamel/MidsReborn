@@ -680,7 +680,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             graphStealth.Clear();
             graphStealth.AddItem("PvE:|" + Strings.Format(MidsContext.Character.Totals.StealthPvE, "##0") + " ft",
                 MidsContext.Character.Totals.StealthPvE, 0.0f,
-                "This is subtracted from a critter's perception to work out if they can see you.");
+                "This is subtracted from a mob's perception to work out if they can see you.");
             graphStealth.AddItem("PvP:|" + Strings.Format(MidsContext.Character.Totals.StealthPvP, "##0") + " ft",
                 MidsContext.Character.Totals.StealthPvP, 0.0f,
                 "This is subtracted from a player's perception to work out if they can see you.");
@@ -690,7 +690,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
             graphStealth.Draw();
             var iTip10 =
-                "This affects how critters prioritise you as a threat.\r\nLower values make you a less tempting target.\r\nThe " +
+                "This affects how mobs prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe " +
                 MidsContext.Character.Archetype.DisplayName + " base Threat Level of " +
                 Strings.Format((float) (MidsContext.Character.Archetype.BaseThreat * 100.0), "##0") +
                 "% is included in this figure.";

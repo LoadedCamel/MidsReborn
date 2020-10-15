@@ -830,7 +830,7 @@ namespace Base.Data_Classes
             switch (PvMode)
             {
                 case Enums.ePvX.PvE:
-                    sPvx = resistPresent ? "by Critters" : "to Critters";
+                    sPvx = resistPresent ? "by Mobs" : "to Mobs";
                     if (EffectType == Enums.eEffectType.Heal & Aspect == Enums.eAspect.Abs & Mag > 0 &
                         PvMode == Enums.ePvX.PvE)
                     {

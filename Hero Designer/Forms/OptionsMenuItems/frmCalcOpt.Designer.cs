@@ -902,7 +902,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.rbPvE.Size = new System.Drawing.Size(260, 20);
             this.rbPvE.TabIndex = 0;
             this.rbPvE.TabStop = true;
-            this.rbPvE.Text = "Show values for Critters (PvE)";
+            this.rbPvE.Text = "Show values for Mobs (PvE)";
             // 
             // TabPage6
             // 

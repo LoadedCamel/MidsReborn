@@ -79,8 +79,6 @@ namespace Hero_Designer.Forms
             this.lblProb = new System.Windows.Forms.Label();
             this.lvSubSub = new System.Windows.Forms.ListView();
             this.chSubSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Label7 = new System.Windows.Forms.Label();
-            this.Label8 = new System.Windows.Forms.Label();
             this.btnCSV = new System.Windows.Forms.Button();
             this.Label9 = new System.Windows.Forms.Label();
             this.cmbEffectId = new System.Windows.Forms.ComboBox();
@@ -92,14 +90,17 @@ namespace Hero_Designer.Forms
             this.cbFXSpecialCase2 = new System.Windows.Forms.ComboBox();
             this.cbFXOperator = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.dGVActive = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lvPowerType = new System.Windows.Forms.ListView();
+            this.removeConditional = new System.Windows.Forms.Button();
+            this.addConditional = new System.Windows.Forms.Button();
+            this.lvActiveConditionals = new System.Windows.Forms.ListView();
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvConditionalBool = new System.Windows.Forms.ListView();
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvConditionalType = new System.Windows.Forms.ListView();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvPower = new System.Windows.Forms.ListView();
+            this.lvSubConditional = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -108,33 +109,36 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cbTarget = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.GroupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dGVActive)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
+            this.tableLayoutPanel6.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnPaste
             // 
-            this.btnPaste.Location = new System.Drawing.Point(928, 497);
+            this.btnPaste.Location = new System.Drawing.Point(43, 54);
             this.btnPaste.Name = "btnPaste";
-            this.btnPaste.Size = new System.Drawing.Size(150, 26);
+            this.btnPaste.Size = new System.Drawing.Size(135, 26);
             this.btnPaste.TabIndex = 116;
             this.btnPaste.Text = "Paste Effect Data";
             this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
             // 
             // btnCopy
             // 
-            this.btnCopy.Location = new System.Drawing.Point(928, 465);
+            this.btnCopy.Location = new System.Drawing.Point(43, 22);
             this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(150, 26);
+            this.btnCopy.Size = new System.Drawing.Size(135, 26);
             this.btnCopy.TabIndex = 115;
             this.btnCopy.Text = "Copy Effect Data";
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
@@ -154,22 +158,22 @@ namespace Hero_Designer.Forms
             // GroupBox3
             // 
             this.GroupBox3.Controls.Add(this.clbSuppression);
-            this.GroupBox3.Location = new System.Drawing.Point(525, 8);
+            this.GroupBox3.Location = new System.Drawing.Point(1040, 150);
             this.GroupBox3.Name = "GroupBox3";
-            this.GroupBox3.Size = new System.Drawing.Size(386, 105);
+            this.GroupBox3.Size = new System.Drawing.Size(212, 283);
             this.GroupBox3.TabIndex = 107;
             this.GroupBox3.TabStop = false;
             this.GroupBox3.Text = "Suppress Effect When:";
             // 
             // clbSuppression
             // 
+            this.clbSuppression.CheckOnClick = true;
             this.clbSuppression.FormattingEnabled = true;
-            this.clbSuppression.HorizontalScrollbar = true;
-            this.clbSuppression.Location = new System.Drawing.Point(10, 19);
-            this.clbSuppression.MultiColumn = true;
+            this.clbSuppression.Location = new System.Drawing.Point(6, 17);
             this.clbSuppression.Name = "clbSuppression";
-            this.clbSuppression.Size = new System.Drawing.Size(370, 79);
+            this.clbSuppression.Size = new System.Drawing.Size(200, 259);
             this.clbSuppression.TabIndex = 0;
+            //this.clbSuppression.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbSuppression_ItemCheck);
             this.clbSuppression.SelectedIndexChanged += new System.EventHandler(this.clbSuppression_SelectedIndexChanged);
             // 
             // rbIfPlayer
@@ -183,7 +187,7 @@ namespace Hero_Designer.Forms
             // 
             // rbIfCritter
             // 
-            this.rbIfCritter.Location = new System.Drawing.Point(6, 45);
+            this.rbIfCritter.Location = new System.Drawing.Point(127, 18);
             this.rbIfCritter.Name = "rbIfCritter";
             this.rbIfCritter.Size = new System.Drawing.Size(60, 20);
             this.rbIfCritter.TabIndex = 87;
@@ -333,46 +337,50 @@ namespace Hero_Designer.Forms
             // 
             // Label28
             // 
-            this.Label28.Location = new System.Drawing.Point(272, 514);
+            this.Label28.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Label28.Location = new System.Drawing.Point(3, 0);
             this.Label28.Name = "Label28";
-            this.Label28.Size = new System.Drawing.Size(82, 20);
+            this.Label28.Size = new System.Drawing.Size(81, 28);
             this.Label28.TabIndex = 104;
-            this.Label28.Text = "DIsplay Priority:";
+            this.Label28.Text = "Display Priority:";
             this.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Label30
             // 
-            this.Label30.Location = new System.Drawing.Point(964, 430);
+            this.Label30.Location = new System.Drawing.Point(9, 738);
             this.Label30.Name = "Label30";
             this.Label30.Size = new System.Drawing.Size(92, 20);
             this.Label30.TabIndex = 105;
             this.Label30.Text = "Special Case(s):";
             this.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label30.Visible = false;
             // 
             // cbFXClass
             // 
+            this.cbFXClass.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbFXClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXClass.Location = new System.Drawing.Point(368, 512);
+            this.cbFXClass.Location = new System.Drawing.Point(90, 3);
             this.cbFXClass.Name = "cbFXClass";
-            this.cbFXClass.Size = new System.Drawing.Size(132, 22);
+            this.cbFXClass.Size = new System.Drawing.Size(99, 22);
             this.cbFXClass.TabIndex = 93;
             this.cbFXClass.SelectedIndexChanged += new System.EventHandler(this.cbFXClass_SelectedIndexChanged);
             // 
             // cbFXSpecialCase
             // 
             this.cbFXSpecialCase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXSpecialCase.Location = new System.Drawing.Point(941, 559);
+            this.cbFXSpecialCase.Location = new System.Drawing.Point(1046, 101);
             this.cbFXSpecialCase.Name = "cbFXSpecialCase";
             this.cbFXSpecialCase.Size = new System.Drawing.Size(136, 22);
             this.cbFXSpecialCase.TabIndex = 94;
+            this.cbFXSpecialCase.Visible = false;
             this.cbFXSpecialCase.SelectedIndexChanged += new System.EventHandler(this.cbFXSpecialCase_SelectedIndexChanged);
             // 
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(1003, 614);
+            this.btnOK.Location = new System.Drawing.Point(111, 152);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 36);
+            this.btnOK.Size = new System.Drawing.Size(96, 36);
             this.btnOK.TabIndex = 119;
             this.btnOK.Text = "OK";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -380,9 +388,9 @@ namespace Hero_Designer.Forms
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(928, 614);
+            this.btnCancel.Location = new System.Drawing.Point(3, 152);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 36);
+            this.btnCancel.Size = new System.Drawing.Size(96, 36);
             this.btnCancel.TabIndex = 118;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -390,20 +398,21 @@ namespace Hero_Designer.Forms
             // lblEffectDescription
             // 
             this.lblEffectDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblEffectDescription.Location = new System.Drawing.Point(8, 11);
+            this.lblEffectDescription.Location = new System.Drawing.Point(12, 9);
             this.lblEffectDescription.Name = "lblEffectDescription";
-            this.lblEffectDescription.Size = new System.Drawing.Size(511, 102);
+            this.lblEffectDescription.Size = new System.Drawing.Size(1240, 89);
             this.lblEffectDescription.TabIndex = 120;
             this.lblEffectDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblEffectDescription.UseMnemonic = false;
             // 
             // chkVariable
             // 
-            this.chkVariable.Location = new System.Drawing.Point(512, 362);
+            this.chkVariable.Location = new System.Drawing.Point(613, 107);
             this.chkVariable.Name = "chkVariable";
-            this.chkVariable.Size = new System.Drawing.Size(187, 20);
+            this.chkVariable.Size = new System.Drawing.Size(178, 19);
             this.chkVariable.TabIndex = 126;
-            this.chkVariable.Text = "Enable Power Scaling (Override)";
+            this.chkVariable.Text = "Enable Power Scaling Override";
+            this.chkVariable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkVariable.CheckedChanged += new System.EventHandler(this.chkVariable_CheckedChanged);
             // 
             // cbPercentageOverride
@@ -458,7 +467,6 @@ namespace Hero_Designer.Forms
             this.Label3.TabIndex = 132;
             this.Label3.Text = "Affects:";
             this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Label3.Click += new System.EventHandler(this.Label3_Click);
             // 
             // cbAffects
             // 
@@ -538,10 +546,10 @@ namespace Hero_Designer.Forms
             this.lvEffectType.FullRowSelect = true;
             this.lvEffectType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvEffectType.HideSelection = false;
-            this.lvEffectType.Location = new System.Drawing.Point(275, 559);
+            this.lvEffectType.Location = new System.Drawing.Point(197, 158);
             this.lvEffectType.MultiSelect = false;
             this.lvEffectType.Name = "lvEffectType";
-            this.lvEffectType.Size = new System.Drawing.Size(225, 68);
+            this.lvEffectType.Size = new System.Drawing.Size(275, 275);
             this.lvEffectType.TabIndex = 141;
             this.lvEffectType.UseCompatibleStateImageBehavior = false;
             this.lvEffectType.View = System.Windows.Forms.View.Details;
@@ -559,10 +567,10 @@ namespace Hero_Designer.Forms
             this.lvSubAttribute.FullRowSelect = true;
             this.lvSubAttribute.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubAttribute.HideSelection = false;
-            this.lvSubAttribute.Location = new System.Drawing.Point(668, 488);
+            this.lvSubAttribute.Location = new System.Drawing.Point(478, 158);
             this.lvSubAttribute.MultiSelect = false;
             this.lvSubAttribute.Name = "lvSubAttribute";
-            this.lvSubAttribute.Size = new System.Drawing.Size(225, 46);
+            this.lvSubAttribute.Size = new System.Drawing.Size(275, 275);
             this.lvSubAttribute.TabIndex = 142;
             this.lvSubAttribute.UseCompatibleStateImageBehavior = false;
             this.lvSubAttribute.View = System.Windows.Forms.View.Details;
@@ -571,16 +579,17 @@ namespace Hero_Designer.Forms
             // chSub
             // 
             this.chSub.Text = "Sub-Attribute";
-            this.chSub.Width = 203;
+            this.chSub.Width = 254;
             // 
             // lblProb
             // 
-            this.lblProb.Location = new System.Drawing.Point(272, 465);
+            this.lblProb.Location = new System.Drawing.Point(107, 738);
             this.lblProb.Name = "lblProb";
             this.lblProb.Size = new System.Drawing.Size(50, 20);
             this.lblProb.TabIndex = 143;
             this.lblProb.Text = "(100%)";
             this.lblProb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblProb.Visible = false;
             // 
             // lvSubSub
             // 
@@ -589,10 +598,10 @@ namespace Hero_Designer.Forms
             this.lvSubSub.FullRowSelect = true;
             this.lvSubSub.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubSub.HideSelection = false;
-            this.lvSubSub.Location = new System.Drawing.Point(668, 544);
+            this.lvSubSub.Location = new System.Drawing.Point(759, 158);
             this.lvSubSub.MultiSelect = false;
             this.lvSubSub.Name = "lvSubSub";
-            this.lvSubSub.Size = new System.Drawing.Size(225, 64);
+            this.lvSubSub.Size = new System.Drawing.Size(275, 275);
             this.lvSubSub.TabIndex = 144;
             this.lvSubSub.UseCompatibleStateImageBehavior = false;
             this.lvSubSub.View = System.Windows.Forms.View.Details;
@@ -601,50 +610,32 @@ namespace Hero_Designer.Forms
             // chSubSub
             // 
             this.chSubSub.Text = "Sub-Sub";
-            this.chSubSub.Width = 203;
-            // 
-            // Label7
-            // 
-            this.Label7.Location = new System.Drawing.Point(801, 430);
-            this.Label7.Name = "Label7";
-            this.Label7.Size = new System.Drawing.Size(10, 20);
-            this.Label7.TabIndex = 145;
-            this.Label7.Text = "s";
-            this.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // Label8
-            // 
-            this.Label8.AutoSize = true;
-            this.Label8.Location = new System.Drawing.Point(476, 465);
-            this.Label8.Name = "Label8";
-            this.Label8.Size = new System.Drawing.Size(13, 14);
-            this.Label8.TabIndex = 146;
-            this.Label8.Text = "s";
-            this.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.chSubSub.Width = 254;
             // 
             // btnCSV
             // 
-            this.btnCSV.Location = new System.Drawing.Point(928, 529);
+            this.btnCSV.Location = new System.Drawing.Point(43, 86);
             this.btnCSV.Name = "btnCSV";
-            this.btnCSV.Size = new System.Drawing.Size(150, 26);
+            this.btnCSV.Size = new System.Drawing.Size(135, 26);
             this.btnCSV.TabIndex = 147;
             this.btnCSV.Text = "Import from CSV String";
             this.btnCSV.Click += new System.EventHandler(this.btnCSV_Click);
             // 
             // Label9
             // 
-            this.Label9.Location = new System.Drawing.Point(925, 353);
+            this.Label9.Location = new System.Drawing.Point(1081, 453);
             this.Label9.Name = "Label9";
-            this.Label9.Size = new System.Drawing.Size(160, 19);
+            this.Label9.Size = new System.Drawing.Size(120, 19);
             this.Label9.TabIndex = 149;
             this.Label9.Text = "GlobalChanceMod Flag:";
+            this.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cmbEffectId
             // 
             this.cmbEffectId.FormattingEnabled = true;
-            this.cmbEffectId.Location = new System.Drawing.Point(927, 369);
+            this.cmbEffectId.Location = new System.Drawing.Point(1062, 475);
             this.cmbEffectId.Name = "cmbEffectId";
-            this.cmbEffectId.Size = new System.Drawing.Size(150, 22);
+            this.cmbEffectId.Size = new System.Drawing.Size(166, 22);
             this.cmbEffectId.TabIndex = 150;
             this.cmbEffectId.TextChanged += new System.EventHandler(this.cmbEffectId_TextChanged);
             // 
@@ -662,17 +653,18 @@ namespace Hero_Designer.Forms
             // 
             // Label10
             // 
-            this.Label10.Location = new System.Drawing.Point(924, 393);
+            this.Label10.Location = new System.Drawing.Point(1076, 500);
             this.Label10.Name = "Label10";
-            this.Label10.Size = new System.Drawing.Size(160, 20);
+            this.Label10.Size = new System.Drawing.Size(143, 19);
             this.Label10.TabIndex = 152;
-            this.Label10.Text = "Override:";
+            this.Label10.Text = "Override GlobalChanceMod:";
+            this.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtOverride
             // 
-            this.txtOverride.Location = new System.Drawing.Point(927, 407);
+            this.txtOverride.Location = new System.Drawing.Point(1062, 522);
             this.txtOverride.Name = "txtOverride";
-            this.txtOverride.Size = new System.Drawing.Size(150, 20);
+            this.txtOverride.Size = new System.Drawing.Size(166, 20);
             this.txtOverride.TabIndex = 153;
             this.txtOverride.TextChanged += new System.EventHandler(this.txtOverride_TextChanged);
             // 
@@ -700,19 +692,21 @@ namespace Hero_Designer.Forms
             // cbFXSpecialCase2
             // 
             this.cbFXSpecialCase2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXSpecialCase2.Location = new System.Drawing.Point(942, 587);
+            this.cbFXSpecialCase2.Location = new System.Drawing.Point(12, 105);
             this.cbFXSpecialCase2.Name = "cbFXSpecialCase2";
             this.cbFXSpecialCase2.Size = new System.Drawing.Size(136, 22);
             this.cbFXSpecialCase2.TabIndex = 156;
+            this.cbFXSpecialCase2.Visible = false;
             this.cbFXSpecialCase2.SelectedIndexChanged += new System.EventHandler(this.cbFXSpecialCase2_SelectedIndexChanged);
             // 
             // cbFXOperator
             // 
             this.cbFXOperator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXOperator.Location = new System.Drawing.Point(994, 667);
+            this.cbFXOperator.Location = new System.Drawing.Point(1190, 101);
             this.cbFXOperator.Name = "cbFXOperator";
             this.cbFXOperator.Size = new System.Drawing.Size(62, 22);
             this.cbFXOperator.TabIndex = 157;
+            this.cbFXOperator.Visible = false;
             this.cbFXOperator.SelectedIndexChanged += new System.EventHandler(this.cbFXOperator_SelectedIndexChanged);
             // 
             // groupBox1
@@ -720,102 +714,136 @@ namespace Hero_Designer.Forms
             this.groupBox1.Controls.Add(this.rbIfAny);
             this.groupBox1.Controls.Add(this.rbIfCritter);
             this.groupBox1.Controls.Add(this.rbIfPlayer);
-            this.groupBox1.Location = new System.Drawing.Point(600, 663);
+            this.groupBox1.Enabled = false;
+            this.groupBox1.Location = new System.Drawing.Point(834, 101);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(179, 69);
+            this.groupBox1.Size = new System.Drawing.Size(189, 45);
             this.groupBox1.TabIndex = 158;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "If Target =";
-            // 
-            // dGVActive
-            // 
-            this.dGVActive.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.dGVActive.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
-            this.dGVActive.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dGVActive.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3});
-            this.dGVActive.Location = new System.Drawing.Point(416, 14);
-            this.dGVActive.Name = "dGVActive";
-            this.dGVActive.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            this.dGVActive.RowTemplate.ReadOnly = true;
-            this.dGVActive.Size = new System.Drawing.Size(265, 200);
-            this.dGVActive.TabIndex = 159;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Power Name";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 150;
-            // 
-            // Column2
-            // 
-            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column2.HeaderText = "Active";
-            this.Column2.Items.AddRange(new object[] {
-            "True",
-            "False"});
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Target";
-            this.Column3.Name = "Column3";
-            this.Column3.Visible = false;
+            this.groupBox1.Visible = false;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.lvPowerType);
-            this.groupBox2.Controls.Add(this.lvPower);
-            this.groupBox2.Controls.Add(this.dGVActive);
-            this.groupBox2.Location = new System.Drawing.Point(928, 99);
+            this.groupBox2.Controls.Add(this.removeConditional);
+            this.groupBox2.Controls.Add(this.addConditional);
+            this.groupBox2.Controls.Add(this.lvActiveConditionals);
+            this.groupBox2.Controls.Add(this.lvConditionalBool);
+            this.groupBox2.Controls.Add(this.lvConditionalType);
+            this.groupBox2.Controls.Add(this.lvSubConditional);
+            this.groupBox2.Location = new System.Drawing.Point(197, 437);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(687, 220);
+            this.groupBox2.Size = new System.Drawing.Size(837, 314);
             this.groupBox2.TabIndex = 160;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Conditionals";
             // 
-            // lvPowerType
+            // removeConditional
             // 
-            this.lvPowerType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.removeConditional.Location = new System.Drawing.Point(585, 279);
+            this.removeConditional.Name = "removeConditional";
+            this.removeConditional.Size = new System.Drawing.Size(246, 29);
+            this.removeConditional.TabIndex = 165;
+            this.removeConditional.Text = "Remove Selected Conditional";
+            this.removeConditional.UseVisualStyleBackColor = true;
+            this.removeConditional.Click += new System.EventHandler(this.removeConditional_Click);
+            // 
+            // addConditional
+            // 
+            this.addConditional.Location = new System.Drawing.Point(460, 279);
+            this.addConditional.Name = "addConditional";
+            this.addConditional.Size = new System.Drawing.Size(119, 29);
+            this.addConditional.TabIndex = 164;
+            this.addConditional.Text = "Add Conditional";
+            this.addConditional.UseVisualStyleBackColor = true;
+            this.addConditional.Click += new System.EventHandler(this.addConditional_Click);
+            // 
+            // lvActiveConditionals
+            // 
+            this.lvActiveConditionals.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6});
+            this.lvActiveConditionals.FullRowSelect = true;
+            this.lvActiveConditionals.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvActiveConditionals.HideSelection = false;
+            this.lvActiveConditionals.Location = new System.Drawing.Point(585, 14);
+            this.lvActiveConditionals.MultiSelect = false;
+            this.lvActiveConditionals.Name = "lvActiveConditionals";
+            this.lvActiveConditionals.Size = new System.Drawing.Size(246, 259);
+            this.lvActiveConditionals.TabIndex = 163;
+            this.lvActiveConditionals.UseCompatibleStateImageBehavior = false;
+            this.lvActiveConditionals.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Active Conditional";
+            this.columnHeader5.Width = 170;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Value";
+            // 
+            // lvConditionalBool
+            // 
+            this.lvConditionalBool.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader4});
+            this.lvConditionalBool.Enabled = false;
+            this.lvConditionalBool.FullRowSelect = true;
+            this.lvConditionalBool.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvConditionalBool.HideSelection = false;
+            this.lvConditionalBool.Location = new System.Drawing.Point(460, 14);
+            this.lvConditionalBool.MultiSelect = false;
+            this.lvConditionalBool.Name = "lvConditionalBool";
+            this.lvConditionalBool.Size = new System.Drawing.Size(119, 259);
+            this.lvConditionalBool.TabIndex = 162;
+            this.lvConditionalBool.UseCompatibleStateImageBehavior = false;
+            this.lvConditionalBool.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Conditional Boolean";
+            this.columnHeader4.Width = 105;
+            // 
+            // lvConditionalType
+            // 
+            this.lvConditionalType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader3});
-            this.lvPowerType.FullRowSelect = true;
-            this.lvPowerType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvPowerType.HideSelection = false;
-            this.lvPowerType.Location = new System.Drawing.Point(6, 14);
-            this.lvPowerType.MultiSelect = false;
-            this.lvPowerType.Name = "lvPowerType";
-            this.lvPowerType.Size = new System.Drawing.Size(179, 200);
-            this.lvPowerType.TabIndex = 161;
-            this.lvPowerType.UseCompatibleStateImageBehavior = false;
-            this.lvPowerType.View = System.Windows.Forms.View.Details;
+            this.lvConditionalType.FullRowSelect = true;
+            this.lvConditionalType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvConditionalType.HideSelection = false;
+            this.lvConditionalType.Location = new System.Drawing.Point(6, 14);
+            this.lvConditionalType.MultiSelect = false;
+            this.lvConditionalType.Name = "lvConditionalType";
+            this.lvConditionalType.Size = new System.Drawing.Size(116, 294);
+            this.lvConditionalType.TabIndex = 161;
+            this.lvConditionalType.UseCompatibleStateImageBehavior = false;
+            this.lvConditionalType.View = System.Windows.Forms.View.Details;
+            this.lvConditionalType.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvConditionalType_SelectionChanged);
             // 
             // columnHeader3
             // 
-            this.columnHeader3.Text = "Effect Attribute";
-            this.columnHeader3.Width = 158;
+            this.columnHeader3.Text = "Effect Conditional";
+            this.columnHeader3.Width = 102;
             // 
-            // lvPower
+            // lvSubConditional
             // 
-            this.lvPower.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvSubConditional.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2});
-            this.lvPower.FullRowSelect = true;
-            this.lvPower.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvPower.HideSelection = false;
-            this.lvPower.Location = new System.Drawing.Point(191, 14);
-            this.lvPower.MultiSelect = false;
-            this.lvPower.Name = "lvPower";
-            this.lvPower.Size = new System.Drawing.Size(219, 200);
-            this.lvPower.TabIndex = 160;
-            this.lvPower.UseCompatibleStateImageBehavior = false;
-            this.lvPower.View = System.Windows.Forms.View.Details;
+            this.lvSubConditional.FullRowSelect = true;
+            this.lvSubConditional.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvSubConditional.HideSelection = false;
+            this.lvSubConditional.Location = new System.Drawing.Point(128, 14);
+            this.lvSubConditional.MultiSelect = false;
+            this.lvSubConditional.Name = "lvSubConditional";
+            this.lvSubConditional.Size = new System.Drawing.Size(326, 294);
+            this.lvSubConditional.TabIndex = 160;
+            this.lvSubConditional.UseCompatibleStateImageBehavior = false;
+            this.lvSubConditional.View = System.Windows.Forms.View.Details;
+            this.lvSubConditional.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvSubConditional_SelectionChanged);
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "Effect Attribute";
+            this.columnHeader2.Text = "Sub-Conditional Attribute";
             this.columnHeader2.Width = 202;
             // 
             // tableLayoutPanel1
@@ -843,7 +871,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel1.Controls.Add(this.cbAttribute, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.Label5, 0, 9);
             this.tableLayoutPanel1.Controls.Add(this.cbAspect, 1, 9);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 116);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 158);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 13;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -871,7 +899,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Controls.Add(this.cbModifier, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.Label6, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(8, 393);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 439);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 32.55814F));
@@ -907,7 +935,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel3.Controls.Add(this.lblAffectsCaster, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.cbAffects, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.Label3, 0, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(8, 442);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(12, 488);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 13;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -937,14 +965,15 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel4.Controls.Add(this.IgnoreED, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.chkFXResistable, 0, 3);
             this.tableLayoutPanel4.Controls.Add(this.chkNearGround, 0, 4);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(8, 544);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(12, 596);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 5;
+            this.tableLayoutPanel4.RowCount = 6;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(179, 136);
             this.tableLayoutPanel4.TabIndex = 164;
@@ -954,27 +983,28 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel5.ColumnCount = 2;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Controls.Add(this.comboBox1, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.cbTarget, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.label12, 0, 0);
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(8, 505);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(12, 557);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel5.Size = new System.Drawing.Size(179, 33);
             this.tableLayoutPanel5.TabIndex = 165;
             // 
-            // comboBox1
+            // cbTarget
             // 
-            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.cbTarget.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cbTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTarget.Items.AddRange(new object[] {
             "Any",
-            "Mob(s)",
-            "Player(s)"});
-            this.comboBox1.Location = new System.Drawing.Point(92, 3);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(84, 22);
-            this.comboBox1.TabIndex = 166;
+            "Mobs",
+            "Players"});
+            this.cbTarget.Location = new System.Drawing.Point(92, 3);
+            this.cbTarget.Name = "cbTarget";
+            this.cbTarget.Size = new System.Drawing.Size(84, 22);
+            this.cbTarget.TabIndex = 166;
+            this.cbTarget.SelectedIndexChanged += new System.EventHandler(this.cbTarget_IndexChanged);
             // 
             // label12
             // 
@@ -986,38 +1016,59 @@ namespace Hero_Designer.Forms
             this.label12.Text = "Target:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.ColumnCount = 2;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.81005F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.18995F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel6.Controls.Add(this.Label28, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.cbFXClass, 1, 0);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(415, 101);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.RowCount = 1;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(192, 28);
+            this.tableLayoutPanel6.TabIndex = 166;
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.btnCopy);
+            this.panel1.Controls.Add(this.btnPaste);
+            this.panel1.Controls.Add(this.btnCSV);
+            this.panel1.Controls.Add(this.btnOK);
+            this.panel1.Controls.Add(this.btnCancel);
+            this.panel1.Location = new System.Drawing.Point(1040, 558);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(212, 193);
+            this.panel1.TabIndex = 167;
+            // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1264, 744);
+            this.ClientSize = new System.Drawing.Size(1264, 765);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.tableLayoutPanel6);
             this.Controls.Add(this.tableLayoutPanel5);
+            this.Controls.Add(this.chkVariable);
             this.Controls.Add(this.tableLayoutPanel4);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.Label28);
-            this.Controls.Add(this.Label8);
-            this.Controls.Add(this.cbFXClass);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cbFXOperator);
             this.Controls.Add(this.cbFXSpecialCase2);
             this.Controls.Add(this.txtOverride);
             this.Controls.Add(this.Label10);
             this.Controls.Add(this.lblProb);
-            this.Controls.Add(this.Label7);
             this.Controls.Add(this.cmbEffectId);
             this.Controls.Add(this.Label9);
-            this.Controls.Add(this.btnCSV);
             this.Controls.Add(this.lvSubSub);
             this.Controls.Add(this.lvSubAttribute);
             this.Controls.Add(this.lvEffectType);
-            this.Controls.Add(this.chkVariable);
             this.Controls.Add(this.lblEffectDescription);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnPaste);
-            this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.GroupBox3);
             this.Controls.Add(this.Label30);
             this.Controls.Add(this.cbFXSpecialCase);
@@ -1031,7 +1082,6 @@ namespace Hero_Designer.Forms
             this.Text = "Edit Effect";
             this.GroupBox3.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dGVActive)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -1039,6 +1089,8 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel6.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1082,8 +1134,6 @@ namespace Hero_Designer.Forms
         Label Label30;
         Label Label4;
         Label Label5;
-        Label Label7;
-        Label Label8;
         Label Label9;
         Label lblAffectsCaster;
         Label lblEffectDescription;
@@ -1105,15 +1155,11 @@ namespace Hero_Designer.Forms
         private ComboBox cbFXSpecialCase2;
         private ComboBox cbFXOperator;
         private GroupBox groupBox1;
-        private DataGridView dGVActive;
         private GroupBox groupBox2;
-        private ListView lvPowerType;
+        private ListView lvConditionalType;
         private ColumnHeader columnHeader3;
-        private ListView lvPower;
+        private ListView lvSubConditional;
         private ColumnHeader columnHeader2;
-        private DataGridViewTextBoxColumn Column1;
-        private DataGridViewComboBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column3;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
         private ComboBox cbModifier;
@@ -1121,7 +1167,16 @@ namespace Hero_Designer.Forms
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel4;
         private TableLayoutPanel tableLayoutPanel5;
-        private ComboBox comboBox1;
+        private ComboBox cbTarget;
         private Label label12;
+        private TableLayoutPanel tableLayoutPanel6;
+        private Panel panel1;
+        private ListView lvActiveConditionals;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
+        private ListView lvConditionalBool;
+        private ColumnHeader columnHeader4;
+        private Button removeConditional;
+        private Button addConditional;
     }
 }

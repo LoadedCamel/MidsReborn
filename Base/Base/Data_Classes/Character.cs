@@ -496,29 +496,6 @@ namespace Base.Data_Classes
 
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power == null || power.Power == null) continue;
-                var powName = power.Power.PowerName;
-                switch (powName)
-                {
-                    default:
-                        power.Power.Taken = power.Chosen;
-
-                        if (!power.StatInclude)
-                        {
-                            power.Power.Active = false;
-                        }
-                        else if (power.StatInclude && !power.HasProc())
-                        {
-                            power.Power.Active = true;
-                        }
-
-                        break;
-                }
-                Console.WriteLine($"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
-            }
-
-            foreach (var power in CurrentBuild.Powers)
-            {
                 if (power == null || power.Power == null || !power.StatInclude) continue;
                 switch (power.Power.PowerName.ToUpper())
                 {
@@ -660,6 +637,28 @@ namespace Base.Data_Classes
                         break;
                 }
 
+                var powName = power.Power.PowerName;
+                switch (powName)
+                {
+                    default:
+                        if (power.Chosen | power.Power.InherentType == Enums.eGridType.Class)
+                        {
+                            power.Power.Taken = true;
+                        }
+
+                        if (!power.StatInclude)
+                        {
+                            power.Power.Active = false;
+                        }
+                        else if (power.StatInclude && !power.HasProc())
+                        {
+                            power.Power.Active = true;
+                        }
+
+                        break;
+                }
+                Console.WriteLine($"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
+
                 if (!power.Chosen)
                 {
                     inherentPowers.Add(power);
@@ -671,7 +670,6 @@ namespace Base.Data_Classes
 
                     if (power.Power.InherentType == Enums.eGridType.Inherent)
                     {
-                        var powName = power.Power.PowerName;
                         if (powName.Equals("Brawl"))
                         {
                             displayIndex = 1;
