@@ -42,7 +42,7 @@ namespace midsControls
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(277, 13);
+            this.panel1.Size = new System.Drawing.Size(277, 11);
             this.panel1.TabIndex = 1;
             // 
             // panel2
@@ -51,7 +51,7 @@ namespace midsControls
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(277, 13);
+            this.panel2.Size = new System.Drawing.Size(277, 11);
             this.panel2.TabIndex = 2;
             // 
             // panel3
@@ -60,7 +60,7 @@ namespace midsControls
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(277, 13);
+            this.panel3.Size = new System.Drawing.Size(277, 11);
             this.panel3.TabIndex = 3;
             // 
             // panel4
@@ -69,7 +69,7 @@ namespace midsControls
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(277, 13);
+            this.panel4.Size = new System.Drawing.Size(277, 11);
             this.panel4.TabIndex = 4;
             // 
             // panel5
@@ -78,7 +78,7 @@ namespace midsControls
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(277, 13);
+            this.panel5.Size = new System.Drawing.Size(277, 11);
             this.panel5.TabIndex = 5;
             // 
             // ctlLayeredBar
@@ -92,7 +92,7 @@ namespace midsControls
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "ctlLayeredBar";
-            this.Size = new System.Drawing.Size(277, 15);
+            this.Size = new System.Drawing.Size(277, 13);
             this.Load += new System.EventHandler(this.ctlLayeredBar_Load);
             this.Layout += new System.Windows.Forms.LayoutEventHandler(this.ctlLayeredBar_Layout);
             this.ResumeLayout(false);
