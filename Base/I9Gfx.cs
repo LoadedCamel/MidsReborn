@@ -210,8 +210,7 @@ public static class I9Gfx
                 try
                 {
                     //Debug.WriteLine($"{GetEnhancementsPath()}{DatabaseAPI.Database.Enhancements[index].Image}");
-                    Enhancements[index] =
-                        new Bitmap($"{GetEnhancementsPath()}{DatabaseAPI.Database.Enhancements[index].Image}");
+                    Enhancements[index] = new Bitmap($"{GetEnhancementsPath()}{DatabaseAPI.Database.Enhancements[index].Image}");
                 }
                 catch (Exception)
                 {
@@ -247,27 +246,24 @@ public static class I9Gfx
             if (!string.IsNullOrEmpty(DatabaseAPI.Database.EnhancementSets[index].Image))
             {
                 var x = index * 30;
-                using (var extendedBitmap =
-                    new ExtendedBitmap(GetEnhancementsPath() + DatabaseAPI.Database.EnhancementSets[index].Image))
+                using var extendedBitmap = new ExtendedBitmap(GetEnhancementsPath() + DatabaseAPI.Database.EnhancementSets[index].Image);
+                DatabaseAPI.Database.EnhancementSets[index].ImageIdx = index;
+                var size = extendedBitmap.Size;
+                int num;
+                if (size.Height <= 30)
                 {
-                    DatabaseAPI.Database.EnhancementSets[index].ImageIdx = index;
-                    var size = extendedBitmap.Size;
-                    int num;
-                    if (size.Height <= 30)
-                    {
-                        size = extendedBitmap.Size;
-                        num = size.Width <= 30 ? 1 : 0;
-                    }
-                    else
-                    {
-                        num = 0;
-                    }
-
-                    if (num == 0)
-                        Sets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, 30, 30);
-                    else
-                        Sets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
+                    size = extendedBitmap.Size;
+                    num = size.Width <= 30 ? 1 : 0;
                 }
+                else
+                {
+                    num = 0;
+                }
+
+                if (num == 0)
+                    Sets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, 30, 30);
+                else
+                    Sets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
             }
             else
             {

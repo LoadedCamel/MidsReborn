@@ -357,6 +357,8 @@ public class PowerEntry : ICloneable
                         break;
                     case Enums.eEffectType.ForceMove:
                         break;
+                    case Enums.eEffectType.ModifyAttrib:
+                        break;
                     default:
                         num = index2.ToWho == Enums.eToWho.Target ? 1 : 0;
                         break;

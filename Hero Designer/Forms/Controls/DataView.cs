@@ -1442,17 +1442,20 @@ namespace Hero_Designer.Forms.Controls
             var effectMagSum9 = pEnh.GetEffectMagSum(Enums.eEffectType.ResEffect);
             var effectMagSum10 = pBase.GetEffectMagSum(Enums.eEffectType.Enhancement);
             var effectMagSum11 = pEnh.GetEffectMagSum(Enums.eEffectType.Enhancement);
+
             effectMagSum1.Multiply();
             effectMagSum2.Multiply();
             effectMagSum3.Multiply();
             effectMagSum4.Multiply();
             effectMagSum5.Multiply();
+
             effectMag1.Multiply();
             effectMag2.Multiply();
             effectMag5.Multiply();
             effectMag6.Multiply();
             effectMag7.Multiply();
             effectMag8.Multiply();
+
             effectMagSum8.Multiply();
             effectMagSum9.Multiply();
             effectMagSum10.Multiply();

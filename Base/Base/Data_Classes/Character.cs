@@ -641,7 +641,7 @@ namespace Base.Data_Classes
                 switch (powName)
                 {
                     default:
-                        if (power.Chosen | power.Power.InherentType == Enums.eGridType.Class)
+                        if (power.Chosen | power.Power.InherentType == Enums.eGridType.Class | power.Power.InherentType == Enums.eGridType.Inherent | power.Power.InherentType == Enums.eGridType.Power | power.Power.InherentType == Enums.eGridType.Powerset)
                         {
                             power.Power.Taken = true;
                         }
@@ -657,7 +657,53 @@ namespace Base.Data_Classes
 
                         break;
                 }
-                Console.WriteLine($"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
+                Console.WriteLine($@"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
+
+                if (power.Power.Active)
+                {
+                    foreach (var effect in power.Power.Effects)
+                    {
+                        switch (effect.PowerAttribs)
+                        {
+                            case Enums.ePowerAttribs.Accuracy:
+                                power.Power.Accuracy = effect.AtrAccuracy;
+                                break;
+                            case Enums.ePowerAttribs.ActivateInterval:
+                                power.Power.ActivatePeriod = effect.AtrActivatePeriod;
+                                break;
+                            case Enums.ePowerAttribs.Arc:
+                                power.Power.Arc = effect.AtrArc;
+                                break;
+                            case Enums.ePowerAttribs.CastTime:
+                                power.Power.CastTime = effect.AtrCastTime;
+                                break;
+                            case Enums.ePowerAttribs.EffectArea:
+                                power.Power.EffectArea = effect.AtrEffectArea;
+                                break;
+                            case Enums.ePowerAttribs.EnduranceCost:
+                                power.Power.EndCost = effect.AtrEnduranceCost;
+                                break;
+                            case Enums.ePowerAttribs.InterruptTime:
+                                power.Power.InterruptTime = effect.AtrInterruptTime;
+                                break;
+                            case Enums.ePowerAttribs.MaxTargets:
+                                power.Power.MaxTargets = effect.AtrMaxTargets;
+                                break;
+                            case Enums.ePowerAttribs.Radius:
+                                power.Power.Radius = effect.AtrRadius;
+                                break;
+                            case Enums.ePowerAttribs.Range:
+                                power.Power.Range = effect.AtrRange;
+                                break;
+                            case Enums.ePowerAttribs.RechargeTime:
+                                power.Power.RechargeTime = effect.AtrRechargeTime;
+                                break;
+                            case Enums.ePowerAttribs.SecondaryRange:
+                                power.Power.RangeSecondary = effect.AtrSecondaryRange;
+                                break;
+                        }
+                    }
+                }
 
                 if (!power.Chosen)
                 {

@@ -31,7 +31,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDBEdit));
             this.udIssue = new System.Windows.Forms.NumericUpDown();
             this.Label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
@@ -69,6 +68,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnEditIOSetPvP = new System.Windows.Forms.Button();
             this.btnExportJSON = new System.Windows.Forms.Button();
             this.btnJsonImporter = new System.Windows.Forms.Button();
+            this.btnExportAttrib = new System.Windows.Forms.Button();
+            this.btnExportGCM = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             this.GroupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -331,7 +332,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnClose.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnClose.Location = new System.Drawing.Point(236, 288);
+            this.btnClose.Location = new System.Drawing.Point(236, 386);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(164, 24);
             this.btnClose.TabIndex = 10;
@@ -438,9 +439,10 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // btnFileReport
             // 
             this.btnFileReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnFileReport.Enabled = false;
             this.btnFileReport.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFileReport.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnFileReport.Location = new System.Drawing.Point(236, 258);
+            this.btnFileReport.Location = new System.Drawing.Point(236, 228);
             this.btnFileReport.Name = "btnFileReport";
             this.btnFileReport.Size = new System.Drawing.Size(164, 24);
             this.btnFileReport.TabIndex = 23;
@@ -501,11 +503,39 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnJsonImporter.UseVisualStyleBackColor = true;
             this.btnJsonImporter.Click += new System.EventHandler(this.btnJsonImporter_Click);
             // 
+            // btnExportAttrib
+            // 
+            this.btnExportAttrib.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnExportAttrib.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportAttrib.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnExportAttrib.Location = new System.Drawing.Point(236, 288);
+            this.btnExportAttrib.Name = "btnExportAttrib";
+            this.btnExportAttrib.Size = new System.Drawing.Size(164, 24);
+            this.btnExportAttrib.TabIndex = 28;
+            this.btnExportAttrib.Text = "Export AttribMods (JSON)";
+            this.btnExportAttrib.UseVisualStyleBackColor = true;
+            this.btnExportAttrib.Click += new System.EventHandler(this.btnExportAttrib_Click);
+            // 
+            // btnExportGCM
+            // 
+            this.btnExportGCM.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnExportGCM.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportGCM.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnExportGCM.Location = new System.Drawing.Point(236, 323);
+            this.btnExportGCM.Name = "btnExportGCM";
+            this.btnExportGCM.Size = new System.Drawing.Size(164, 24);
+            this.btnExportGCM.TabIndex = 29;
+            this.btnExportGCM.Text = "Export GCMs (JSON)";
+            this.btnExportGCM.UseVisualStyleBackColor = true;
+            this.btnExportGCM.Click += new System.EventHandler(this.btnExportGCM_Click);
+            // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(416, 422);
+            this.Controls.Add(this.btnExportGCM);
+            this.Controls.Add(this.btnExportAttrib);
             this.Controls.Add(this.btnJsonImporter);
             this.Controls.Add(this.btnExportJSON);
             this.Controls.Add(this.btnFileReport);
@@ -529,7 +559,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -548,5 +577,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private Button btnExportJSON;
         private Button btnJsonImporter;
+        private Button btnExportAttrib;
+        private Button btnExportGCM;
     }
 }
