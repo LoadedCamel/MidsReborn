@@ -10,6 +10,7 @@ namespace midsControls
 {
     public partial class ctlLayeredBar : UserControl
     {
+        private bool _CanUpdate = true;
         private bool _EnableOverCap;
         private bool _EnableBaseValue;
         private bool _EnableOverlay1;
@@ -32,6 +33,19 @@ namespace midsControls
         // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
         protected override Size DefaultSize => new Size(277, 13);
         public new static Color DefaultBackColor => Color.Transparent;
+
+        public void SuspendUpdate()
+        {
+            _CanUpdate = false;
+        }
+
+        public void ResumeUpdate(bool forceUpdate = true)
+        {
+            if (_CanUpdate) return;
+            
+            _CanUpdate = true;
+            if (forceUpdate) SetValues();
+        }
 
         #region SubBarsDimensions sub-class
         private class SubBarsDimensions
@@ -530,6 +544,8 @@ namespace midsControls
 
         private void ctlLayeredBar_Layout(object sender, LayoutEventArgs e)
         {
+            if (!_CanUpdate) return;
+
             if (e.AffectedProperty.StartsWith("Value") ||
                 e.AffectedProperty == "MaximumBarValue" ||
                 e.AffectedProperty == "MinimumBarValue" ||

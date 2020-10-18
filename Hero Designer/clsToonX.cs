@@ -43,7 +43,7 @@ namespace Hero_Designer
             var flag2 = value[index] > (double) DatabaseAPI.Database.MultED[(int) schedule[index]][1];
             var flag3 = value[index] > (double) DatabaseAPI.Database.MultED[(int) schedule[index]][2];
             PopUp.StringValue stringValue2;
-            if (value[index] > 0.0)
+            if (value[index] > 0)
             {
                 var color = new Color();
                 var str1 = edName + ":";
@@ -54,7 +54,7 @@ namespace Hero_Designer
                 //var str2 = Strings.Format((float) (num1 + afterED[index] * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
                 //var str3 = Strings.Format(num2 + afterED[index] * 100f, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
                 string str4;
-                if ((float) Math.Round(num1 - (double) num2, 3) > 0.0)
+                if (Math.Round(num1 - num2, 3) > 0)
                 {
                     str4 = str3 + "  (Pre-ED: " + str2 + ")";
                     if (flag3)
