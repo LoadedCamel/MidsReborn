@@ -5,9 +5,11 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Data_Classes;
+using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -19,6 +21,18 @@ namespace Hero_Designer.Forms
 
         public IEffect myFX;
 
+        private IPower myPower { get; set; }
+
+        public frmPowerEffect(IEffect iFX, IPower fxPower)
+        {
+            Loading = true;
+            myPower = fxPower;
+            InitializeComponent();
+            Load += frmPowerEffect_Load;
+            var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
+            Icon = Resources.reborn;
+            if (iFX != null) myFX = (IEffect) iFX.Clone();
+        }
         public frmPowerEffect(IEffect iFX)
         {
             Loading = true;
@@ -26,7 +40,7 @@ namespace Hero_Designer.Forms
             Load += frmPowerEffect_Load;
             var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
             Icon = Resources.reborn;
-            if (iFX != null) myFX = (IEffect) iFX.Clone();
+            if (iFX != null) myFX = (IEffect)iFX.Clone();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -38,23 +52,6 @@ namespace Hero_Designer.Forms
         private void btnCopy_Click(object sender, EventArgs e)
         {
             FullCopy();
-        }
-
-        private void btnCSV_Click(object sender, EventArgs e)
-        {
-            var effect = (IEffect) myFX.Clone();
-            try
-            {
-                effect.ImportFromCSV(Clipboard.GetDataObject()?.GetData("System.String", true).ToString());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return;
-            }
-
-            myFX.ImportFromCSV(Clipboard.GetDataObject()?.GetData("System.String", true).ToString());
-            DisplayEffectData();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -112,30 +109,8 @@ namespace Hero_Designer.Forms
             {
                 return;
             }
-            //Case1 = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
             myFX.SpecialCase = (Enums.eSpecialCase) cbFXSpecialCase.SelectedIndex;
-            //UpdateFXText();
-        }
-
-        private void cbFXSpecialCase2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-            {
-                return;
-            }
-            //Case2 = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
-            myFX.SpecialCase2 = (Enums.eSpecialCase) cbFXSpecialCase2.SelectedIndex;
-            //UpdateFXText();
-        }
-
-        private void cbFXOperator_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-            {
-                return;
-            }
-            //CaseOp = (Enums.eSpecialOperator)cbFXOperator.SelectedIndex;
-            myFX.SpecialOperator = (Enums.eSpecialOperator)cbFXOperator.SelectedIndex;
+            UpdateFXText();
         }
 
         private void cbModifier_SelectedIndexChanged(object sender, EventArgs e)
@@ -215,7 +190,6 @@ namespace Hero_Designer.Forms
             txtFXDelay.Text = Strings.Format(fx.DelayedTime, Style);
             txtFXProb.Text = Strings.Format(fx.BaseProbability, Style);
             txtPPM.Text = Strings.Format(fx.ProcsPerMinute, Style);
-            lblProb.Text = "(" + Strings.Format((float) (fx.BaseProbability * 100.0), "####0") + "%)";
             cbAttribute.SelectedIndex = (int) fx.AttribType;
             cbAspect.SelectedIndex = (int) fx.Aspect;
             cbModifier.SelectedIndex = DatabaseAPI.NidFromUidAttribMod(fx.ModifierTable);
@@ -225,11 +199,9 @@ namespace Hero_Designer.Forms
             else
                 cbAffects.SelectedIndex = (int) fx.ToWho;
             var power = fx.GetPower();
+            FillPowerAttribs();
             if (power != null && (power.EntitiesAutoHit & Enums.eEntity.Caster) > Enums.eEntity.None)
                 lblAffectsCaster.Text = "Power also affects Self";
-            rbIfAny.Checked = fx.PvMode == Enums.ePvX.Any;
-            rbIfCritter.Checked = fx.PvMode == Enums.ePvX.PvE;
-            rbIfPlayer.Checked = fx.PvMode == Enums.ePvX.PvP;
             cbTarget.SelectedIndex = (int) fx.PvMode;
             chkStack.Checked = fx.Stacking == Enums.eStacking.Yes;
             chkFXBuffable.Checked = !fx.Buffable;
@@ -274,8 +246,6 @@ namespace Hero_Designer.Forms
         {
             cbFXClass.BeginUpdate();
             cbFXSpecialCase.BeginUpdate();
-            cbFXOperator.BeginUpdate();
-            cbFXSpecialCase2.BeginUpdate();
             cbPercentageOverride.BeginUpdate();
             cbAttribute.BeginUpdate();
             cbAspect.BeginUpdate();
@@ -290,8 +260,6 @@ namespace Hero_Designer.Forms
             cbAffects.Items.Clear();
             cbFXClass.Items.AddRange(Enum.GetNames(myFX.EffectClass.GetType()));
             cbFXSpecialCase.Items.AddRange(Enum.GetNames(myFX.SpecialCase.GetType()));
-            cbFXOperator.Items.AddRange(Enum.GetNames(myFX.SpecialOperator.GetType()));
-            cbFXSpecialCase2.Items.AddRange(Enum.GetNames(myFX.SpecialCase.GetType()));
             cbPercentageOverride.Items.Add("Auto");
             cbPercentageOverride.Items.Add("Yes");
             cbPercentageOverride.Items.Add("No");
@@ -305,8 +273,6 @@ namespace Hero_Designer.Forms
             cbAffects.Items.Add("Self");
             cbFXClass.EndUpdate();
             cbFXSpecialCase.EndUpdate();
-            cbFXOperator.EndUpdate();
-            cbFXSpecialCase2.EndUpdate();
             cbPercentageOverride.EndUpdate();
             cbAttribute.EndUpdate();
             cbAspect.EndUpdate();
@@ -336,6 +302,75 @@ namespace Hero_Designer.Forms
                 Text = "Edit Effect";
             Loading = false;
             UpdateFXText();
+        }
+
+        //change storing of Atr attributes from power to effect
+        private void FillPowerAttribs()
+        {
+            var power = myPower;
+            if (myFX.AtrAccuracy == 0)
+            {
+                myFX.AtrAccuracy = power.Accuracy;
+            }
+            if (myFX.AtrActivatePeriod == 0)
+            {
+                myFX.AtrActivatePeriod = power.ActivatePeriod;
+            }
+            if (myFX.AtrArc == 0)
+            {
+                myFX.AtrArc = power.Arc;
+            }
+            if (myFX.AtrCastTime == 0)
+            {
+                myFX.AtrCastTime = power.CastTime;
+            }
+            if (myFX.AtrEffectArea == Enums.eEffectArea.None)
+            {
+                myFX.AtrEffectArea = power.EffectArea;
+            }
+            if (myFX.AtrEnduranceCost == 0)
+            {
+                myFX.AtrEnduranceCost = power.EndCost;
+            }
+            if (myFX.AtrInterruptTime == 0)
+            {
+                myFX.AtrInterruptTime = power.InterruptTime;
+            }
+            if (myFX.AtrMaxTargets == 0)
+            {
+                myFX.AtrMaxTargets = power.MaxTargets;
+            }
+            if (myFX.AtrRadius == 0)
+            {
+                myFX.AtrRadius = power.Radius;
+            }
+            if (myFX.AtrRange == 0)
+            {
+                myFX.AtrRange = power.Range;
+            }
+            if (myFX.AtrRechargeTime == 0)
+            {
+                myFX.AtrRechargeTime = power.RechargeTime;
+            }
+
+            if (myFX.AtrSecondaryRange == 0)
+            {
+                myFX.AtrSecondaryRange = power.RangeSecondary;
+            }
+
+            txtFXAccuracy.Text = myFX.AtrAccuracy.ToString("0.##");
+            txtFXActivateInterval.Text = myFX.AtrActivatePeriod.ToString("0.##");
+            txtFXArc.Text = myFX.AtrArc.ToString("##");
+            txtFXCastTime.Text = myFX.AtrCastTime.ToString("0.##");
+            cbFXEffectArea.Items.AddRange(Enum.GetNames(myFX.AtrEffectArea.GetType()));
+            cbFXEffectArea.SelectedIndex = (int)myFX.AtrEffectArea;
+            txtFXEnduranceCost.Text = myFX.AtrEnduranceCost.ToString("0.##");
+            txtFXInterruptTime.Text = myFX.AtrInterruptTime.ToString("0.##");
+            txtFXMaxTargets.Text = myFX.AtrMaxTargets.ToString("##");
+            txtFXRadius.Text = myFX.AtrRadius.ToString("0.##");
+            txtFXRange.Text = myFX.AtrRange.ToString("0.##");
+            txtFXRechargeTime.Text = myFX.AtrRechargeTime.ToString("0.##");
+            txtFXSecondaryRange.Text = myFX.AtrSecondaryRange.ToString("0.##");
         }
 
         private void FullCopy()
@@ -383,6 +418,34 @@ namespace Hero_Designer.Forms
             if (Loading || lvEffectType.SelectedIndices.Count < 1)
                 return;
             myFX.EffectType = (Enums.eEffectType) lvEffectType.SelectedIndices[0];
+            if (myFX.EffectType == Enums.eEffectType.ModifyAttrib)
+            {
+                tableLayoutPanel1.Enabled = false;
+                tableLayoutPanel2.Enabled = false;
+                tableLayoutPanel3.Enabled = false;
+                tableLayoutPanel4.Enabled = false;
+                tableLayoutPanel5.Enabled = false;
+                tableLayoutPanel1.Visible = false;
+                tableLayoutPanel2.Visible = false;
+                tableLayoutPanel3.Visible = false;
+                tableLayoutPanel4.Visible = false;
+                tableLayoutPanel5.Visible = false;
+                tpPowerAttribs.Visible = true;
+            }
+            else
+            {
+                tableLayoutPanel1.Enabled = true;
+                tableLayoutPanel2.Enabled = true;
+                tableLayoutPanel3.Enabled = true;
+                tableLayoutPanel4.Enabled = true;
+                tableLayoutPanel5.Enabled = true;
+                tableLayoutPanel1.Visible = true;
+                tableLayoutPanel2.Visible = true;
+                tableLayoutPanel3.Visible = true;
+                tableLayoutPanel4.Visible = true;
+                tableLayoutPanel5.Visible = true;
+                tpPowerAttribs.Visible = false;
+            }
             UpdateEffectSubAttribList();
             UpdateFXText();
         }
@@ -392,12 +455,16 @@ namespace Hero_Designer.Forms
             if (Loading || lvSubAttribute.SelectedIndices.Count < 1)
                 return;
             var fx = myFX;
-            if ((fx.EffectType == Enums.eEffectType.Damage) | (fx.EffectType == Enums.eEffectType.DamageBuff) |
-                (fx.EffectType == Enums.eEffectType.Defense) | (fx.EffectType == Enums.eEffectType.Resistance))
+            if ((fx.EffectType == Enums.eEffectType.Damage) | (fx.EffectType == Enums.eEffectType.DamageBuff) | (fx.EffectType == Enums.eEffectType.Defense) | (fx.EffectType == Enums.eEffectType.Resistance))
+            {
                 fx.DamageType = (Enums.eDamage) lvSubAttribute.SelectedIndices[0];
+            }
             else if ((fx.EffectType == Enums.eEffectType.Mez) | (fx.EffectType == Enums.eEffectType.MezResist))
+            {
                 fx.MezType = (Enums.eMez) lvSubAttribute.SelectedIndices[0];
+            }
             else
+            {
                 switch (fx.EffectType)
                 {
                     case Enums.eEffectType.ResEffect:
@@ -415,7 +482,17 @@ namespace Hero_Designer.Forms
                     case Enums.eEffectType.GrantPower:
                         fx.Summon = lvSubAttribute.SelectedItems[0].Text;
                         break;
+                    case Enums.eEffectType.ModifyAttrib:
+                        fx.PowerAttribs = (Enums.ePowerAttribs) lvSubAttribute.SelectedIndices[0];
+                        var tpControls = tpPowerAttribs.Controls;
+                        for (var rowIndex = 0; rowIndex < tpControls.Count; rowIndex++)
+                        {
+                            tpControls[rowIndex].Enabled = tpControls[rowIndex].Name.Contains(lvSubAttribute.SelectedItems[0].Text);
+                        }
+
+                        break;
                 }
+            }
 
             UpdateFXText();
             UpdateSubSubList();
@@ -434,15 +511,11 @@ namespace Hero_Designer.Forms
             {
                 fx.DamageType = (Enums.eDamage) lvSubSub.SelectedIndices[0];
             }
+            if ((fx.EffectType == Enums.eEffectType.ResEffect) & (fx.ETModifies == Enums.eEffectType.Mez))
+            {
+                fx.MezType = (Enums.eMez)lvSubSub.SelectedIndices[0];
+            }
 
-            UpdateFXText();
-        }
-
-        private void rbIfACP_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-                return;
-            myFX.PvMode = !rbIfCritter.Checked ? !rbIfPlayer.Checked ? Enums.ePvX.Any : Enums.ePvX.PvP : Enums.ePvX.PvE;
             UpdateFXText();
         }
 
@@ -533,23 +606,6 @@ namespace Hero_Designer.Forms
             UpdateFXText();
         }
 
-        private void txtFXProb_TextChanged(object sender, EventArgs e)
-        {
-            if (Loading)
-                return;
-            var fx = myFX;
-            var num = (float) Conversion.Val(txtFXProb.Text);
-            if ((num >= 0.0) & (num <= 2147483904.0))
-            {
-                if (num > 1.0)
-                    num /= 100f;
-                fx.BaseProbability = num;
-                lblProb.Text = "(" + Strings.Format((float) (fx.BaseProbability * 100.0), "###0") + "%)";
-            }
-
-            UpdateFXText();
-        }
-
         private void txtFXScale_Leave(object sender, EventArgs e)
         {
             if (Loading)
@@ -615,6 +671,91 @@ namespace Hero_Designer.Forms
                 myFX.ProcsPerMinute = ppm;
         }
 
+        private void txtFXAccuracy_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrAccuracy = Convert.ToSingle(txtFXAccuracy.Text);
+            UpdateFXText();
+        }
+        private void txtFXActivateInterval_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrActivatePeriod = Convert.ToSingle(txtFXActivateInterval.Text);
+            UpdateFXText();
+        }
+        private void txtFXArc_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrArc = Convert.ToInt32(txtFXArc.Text);
+            UpdateFXText();
+        }
+        private void txtFXCastTime_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrCastTime = Convert.ToSingle(txtFXCastTime.Text);
+            UpdateFXText();
+        }
+        private void cbFXEffectArea_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrEffectArea = (Enums.eEffectArea) cbFXEffectArea.SelectedIndex;
+            UpdateFXText();
+        }
+        private void txtFXEnduranceCost_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrEnduranceCost = Convert.ToSingle(txtFXEnduranceCost.Text);
+            UpdateFXText();
+        }
+        private void txtFXInterruptTime_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrInterruptTime = Convert.ToSingle(txtFXInterruptTime.Text);
+            UpdateFXText();
+        }
+        private void txtFXMaxTargets_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrMaxTargets = Convert.ToInt32(txtFXAccuracy.Text);
+            UpdateFXText();
+        }
+        private void txtFXRadius_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrRadius = Convert.ToInt32(txtFXRadius.Text);
+            UpdateFXText();
+        }
+        private void txtFXRange_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrRange = Convert.ToSingle(txtFXRange.Text);
+            UpdateFXText();
+        }
+        private void txtFXRechargeTime_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrRechargeTime = Convert.ToSingle(txtFXRechargeTime.Text);
+            UpdateFXText();
+        }
+        private void txtFXSecondaryRange_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.AtrSecondaryRange = Convert.ToSingle(txtFXSecondaryRange.Text);
+            UpdateFXText();
+        }
+
         private void UpdateEffectSubAttribList()
         {
             var index1 = 0;
@@ -629,21 +770,30 @@ namespace Hero_Designer.Forms
                 strArray = Enum.GetNames(fx.DamageType.GetType());
                 index1 = (int) fx.DamageType;
                 lvSubAttribute.Columns[0].Text = "Damage Type / Vector";
+                lvSubAttribute.Columns[0].Width = -2;
             }
             else if ((fx.EffectType == Enums.eEffectType.Mez) | (fx.EffectType == Enums.eEffectType.MezResist))
             {
                 strArray = Enum.GetNames(fx.MezType.GetType());
                 index1 = (int) fx.MezType;
                 lvSubAttribute.Columns[0].Text = "Mez Type";
+                lvSubAttribute.Columns[0].Width = -2;
             }
             else
             {
                 switch (fx.EffectType)
                 {
+                    case Enums.eEffectType.ModifyAttrib:
+                        strArray = Enum.GetNames(fx.PowerAttribs.GetType());
+                        index1 = (int)fx.PowerAttribs;
+                        lvSubAttribute.Columns[0].Text = "Power Attrib";
+                        lvSubAttribute.Columns[0].Width = -2;
+                        break;
                     case Enums.eEffectType.ResEffect:
                         strArray = Enum.GetNames(fx.EffectType.GetType());
                         index1 = (int) fx.ETModifies;
                         lvSubAttribute.Columns[0].Text = "Effect Type";
+                        lvSubAttribute.Columns[0].Width = -2;
                         break;
                     case Enums.eEffectType.EntCreate:
                     {
@@ -658,6 +808,7 @@ namespace Hero_Designer.Forms
                         }
 
                         lvSubAttribute.Columns[0].Text = "Entity Name";
+                        lvSubAttribute.Columns[0].Width = -2;
                         break;
                     }
                     case Enums.eEffectType.GrantPower:
@@ -673,12 +824,14 @@ namespace Hero_Designer.Forms
                         }
 
                         lvSubAttribute.Columns[0].Text = "Power Name";
+                        lvSubAttribute.Columns[0].Width = -2;
                         break;
                     }
                     case Enums.eEffectType.Enhancement:
                         strArray = Enum.GetNames(fx.EffectType.GetType());
                         index1 = (int) fx.ETModifies;
                         lvSubAttribute.Columns[0].Text = "Effect Type";
+                        lvSubAttribute.Columns[0].Width = -2;
                         break;
                     case Enums.eEffectType.GlobalChanceMod:
                     {
@@ -693,6 +846,7 @@ namespace Hero_Designer.Forms
                         }
 
                         lvSubAttribute.Columns[0].Text = "GlobalChanceMod Flag";
+                        lvSubAttribute.Columns[0].Width = -2;
                         break;
                     }
                 }
@@ -738,13 +892,15 @@ namespace Hero_Designer.Forms
             if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) & (fx.ETModifies == Enums.eEffectType.Mez))
             {
                 lvSubSub.Columns[0].Text = "Mez Type";
+                lvSubSub.Columns[0].Width = -2;
                 strArray = Enum.GetNames(fx.MezType.GetType());
                 index1 = (int) fx.MezType;
             }
 
-            if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) & (fx.ETModifies == Enums.eEffectType.Defense) | (fx.ETModifies == Enums.eEffectType.Damage))
+            if (fx.EffectType == Enums.eEffectType.Enhancement && (fx.ETModifies == Enums.eEffectType.Defense) | (fx.ETModifies == Enums.eEffectType.Damage))
             {
                 lvSubSub.Columns[0].Text = @"Damage Type";
+                lvSubSub.Columns[0].Width = -2;
                 strArray = Enum.GetNames(fx.DamageType.GetType());
                 index1 = (int) fx.DamageType;
             }
@@ -770,162 +926,6 @@ namespace Hero_Designer.Forms
             }
 
             lvSubSub.EndUpdate();
-        }
-
-        private void addConditional_Click(object sender, EventArgs e)
-        {
-            //To do: Reference selected items and add to active conditional view and assign item name as the power fullname.
-            switch (lvConditionalType.SelectedItems[0].Text)
-            {
-                case "Power Active":
-                    var powerName = lvSubConditional.SelectedItems[0].Name;
-                    //var power = DatabaseAPI.GetPowerByFullName(powerName);
-                    var value = lvConditionalBool.SelectedItems[0].Text;
-                    lvActiveConditionals.Items.Add($"Active:{powerName}").SubItems.Add(value);
-                    lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
-                    lvActiveConditionals.Columns[0].Width = -2;
-                    lvActiveConditionals.Columns[1].Text = @"Value";
-                    lvActiveConditionals.Columns[1].Width = -2;
-                    //myFX.ActiveConditionals.Add($"Active:{powerName}", value);
-                    break;
-                case "Power Taken":
-                    powerName = lvSubConditional.SelectedItems[0].Name;
-                    //power = DatabaseAPI.GetPowerByFullName(powerName);
-                    value = lvConditionalBool.SelectedItems[0].Text;
-                    lvActiveConditionals.Items.Add($"Taken:{powerName}").SubItems.Add(value);
-                    lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
-                    lvActiveConditionals.Columns[0].Width = -2;
-                    lvActiveConditionals.Columns[1].Text = @"Value";
-                    lvActiveConditionals.Columns[1].Width = -2;
-                    //myFX.ActiveConditionals.Add($"Taken:{powerName}", value);
-                    break;
-            }
-
-            UpdateFXText();
-        }
-
-        private void removeConditional_Click(object sender, EventArgs e)
-        {
-            //myFX.ActiveConditionals.Remove(lvActiveConditionals.SelectedItems[0].Text);
-            lvActiveConditionals.SelectedItems[0].Remove();
-        }
-
-        private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            var selected = DatabaseAPI.GetPowerByFullName(e.Item.Name);
-            lvConditionalBool.Items.Clear();
-            switch (lvConditionalType.SelectedItems[0].Text)
-            {
-                case "Power Active":
-                    lvConditionalBool.BeginUpdate();
-                    lvConditionalBool.Items.Add("True");
-                    lvConditionalBool.Items.Add("False");
-                    lvConditionalBool.Columns[0].Text = @"Power Active?";
-                    lvConditionalBool.Columns[0].Width = -2;
-                    lvConditionalBool.EndUpdate();
-                    break;
-                case "Power Taken":
-                    lvConditionalBool.BeginUpdate();
-                    lvConditionalBool.Items.Add("True");
-                    lvConditionalBool.Items.Add("False");
-                    lvConditionalBool.Columns[0].Text = @"Power Taken?";
-                    lvConditionalBool.Columns[0].Width = -2;
-                    lvConditionalBool.EndUpdate();
-                    break;
-            }
-        }
-
-        private void lvConditionalType_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            switch (e.Item.Text)
-            {
-                case "Power Active":
-                    lvConditionalBool.Enabled = true;
-                    lvSubConditional.BeginUpdate();
-                    lvSubConditional.Items.Clear();
-                    var pArray = DatabaseAPI.Database.Power;
-                    var eArray = new[] { 6, 7, 8, 9, 10, 11 };
-                    foreach (var power in pArray)
-                    {
-                        var pSetType = power.GetPowerSet().SetType;
-                        var pType = power.PowerType;
-                        var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle || (pType == Enums.ePowerType.Click && power.ClickBuff);
-                        var isUsable = !eArray.Contains((int)pSetType);
-                        if (isUsable && isType)
-                        {
-                            var pItem = new Regex("[_]");
-                            var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                            var pMatch = new Regex("[ ].*");
-                            var pArchetype = pMatch.Replace(pStrings[0], "");
-                            lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
-                        }
-                    }
-                    lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
-                    lvSubConditional.Columns[0].Width = -2;
-                    lvSubConditional.EndUpdate();
-                    break;
-
-                case "Power Taken":
-                    lvConditionalBool.Enabled = true;
-                    lvSubConditional.BeginUpdate();
-                    lvSubConditional.Items.Clear();
-                    pArray = DatabaseAPI.Database.Power;
-                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
-                    foreach (var power in pArray)
-                    {
-                        var pSetType = power.GetPowerSet().SetType;
-                        var isUsable = !eArray.Contains((int)pSetType);
-                        if (isUsable)
-                        {
-                            var pItem = new Regex("[_]");
-                            var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                            var pMatch = new Regex("[ ].*");
-                            var pArchetype = pMatch.Replace(pStrings[0], "");
-                            lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
-                        }
-                    }
-                    lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
-                    lvSubConditional.Columns[0].Width = -2;
-                    lvSubConditional.EndUpdate();
-                    break;
-                case "Other Condition":
-                    break;
-            }
-        }
-
-        /*private void UpdateConditionals()
-        {
-            lvActiveConditionals.BeginUpdate();
-            foreach (var pair in myFX.ActiveConditionals)
-            {
-                Console.WriteLine($@"Key: {pair.Key} Value: {pair.Value}");
-                lvActiveConditionals.Items.Add(pair.Key).SubItems.Add(pair.Value);
-            }
-            lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
-            lvActiveConditionals.Columns[0].Width = -2;
-            lvActiveConditionals.Columns[1].Text = @"Value";
-            lvActiveConditionals.Columns[1].Width = -2;
-            lvActiveConditionals.EndUpdate();
-        }*/
-        private void UpdateConditionalTypes()
-        {
-            lvConditionalType.BeginUpdate();
-            var cTypes = new List<string> { "Power Active", "Power Taken", "Other Condition" }.ToArray();
-            var indexVal = -1;
-            for (var index = 0; index < cTypes.Length; index++)
-            {
-                lvConditionalType.Items.Add(cTypes[index]);
-                indexVal = index;
-            }
-
-            if (indexVal > -1)
-            {
-                lvConditionalType.Items[indexVal].Selected = true;
-                lvConditionalType.Items[indexVal].EnsureVisible();
-            }
-
-            lvConditionalType.View = View.Details;
-            lvConditionalType.EndUpdate();
         }
     }
 }

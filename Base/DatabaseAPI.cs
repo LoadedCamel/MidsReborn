@@ -58,6 +58,31 @@ public static class DatabaseAPI
         return -1;
     }
 
+    public static void ExportAttribMods()
+    {
+        var pathA = $"{Application.StartupPath}\\Data\\Database\\attribMods.json";
+        var pathB = $"{Application.StartupPath}\\Data\\Database\\classes.json";
+        using StreamWriter file1 = new StreamWriter(File.OpenWrite(pathA));
+        var serializer = new JsonSerializer {Formatting = Formatting.Indented};
+        serializer.Serialize(file1, Database.AttribMods.Modifier);
+
+        using StreamWriter file2 = new StreamWriter(File.OpenWrite(pathB));
+        var serializer2 = new JsonSerializer { Formatting = Formatting.Indented };
+        serializer2.Serialize(file2, Database.Classes);
+        MessageBox.Show($"Export complete\r\nYou can now close this window.", "Json Export", MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
+    }
+
+    public static void ExportGlobalChanceMods()
+    {
+        var path = $"{Application.StartupPath}\\Data\\Database\\GCMs.json";
+        using StreamWriter file = new StreamWriter(File.OpenWrite(path));
+        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
+        serializer.Serialize(file, Database.EffectIds);
+        MessageBox.Show($"Export complete\r\nYou can now close this window.", "Json Export", MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
+    }
+
     public static int NidFromUidClass(string uidClass)
     {
         if (string.IsNullOrEmpty(uidClass))

@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace Base.Data_Classes
 {
-    class SpecialCase
+    public class PowerATR
     {
-        public List<string> SpecialCasesList { get; set; }
-        public string SpecialCaseA { get; set; }
-        public string SpecialCaseB { get; set; }
+        
 
-        public SpecialCase()
+        public PowerATR()
         {
         }
     }

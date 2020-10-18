@@ -225,5 +225,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             new frmJsonImportMain().ShowDialog();
         }
+
+        private void btnExportAttrib_Click(object sender, EventArgs e)
+        {
+            DatabaseAPI.ExportAttribMods();
+        }
+
+        private void btnExportGCM_Click(object sender, EventArgs e)
+        {
+            DatabaseAPI.ExportGlobalChanceMods();
+        }
     }
 }

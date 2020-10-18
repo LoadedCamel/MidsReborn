@@ -41,7 +41,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Base\Data_Classes\SpecialCase.cs" />
+    <Compile Include="Base\Data_Classes\PowerATR.cs" />
     <Compile Include="ConfigDataSpecial.cs" />
     <Compile Include="HeroViewerBase.cs" />
     <Compile Include="Extensions.cs" />

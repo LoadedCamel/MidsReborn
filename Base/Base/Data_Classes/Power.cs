@@ -340,7 +340,6 @@ namespace Base.Data_Classes
         public bool IsEpic
             => Requires.NPowerID.Length > 0 && Requires.NPowerID[0][0] != -1;
 
-
         public int LocationIndex { get; private set; }
 
         public bool IsModified { get; set; }
@@ -1741,6 +1740,7 @@ namespace Base.Data_Classes
             }
         }
 
+        
         public bool GetEffectStringGrouped(
             int idEffect,
             ref string returnString,
@@ -2011,6 +2011,8 @@ namespace Base.Data_Classes
                         case Enums.eEffectType.XPDebt:
                             break;
                         case Enums.eEffectType.ForceMove:
+                            break;
+                        case Enums.eEffectType.ModifyAttrib:
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

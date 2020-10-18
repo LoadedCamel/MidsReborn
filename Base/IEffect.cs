@@ -38,6 +38,8 @@ public interface IEffect : IComparable, ICloneable
 
     Enums.eEffectType EffectType { get; set; }
 
+    Enums.ePowerAttribs PowerAttribs { get; set; }
+
     Enums.eOverrideBoolean DisplayPercentageOverride { get; set; }
 
     Enums.eDamage DamageType { get; set; }
@@ -63,12 +65,6 @@ public interface IEffect : IComparable, ICloneable
     bool Resistible { get; set; }
 
     Enums.eSpecialCase SpecialCase { get; set; }
-
-    Enums.eSpecialCase SpecialCase2 { get; set; }
-
-    Enums.eSpecialOperator SpecialOperator { get; set; }
-
-    Enums.eSpecialCase[] SpecialCases { get; set; }
 
     string UIDClassName { get; set; }
 
@@ -131,6 +127,19 @@ public interface IEffect : IComparable, ICloneable
     bool CancelOnMiss { get; set; }
 
     float ProcsPerMinute { get; set; }
+
+    float AtrAccuracy { get; set; }
+    float AtrActivatePeriod { get; set; }
+    int AtrArc { get; set; }
+    float AtrCastTime { get; set; }
+    Enums.eEffectArea AtrEffectArea { get; set; }
+    float AtrEnduranceCost { get; set; }
+    float AtrInterruptTime { get; set; }
+    int AtrMaxTargets { get; set; }
+    float AtrRadius { get; set; }
+    float AtrRange { get; set; }
+    float AtrRechargeTime { get; set; }
+    float AtrSecondaryRange { get; set; }
 
     IPower GetPower();
     void SetPower(IPower power);

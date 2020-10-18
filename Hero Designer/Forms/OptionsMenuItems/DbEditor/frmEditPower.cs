@@ -103,10 +103,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private void btnFXAdd_Click(object sender, EventArgs e)
         {
             IEffect iFX = new Effect();
-            using var frmPowerEffect = new frmPowerEffect(iFX);
+            var power1 = myPower;
+            using var frmPowerEffect = new frmPowerEffect(iFX, power1);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
-            var power1 = myPower;
+            //var power1 = myPower;
             var power2 = power1;
             var effectArray = (IEffect[]) Utils.CopyArray(power2.Effects, new IEffect[power1.Effects.Length + 1]);
             power2.Effects = effectArray;
@@ -154,9 +155,10 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             if (lvFX.SelectedIndices.Count <= 0)
                 return;
+            var power1 = myPower;
             var selectedIndex = lvFX.SelectedIndices[0];
             var iFX = (IEffect) myPower.Effects[selectedIndex].Clone();
-            using var frmPowerEffect = new frmPowerEffect(iFX);
+            using var frmPowerEffect = new frmPowerEffect(iFX, power1);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.myFX.Clone();
@@ -1843,8 +1845,10 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lvFX.Items.Clear();
             var num = power.Effects.Length - 1;
             for (var index = 0; index <= num; ++index)
-                lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true)
-                    .Replace("\r\n", " - "));
+            {
+                lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true).Replace("\r\n", " - "));
+            }
+
             lvFX.EndUpdate();
             if (lvFX.Items.Count > Index)
                 lvFX.SelectedIndex = Index;

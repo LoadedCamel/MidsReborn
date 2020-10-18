@@ -218,7 +218,7 @@ public interface IPower : IComparable
     bool Active { get; set; }
 
     bool Taken { get; set; }
-
+    
     bool HasDefEffects();
 
     bool HasResEffects();

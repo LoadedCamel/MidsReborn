@@ -47,15 +47,13 @@ namespace Base.Data_Classes
             DamageType = Enums.eDamage.None;
             MezType = Enums.eMez.None;
             ETModifies = Enums.eEffectType.None;
+            PowerAttribs = Enums.ePowerAttribs.None;
             Summon = string.Empty;
             Stacking = Enums.eStacking.No;
             Suppression = Enums.eSuppress.None;
             Buffable = true;
             Resistible = true;
             SpecialCase = Enums.eSpecialCase.None;
-            SpecialOperator = Enums.eSpecialOperator.None;
-            SpecialCase2 = Enums.eSpecialCase.None;
-            SpecialCases = new Enums.eSpecialCase[0];
             UIDClassName = string.Empty;
             nIDClassName = -1;
             PvMode = Enums.ePvX.Any;
@@ -99,8 +97,6 @@ namespace Base.Data_Classes
             Buffable = reader.ReadBoolean();
             Resistible = reader.ReadBoolean();
             SpecialCase = (Enums.eSpecialCase) reader.ReadInt32();
-            //SpecialOperator = (Enums.eSpecialOperator) reader.ReadInt32();
-            //SpecialCase2 = (Enums.eSpecialCase)reader.ReadInt32();
             VariableModifiedOverride = reader.ReadBoolean();
             PvMode = (Enums.ePvX) reader.ReadInt32();
             ToWho = (Enums.eToWho) reader.ReadInt32();
@@ -123,9 +119,24 @@ namespace Base.Data_Classes
             IgnoreED = reader.ReadBoolean();
             Override = reader.ReadString();
             ProcsPerMinute = reader.ReadSingle();
-            if (DatabaseAPI.Database.EffectIds.Contains(EffectId))
+            /*PowerAttribs = (Enums.ePowerAttribs) reader.ReadInt32();
+            AtrAccuracy = reader.ReadSingle();
+            AtrActivatePeriod = reader.ReadSingle();
+            AtrArc = reader.ReadInt32();
+            AtrCastTime = reader.ReadSingle();
+            AtrEffectArea = (Enums.eEffectArea)reader.ReadInt32();
+            AtrEnduranceCost = reader.ReadSingle();
+            AtrInterruptTime = reader.ReadSingle();
+            AtrMaxTargets = reader.ReadInt32();
+            AtrRadius = reader.ReadSingle();
+            AtrRange = reader.ReadSingle();
+            AtrRechargeTime = reader.ReadSingle();
+            AtrSecondaryRange = reader.ReadSingle();*/
+
+            /*if (DatabaseAPI.Database.EffectIds.Contains(EffectId))
                 return;
-            DatabaseAPI.Database.EffectIds.Add(EffectId);
+            DatabaseAPI.Database.EffectIds.Add(EffectId)*/
+            ;
         }
 
         private Effect(IEffect template)
@@ -150,8 +161,6 @@ namespace Base.Data_Classes
             Buffable = template.Buffable;
             Resistible = template.Resistible;
             SpecialCase = template.SpecialCase;
-            SpecialOperator = template.SpecialOperator;
-            SpecialCase2 = template.SpecialCase2;
             VariableModifiedOverride = template.VariableModifiedOverride;
             isEnhancementEffect = template.isEnhancementEffect;
             PvMode = template.PvMode;
@@ -183,6 +192,7 @@ namespace Base.Data_Classes
             EffectId = template.EffectId;
             IgnoreED = template.IgnoreED;
             Override = template.Override;
+            PowerAttribs = template.PowerAttribs;
         }
 
         private int? SummonId { get; set; }
@@ -423,6 +433,8 @@ namespace Base.Data_Classes
 
         public Enums.eEffectType EffectType { get; set; }
 
+        public Enums.ePowerAttribs PowerAttribs { get; set; }
+
         public Enums.eOverrideBoolean DisplayPercentageOverride { get; set; }
 
         public Enums.eDamage DamageType { get; set; }
@@ -460,12 +472,6 @@ namespace Base.Data_Classes
         public bool Resistible { get; set; }
 
         public Enums.eSpecialCase SpecialCase { get; set; }
-
-        public Enums.eSpecialCase SpecialCase2 { get; set; }
-
-        public Enums.eSpecialOperator SpecialOperator { get; set; }
-
-        public Enums.eSpecialCase[] SpecialCases { get; set; }
 
         public string UIDClassName { get; set; }
 
@@ -522,6 +528,19 @@ namespace Base.Data_Classes
         public int UniqueID { get; set; }
 
         public string Override { get; set; }
+
+        public float AtrAccuracy { get; set; }
+        public float AtrActivatePeriod { get; set; }
+        public int AtrArc { get; set; }
+        public float AtrCastTime { get; set; }
+        public Enums.eEffectArea AtrEffectArea { get; set; }
+        public float AtrEnduranceCost { get; set; }
+        public float AtrInterruptTime { get; set; }
+        public int AtrMaxTargets { get; set; }
+        public float AtrRadius { get; set; }
+        public float AtrRange { get; set; }
+        public float AtrRechargeTime { get; set; }
+        public float AtrSecondaryRange { get; set; }
 
         public int nOverride
         {
@@ -731,11 +750,12 @@ namespace Base.Data_Classes
             return str5.Trim() + iStr + str4;
         }
 
-        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false)
+        public string BuildEffectString2(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false)
         {
-            string sBuild;
+            string sBuild = string.Empty;
 
-            string sSubEffect;
+            string sSubEffect = string.Empty;
+            string sSubSubEffect = string.Empty;
             string sMag = string.Empty;
             string sDuration = string.Empty;
             string sChance = string.Empty;
@@ -866,21 +886,9 @@ namespace Base.Data_Classes
                 }
             }
 
-            if (SpecialOperator != Enums.eSpecialOperator.None)
+            if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
             {
-                if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance & SpecialCase2 != Enums.eSpecialCase.None & SpecialCase2 != Enums.eSpecialCase.Defiance)
-                {
-                    sSpecial = $"{Enum.GetName(SpecialCase.GetType(), SpecialCase)} {Enum.GetName(SpecialOperator.GetType(), SpecialOperator)} {Enum.GetName(SpecialCase2.GetType(), SpecialCase2)}";
-                    //sSpecial = $"{nameof(SpecialCase)} {nameof(SpecialOperator)} {nameof(SpecialCase2)}";
-                    //sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
-                }
-            }
-            else
-            {
-                if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
-                {
-                    sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
-                }
+                sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
             }
 
             if (!simple || Scale > 0 && EffectType == Enums.eEffectType.Mez)
@@ -1022,10 +1030,20 @@ namespace Base.Data_Classes
                         sMag = " " + sMag;
                     sBuild = sEffect + "(" + sSubEffect + ")" + sMag + sTarget + sDuration;
                     break;
+
                 case Enums.eEffectType.ResEffect:
                     sSubEffect = Enum.GetName(ETModifies.GetType(), ETModifies);
-                    sBuild = sMag + " " + sEffect + "(" + sSubEffect + ")" + sTarget + sDuration;
+                    if (sSubEffect == "Mez")
+                    {
+                        sSubSubEffect = Enum.GetName(MezType.GetType(), MezType);
+                        sBuild = $"{sMag} {sEffect}({sSubSubEffect}){sTarget}{sDuration}";
+                    }
+                    else
+                    {
+                        sBuild = $"{sMag} {sEffect}({sSubEffect}){sTarget}{sDuration}";
+                    }
                     break;
+
                 case Enums.eEffectType.Enhancement:
                     string tSpStr;
                     if (ETModifies == Enums.eEffectType.Mez)
@@ -1165,6 +1183,48 @@ namespace Base.Data_Classes
                 default:
                     sBuild = sMag + " " + sEffect + sTarget + sDuration;
                     break;
+                case Enums.eEffectType.ModifyAttrib:
+                    sSubEffect = Enum.GetName(PowerAttribs.GetType(), PowerAttribs);
+                    switch (sSubEffect)
+                    {
+                        case "Accuracy":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrAccuracy} ({Convert.ToDecimal(AtrAccuracy * MidsContext.Config.BaseAcc * 100f):0.##}%)";
+                            break;
+                        case "ActivateInterval":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrActivatePeriod} second(s)";
+                            break;
+                        case "Arc":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrArc} degrees";
+                            break;
+                        case "CastTime":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrCastTime} second(s)";
+                            break;
+                        case "EffectArea":
+                            sBuild = $"{sEffect}({sSubEffect}) to {Enum.GetName(typeof(Enums.eEffectArea), AtrEffectArea!)}";
+                            break;
+                        case "EnduranceCost":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrEnduranceCost} ({Convert.ToDecimal(AtrEnduranceCost / AtrActivatePeriod):0.##}/s)";
+                            break;
+                        case "InterruptTime":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrInterruptTime} second(s)";
+                            break;
+                        case "MaxTargets":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrMaxTargets} target(s)";
+                            break;
+                        case "Radius":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrRadius} feet";
+                            break;
+                        case "Range":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrRange} feet";
+                            break;
+                        case "RechargeTime":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrRechargeTime} second(s)";
+                            break;
+                        case "SecondaryRange":
+                            sBuild = $"{sEffect}({sSubEffect}) to {AtrSecondaryRange} feet";
+                            break;
+                    }
+                    break;
             }
 
 
@@ -1191,6 +1251,519 @@ namespace Base.Data_Classes
             return sEnh + sBuild + sExtra + sBuff + sVariable + sStack + sSuppress;
         }
 
+        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false)
+        {
+            string sBuild = string.Empty;
+
+            string sSubEffect = string.Empty;
+            string sSubSubEffect = string.Empty;
+            string sMag = string.Empty;
+            string sDuration = string.Empty;
+            string sChance = string.Empty;
+            string sTarget = string.Empty;
+            string sPvx = string.Empty;
+            string sStack = string.Empty;
+            string sBuff = string.Empty;
+            string sDelay = string.Empty;
+            string sResist = string.Empty;
+            string sSpecial = string.Empty;
+            string sSuppress = string.Empty;
+            string sVariable = string.Empty;
+            string sToHit = string.Empty;
+            string sEnh = string.Empty;
+            string sSuppressShort = string.Empty;
+
+            if (power != null && power.VariableEnabled && VariableModified)
+            {
+                sVariable = " (Variable)";
+            }
+
+            if (isEnhancementEffect)
+            {
+                sEnh = "(From Enh) ";
+            }
+            string sEffect = Enums.GetEffectName(EffectType);
+
+            if (!simple)
+            {
+                if (ToWho == Enums.eToWho.Target)
+                {
+                    sTarget = " to Target";
+                }
+                else if (ToWho == Enums.eToWho.Self)
+                {
+                    sTarget = " to Self";
+                }
+                if (RequiresToHitCheck)
+                {
+                    sToHit = " requires ToHit check";
+                }
+            }
+
+            if (ProcsPerMinute > 0 && Probability < 0.01)
+            {
+                sChance = ProcsPerMinute + "PPM";
+            }
+            else if (useBaseProbability)
+            {
+                if (BaseProbability < 1)
+                {
+                    if (BaseProbability >= 0.975f)
+                    {
+                        sChance = (BaseProbability * 100).ToString("#0" + System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
+                    }
+                    else
+                    {
+                        sChance = (BaseProbability * 100).ToString("#0") + "% chance";
+                    }
+                }
+            }
+            else
+            {
+                if (Probability < 1)
+                {
+                    if (Probability >= 0.975f)
+                    {
+                        sChance = (Probability * 100).ToString("#0" + System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
+                    }
+                    else
+                    {
+                        sChance = (Probability * 100).ToString("#0") + "% chance";
+                    }
+
+                    if (CancelOnMiss)
+                    {
+                        sChance += ", CancelOnMiss";
+                    }
+                }
+            }
+
+            bool resistPresent = false;
+            if (Resistible == false)
+            {
+                if ((!simple & ToWho != Enums.eToWho.Self) | EffectType == Enums.eEffectType.Damage)
+                {
+                    sResist = "Non-resistible";
+                    resistPresent = true;
+                }
+            }
+
+            switch (PvMode)
+            {
+                case Enums.ePvX.PvE:
+                    sPvx = resistPresent ? "by Mobs" : "to Mobs";
+                    if (EffectType == Enums.eEffectType.Heal & Aspect == Enums.eAspect.Abs & Mag > 0 &
+                        PvMode == Enums.ePvX.PvE)
+                    {
+                        sPvx = "in PvE";
+                    }
+                    if (ToWho == Enums.eToWho.Self)
+                    {
+                        sPvx = "in PvE";
+                    }
+                    break;
+                case Enums.ePvX.PvP:
+                    sPvx = resistPresent ? "by Players" : "to Players";
+                    if (ToWho == Enums.eToWho.Self)
+                    {
+                        sPvx = "in PvP";
+                    }
+                    break;
+            }
+            if (!simple)
+            {
+                if (Buffable == false & EffectType != Enums.eEffectType.DamageBuff)
+                {
+                    sBuff = " [Ignores Enhancements & Buffs]";
+                }
+                if (Stacking == Enums.eStacking.No)
+                {
+                    sStack = "\n  Effect does not stack from same caster";
+                }
+
+                if (DelayedTime > 0)
+                {
+                    sDelay = "after " + Utilities.FixDP(DelayedTime) + " seconds";
+                }
+            }
+
+            if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
+            {
+                sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
+            }
+
+            if (!simple || Scale > 0 && EffectType == Enums.eEffectType.Mez)
+            {
+                sDuration = string.Empty;
+                string sForOver = " for ";
+                switch (EffectType)
+                {
+                    case Enums.eEffectType.Damage:
+                        sForOver = " over ";
+                        break;
+                    case Enums.eEffectType.SilentKill:
+                        sForOver = " in ";
+                        break;
+                }
+
+                if (Duration > 0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0))
+                {
+                    sDuration += sForOver + Utilities.FixDP(Duration) + " seconds";
+                }
+                else if (Absorbed_Duration > 0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0))
+                {
+                    sDuration += sForOver + Utilities.FixDP(Absorbed_Duration) + " seconds";
+                }
+                else
+                {
+                    sDuration += " ";
+                }
+                // If .Absorbed_Interval > 0 Then
+                if (Absorbed_Interval > 0 & Absorbed_Interval < 900)
+                {
+                    sDuration += " every " + Utilities.FixDP(Absorbed_Interval) + " seconds";
+                }
+            }
+
+            if (noMag == false & EffectType != Enums.eEffectType.SilentKill)
+            {
+                if (DisplayPercentage)
+                {
+                    sMag = Utilities.FixDP(Mag * 100);
+                    sMag += "%";
+                }
+                else
+                {
+                    sMag = Utilities.FixDP(Mag);
+                }
+            }
+
+            if (!simple)
+            {
+                sSuppress = string.Empty;
+                if ((Suppression & Enums.eSuppress.ActivateAttackClick) == Enums.eSuppress.ActivateAttackClick)
+                {
+                    sSuppress += "\n  Suppressed when Attacking.";
+                }
+                if ((Suppression & Enums.eSuppress.Attacked) == Enums.eSuppress.Attacked)
+                {
+                    sSuppress += "\n  Suppressed when Attacked.";
+                }
+                if ((Suppression & Enums.eSuppress.HitByFoe) == Enums.eSuppress.HitByFoe)
+                {
+                    sSuppress += "\n  Suppressed when Hit.";
+                }
+                if ((Suppression & Enums.eSuppress.MissionObjectClick) == Enums.eSuppress.MissionObjectClick)
+                {
+                    sSuppress += "\n  Suppressed when MissionObjectClick.";
+                }
+
+                if ((Suppression & Enums.eSuppress.Held) == Enums.eSuppress.Held ||
+                    (Suppression & Enums.eSuppress.Immobilized) == Enums.eSuppress.Immobilized ||
+                    (Suppression & Enums.eSuppress.Sleep) == Enums.eSuppress.Sleep ||
+                    (Suppression & Enums.eSuppress.Stunned) == Enums.eSuppress.Stunned ||
+                    (Suppression & Enums.eSuppress.Terrorized) == Enums.eSuppress.Terrorized)
+                {
+                    sSuppress += "\n  Suppressed when Mezzed.";
+                }
+                if ((Suppression & Enums.eSuppress.Knocked) == Enums.eSuppress.Knocked)
+                {
+                    sSuppress += "\n  Suppressed when Knocked.";
+                }
+            }
+            else
+            {
+                if ((Suppression & Enums.eSuppress.ActivateAttackClick) == Enums.eSuppress.ActivateAttackClick ||
+                    (Suppression & Enums.eSuppress.Attacked) == Enums.eSuppress.Attacked ||
+                    (Suppression & Enums.eSuppress.HitByFoe) == Enums.eSuppress.HitByFoe)
+                {
+                    sSuppressShort = "Combat Suppression";
+                }
+            }
+
+
+            switch (EffectType)
+            {
+                case Enums.eEffectType.Elusivity:
+                case Enums.eEffectType.Damage:
+                case Enums.eEffectType.Resistance:
+                case Enums.eEffectType.DamageBuff:
+                case Enums.eEffectType.Defense:
+                    if (string.IsNullOrEmpty(specialCat))
+                    {
+                        sSubEffect = grouped ? "%VALUE%" : Enum.GetName(DamageType.GetType(), DamageType);
+                        if (EffectType == Enums.eEffectType.Damage)
+                        {
+                            if (Ticks > 0)
+                            {
+                                sMag = Ticks + " x " + sMag;
+                            }
+                            sBuild = sMag + " " + sSubEffect + " " + sEffect + sTarget + sDuration;
+                        }
+                        else
+                        {
+                            sSubEffect = "(" + sSubEffect + ")";
+                            if (DamageType == Enums.eDamage.None)
+                                sSubEffect = string.Empty;
+                            sBuild = sMag + " " + sEffect + sSubEffect + sTarget + sDuration;
+                        }
+                    }
+                    else
+                    {
+                        sBuild = sMag + " " + specialCat + " " + sTarget + sDuration;
+                    }
+                    break;
+                case Enums.eEffectType.StealthRadius:
+                case Enums.eEffectType.StealthRadiusPlayer:
+                    sBuild = sMag + "ft " + sEffect + sTarget + sDuration;
+                    break;
+                case Enums.eEffectType.Mez:
+                    sSubEffect = Enum.GetName(MezType.GetType(), MezType);
+                    if (Duration > 0 & (simple == false | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
+                        sDuration = Utilities.FixDP(Duration) + " second ";
+                    if (noMag == false)
+                        sMag = " (Mag " + sMag + ")";
+                    sBuild = sDuration + sSubEffect + sMag + sTarget;
+                    break;
+                case Enums.eEffectType.MezResist:
+                    sSubEffect = Enum.GetName(MezType.GetType(), MezType);
+                    if (noMag == false)
+                        sMag = " " + sMag;
+                    sBuild = sEffect + "(" + sSubEffect + ")" + sMag + sTarget + sDuration;
+                    break;
+
+                case Enums.eEffectType.ResEffect:
+                    sSubEffect = Enum.GetName(ETModifies.GetType(), ETModifies);
+                    if (sSubEffect == "Mez")
+                    {
+                        sSubSubEffect = Enum.GetName(MezType.GetType(), MezType);
+                        sBuild = $"{sMag} {sEffect}({sSubSubEffect}){sTarget}{sDuration}";
+                    }
+                    else
+                    {
+                        sBuild = $"{sMag} {sEffect}({sSubEffect}){sTarget}{sDuration}";
+                    }
+                    break;
+
+                case Enums.eEffectType.Enhancement:
+                    string tSpStr;
+                    if (ETModifies == Enums.eEffectType.Mez)
+                    {
+                        tSpStr = Enums.GetMezName((Enums.eMezShort)MezType);
+                    }
+                    else if (ETModifies == Enums.eEffectType.Defense | ETModifies == Enums.eEffectType.Resistance | ETModifies == Enums.eEffectType.Damage)
+                    {
+                        tSpStr = Enums.GetDamageName(DamageType) + " " + Enums.GetEffectName(ETModifies);
+                    }
+                    else
+                    {
+                        tSpStr = Enums.GetEffectName(ETModifies);
+                    }
+
+                    sBuild = sMag + " " + sEffect + "(" + tSpStr + ")" + sTarget + sDuration;
+                    break;
+                case Enums.eEffectType.None:
+                    sBuild = Special;
+                    if (Special == "Debt Protection")
+                    {
+                        sBuild = sMag + "% " + sBuild;
+                    }
+                    break;
+                case Enums.eEffectType.Heal:
+                case Enums.eEffectType.HitPoints:
+                    if (noMag == false)
+                    {
+                        if (Ticks > 0)
+                        {
+                            sMag = Ticks + " x " + sMag;
+                        }
+                        if (Aspect == Enums.eAspect.Cur)
+                        {
+                            sBuild = Utilities.FixDP(Mag * 100) + "% " + sEffect + sTarget + sDuration;
+                        }
+                        else
+                        {
+                            if (DisplayPercentage == false)
+                            {
+                                sBuild = sMag + " HP (" + Utilities.FixDP(Mag / MidsContext.Archetype.Hitpoints * 100) + "%) " + sEffect + sTarget + sDuration;
+                            }
+                            else
+                            {
+                                sBuild = Utilities.FixDP((Mag / 100) * MidsContext.Archetype.Hitpoints) + " HP (" + sMag + ") " + sEffect + sTarget + sDuration;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        sBuild = "+Max HP";
+                    }
+                    break;
+                case Enums.eEffectType.Regeneration:
+                    if (noMag == false)
+                    {
+                        if (DisplayPercentage)
+                        {
+                            sBuild = sMag + " (" + Utilities.FixDP((MidsContext.Archetype.Hitpoints / 100f) * (Mag * MidsContext.Archetype.BaseRegen * Statistics.BaseMagic)) + " HP/sec) " + sEffect + sTarget + sDuration;
+                        }
+                        else
+                        {
+                            sBuild = sMag + " " + sEffect + sTarget + sDuration;
+                        }
+                    }
+                    else
+                    {
+                        sBuild = "+Regeneration";
+                    }
+                    break;
+                case Enums.eEffectType.Recovery:
+                    if (noMag == false)
+                    {
+                        if (DisplayPercentage)
+                        {
+                            sBuild = sMag + " (" + Utilities.FixDP(Mag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic)) + " End/sec) " + sEffect + sTarget + sDuration;
+                        }
+                        else
+                        {
+                            sBuild = sMag + " " + sEffect + sTarget + sDuration;
+                        }
+                    }
+                    else
+                    {
+                        sBuild = "+Recovery";
+                    }
+                    break;
+                case Enums.eEffectType.EntCreate:
+                    sResist = string.Empty;
+                    var summon = DatabaseAPI.NidFromUidEntity(Summon);
+                    string tSummon;
+                    if (summon > -1)
+                    {
+                        tSummon = " " + DatabaseAPI.Database.Entities[summon].DisplayName;
+                    }
+                    else
+                    {
+                        tSummon = " " + Summon;
+                    }
+                    if (Duration > 9999)
+                    {
+                        sBuild = sEffect + tSummon + sTarget;
+                    }
+                    else
+                    {
+                        sBuild = sEffect + tSummon + sTarget + sDuration;
+                    }
+                    break;
+                case Enums.eEffectType.Endurance:
+                    if (noMag) sBuild = "+Max End";
+                    else if (Aspect == Enums.eAspect.Max)
+                    {
+                        sBuild = sMag + "% Max End" + sTarget + sDuration;
+                    }
+                    else
+                    {
+                        sBuild = sMag + " " + sEffect + sTarget + sDuration;
+                    }
+                    break;
+                case Enums.eEffectType.GrantPower:
+                    sResist = string.Empty;
+                    string tGrant;
+                    var pID = DatabaseAPI.GetPowerByFullName(Summon);
+                    if (pID != null)
+                    {
+                        tGrant = " " + pID.DisplayName;
+                    }
+                    else
+                    {
+                        tGrant = " " + Summon;
+                    }
+                    sBuild = sEffect + tGrant + sTarget;
+                    break;
+                case Enums.eEffectType.GlobalChanceMod:
+                    sBuild = sMag + " " + sEffect + " " + Reward + sTarget + sDuration;
+                    break;
+                case Enums.eEffectType.ModifyAttrib:
+                    sSubEffect = Enum.GetName(PowerAttribs.GetType(), PowerAttribs);
+                    if (sSubEffect == "Accuracy")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrAccuracy} ({Convert.ToDecimal(AtrAccuracy * MidsContext.Config.BaseAcc * 100f):0.##}%)";
+                    }
+                    else if (sSubEffect == "ActivateInterval")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrActivatePeriod} second(s)";
+                    }
+                    else if (sSubEffect == "Arc")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrArc} degrees";
+                    }
+                    else if (sSubEffect == "CastTime")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrCastTime} second(s)";
+                    }
+                    else if (sSubEffect == "EffectArea")
+                    {
+                        sBuild =
+                            $"{sEffect}({sSubEffect}) to {Enum.GetName(typeof(Enums.eEffectArea), AtrEffectArea!)}";
+                    }
+                    else if (sSubEffect == "EnduranceCost")
+                    {
+                        sBuild =
+                            $"{sEffect}({sSubEffect}) to {AtrEnduranceCost} ({Convert.ToDecimal(AtrEnduranceCost / AtrActivatePeriod):0.##}/s)";
+                    }
+                    else if (sSubEffect == "InterruptTime")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrInterruptTime} second(s)";
+                    }
+                    else if (sSubEffect == "MaxTargets")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrMaxTargets} target(s)";
+                    }
+                    else if (sSubEffect == "Radius")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrRadius} feet";
+                    }
+                    else if (sSubEffect == "Range")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrRange} feet";
+                    }
+                    else if (sSubEffect == "RechargeTime")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrRechargeTime} second(s)";
+                    }
+                    else if (sSubEffect == "SecondaryRange")
+                    {
+                        sBuild = $"{sEffect}({sSubEffect}) to {AtrSecondaryRange} feet";
+                    }
+                    break;
+                default:
+                    sBuild = sMag + " " + sEffect + sTarget + sDuration;
+                    break;
+            }
+
+
+            var sExtra = string.Empty;
+            //(20% chance, non-resistible if target = player)
+            if (!string.IsNullOrEmpty(sChance + sResist + sPvx + sDelay + sSpecial + sToHit + sSuppressShort))
+            {
+                sExtra = BuildCs(sChance, sExtra);
+                sExtra = BuildCs(sDelay, sExtra);
+                sExtra = BuildCs(sSuppressShort, sExtra);
+                sExtra = BuildCs(sResist, sExtra);
+                if (!string.IsNullOrEmpty(sPvx))
+                {
+                    sExtra = !string.IsNullOrEmpty(sSpecial) ? BuildCs(sPvx + ", if " + sSpecial, sExtra, resistPresent) : BuildCs(sPvx, sExtra, resistPresent);
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(sSpecial))
+                        sExtra = BuildCs("if " + sSpecial, sExtra);
+                }
+                sExtra = BuildCs(sToHit, sExtra);
+                sExtra = " (" + sExtra + ")";
+            }
+            return sEnh + sBuild + sExtra + sBuff + sVariable + sStack + sSuppress;
+        }
+
+
         public void StoreTo(ref BinaryWriter writer)
         {
             writer.Write(PowerFullName);
@@ -1208,11 +1781,7 @@ namespace Base.Data_Classes
             writer.Write((int) Suppression);
             writer.Write(Buffable);
             writer.Write(Resistible);
-            //
             writer.Write((int) SpecialCase);
-            //writer.Write((int)SpecialOperator);
-            //writer.Write((int)SpecialCase2);
-            //
             writer.Write(VariableModifiedOverride);
             writer.Write((int) PvMode);
             writer.Write((int) ToWho);
@@ -1222,9 +1791,9 @@ namespace Base.Data_Classes
             writer.Write(nDuration);
             writer.Write((int) AttribType);
             writer.Write((int) Aspect);
-            DatabaseAPI.Database.EffectIds.RemoveRange(DatabaseAPI.Database.EffectIds.Count - NewEffects.Count,
+            /*DatabaseAPI.Database.EffectIds.RemoveRange(DatabaseAPI.Database.EffectIds.Count - NewEffects.Count,
                 NewEffects.Count);
-            DatabaseAPI.Database.EffectIds.AddRange(NewEffects.Except(DatabaseAPI.Database.EffectIds));
+            DatabaseAPI.Database.EffectIds.AddRange(NewEffects.Except(DatabaseAPI.Database.EffectIds));*/
             writer.Write(ModifierTable);
             writer.Write(NearGround);
             writer.Write(CancelOnMiss);
@@ -1237,6 +1806,19 @@ namespace Base.Data_Classes
             writer.Write(IgnoreED);
             writer.Write(Override);
             writer.Write(ProcsPerMinute);
+            writer.Write((int) PowerAttribs);
+            writer.Write(AtrAccuracy);
+            writer.Write(AtrActivatePeriod);
+            writer.Write(AtrArc);
+            writer.Write(AtrCastTime);
+            writer.Write((int)AtrEffectArea);
+            writer.Write(AtrEnduranceCost);
+            writer.Write(AtrInterruptTime);
+            writer.Write(AtrMaxTargets);
+            writer.Write(AtrRadius);
+            writer.Write(AtrRange);
+            writer.Write(AtrRechargeTime);
+            writer.Write(AtrSecondaryRange);
         }
 
         public bool ImportFromCSV(string iCSV)

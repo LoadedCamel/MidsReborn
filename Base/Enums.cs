@@ -312,7 +312,8 @@ public static class Enums
         SteamJump,
         Walk,
         XPDebt,
-        ForceMove
+        ForceMove,
+        ModifyAttrib
     }
 
     public enum eEffectTypeShort
@@ -400,7 +401,25 @@ public static class Enums
         SteamJump,
         Walk,
         XPDebt,
-        ForceMove
+        ForceMove,
+        ModifyAttrib
+    }
+
+    public enum ePowerAttribs
+    {
+        None,
+        Accuracy,
+        ActivateInterval,
+        Arc,
+        CastTime,
+        EffectArea,
+        EnduranceCost,
+        InterruptTime,
+        MaxTargets,
+        Radius,
+        Range,
+        RechargeTime,
+        SecondaryRange
     }
 
     public enum eEffMode
@@ -777,13 +796,6 @@ public static class Enums
         Tanker,
         UniversalDamage,
         Sentinel
-    }
-
-    public enum eSpecialOperator
-    {
-        None,
-        And,
-        Or
     }
 
     public enum eSpecialCase

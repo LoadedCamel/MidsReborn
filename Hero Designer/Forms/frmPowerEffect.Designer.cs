@@ -37,9 +37,6 @@ namespace Hero_Designer.Forms
             this.chkStack = new System.Windows.Forms.CheckBox();
             this.GroupBox3 = new System.Windows.Forms.GroupBox();
             this.clbSuppression = new System.Windows.Forms.CheckedListBox();
-            this.rbIfPlayer = new System.Windows.Forms.RadioButton();
-            this.rbIfCritter = new System.Windows.Forms.RadioButton();
-            this.rbIfAny = new System.Windows.Forms.RadioButton();
             this.chkFXResistable = new System.Windows.Forms.CheckBox();
             this.chkFXBuffable = new System.Windows.Forms.CheckBox();
             this.Label26 = new System.Windows.Forms.Label();
@@ -76,10 +73,8 @@ namespace Hero_Designer.Forms
             this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvSubAttribute = new System.Windows.Forms.ListView();
             this.chSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lblProb = new System.Windows.Forms.Label();
             this.lvSubSub = new System.Windows.Forms.ListView();
             this.chSubSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnCSV = new System.Windows.Forms.Button();
             this.Label9 = new System.Windows.Forms.Label();
             this.cmbEffectId = new System.Windows.Forms.ComboBox();
             this.IgnoreED = new System.Windows.Forms.CheckBox();
@@ -87,21 +82,6 @@ namespace Hero_Designer.Forms
             this.txtOverride = new System.Windows.Forms.TextBox();
             this.Label11 = new System.Windows.Forms.Label();
             this.txtPPM = new System.Windows.Forms.TextBox();
-            this.cbFXSpecialCase2 = new System.Windows.Forms.ComboBox();
-            this.cbFXOperator = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.removeConditional = new System.Windows.Forms.Button();
-            this.addConditional = new System.Windows.Forms.Button();
-            this.lvActiveConditionals = new System.Windows.Forms.ListView();
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvConditionalBool = new System.Windows.Forms.ListView();
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvConditionalType = new System.Windows.Forms.ListView();
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvSubConditional = new System.Windows.Forms.ListView();
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.cbModifier = new System.Windows.Forms.ComboBox();
@@ -113,9 +93,32 @@ namespace Hero_Designer.Forms
             this.label12 = new System.Windows.Forms.Label();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.tpPowerAttribs = new System.Windows.Forms.TableLayoutPanel();
+            this.txtMaxTargets = new System.Windows.Forms.Label();
+            this.txtArc = new System.Windows.Forms.Label();
+            this.txtEffectArea = new System.Windows.Forms.Label();
+            this.cbFXEffectArea = new System.Windows.Forms.ComboBox();
+            this.txtFXAccuracy = new System.Windows.Forms.TextBox();
+            this.txtRange = new System.Windows.Forms.Label();
+            this.txtAccuracy = new System.Windows.Forms.Label();
+            this.txtCastTime = new System.Windows.Forms.Label();
+            this.txtFXRange = new System.Windows.Forms.TextBox();
+            this.txtInterruptTime = new System.Windows.Forms.Label();
+            this.txtFXInterruptTime = new System.Windows.Forms.TextBox();
+            this.txtRechargeTime = new System.Windows.Forms.Label();
+            this.txtFXCastTime = new System.Windows.Forms.TextBox();
+            this.txtFXRechargeTime = new System.Windows.Forms.TextBox();
+            this.txtActivateInterval = new System.Windows.Forms.Label();
+            this.txtFXActivateInterval = new System.Windows.Forms.TextBox();
+            this.txtEnduranceCost = new System.Windows.Forms.Label();
+            this.txtFXEnduranceCost = new System.Windows.Forms.TextBox();
+            this.txtSecondaryRange = new System.Windows.Forms.Label();
+            this.txtRadius = new System.Windows.Forms.Label();
+            this.txtFXSecondaryRange = new System.Windows.Forms.TextBox();
+            this.txtFXRadius = new System.Windows.Forms.TextBox();
+            this.txtFXArc = new System.Windows.Forms.TextBox();
+            this.txtFXMaxTargets = new System.Windows.Forms.TextBox();
             this.GroupBox3.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -123,6 +126,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.tpPowerAttribs.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnPaste
@@ -149,7 +153,7 @@ namespace Hero_Designer.Forms
             this.chkStack.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkStack.Location = new System.Drawing.Point(3, 3);
             this.chkStack.Name = "chkStack";
-            this.chkStack.Size = new System.Drawing.Size(173, 20);
+            this.chkStack.Size = new System.Drawing.Size(222, 20);
             this.chkStack.TabIndex = 112;
             this.chkStack.Text = "Effect Can Stack";
             this.chkStack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -173,37 +177,7 @@ namespace Hero_Designer.Forms
             this.clbSuppression.Name = "clbSuppression";
             this.clbSuppression.Size = new System.Drawing.Size(200, 259);
             this.clbSuppression.TabIndex = 0;
-            //this.clbSuppression.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbSuppression_ItemCheck);
             this.clbSuppression.SelectedIndexChanged += new System.EventHandler(this.clbSuppression_SelectedIndexChanged);
-            // 
-            // rbIfPlayer
-            // 
-            this.rbIfPlayer.Location = new System.Drawing.Point(59, 19);
-            this.rbIfPlayer.Name = "rbIfPlayer";
-            this.rbIfPlayer.Size = new System.Drawing.Size(62, 20);
-            this.rbIfPlayer.TabIndex = 88;
-            this.rbIfPlayer.Text = "Players";
-            this.rbIfPlayer.CheckedChanged += new System.EventHandler(this.rbIfACP_CheckedChanged);
-            // 
-            // rbIfCritter
-            // 
-            this.rbIfCritter.Location = new System.Drawing.Point(127, 18);
-            this.rbIfCritter.Name = "rbIfCritter";
-            this.rbIfCritter.Size = new System.Drawing.Size(60, 20);
-            this.rbIfCritter.TabIndex = 87;
-            this.rbIfCritter.Text = "Critters";
-            this.rbIfCritter.CheckedChanged += new System.EventHandler(this.rbIfACP_CheckedChanged);
-            // 
-            // rbIfAny
-            // 
-            this.rbIfAny.Checked = true;
-            this.rbIfAny.Location = new System.Drawing.Point(6, 19);
-            this.rbIfAny.Name = "rbIfAny";
-            this.rbIfAny.Size = new System.Drawing.Size(47, 20);
-            this.rbIfAny.TabIndex = 86;
-            this.rbIfAny.TabStop = true;
-            this.rbIfAny.Text = "Any";
-            this.rbIfAny.CheckedChanged += new System.EventHandler(this.rbIfACP_CheckedChanged);
             // 
             // chkFXResistable
             // 
@@ -211,7 +185,7 @@ namespace Hero_Designer.Forms
             this.chkFXResistable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkFXResistable.Location = new System.Drawing.Point(3, 81);
             this.chkFXResistable.Name = "chkFXResistable";
-            this.chkFXResistable.Size = new System.Drawing.Size(173, 20);
+            this.chkFXResistable.Size = new System.Drawing.Size(222, 20);
             this.chkFXResistable.TabIndex = 90;
             this.chkFXResistable.Text = "Effect is Unresistible";
             this.chkFXResistable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -223,7 +197,7 @@ namespace Hero_Designer.Forms
             this.chkFXBuffable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkFXBuffable.Location = new System.Drawing.Point(3, 29);
             this.chkFXBuffable.Name = "chkFXBuffable";
-            this.chkFXBuffable.Size = new System.Drawing.Size(173, 20);
+            this.chkFXBuffable.Size = new System.Drawing.Size(222, 20);
             this.chkFXBuffable.TabIndex = 89;
             this.chkFXBuffable.Text = "Ignore Buffs / Enhancements";
             this.chkFXBuffable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -241,14 +215,10 @@ namespace Hero_Designer.Forms
             // 
             // txtFXProb
             // 
-            this.txtFXProb.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtFXProb.Location = new System.Drawing.Point(85, 161);
             this.txtFXProb.Name = "txtFXProb";
-            this.txtFXProb.Size = new System.Drawing.Size(91, 20);
-            this.txtFXProb.TabIndex = 85;
-            this.txtFXProb.Text = "1";
-            this.txtFXProb.TextChanged += new System.EventHandler(this.txtFXProb_TextChanged);
-            this.txtFXProb.Leave += new System.EventHandler(this.txtFXProb_Leave);
+            this.txtFXProb.Size = new System.Drawing.Size(100, 20);
+            this.txtFXProb.TabIndex = 156;
             // 
             // Label25
             // 
@@ -265,7 +235,7 @@ namespace Hero_Designer.Forms
             this.txtFXDelay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtFXDelay.Location = new System.Drawing.Point(85, 135);
             this.txtFXDelay.Name = "txtFXDelay";
-            this.txtFXDelay.Size = new System.Drawing.Size(91, 20);
+            this.txtFXDelay.Size = new System.Drawing.Size(140, 20);
             this.txtFXDelay.TabIndex = 84;
             this.txtFXDelay.Text = "0";
             this.txtFXDelay.TextChanged += new System.EventHandler(this.txtFXDelay_TextChanged);
@@ -286,7 +256,7 @@ namespace Hero_Designer.Forms
             this.txtFXTicks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtFXTicks.Location = new System.Drawing.Point(85, 109);
             this.txtFXTicks.Name = "txtFXTicks";
-            this.txtFXTicks.Size = new System.Drawing.Size(91, 20);
+            this.txtFXTicks.Size = new System.Drawing.Size(140, 20);
             this.txtFXTicks.TabIndex = 83;
             this.txtFXTicks.Text = "0";
             this.txtFXTicks.TextChanged += new System.EventHandler(this.txtFXTicks_TextChanged);
@@ -308,7 +278,7 @@ namespace Hero_Designer.Forms
             this.txtFXDuration.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtFXDuration.Location = new System.Drawing.Point(85, 57);
             this.txtFXDuration.Name = "txtFXDuration";
-            this.txtFXDuration.Size = new System.Drawing.Size(91, 20);
+            this.txtFXDuration.Size = new System.Drawing.Size(140, 20);
             this.txtFXDuration.TabIndex = 82;
             this.txtFXDuration.Text = "0";
             this.txtFXDuration.TextChanged += new System.EventHandler(this.txtFXDuration_TextChanged);
@@ -329,7 +299,7 @@ namespace Hero_Designer.Forms
             this.txtFXMag.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtFXMag.Location = new System.Drawing.Point(85, 83);
             this.txtFXMag.Name = "txtFXMag";
-            this.txtFXMag.Size = new System.Drawing.Size(91, 20);
+            this.txtFXMag.Size = new System.Drawing.Size(140, 20);
             this.txtFXMag.TabIndex = 80;
             this.txtFXMag.Text = "0";
             this.txtFXMag.TextChanged += new System.EventHandler(this.txtFXMag_TextChanged);
@@ -347,13 +317,12 @@ namespace Hero_Designer.Forms
             // 
             // Label30
             // 
-            this.Label30.Location = new System.Drawing.Point(9, 738);
+            this.Label30.Location = new System.Drawing.Point(502, 709);
             this.Label30.Name = "Label30";
-            this.Label30.Size = new System.Drawing.Size(92, 20);
+            this.Label30.Size = new System.Drawing.Size(79, 20);
             this.Label30.TabIndex = 105;
-            this.Label30.Text = "Special Case(s):";
+            this.Label30.Text = "Special Case:";
             this.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Label30.Visible = false;
             // 
             // cbFXClass
             // 
@@ -368,17 +337,16 @@ namespace Hero_Designer.Forms
             // cbFXSpecialCase
             // 
             this.cbFXSpecialCase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXSpecialCase.Location = new System.Drawing.Point(1046, 101);
+            this.cbFXSpecialCase.Location = new System.Drawing.Point(587, 709);
             this.cbFXSpecialCase.Name = "cbFXSpecialCase";
             this.cbFXSpecialCase.Size = new System.Drawing.Size(136, 22);
             this.cbFXSpecialCase.TabIndex = 94;
-            this.cbFXSpecialCase.Visible = false;
             this.cbFXSpecialCase.SelectedIndexChanged += new System.EventHandler(this.cbFXSpecialCase_SelectedIndexChanged);
             // 
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(111, 152);
+            this.btnOK.Location = new System.Drawing.Point(111, 109);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(96, 36);
             this.btnOK.TabIndex = 119;
@@ -388,7 +356,7 @@ namespace Hero_Designer.Forms
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(3, 152);
+            this.btnCancel.Location = new System.Drawing.Point(3, 109);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(96, 36);
             this.btnCancel.TabIndex = 118;
@@ -400,14 +368,14 @@ namespace Hero_Designer.Forms
             this.lblEffectDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblEffectDescription.Location = new System.Drawing.Point(12, 9);
             this.lblEffectDescription.Name = "lblEffectDescription";
-            this.lblEffectDescription.Size = new System.Drawing.Size(1240, 89);
+            this.lblEffectDescription.Size = new System.Drawing.Size(1240, 112);
             this.lblEffectDescription.TabIndex = 120;
             this.lblEffectDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblEffectDescription.UseMnemonic = false;
             // 
             // chkVariable
             // 
-            this.chkVariable.Location = new System.Drawing.Point(613, 107);
+            this.chkVariable.Location = new System.Drawing.Point(613, 129);
             this.chkVariable.Name = "chkVariable";
             this.chkVariable.Size = new System.Drawing.Size(178, 19);
             this.chkVariable.TabIndex = 126;
@@ -421,7 +389,7 @@ namespace Hero_Designer.Forms
             this.cbPercentageOverride.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPercentageOverride.Location = new System.Drawing.Point(85, 3);
             this.cbPercentageOverride.Name = "cbPercentageOverride";
-            this.cbPercentageOverride.Size = new System.Drawing.Size(91, 22);
+            this.cbPercentageOverride.Size = new System.Drawing.Size(140, 22);
             this.cbPercentageOverride.TabIndex = 127;
             this.cbPercentageOverride.SelectedIndexChanged += new System.EventHandler(this.cbPercentageOverride_SelectedIndexChanged);
             // 
@@ -452,7 +420,7 @@ namespace Hero_Designer.Forms
             this.txtFXScale.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtFXScale.Location = new System.Drawing.Point(85, 31);
             this.txtFXScale.Name = "txtFXScale";
-            this.txtFXScale.Size = new System.Drawing.Size(91, 20);
+            this.txtFXScale.Size = new System.Drawing.Size(140, 20);
             this.txtFXScale.TabIndex = 129;
             this.txtFXScale.Text = "0";
             this.txtFXScale.TextChanged += new System.EventHandler(this.txtFXScale_TextChanged);
@@ -474,7 +442,7 @@ namespace Hero_Designer.Forms
             this.cbAffects.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAffects.Location = new System.Drawing.Point(85, 3);
             this.cbAffects.Name = "cbAffects";
-            this.cbAffects.Size = new System.Drawing.Size(91, 22);
+            this.cbAffects.Size = new System.Drawing.Size(140, 22);
             this.cbAffects.TabIndex = 131;
             this.cbAffects.SelectedIndexChanged += new System.EventHandler(this.cbAffects_SelectedIndexChanged);
             // 
@@ -494,7 +462,7 @@ namespace Hero_Designer.Forms
             this.cbAttribute.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAttribute.Location = new System.Drawing.Point(85, 213);
             this.cbAttribute.Name = "cbAttribute";
-            this.cbAttribute.Size = new System.Drawing.Size(91, 22);
+            this.cbAttribute.Size = new System.Drawing.Size(140, 22);
             this.cbAttribute.TabIndex = 133;
             this.cbAttribute.SelectedIndexChanged += new System.EventHandler(this.cbAttribute_SelectedIndexChanged);
             // 
@@ -514,7 +482,7 @@ namespace Hero_Designer.Forms
             this.cbAspect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAspect.Location = new System.Drawing.Point(85, 241);
             this.cbAspect.Name = "cbAspect";
-            this.cbAspect.Size = new System.Drawing.Size(91, 22);
+            this.cbAspect.Size = new System.Drawing.Size(140, 22);
             this.cbAspect.TabIndex = 135;
             this.cbAspect.SelectedIndexChanged += new System.EventHandler(this.cbAspect_SelectedIndexChanged);
             // 
@@ -524,7 +492,7 @@ namespace Hero_Designer.Forms
             this.chkNearGround.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkNearGround.Location = new System.Drawing.Point(3, 107);
             this.chkNearGround.Name = "chkNearGround";
-            this.chkNearGround.Size = new System.Drawing.Size(173, 26);
+            this.chkNearGround.Size = new System.Drawing.Size(222, 26);
             this.chkNearGround.TabIndex = 139;
             this.chkNearGround.Text = "Target must be Near Ground";
             this.chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -534,7 +502,7 @@ namespace Hero_Designer.Forms
             this.lblAffectsCaster.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblAffectsCaster.Location = new System.Drawing.Point(85, 28);
             this.lblAffectsCaster.Name = "lblAffectsCaster";
-            this.lblAffectsCaster.Size = new System.Drawing.Size(91, 32);
+            this.lblAffectsCaster.Size = new System.Drawing.Size(140, 32);
             this.lblAffectsCaster.TabIndex = 140;
             this.lblAffectsCaster.Text = "Power also affects caster";
             this.lblAffectsCaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -546,10 +514,10 @@ namespace Hero_Designer.Forms
             this.lvEffectType.FullRowSelect = true;
             this.lvEffectType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvEffectType.HideSelection = false;
-            this.lvEffectType.Location = new System.Drawing.Point(197, 158);
+            this.lvEffectType.Location = new System.Drawing.Point(246, 158);
             this.lvEffectType.MultiSelect = false;
             this.lvEffectType.Name = "lvEffectType";
-            this.lvEffectType.Size = new System.Drawing.Size(275, 275);
+            this.lvEffectType.Size = new System.Drawing.Size(226, 545);
             this.lvEffectType.TabIndex = 141;
             this.lvEffectType.UseCompatibleStateImageBehavior = false;
             this.lvEffectType.View = System.Windows.Forms.View.Details;
@@ -570,7 +538,7 @@ namespace Hero_Designer.Forms
             this.lvSubAttribute.Location = new System.Drawing.Point(478, 158);
             this.lvSubAttribute.MultiSelect = false;
             this.lvSubAttribute.Name = "lvSubAttribute";
-            this.lvSubAttribute.Size = new System.Drawing.Size(275, 275);
+            this.lvSubAttribute.Size = new System.Drawing.Size(275, 545);
             this.lvSubAttribute.TabIndex = 142;
             this.lvSubAttribute.UseCompatibleStateImageBehavior = false;
             this.lvSubAttribute.View = System.Windows.Forms.View.Details;
@@ -580,16 +548,6 @@ namespace Hero_Designer.Forms
             // 
             this.chSub.Text = "Sub-Attribute";
             this.chSub.Width = 254;
-            // 
-            // lblProb
-            // 
-            this.lblProb.Location = new System.Drawing.Point(107, 738);
-            this.lblProb.Name = "lblProb";
-            this.lblProb.Size = new System.Drawing.Size(50, 20);
-            this.lblProb.TabIndex = 143;
-            this.lblProb.Text = "(100%)";
-            this.lblProb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblProb.Visible = false;
             // 
             // lvSubSub
             // 
@@ -601,7 +559,7 @@ namespace Hero_Designer.Forms
             this.lvSubSub.Location = new System.Drawing.Point(759, 158);
             this.lvSubSub.MultiSelect = false;
             this.lvSubSub.Name = "lvSubSub";
-            this.lvSubSub.Size = new System.Drawing.Size(275, 275);
+            this.lvSubSub.Size = new System.Drawing.Size(275, 545);
             this.lvSubSub.TabIndex = 144;
             this.lvSubSub.UseCompatibleStateImageBehavior = false;
             this.lvSubSub.View = System.Windows.Forms.View.Details;
@@ -611,15 +569,6 @@ namespace Hero_Designer.Forms
             // 
             this.chSubSub.Text = "Sub-Sub";
             this.chSubSub.Width = 254;
-            // 
-            // btnCSV
-            // 
-            this.btnCSV.Location = new System.Drawing.Point(43, 86);
-            this.btnCSV.Name = "btnCSV";
-            this.btnCSV.Size = new System.Drawing.Size(135, 26);
-            this.btnCSV.TabIndex = 147;
-            this.btnCSV.Text = "Import from CSV String";
-            this.btnCSV.Click += new System.EventHandler(this.btnCSV_Click);
             // 
             // Label9
             // 
@@ -645,7 +594,7 @@ namespace Hero_Designer.Forms
             this.IgnoreED.Dock = System.Windows.Forms.DockStyle.Fill;
             this.IgnoreED.Location = new System.Drawing.Point(3, 55);
             this.IgnoreED.Name = "IgnoreED";
-            this.IgnoreED.Size = new System.Drawing.Size(173, 20);
+            this.IgnoreED.Size = new System.Drawing.Size(222, 20);
             this.IgnoreED.TabIndex = 151;
             this.IgnoreED.Text = "Ignore ED";
             this.IgnoreED.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -653,7 +602,7 @@ namespace Hero_Designer.Forms
             // 
             // Label10
             // 
-            this.Label10.Location = new System.Drawing.Point(1076, 500);
+            this.Label10.Location = new System.Drawing.Point(1076, 523);
             this.Label10.Name = "Label10";
             this.Label10.Size = new System.Drawing.Size(143, 19);
             this.Label10.TabIndex = 152;
@@ -662,7 +611,7 @@ namespace Hero_Designer.Forms
             // 
             // txtOverride
             // 
-            this.txtOverride.Location = new System.Drawing.Point(1062, 522);
+            this.txtOverride.Location = new System.Drawing.Point(1062, 545);
             this.txtOverride.Name = "txtOverride";
             this.txtOverride.Size = new System.Drawing.Size(166, 20);
             this.txtOverride.TabIndex = 153;
@@ -683,174 +632,17 @@ namespace Hero_Designer.Forms
             this.txtPPM.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtPPM.Location = new System.Drawing.Point(85, 187);
             this.txtPPM.Name = "txtPPM";
-            this.txtPPM.Size = new System.Drawing.Size(91, 20);
+            this.txtPPM.Size = new System.Drawing.Size(140, 20);
             this.txtPPM.TabIndex = 154;
             this.txtPPM.Text = "0";
             this.txtPPM.TextChanged += new System.EventHandler(this.txtPPM_TextChanged);
             this.txtPPM.Leave += new System.EventHandler(this.txtPPM_Leave);
             // 
-            // cbFXSpecialCase2
-            // 
-            this.cbFXSpecialCase2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXSpecialCase2.Location = new System.Drawing.Point(12, 105);
-            this.cbFXSpecialCase2.Name = "cbFXSpecialCase2";
-            this.cbFXSpecialCase2.Size = new System.Drawing.Size(136, 22);
-            this.cbFXSpecialCase2.TabIndex = 156;
-            this.cbFXSpecialCase2.Visible = false;
-            this.cbFXSpecialCase2.SelectedIndexChanged += new System.EventHandler(this.cbFXSpecialCase2_SelectedIndexChanged);
-            // 
-            // cbFXOperator
-            // 
-            this.cbFXOperator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXOperator.Location = new System.Drawing.Point(1190, 101);
-            this.cbFXOperator.Name = "cbFXOperator";
-            this.cbFXOperator.Size = new System.Drawing.Size(62, 22);
-            this.cbFXOperator.TabIndex = 157;
-            this.cbFXOperator.Visible = false;
-            this.cbFXOperator.SelectedIndexChanged += new System.EventHandler(this.cbFXOperator_SelectedIndexChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.rbIfAny);
-            this.groupBox1.Controls.Add(this.rbIfCritter);
-            this.groupBox1.Controls.Add(this.rbIfPlayer);
-            this.groupBox1.Enabled = false;
-            this.groupBox1.Location = new System.Drawing.Point(834, 101);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(189, 45);
-            this.groupBox1.TabIndex = 158;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "If Target =";
-            this.groupBox1.Visible = false;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.removeConditional);
-            this.groupBox2.Controls.Add(this.addConditional);
-            this.groupBox2.Controls.Add(this.lvActiveConditionals);
-            this.groupBox2.Controls.Add(this.lvConditionalBool);
-            this.groupBox2.Controls.Add(this.lvConditionalType);
-            this.groupBox2.Controls.Add(this.lvSubConditional);
-            this.groupBox2.Location = new System.Drawing.Point(197, 437);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(837, 314);
-            this.groupBox2.TabIndex = 160;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Conditionals";
-            // 
-            // removeConditional
-            // 
-            this.removeConditional.Location = new System.Drawing.Point(585, 279);
-            this.removeConditional.Name = "removeConditional";
-            this.removeConditional.Size = new System.Drawing.Size(246, 29);
-            this.removeConditional.TabIndex = 165;
-            this.removeConditional.Text = "Remove Selected Conditional";
-            this.removeConditional.UseVisualStyleBackColor = true;
-            this.removeConditional.Click += new System.EventHandler(this.removeConditional_Click);
-            // 
-            // addConditional
-            // 
-            this.addConditional.Location = new System.Drawing.Point(460, 279);
-            this.addConditional.Name = "addConditional";
-            this.addConditional.Size = new System.Drawing.Size(119, 29);
-            this.addConditional.TabIndex = 164;
-            this.addConditional.Text = "Add Conditional";
-            this.addConditional.UseVisualStyleBackColor = true;
-            this.addConditional.Click += new System.EventHandler(this.addConditional_Click);
-            // 
-            // lvActiveConditionals
-            // 
-            this.lvActiveConditionals.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6});
-            this.lvActiveConditionals.FullRowSelect = true;
-            this.lvActiveConditionals.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvActiveConditionals.HideSelection = false;
-            this.lvActiveConditionals.Location = new System.Drawing.Point(585, 14);
-            this.lvActiveConditionals.MultiSelect = false;
-            this.lvActiveConditionals.Name = "lvActiveConditionals";
-            this.lvActiveConditionals.Size = new System.Drawing.Size(246, 259);
-            this.lvActiveConditionals.TabIndex = 163;
-            this.lvActiveConditionals.UseCompatibleStateImageBehavior = false;
-            this.lvActiveConditionals.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Active Conditional";
-            this.columnHeader5.Width = 170;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Value";
-            // 
-            // lvConditionalBool
-            // 
-            this.lvConditionalBool.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader4});
-            this.lvConditionalBool.Enabled = false;
-            this.lvConditionalBool.FullRowSelect = true;
-            this.lvConditionalBool.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvConditionalBool.HideSelection = false;
-            this.lvConditionalBool.Location = new System.Drawing.Point(460, 14);
-            this.lvConditionalBool.MultiSelect = false;
-            this.lvConditionalBool.Name = "lvConditionalBool";
-            this.lvConditionalBool.Size = new System.Drawing.Size(119, 259);
-            this.lvConditionalBool.TabIndex = 162;
-            this.lvConditionalBool.UseCompatibleStateImageBehavior = false;
-            this.lvConditionalBool.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Conditional Boolean";
-            this.columnHeader4.Width = 105;
-            // 
-            // lvConditionalType
-            // 
-            this.lvConditionalType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3});
-            this.lvConditionalType.FullRowSelect = true;
-            this.lvConditionalType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvConditionalType.HideSelection = false;
-            this.lvConditionalType.Location = new System.Drawing.Point(6, 14);
-            this.lvConditionalType.MultiSelect = false;
-            this.lvConditionalType.Name = "lvConditionalType";
-            this.lvConditionalType.Size = new System.Drawing.Size(116, 294);
-            this.lvConditionalType.TabIndex = 161;
-            this.lvConditionalType.UseCompatibleStateImageBehavior = false;
-            this.lvConditionalType.View = System.Windows.Forms.View.Details;
-            this.lvConditionalType.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvConditionalType_SelectionChanged);
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Effect Conditional";
-            this.columnHeader3.Width = 102;
-            // 
-            // lvSubConditional
-            // 
-            this.lvSubConditional.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader2});
-            this.lvSubConditional.FullRowSelect = true;
-            this.lvSubConditional.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSubConditional.HideSelection = false;
-            this.lvSubConditional.Location = new System.Drawing.Point(128, 14);
-            this.lvSubConditional.MultiSelect = false;
-            this.lvSubConditional.Name = "lvSubConditional";
-            this.lvSubConditional.Size = new System.Drawing.Size(326, 294);
-            this.lvSubConditional.TabIndex = 160;
-            this.lvSubConditional.UseCompatibleStateImageBehavior = false;
-            this.lvSubConditional.View = System.Windows.Forms.View.Details;
-            this.lvSubConditional.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvSubConditional_SelectionChanged);
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Sub-Conditional Attribute";
-            this.columnHeader2.Width = 202;
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 82F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96F));
             this.tableLayoutPanel1.Controls.Add(this.Label2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.cbPercentageOverride, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtFXScale, 1, 1);
@@ -889,7 +681,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(179, 275);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(228, 275);
             this.tableLayoutPanel1.TabIndex = 161;
             // 
             // tableLayoutPanel2
@@ -904,7 +696,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 32.55814F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 67.44186F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(179, 43);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(228, 43);
             this.tableLayoutPanel2.TabIndex = 162;
             // 
             // cbModifier
@@ -913,7 +705,7 @@ namespace Hero_Designer.Forms
             this.cbModifier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbModifier.Location = new System.Drawing.Point(3, 17);
             this.cbModifier.Name = "cbModifier";
-            this.cbModifier.Size = new System.Drawing.Size(173, 22);
+            this.cbModifier.Size = new System.Drawing.Size(222, 22);
             this.cbModifier.TabIndex = 137;
             this.cbModifier.SelectedIndexChanged += new System.EventHandler(this.cbModifier_SelectedIndexChanged);
             // 
@@ -922,7 +714,7 @@ namespace Hero_Designer.Forms
             this.Label6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Label6.Location = new System.Drawing.Point(3, 0);
             this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(173, 14);
+            this.Label6.Size = new System.Drawing.Size(222, 14);
             this.Label6.TabIndex = 138;
             this.Label6.Text = "Modifier Table:";
             this.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -953,7 +745,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(179, 63);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(228, 63);
             this.tableLayoutPanel3.TabIndex = 163;
             // 
             // tableLayoutPanel4
@@ -975,21 +767,21 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(179, 136);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(228, 136);
             this.tableLayoutPanel4.TabIndex = 164;
             // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.08911F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.91089F));
             this.tableLayoutPanel5.Controls.Add(this.cbTarget, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.label12, 0, 0);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(12, 557);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(179, 33);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(228, 33);
             this.tableLayoutPanel5.TabIndex = 165;
             // 
             // cbTarget
@@ -1000,9 +792,9 @@ namespace Hero_Designer.Forms
             "Any",
             "Mobs",
             "Players"});
-            this.cbTarget.Location = new System.Drawing.Point(92, 3);
+            this.cbTarget.Location = new System.Drawing.Point(96, 3);
             this.cbTarget.Name = "cbTarget";
-            this.cbTarget.Size = new System.Drawing.Size(84, 22);
+            this.cbTarget.Size = new System.Drawing.Size(129, 22);
             this.cbTarget.TabIndex = 166;
             this.cbTarget.SelectedIndexChanged += new System.EventHandler(this.cbTarget_IndexChanged);
             // 
@@ -1011,7 +803,7 @@ namespace Hero_Designer.Forms
             this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label12.Location = new System.Drawing.Point(3, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(83, 33);
+            this.label12.Size = new System.Drawing.Size(87, 33);
             this.label12.TabIndex = 166;
             this.label12.Text = "Target:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1024,7 +816,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel6.Controls.Add(this.Label28, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.cbFXClass, 1, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(415, 101);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(415, 124);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -1036,18 +828,314 @@ namespace Hero_Designer.Forms
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.btnCopy);
             this.panel1.Controls.Add(this.btnPaste);
-            this.panel1.Controls.Add(this.btnCSV);
             this.panel1.Controls.Add(this.btnOK);
             this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Location = new System.Drawing.Point(1040, 558);
+            this.panel1.Location = new System.Drawing.Point(1040, 580);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(212, 193);
+            this.panel1.Size = new System.Drawing.Size(212, 152);
             this.panel1.TabIndex = 167;
+            // 
+            // tpPowerAttribs
+            // 
+            this.tpPowerAttribs.ColumnCount = 2;
+            this.tpPowerAttribs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 117F));
+            this.tpPowerAttribs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            this.tpPowerAttribs.Controls.Add(this.txtMaxTargets, 0, 14);
+            this.tpPowerAttribs.Controls.Add(this.txtArc, 0, 13);
+            this.tpPowerAttribs.Controls.Add(this.txtEffectArea, 0, 0);
+            this.tpPowerAttribs.Controls.Add(this.cbFXEffectArea, 1, 0);
+            this.tpPowerAttribs.Controls.Add(this.txtFXAccuracy, 1, 1);
+            this.tpPowerAttribs.Controls.Add(this.txtRange, 0, 7);
+            this.tpPowerAttribs.Controls.Add(this.txtAccuracy, 0, 1);
+            this.tpPowerAttribs.Controls.Add(this.txtCastTime, 0, 3);
+            this.tpPowerAttribs.Controls.Add(this.txtFXRange, 1, 7);
+            this.tpPowerAttribs.Controls.Add(this.txtInterruptTime, 0, 2);
+            this.tpPowerAttribs.Controls.Add(this.txtFXInterruptTime, 1, 2);
+            this.tpPowerAttribs.Controls.Add(this.txtRechargeTime, 0, 4);
+            this.tpPowerAttribs.Controls.Add(this.txtFXCastTime, 1, 3);
+            this.tpPowerAttribs.Controls.Add(this.txtFXRechargeTime, 1, 4);
+            this.tpPowerAttribs.Controls.Add(this.txtActivateInterval, 0, 5);
+            this.tpPowerAttribs.Controls.Add(this.txtFXActivateInterval, 1, 5);
+            this.tpPowerAttribs.Controls.Add(this.txtEnduranceCost, 0, 6);
+            this.tpPowerAttribs.Controls.Add(this.txtFXEnduranceCost, 1, 6);
+            this.tpPowerAttribs.Controls.Add(this.txtSecondaryRange, 0, 8);
+            this.tpPowerAttribs.Controls.Add(this.txtRadius, 0, 9);
+            this.tpPowerAttribs.Controls.Add(this.txtFXSecondaryRange, 1, 8);
+            this.tpPowerAttribs.Controls.Add(this.txtFXRadius, 1, 9);
+            this.tpPowerAttribs.Controls.Add(this.txtFXArc, 1, 13);
+            this.tpPowerAttribs.Controls.Add(this.txtFXMaxTargets, 1, 14);
+            this.tpPowerAttribs.Location = new System.Drawing.Point(12, 158);
+            this.tpPowerAttribs.Name = "tpPowerAttribs";
+            this.tpPowerAttribs.RowCount = 15;
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tpPowerAttribs.Size = new System.Drawing.Size(228, 320);
+            this.tpPowerAttribs.TabIndex = 168;
+            this.tpPowerAttribs.Visible = false;
+            // 
+            // txtMaxTargets
+            // 
+            this.txtMaxTargets.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtMaxTargets.Location = new System.Drawing.Point(3, 293);
+            this.txtMaxTargets.Name = "txtMaxTargets";
+            this.txtMaxTargets.Size = new System.Drawing.Size(111, 27);
+            this.txtMaxTargets.TabIndex = 161;
+            this.txtMaxTargets.Text = "Max Targets:";
+            this.txtMaxTargets.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtArc
+            // 
+            this.txtArc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtArc.Location = new System.Drawing.Point(3, 266);
+            this.txtArc.Name = "txtArc";
+            this.txtArc.Size = new System.Drawing.Size(111, 27);
+            this.txtArc.TabIndex = 156;
+            this.txtArc.Text = "Arc:";
+            this.txtArc.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtEffectArea
+            // 
+            this.txtEffectArea.AutoSize = true;
+            this.txtEffectArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtEffectArea.Location = new System.Drawing.Point(3, 0);
+            this.txtEffectArea.Name = "txtEffectArea";
+            this.txtEffectArea.Size = new System.Drawing.Size(111, 28);
+            this.txtEffectArea.TabIndex = 128;
+            this.txtEffectArea.Text = "Effect Area:";
+            this.txtEffectArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cbFXEffectArea
+            // 
+            this.cbFXEffectArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cbFXEffectArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFXEffectArea.Location = new System.Drawing.Point(120, 3);
+            this.cbFXEffectArea.Name = "cbFXEffectArea";
+            this.cbFXEffectArea.Size = new System.Drawing.Size(105, 22);
+            this.cbFXEffectArea.TabIndex = 127;
+            this.cbFXEffectArea.SelectedIndexChanged += new System.EventHandler(this.cbFXEffectArea_SelectedIndexChanged);
+            // 
+            // txtFXAccuracy
+            // 
+            this.txtFXAccuracy.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXAccuracy.Location = new System.Drawing.Point(120, 31);
+            this.txtFXAccuracy.Name = "txtFXAccuracy";
+            this.txtFXAccuracy.Size = new System.Drawing.Size(105, 20);
+            this.txtFXAccuracy.TabIndex = 129;
+            this.txtFXAccuracy.Text = "0";
+            this.txtFXAccuracy.TextChanged += new System.EventHandler(this.txtFXAccuracy_TextChanged);
+            // 
+            // txtRange
+            // 
+            this.txtRange.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtRange.Location = new System.Drawing.Point(3, 184);
+            this.txtRange.Name = "txtRange";
+            this.txtRange.Size = new System.Drawing.Size(111, 26);
+            this.txtRange.TabIndex = 155;
+            this.txtRange.Text = "Range:";
+            this.txtRange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtAccuracy
+            // 
+            this.txtAccuracy.AutoSize = true;
+            this.txtAccuracy.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAccuracy.Location = new System.Drawing.Point(3, 28);
+            this.txtAccuracy.Name = "txtAccuracy";
+            this.txtAccuracy.Size = new System.Drawing.Size(111, 26);
+            this.txtAccuracy.TabIndex = 130;
+            this.txtAccuracy.Text = "Accuracy:";
+            this.txtAccuracy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtCastTime
+            // 
+            this.txtCastTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCastTime.Location = new System.Drawing.Point(3, 80);
+            this.txtCastTime.Name = "txtCastTime";
+            this.txtCastTime.Size = new System.Drawing.Size(111, 26);
+            this.txtCastTime.TabIndex = 97;
+            this.txtCastTime.Text = "Casting Time:";
+            this.txtCastTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtFXRange
+            // 
+            this.txtFXRange.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXRange.Location = new System.Drawing.Point(120, 187);
+            this.txtFXRange.Name = "txtFXRange";
+            this.txtFXRange.Size = new System.Drawing.Size(105, 20);
+            this.txtFXRange.TabIndex = 154;
+            this.txtFXRange.Text = "0";
+            this.txtFXRange.TextChanged += new System.EventHandler(this.txtFXRange_TextChanged);
+            // 
+            // txtInterruptTime
+            // 
+            this.txtInterruptTime.AutoSize = true;
+            this.txtInterruptTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtInterruptTime.Location = new System.Drawing.Point(3, 54);
+            this.txtInterruptTime.Name = "txtInterruptTime";
+            this.txtInterruptTime.Size = new System.Drawing.Size(111, 26);
+            this.txtInterruptTime.TabIndex = 98;
+            this.txtInterruptTime.Text = "Interruptable Time:";
+            this.txtInterruptTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtFXInterruptTime
+            // 
+            this.txtFXInterruptTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXInterruptTime.Location = new System.Drawing.Point(120, 57);
+            this.txtFXInterruptTime.Name = "txtFXInterruptTime";
+            this.txtFXInterruptTime.Size = new System.Drawing.Size(105, 20);
+            this.txtFXInterruptTime.TabIndex = 82;
+            this.txtFXInterruptTime.Text = "0";
+            this.txtFXInterruptTime.TextChanged += new System.EventHandler(this.txtFXInterruptTime_TextChanged);
+            // 
+            // txtRechargeTime
+            // 
+            this.txtRechargeTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtRechargeTime.Location = new System.Drawing.Point(3, 106);
+            this.txtRechargeTime.Name = "txtRechargeTime";
+            this.txtRechargeTime.Size = new System.Drawing.Size(111, 26);
+            this.txtRechargeTime.TabIndex = 99;
+            this.txtRechargeTime.Text = "Recharge Time:";
+            this.txtRechargeTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtFXCastTime
+            // 
+            this.txtFXCastTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXCastTime.Location = new System.Drawing.Point(120, 83);
+            this.txtFXCastTime.Name = "txtFXCastTime";
+            this.txtFXCastTime.Size = new System.Drawing.Size(105, 20);
+            this.txtFXCastTime.TabIndex = 80;
+            this.txtFXCastTime.Text = "0";
+            this.txtFXCastTime.TextChanged += new System.EventHandler(this.txtFXCastTime_TextChanged);
+            // 
+            // txtFXRechargeTime
+            // 
+            this.txtFXRechargeTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXRechargeTime.Location = new System.Drawing.Point(120, 109);
+            this.txtFXRechargeTime.Name = "txtFXRechargeTime";
+            this.txtFXRechargeTime.Size = new System.Drawing.Size(105, 20);
+            this.txtFXRechargeTime.TabIndex = 83;
+            this.txtFXRechargeTime.Text = "0";
+            this.txtFXRechargeTime.TextChanged += new System.EventHandler(this.txtFXRechargeTime_TextChanged);
+            // 
+            // txtActivateInterval
+            // 
+            this.txtActivateInterval.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtActivateInterval.Location = new System.Drawing.Point(3, 132);
+            this.txtActivateInterval.Name = "txtActivateInterval";
+            this.txtActivateInterval.Size = new System.Drawing.Size(111, 26);
+            this.txtActivateInterval.TabIndex = 100;
+            this.txtActivateInterval.Text = "Activate Interval:";
+            this.txtActivateInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtFXActivateInterval
+            // 
+            this.txtFXActivateInterval.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXActivateInterval.Location = new System.Drawing.Point(120, 135);
+            this.txtFXActivateInterval.Name = "txtFXActivateInterval";
+            this.txtFXActivateInterval.Size = new System.Drawing.Size(105, 20);
+            this.txtFXActivateInterval.TabIndex = 84;
+            this.txtFXActivateInterval.Text = "0";
+            this.txtFXActivateInterval.TextChanged += new System.EventHandler(this.txtFXActivateInterval_TextChanged);
+            // 
+            // txtEnduranceCost
+            // 
+            this.txtEnduranceCost.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtEnduranceCost.Location = new System.Drawing.Point(3, 158);
+            this.txtEnduranceCost.Name = "txtEnduranceCost";
+            this.txtEnduranceCost.Size = new System.Drawing.Size(111, 26);
+            this.txtEnduranceCost.TabIndex = 101;
+            this.txtEnduranceCost.Text = "Endurance Cost:";
+            this.txtEnduranceCost.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtFXEnduranceCost
+            // 
+            this.txtFXEnduranceCost.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXEnduranceCost.Location = new System.Drawing.Point(120, 161);
+            this.txtFXEnduranceCost.Name = "txtFXEnduranceCost";
+            this.txtFXEnduranceCost.Size = new System.Drawing.Size(105, 20);
+            this.txtFXEnduranceCost.TabIndex = 85;
+            this.txtFXEnduranceCost.Text = "1";
+            this.txtFXEnduranceCost.TextChanged += new System.EventHandler(this.txtFXEnduranceCost_TextChanged);
+            // 
+            // txtSecondaryRange
+            // 
+            this.txtSecondaryRange.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSecondaryRange.Location = new System.Drawing.Point(3, 210);
+            this.txtSecondaryRange.Name = "txtSecondaryRange";
+            this.txtSecondaryRange.Size = new System.Drawing.Size(111, 28);
+            this.txtSecondaryRange.TabIndex = 134;
+            this.txtSecondaryRange.Text = "Secondary Range:";
+            this.txtSecondaryRange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtRadius
+            // 
+            this.txtRadius.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtRadius.Location = new System.Drawing.Point(3, 238);
+            this.txtRadius.Name = "txtRadius";
+            this.txtRadius.Size = new System.Drawing.Size(111, 28);
+            this.txtRadius.TabIndex = 136;
+            this.txtRadius.Text = "Radius:";
+            this.txtRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtFXSecondaryRange
+            // 
+            this.txtFXSecondaryRange.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXSecondaryRange.Location = new System.Drawing.Point(120, 213);
+            this.txtFXSecondaryRange.Name = "txtFXSecondaryRange";
+            this.txtFXSecondaryRange.Size = new System.Drawing.Size(105, 20);
+            this.txtFXSecondaryRange.TabIndex = 157;
+            this.txtFXSecondaryRange.Text = "0";
+            this.txtFXSecondaryRange.TextChanged += new System.EventHandler(this.txtFXSecondaryRange_TextChanged);
+            // 
+            // txtFXRadius
+            // 
+            this.txtFXRadius.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXRadius.Location = new System.Drawing.Point(120, 241);
+            this.txtFXRadius.Name = "txtFXRadius";
+            this.txtFXRadius.Size = new System.Drawing.Size(105, 20);
+            this.txtFXRadius.TabIndex = 158;
+            this.txtFXRadius.Text = "0";
+            this.txtFXRadius.TextChanged += new System.EventHandler(this.txtFXRadius_TextChanged);
+            // 
+            // txtFXArc
+            // 
+            this.txtFXArc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXArc.Location = new System.Drawing.Point(120, 269);
+            this.txtFXArc.Name = "txtFXArc";
+            this.txtFXArc.Size = new System.Drawing.Size(105, 20);
+            this.txtFXArc.TabIndex = 159;
+            this.txtFXArc.Text = "0";
+            this.txtFXArc.TextChanged += new System.EventHandler(this.txtFXArc_TextChanged);
+            // 
+            // txtFXMaxTargets
+            // 
+            this.txtFXMaxTargets.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtFXMaxTargets.Location = new System.Drawing.Point(120, 296);
+            this.txtFXMaxTargets.Name = "txtFXMaxTargets";
+            this.txtFXMaxTargets.Size = new System.Drawing.Size(105, 20);
+            this.txtFXMaxTargets.TabIndex = 162;
+            this.txtFXMaxTargets.Text = "0";
+            this.txtFXMaxTargets.TextChanged += new System.EventHandler(this.txtFXMaxTargets_TextChanged);
             // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1264, 765);
+            this.ClientSize = new System.Drawing.Size(1264, 741);
+            this.Controls.Add(this.tpPowerAttribs);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tableLayoutPanel6);
             this.Controls.Add(this.tableLayoutPanel5);
@@ -1056,13 +1144,8 @@ namespace Hero_Designer.Forms
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.cbFXOperator);
-            this.Controls.Add(this.cbFXSpecialCase2);
             this.Controls.Add(this.txtOverride);
             this.Controls.Add(this.Label10);
-            this.Controls.Add(this.lblProb);
             this.Controls.Add(this.cmbEffectId);
             this.Controls.Add(this.Label9);
             this.Controls.Add(this.lvSubSub);
@@ -1081,8 +1164,6 @@ namespace Hero_Designer.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Effect";
             this.GroupBox3.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -1091,6 +1172,8 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.tpPowerAttribs.ResumeLayout(false);
+            this.tpPowerAttribs.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1099,7 +1182,6 @@ namespace Hero_Designer.Forms
 
         Button btnCancel;
         Button btnCopy;
-        Button btnCSV;
         Button btnOK;
         Button btnPaste;
         ComboBox cbAffects;
@@ -1137,13 +1219,9 @@ namespace Hero_Designer.Forms
         Label Label9;
         Label lblAffectsCaster;
         Label lblEffectDescription;
-        Label lblProb;
         ListView lvEffectType;
         ListView lvSubAttribute;
         ListView lvSubSub;
-        RadioButton rbIfAny;
-        RadioButton rbIfCritter;
-        RadioButton rbIfPlayer;
         TextBox txtFXDelay;
         TextBox txtFXDuration;
         TextBox txtFXMag;
@@ -1152,14 +1230,6 @@ namespace Hero_Designer.Forms
         TextBox txtFXTicks;
         TextBox txtOverride;
         TextBox txtPPM;
-        private ComboBox cbFXSpecialCase2;
-        private ComboBox cbFXOperator;
-        private GroupBox groupBox1;
-        private GroupBox groupBox2;
-        private ListView lvConditionalType;
-        private ColumnHeader columnHeader3;
-        private ListView lvSubConditional;
-        private ColumnHeader columnHeader2;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
         private ComboBox cbModifier;
@@ -1171,12 +1241,30 @@ namespace Hero_Designer.Forms
         private Label label12;
         private TableLayoutPanel tableLayoutPanel6;
         private Panel panel1;
-        private ListView lvActiveConditionals;
-        private ColumnHeader columnHeader5;
-        private ColumnHeader columnHeader6;
-        private ListView lvConditionalBool;
-        private ColumnHeader columnHeader4;
-        private Button removeConditional;
-        private Button addConditional;
+        private TableLayoutPanel tpPowerAttribs;
+        private Label txtMaxTargets;
+        private Label txtArc;
+        private Label txtEffectArea;
+        private ComboBox cbFXEffectArea;
+        private TextBox txtFXAccuracy;
+        private Label txtRange;
+        private Label txtAccuracy;
+        private Label txtCastTime;
+        private TextBox txtFXRange;
+        private Label txtInterruptTime;
+        private TextBox txtFXInterruptTime;
+        private Label txtRechargeTime;
+        private TextBox txtFXCastTime;
+        private TextBox txtFXRechargeTime;
+        private Label txtActivateInterval;
+        private TextBox txtFXActivateInterval;
+        private Label txtEnduranceCost;
+        private TextBox txtFXEnduranceCost;
+        private Label txtSecondaryRange;
+        private Label txtRadius;
+        private TextBox txtFXSecondaryRange;
+        private TextBox txtFXRadius;
+        private TextBox txtFXArc;
+        private TextBox txtFXMaxTargets;
     }
 }
