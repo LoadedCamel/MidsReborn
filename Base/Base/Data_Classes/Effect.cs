@@ -542,6 +542,8 @@ namespace Base.Data_Classes
         public float AtrRechargeTime { get; set; }
         public float AtrSecondaryRange { get; set; }
 
+        public Dictionary<string, string> ActiveConditionals { get; set; }
+
         public int nOverride
         {
             get
@@ -1806,6 +1808,7 @@ namespace Base.Data_Classes
             writer.Write(IgnoreED);
             writer.Write(Override);
             writer.Write(ProcsPerMinute);
+
             writer.Write((int) PowerAttribs);
             writer.Write(AtrAccuracy);
             writer.Write(AtrActivatePeriod);
@@ -1819,6 +1822,13 @@ namespace Base.Data_Classes
             writer.Write(AtrRange);
             writer.Write(AtrRechargeTime);
             writer.Write(AtrSecondaryRange);
+
+            writer.Write(ActiveConditionals.Count);
+            foreach (var cVp in ActiveConditionals)
+            {
+                writer.Write(cVp.Key);
+                writer.Write(cVp.Value);
+            }
         }
 
         public bool ImportFromCSV(string iCSV)

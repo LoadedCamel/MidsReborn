@@ -141,6 +141,8 @@ public interface IEffect : IComparable, ICloneable
     float AtrRechargeTime { get; set; }
     float AtrSecondaryRange { get; set; }
 
+    Dictionary<string, string> ActiveConditionals { get; set; }
+
     IPower GetPower();
     void SetPower(IPower power);
 

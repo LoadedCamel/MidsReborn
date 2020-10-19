@@ -756,6 +756,162 @@ namespace Hero_Designer.Forms
             UpdateFXText();
         }
 
+        private void addConditional_Click(object sender, EventArgs e)
+        {
+            //To do: Reference selected items and add to active conditional view and assign item name as the power fullname.
+            switch (lvConditionalType.SelectedItems[0].Text)
+            {
+                case "Power Active":
+                    var powerName = lvSubConditional.SelectedItems[0].Name;
+                    //var power = DatabaseAPI.GetPowerByFullName(powerName);
+                    var value = lvConditionalBool.SelectedItems[0].Text;
+                    lvActiveConditionals.Items.Add($"Active:{powerName}").SubItems.Add(value);
+                    lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
+                    lvActiveConditionals.Columns[0].Width = -2;
+                    lvActiveConditionals.Columns[1].Text = @"Value";
+                    lvActiveConditionals.Columns[1].Width = -2;
+                    myFX.ActiveConditionals.Add($"Active:{powerName}", value);
+                    break;
+                case "Power Taken":
+                    powerName = lvSubConditional.SelectedItems[0].Name;
+                    //power = DatabaseAPI.GetPowerByFullName(powerName);
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    lvActiveConditionals.Items.Add($"Taken:{powerName}").SubItems.Add(value);
+                    lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
+                    lvActiveConditionals.Columns[0].Width = -2;
+                    lvActiveConditionals.Columns[1].Text = @"Value";
+                    lvActiveConditionals.Columns[1].Width = -2;
+                    myFX.ActiveConditionals.Add($"Taken:{powerName}", value);
+                    break;
+            }
+
+            UpdateFXText();
+        }
+
+        private void removeConditional_Click(object sender, EventArgs e)
+        {
+            myFX.ActiveConditionals.Remove(lvActiveConditionals.SelectedItems[0].Text);
+            lvActiveConditionals.SelectedItems[0].Remove();
+        }
+
+        private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            var selected = DatabaseAPI.GetPowerByFullName(e.Item.Name);
+            lvConditionalBool.Items.Clear();
+            switch (lvConditionalType.SelectedItems[0].Text)
+            {
+                case "Power Active":
+                    lvConditionalBool.BeginUpdate();
+                    lvConditionalBool.Items.Add("True");
+                    lvConditionalBool.Items.Add("False");
+                    lvConditionalBool.Columns[0].Text = @"Power Active?";
+                    lvConditionalBool.Columns[0].Width = -2;
+                    lvConditionalBool.EndUpdate();
+                    break;
+                case "Power Taken":
+                    lvConditionalBool.BeginUpdate();
+                    lvConditionalBool.Items.Add("True");
+                    lvConditionalBool.Items.Add("False");
+                    lvConditionalBool.Columns[0].Text = @"Power Taken?";
+                    lvConditionalBool.Columns[0].Width = -2;
+                    lvConditionalBool.EndUpdate();
+                    break;
+            }
+        }
+
+        private void lvConditionalType_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            switch (e.Item.Text)
+            {
+                case "Power Active":
+                    lvConditionalBool.Enabled = true;
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    var pArray = DatabaseAPI.Database.Power;
+                    var eArray = new[] { 6, 7, 8, 9, 10, 11 };
+                    foreach (var power in pArray)
+                    {
+                        var pSetType = power.GetPowerSet().SetType;
+                        var pType = power.PowerType;
+                        var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle || (pType == Enums.ePowerType.Click && power.ClickBuff);
+                        var isUsable = !eArray.Contains((int)pSetType);
+                        if (isUsable && isType)
+                        {
+                            var pItem = new Regex("[_]");
+                            var pStrings = pItem.Replace(power.FullName, " ").Split('.');
+                            var pMatch = new Regex("[ ].*");
+                            var pArchetype = pMatch.Replace(pStrings[0], "");
+                            lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
+                        }
+                    }
+                    lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
+                    lvSubConditional.Columns[0].Width = -2;
+                    lvSubConditional.EndUpdate();
+                    break;
+
+                case "Power Taken":
+                    lvConditionalBool.Enabled = true;
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    pArray = DatabaseAPI.Database.Power;
+                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
+                    foreach (var power in pArray)
+                    {
+                        var pSetType = power.GetPowerSet().SetType;
+                        var isUsable = !eArray.Contains((int)pSetType);
+                        if (isUsable)
+                        {
+                            var pItem = new Regex("[_]");
+                            var pStrings = pItem.Replace(power.FullName, " ").Split('.');
+                            var pMatch = new Regex("[ ].*");
+                            var pArchetype = pMatch.Replace(pStrings[0], "");
+                            lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
+                        }
+                    }
+                    lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
+                    lvSubConditional.Columns[0].Width = -2;
+                    lvSubConditional.EndUpdate();
+                    break;
+                case "Other Condition":
+                    break;
+            }
+        }
+
+        private void UpdateConditionals()
+        {
+            lvActiveConditionals.BeginUpdate();
+            foreach (var pair in myFX.ActiveConditionals)
+            {
+                Console.WriteLine($@"Key: {pair.Key} Value: {pair.Value}");
+                lvActiveConditionals.Items.Add(pair.Key).SubItems.Add(pair.Value);
+            }
+            lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
+            lvActiveConditionals.Columns[0].Width = -2;
+            lvActiveConditionals.Columns[1].Text = @"Value";
+            lvActiveConditionals.Columns[1].Width = -2;
+            lvActiveConditionals.EndUpdate();
+        }
+        private void UpdateConditionalTypes()
+        {
+            lvConditionalType.BeginUpdate();
+            var cTypes = new List<string> { "Power Active", "Power Taken", "Other Condition" }.ToArray();
+            var indexVal = -1;
+            for (var index = 0; index < cTypes.Length; index++)
+            {
+                lvConditionalType.Items.Add(cTypes[index]);
+                indexVal = index;
+            }
+
+            if (indexVal > -1)
+            {
+                lvConditionalType.Items[indexVal].Selected = true;
+                lvConditionalType.Items[indexVal].EnsureVisible();
+            }
+
+            lvConditionalType.View = View.Details;
+            lvConditionalType.EndUpdate();
+        }
+
         private void UpdateEffectSubAttribList()
         {
             var index1 = 0;
