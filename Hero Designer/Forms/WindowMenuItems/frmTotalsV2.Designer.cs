@@ -461,7 +461,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.17308F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.82692F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel1.Controls.Add(this.label50, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.label49, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.ctlLayeredBar16, 2, 0);
@@ -486,7 +486,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label50.AutoSize = true;
             this.label50.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label50.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label50.Location = new System.Drawing.Point(111, 38);
+            this.label50.Location = new System.Drawing.Point(110, 38);
             this.label50.Name = "label50";
             this.label50.Size = new System.Drawing.Size(71, 19);
             this.label50.TabIndex = 11;
@@ -498,7 +498,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label49.AutoSize = true;
             this.label49.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label49.Location = new System.Drawing.Point(111, 19);
+            this.label49.Location = new System.Drawing.Point(110, 19);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(71, 19);
             this.label49.TabIndex = 10;
@@ -518,7 +518,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar16.EnableOverCap = true;
             this.ctlLayeredBar16.EnableOverlay1 = false;
             this.ctlLayeredBar16.EnableOverlay2 = false;
-            this.ctlLayeredBar16.Location = new System.Drawing.Point(188, 3);
+            this.ctlLayeredBar16.Location = new System.Drawing.Point(187, 3);
             this.ctlLayeredBar16.MaximumBarValue = 100F;
             this.ctlLayeredBar16.MinimumBarValue = 0F;
             this.ctlLayeredBar16.Name = "ctlLayeredBar16";
@@ -543,7 +543,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar18.EnableOverCap = false;
             this.ctlLayeredBar18.EnableOverlay1 = false;
             this.ctlLayeredBar18.EnableOverlay2 = false;
-            this.ctlLayeredBar18.Location = new System.Drawing.Point(188, 41);
+            this.ctlLayeredBar18.Location = new System.Drawing.Point(187, 41);
             this.ctlLayeredBar18.MaximumBarValue = 100F;
             this.ctlLayeredBar18.MinimumBarValue = 0F;
             this.ctlLayeredBar18.Name = "ctlLayeredBar18";
@@ -568,7 +568,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar17.EnableOverCap = false;
             this.ctlLayeredBar17.EnableOverlay1 = false;
             this.ctlLayeredBar17.EnableOverlay2 = false;
-            this.ctlLayeredBar17.Location = new System.Drawing.Point(188, 22);
+            this.ctlLayeredBar17.Location = new System.Drawing.Point(187, 22);
             this.ctlLayeredBar17.MaximumBarValue = 100F;
             this.ctlLayeredBar17.MinimumBarValue = 0F;
             this.ctlLayeredBar17.Name = "ctlLayeredBar17";
@@ -587,7 +587,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label45.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label45.Location = new System.Drawing.Point(3, 0);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(102, 19);
+            this.label45.Size = new System.Drawing.Size(101, 19);
             this.label45.TabIndex = 6;
             this.label45.Text = "End Recovery:";
             this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -599,7 +599,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label46.Location = new System.Drawing.Point(3, 19);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(102, 19);
+            this.label46.Size = new System.Drawing.Size(101, 19);
             this.label46.TabIndex = 7;
             this.label46.Text = "End Use:";
             this.label46.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -611,7 +611,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label47.Location = new System.Drawing.Point(3, 38);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(102, 19);
+            this.label47.Size = new System.Drawing.Size(101, 19);
             this.label47.TabIndex = 8;
             this.label47.Text = "Max End:";
             this.label47.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -621,7 +621,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label48.AutoSize = true;
             this.label48.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label48.Location = new System.Drawing.Point(111, 0);
+            this.label48.Location = new System.Drawing.Point(110, 0);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(71, 19);
             this.label48.TabIndex = 9;
@@ -690,7 +690,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 59.40594F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.59406F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel2.Controls.Add(this.label44, 1, 1);
             this.tableLayoutPanel2.Controls.Add(this.ctlLayeredBar14, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.ctlLayeredBar15, 2, 1);
@@ -711,7 +711,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label44.AutoSize = true;
             this.label44.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label44.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label44.Location = new System.Drawing.Point(114, 19);
+            this.label44.Location = new System.Drawing.Point(113, 19);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(69, 19);
             this.label44.TabIndex = 7;
@@ -731,7 +731,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar14.EnableOverCap = true;
             this.ctlLayeredBar14.EnableOverlay1 = false;
             this.ctlLayeredBar14.EnableOverlay2 = false;
-            this.ctlLayeredBar14.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar14.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar14.MaximumBarValue = 100F;
             this.ctlLayeredBar14.MinimumBarValue = 0F;
             this.ctlLayeredBar14.Name = "ctlLayeredBar14";
@@ -756,7 +756,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar15.EnableOverCap = true;
             this.ctlLayeredBar15.EnableOverlay1 = true;
             this.ctlLayeredBar15.EnableOverlay2 = false;
-            this.ctlLayeredBar15.Location = new System.Drawing.Point(189, 22);
+            this.ctlLayeredBar15.Location = new System.Drawing.Point(188, 22);
             this.ctlLayeredBar15.MaximumBarValue = 100F;
             this.ctlLayeredBar15.MinimumBarValue = 0F;
             this.ctlLayeredBar15.Name = "ctlLayeredBar15";
@@ -775,7 +775,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label41.Location = new System.Drawing.Point(3, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(105, 19);
+            this.label41.Size = new System.Drawing.Size(104, 19);
             this.label41.TabIndex = 4;
             this.label41.Text = "Regeneration:";
             this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -787,7 +787,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label42.Location = new System.Drawing.Point(3, 19);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(105, 19);
+            this.label42.Size = new System.Drawing.Size(104, 19);
             this.label42.TabIndex = 5;
             this.label42.Text = "Max HP:";
             this.label42.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -797,7 +797,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label43.AutoSize = true;
             this.label43.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label43.Location = new System.Drawing.Point(114, 0);
+            this.label43.Location = new System.Drawing.Point(113, 0);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(69, 19);
             this.label43.TabIndex = 6;
@@ -826,7 +826,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel3.ColumnCount = 3;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 318F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
             this.tableLayoutPanel3.Controls.Add(this.label40, 1, 7);
             this.tableLayoutPanel3.Controls.Add(this.label39, 1, 6);
             this.tableLayoutPanel3.Controls.Add(this.label38, 1, 5);
@@ -873,7 +873,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label40.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label40.Location = new System.Drawing.Point(112, 133);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(71, 19);
+            this.label40.Size = new System.Drawing.Size(70, 19);
             this.label40.TabIndex = 24;
             this.label40.Text = "100.00%";
             this.label40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -885,7 +885,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label39.Location = new System.Drawing.Point(112, 114);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(71, 19);
+            this.label39.Size = new System.Drawing.Size(70, 19);
             this.label39.TabIndex = 23;
             this.label39.Text = "100.00%";
             this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -897,7 +897,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label38.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label38.Location = new System.Drawing.Point(112, 95);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(71, 19);
+            this.label38.Size = new System.Drawing.Size(70, 19);
             this.label38.TabIndex = 22;
             this.label38.Text = "100.00%";
             this.label38.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -909,7 +909,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label37.Location = new System.Drawing.Point(112, 76);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(71, 19);
+            this.label37.Size = new System.Drawing.Size(70, 19);
             this.label37.TabIndex = 21;
             this.label37.Text = "100.00%";
             this.label37.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -921,7 +921,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label36.Location = new System.Drawing.Point(112, 57);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(71, 19);
+            this.label36.Size = new System.Drawing.Size(70, 19);
             this.label36.TabIndex = 20;
             this.label36.Text = "100.00%";
             this.label36.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -933,7 +933,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label35.Location = new System.Drawing.Point(112, 38);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(71, 19);
+            this.label35.Size = new System.Drawing.Size(70, 19);
             this.label35.TabIndex = 19;
             this.label35.Text = "100.00%";
             this.label35.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -945,7 +945,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label34.Location = new System.Drawing.Point(112, 19);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(71, 19);
+            this.label34.Size = new System.Drawing.Size(70, 19);
             this.label34.TabIndex = 18;
             this.label34.Text = "100.00%";
             this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -963,7 +963,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar13.EnableOverCap = true;
             this.ctlLayeredBar13.EnableOverlay1 = false;
             this.ctlLayeredBar13.EnableOverlay2 = false;
-            this.ctlLayeredBar13.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar13.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar13.MaximumBarValue = 100F;
             this.ctlLayeredBar13.MinimumBarValue = 0F;
             this.ctlLayeredBar13.Name = "ctlLayeredBar13";
@@ -988,7 +988,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar25.EnableOverCap = true;
             this.ctlLayeredBar25.EnableOverlay1 = false;
             this.ctlLayeredBar25.EnableOverlay2 = false;
-            this.ctlLayeredBar25.Location = new System.Drawing.Point(189, 136);
+            this.ctlLayeredBar25.Location = new System.Drawing.Point(188, 136);
             this.ctlLayeredBar25.MaximumBarValue = 100F;
             this.ctlLayeredBar25.MinimumBarValue = 0F;
             this.ctlLayeredBar25.Name = "ctlLayeredBar25";
@@ -1013,7 +1013,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar19.EnableOverCap = true;
             this.ctlLayeredBar19.EnableOverlay1 = false;
             this.ctlLayeredBar19.EnableOverlay2 = false;
-            this.ctlLayeredBar19.Location = new System.Drawing.Point(189, 22);
+            this.ctlLayeredBar19.Location = new System.Drawing.Point(188, 22);
             this.ctlLayeredBar19.MaximumBarValue = 100F;
             this.ctlLayeredBar19.MinimumBarValue = 0F;
             this.ctlLayeredBar19.Name = "ctlLayeredBar19";
@@ -1038,7 +1038,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar24.EnableOverCap = true;
             this.ctlLayeredBar24.EnableOverlay1 = false;
             this.ctlLayeredBar24.EnableOverlay2 = false;
-            this.ctlLayeredBar24.Location = new System.Drawing.Point(189, 117);
+            this.ctlLayeredBar24.Location = new System.Drawing.Point(188, 117);
             this.ctlLayeredBar24.MaximumBarValue = 100F;
             this.ctlLayeredBar24.MinimumBarValue = 0F;
             this.ctlLayeredBar24.Name = "ctlLayeredBar24";
@@ -1063,7 +1063,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar20.EnableOverCap = true;
             this.ctlLayeredBar20.EnableOverlay1 = false;
             this.ctlLayeredBar20.EnableOverlay2 = false;
-            this.ctlLayeredBar20.Location = new System.Drawing.Point(189, 41);
+            this.ctlLayeredBar20.Location = new System.Drawing.Point(188, 41);
             this.ctlLayeredBar20.MaximumBarValue = 100F;
             this.ctlLayeredBar20.MinimumBarValue = 0F;
             this.ctlLayeredBar20.Name = "ctlLayeredBar20";
@@ -1088,7 +1088,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar23.EnableOverCap = true;
             this.ctlLayeredBar23.EnableOverlay1 = false;
             this.ctlLayeredBar23.EnableOverlay2 = false;
-            this.ctlLayeredBar23.Location = new System.Drawing.Point(189, 98);
+            this.ctlLayeredBar23.Location = new System.Drawing.Point(188, 98);
             this.ctlLayeredBar23.MaximumBarValue = 100F;
             this.ctlLayeredBar23.MinimumBarValue = 0F;
             this.ctlLayeredBar23.Name = "ctlLayeredBar23";
@@ -1113,7 +1113,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar21.EnableOverCap = true;
             this.ctlLayeredBar21.EnableOverlay1 = false;
             this.ctlLayeredBar21.EnableOverlay2 = false;
-            this.ctlLayeredBar21.Location = new System.Drawing.Point(189, 60);
+            this.ctlLayeredBar21.Location = new System.Drawing.Point(188, 60);
             this.ctlLayeredBar21.MaximumBarValue = 100F;
             this.ctlLayeredBar21.MinimumBarValue = 0F;
             this.ctlLayeredBar21.Name = "ctlLayeredBar21";
@@ -1138,7 +1138,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar22.EnableOverCap = true;
             this.ctlLayeredBar22.EnableOverlay1 = false;
             this.ctlLayeredBar22.EnableOverlay2 = false;
-            this.ctlLayeredBar22.Location = new System.Drawing.Point(189, 79);
+            this.ctlLayeredBar22.Location = new System.Drawing.Point(188, 79);
             this.ctlLayeredBar22.MaximumBarValue = 100F;
             this.ctlLayeredBar22.MinimumBarValue = 0F;
             this.ctlLayeredBar22.Name = "ctlLayeredBar22";
@@ -1253,7 +1253,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label33.Location = new System.Drawing.Point(112, 0);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(71, 19);
+            this.label33.Size = new System.Drawing.Size(70, 19);
             this.label33.TabIndex = 17;
             this.label33.Text = "100.00%";
             this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1280,7 +1280,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel4.ColumnCount = 3;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel4.Controls.Add(this.label24, 1, 9);
             this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar12, 2, 9);
             this.tableLayoutPanel4.Controls.Add(this.label23, 1, 8);
@@ -1334,7 +1334,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label24.Location = new System.Drawing.Point(112, 171);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(71, 19);
+            this.label24.Size = new System.Drawing.Size(70, 19);
             this.label24.TabIndex = 19;
             this.label24.Text = "100.00%";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1352,7 +1352,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar12.EnableOverCap = false;
             this.ctlLayeredBar12.EnableOverlay1 = false;
             this.ctlLayeredBar12.EnableOverlay2 = false;
-            this.ctlLayeredBar12.Location = new System.Drawing.Point(189, 174);
+            this.ctlLayeredBar12.Location = new System.Drawing.Point(188, 174);
             this.ctlLayeredBar12.MaximumBarValue = 100F;
             this.ctlLayeredBar12.MinimumBarValue = 0F;
             this.ctlLayeredBar12.Name = "ctlLayeredBar12";
@@ -1371,7 +1371,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label23.Location = new System.Drawing.Point(112, 152);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(71, 19);
+            this.label23.Size = new System.Drawing.Size(70, 19);
             this.label23.TabIndex = 18;
             this.label23.Text = "100.00%";
             this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1389,7 +1389,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar11.EnableOverCap = false;
             this.ctlLayeredBar11.EnableOverlay1 = false;
             this.ctlLayeredBar11.EnableOverlay2 = false;
-            this.ctlLayeredBar11.Location = new System.Drawing.Point(189, 155);
+            this.ctlLayeredBar11.Location = new System.Drawing.Point(188, 155);
             this.ctlLayeredBar11.MaximumBarValue = 100F;
             this.ctlLayeredBar11.MinimumBarValue = 0F;
             this.ctlLayeredBar11.Name = "ctlLayeredBar11";
@@ -1408,7 +1408,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label22.Location = new System.Drawing.Point(112, 133);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(71, 19);
+            this.label22.Size = new System.Drawing.Size(70, 19);
             this.label22.TabIndex = 17;
             this.label22.Text = "100.00%";
             this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1426,7 +1426,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar10.EnableOverCap = false;
             this.ctlLayeredBar10.EnableOverlay1 = false;
             this.ctlLayeredBar10.EnableOverlay2 = false;
-            this.ctlLayeredBar10.Location = new System.Drawing.Point(189, 136);
+            this.ctlLayeredBar10.Location = new System.Drawing.Point(188, 136);
             this.ctlLayeredBar10.MaximumBarValue = 100F;
             this.ctlLayeredBar10.MinimumBarValue = 0F;
             this.ctlLayeredBar10.Name = "ctlLayeredBar10";
@@ -1445,7 +1445,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label21.Location = new System.Drawing.Point(112, 114);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(71, 19);
+            this.label21.Size = new System.Drawing.Size(70, 19);
             this.label21.TabIndex = 16;
             this.label21.Text = "100.00%";
             this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1463,7 +1463,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar9.EnableOverCap = false;
             this.ctlLayeredBar9.EnableOverlay1 = false;
             this.ctlLayeredBar9.EnableOverlay2 = false;
-            this.ctlLayeredBar9.Location = new System.Drawing.Point(189, 117);
+            this.ctlLayeredBar9.Location = new System.Drawing.Point(188, 117);
             this.ctlLayeredBar9.MaximumBarValue = 100F;
             this.ctlLayeredBar9.MinimumBarValue = 0F;
             this.ctlLayeredBar9.Name = "ctlLayeredBar9";
@@ -1482,7 +1482,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label20.Location = new System.Drawing.Point(112, 95);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(71, 19);
+            this.label20.Size = new System.Drawing.Size(70, 19);
             this.label20.TabIndex = 15;
             this.label20.Text = "100.00%";
             this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1500,7 +1500,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar8.EnableOverCap = false;
             this.ctlLayeredBar8.EnableOverlay1 = false;
             this.ctlLayeredBar8.EnableOverlay2 = false;
-            this.ctlLayeredBar8.Location = new System.Drawing.Point(189, 98);
+            this.ctlLayeredBar8.Location = new System.Drawing.Point(188, 98);
             this.ctlLayeredBar8.MaximumBarValue = 100F;
             this.ctlLayeredBar8.MinimumBarValue = 0F;
             this.ctlLayeredBar8.Name = "ctlLayeredBar8";
@@ -1519,7 +1519,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label19.Location = new System.Drawing.Point(112, 76);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(71, 19);
+            this.label19.Size = new System.Drawing.Size(70, 19);
             this.label19.TabIndex = 14;
             this.label19.Text = "100.00%";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1537,7 +1537,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar7.EnableOverCap = false;
             this.ctlLayeredBar7.EnableOverlay1 = false;
             this.ctlLayeredBar7.EnableOverlay2 = false;
-            this.ctlLayeredBar7.Location = new System.Drawing.Point(189, 79);
+            this.ctlLayeredBar7.Location = new System.Drawing.Point(188, 79);
             this.ctlLayeredBar7.MaximumBarValue = 100F;
             this.ctlLayeredBar7.MinimumBarValue = 0F;
             this.ctlLayeredBar7.Name = "ctlLayeredBar7";
@@ -1556,7 +1556,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label18.Location = new System.Drawing.Point(112, 57);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(71, 19);
+            this.label18.Size = new System.Drawing.Size(70, 19);
             this.label18.TabIndex = 13;
             this.label18.Text = "100.00%";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1574,7 +1574,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar6.EnableOverCap = false;
             this.ctlLayeredBar6.EnableOverlay1 = false;
             this.ctlLayeredBar6.EnableOverlay2 = false;
-            this.ctlLayeredBar6.Location = new System.Drawing.Point(189, 60);
+            this.ctlLayeredBar6.Location = new System.Drawing.Point(188, 60);
             this.ctlLayeredBar6.MaximumBarValue = 100F;
             this.ctlLayeredBar6.MinimumBarValue = 0F;
             this.ctlLayeredBar6.Name = "ctlLayeredBar6";
@@ -1593,7 +1593,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label17.Location = new System.Drawing.Point(112, 38);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(71, 19);
+            this.label17.Size = new System.Drawing.Size(70, 19);
             this.label17.TabIndex = 12;
             this.label17.Text = "100.00%";
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1611,7 +1611,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar5.EnableOverCap = false;
             this.ctlLayeredBar5.EnableOverlay1 = false;
             this.ctlLayeredBar5.EnableOverlay2 = false;
-            this.ctlLayeredBar5.Location = new System.Drawing.Point(189, 41);
+            this.ctlLayeredBar5.Location = new System.Drawing.Point(188, 41);
             this.ctlLayeredBar5.MaximumBarValue = 100F;
             this.ctlLayeredBar5.MinimumBarValue = 0F;
             this.ctlLayeredBar5.Name = "ctlLayeredBar5";
@@ -1630,7 +1630,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label16.Location = new System.Drawing.Point(112, 19);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(71, 19);
+            this.label16.Size = new System.Drawing.Size(70, 19);
             this.label16.TabIndex = 11;
             this.label16.Text = "100.00%";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1648,7 +1648,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar4.EnableOverCap = false;
             this.ctlLayeredBar4.EnableOverlay1 = false;
             this.ctlLayeredBar4.EnableOverlay2 = false;
-            this.ctlLayeredBar4.Location = new System.Drawing.Point(189, 22);
+            this.ctlLayeredBar4.Location = new System.Drawing.Point(188, 22);
             this.ctlLayeredBar4.MaximumBarValue = 100F;
             this.ctlLayeredBar4.MinimumBarValue = 0F;
             this.ctlLayeredBar4.Name = "ctlLayeredBar4";
@@ -1685,7 +1685,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar3.EnableOverCap = false;
             this.ctlLayeredBar3.EnableOverlay1 = false;
             this.ctlLayeredBar3.EnableOverlay2 = false;
-            this.ctlLayeredBar3.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar3.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar3.MaximumBarValue = 100F;
             this.ctlLayeredBar3.MinimumBarValue = 0F;
             this.ctlLayeredBar3.Name = "ctlLayeredBar3";
@@ -1812,7 +1812,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label15.Location = new System.Drawing.Point(112, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(71, 19);
+            this.label15.Size = new System.Drawing.Size(70, 19);
             this.label15.TabIndex = 10;
             this.label15.Text = "100.00%";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1893,7 +1893,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel13.ColumnCount = 3;
             this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel13.Controls.Add(this.label79, 0, 0);
             this.tableLayoutPanel13.Controls.Add(this.ctlLayeredBar85, 2, 0);
             this.tableLayoutPanel13.Controls.Add(this.label80, 1, 0);
@@ -1929,7 +1929,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar85.EnableOverCap = false;
             this.ctlLayeredBar85.EnableOverlay1 = false;
             this.ctlLayeredBar85.EnableOverlay2 = false;
-            this.ctlLayeredBar85.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar85.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar85.MaximumBarValue = 100F;
             this.ctlLayeredBar85.MinimumBarValue = 0F;
             this.ctlLayeredBar85.Name = "ctlLayeredBar85";
@@ -1948,7 +1948,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label80.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label80.Location = new System.Drawing.Point(103, 0);
             this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(80, 22);
+            this.label80.Size = new System.Drawing.Size(79, 22);
             this.label80.TabIndex = 10;
             this.label80.Text = "100.00%";
             this.label80.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1975,7 +1975,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel12.ColumnCount = 3;
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel12.Controls.Add(this.label77, 0, 0);
             this.tableLayoutPanel12.Controls.Add(this.ctlLayeredBar81, 2, 0);
             this.tableLayoutPanel12.Controls.Add(this.label78, 1, 0);
@@ -2011,7 +2011,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar81.EnableOverCap = false;
             this.ctlLayeredBar81.EnableOverlay1 = false;
             this.ctlLayeredBar81.EnableOverlay2 = false;
-            this.ctlLayeredBar81.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar81.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar81.MaximumBarValue = 100F;
             this.ctlLayeredBar81.MinimumBarValue = 0F;
             this.ctlLayeredBar81.Name = "ctlLayeredBar81";
@@ -2030,7 +2030,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label78.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label78.Location = new System.Drawing.Point(103, 0);
             this.label78.Name = "label78";
-            this.label78.Size = new System.Drawing.Size(80, 22);
+            this.label78.Size = new System.Drawing.Size(79, 22);
             this.label78.TabIndex = 10;
             this.label78.Text = "100.00%";
             this.label78.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2057,7 +2057,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel11.ColumnCount = 3;
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel11.Controls.Add(this.label75, 0, 0);
             this.tableLayoutPanel11.Controls.Add(this.ctlLayeredBar78, 2, 0);
             this.tableLayoutPanel11.Controls.Add(this.label76, 1, 0);
@@ -2093,7 +2093,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar78.EnableOverCap = false;
             this.ctlLayeredBar78.EnableOverlay1 = false;
             this.ctlLayeredBar78.EnableOverlay2 = false;
-            this.ctlLayeredBar78.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar78.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar78.MaximumBarValue = 100F;
             this.ctlLayeredBar78.MinimumBarValue = 0F;
             this.ctlLayeredBar78.Name = "ctlLayeredBar78";
@@ -2112,7 +2112,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label76.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label76.Location = new System.Drawing.Point(103, 0);
             this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(80, 22);
+            this.label76.Size = new System.Drawing.Size(79, 22);
             this.label76.TabIndex = 10;
             this.label76.Text = "+100.00%";
             this.label76.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2139,7 +2139,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel10.ColumnCount = 3;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel10.Controls.Add(this.label72, 0, 0);
             this.tableLayoutPanel10.Controls.Add(this.ctlLayeredBar71, 2, 0);
             this.tableLayoutPanel10.Controls.Add(this.label73, 1, 0);
@@ -2175,7 +2175,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar71.EnableOverCap = true;
             this.ctlLayeredBar71.EnableOverlay1 = false;
             this.ctlLayeredBar71.EnableOverlay2 = false;
-            this.ctlLayeredBar71.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar71.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar71.MaximumBarValue = 500F;
             this.ctlLayeredBar71.MinimumBarValue = 0F;
             this.ctlLayeredBar71.Name = "ctlLayeredBar71";
@@ -2194,7 +2194,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label73.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label73.Location = new System.Drawing.Point(103, 0);
             this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(80, 22);
+            this.label73.Size = new System.Drawing.Size(79, 22);
             this.label73.TabIndex = 10;
             this.label73.Text = "+100.00%";
             this.label73.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2221,7 +2221,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel9.ColumnCount = 3;
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel9.Controls.Add(this.label68, 0, 0);
             this.tableLayoutPanel9.Controls.Add(this.ctlLayeredBar68, 2, 0);
             this.tableLayoutPanel9.Controls.Add(this.label71, 1, 0);
@@ -2257,7 +2257,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar68.EnableOverCap = false;
             this.ctlLayeredBar68.EnableOverlay1 = false;
             this.ctlLayeredBar68.EnableOverlay2 = false;
-            this.ctlLayeredBar68.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar68.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar68.MaximumBarValue = 100F;
             this.ctlLayeredBar68.MinimumBarValue = 0F;
             this.ctlLayeredBar68.Name = "ctlLayeredBar68";
@@ -2276,7 +2276,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label71.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label71.Location = new System.Drawing.Point(103, 0);
             this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(80, 22);
+            this.label71.Size = new System.Drawing.Size(79, 22);
             this.label71.TabIndex = 10;
             this.label71.Text = "+100.00%";
             this.label71.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2303,7 +2303,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel8.ColumnCount = 3;
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel8.Controls.Add(this.label65, 0, 0);
             this.tableLayoutPanel8.Controls.Add(this.ctlLayeredBar56, 2, 0);
             this.tableLayoutPanel8.Controls.Add(this.label67, 1, 0);
@@ -2339,7 +2339,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar56.EnableOverCap = false;
             this.ctlLayeredBar56.EnableOverlay1 = false;
             this.ctlLayeredBar56.EnableOverlay2 = false;
-            this.ctlLayeredBar56.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar56.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar56.MaximumBarValue = 100F;
             this.ctlLayeredBar56.MinimumBarValue = 0F;
             this.ctlLayeredBar56.Name = "ctlLayeredBar56";
@@ -2358,7 +2358,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label67.Location = new System.Drawing.Point(103, 0);
             this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(80, 22);
+            this.label67.Size = new System.Drawing.Size(79, 22);
             this.label67.TabIndex = 10;
             this.label67.Text = "+100.00%";
             this.label67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2385,7 +2385,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel7.ColumnCount = 3;
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel7.Controls.Add(this.label69, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.ctlLayeredBar72, 2, 0);
             this.tableLayoutPanel7.Controls.Add(this.label74, 1, 0);
@@ -2421,7 +2421,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar72.EnableOverCap = true;
             this.ctlLayeredBar72.EnableOverlay1 = false;
             this.ctlLayeredBar72.EnableOverlay2 = false;
-            this.ctlLayeredBar72.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar72.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar72.MaximumBarValue = 100F;
             this.ctlLayeredBar72.MinimumBarValue = 0F;
             this.ctlLayeredBar72.Name = "ctlLayeredBar72";
@@ -2440,7 +2440,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label74.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label74.Location = new System.Drawing.Point(103, 0);
             this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(80, 22);
+            this.label74.Size = new System.Drawing.Size(79, 22);
             this.label74.TabIndex = 10;
             this.label74.Text = "100.00%";
             this.label74.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2477,7 +2477,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel6.ColumnCount = 3;
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel6.Controls.Add(this.label53, 1, 2);
             this.tableLayoutPanel6.Controls.Add(this.ctlLayeredBar57, 2, 2);
             this.tableLayoutPanel6.Controls.Add(this.label54, 1, 1);
@@ -2503,7 +2503,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label53.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label53.Location = new System.Drawing.Point(103, 38);
             this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(80, 20);
+            this.label53.Size = new System.Drawing.Size(79, 20);
             this.label53.TabIndex = 12;
             this.label53.Text = "100.00 ft";
             this.label53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2521,8 +2521,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar57.EnableOverCap = true;
             this.ctlLayeredBar57.EnableOverlay1 = false;
             this.ctlLayeredBar57.EnableOverlay2 = false;
-            this.ctlLayeredBar57.Location = new System.Drawing.Point(189, 41);
-            this.ctlLayeredBar57.MaximumBarValue = 100F;
+            this.ctlLayeredBar57.Location = new System.Drawing.Point(188, 41);
+            this.ctlLayeredBar57.MaximumBarValue = 800F;
             this.ctlLayeredBar57.MinimumBarValue = 0F;
             this.ctlLayeredBar57.Name = "ctlLayeredBar57";
             this.ctlLayeredBar57.Size = new System.Drawing.Size(307, 13);
@@ -2540,7 +2540,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label54.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label54.Location = new System.Drawing.Point(103, 19);
             this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(80, 19);
+            this.label54.Size = new System.Drawing.Size(79, 19);
             this.label54.TabIndex = 11;
             this.label54.Text = "100.00 ft";
             this.label54.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2558,8 +2558,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar60.EnableOverCap = true;
             this.ctlLayeredBar60.EnableOverlay1 = false;
             this.ctlLayeredBar60.EnableOverlay2 = false;
-            this.ctlLayeredBar60.Location = new System.Drawing.Point(189, 22);
-            this.ctlLayeredBar60.MaximumBarValue = 100F;
+            this.ctlLayeredBar60.Location = new System.Drawing.Point(188, 22);
+            this.ctlLayeredBar60.MaximumBarValue = 800F;
             this.ctlLayeredBar60.MinimumBarValue = 0F;
             this.ctlLayeredBar60.Name = "ctlLayeredBar60";
             this.ctlLayeredBar60.Size = new System.Drawing.Size(307, 13);
@@ -2595,8 +2595,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar63.EnableOverCap = true;
             this.ctlLayeredBar63.EnableOverlay1 = false;
             this.ctlLayeredBar63.EnableOverlay2 = false;
-            this.ctlLayeredBar63.Location = new System.Drawing.Point(189, 3);
-            this.ctlLayeredBar63.MaximumBarValue = 100F;
+            this.ctlLayeredBar63.Location = new System.Drawing.Point(188, 3);
+            this.ctlLayeredBar63.MaximumBarValue = 800F;
             this.ctlLayeredBar63.MinimumBarValue = 0F;
             this.ctlLayeredBar63.Name = "ctlLayeredBar63";
             this.ctlLayeredBar63.Size = new System.Drawing.Size(307, 13);
@@ -2638,7 +2638,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label66.Location = new System.Drawing.Point(103, 0);
             this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(80, 19);
+            this.label66.Size = new System.Drawing.Size(79, 19);
             this.label66.TabIndex = 10;
             this.label66.Text = "100.00 ft";
             this.label66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2723,7 +2723,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel5.ColumnCount = 3;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel5.Controls.Add(this.label57, 1, 3);
             this.tableLayoutPanel5.Controls.Add(this.ctlLayeredBar48, 2, 3);
             this.tableLayoutPanel5.Controls.Add(this.label58, 1, 2);
@@ -2753,7 +2753,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label57.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label57.Location = new System.Drawing.Point(103, 57);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(80, 20);
+            this.label57.Size = new System.Drawing.Size(79, 20);
             this.label57.TabIndex = 13;
             this.label57.Text = "100.00 mph";
             this.label57.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2771,7 +2771,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar48.EnableOverCap = true;
             this.ctlLayeredBar48.EnableOverlay1 = false;
             this.ctlLayeredBar48.EnableOverlay2 = false;
-            this.ctlLayeredBar48.Location = new System.Drawing.Point(189, 60);
+            this.ctlLayeredBar48.Location = new System.Drawing.Point(188, 60);
             this.ctlLayeredBar48.MaximumBarValue = 100F;
             this.ctlLayeredBar48.MinimumBarValue = 0F;
             this.ctlLayeredBar48.Name = "ctlLayeredBar48";
@@ -2790,7 +2790,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label58.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label58.Location = new System.Drawing.Point(103, 38);
             this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(80, 19);
+            this.label58.Size = new System.Drawing.Size(79, 19);
             this.label58.TabIndex = 12;
             this.label58.Text = "100.00 ft";
             this.label58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2808,7 +2808,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar49.EnableOverCap = true;
             this.ctlLayeredBar49.EnableOverlay1 = false;
             this.ctlLayeredBar49.EnableOverlay2 = false;
-            this.ctlLayeredBar49.Location = new System.Drawing.Point(189, 41);
+            this.ctlLayeredBar49.Location = new System.Drawing.Point(188, 41);
             this.ctlLayeredBar49.MaximumBarValue = 100F;
             this.ctlLayeredBar49.MinimumBarValue = 0F;
             this.ctlLayeredBar49.Name = "ctlLayeredBar49";
@@ -2827,7 +2827,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label59.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label59.Location = new System.Drawing.Point(103, 19);
             this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(80, 19);
+            this.label59.Size = new System.Drawing.Size(79, 19);
             this.label59.TabIndex = 11;
             this.label59.Text = "100.00 mph";
             this.label59.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2845,7 +2845,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar50.EnableOverCap = true;
             this.ctlLayeredBar50.EnableOverlay1 = false;
             this.ctlLayeredBar50.EnableOverlay2 = false;
-            this.ctlLayeredBar50.Location = new System.Drawing.Point(189, 22);
+            this.ctlLayeredBar50.Location = new System.Drawing.Point(188, 22);
             this.ctlLayeredBar50.MaximumBarValue = 100F;
             this.ctlLayeredBar50.MinimumBarValue = 0F;
             this.ctlLayeredBar50.Name = "ctlLayeredBar50";
@@ -2882,7 +2882,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar51.EnableOverCap = true;
             this.ctlLayeredBar51.EnableOverlay1 = false;
             this.ctlLayeredBar51.EnableOverlay2 = false;
-            this.ctlLayeredBar51.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar51.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar51.MaximumBarValue = 100F;
             this.ctlLayeredBar51.MinimumBarValue = 0F;
             this.ctlLayeredBar51.Name = "ctlLayeredBar51";
@@ -2937,7 +2937,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label70.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label70.Location = new System.Drawing.Point(103, 0);
             this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(80, 19);
+            this.label70.Size = new System.Drawing.Size(79, 19);
             this.label70.TabIndex = 10;
             this.label70.Text = "100.00 mph";
             this.label70.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2990,7 +2990,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel15.ColumnCount = 3;
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel15.Controls.Add(this.label106, 1, 10);
             this.tableLayoutPanel15.Controls.Add(this.label107, 1, 9);
             this.tableLayoutPanel15.Controls.Add(this.label108, 1, 8);
@@ -3048,7 +3048,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label106.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label106.Location = new System.Drawing.Point(112, 196);
             this.label106.Name = "label106";
-            this.label106.Size = new System.Drawing.Size(71, 20);
+            this.label106.Size = new System.Drawing.Size(70, 20);
             this.label106.TabIndex = 12;
             this.label106.Text = "100.00%";
             this.label106.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3060,7 +3060,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label107.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label107.Location = new System.Drawing.Point(112, 176);
             this.label107.Name = "label107";
-            this.label107.Size = new System.Drawing.Size(71, 20);
+            this.label107.Size = new System.Drawing.Size(70, 20);
             this.label107.TabIndex = 12;
             this.label107.Text = "100.00%";
             this.label107.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3072,7 +3072,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label108.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label108.Location = new System.Drawing.Point(112, 156);
             this.label108.Name = "label108";
-            this.label108.Size = new System.Drawing.Size(71, 20);
+            this.label108.Size = new System.Drawing.Size(70, 20);
             this.label108.TabIndex = 12;
             this.label108.Text = "100.00%";
             this.label108.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3084,7 +3084,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label109.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label109.Location = new System.Drawing.Point(112, 136);
             this.label109.Name = "label109";
-            this.label109.Size = new System.Drawing.Size(71, 20);
+            this.label109.Size = new System.Drawing.Size(70, 20);
             this.label109.TabIndex = 12;
             this.label109.Text = "100.00%";
             this.label109.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3096,7 +3096,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label110.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label110.Location = new System.Drawing.Point(112, 116);
             this.label110.Name = "label110";
-            this.label110.Size = new System.Drawing.Size(71, 20);
+            this.label110.Size = new System.Drawing.Size(70, 20);
             this.label110.TabIndex = 12;
             this.label110.Text = "100.00%";
             this.label110.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3108,7 +3108,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label111.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label111.Location = new System.Drawing.Point(112, 96);
             this.label111.Name = "label111";
-            this.label111.Size = new System.Drawing.Size(71, 20);
+            this.label111.Size = new System.Drawing.Size(70, 20);
             this.label111.TabIndex = 12;
             this.label111.Text = "100.00%";
             this.label111.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3204,7 +3204,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label119.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label119.Location = new System.Drawing.Point(112, 57);
             this.label119.Name = "label119";
-            this.label119.Size = new System.Drawing.Size(71, 19);
+            this.label119.Size = new System.Drawing.Size(70, 19);
             this.label119.TabIndex = 13;
             this.label119.Text = "100.00%";
             this.label119.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3222,7 +3222,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar99.EnableOverCap = false;
             this.ctlLayeredBar99.EnableOverlay1 = false;
             this.ctlLayeredBar99.EnableOverlay2 = false;
-            this.ctlLayeredBar99.Location = new System.Drawing.Point(189, 60);
+            this.ctlLayeredBar99.Location = new System.Drawing.Point(188, 60);
             this.ctlLayeredBar99.MaximumBarValue = 1000F;
             this.ctlLayeredBar99.MinimumBarValue = 0F;
             this.ctlLayeredBar99.Name = "ctlLayeredBar99";
@@ -3241,7 +3241,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label120.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label120.Location = new System.Drawing.Point(112, 38);
             this.label120.Name = "label120";
-            this.label120.Size = new System.Drawing.Size(71, 19);
+            this.label120.Size = new System.Drawing.Size(70, 19);
             this.label120.TabIndex = 12;
             this.label120.Text = "100.00%";
             this.label120.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3259,7 +3259,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar100.EnableOverCap = false;
             this.ctlLayeredBar100.EnableOverlay1 = false;
             this.ctlLayeredBar100.EnableOverlay2 = false;
-            this.ctlLayeredBar100.Location = new System.Drawing.Point(189, 41);
+            this.ctlLayeredBar100.Location = new System.Drawing.Point(188, 41);
             this.ctlLayeredBar100.MaximumBarValue = 1000F;
             this.ctlLayeredBar100.MinimumBarValue = 0F;
             this.ctlLayeredBar100.Name = "ctlLayeredBar100";
@@ -3278,7 +3278,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label121.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label121.Location = new System.Drawing.Point(112, 19);
             this.label121.Name = "label121";
-            this.label121.Size = new System.Drawing.Size(71, 19);
+            this.label121.Size = new System.Drawing.Size(70, 19);
             this.label121.TabIndex = 11;
             this.label121.Text = "100.00%";
             this.label121.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3296,7 +3296,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar101.EnableOverCap = false;
             this.ctlLayeredBar101.EnableOverlay1 = false;
             this.ctlLayeredBar101.EnableOverlay2 = false;
-            this.ctlLayeredBar101.Location = new System.Drawing.Point(189, 22);
+            this.ctlLayeredBar101.Location = new System.Drawing.Point(188, 22);
             this.ctlLayeredBar101.MaximumBarValue = 1000F;
             this.ctlLayeredBar101.MinimumBarValue = 0F;
             this.ctlLayeredBar101.Name = "ctlLayeredBar101";
@@ -3333,7 +3333,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar102.EnableOverCap = false;
             this.ctlLayeredBar102.EnableOverlay1 = false;
             this.ctlLayeredBar102.EnableOverlay2 = false;
-            this.ctlLayeredBar102.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar102.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar102.MaximumBarValue = 1000F;
             this.ctlLayeredBar102.MinimumBarValue = 0F;
             this.ctlLayeredBar102.Name = "ctlLayeredBar102";
@@ -3388,7 +3388,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label126.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label126.Location = new System.Drawing.Point(112, 0);
             this.label126.Name = "label126";
-            this.label126.Size = new System.Drawing.Size(71, 19);
+            this.label126.Size = new System.Drawing.Size(70, 19);
             this.label126.TabIndex = 10;
             this.label126.Text = "100.00%";
             this.label126.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3406,7 +3406,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar103.EnableOverCap = false;
             this.ctlLayeredBar103.EnableOverlay1 = false;
             this.ctlLayeredBar103.EnableOverlay2 = false;
-            this.ctlLayeredBar103.Location = new System.Drawing.Point(189, 79);
+            this.ctlLayeredBar103.Location = new System.Drawing.Point(188, 79);
             this.ctlLayeredBar103.MaximumBarValue = 1000F;
             this.ctlLayeredBar103.MinimumBarValue = 0F;
             this.ctlLayeredBar103.Name = "ctlLayeredBar103";
@@ -3431,7 +3431,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar104.EnableOverCap = false;
             this.ctlLayeredBar104.EnableOverlay1 = false;
             this.ctlLayeredBar104.EnableOverlay2 = false;
-            this.ctlLayeredBar104.Location = new System.Drawing.Point(189, 99);
+            this.ctlLayeredBar104.Location = new System.Drawing.Point(188, 99);
             this.ctlLayeredBar104.MaximumBarValue = 1000F;
             this.ctlLayeredBar104.MinimumBarValue = 0F;
             this.ctlLayeredBar104.Name = "ctlLayeredBar104";
@@ -3456,7 +3456,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar105.EnableOverCap = false;
             this.ctlLayeredBar105.EnableOverlay1 = false;
             this.ctlLayeredBar105.EnableOverlay2 = false;
-            this.ctlLayeredBar105.Location = new System.Drawing.Point(189, 119);
+            this.ctlLayeredBar105.Location = new System.Drawing.Point(188, 119);
             this.ctlLayeredBar105.MaximumBarValue = 1000F;
             this.ctlLayeredBar105.MinimumBarValue = 0F;
             this.ctlLayeredBar105.Name = "ctlLayeredBar105";
@@ -3481,7 +3481,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar106.EnableOverCap = false;
             this.ctlLayeredBar106.EnableOverlay1 = false;
             this.ctlLayeredBar106.EnableOverlay2 = false;
-            this.ctlLayeredBar106.Location = new System.Drawing.Point(189, 139);
+            this.ctlLayeredBar106.Location = new System.Drawing.Point(188, 139);
             this.ctlLayeredBar106.MaximumBarValue = 1000F;
             this.ctlLayeredBar106.MinimumBarValue = 0F;
             this.ctlLayeredBar106.Name = "ctlLayeredBar106";
@@ -3506,7 +3506,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar107.EnableOverCap = false;
             this.ctlLayeredBar107.EnableOverlay1 = false;
             this.ctlLayeredBar107.EnableOverlay2 = false;
-            this.ctlLayeredBar107.Location = new System.Drawing.Point(189, 159);
+            this.ctlLayeredBar107.Location = new System.Drawing.Point(188, 159);
             this.ctlLayeredBar107.MaximumBarValue = 1000F;
             this.ctlLayeredBar107.MinimumBarValue = 0F;
             this.ctlLayeredBar107.Name = "ctlLayeredBar107";
@@ -3531,7 +3531,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar108.EnableOverCap = false;
             this.ctlLayeredBar108.EnableOverlay1 = false;
             this.ctlLayeredBar108.EnableOverlay2 = false;
-            this.ctlLayeredBar108.Location = new System.Drawing.Point(189, 179);
+            this.ctlLayeredBar108.Location = new System.Drawing.Point(188, 179);
             this.ctlLayeredBar108.MaximumBarValue = 1000F;
             this.ctlLayeredBar108.MinimumBarValue = 0F;
             this.ctlLayeredBar108.Name = "ctlLayeredBar108";
@@ -3556,7 +3556,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar109.EnableOverCap = false;
             this.ctlLayeredBar109.EnableOverlay1 = false;
             this.ctlLayeredBar109.EnableOverlay2 = false;
-            this.ctlLayeredBar109.Location = new System.Drawing.Point(189, 199);
+            this.ctlLayeredBar109.Location = new System.Drawing.Point(188, 199);
             this.ctlLayeredBar109.MaximumBarValue = 1000F;
             this.ctlLayeredBar109.MinimumBarValue = 0F;
             this.ctlLayeredBar109.Name = "ctlLayeredBar109";
@@ -3575,7 +3575,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label127.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label127.Location = new System.Drawing.Point(112, 76);
             this.label127.Name = "label127";
-            this.label127.Size = new System.Drawing.Size(71, 20);
+            this.label127.Size = new System.Drawing.Size(70, 20);
             this.label127.TabIndex = 11;
             this.label127.Text = "100.00%";
             this.label127.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3612,7 +3612,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel14.ColumnCount = 3;
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel14.Controls.Add(this.label103, 1, 10);
             this.tableLayoutPanel14.Controls.Add(this.label102, 1, 9);
             this.tableLayoutPanel14.Controls.Add(this.label101, 1, 8);
@@ -3670,7 +3670,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label103.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label103.Location = new System.Drawing.Point(112, 196);
             this.label103.Name = "label103";
-            this.label103.Size = new System.Drawing.Size(71, 20);
+            this.label103.Size = new System.Drawing.Size(70, 20);
             this.label103.TabIndex = 12;
             this.label103.Text = "30";
             this.label103.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3682,7 +3682,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label102.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label102.Location = new System.Drawing.Point(112, 176);
             this.label102.Name = "label102";
-            this.label102.Size = new System.Drawing.Size(71, 20);
+            this.label102.Size = new System.Drawing.Size(70, 20);
             this.label102.TabIndex = 12;
             this.label102.Text = "30";
             this.label102.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3694,7 +3694,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label101.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label101.Location = new System.Drawing.Point(112, 156);
             this.label101.Name = "label101";
-            this.label101.Size = new System.Drawing.Size(71, 20);
+            this.label101.Size = new System.Drawing.Size(70, 20);
             this.label101.TabIndex = 12;
             this.label101.Text = "30";
             this.label101.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3706,7 +3706,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label100.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label100.Location = new System.Drawing.Point(112, 136);
             this.label100.Name = "label100";
-            this.label100.Size = new System.Drawing.Size(71, 20);
+            this.label100.Size = new System.Drawing.Size(70, 20);
             this.label100.TabIndex = 12;
             this.label100.Text = "30";
             this.label100.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3718,7 +3718,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label99.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label99.Location = new System.Drawing.Point(112, 116);
             this.label99.Name = "label99";
-            this.label99.Size = new System.Drawing.Size(71, 20);
+            this.label99.Size = new System.Drawing.Size(70, 20);
             this.label99.TabIndex = 12;
             this.label99.Text = "30";
             this.label99.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3730,7 +3730,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label98.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label98.Location = new System.Drawing.Point(112, 96);
             this.label98.Name = "label98";
-            this.label98.Size = new System.Drawing.Size(71, 20);
+            this.label98.Size = new System.Drawing.Size(70, 20);
             this.label98.TabIndex = 12;
             this.label98.Text = "30";
             this.label98.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3826,7 +3826,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label82.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label82.Location = new System.Drawing.Point(112, 57);
             this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(71, 19);
+            this.label82.Size = new System.Drawing.Size(70, 19);
             this.label82.TabIndex = 13;
             this.label82.Text = "30";
             this.label82.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3844,7 +3844,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar88.EnableOverCap = false;
             this.ctlLayeredBar88.EnableOverlay1 = false;
             this.ctlLayeredBar88.EnableOverlay2 = false;
-            this.ctlLayeredBar88.Location = new System.Drawing.Point(189, 60);
+            this.ctlLayeredBar88.Location = new System.Drawing.Point(188, 60);
             this.ctlLayeredBar88.MaximumBarValue = 70F;
             this.ctlLayeredBar88.MinimumBarValue = 0F;
             this.ctlLayeredBar88.Name = "ctlLayeredBar88";
@@ -3863,7 +3863,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label83.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label83.Location = new System.Drawing.Point(112, 38);
             this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(71, 19);
+            this.label83.Size = new System.Drawing.Size(70, 19);
             this.label83.TabIndex = 12;
             this.label83.Text = "30";
             this.label83.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3881,7 +3881,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar91.EnableOverCap = false;
             this.ctlLayeredBar91.EnableOverlay1 = false;
             this.ctlLayeredBar91.EnableOverlay2 = false;
-            this.ctlLayeredBar91.Location = new System.Drawing.Point(189, 41);
+            this.ctlLayeredBar91.Location = new System.Drawing.Point(188, 41);
             this.ctlLayeredBar91.MaximumBarValue = 70F;
             this.ctlLayeredBar91.MinimumBarValue = 0F;
             this.ctlLayeredBar91.Name = "ctlLayeredBar91";
@@ -3900,7 +3900,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label84.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label84.Location = new System.Drawing.Point(112, 19);
             this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(71, 19);
+            this.label84.Size = new System.Drawing.Size(70, 19);
             this.label84.TabIndex = 11;
             this.label84.Text = "30";
             this.label84.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3918,7 +3918,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar94.EnableOverCap = false;
             this.ctlLayeredBar94.EnableOverlay1 = false;
             this.ctlLayeredBar94.EnableOverlay2 = false;
-            this.ctlLayeredBar94.Location = new System.Drawing.Point(189, 22);
+            this.ctlLayeredBar94.Location = new System.Drawing.Point(188, 22);
             this.ctlLayeredBar94.MaximumBarValue = 70F;
             this.ctlLayeredBar94.MinimumBarValue = 0F;
             this.ctlLayeredBar94.Name = "ctlLayeredBar94";
@@ -3955,7 +3955,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar97.EnableOverCap = false;
             this.ctlLayeredBar97.EnableOverlay1 = false;
             this.ctlLayeredBar97.EnableOverlay2 = false;
-            this.ctlLayeredBar97.Location = new System.Drawing.Point(189, 3);
+            this.ctlLayeredBar97.Location = new System.Drawing.Point(188, 3);
             this.ctlLayeredBar97.MaximumBarValue = 70F;
             this.ctlLayeredBar97.MinimumBarValue = 0F;
             this.ctlLayeredBar97.Name = "ctlLayeredBar97";
@@ -4010,7 +4010,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label89.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label89.Location = new System.Drawing.Point(112, 0);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(71, 19);
+            this.label89.Size = new System.Drawing.Size(70, 19);
             this.label89.TabIndex = 10;
             this.label89.Text = "30";
             this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4028,7 +4028,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar89.EnableOverCap = false;
             this.ctlLayeredBar89.EnableOverlay1 = false;
             this.ctlLayeredBar89.EnableOverlay2 = false;
-            this.ctlLayeredBar89.Location = new System.Drawing.Point(189, 79);
+            this.ctlLayeredBar89.Location = new System.Drawing.Point(188, 79);
             this.ctlLayeredBar89.MaximumBarValue = 70F;
             this.ctlLayeredBar89.MinimumBarValue = 0F;
             this.ctlLayeredBar89.Name = "ctlLayeredBar89";
@@ -4053,7 +4053,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar90.EnableOverCap = false;
             this.ctlLayeredBar90.EnableOverlay1 = false;
             this.ctlLayeredBar90.EnableOverlay2 = false;
-            this.ctlLayeredBar90.Location = new System.Drawing.Point(189, 99);
+            this.ctlLayeredBar90.Location = new System.Drawing.Point(188, 99);
             this.ctlLayeredBar90.MaximumBarValue = 70F;
             this.ctlLayeredBar90.MinimumBarValue = 0F;
             this.ctlLayeredBar90.Name = "ctlLayeredBar90";
@@ -4078,7 +4078,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar92.EnableOverCap = false;
             this.ctlLayeredBar92.EnableOverlay1 = false;
             this.ctlLayeredBar92.EnableOverlay2 = false;
-            this.ctlLayeredBar92.Location = new System.Drawing.Point(189, 119);
+            this.ctlLayeredBar92.Location = new System.Drawing.Point(188, 119);
             this.ctlLayeredBar92.MaximumBarValue = 70F;
             this.ctlLayeredBar92.MinimumBarValue = 0F;
             this.ctlLayeredBar92.Name = "ctlLayeredBar92";
@@ -4103,7 +4103,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar93.EnableOverCap = false;
             this.ctlLayeredBar93.EnableOverlay1 = false;
             this.ctlLayeredBar93.EnableOverlay2 = false;
-            this.ctlLayeredBar93.Location = new System.Drawing.Point(189, 139);
+            this.ctlLayeredBar93.Location = new System.Drawing.Point(188, 139);
             this.ctlLayeredBar93.MaximumBarValue = 70F;
             this.ctlLayeredBar93.MinimumBarValue = 0F;
             this.ctlLayeredBar93.Name = "ctlLayeredBar93";
@@ -4128,7 +4128,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar95.EnableOverCap = false;
             this.ctlLayeredBar95.EnableOverlay1 = false;
             this.ctlLayeredBar95.EnableOverlay2 = false;
-            this.ctlLayeredBar95.Location = new System.Drawing.Point(189, 159);
+            this.ctlLayeredBar95.Location = new System.Drawing.Point(188, 159);
             this.ctlLayeredBar95.MaximumBarValue = 70F;
             this.ctlLayeredBar95.MinimumBarValue = 0F;
             this.ctlLayeredBar95.Name = "ctlLayeredBar95";
@@ -4153,7 +4153,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar96.EnableOverCap = false;
             this.ctlLayeredBar96.EnableOverlay1 = false;
             this.ctlLayeredBar96.EnableOverlay2 = false;
-            this.ctlLayeredBar96.Location = new System.Drawing.Point(189, 179);
+            this.ctlLayeredBar96.Location = new System.Drawing.Point(188, 179);
             this.ctlLayeredBar96.MaximumBarValue = 70F;
             this.ctlLayeredBar96.MinimumBarValue = 0F;
             this.ctlLayeredBar96.Name = "ctlLayeredBar96";
@@ -4178,7 +4178,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ctlLayeredBar98.EnableOverCap = false;
             this.ctlLayeredBar98.EnableOverlay1 = false;
             this.ctlLayeredBar98.EnableOverlay2 = false;
-            this.ctlLayeredBar98.Location = new System.Drawing.Point(189, 199);
+            this.ctlLayeredBar98.Location = new System.Drawing.Point(188, 199);
             this.ctlLayeredBar98.MaximumBarValue = 70F;
             this.ctlLayeredBar98.MinimumBarValue = 0F;
             this.ctlLayeredBar98.Name = "ctlLayeredBar98";
@@ -4197,7 +4197,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label97.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label97.Location = new System.Drawing.Point(112, 76);
             this.label97.Name = "label97";
-            this.label97.Size = new System.Drawing.Size(71, 20);
+            this.label97.Size = new System.Drawing.Size(70, 20);
             this.label97.TabIndex = 11;
             this.label97.Text = "30";
             this.label97.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

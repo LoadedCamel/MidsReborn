@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ namespace midsControls
 {
     public partial class ctlLayeredBar : UserControl
     {
+        private bool _DesignMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
         private bool _CanUpdate = true;
         private bool _EnableOverCap;
         private bool _EnableBaseValue;
@@ -432,107 +432,166 @@ namespace midsControls
             SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, auxValue);
             if (_EnableOverCap)
             {
-                // https://falahati.github.io/WinFormAnimation/
-                // Threading ref: Hero Designer/MainModule.cs:74
-                Animator[] animators = {
-                    new Animator(new Path(panel1.Width, dim.P1Width, _AnimDuration)),
-                    new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
-                    new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration))
-                };
+                if (!_DesignMode)
+                {
+                    // https://falahati.github.io/WinFormAnimation/
+                    // Threading ref: Hero Designer/MainModule.cs:74
+                    Animator[] animators =
+                    {
+                        new Animator(new Path(panel1.Width, dim.P1Width, _AnimDuration)),
+                        new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
+                        new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration))
+                    };
 
-                Task[] animRenderers = {
-                    Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel1.Width = (int)Math.Floor(v))); }),
-                    Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel3.Width = (int)Math.Floor(v))); }),
-                    Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); })
-                };
+                    Task[] animRenderers =
+                    {
+                        Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel1.Width = (int) Math.Floor(v))); }),
+                        Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel3.Width = (int) Math.Floor(v))); }),
+                        Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); })
+                    };
 
-                Task.WaitAll(animRenderers);
+                    //Task.WaitAll(animRenderers);
+                }
+                else
+                {
+                    panel1.Width = dim.P1Width;
+                    panel3.Width = dim.P3Width;
+                    panel3.Location = new Point(dim.P3Pos, panel3.Location.Y);
+                }
             }
 
             if (_EnableBaseValue)
             {
-                Animator[] animators = {
-                    new Animator(new Path(panel2.Width, dim.P2Width, _AnimDuration)),
-                    new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
-                    new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration))
-                };
+                if (!_DesignMode)
+                {
+                    Animator[] animators =
+                    {
+                        new Animator(new Path(panel2.Width, dim.P2Width, _AnimDuration)),
+                        new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
+                        new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration))
+                    };
 
-                Task[] animRenderers = {
-                    Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel2.Width = (int)Math.Floor(v))); }),
-                    Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel3.Width = (int)Math.Floor(v))); }),
-                    Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); })
-                };
+                    Task[] animRenderers =
+                    {
+                        Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel2.Width = (int) Math.Floor(v))); }),
+                        Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel3.Width = (int) Math.Floor(v))); }),
+                        Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); })
+                    };
 
-                Task.WaitAll(animRenderers);
+                    //Task.WaitAll(animRenderers);
+                }
+                else
+                {
+                    panel2.Width = dim.P2Width;
+                    panel3.Width = dim.P3Width;
+                    panel3.Location = new Point(dim.P3Pos, panel3.Location.Y);
+                }
             }
         }
 
         public void SetValues(float mainValue, float baseValue, float uncappedValue)
         {
             SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue);
-            Animator[] animators = {
-                new Animator(new Path(panel1.Width, dim.P1Width, _AnimDuration)),
-                new Animator(new Path(panel2.Width, dim.P2Width, _AnimDuration)),
-                new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
-                new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration))
-            };
+            if (!_DesignMode)
+            {
+                Animator[] animators =
+                {
+                    new Animator(new Path(panel1.Width, dim.P1Width, _AnimDuration)),
+                    new Animator(new Path(panel2.Width, dim.P2Width, _AnimDuration)),
+                    new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
+                    new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration))
+                };
 
-            Task[] animRenderers = {
-                // Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel2.Width = (int)Math.Floor(v))); }),
-                Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel1.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel2.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[3].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); })
-            };
+                Task[] animRenderers =
+                {
+                    Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel1.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel2.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[3].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); })
+                };
 
-            Task.WaitAll(animRenderers);
+                //Task.WaitAll(animRenderers);
+            }
+            else
+            {
+                panel1.Width = dim.P1Width;
+                panel2.Width = dim.P2Width;
+                panel3.Width = dim.P3Width;
+                panel3.Location = new Point(dim.P3Pos, panel3.Location.Y);
+            }
         }
 
         public void SetValues(float mainValue, float baseValue, float uncappedValue, float overlay1Value)
         {
             SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value);
-            Animator[] animators = {
-                new Animator(new Path(panel1.Width, dim.P1Width, _AnimDuration)),
-                new Animator(new Path(panel2.Width, dim.P2Width, _AnimDuration)),
-                new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
-                new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration)),
-                new Animator(new Path(panel4.Width, dim.P4Width, _AnimDuration))
-            };
+            if (!_DesignMode)
+            {
+                Animator[] animators =
+                {
+                    new Animator(new Path(panel1.Width, dim.P1Width, _AnimDuration)),
+                    new Animator(new Path(panel2.Width, dim.P2Width, _AnimDuration)),
+                    new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
+                    new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration)),
+                    new Animator(new Path(panel4.Width, dim.P4Width, _AnimDuration))
+                };
 
-            Task[] animRenderers = {
-                Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel1.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel2.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[3].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); }),
-                Task.Run(() => { animators[4].Play(new SafeInvoker<float>(v => panel4.Width = (int) Math.Floor(v))); })
-            };
+                Task[] animRenderers =
+                {
+                    Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel1.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel2.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[3].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); }),
+                    Task.Run(() => { animators[4].Play(new SafeInvoker<float>(v => panel4.Width = (int) Math.Floor(v))); })
+                };
 
-            Task.WaitAll(animRenderers);
+                //Task.WaitAll(animRenderers);
+            }
+            else
+            {
+                panel1.Width = dim.P1Width;
+                panel2.Width = dim.P2Width;
+                panel3.Width = dim.P3Width;
+                panel3.Location = new Point(dim.P3Pos, panel3.Location.Y);
+                panel4.Width = dim.P4Width;
+            }
         }
 
         public void SetValues(float mainValue, float baseValue, float uncappedValue, float overlay1Value, float overlay2Value)
         {
             SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value, overlay2Value);
-            Animator[] animators =
+            if (!_DesignMode)
             {
-                new Animator(new Path(panel1.Width, dim.P1Width, _AnimDuration)),
-                new Animator(new Path(panel2.Width, dim.P2Width, _AnimDuration)),
-                new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
-                new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration)),
-                new Animator(new Path(panel4.Width, dim.P4Width, _AnimDuration)),
-                new Animator(new Path(panel5.Width, dim.P5Width, _AnimDuration))
-            };
+                Animator[] animators =
+                {
+                    new Animator(new Path(panel1.Width, dim.P1Width, _AnimDuration)),
+                    new Animator(new Path(panel2.Width, dim.P2Width, _AnimDuration)),
+                    new Animator(new Path(panel3.Width, dim.P3Width, _AnimDuration)),
+                    new Animator(new Path(panel3.Location.X, dim.P3Pos, _AnimDuration)),
+                    new Animator(new Path(panel4.Width, dim.P4Width, _AnimDuration)),
+                    new Animator(new Path(panel5.Width, dim.P5Width, _AnimDuration))
+                };
 
-            Task[] animRenderers = {
-                Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel1.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel2.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[3].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); }),
-                Task.Run(() => { animators[4].Play(new SafeInvoker<float>(v => panel4.Width = (int) Math.Floor(v))); }),
-                Task.Run(() => { animators[5].Play(new SafeInvoker<float>(v => panel5.Width = (int) Math.Floor(v))); })
-            };
+                Task[] animRenderers =
+                {
+                    Task.Run(() => { animators[0].Play(new SafeInvoker<float>(v => panel1.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[1].Play(new SafeInvoker<float>(v => panel2.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[2].Play(new SafeInvoker<float>(v => panel3.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[3].Play(new SafeInvoker<float>(v => panel3.Location = new Point((int) Math.Floor(v), panel3.Location.Y))); }),
+                    Task.Run(() => { animators[4].Play(new SafeInvoker<float>(v => panel4.Width = (int) Math.Floor(v))); }),
+                    Task.Run(() => { animators[5].Play(new SafeInvoker<float>(v => panel5.Width = (int) Math.Floor(v))); })
+                };
 
-            Task.WaitAll(animRenderers);
+                //Task.WaitAll(animRenderers);
+            }
+            else
+            {
+                panel1.Width = dim.P1Width;
+                panel2.Width = dim.P2Width;
+                panel3.Width = dim.P3Width;
+                panel3.Location = new Point(dim.P3Pos, panel3.Location.Y);
+                panel4.Width = dim.P4Width;
+                panel5.Width = dim.P5Width;
+            }
         }
         #endregion
 
@@ -542,30 +601,9 @@ namespace midsControls
             InitializeComponent();
         }
 
-        private void ctlLayeredBar_Layout(object sender, LayoutEventArgs e)
-        {
-            if (!_CanUpdate) return;
-
-            if (e.AffectedProperty.StartsWith("Value") ||
-                e.AffectedProperty == "MaximumBarValue" ||
-                e.AffectedProperty == "MinimumBarValue" ||
-                e.AffectedProperty == "Size")
-            {
-                SetValues();
-            }
-        }
-
         private void ctlLayeredBar_Load(object sender, EventArgs e)
         {
             // Required to avoid artifacts in the designer with bars showing a single color at 100%
-            SubBarsDimensions dim = CalcSubBarsDimensions(_Value, _ValueBase, _ValueUncapped, _ValueOverlay1, _ValueOverlay2);
-            panel1.Width = dim.P1Width;
-            panel2.Width = dim.P2Width;
-            panel3.Width = dim.P3Width;
-            panel3.Location = new Point(dim.P3Pos, panel3.Location.Y);
-            panel4.Width = dim.P4Width;
-            panel5.Width = dim.P5Width;
-
             SetValues();
         }
     }

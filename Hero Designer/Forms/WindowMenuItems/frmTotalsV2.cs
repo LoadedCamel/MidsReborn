@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -15,39 +16,37 @@ namespace Hero_Designer.Forms.WindowMenuItems
     {
         private readonly frmMain _myParent;
         private bool _keepOnTop;
-        private ctlLayeredBar[] Bars;
-        private readonly int BarMaxWidth = 307;
 
         public Control StatControl(string tab, int panel, string type, int control)
         {
-            var regEx = new Regex(@"^\d+");
-            var page = tabControlAdv1.Controls.OfType<TabPageAdv>().First(t => t.Text.Contains(tab));
-            var gradientList = page.Controls.OfType<GradientPanel>().ToList();
-            var gradientPanels = gradientList.OrderBy(x => x.Name).ToList();
-            var tablePanels = gradientPanels[panel - 1].Controls.OfType<TableLayoutPanel>().ToList();
+            Regex regEx = new Regex(@"^\d+");
+            TabPageAdv page = tabControlAdv1.Controls.OfType<TabPageAdv>().First(t => t.Text.Contains(tab));
+            List<GradientPanel> gradientList = page.Controls.OfType<GradientPanel>().ToList();
+            List<GradientPanel> gradientPanels = gradientList.OrderBy(x => x.Name).ToList();
+            List<TableLayoutPanel> tablePanels = gradientPanels[panel - 1].Controls.OfType<TableLayoutPanel>().ToList();
 
             switch (type)
             {
                 case "Bar":
-                    var controls = new List<Control>();
-                    for (var rowIndex = 0; rowIndex < tablePanels[0].RowCount; rowIndex++)
+                    List<Control> controls = new List<Control>();
+                    for (int rowIndex = 0; rowIndex < tablePanels[0].RowCount; rowIndex++)
                     {
-                        var tControl = tablePanels[0].GetControlFromPosition(2, rowIndex);
+                        Control tControl = tablePanels[0].GetControlFromPosition(2, rowIndex);
                         controls.Add(tControl);
                     }
-                    var barList = controls.OfType<ctlLayeredBar>().ToList();
-                    var bars = barList.OrderBy(x => regEx.Match(x.Name).Value).ToList();
+                    List<ctlLayeredBar> barList = controls.OfType<ctlLayeredBar>().ToList();
+                    List<ctlLayeredBar> bars = barList.OrderBy(x => regEx.Match(x.Name).Value).ToList();
 
                     return bars[control - 1];
                 case "Label":
                     controls = new List<Control>();
-                    for (var rowIndex = 0; rowIndex < tablePanels[0].RowCount; rowIndex++)
+                    for (int rowIndex = 0; rowIndex < tablePanels[0].RowCount; rowIndex++)
                     {
-                        var tControl = tablePanels[0].GetControlFromPosition(1, rowIndex);
+                        Control tControl = tablePanels[0].GetControlFromPosition(1, rowIndex);
                         controls.Add(tControl);
                     }
-                    var labelList = controls.OfType<Label>().ToList();
-                    var labels = labelList.OrderBy(x => regEx.Match(x.Name).Value).ToList();
+                    List<Label> labelList = controls.OfType<Label>().ToList();
+                    List<Label> labels = labelList.OrderBy(x => regEx.Match(x.Name).Value).ToList();
 
                     return labels[control - 1];
             }
@@ -55,102 +54,201 @@ namespace Hero_Designer.Forms.WindowMenuItems
             return null;
         }
 
+        private string FormatValue(int formatType, float value)
+        {
+            return formatType switch
+            {
+                0 => $"{value:##0.##}%", // Percentage
+                1 => $"{value:##0.##}", // Numeric, 2 decimals
+                2 => (value > 0 ? "+" : "") + $"{value:##0.##}", // Numeric, 2 decimals, with sign
+                _ => $"{value:##0.##}"
+            };
+        }
+
+        private Label FetchLabel(Enums.eBarType barType)
+        {
+            return FetchLabel((int)barType);
+        }
+
+        private Label FetchLabel(int index)
+        {
+            return index switch
+            {
+                0 => label15,
+                1 => label16,
+                2 => label17,
+                3 => label18,
+                4 => label19,
+                5 => label20,
+                6 => label21,
+                7 => label22,
+                8 => label23,
+                9 => label24,
+
+                10 => label33,
+                11 => label34,
+                12 => label35,
+                13 => label36,
+                14 => label37,
+                15 => label38,
+                16 => label39,
+                17 => label40,
+
+                18 => label43,
+                19 => label44,
+
+                20 => label48,
+                21 => label49,
+                22 => label50,
+
+                23 => label70,
+                24 => label59,
+                25 => label58,
+                26 => label57,
+
+                27 => label66,
+                28 => label54,
+                29 => label53,
+
+                30 => label74,
+                31 => label67,
+                32 => label71,
+                33 => label73,
+                34 => label76,
+                35 => label78,
+                36 => label80,
+
+                37 => label89,
+                38 => label84,
+                39 => label83,
+                40 => label82,
+                41 => label97,
+                42 => label98,
+                43 => label99,
+                44 => label100,
+                45 => label101,
+                46 => label102,
+                47 => label103,
+
+                48 => label126,
+                49 => label121,
+                50 => label120,
+                51 => label119,
+                52 => label127,
+                53 => label111,
+                54 => label110,
+                55 => label109,
+                56 => label108,
+                57 => label107,
+                58 => label106,
+
+                59 => label149,
+                60 => label144,
+                61 => label143,
+                62 => label142,
+                63 => label150,
+                64 => label134,
+                65 => label133,
+                _ => label15
+            };
+        }
+
         private ctlLayeredBar FetchBar(int index)
         {
-            switch (index)
+            return index switch
             {
                 // Defense
-                case 0: return ctlLayeredBar3;
-                case 1: return ctlLayeredBar4;
-                case 2: return ctlLayeredBar5;
-                case 3: return ctlLayeredBar6;
-                case 4: return ctlLayeredBar7;
-                case 5: return ctlLayeredBar8;
-                case 6: return ctlLayeredBar9;
-                case 7: return ctlLayeredBar10;
-                case 8: return ctlLayeredBar11;
-                case 9: return ctlLayeredBar12;
+                0 => ctlLayeredBar3,
+                1 => ctlLayeredBar4,
+                2 => ctlLayeredBar5,
+                3 => ctlLayeredBar6,
+                4 => ctlLayeredBar7,
+                5 => ctlLayeredBar8,
+                6 => ctlLayeredBar9,
+                7 => ctlLayeredBar10,
+                8 => ctlLayeredBar11,
+                9 => ctlLayeredBar12,
 
                 // Resistance
-                case 10: return ctlLayeredBar13;
-                case 11: return ctlLayeredBar19;
-                case 12: return ctlLayeredBar20;
-                case 13: return ctlLayeredBar21;
-                case 14: return ctlLayeredBar22;
-                case 15: return ctlLayeredBar23;
-                case 16: return ctlLayeredBar24;
-                case 17: return ctlLayeredBar25;
+                10 => ctlLayeredBar13,
+                11 => ctlLayeredBar19,
+                12 => ctlLayeredBar20,
+                13 => ctlLayeredBar21,
+                14 => ctlLayeredBar22,
+                15 => ctlLayeredBar23,
+                16 => ctlLayeredBar24,
+                17 => ctlLayeredBar25,
 
                 // Regen/HP/Absorb
-                case 18: return ctlLayeredBar14;
-                case 19: return ctlLayeredBar15;
+                18 => ctlLayeredBar14,
+                19 => ctlLayeredBar15,
 
                 // Endurance
-                case 20: return ctlLayeredBar16;
-                case 21: return ctlLayeredBar17;
-                case 22: return ctlLayeredBar18;
-
+                20 => ctlLayeredBar16,
+                21 => ctlLayeredBar17,
+                22 => ctlLayeredBar18,
+                
                 // Movement
-                case 23: return ctlLayeredBar51;
-                case 24: return ctlLayeredBar50;
-                case 25: return ctlLayeredBar49;
-                case 26: return ctlLayeredBar48;
-
+                23 => ctlLayeredBar51,
+                24 => ctlLayeredBar50,
+                25 => ctlLayeredBar49,
+                26 => ctlLayeredBar48,
+                
                 // Stealth/Perception
-                case 27: return ctlLayeredBar63;
-                case 28: return ctlLayeredBar60;
-                case 29: return ctlLayeredBar57;
-
+                27 => ctlLayeredBar63,
+                28 => ctlLayeredBar60,
+                29 => ctlLayeredBar57,
+                
                 // Misc
-                case 30: return ctlLayeredBar72;
-                case 31: return ctlLayeredBar56;
-                case 32: return ctlLayeredBar68;
-                case 33: return ctlLayeredBar71;
-                case 34: return ctlLayeredBar78;
-                case 35: return ctlLayeredBar81;
-                case 36: return ctlLayeredBar85;
-
+                30 => ctlLayeredBar72,
+                31 => ctlLayeredBar56,
+                32 => ctlLayeredBar68,
+                33 => ctlLayeredBar71,
+                34 => ctlLayeredBar78,
+                35 => ctlLayeredBar81,
+                36 => ctlLayeredBar85,
+                
                 // Status Protection
-                case 37: return ctlLayeredBar97;
-                case 38: return ctlLayeredBar94;
-                case 39: return ctlLayeredBar91;
-                case 40: return ctlLayeredBar88;
-                case 41: return ctlLayeredBar89;
-                case 42: return ctlLayeredBar90;
-                case 43: return ctlLayeredBar92;
-                case 44: return ctlLayeredBar93;
-                case 45: return ctlLayeredBar95;
-                case 46: return ctlLayeredBar96;
-                case 47: return ctlLayeredBar98;
-
+                37 => ctlLayeredBar97,
+                38 => ctlLayeredBar94,
+                39 => ctlLayeredBar91,
+                40 => ctlLayeredBar88,
+                41 => ctlLayeredBar89,
+                42 => ctlLayeredBar90,
+                43 => ctlLayeredBar92,
+                44 => ctlLayeredBar93,
+                45 => ctlLayeredBar95,
+                46 => ctlLayeredBar96,
+                47 => ctlLayeredBar98,
+                
                 // Status Resistance
-                case 48: return ctlLayeredBar102;
-                case 49: return ctlLayeredBar101;
-                case 50: return ctlLayeredBar100;
-                case 51: return ctlLayeredBar99;
-                case 52: return ctlLayeredBar103;
-                case 53: return ctlLayeredBar104;
-                case 54: return ctlLayeredBar105;
-                case 55: return ctlLayeredBar106;
-                case 56: return ctlLayeredBar107;
-                case 57: return ctlLayeredBar108;
-                case 58: return ctlLayeredBar109;
+                48 => ctlLayeredBar102,
+                49 => ctlLayeredBar101,
+                50 => ctlLayeredBar100,
+                51 => ctlLayeredBar99,
+                52 => ctlLayeredBar103,
+                53 => ctlLayeredBar104,
+                54 => ctlLayeredBar105,
+                55 => ctlLayeredBar106,
+                56 => ctlLayeredBar107,
+                57 => ctlLayeredBar108,
+                58 => ctlLayeredBar109,
+                
                 // Debuff Resistance
-                case 59: return ctlLayeredBar113;
-                case 60: return ctlLayeredBar112;
-                case 61: return ctlLayeredBar111;
-                case 62: return ctlLayeredBar110;
-                case 63: return ctlLayeredBar114;
-                case 64: return ctlLayeredBar115;
-                case 65: return ctlLayeredBar116;
-
-                default: return ctlLayeredBar3;
+                59 => ctlLayeredBar113,
+                60 => ctlLayeredBar112,
+                61 => ctlLayeredBar111,
+                62 => ctlLayeredBar110,
+                63 => ctlLayeredBar114,
+                64 => ctlLayeredBar115,
+                65 => ctlLayeredBar116,
+                _ => ctlLayeredBar3
             };
         }
 
         private ctlLayeredBar FetchBar(Enums.eBarType barType)
         {
-            return FetchBar((int) barType);
+            return FetchBar((int)barType);
         }
 
         private void SetTabPanelColorScheme()
@@ -459,7 +557,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             ///////////////////////////////
 
-            FetchBar(Enums.eBarType.MezProtectionHold).ValueMainBar = MidsContext.Character.Totals.Mez[(int) Enums.eMez.Held];
+            FetchBar(Enums.eBarType.MezProtectionHold).ValueMainBar = MidsContext.Character.Totals.Mez[(int)Enums.eMez.Held];
             FetchBar(Enums.eBarType.MezProtectionStunned).ValueMainBar = MidsContext.Character.Totals.Mez[(int)Enums.eMez.Stunned];
             FetchBar(Enums.eBarType.MezProtectionSleep).ValueMainBar = MidsContext.Character.Totals.Mez[(int)Enums.eMez.Sleep];
             FetchBar(Enums.eBarType.MezProtectionImmob).ValueMainBar = MidsContext.Character.Totals.Mez[(int)Enums.eMez.Immobilized];
@@ -471,21 +569,21 @@ namespace Hero_Designer.Forms.WindowMenuItems
             FetchBar(Enums.eBarType.MezProtectionPlacate).ValueMainBar = MidsContext.Character.Totals.Mez[(int)Enums.eMez.Placate];
             FetchBar(Enums.eBarType.MezProtectionTeleport).ValueMainBar = MidsContext.Character.Totals.Mez[(int)Enums.eMez.Teleport];
 
-            FetchBar(Enums.eBarType.MezResistanceHold).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Held];
-            FetchBar(Enums.eBarType.MezResistanceStunned).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Stunned];
-            FetchBar(Enums.eBarType.MezResistanceSleep).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Sleep];
-            FetchBar(Enums.eBarType.MezResistanceImmob).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Immobilized];
-            FetchBar(Enums.eBarType.MezResistanceKnockback).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Knockback];
-            FetchBar(Enums.eBarType.MezResistanceRepel).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Repel];
-            FetchBar(Enums.eBarType.MezResistanceConfuse).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Confused];
-            FetchBar(Enums.eBarType.MezResistanceFear).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Terrorized];
-            FetchBar(Enums.eBarType.MezResistanceTaunt).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Taunt];
-            FetchBar(Enums.eBarType.MezResistancePlacate).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Placate];
-            FetchBar(Enums.eBarType.MezResistanceTeleport).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Teleport];
+            FetchBar(Enums.eBarType.MezResistanceHold).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Held];
+            FetchBar(Enums.eBarType.MezResistanceStunned).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Stunned];
+            FetchBar(Enums.eBarType.MezResistanceSleep).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Sleep];
+            FetchBar(Enums.eBarType.MezResistanceImmob).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Immobilized];
+            FetchBar(Enums.eBarType.MezResistanceKnockback).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Knockback];
+            FetchBar(Enums.eBarType.MezResistanceRepel).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Repel];
+            FetchBar(Enums.eBarType.MezResistanceConfuse).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Confused];
+            FetchBar(Enums.eBarType.MezResistanceFear).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Terrorized];
+            FetchBar(Enums.eBarType.MezResistanceTaunt).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Taunt];
+            FetchBar(Enums.eBarType.MezResistancePlacate).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Placate];
+            FetchBar(Enums.eBarType.MezResistanceTeleport).ValueMainBar = MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Teleport];
 
             ///////////////////////////////
 
-            FetchBar(Enums.eBarType.DebuffResistanceDefense).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Defense];
+            FetchBar(Enums.eBarType.DebuffResistanceDefense).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Defense];
             FetchBar(Enums.eBarType.DebuffResistanceEndurance).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Endurance];
             FetchBar(Enums.eBarType.DebuffResistanceRecovery).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Recovery];
             FetchBar(Enums.eBarType.DebuffResistancePerception).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.PerceptionRadius];
@@ -493,6 +591,95 @@ namespace Hero_Designer.Forms.WindowMenuItems
             FetchBar(Enums.eBarType.DebuffResistanceRechargeTime).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.RechargeTime];
             FetchBar(Enums.eBarType.DebuffResistanceSpeedRunning).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.SpeedRunning];
             FetchBar(Enums.eBarType.DebuffResistanceRegen).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Regeneration];
+            #endregion
+
+            #region Labels setup
+            FetchLabel(Enums.eBarType.DefenseSmashing).Text = FormatValue(0, displayStats.Defense(0));
+            FetchLabel(Enums.eBarType.DefenseLethal).Text = FormatValue(0, displayStats.Defense(1));
+            FetchLabel(Enums.eBarType.DefenseFire).Text = FormatValue(0, displayStats.Defense(2));
+            FetchLabel(Enums.eBarType.DefenseCold).Text = FormatValue(0, displayStats.Defense(3));
+            FetchLabel(Enums.eBarType.DefenseEnergy).Text = FormatValue(0, displayStats.Defense(4));
+            FetchLabel(Enums.eBarType.DefenseNegative).Text = FormatValue(0, displayStats.Defense(5));
+            FetchLabel(Enums.eBarType.DefensePsionic).Text = FormatValue(0, displayStats.Defense(6));
+            FetchLabel(Enums.eBarType.DefenseMelee).Text = FormatValue(0, displayStats.Defense(7));
+            FetchLabel(Enums.eBarType.DefenseRanged).Text = FormatValue(0, displayStats.Defense(8));
+            FetchLabel(Enums.eBarType.DefenseAoE).Text = FormatValue(0, displayStats.Defense(9));
+
+            FetchLabel(Enums.eBarType.ResistanceSmashing).Text = FormatValue(0, displayStats.DamageResistance(0, false));
+            FetchLabel(Enums.eBarType.ResistanceLethal).Text = FormatValue(0, displayStats.DamageResistance(1, false));
+            FetchLabel(Enums.eBarType.ResistanceFire).Text = FormatValue(0, displayStats.DamageResistance(2, false));
+            FetchLabel(Enums.eBarType.ResistanceCold).Text = FormatValue(0, displayStats.DamageResistance(3, false));
+            FetchLabel(Enums.eBarType.ResistanceEnergy).Text = FormatValue(0, displayStats.DamageResistance(4, false));
+            FetchLabel(Enums.eBarType.ResistanceNegative).Text = FormatValue(0, displayStats.DamageResistance(5, false));
+            FetchLabel(Enums.eBarType.ResistanceToxic).Text = FormatValue(0, displayStats.DamageResistance(6, false));
+            FetchLabel(Enums.eBarType.ResistancePsionic).Text = FormatValue(0, displayStats.DamageResistance(7, false));
+
+            FetchLabel(Enums.eBarType.Regeneration).Text = FormatValue(0, displayStats.HealthRegenPercent(false));
+            FetchLabel(Enums.eBarType.MaxHPAbsorb).Text = FormatValue(0, displayStats.HealthHitpointsNumeric(false));
+
+            FetchLabel(Enums.eBarType.EndRec).Text = FormatValue(1, displayStats.EnduranceRecoveryNumeric) + "/s";
+            FetchLabel(Enums.eBarType.EndUse).Text = FormatValue(1, displayStats.EnduranceUsage) + "/s";
+            FetchLabel(Enums.eBarType.MaxEnd).Text = FormatValue(0, displayStats.EnduranceMaxEnd);
+
+            ///////////////////////////////
+
+            FetchLabel(Enums.eBarType.RunSpeed).Text = FormatValue(1, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
+            FetchLabel(Enums.eBarType.JumpSpeed).Text = FormatValue(1, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
+            FetchLabel(Enums.eBarType.JumpHeight).Text = FormatValue(1, displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond)) + "ft";
+            FetchLabel(Enums.eBarType.FlySpeed).Text = FormatValue(1, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
+
+            ///////////////////////////////
+
+            FetchLabel(Enums.eBarType.StealthPvE).Text = FormatValue(1, MidsContext.Character.Totals.StealthPvE) + "ft"; // ???
+            FetchLabel(Enums.eBarType.StealthPvP).Text = FormatValue(1, MidsContext.Character.Totals.StealthPvP) + "ft"; // ???
+            FetchLabel(Enums.eBarType.Perception).Text = FormatValue(1, displayStats.Perception(false)) + "ft";
+
+            ///////////////////////////////
+
+            FetchLabel(Enums.eBarType.Haste).Text = FormatValue(0, displayStats.BuffHaste(false));
+            FetchLabel(Enums.eBarType.ToHit).Text = FormatValue(0, displayStats.BuffToHit);
+            FetchLabel(Enums.eBarType.Accuracy).Text = FormatValue(0, displayStats.BuffAccuracy);
+            FetchLabel(Enums.eBarType.Damage).Text = FormatValue(0, displayStats.BuffDamage(false)); // Need to add +100 here ?
+            FetchLabel(Enums.eBarType.EndRdx).Text = FormatValue(0, displayStats.BuffEndRdx);
+            FetchLabel(Enums.eBarType.ThreatLevel).Text = Convert.ToString(displayStats.ThreatLevel, CultureInfo.InvariantCulture); // ???
+            FetchLabel(Enums.eBarType.Elusivity).Text = FormatValue(0, MidsContext.Character.Totals.Elusivity);
+
+            ///////////////////////////////
+
+            FetchLabel(Enums.eBarType.MezProtectionHold).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Held]);
+            FetchLabel(Enums.eBarType.MezProtectionStunned).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Stunned]);
+            FetchLabel(Enums.eBarType.MezProtectionSleep).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Sleep]);
+            FetchLabel(Enums.eBarType.MezProtectionImmob).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Immobilized]);
+            FetchLabel(Enums.eBarType.MezProtectionKnockback).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Knockback]);
+            FetchLabel(Enums.eBarType.MezProtectionRepel).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Repel]);
+            FetchLabel(Enums.eBarType.MezProtectionConfuse).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Confused]);
+            FetchLabel(Enums.eBarType.MezProtectionFear).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Terrorized]);
+            FetchLabel(Enums.eBarType.MezProtectionTaunt).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Taunt]);
+            FetchLabel(Enums.eBarType.MezProtectionPlacate).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Placate]);
+            FetchLabel(Enums.eBarType.MezProtectionTeleport).Text = FormatValue(1, MidsContext.Character.Totals.Mez[(int)Enums.eMez.Teleport]);
+
+            FetchLabel(Enums.eBarType.MezResistanceHold).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Held]);
+            FetchLabel(Enums.eBarType.MezResistanceStunned).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Stunned]);
+            FetchLabel(Enums.eBarType.MezResistanceSleep).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Sleep]);
+            FetchLabel(Enums.eBarType.MezResistanceImmob).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Immobilized]);
+            FetchLabel(Enums.eBarType.MezResistanceKnockback).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Knockback]);
+            FetchLabel(Enums.eBarType.MezResistanceRepel).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Repel]);
+            FetchLabel(Enums.eBarType.MezResistanceConfuse).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Confused]);
+            FetchLabel(Enums.eBarType.MezResistanceFear).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Terrorized]);
+            FetchLabel(Enums.eBarType.MezResistanceTaunt).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Taunt]);
+            FetchLabel(Enums.eBarType.MezResistancePlacate).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Placate]);
+            FetchLabel(Enums.eBarType.MezResistanceTeleport).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int)Enums.eMez.Teleport]);
+
+            ///////////////////////////////
+
+            FetchLabel(Enums.eBarType.DebuffResistanceDefense).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Defense]);
+            FetchLabel(Enums.eBarType.DebuffResistanceEndurance).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Endurance]);
+            FetchLabel(Enums.eBarType.DebuffResistanceRecovery).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Recovery]);
+            FetchLabel(Enums.eBarType.DebuffResistancePerception).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.PerceptionRadius]);
+            FetchLabel(Enums.eBarType.DebuffResistanceToHit).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.ToHit]);
+            FetchLabel(Enums.eBarType.DebuffResistanceRechargeTime).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.RechargeTime]);
+            FetchLabel(Enums.eBarType.DebuffResistanceSpeedRunning).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.SpeedRunning]);
+            FetchLabel(Enums.eBarType.DebuffResistanceRegen).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Regeneration]);
             #endregion
         }
     }
