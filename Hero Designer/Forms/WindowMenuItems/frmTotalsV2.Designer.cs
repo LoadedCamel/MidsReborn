@@ -1,7 +1,5 @@
 ﻿
-using System;
 using System.Windows.Forms;
-using midsControls;
 
 namespace Hero_Designer.Forms.WindowMenuItems
 {
@@ -33,52 +31,53 @@ namespace Hero_Designer.Forms.WindowMenuItems
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTotalsV2));
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.pbTopMost = new System.Windows.Forms.PictureBox();
-            this.pContainer1 = new System.Windows.Forms.Panel();
-            this.pContainer2 = new System.Windows.Forms.Panel();
-            this.tabControlAdv1 = new Syncfusion.Windows.Forms.Tools.TabControlAdv();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.tabControlAdv2 = new Syncfusion.Windows.Forms.Tools.TabControlAdv();
             this.tabPageAdv4 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.gradientPanel4 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label50 = new System.Windows.Forms.Label();
-            this.label49 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar16 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar18 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar17 = new midsControls.ctlLayeredBar();
+            this.lv23 = new System.Windows.Forms.Label();
+            this.lv22 = new System.Windows.Forms.Label();
+            this.bar21 = new midsControls.ctlLayeredBar();
+            this.bar23 = new midsControls.ctlLayeredBar();
+            this.bar22 = new midsControls.ctlLayeredBar();
             this.label45 = new System.Windows.Forms.Label();
             this.label46 = new System.Windows.Forms.Label();
             this.label47 = new System.Windows.Forms.Label();
-            this.label48 = new System.Windows.Forms.Label();
+            this.lv21 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.gradientPanel3 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.label44 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar14 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar15 = new midsControls.ctlLayeredBar();
+            this.lv20 = new System.Windows.Forms.Label();
+            this.bar19 = new midsControls.ctlLayeredBar();
+            this.bar20 = new midsControls.ctlLayeredBar();
             this.label41 = new System.Windows.Forms.Label();
             this.label42 = new System.Windows.Forms.Label();
-            this.label43 = new System.Windows.Forms.Label();
+            this.lv19 = new System.Windows.Forms.Label();
             this.gradientPanel2 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.label40 = new System.Windows.Forms.Label();
-            this.label39 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label36 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar13 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar25 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar19 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar24 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar20 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar23 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar21 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar22 = new midsControls.ctlLayeredBar();
+            this.lv18 = new System.Windows.Forms.Label();
+            this.lv17 = new System.Windows.Forms.Label();
+            this.lv16 = new System.Windows.Forms.Label();
+            this.lv15 = new System.Windows.Forms.Label();
+            this.lv14 = new System.Windows.Forms.Label();
+            this.lv13 = new System.Windows.Forms.Label();
+            this.lv12 = new System.Windows.Forms.Label();
+            this.bar11 = new midsControls.ctlLayeredBar();
+            this.bar18 = new midsControls.ctlLayeredBar();
+            this.bar12 = new midsControls.ctlLayeredBar();
+            this.bar17 = new midsControls.ctlLayeredBar();
+            this.bar13 = new midsControls.ctlLayeredBar();
+            this.bar16 = new midsControls.ctlLayeredBar();
+            this.bar14 = new midsControls.ctlLayeredBar();
+            this.bar15 = new midsControls.ctlLayeredBar();
             this.label25 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
@@ -87,29 +86,29 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label30 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
+            this.lv11 = new System.Windows.Forms.Label();
             this.gradientPanel1 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.label24 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar12 = new midsControls.ctlLayeredBar();
-            this.label23 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar11 = new midsControls.ctlLayeredBar();
-            this.label22 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar10 = new midsControls.ctlLayeredBar();
-            this.label21 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar9 = new midsControls.ctlLayeredBar();
-            this.label20 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar8 = new midsControls.ctlLayeredBar();
-            this.label19 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar7 = new midsControls.ctlLayeredBar();
-            this.label18 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar6 = new midsControls.ctlLayeredBar();
-            this.label17 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar5 = new midsControls.ctlLayeredBar();
-            this.label16 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar4 = new midsControls.ctlLayeredBar();
+            this.lv10 = new System.Windows.Forms.Label();
+            this.bar10 = new midsControls.ctlLayeredBar();
+            this.lv9 = new System.Windows.Forms.Label();
+            this.bar9 = new midsControls.ctlLayeredBar();
+            this.lv8 = new System.Windows.Forms.Label();
+            this.bar8 = new midsControls.ctlLayeredBar();
+            this.lv7 = new System.Windows.Forms.Label();
+            this.bar7 = new midsControls.ctlLayeredBar();
+            this.lv6 = new System.Windows.Forms.Label();
+            this.bar6 = new midsControls.ctlLayeredBar();
+            this.lv5 = new System.Windows.Forms.Label();
+            this.bar5 = new midsControls.ctlLayeredBar();
+            this.lv4 = new System.Windows.Forms.Label();
+            this.bar4 = new midsControls.ctlLayeredBar();
+            this.lv3 = new System.Windows.Forms.Label();
+            this.bar3 = new midsControls.ctlLayeredBar();
+            this.lv2 = new System.Windows.Forms.Label();
+            this.bar2 = new midsControls.ctlLayeredBar();
             this.label5 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar3 = new midsControls.ctlLayeredBar();
+            this.bar1 = new midsControls.ctlLayeredBar();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -119,57 +118,57 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
+            this.lv1 = new System.Windows.Forms.Label();
             this.tabPageAdv5 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.label81 = new System.Windows.Forms.Label();
             this.gradientPanel7 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.gradientPanel14 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
             this.label79 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar85 = new midsControls.ctlLayeredBar();
-            this.label80 = new System.Windows.Forms.Label();
+            this.bar37 = new midsControls.ctlLayeredBar();
+            this.lv37 = new System.Windows.Forms.Label();
             this.gradientPanel13 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
             this.label77 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar81 = new midsControls.ctlLayeredBar();
-            this.label78 = new System.Windows.Forms.Label();
+            this.bar36 = new midsControls.ctlLayeredBar();
+            this.lv36 = new System.Windows.Forms.Label();
             this.gradientPanel12 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.label75 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar78 = new midsControls.ctlLayeredBar();
-            this.label76 = new System.Windows.Forms.Label();
+            this.bar35 = new midsControls.ctlLayeredBar();
+            this.lv35 = new System.Windows.Forms.Label();
             this.gradientPanel11 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
             this.label72 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar71 = new midsControls.ctlLayeredBar();
-            this.label73 = new System.Windows.Forms.Label();
+            this.bar34 = new midsControls.ctlLayeredBar();
+            this.lv34 = new System.Windows.Forms.Label();
             this.gradientPanel10 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.label68 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar68 = new midsControls.ctlLayeredBar();
-            this.label71 = new System.Windows.Forms.Label();
+            this.bar33 = new midsControls.ctlLayeredBar();
+            this.lv33 = new System.Windows.Forms.Label();
             this.gradientPanel9 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.label65 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar56 = new midsControls.ctlLayeredBar();
-            this.label67 = new System.Windows.Forms.Label();
+            this.bar32 = new midsControls.ctlLayeredBar();
+            this.lv32 = new System.Windows.Forms.Label();
             this.gradientPanel8 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.label69 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar72 = new midsControls.ctlLayeredBar();
-            this.label74 = new System.Windows.Forms.Label();
+            this.bar31 = new midsControls.ctlLayeredBar();
+            this.lv31 = new System.Windows.Forms.Label();
             this.label52 = new System.Windows.Forms.Label();
             this.gradientPanel6 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.label53 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar57 = new midsControls.ctlLayeredBar();
-            this.label54 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar60 = new midsControls.ctlLayeredBar();
+            this.lv30 = new System.Windows.Forms.Label();
+            this.bar30 = new midsControls.ctlLayeredBar();
+            this.lv29 = new System.Windows.Forms.Label();
+            this.bar29 = new midsControls.ctlLayeredBar();
             this.label55 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar63 = new midsControls.ctlLayeredBar();
+            this.bar28 = new midsControls.ctlLayeredBar();
             this.label56 = new System.Windows.Forms.Label();
             this.label64 = new System.Windows.Forms.Label();
-            this.label66 = new System.Windows.Forms.Label();
+            this.lv28 = new System.Windows.Forms.Label();
             this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -177,28 +176,28 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label51 = new System.Windows.Forms.Label();
             this.gradientPanel5 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.label57 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar48 = new midsControls.ctlLayeredBar();
-            this.label58 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar49 = new midsControls.ctlLayeredBar();
-            this.label59 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar50 = new midsControls.ctlLayeredBar();
+            this.lv27 = new System.Windows.Forms.Label();
+            this.bar27 = new midsControls.ctlLayeredBar();
+            this.lv26 = new System.Windows.Forms.Label();
+            this.bar26 = new midsControls.ctlLayeredBar();
+            this.lv25 = new System.Windows.Forms.Label();
+            this.bar25 = new midsControls.ctlLayeredBar();
             this.label60 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar51 = new midsControls.ctlLayeredBar();
+            this.bar24 = new midsControls.ctlLayeredBar();
             this.label61 = new System.Windows.Forms.Label();
             this.label62 = new System.Windows.Forms.Label();
             this.label63 = new System.Windows.Forms.Label();
-            this.label70 = new System.Windows.Forms.Label();
+            this.lv24 = new System.Windows.Forms.Label();
             this.tabPageAdv6 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.label105 = new System.Windows.Forms.Label();
             this.gradientPanel16 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
-            this.label106 = new System.Windows.Forms.Label();
-            this.label107 = new System.Windows.Forms.Label();
-            this.label108 = new System.Windows.Forms.Label();
-            this.label109 = new System.Windows.Forms.Label();
-            this.label110 = new System.Windows.Forms.Label();
-            this.label111 = new System.Windows.Forms.Label();
+            this.lv59 = new System.Windows.Forms.Label();
+            this.lv58 = new System.Windows.Forms.Label();
+            this.lv57 = new System.Windows.Forms.Label();
+            this.lv56 = new System.Windows.Forms.Label();
+            this.lv55 = new System.Windows.Forms.Label();
+            this.lv54 = new System.Windows.Forms.Label();
             this.label112 = new System.Windows.Forms.Label();
             this.label113 = new System.Windows.Forms.Label();
             this.label114 = new System.Windows.Forms.Label();
@@ -206,35 +205,35 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label116 = new System.Windows.Forms.Label();
             this.label117 = new System.Windows.Forms.Label();
             this.label118 = new System.Windows.Forms.Label();
-            this.label119 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar99 = new midsControls.ctlLayeredBar();
-            this.label120 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar100 = new midsControls.ctlLayeredBar();
-            this.label121 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar101 = new midsControls.ctlLayeredBar();
+            this.lv52 = new System.Windows.Forms.Label();
+            this.bar52 = new midsControls.ctlLayeredBar();
+            this.lv51 = new System.Windows.Forms.Label();
+            this.bar51 = new midsControls.ctlLayeredBar();
+            this.lv50 = new System.Windows.Forms.Label();
+            this.bar50 = new midsControls.ctlLayeredBar();
             this.label122 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar102 = new midsControls.ctlLayeredBar();
+            this.bar49 = new midsControls.ctlLayeredBar();
             this.label123 = new System.Windows.Forms.Label();
             this.label124 = new System.Windows.Forms.Label();
             this.label125 = new System.Windows.Forms.Label();
-            this.label126 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar103 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar104 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar105 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar106 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar107 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar108 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar109 = new midsControls.ctlLayeredBar();
-            this.label127 = new System.Windows.Forms.Label();
+            this.lv49 = new System.Windows.Forms.Label();
+            this.bar53 = new midsControls.ctlLayeredBar();
+            this.bar54 = new midsControls.ctlLayeredBar();
+            this.bar55 = new midsControls.ctlLayeredBar();
+            this.bar56 = new midsControls.ctlLayeredBar();
+            this.bar57 = new midsControls.ctlLayeredBar();
+            this.bar58 = new midsControls.ctlLayeredBar();
+            this.bar59 = new midsControls.ctlLayeredBar();
+            this.lv53 = new System.Windows.Forms.Label();
             this.label104 = new System.Windows.Forms.Label();
             this.gradientPanel15 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
-            this.label103 = new System.Windows.Forms.Label();
-            this.label102 = new System.Windows.Forms.Label();
-            this.label101 = new System.Windows.Forms.Label();
-            this.label100 = new System.Windows.Forms.Label();
-            this.label99 = new System.Windows.Forms.Label();
-            this.label98 = new System.Windows.Forms.Label();
+            this.lv48 = new System.Windows.Forms.Label();
+            this.lv47 = new System.Windows.Forms.Label();
+            this.lv46 = new System.Windows.Forms.Label();
+            this.lv45 = new System.Windows.Forms.Label();
+            this.lv44 = new System.Windows.Forms.Label();
+            this.lv43 = new System.Windows.Forms.Label();
             this.label96 = new System.Windows.Forms.Label();
             this.label95 = new System.Windows.Forms.Label();
             this.label94 = new System.Windows.Forms.Label();
@@ -242,57 +241,60 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label92 = new System.Windows.Forms.Label();
             this.label91 = new System.Windows.Forms.Label();
             this.label90 = new System.Windows.Forms.Label();
-            this.label82 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar88 = new midsControls.ctlLayeredBar();
-            this.label83 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar91 = new midsControls.ctlLayeredBar();
-            this.label84 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar94 = new midsControls.ctlLayeredBar();
+            this.lv41 = new System.Windows.Forms.Label();
+            this.bar41 = new midsControls.ctlLayeredBar();
+            this.lv40 = new System.Windows.Forms.Label();
+            this.bar40 = new midsControls.ctlLayeredBar();
+            this.lv39 = new System.Windows.Forms.Label();
+            this.bar39 = new midsControls.ctlLayeredBar();
             this.label85 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar97 = new midsControls.ctlLayeredBar();
+            this.bar38 = new midsControls.ctlLayeredBar();
             this.label86 = new System.Windows.Forms.Label();
             this.label87 = new System.Windows.Forms.Label();
             this.label88 = new System.Windows.Forms.Label();
-            this.label89 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar89 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar90 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar92 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar93 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar95 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar96 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar98 = new midsControls.ctlLayeredBar();
-            this.label97 = new System.Windows.Forms.Label();
+            this.lv38 = new System.Windows.Forms.Label();
+            this.bar42 = new midsControls.ctlLayeredBar();
+            this.bar43 = new midsControls.ctlLayeredBar();
+            this.bar44 = new midsControls.ctlLayeredBar();
+            this.bar45 = new midsControls.ctlLayeredBar();
+            this.bar46 = new midsControls.ctlLayeredBar();
+            this.bar47 = new midsControls.ctlLayeredBar();
+            this.bar48 = new midsControls.ctlLayeredBar();
+            this.lv42 = new System.Windows.Forms.Label();
             this.tabPageAdv1 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.label128 = new System.Windows.Forms.Label();
             this.gradientPanel17 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
-            this.label133 = new System.Windows.Forms.Label();
-            this.label134 = new System.Windows.Forms.Label();
+            this.lv67 = new System.Windows.Forms.Label();
+            this.lv66 = new System.Windows.Forms.Label();
+            this.lv65 = new System.Windows.Forms.Label();
+            this.lv64 = new System.Windows.Forms.Label();
+            this.lv63 = new System.Windows.Forms.Label();
+            this.lv62 = new System.Windows.Forms.Label();
+            this.lv61 = new System.Windows.Forms.Label();
+            this.bar60 = new midsControls.ctlLayeredBar();
+            this.bar67 = new midsControls.ctlLayeredBar();
+            this.bar61 = new midsControls.ctlLayeredBar();
+            this.bar66 = new midsControls.ctlLayeredBar();
+            this.bar62 = new midsControls.ctlLayeredBar();
+            this.bar65 = new midsControls.ctlLayeredBar();
+            this.bar63 = new midsControls.ctlLayeredBar();
+            this.bar64 = new midsControls.ctlLayeredBar();
+            this.label136 = new System.Windows.Forms.Label();
+            this.label137 = new System.Windows.Forms.Label();
+            this.label138 = new System.Windows.Forms.Label();
             this.label139 = new System.Windows.Forms.Label();
             this.label140 = new System.Windows.Forms.Label();
             this.label141 = new System.Windows.Forms.Label();
             this.label142 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar110 = new midsControls.ctlLayeredBar();
             this.label143 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar111 = new midsControls.ctlLayeredBar();
-            this.label144 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar112 = new midsControls.ctlLayeredBar();
-            this.label145 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar113 = new midsControls.ctlLayeredBar();
-            this.label146 = new System.Windows.Forms.Label();
-            this.label147 = new System.Windows.Forms.Label();
-            this.label148 = new System.Windows.Forms.Label();
-            this.label149 = new System.Windows.Forms.Label();
-            this.ctlLayeredBar114 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar115 = new midsControls.ctlLayeredBar();
-            this.ctlLayeredBar116 = new midsControls.ctlLayeredBar();
-            this.label150 = new System.Windows.Forms.Label();
+            this.lv60 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopMost)).BeginInit();
-            this.pContainer1.SuspendLayout();
-            this.pContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tabControlAdv1)).BeginInit();
-            this.tabControlAdv1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabControlAdv2)).BeginInit();
+            this.tabControlAdv2.SuspendLayout();
             this.tabPageAdv4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gradientPanel4)).BeginInit();
             this.gradientPanel4.SuspendLayout();
@@ -373,51 +375,51 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.pbTopMost.Click += new System.EventHandler(this.PbTopMostClick);
             this.pbTopMost.Paint += new System.Windows.Forms.PaintEventHandler(this.PbTopMostPaint);
             // 
-            // pContainer1
+            // panel1
             // 
-            this.pContainer1.BackColor = System.Drawing.SystemColors.Control;
-            this.pContainer1.Controls.Add(this.pContainer2);
-            this.pContainer1.Location = new System.Drawing.Point(0, 0);
-            this.pContainer1.Name = "pContainer1";
-            this.pContainer1.Size = new System.Drawing.Size(538, 652);
-            this.pContainer1.TabIndex = 100;
+            this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(538, 652);
+            this.panel1.TabIndex = 100;
             // 
-            // pContainer2
+            // panel2
             // 
-            this.pContainer2.BackColor = System.Drawing.Color.Black;
-            this.pContainer2.Controls.Add(this.pbClose);
-            this.pContainer2.Controls.Add(this.tabControlAdv1);
-            this.pContainer2.Controls.Add(this.pbTopMost);
-            this.pContainer2.Location = new System.Drawing.Point(3, 0);
-            this.pContainer2.Name = "pContainer2";
-            this.pContainer2.Size = new System.Drawing.Size(532, 629);
-            this.pContainer2.TabIndex = 101;
+            this.panel2.BackColor = System.Drawing.Color.Black;
+            this.panel2.Controls.Add(this.pbClose);
+            this.panel2.Controls.Add(this.tabControlAdv2);
+            this.panel2.Controls.Add(this.pbTopMost);
+            this.panel2.Location = new System.Drawing.Point(3, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(532, 629);
+            this.panel2.TabIndex = 101;
             // 
-            // tabControlAdv1
+            // tabControlAdv2
             // 
-            this.tabControlAdv1.ActiveTabColor = System.Drawing.Color.Goldenrod;
-            this.tabControlAdv1.BeforeTouchSize = new System.Drawing.Size(532, 597);
-            this.tabControlAdv1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.tabControlAdv1.CanApplyTheme = false;
-            this.tabControlAdv1.Controls.Add(this.tabPageAdv4);
-            this.tabControlAdv1.Controls.Add(this.tabPageAdv5);
-            this.tabControlAdv1.Controls.Add(this.tabPageAdv6);
-            this.tabControlAdv1.Controls.Add(this.tabPageAdv1);
-            this.tabControlAdv1.FixedSingleBorderColor = System.Drawing.Color.Goldenrod;
-            this.tabControlAdv1.FocusOnTabClick = false;
-            this.tabControlAdv1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControlAdv1.InactiveTabColor = System.Drawing.Color.DodgerBlue;
-            this.tabControlAdv1.ItemSize = new System.Drawing.Size(150, 25);
-            this.tabControlAdv1.Location = new System.Drawing.Point(0, 0);
-            this.tabControlAdv1.Name = "tabControlAdv1";
-            this.tabControlAdv1.ShowScroll = false;
-            this.tabControlAdv1.Size = new System.Drawing.Size(532, 597);
-            this.tabControlAdv1.TabGap = 24;
-            this.tabControlAdv1.TabIndex = 99;
-            this.tabControlAdv1.TabPanelBackColor = System.Drawing.Color.DodgerBlue;
-            this.tabControlAdv1.TabStyle = typeof(Syncfusion.Windows.Forms.Tools.TabRendererMetro);
-            this.tabControlAdv1.ThemeName = "TabRendererMetro";
-            this.tabControlAdv1.ThemeStyle.PrimitiveButtonStyle.DisabledNextPageImage = null;
+            this.tabControlAdv2.ActiveTabColor = System.Drawing.Color.Goldenrod;
+            this.tabControlAdv2.BeforeTouchSize = new System.Drawing.Size(532, 597);
+            this.tabControlAdv2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tabControlAdv2.CanApplyTheme = false;
+            this.tabControlAdv2.Controls.Add(this.tabPageAdv4);
+            this.tabControlAdv2.Controls.Add(this.tabPageAdv5);
+            this.tabControlAdv2.Controls.Add(this.tabPageAdv6);
+            this.tabControlAdv2.Controls.Add(this.tabPageAdv1);
+            this.tabControlAdv2.FixedSingleBorderColor = System.Drawing.Color.Goldenrod;
+            this.tabControlAdv2.FocusOnTabClick = false;
+            this.tabControlAdv2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControlAdv2.InactiveTabColor = System.Drawing.Color.DodgerBlue;
+            this.tabControlAdv2.ItemSize = new System.Drawing.Size(150, 25);
+            this.tabControlAdv2.Location = new System.Drawing.Point(0, 0);
+            this.tabControlAdv2.Name = "tabControlAdv2";
+            this.tabControlAdv2.ShowScroll = false;
+            this.tabControlAdv2.Size = new System.Drawing.Size(532, 597);
+            this.tabControlAdv2.TabGap = 24;
+            this.tabControlAdv2.TabIndex = 99;
+            this.tabControlAdv2.TabPanelBackColor = System.Drawing.Color.DodgerBlue;
+            this.tabControlAdv2.TabStyle = typeof(Syncfusion.Windows.Forms.Tools.TabRendererMetro);
+            this.tabControlAdv2.ThemeName = "TabRendererMetro";
+            this.tabControlAdv2.ThemeStyle.PrimitiveButtonStyle.DisabledNextPageImage = null;
             // 
             // tabPageAdv4
             // 
@@ -461,16 +463,16 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.17308F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.82692F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
-            this.tableLayoutPanel1.Controls.Add(this.label50, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label49, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.ctlLayeredBar16, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.ctlLayeredBar18, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.ctlLayeredBar17, 2, 1);
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
+            this.tableLayoutPanel1.Controls.Add(this.lv23, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.lv22, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.bar21, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.bar23, 2, 2);
+            this.tableLayoutPanel1.Controls.Add(this.bar22, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.label45, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label46, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label47, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label48, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.lv21, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
@@ -481,104 +483,104 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel1.Size = new System.Drawing.Size(505, 71);
             this.tableLayoutPanel1.TabIndex = 8;
             // 
-            // label50
+            // lv23
             // 
-            this.label50.AutoSize = true;
-            this.label50.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label50.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label50.Location = new System.Drawing.Point(110, 38);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(71, 19);
-            this.label50.TabIndex = 11;
-            this.label50.Text = "100.00%";
-            this.label50.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv23.AutoSize = true;
+            this.lv23.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv23.Location = new System.Drawing.Point(113, 38);
+            this.lv23.Name = "lv23";
+            this.lv23.Size = new System.Drawing.Size(73, 19);
+            this.lv23.TabIndex = 11;
+            this.lv23.Text = "100.00%";
+            this.lv23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label49
+            // lv22
             // 
-            this.label49.AutoSize = true;
-            this.label49.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label49.Location = new System.Drawing.Point(110, 19);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(71, 19);
-            this.label49.TabIndex = 10;
-            this.label49.Text = "100.00%";
-            this.label49.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv22.AutoSize = true;
+            this.lv22.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv22.Location = new System.Drawing.Point(113, 19);
+            this.lv22.Name = "lv22";
+            this.lv22.Size = new System.Drawing.Size(73, 19);
+            this.lv22.TabIndex = 10;
+            this.lv22.Text = "100.00%";
+            this.lv22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar16
+            // bar21
             // 
-            this.ctlLayeredBar16.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar16.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(114)))), ((int)(((byte)(204)))));
-            this.ctlLayeredBar16.ColorMainBar = System.Drawing.Color.DodgerBlue;
-            this.ctlLayeredBar16.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(63)))), ((int)(((byte)(112)))));
-            this.ctlLayeredBar16.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar16.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar16.EnableBaseValue = true;
-            this.ctlLayeredBar16.EnableOverCap = true;
-            this.ctlLayeredBar16.EnableOverlay1 = false;
-            this.ctlLayeredBar16.EnableOverlay2 = false;
-            this.ctlLayeredBar16.Location = new System.Drawing.Point(187, 3);
-            this.ctlLayeredBar16.MaximumBarValue = 100F;
-            this.ctlLayeredBar16.MinimumBarValue = 0F;
-            this.ctlLayeredBar16.Name = "ctlLayeredBar16";
-            this.ctlLayeredBar16.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar16.TabIndex = 3;
-            this.ctlLayeredBar16.ValueBase = 0F;
-            this.ctlLayeredBar16.ValueMainBar = 100F;
-            this.ctlLayeredBar16.ValueOverCap = 0F;
-            this.ctlLayeredBar16.ValueOverlay1 = 0F;
-            this.ctlLayeredBar16.ValueOverlay2 = 0F;
+            this.bar21.BackColor = System.Drawing.Color.Transparent;
+            this.bar21.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar21.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(114)))), ((int)(((byte)(204)))));
+            this.bar21.ColorMainBar = System.Drawing.Color.DodgerBlue;
+            this.bar21.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(63)))), ((int)(((byte)(112)))));
+            this.bar21.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar21.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar21.EnableBaseValue = true;
+            this.bar21.EnableOverCap = true;
+            this.bar21.EnableOverlay1 = false;
+            this.bar21.EnableOverlay2 = false;
+            this.bar21.Location = new System.Drawing.Point(192, 3);
+            this.bar21.MaximumBarValue = 100F;
+            this.bar21.MinimumBarValue = 0F;
+            this.bar21.Name = "bar21";
+            this.bar21.Size = new System.Drawing.Size(304, 13);
+            this.bar21.TabIndex = 3;
+            this.bar21.ValueBase = 0F;
+            this.bar21.ValueMainBar = 100F;
+            this.bar21.ValueOverCap = 0F;
+            this.bar21.ValueOverlay1 = 0F;
+            this.bar21.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar18
+            // bar23
             // 
-            this.ctlLayeredBar18.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar18.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(125)))), ((int)(((byte)(204)))));
-            this.ctlLayeredBar18.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(158)))), ((int)(((byte)(255)))));
-            this.ctlLayeredBar18.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar18.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar18.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar18.EnableBaseValue = true;
-            this.ctlLayeredBar18.EnableOverCap = false;
-            this.ctlLayeredBar18.EnableOverlay1 = false;
-            this.ctlLayeredBar18.EnableOverlay2 = false;
-            this.ctlLayeredBar18.Location = new System.Drawing.Point(187, 41);
-            this.ctlLayeredBar18.MaximumBarValue = 100F;
-            this.ctlLayeredBar18.MinimumBarValue = 0F;
-            this.ctlLayeredBar18.Name = "ctlLayeredBar18";
-            this.ctlLayeredBar18.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar18.TabIndex = 5;
-            this.ctlLayeredBar18.ValueBase = 0F;
-            this.ctlLayeredBar18.ValueMainBar = 100F;
-            this.ctlLayeredBar18.ValueOverCap = 0F;
-            this.ctlLayeredBar18.ValueOverlay1 = 0F;
-            this.ctlLayeredBar18.ValueOverlay2 = 0F;
+            this.bar23.BackColor = System.Drawing.Color.Transparent;
+            this.bar23.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar23.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(125)))), ((int)(((byte)(204)))));
+            this.bar23.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(158)))), ((int)(((byte)(255)))));
+            this.bar23.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar23.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar23.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar23.EnableBaseValue = true;
+            this.bar23.EnableOverCap = false;
+            this.bar23.EnableOverlay1 = false;
+            this.bar23.EnableOverlay2 = false;
+            this.bar23.Location = new System.Drawing.Point(192, 41);
+            this.bar23.MaximumBarValue = 100F;
+            this.bar23.MinimumBarValue = 0F;
+            this.bar23.Name = "bar23";
+            this.bar23.Size = new System.Drawing.Size(304, 13);
+            this.bar23.TabIndex = 5;
+            this.bar23.ValueBase = 0F;
+            this.bar23.ValueMainBar = 100F;
+            this.bar23.ValueOverCap = 0F;
+            this.bar23.ValueOverlay1 = 0F;
+            this.bar23.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar17
+            // bar22
             // 
-            this.ctlLayeredBar17.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar17.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar17.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(149)))), ((int)(((byte)(203)))), ((int)(((byte)(255)))));
-            this.ctlLayeredBar17.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar17.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar17.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar17.EnableBaseValue = false;
-            this.ctlLayeredBar17.EnableOverCap = false;
-            this.ctlLayeredBar17.EnableOverlay1 = false;
-            this.ctlLayeredBar17.EnableOverlay2 = false;
-            this.ctlLayeredBar17.Location = new System.Drawing.Point(187, 22);
-            this.ctlLayeredBar17.MaximumBarValue = 100F;
-            this.ctlLayeredBar17.MinimumBarValue = 0F;
-            this.ctlLayeredBar17.Name = "ctlLayeredBar17";
-            this.ctlLayeredBar17.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar17.TabIndex = 4;
-            this.ctlLayeredBar17.ValueBase = 0F;
-            this.ctlLayeredBar17.ValueMainBar = 100F;
-            this.ctlLayeredBar17.ValueOverCap = 0F;
-            this.ctlLayeredBar17.ValueOverlay1 = 0F;
-            this.ctlLayeredBar17.ValueOverlay2 = 0F;
+            this.bar22.BackColor = System.Drawing.Color.Transparent;
+            this.bar22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar22.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar22.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(149)))), ((int)(((byte)(203)))), ((int)(((byte)(255)))));
+            this.bar22.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar22.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar22.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar22.EnableBaseValue = false;
+            this.bar22.EnableOverCap = false;
+            this.bar22.EnableOverlay1 = false;
+            this.bar22.EnableOverlay2 = false;
+            this.bar22.Location = new System.Drawing.Point(192, 22);
+            this.bar22.MaximumBarValue = 100F;
+            this.bar22.MinimumBarValue = 0F;
+            this.bar22.Name = "bar22";
+            this.bar22.Size = new System.Drawing.Size(304, 13);
+            this.bar22.TabIndex = 4;
+            this.bar22.ValueBase = 0F;
+            this.bar22.ValueMainBar = 100F;
+            this.bar22.ValueOverCap = 0F;
+            this.bar22.ValueOverlay1 = 0F;
+            this.bar22.ValueOverlay2 = 0F;
             // 
             // label45
             // 
@@ -587,7 +589,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label45.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label45.Location = new System.Drawing.Point(3, 0);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(101, 19);
+            this.label45.Size = new System.Drawing.Size(104, 19);
             this.label45.TabIndex = 6;
             this.label45.Text = "End Recovery:";
             this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -599,7 +601,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label46.Location = new System.Drawing.Point(3, 19);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(101, 19);
+            this.label46.Size = new System.Drawing.Size(104, 19);
             this.label46.TabIndex = 7;
             this.label46.Text = "End Use:";
             this.label46.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -611,22 +613,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label47.Location = new System.Drawing.Point(3, 38);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(101, 19);
+            this.label47.Size = new System.Drawing.Size(104, 19);
             this.label47.TabIndex = 8;
             this.label47.Text = "Max End:";
             this.label47.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label48
+            // lv21
             // 
-            this.label48.AutoSize = true;
-            this.label48.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label48.Location = new System.Drawing.Point(110, 0);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(71, 19);
-            this.label48.TabIndex = 9;
-            this.label48.Text = "100.00%";
-            this.label48.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv21.AutoSize = true;
+            this.lv21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv21.Location = new System.Drawing.Point(113, 0);
+            this.lv21.Name = "lv21";
+            this.lv21.Size = new System.Drawing.Size(73, 19);
+            this.lv21.TabIndex = 9;
+            this.lv21.Text = "100.00%";
+            this.lv21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label4
             // 
@@ -690,13 +692,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 59.40594F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.59406F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
-            this.tableLayoutPanel2.Controls.Add(this.label44, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.ctlLayeredBar14, 2, 0);
-            this.tableLayoutPanel2.Controls.Add(this.ctlLayeredBar15, 2, 1);
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
+            this.tableLayoutPanel2.Controls.Add(this.lv20, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.bar19, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.bar20, 2, 1);
             this.tableLayoutPanel2.Controls.Add(this.label41, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.label42, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label43, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lv19, 1, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
@@ -706,67 +708,67 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel2.Size = new System.Drawing.Size(506, 57);
             this.tableLayoutPanel2.TabIndex = 9;
             // 
-            // label44
+            // lv20
             // 
-            this.label44.AutoSize = true;
-            this.label44.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label44.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label44.Location = new System.Drawing.Point(113, 19);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(69, 19);
-            this.label44.TabIndex = 7;
-            this.label44.Text = "100.00%";
-            this.label44.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv20.AutoSize = true;
+            this.lv20.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv20.Location = new System.Drawing.Point(116, 19);
+            this.lv20.Name = "lv20";
+            this.lv20.Size = new System.Drawing.Size(71, 19);
+            this.lv20.TabIndex = 7;
+            this.lv20.Text = "100.00%";
+            this.lv20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar14
+            // bar19
             // 
-            this.ctlLayeredBar14.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar14.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(204)))), ((int)(((byte)(51)))));
-            this.ctlLayeredBar14.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(64)))));
-            this.ctlLayeredBar14.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(111)))), ((int)(((byte)(28)))));
-            this.ctlLayeredBar14.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar14.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar14.EnableBaseValue = true;
-            this.ctlLayeredBar14.EnableOverCap = true;
-            this.ctlLayeredBar14.EnableOverlay1 = false;
-            this.ctlLayeredBar14.EnableOverlay2 = false;
-            this.ctlLayeredBar14.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar14.MaximumBarValue = 100F;
-            this.ctlLayeredBar14.MinimumBarValue = 0F;
-            this.ctlLayeredBar14.Name = "ctlLayeredBar14";
-            this.ctlLayeredBar14.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar14.TabIndex = 2;
-            this.ctlLayeredBar14.ValueBase = 0F;
-            this.ctlLayeredBar14.ValueMainBar = 100F;
-            this.ctlLayeredBar14.ValueOverCap = 0F;
-            this.ctlLayeredBar14.ValueOverlay1 = 0F;
-            this.ctlLayeredBar14.ValueOverlay2 = 0F;
+            this.bar19.BackColor = System.Drawing.Color.Transparent;
+            this.bar19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar19.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(204)))), ((int)(((byte)(51)))));
+            this.bar19.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(64)))));
+            this.bar19.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(111)))), ((int)(((byte)(28)))));
+            this.bar19.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar19.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar19.EnableBaseValue = true;
+            this.bar19.EnableOverCap = true;
+            this.bar19.EnableOverlay1 = false;
+            this.bar19.EnableOverlay2 = false;
+            this.bar19.Location = new System.Drawing.Point(193, 3);
+            this.bar19.MaximumBarValue = 100F;
+            this.bar19.MinimumBarValue = 0F;
+            this.bar19.Name = "bar19";
+            this.bar19.Size = new System.Drawing.Size(304, 13);
+            this.bar19.TabIndex = 2;
+            this.bar19.ValueBase = 0F;
+            this.bar19.ValueMainBar = 100F;
+            this.bar19.ValueOverCap = 0F;
+            this.bar19.ValueOverlay1 = 0F;
+            this.bar19.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar15
+            // bar20
             // 
-            this.ctlLayeredBar15.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar15.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(130)))), ((int)(((byte)(31)))));
-            this.ctlLayeredBar15.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(180)))), ((int)(((byte)(44)))));
-            this.ctlLayeredBar15.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(38)))), ((int)(((byte)(10)))));
-            this.ctlLayeredBar15.ColorOverlay1 = System.Drawing.Color.Gainsboro;
-            this.ctlLayeredBar15.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar15.EnableBaseValue = true;
-            this.ctlLayeredBar15.EnableOverCap = true;
-            this.ctlLayeredBar15.EnableOverlay1 = true;
-            this.ctlLayeredBar15.EnableOverlay2 = false;
-            this.ctlLayeredBar15.Location = new System.Drawing.Point(188, 22);
-            this.ctlLayeredBar15.MaximumBarValue = 100F;
-            this.ctlLayeredBar15.MinimumBarValue = 0F;
-            this.ctlLayeredBar15.Name = "ctlLayeredBar15";
-            this.ctlLayeredBar15.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar15.TabIndex = 3;
-            this.ctlLayeredBar15.ValueBase = 0F;
-            this.ctlLayeredBar15.ValueMainBar = 100F;
-            this.ctlLayeredBar15.ValueOverCap = 0F;
-            this.ctlLayeredBar15.ValueOverlay1 = 0F;
-            this.ctlLayeredBar15.ValueOverlay2 = 0F;
+            this.bar20.BackColor = System.Drawing.Color.Transparent;
+            this.bar20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar20.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(130)))), ((int)(((byte)(31)))));
+            this.bar20.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(180)))), ((int)(((byte)(44)))));
+            this.bar20.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(38)))), ((int)(((byte)(10)))));
+            this.bar20.ColorOverlay1 = System.Drawing.Color.Gainsboro;
+            this.bar20.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar20.EnableBaseValue = true;
+            this.bar20.EnableOverCap = true;
+            this.bar20.EnableOverlay1 = true;
+            this.bar20.EnableOverlay2 = false;
+            this.bar20.Location = new System.Drawing.Point(193, 22);
+            this.bar20.MaximumBarValue = 100F;
+            this.bar20.MinimumBarValue = 0F;
+            this.bar20.Name = "bar20";
+            this.bar20.Size = new System.Drawing.Size(304, 13);
+            this.bar20.TabIndex = 3;
+            this.bar20.ValueBase = 0F;
+            this.bar20.ValueMainBar = 100F;
+            this.bar20.ValueOverCap = 0F;
+            this.bar20.ValueOverlay1 = 0F;
+            this.bar20.ValueOverlay2 = 0F;
             // 
             // label41
             // 
@@ -775,7 +777,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label41.Location = new System.Drawing.Point(3, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(104, 19);
+            this.label41.Size = new System.Drawing.Size(107, 19);
             this.label41.TabIndex = 4;
             this.label41.Text = "Regeneration:";
             this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -787,22 +789,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label42.Location = new System.Drawing.Point(3, 19);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(104, 19);
+            this.label42.Size = new System.Drawing.Size(107, 19);
             this.label42.TabIndex = 5;
             this.label42.Text = "Max HP:";
             this.label42.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label43
+            // lv19
             // 
-            this.label43.AutoSize = true;
-            this.label43.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label43.Location = new System.Drawing.Point(113, 0);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(69, 19);
-            this.label43.TabIndex = 6;
-            this.label43.Text = "100.00%";
-            this.label43.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv19.AutoSize = true;
+            this.lv19.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv19.Location = new System.Drawing.Point(116, 0);
+            this.lv19.Name = "lv19";
+            this.lv19.Size = new System.Drawing.Size(71, 19);
+            this.lv19.TabIndex = 6;
+            this.lv19.Text = "100.00%";
+            this.lv19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gradientPanel2
             // 
@@ -826,22 +828,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel3.ColumnCount = 3;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 319F));
-            this.tableLayoutPanel3.Controls.Add(this.label40, 1, 7);
-            this.tableLayoutPanel3.Controls.Add(this.label39, 1, 6);
-            this.tableLayoutPanel3.Controls.Add(this.label38, 1, 5);
-            this.tableLayoutPanel3.Controls.Add(this.label37, 1, 4);
-            this.tableLayoutPanel3.Controls.Add(this.label36, 1, 3);
-            this.tableLayoutPanel3.Controls.Add(this.label35, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.label34, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.ctlLayeredBar13, 2, 0);
-            this.tableLayoutPanel3.Controls.Add(this.ctlLayeredBar25, 2, 7);
-            this.tableLayoutPanel3.Controls.Add(this.ctlLayeredBar19, 2, 1);
-            this.tableLayoutPanel3.Controls.Add(this.ctlLayeredBar24, 2, 6);
-            this.tableLayoutPanel3.Controls.Add(this.ctlLayeredBar20, 2, 2);
-            this.tableLayoutPanel3.Controls.Add(this.ctlLayeredBar23, 2, 5);
-            this.tableLayoutPanel3.Controls.Add(this.ctlLayeredBar21, 2, 3);
-            this.tableLayoutPanel3.Controls.Add(this.ctlLayeredBar22, 2, 4);
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 314F));
+            this.tableLayoutPanel3.Controls.Add(this.lv18, 1, 7);
+            this.tableLayoutPanel3.Controls.Add(this.lv17, 1, 6);
+            this.tableLayoutPanel3.Controls.Add(this.lv16, 1, 5);
+            this.tableLayoutPanel3.Controls.Add(this.lv15, 1, 4);
+            this.tableLayoutPanel3.Controls.Add(this.lv14, 1, 3);
+            this.tableLayoutPanel3.Controls.Add(this.lv13, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.lv12, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.bar11, 2, 0);
+            this.tableLayoutPanel3.Controls.Add(this.bar18, 2, 7);
+            this.tableLayoutPanel3.Controls.Add(this.bar12, 2, 1);
+            this.tableLayoutPanel3.Controls.Add(this.bar17, 2, 6);
+            this.tableLayoutPanel3.Controls.Add(this.bar13, 2, 2);
+            this.tableLayoutPanel3.Controls.Add(this.bar16, 2, 5);
+            this.tableLayoutPanel3.Controls.Add(this.bar14, 2, 3);
+            this.tableLayoutPanel3.Controls.Add(this.bar15, 2, 4);
             this.tableLayoutPanel3.Controls.Add(this.label25, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.label26, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.label27, 0, 2);
@@ -850,7 +852,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel3.Controls.Add(this.label30, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.label31, 0, 6);
             this.tableLayoutPanel3.Controls.Add(this.label32, 0, 7);
-            this.tableLayoutPanel3.Controls.Add(this.label33, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.lv11, 1, 0);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 9;
@@ -866,289 +868,289 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel3.Size = new System.Drawing.Size(505, 183);
             this.tableLayoutPanel3.TabIndex = 10;
             // 
-            // label40
+            // lv18
             // 
-            this.label40.AutoSize = true;
-            this.label40.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label40.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label40.Location = new System.Drawing.Point(112, 133);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(70, 19);
-            this.label40.TabIndex = 24;
-            this.label40.Text = "100.00%";
-            this.label40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv18.AutoSize = true;
+            this.lv18.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv18.Location = new System.Drawing.Point(115, 133);
+            this.lv18.Name = "lv18";
+            this.lv18.Size = new System.Drawing.Size(72, 19);
+            this.lv18.TabIndex = 24;
+            this.lv18.Text = "100.00%";
+            this.lv18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label39
+            // lv17
             // 
-            this.label39.AutoSize = true;
-            this.label39.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label39.Location = new System.Drawing.Point(112, 114);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(70, 19);
-            this.label39.TabIndex = 23;
-            this.label39.Text = "100.00%";
-            this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv17.AutoSize = true;
+            this.lv17.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv17.Location = new System.Drawing.Point(115, 114);
+            this.lv17.Name = "lv17";
+            this.lv17.Size = new System.Drawing.Size(72, 19);
+            this.lv17.TabIndex = 23;
+            this.lv17.Text = "100.00%";
+            this.lv17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label38
+            // lv16
             // 
-            this.label38.AutoSize = true;
-            this.label38.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label38.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label38.Location = new System.Drawing.Point(112, 95);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(70, 19);
-            this.label38.TabIndex = 22;
-            this.label38.Text = "100.00%";
-            this.label38.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv16.AutoSize = true;
+            this.lv16.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv16.Location = new System.Drawing.Point(115, 95);
+            this.lv16.Name = "lv16";
+            this.lv16.Size = new System.Drawing.Size(72, 19);
+            this.lv16.TabIndex = 22;
+            this.lv16.Text = "100.00%";
+            this.lv16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label37
+            // lv15
             // 
-            this.label37.AutoSize = true;
-            this.label37.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label37.Location = new System.Drawing.Point(112, 76);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(70, 19);
-            this.label37.TabIndex = 21;
-            this.label37.Text = "100.00%";
-            this.label37.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv15.AutoSize = true;
+            this.lv15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv15.Location = new System.Drawing.Point(115, 76);
+            this.lv15.Name = "lv15";
+            this.lv15.Size = new System.Drawing.Size(72, 19);
+            this.lv15.TabIndex = 21;
+            this.lv15.Text = "100.00%";
+            this.lv15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label36
+            // lv14
             // 
-            this.label36.AutoSize = true;
-            this.label36.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label36.Location = new System.Drawing.Point(112, 57);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(70, 19);
-            this.label36.TabIndex = 20;
-            this.label36.Text = "100.00%";
-            this.label36.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv14.AutoSize = true;
+            this.lv14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv14.Location = new System.Drawing.Point(115, 57);
+            this.lv14.Name = "lv14";
+            this.lv14.Size = new System.Drawing.Size(72, 19);
+            this.lv14.TabIndex = 20;
+            this.lv14.Text = "100.00%";
+            this.lv14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label35
+            // lv13
             // 
-            this.label35.AutoSize = true;
-            this.label35.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label35.Location = new System.Drawing.Point(112, 38);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(70, 19);
-            this.label35.TabIndex = 19;
-            this.label35.Text = "100.00%";
-            this.label35.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv13.AutoSize = true;
+            this.lv13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv13.Location = new System.Drawing.Point(115, 38);
+            this.lv13.Name = "lv13";
+            this.lv13.Size = new System.Drawing.Size(72, 19);
+            this.lv13.TabIndex = 19;
+            this.lv13.Text = "100.00%";
+            this.lv13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label34
+            // lv12
             // 
-            this.label34.AutoSize = true;
-            this.label34.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label34.Location = new System.Drawing.Point(112, 19);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(70, 19);
-            this.label34.TabIndex = 18;
-            this.label34.Text = "100.00%";
-            this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv12.AutoSize = true;
+            this.lv12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv12.Location = new System.Drawing.Point(115, 19);
+            this.lv12.Name = "lv12";
+            this.lv12.Size = new System.Drawing.Size(72, 19);
+            this.lv12.TabIndex = 18;
+            this.lv12.Text = "100.00%";
+            this.lv12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar13
+            // bar11
             // 
-            this.ctlLayeredBar13.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar13.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar13.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ctlLayeredBar13.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar13.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar13.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar13.EnableBaseValue = false;
-            this.ctlLayeredBar13.EnableOverCap = true;
-            this.ctlLayeredBar13.EnableOverlay1 = false;
-            this.ctlLayeredBar13.EnableOverlay2 = false;
-            this.ctlLayeredBar13.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar13.MaximumBarValue = 100F;
-            this.ctlLayeredBar13.MinimumBarValue = 0F;
-            this.ctlLayeredBar13.Name = "ctlLayeredBar13";
-            this.ctlLayeredBar13.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar13.TabIndex = 1;
-            this.ctlLayeredBar13.ValueBase = 0F;
-            this.ctlLayeredBar13.ValueMainBar = 100F;
-            this.ctlLayeredBar13.ValueOverCap = 0F;
-            this.ctlLayeredBar13.ValueOverlay1 = 0F;
-            this.ctlLayeredBar13.ValueOverlay2 = 0F;
+            this.bar11.BackColor = System.Drawing.Color.Transparent;
+            this.bar11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar11.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar11.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.bar11.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.bar11.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar11.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar11.EnableBaseValue = false;
+            this.bar11.EnableOverCap = true;
+            this.bar11.EnableOverlay1 = false;
+            this.bar11.EnableOverlay2 = false;
+            this.bar11.Location = new System.Drawing.Point(193, 3);
+            this.bar11.MaximumBarValue = 100F;
+            this.bar11.MinimumBarValue = 0F;
+            this.bar11.Name = "bar11";
+            this.bar11.Size = new System.Drawing.Size(303, 13);
+            this.bar11.TabIndex = 1;
+            this.bar11.ValueBase = 0F;
+            this.bar11.ValueMainBar = 100F;
+            this.bar11.ValueOverCap = 0F;
+            this.bar11.ValueOverlay1 = 0F;
+            this.bar11.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar25
+            // bar18
             // 
-            this.ctlLayeredBar25.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar25.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar25.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ctlLayeredBar25.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar25.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar25.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar25.EnableBaseValue = false;
-            this.ctlLayeredBar25.EnableOverCap = true;
-            this.ctlLayeredBar25.EnableOverlay1 = false;
-            this.ctlLayeredBar25.EnableOverlay2 = false;
-            this.ctlLayeredBar25.Location = new System.Drawing.Point(188, 136);
-            this.ctlLayeredBar25.MaximumBarValue = 100F;
-            this.ctlLayeredBar25.MinimumBarValue = 0F;
-            this.ctlLayeredBar25.Name = "ctlLayeredBar25";
-            this.ctlLayeredBar25.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar25.TabIndex = 8;
-            this.ctlLayeredBar25.ValueBase = 0F;
-            this.ctlLayeredBar25.ValueMainBar = 100F;
-            this.ctlLayeredBar25.ValueOverCap = 0F;
-            this.ctlLayeredBar25.ValueOverlay1 = 0F;
-            this.ctlLayeredBar25.ValueOverlay2 = 0F;
+            this.bar18.BackColor = System.Drawing.Color.Transparent;
+            this.bar18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar18.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar18.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.bar18.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.bar18.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar18.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar18.EnableBaseValue = false;
+            this.bar18.EnableOverCap = true;
+            this.bar18.EnableOverlay1 = false;
+            this.bar18.EnableOverlay2 = false;
+            this.bar18.Location = new System.Drawing.Point(193, 136);
+            this.bar18.MaximumBarValue = 100F;
+            this.bar18.MinimumBarValue = 0F;
+            this.bar18.Name = "bar18";
+            this.bar18.Size = new System.Drawing.Size(303, 13);
+            this.bar18.TabIndex = 8;
+            this.bar18.ValueBase = 0F;
+            this.bar18.ValueMainBar = 100F;
+            this.bar18.ValueOverCap = 0F;
+            this.bar18.ValueOverlay1 = 0F;
+            this.bar18.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar19
+            // bar12
             // 
-            this.ctlLayeredBar19.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar19.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar19.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ctlLayeredBar19.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar19.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar19.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar19.EnableBaseValue = false;
-            this.ctlLayeredBar19.EnableOverCap = true;
-            this.ctlLayeredBar19.EnableOverlay1 = false;
-            this.ctlLayeredBar19.EnableOverlay2 = false;
-            this.ctlLayeredBar19.Location = new System.Drawing.Point(188, 22);
-            this.ctlLayeredBar19.MaximumBarValue = 100F;
-            this.ctlLayeredBar19.MinimumBarValue = 0F;
-            this.ctlLayeredBar19.Name = "ctlLayeredBar19";
-            this.ctlLayeredBar19.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar19.TabIndex = 2;
-            this.ctlLayeredBar19.ValueBase = 0F;
-            this.ctlLayeredBar19.ValueMainBar = 100F;
-            this.ctlLayeredBar19.ValueOverCap = 0F;
-            this.ctlLayeredBar19.ValueOverlay1 = 0F;
-            this.ctlLayeredBar19.ValueOverlay2 = 0F;
+            this.bar12.BackColor = System.Drawing.Color.Transparent;
+            this.bar12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar12.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar12.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.bar12.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.bar12.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar12.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar12.EnableBaseValue = false;
+            this.bar12.EnableOverCap = true;
+            this.bar12.EnableOverlay1 = false;
+            this.bar12.EnableOverlay2 = false;
+            this.bar12.Location = new System.Drawing.Point(193, 22);
+            this.bar12.MaximumBarValue = 100F;
+            this.bar12.MinimumBarValue = 0F;
+            this.bar12.Name = "bar12";
+            this.bar12.Size = new System.Drawing.Size(303, 13);
+            this.bar12.TabIndex = 2;
+            this.bar12.ValueBase = 0F;
+            this.bar12.ValueMainBar = 100F;
+            this.bar12.ValueOverCap = 0F;
+            this.bar12.ValueOverlay1 = 0F;
+            this.bar12.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar24
+            // bar17
             // 
-            this.ctlLayeredBar24.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar24.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar24.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ctlLayeredBar24.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar24.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar24.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar24.EnableBaseValue = false;
-            this.ctlLayeredBar24.EnableOverCap = true;
-            this.ctlLayeredBar24.EnableOverlay1 = false;
-            this.ctlLayeredBar24.EnableOverlay2 = false;
-            this.ctlLayeredBar24.Location = new System.Drawing.Point(188, 117);
-            this.ctlLayeredBar24.MaximumBarValue = 100F;
-            this.ctlLayeredBar24.MinimumBarValue = 0F;
-            this.ctlLayeredBar24.Name = "ctlLayeredBar24";
-            this.ctlLayeredBar24.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar24.TabIndex = 7;
-            this.ctlLayeredBar24.ValueBase = 0F;
-            this.ctlLayeredBar24.ValueMainBar = 100F;
-            this.ctlLayeredBar24.ValueOverCap = 0F;
-            this.ctlLayeredBar24.ValueOverlay1 = 0F;
-            this.ctlLayeredBar24.ValueOverlay2 = 0F;
+            this.bar17.BackColor = System.Drawing.Color.Transparent;
+            this.bar17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar17.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar17.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.bar17.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.bar17.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar17.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar17.EnableBaseValue = false;
+            this.bar17.EnableOverCap = true;
+            this.bar17.EnableOverlay1 = false;
+            this.bar17.EnableOverlay2 = false;
+            this.bar17.Location = new System.Drawing.Point(193, 117);
+            this.bar17.MaximumBarValue = 100F;
+            this.bar17.MinimumBarValue = 0F;
+            this.bar17.Name = "bar17";
+            this.bar17.Size = new System.Drawing.Size(303, 13);
+            this.bar17.TabIndex = 7;
+            this.bar17.ValueBase = 0F;
+            this.bar17.ValueMainBar = 100F;
+            this.bar17.ValueOverCap = 0F;
+            this.bar17.ValueOverlay1 = 0F;
+            this.bar17.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar20
+            // bar13
             // 
-            this.ctlLayeredBar20.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar20.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar20.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ctlLayeredBar20.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar20.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar20.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar20.EnableBaseValue = false;
-            this.ctlLayeredBar20.EnableOverCap = true;
-            this.ctlLayeredBar20.EnableOverlay1 = false;
-            this.ctlLayeredBar20.EnableOverlay2 = false;
-            this.ctlLayeredBar20.Location = new System.Drawing.Point(188, 41);
-            this.ctlLayeredBar20.MaximumBarValue = 100F;
-            this.ctlLayeredBar20.MinimumBarValue = 0F;
-            this.ctlLayeredBar20.Name = "ctlLayeredBar20";
-            this.ctlLayeredBar20.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar20.TabIndex = 3;
-            this.ctlLayeredBar20.ValueBase = 0F;
-            this.ctlLayeredBar20.ValueMainBar = 100F;
-            this.ctlLayeredBar20.ValueOverCap = 0F;
-            this.ctlLayeredBar20.ValueOverlay1 = 0F;
-            this.ctlLayeredBar20.ValueOverlay2 = 0F;
+            this.bar13.BackColor = System.Drawing.Color.Transparent;
+            this.bar13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar13.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar13.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.bar13.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.bar13.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar13.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar13.EnableBaseValue = false;
+            this.bar13.EnableOverCap = true;
+            this.bar13.EnableOverlay1 = false;
+            this.bar13.EnableOverlay2 = false;
+            this.bar13.Location = new System.Drawing.Point(193, 41);
+            this.bar13.MaximumBarValue = 100F;
+            this.bar13.MinimumBarValue = 0F;
+            this.bar13.Name = "bar13";
+            this.bar13.Size = new System.Drawing.Size(303, 13);
+            this.bar13.TabIndex = 3;
+            this.bar13.ValueBase = 0F;
+            this.bar13.ValueMainBar = 100F;
+            this.bar13.ValueOverCap = 0F;
+            this.bar13.ValueOverlay1 = 0F;
+            this.bar13.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar23
+            // bar16
             // 
-            this.ctlLayeredBar23.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar23.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar23.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar23.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ctlLayeredBar23.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar23.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar23.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar23.EnableBaseValue = false;
-            this.ctlLayeredBar23.EnableOverCap = true;
-            this.ctlLayeredBar23.EnableOverlay1 = false;
-            this.ctlLayeredBar23.EnableOverlay2 = false;
-            this.ctlLayeredBar23.Location = new System.Drawing.Point(188, 98);
-            this.ctlLayeredBar23.MaximumBarValue = 100F;
-            this.ctlLayeredBar23.MinimumBarValue = 0F;
-            this.ctlLayeredBar23.Name = "ctlLayeredBar23";
-            this.ctlLayeredBar23.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar23.TabIndex = 6;
-            this.ctlLayeredBar23.ValueBase = 0F;
-            this.ctlLayeredBar23.ValueMainBar = 100F;
-            this.ctlLayeredBar23.ValueOverCap = 0F;
-            this.ctlLayeredBar23.ValueOverlay1 = 0F;
-            this.ctlLayeredBar23.ValueOverlay2 = 0F;
+            this.bar16.BackColor = System.Drawing.Color.Transparent;
+            this.bar16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar16.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar16.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.bar16.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.bar16.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar16.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar16.EnableBaseValue = false;
+            this.bar16.EnableOverCap = true;
+            this.bar16.EnableOverlay1 = false;
+            this.bar16.EnableOverlay2 = false;
+            this.bar16.Location = new System.Drawing.Point(193, 98);
+            this.bar16.MaximumBarValue = 100F;
+            this.bar16.MinimumBarValue = 0F;
+            this.bar16.Name = "bar16";
+            this.bar16.Size = new System.Drawing.Size(303, 13);
+            this.bar16.TabIndex = 6;
+            this.bar16.ValueBase = 0F;
+            this.bar16.ValueMainBar = 100F;
+            this.bar16.ValueOverCap = 0F;
+            this.bar16.ValueOverlay1 = 0F;
+            this.bar16.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar21
+            // bar14
             // 
-            this.ctlLayeredBar21.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar21.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar21.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar21.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ctlLayeredBar21.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar21.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar21.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar21.EnableBaseValue = false;
-            this.ctlLayeredBar21.EnableOverCap = true;
-            this.ctlLayeredBar21.EnableOverlay1 = false;
-            this.ctlLayeredBar21.EnableOverlay2 = false;
-            this.ctlLayeredBar21.Location = new System.Drawing.Point(188, 60);
-            this.ctlLayeredBar21.MaximumBarValue = 100F;
-            this.ctlLayeredBar21.MinimumBarValue = 0F;
-            this.ctlLayeredBar21.Name = "ctlLayeredBar21";
-            this.ctlLayeredBar21.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar21.TabIndex = 4;
-            this.ctlLayeredBar21.ValueBase = 0F;
-            this.ctlLayeredBar21.ValueMainBar = 100F;
-            this.ctlLayeredBar21.ValueOverCap = 0F;
-            this.ctlLayeredBar21.ValueOverlay1 = 0F;
-            this.ctlLayeredBar21.ValueOverlay2 = 0F;
+            this.bar14.BackColor = System.Drawing.Color.Transparent;
+            this.bar14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar14.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar14.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.bar14.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.bar14.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar14.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar14.EnableBaseValue = false;
+            this.bar14.EnableOverCap = true;
+            this.bar14.EnableOverlay1 = false;
+            this.bar14.EnableOverlay2 = false;
+            this.bar14.Location = new System.Drawing.Point(193, 60);
+            this.bar14.MaximumBarValue = 100F;
+            this.bar14.MinimumBarValue = 0F;
+            this.bar14.Name = "bar14";
+            this.bar14.Size = new System.Drawing.Size(303, 13);
+            this.bar14.TabIndex = 4;
+            this.bar14.ValueBase = 0F;
+            this.bar14.ValueMainBar = 100F;
+            this.bar14.ValueOverCap = 0F;
+            this.bar14.ValueOverlay1 = 0F;
+            this.bar14.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar22
+            // bar15
             // 
-            this.ctlLayeredBar22.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar22.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar22.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.ctlLayeredBar22.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar22.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar22.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar22.EnableBaseValue = false;
-            this.ctlLayeredBar22.EnableOverCap = true;
-            this.ctlLayeredBar22.EnableOverlay1 = false;
-            this.ctlLayeredBar22.EnableOverlay2 = false;
-            this.ctlLayeredBar22.Location = new System.Drawing.Point(188, 79);
-            this.ctlLayeredBar22.MaximumBarValue = 100F;
-            this.ctlLayeredBar22.MinimumBarValue = 0F;
-            this.ctlLayeredBar22.Name = "ctlLayeredBar22";
-            this.ctlLayeredBar22.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar22.TabIndex = 5;
-            this.ctlLayeredBar22.ValueBase = 0F;
-            this.ctlLayeredBar22.ValueMainBar = 100F;
-            this.ctlLayeredBar22.ValueOverCap = 0F;
-            this.ctlLayeredBar22.ValueOverlay1 = 0F;
-            this.ctlLayeredBar22.ValueOverlay2 = 0F;
+            this.bar15.BackColor = System.Drawing.Color.Transparent;
+            this.bar15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar15.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar15.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.bar15.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.bar15.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar15.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar15.EnableBaseValue = false;
+            this.bar15.EnableOverCap = true;
+            this.bar15.EnableOverlay1 = false;
+            this.bar15.EnableOverlay2 = false;
+            this.bar15.Location = new System.Drawing.Point(193, 79);
+            this.bar15.MaximumBarValue = 100F;
+            this.bar15.MinimumBarValue = 0F;
+            this.bar15.Name = "bar15";
+            this.bar15.Size = new System.Drawing.Size(303, 13);
+            this.bar15.TabIndex = 5;
+            this.bar15.ValueBase = 0F;
+            this.bar15.ValueMainBar = 100F;
+            this.bar15.ValueOverCap = 0F;
+            this.bar15.ValueOverlay1 = 0F;
+            this.bar15.ValueOverlay2 = 0F;
             // 
             // label25
             // 
@@ -1157,7 +1159,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label25.Location = new System.Drawing.Point(3, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(103, 19);
+            this.label25.Size = new System.Drawing.Size(106, 19);
             this.label25.TabIndex = 9;
             this.label25.Text = "Smashing:";
             this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1169,7 +1171,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label26.Location = new System.Drawing.Point(3, 19);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(103, 19);
+            this.label26.Size = new System.Drawing.Size(106, 19);
             this.label26.TabIndex = 10;
             this.label26.Text = "Lethal:";
             this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1181,7 +1183,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label27.Location = new System.Drawing.Point(3, 38);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(103, 19);
+            this.label27.Size = new System.Drawing.Size(106, 19);
             this.label27.TabIndex = 11;
             this.label27.Text = "Fire:";
             this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1193,7 +1195,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label28.Location = new System.Drawing.Point(3, 57);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(103, 19);
+            this.label28.Size = new System.Drawing.Size(106, 19);
             this.label28.TabIndex = 12;
             this.label28.Text = "Cold:";
             this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1205,7 +1207,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label29.Location = new System.Drawing.Point(3, 76);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(103, 19);
+            this.label29.Size = new System.Drawing.Size(106, 19);
             this.label29.TabIndex = 13;
             this.label29.Text = "Energy:";
             this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1217,7 +1219,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label30.Location = new System.Drawing.Point(3, 95);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(103, 19);
+            this.label30.Size = new System.Drawing.Size(106, 19);
             this.label30.TabIndex = 14;
             this.label30.Text = "Negative:";
             this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1229,7 +1231,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label31.Location = new System.Drawing.Point(3, 114);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(103, 19);
+            this.label31.Size = new System.Drawing.Size(106, 19);
             this.label31.TabIndex = 15;
             this.label31.Text = "Toxic:";
             this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1241,22 +1243,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label32.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label32.Location = new System.Drawing.Point(3, 133);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(103, 19);
+            this.label32.Size = new System.Drawing.Size(106, 19);
             this.label32.TabIndex = 16;
             this.label32.Text = "Psionic:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label33
+            // lv11
             // 
-            this.label33.AutoSize = true;
-            this.label33.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label33.Location = new System.Drawing.Point(112, 0);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(70, 19);
-            this.label33.TabIndex = 17;
-            this.label33.Text = "100.00%";
-            this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv11.AutoSize = true;
+            this.lv11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv11.Location = new System.Drawing.Point(115, 0);
+            this.lv11.Name = "lv11";
+            this.lv11.Size = new System.Drawing.Size(72, 19);
+            this.lv11.TabIndex = 17;
+            this.lv11.Text = "100.00%";
+            this.lv11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gradientPanel1
             // 
@@ -1280,27 +1282,27 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel4.ColumnCount = 3;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
-            this.tableLayoutPanel4.Controls.Add(this.label24, 1, 9);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar12, 2, 9);
-            this.tableLayoutPanel4.Controls.Add(this.label23, 1, 8);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar11, 2, 8);
-            this.tableLayoutPanel4.Controls.Add(this.label22, 1, 7);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar10, 2, 7);
-            this.tableLayoutPanel4.Controls.Add(this.label21, 1, 6);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar9, 2, 6);
-            this.tableLayoutPanel4.Controls.Add(this.label20, 1, 5);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar8, 2, 5);
-            this.tableLayoutPanel4.Controls.Add(this.label19, 1, 4);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar7, 2, 4);
-            this.tableLayoutPanel4.Controls.Add(this.label18, 1, 3);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar6, 2, 3);
-            this.tableLayoutPanel4.Controls.Add(this.label17, 1, 2);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar5, 2, 2);
-            this.tableLayoutPanel4.Controls.Add(this.label16, 1, 1);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar4, 2, 1);
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
+            this.tableLayoutPanel4.Controls.Add(this.lv10, 1, 9);
+            this.tableLayoutPanel4.Controls.Add(this.bar10, 2, 9);
+            this.tableLayoutPanel4.Controls.Add(this.lv9, 1, 8);
+            this.tableLayoutPanel4.Controls.Add(this.bar9, 2, 8);
+            this.tableLayoutPanel4.Controls.Add(this.lv8, 1, 7);
+            this.tableLayoutPanel4.Controls.Add(this.bar8, 2, 7);
+            this.tableLayoutPanel4.Controls.Add(this.lv7, 1, 6);
+            this.tableLayoutPanel4.Controls.Add(this.bar7, 2, 6);
+            this.tableLayoutPanel4.Controls.Add(this.lv6, 1, 5);
+            this.tableLayoutPanel4.Controls.Add(this.bar6, 2, 5);
+            this.tableLayoutPanel4.Controls.Add(this.lv5, 1, 4);
+            this.tableLayoutPanel4.Controls.Add(this.bar5, 2, 4);
+            this.tableLayoutPanel4.Controls.Add(this.lv4, 1, 3);
+            this.tableLayoutPanel4.Controls.Add(this.bar4, 2, 3);
+            this.tableLayoutPanel4.Controls.Add(this.lv3, 1, 2);
+            this.tableLayoutPanel4.Controls.Add(this.bar3, 2, 2);
+            this.tableLayoutPanel4.Controls.Add(this.lv2, 1, 1);
+            this.tableLayoutPanel4.Controls.Add(this.bar2, 2, 1);
             this.tableLayoutPanel4.Controls.Add(this.label5, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.ctlLayeredBar3, 2, 0);
+            this.tableLayoutPanel4.Controls.Add(this.bar1, 2, 0);
             this.tableLayoutPanel4.Controls.Add(this.label6, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.label7, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.label8, 0, 3);
@@ -1310,7 +1312,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel4.Controls.Add(this.label12, 0, 7);
             this.tableLayoutPanel4.Controls.Add(this.label13, 0, 8);
             this.tableLayoutPanel4.Controls.Add(this.label14, 0, 9);
-            this.tableLayoutPanel4.Controls.Add(this.label15, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.lv1, 1, 0);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 10;
@@ -1327,338 +1329,338 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel4.Size = new System.Drawing.Size(506, 190);
             this.tableLayoutPanel4.TabIndex = 11;
             // 
-            // label24
+            // lv10
             // 
-            this.label24.AutoSize = true;
-            this.label24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label24.Location = new System.Drawing.Point(112, 171);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(70, 19);
-            this.label24.TabIndex = 19;
-            this.label24.Text = "100.00%";
-            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv10.AutoSize = true;
+            this.lv10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv10.Location = new System.Drawing.Point(115, 171);
+            this.lv10.Name = "lv10";
+            this.lv10.Size = new System.Drawing.Size(72, 19);
+            this.lv10.TabIndex = 19;
+            this.lv10.Text = "100.00%";
+            this.lv10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar12
+            // bar10
             // 
-            this.ctlLayeredBar12.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar12.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar12.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar12.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar12.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar12.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar12.EnableBaseValue = false;
-            this.ctlLayeredBar12.EnableOverCap = false;
-            this.ctlLayeredBar12.EnableOverlay1 = false;
-            this.ctlLayeredBar12.EnableOverlay2 = false;
-            this.ctlLayeredBar12.Location = new System.Drawing.Point(188, 174);
-            this.ctlLayeredBar12.MaximumBarValue = 100F;
-            this.ctlLayeredBar12.MinimumBarValue = 0F;
-            this.ctlLayeredBar12.Name = "ctlLayeredBar12";
-            this.ctlLayeredBar12.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar12.TabIndex = 9;
-            this.ctlLayeredBar12.ValueBase = 0F;
-            this.ctlLayeredBar12.ValueMainBar = 100F;
-            this.ctlLayeredBar12.ValueOverCap = 0F;
-            this.ctlLayeredBar12.ValueOverlay1 = 0F;
-            this.ctlLayeredBar12.ValueOverlay2 = 0F;
+            this.bar10.BackColor = System.Drawing.Color.Transparent;
+            this.bar10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar10.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar10.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar10.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar10.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar10.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar10.EnableBaseValue = false;
+            this.bar10.EnableOverCap = false;
+            this.bar10.EnableOverlay1 = false;
+            this.bar10.EnableOverlay2 = false;
+            this.bar10.Location = new System.Drawing.Point(193, 174);
+            this.bar10.MaximumBarValue = 100F;
+            this.bar10.MinimumBarValue = 0F;
+            this.bar10.Name = "bar10";
+            this.bar10.Size = new System.Drawing.Size(304, 13);
+            this.bar10.TabIndex = 9;
+            this.bar10.ValueBase = 0F;
+            this.bar10.ValueMainBar = 100F;
+            this.bar10.ValueOverCap = 0F;
+            this.bar10.ValueOverlay1 = 0F;
+            this.bar10.ValueOverlay2 = 0F;
             // 
-            // label23
+            // lv9
             // 
-            this.label23.AutoSize = true;
-            this.label23.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label23.Location = new System.Drawing.Point(112, 152);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(70, 19);
-            this.label23.TabIndex = 18;
-            this.label23.Text = "100.00%";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv9.AutoSize = true;
+            this.lv9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv9.Location = new System.Drawing.Point(115, 152);
+            this.lv9.Name = "lv9";
+            this.lv9.Size = new System.Drawing.Size(72, 19);
+            this.lv9.TabIndex = 18;
+            this.lv9.Text = "100.00%";
+            this.lv9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar11
+            // bar9
             // 
-            this.ctlLayeredBar11.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar11.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar11.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar11.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar11.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar11.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar11.EnableBaseValue = false;
-            this.ctlLayeredBar11.EnableOverCap = false;
-            this.ctlLayeredBar11.EnableOverlay1 = false;
-            this.ctlLayeredBar11.EnableOverlay2 = false;
-            this.ctlLayeredBar11.Location = new System.Drawing.Point(188, 155);
-            this.ctlLayeredBar11.MaximumBarValue = 100F;
-            this.ctlLayeredBar11.MinimumBarValue = 0F;
-            this.ctlLayeredBar11.Name = "ctlLayeredBar11";
-            this.ctlLayeredBar11.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar11.TabIndex = 8;
-            this.ctlLayeredBar11.ValueBase = 0F;
-            this.ctlLayeredBar11.ValueMainBar = 100F;
-            this.ctlLayeredBar11.ValueOverCap = 0F;
-            this.ctlLayeredBar11.ValueOverlay1 = 0F;
-            this.ctlLayeredBar11.ValueOverlay2 = 0F;
+            this.bar9.BackColor = System.Drawing.Color.Transparent;
+            this.bar9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar9.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar9.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar9.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar9.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar9.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar9.EnableBaseValue = false;
+            this.bar9.EnableOverCap = false;
+            this.bar9.EnableOverlay1 = false;
+            this.bar9.EnableOverlay2 = false;
+            this.bar9.Location = new System.Drawing.Point(193, 155);
+            this.bar9.MaximumBarValue = 100F;
+            this.bar9.MinimumBarValue = 0F;
+            this.bar9.Name = "bar9";
+            this.bar9.Size = new System.Drawing.Size(304, 13);
+            this.bar9.TabIndex = 8;
+            this.bar9.ValueBase = 0F;
+            this.bar9.ValueMainBar = 100F;
+            this.bar9.ValueOverCap = 0F;
+            this.bar9.ValueOverlay1 = 0F;
+            this.bar9.ValueOverlay2 = 0F;
             // 
-            // label22
+            // lv8
             // 
-            this.label22.AutoSize = true;
-            this.label22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label22.Location = new System.Drawing.Point(112, 133);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(70, 19);
-            this.label22.TabIndex = 17;
-            this.label22.Text = "100.00%";
-            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv8.AutoSize = true;
+            this.lv8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv8.Location = new System.Drawing.Point(115, 133);
+            this.lv8.Name = "lv8";
+            this.lv8.Size = new System.Drawing.Size(72, 19);
+            this.lv8.TabIndex = 17;
+            this.lv8.Text = "100.00%";
+            this.lv8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar10
+            // bar8
             // 
-            this.ctlLayeredBar10.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar10.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar10.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar10.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar10.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar10.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar10.EnableBaseValue = false;
-            this.ctlLayeredBar10.EnableOverCap = false;
-            this.ctlLayeredBar10.EnableOverlay1 = false;
-            this.ctlLayeredBar10.EnableOverlay2 = false;
-            this.ctlLayeredBar10.Location = new System.Drawing.Point(188, 136);
-            this.ctlLayeredBar10.MaximumBarValue = 100F;
-            this.ctlLayeredBar10.MinimumBarValue = 0F;
-            this.ctlLayeredBar10.Name = "ctlLayeredBar10";
-            this.ctlLayeredBar10.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar10.TabIndex = 7;
-            this.ctlLayeredBar10.ValueBase = 0F;
-            this.ctlLayeredBar10.ValueMainBar = 100F;
-            this.ctlLayeredBar10.ValueOverCap = 0F;
-            this.ctlLayeredBar10.ValueOverlay1 = 0F;
-            this.ctlLayeredBar10.ValueOverlay2 = 0F;
+            this.bar8.BackColor = System.Drawing.Color.Transparent;
+            this.bar8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar8.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar8.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar8.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar8.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar8.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar8.EnableBaseValue = false;
+            this.bar8.EnableOverCap = false;
+            this.bar8.EnableOverlay1 = false;
+            this.bar8.EnableOverlay2 = false;
+            this.bar8.Location = new System.Drawing.Point(193, 136);
+            this.bar8.MaximumBarValue = 100F;
+            this.bar8.MinimumBarValue = 0F;
+            this.bar8.Name = "bar8";
+            this.bar8.Size = new System.Drawing.Size(304, 13);
+            this.bar8.TabIndex = 7;
+            this.bar8.ValueBase = 0F;
+            this.bar8.ValueMainBar = 100F;
+            this.bar8.ValueOverCap = 0F;
+            this.bar8.ValueOverlay1 = 0F;
+            this.bar8.ValueOverlay2 = 0F;
             // 
-            // label21
+            // lv7
             // 
-            this.label21.AutoSize = true;
-            this.label21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label21.Location = new System.Drawing.Point(112, 114);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(70, 19);
-            this.label21.TabIndex = 16;
-            this.label21.Text = "100.00%";
-            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv7.AutoSize = true;
+            this.lv7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv7.Location = new System.Drawing.Point(115, 114);
+            this.lv7.Name = "lv7";
+            this.lv7.Size = new System.Drawing.Size(72, 19);
+            this.lv7.TabIndex = 16;
+            this.lv7.Text = "100.00%";
+            this.lv7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar9
+            // bar7
             // 
-            this.ctlLayeredBar9.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar9.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar9.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar9.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar9.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar9.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar9.EnableBaseValue = false;
-            this.ctlLayeredBar9.EnableOverCap = false;
-            this.ctlLayeredBar9.EnableOverlay1 = false;
-            this.ctlLayeredBar9.EnableOverlay2 = false;
-            this.ctlLayeredBar9.Location = new System.Drawing.Point(188, 117);
-            this.ctlLayeredBar9.MaximumBarValue = 100F;
-            this.ctlLayeredBar9.MinimumBarValue = 0F;
-            this.ctlLayeredBar9.Name = "ctlLayeredBar9";
-            this.ctlLayeredBar9.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar9.TabIndex = 6;
-            this.ctlLayeredBar9.ValueBase = 0F;
-            this.ctlLayeredBar9.ValueMainBar = 100F;
-            this.ctlLayeredBar9.ValueOverCap = 0F;
-            this.ctlLayeredBar9.ValueOverlay1 = 0F;
-            this.ctlLayeredBar9.ValueOverlay2 = 0F;
+            this.bar7.BackColor = System.Drawing.Color.Transparent;
+            this.bar7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar7.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar7.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar7.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar7.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar7.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar7.EnableBaseValue = false;
+            this.bar7.EnableOverCap = false;
+            this.bar7.EnableOverlay1 = false;
+            this.bar7.EnableOverlay2 = false;
+            this.bar7.Location = new System.Drawing.Point(193, 117);
+            this.bar7.MaximumBarValue = 100F;
+            this.bar7.MinimumBarValue = 0F;
+            this.bar7.Name = "bar7";
+            this.bar7.Size = new System.Drawing.Size(304, 13);
+            this.bar7.TabIndex = 6;
+            this.bar7.ValueBase = 0F;
+            this.bar7.ValueMainBar = 100F;
+            this.bar7.ValueOverCap = 0F;
+            this.bar7.ValueOverlay1 = 0F;
+            this.bar7.ValueOverlay2 = 0F;
             // 
-            // label20
+            // lv6
             // 
-            this.label20.AutoSize = true;
-            this.label20.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label20.Location = new System.Drawing.Point(112, 95);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(70, 19);
-            this.label20.TabIndex = 15;
-            this.label20.Text = "100.00%";
-            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv6.AutoSize = true;
+            this.lv6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv6.Location = new System.Drawing.Point(115, 95);
+            this.lv6.Name = "lv6";
+            this.lv6.Size = new System.Drawing.Size(72, 19);
+            this.lv6.TabIndex = 15;
+            this.lv6.Text = "100.00%";
+            this.lv6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar8
+            // bar6
             // 
-            this.ctlLayeredBar8.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar8.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar8.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar8.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar8.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar8.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar8.EnableBaseValue = false;
-            this.ctlLayeredBar8.EnableOverCap = false;
-            this.ctlLayeredBar8.EnableOverlay1 = false;
-            this.ctlLayeredBar8.EnableOverlay2 = false;
-            this.ctlLayeredBar8.Location = new System.Drawing.Point(188, 98);
-            this.ctlLayeredBar8.MaximumBarValue = 100F;
-            this.ctlLayeredBar8.MinimumBarValue = 0F;
-            this.ctlLayeredBar8.Name = "ctlLayeredBar8";
-            this.ctlLayeredBar8.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar8.TabIndex = 5;
-            this.ctlLayeredBar8.ValueBase = 0F;
-            this.ctlLayeredBar8.ValueMainBar = 100F;
-            this.ctlLayeredBar8.ValueOverCap = 0F;
-            this.ctlLayeredBar8.ValueOverlay1 = 0F;
-            this.ctlLayeredBar8.ValueOverlay2 = 0F;
+            this.bar6.BackColor = System.Drawing.Color.Transparent;
+            this.bar6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar6.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar6.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar6.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar6.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar6.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar6.EnableBaseValue = false;
+            this.bar6.EnableOverCap = false;
+            this.bar6.EnableOverlay1 = false;
+            this.bar6.EnableOverlay2 = false;
+            this.bar6.Location = new System.Drawing.Point(193, 98);
+            this.bar6.MaximumBarValue = 100F;
+            this.bar6.MinimumBarValue = 0F;
+            this.bar6.Name = "bar6";
+            this.bar6.Size = new System.Drawing.Size(304, 13);
+            this.bar6.TabIndex = 5;
+            this.bar6.ValueBase = 0F;
+            this.bar6.ValueMainBar = 100F;
+            this.bar6.ValueOverCap = 0F;
+            this.bar6.ValueOverlay1 = 0F;
+            this.bar6.ValueOverlay2 = 0F;
             // 
-            // label19
+            // lv5
             // 
-            this.label19.AutoSize = true;
-            this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label19.Location = new System.Drawing.Point(112, 76);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(70, 19);
-            this.label19.TabIndex = 14;
-            this.label19.Text = "100.00%";
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv5.AutoSize = true;
+            this.lv5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv5.Location = new System.Drawing.Point(115, 76);
+            this.lv5.Name = "lv5";
+            this.lv5.Size = new System.Drawing.Size(72, 19);
+            this.lv5.TabIndex = 14;
+            this.lv5.Text = "100.00%";
+            this.lv5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar7
+            // bar5
             // 
-            this.ctlLayeredBar7.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar7.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar7.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar7.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar7.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar7.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar7.EnableBaseValue = false;
-            this.ctlLayeredBar7.EnableOverCap = false;
-            this.ctlLayeredBar7.EnableOverlay1 = false;
-            this.ctlLayeredBar7.EnableOverlay2 = false;
-            this.ctlLayeredBar7.Location = new System.Drawing.Point(188, 79);
-            this.ctlLayeredBar7.MaximumBarValue = 100F;
-            this.ctlLayeredBar7.MinimumBarValue = 0F;
-            this.ctlLayeredBar7.Name = "ctlLayeredBar7";
-            this.ctlLayeredBar7.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar7.TabIndex = 4;
-            this.ctlLayeredBar7.ValueBase = 0F;
-            this.ctlLayeredBar7.ValueMainBar = 100F;
-            this.ctlLayeredBar7.ValueOverCap = 0F;
-            this.ctlLayeredBar7.ValueOverlay1 = 0F;
-            this.ctlLayeredBar7.ValueOverlay2 = 0F;
+            this.bar5.BackColor = System.Drawing.Color.Transparent;
+            this.bar5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar5.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar5.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar5.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar5.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar5.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar5.EnableBaseValue = false;
+            this.bar5.EnableOverCap = false;
+            this.bar5.EnableOverlay1 = false;
+            this.bar5.EnableOverlay2 = false;
+            this.bar5.Location = new System.Drawing.Point(193, 79);
+            this.bar5.MaximumBarValue = 100F;
+            this.bar5.MinimumBarValue = 0F;
+            this.bar5.Name = "bar5";
+            this.bar5.Size = new System.Drawing.Size(304, 13);
+            this.bar5.TabIndex = 4;
+            this.bar5.ValueBase = 0F;
+            this.bar5.ValueMainBar = 100F;
+            this.bar5.ValueOverCap = 0F;
+            this.bar5.ValueOverlay1 = 0F;
+            this.bar5.ValueOverlay2 = 0F;
             // 
-            // label18
+            // lv4
             // 
-            this.label18.AutoSize = true;
-            this.label18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label18.Location = new System.Drawing.Point(112, 57);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(70, 19);
-            this.label18.TabIndex = 13;
-            this.label18.Text = "100.00%";
-            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv4.AutoSize = true;
+            this.lv4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv4.Location = new System.Drawing.Point(115, 57);
+            this.lv4.Name = "lv4";
+            this.lv4.Size = new System.Drawing.Size(72, 19);
+            this.lv4.TabIndex = 13;
+            this.lv4.Text = "100.00%";
+            this.lv4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar6
+            // bar4
             // 
-            this.ctlLayeredBar6.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar6.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar6.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar6.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar6.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar6.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar6.EnableBaseValue = false;
-            this.ctlLayeredBar6.EnableOverCap = false;
-            this.ctlLayeredBar6.EnableOverlay1 = false;
-            this.ctlLayeredBar6.EnableOverlay2 = false;
-            this.ctlLayeredBar6.Location = new System.Drawing.Point(188, 60);
-            this.ctlLayeredBar6.MaximumBarValue = 100F;
-            this.ctlLayeredBar6.MinimumBarValue = 0F;
-            this.ctlLayeredBar6.Name = "ctlLayeredBar6";
-            this.ctlLayeredBar6.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar6.TabIndex = 3;
-            this.ctlLayeredBar6.ValueBase = 0F;
-            this.ctlLayeredBar6.ValueMainBar = 100F;
-            this.ctlLayeredBar6.ValueOverCap = 0F;
-            this.ctlLayeredBar6.ValueOverlay1 = 0F;
-            this.ctlLayeredBar6.ValueOverlay2 = 0F;
+            this.bar4.BackColor = System.Drawing.Color.Transparent;
+            this.bar4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar4.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar4.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar4.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar4.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar4.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar4.EnableBaseValue = false;
+            this.bar4.EnableOverCap = false;
+            this.bar4.EnableOverlay1 = false;
+            this.bar4.EnableOverlay2 = false;
+            this.bar4.Location = new System.Drawing.Point(193, 60);
+            this.bar4.MaximumBarValue = 100F;
+            this.bar4.MinimumBarValue = 0F;
+            this.bar4.Name = "bar4";
+            this.bar4.Size = new System.Drawing.Size(304, 13);
+            this.bar4.TabIndex = 3;
+            this.bar4.ValueBase = 0F;
+            this.bar4.ValueMainBar = 100F;
+            this.bar4.ValueOverCap = 0F;
+            this.bar4.ValueOverlay1 = 0F;
+            this.bar4.ValueOverlay2 = 0F;
             // 
-            // label17
+            // lv3
             // 
-            this.label17.AutoSize = true;
-            this.label17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label17.Location = new System.Drawing.Point(112, 38);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(70, 19);
-            this.label17.TabIndex = 12;
-            this.label17.Text = "100.00%";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv3.AutoSize = true;
+            this.lv3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv3.Location = new System.Drawing.Point(115, 38);
+            this.lv3.Name = "lv3";
+            this.lv3.Size = new System.Drawing.Size(72, 19);
+            this.lv3.TabIndex = 12;
+            this.lv3.Text = "100.00%";
+            this.lv3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar5
+            // bar3
             // 
-            this.ctlLayeredBar5.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar5.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar5.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar5.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar5.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar5.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar5.EnableBaseValue = false;
-            this.ctlLayeredBar5.EnableOverCap = false;
-            this.ctlLayeredBar5.EnableOverlay1 = false;
-            this.ctlLayeredBar5.EnableOverlay2 = false;
-            this.ctlLayeredBar5.Location = new System.Drawing.Point(188, 41);
-            this.ctlLayeredBar5.MaximumBarValue = 100F;
-            this.ctlLayeredBar5.MinimumBarValue = 0F;
-            this.ctlLayeredBar5.Name = "ctlLayeredBar5";
-            this.ctlLayeredBar5.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar5.TabIndex = 2;
-            this.ctlLayeredBar5.ValueBase = 0F;
-            this.ctlLayeredBar5.ValueMainBar = 100F;
-            this.ctlLayeredBar5.ValueOverCap = 0F;
-            this.ctlLayeredBar5.ValueOverlay1 = 0F;
-            this.ctlLayeredBar5.ValueOverlay2 = 0F;
+            this.bar3.BackColor = System.Drawing.Color.Transparent;
+            this.bar3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar3.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar3.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar3.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar3.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar3.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar3.EnableBaseValue = false;
+            this.bar3.EnableOverCap = false;
+            this.bar3.EnableOverlay1 = false;
+            this.bar3.EnableOverlay2 = false;
+            this.bar3.Location = new System.Drawing.Point(193, 41);
+            this.bar3.MaximumBarValue = 100F;
+            this.bar3.MinimumBarValue = 0F;
+            this.bar3.Name = "bar3";
+            this.bar3.Size = new System.Drawing.Size(304, 13);
+            this.bar3.TabIndex = 2;
+            this.bar3.ValueBase = 0F;
+            this.bar3.ValueMainBar = 100F;
+            this.bar3.ValueOverCap = 0F;
+            this.bar3.ValueOverlay1 = 0F;
+            this.bar3.ValueOverlay2 = 0F;
             // 
-            // label16
+            // lv2
             // 
-            this.label16.AutoSize = true;
-            this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label16.Location = new System.Drawing.Point(112, 19);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(70, 19);
-            this.label16.TabIndex = 11;
-            this.label16.Text = "100.00%";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv2.AutoSize = true;
+            this.lv2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv2.Location = new System.Drawing.Point(115, 19);
+            this.lv2.Name = "lv2";
+            this.lv2.Size = new System.Drawing.Size(72, 19);
+            this.lv2.TabIndex = 11;
+            this.lv2.Text = "100.00%";
+            this.lv2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar4
+            // bar2
             // 
-            this.ctlLayeredBar4.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar4.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar4.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar4.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar4.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar4.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar4.EnableBaseValue = false;
-            this.ctlLayeredBar4.EnableOverCap = false;
-            this.ctlLayeredBar4.EnableOverlay1 = false;
-            this.ctlLayeredBar4.EnableOverlay2 = false;
-            this.ctlLayeredBar4.Location = new System.Drawing.Point(188, 22);
-            this.ctlLayeredBar4.MaximumBarValue = 100F;
-            this.ctlLayeredBar4.MinimumBarValue = 0F;
-            this.ctlLayeredBar4.Name = "ctlLayeredBar4";
-            this.ctlLayeredBar4.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar4.TabIndex = 1;
-            this.ctlLayeredBar4.ValueBase = 0F;
-            this.ctlLayeredBar4.ValueMainBar = 100F;
-            this.ctlLayeredBar4.ValueOverCap = 0F;
-            this.ctlLayeredBar4.ValueOverlay1 = 0F;
-            this.ctlLayeredBar4.ValueOverlay2 = 0F;
+            this.bar2.BackColor = System.Drawing.Color.Transparent;
+            this.bar2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar2.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar2.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar2.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar2.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar2.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar2.EnableBaseValue = false;
+            this.bar2.EnableOverCap = false;
+            this.bar2.EnableOverlay1 = false;
+            this.bar2.EnableOverlay2 = false;
+            this.bar2.Location = new System.Drawing.Point(193, 22);
+            this.bar2.MaximumBarValue = 100F;
+            this.bar2.MinimumBarValue = 0F;
+            this.bar2.Name = "bar2";
+            this.bar2.Size = new System.Drawing.Size(304, 13);
+            this.bar2.TabIndex = 1;
+            this.bar2.ValueBase = 0F;
+            this.bar2.ValueMainBar = 100F;
+            this.bar2.ValueOverCap = 0F;
+            this.bar2.ValueOverlay1 = 0F;
+            this.bar2.ValueOverlay2 = 0F;
             // 
             // label5
             // 
@@ -1667,35 +1669,35 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label5.Location = new System.Drawing.Point(3, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(103, 19);
+            this.label5.Size = new System.Drawing.Size(106, 19);
             this.label5.TabIndex = 0;
             this.label5.Text = "Smashing:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar3
+            // bar1
             // 
-            this.ctlLayeredBar3.BackColor = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar3.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar3.ColorMainBar = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar3.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar3.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar3.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar3.EnableBaseValue = false;
-            this.ctlLayeredBar3.EnableOverCap = false;
-            this.ctlLayeredBar3.EnableOverlay1 = false;
-            this.ctlLayeredBar3.EnableOverlay2 = false;
-            this.ctlLayeredBar3.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar3.MaximumBarValue = 100F;
-            this.ctlLayeredBar3.MinimumBarValue = 0F;
-            this.ctlLayeredBar3.Name = "ctlLayeredBar3";
-            this.ctlLayeredBar3.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar3.TabIndex = 0;
-            this.ctlLayeredBar3.ValueBase = 0F;
-            this.ctlLayeredBar3.ValueMainBar = 100F;
-            this.ctlLayeredBar3.ValueOverCap = 0F;
-            this.ctlLayeredBar3.ValueOverlay1 = 0F;
-            this.ctlLayeredBar3.ValueOverlay2 = 0F;
+            this.bar1.BackColor = System.Drawing.Color.Transparent;
+            this.bar1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar1.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar1.ColorMainBar = System.Drawing.Color.Magenta;
+            this.bar1.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar1.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar1.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar1.EnableBaseValue = false;
+            this.bar1.EnableOverCap = false;
+            this.bar1.EnableOverlay1 = false;
+            this.bar1.EnableOverlay2 = false;
+            this.bar1.Location = new System.Drawing.Point(193, 3);
+            this.bar1.MaximumBarValue = 100F;
+            this.bar1.MinimumBarValue = 0F;
+            this.bar1.Name = "bar1";
+            this.bar1.Size = new System.Drawing.Size(304, 13);
+            this.bar1.TabIndex = 0;
+            this.bar1.ValueBase = 0F;
+            this.bar1.ValueMainBar = 100F;
+            this.bar1.ValueOverCap = 0F;
+            this.bar1.ValueOverlay1 = 0F;
+            this.bar1.ValueOverlay2 = 0F;
             // 
             // label6
             // 
@@ -1704,7 +1706,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label6.Location = new System.Drawing.Point(3, 19);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(103, 19);
+            this.label6.Size = new System.Drawing.Size(106, 19);
             this.label6.TabIndex = 1;
             this.label6.Text = "Lethal:";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1716,7 +1718,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label7.Location = new System.Drawing.Point(3, 38);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(103, 19);
+            this.label7.Size = new System.Drawing.Size(106, 19);
             this.label7.TabIndex = 2;
             this.label7.Text = "Fire:";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1728,7 +1730,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label8.Location = new System.Drawing.Point(3, 57);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(103, 19);
+            this.label8.Size = new System.Drawing.Size(106, 19);
             this.label8.TabIndex = 3;
             this.label8.Text = "Cold:";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1740,7 +1742,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label9.Location = new System.Drawing.Point(3, 76);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(103, 19);
+            this.label9.Size = new System.Drawing.Size(106, 19);
             this.label9.TabIndex = 4;
             this.label9.Text = "Energy:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1752,7 +1754,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label10.Location = new System.Drawing.Point(3, 95);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(103, 19);
+            this.label10.Size = new System.Drawing.Size(106, 19);
             this.label10.TabIndex = 5;
             this.label10.Text = "Negative:";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1764,7 +1766,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label11.Location = new System.Drawing.Point(3, 114);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(103, 19);
+            this.label11.Size = new System.Drawing.Size(106, 19);
             this.label11.TabIndex = 6;
             this.label11.Text = "Psionic:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1776,7 +1778,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label12.Location = new System.Drawing.Point(3, 133);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(103, 19);
+            this.label12.Size = new System.Drawing.Size(106, 19);
             this.label12.TabIndex = 7;
             this.label12.Text = "Melee:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1788,7 +1790,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label13.Location = new System.Drawing.Point(3, 152);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(103, 19);
+            this.label13.Size = new System.Drawing.Size(106, 19);
             this.label13.TabIndex = 8;
             this.label13.Text = "Ranged:";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1800,22 +1802,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label14.Location = new System.Drawing.Point(3, 171);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(103, 19);
+            this.label14.Size = new System.Drawing.Size(106, 19);
             this.label14.TabIndex = 9;
             this.label14.Text = "AoE:";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label15
+            // lv1
             // 
-            this.label15.AutoSize = true;
-            this.label15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label15.Location = new System.Drawing.Point(112, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(70, 19);
-            this.label15.TabIndex = 10;
-            this.label15.Text = "100.00%";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv1.AutoSize = true;
+            this.lv1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv1.Location = new System.Drawing.Point(115, 0);
+            this.lv1.Name = "lv1";
+            this.lv1.Size = new System.Drawing.Size(72, 19);
+            this.lv1.TabIndex = 10;
+            this.lv1.Text = "100.00%";
+            this.lv1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tabPageAdv5
             // 
@@ -1891,12 +1893,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel13.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel13.ColumnCount = 3;
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.tableLayoutPanel13.Controls.Add(this.label79, 0, 0);
-            this.tableLayoutPanel13.Controls.Add(this.ctlLayeredBar85, 2, 0);
-            this.tableLayoutPanel13.Controls.Add(this.label80, 1, 0);
+            this.tableLayoutPanel13.Controls.Add(this.bar37, 2, 0);
+            this.tableLayoutPanel13.Controls.Add(this.lv37, 1, 0);
             this.tableLayoutPanel13.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel13.Name = "tableLayoutPanel13";
             this.tableLayoutPanel13.RowCount = 1;
@@ -1911,47 +1913,47 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label79.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label79.Location = new System.Drawing.Point(3, 0);
             this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(94, 22);
+            this.label79.Size = new System.Drawing.Size(106, 22);
             this.label79.TabIndex = 0;
             this.label79.Text = "Elusivity:";
             this.label79.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar85
+            // bar37
             // 
-            this.ctlLayeredBar85.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar85.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar85.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar85.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(163)))), ((int)(((byte)(1)))), ((int)(((byte)(231)))));
-            this.ctlLayeredBar85.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar85.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar85.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar85.EnableBaseValue = false;
-            this.ctlLayeredBar85.EnableOverCap = false;
-            this.ctlLayeredBar85.EnableOverlay1 = false;
-            this.ctlLayeredBar85.EnableOverlay2 = false;
-            this.ctlLayeredBar85.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar85.MaximumBarValue = 100F;
-            this.ctlLayeredBar85.MinimumBarValue = 0F;
-            this.ctlLayeredBar85.Name = "ctlLayeredBar85";
-            this.ctlLayeredBar85.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar85.TabIndex = 0;
-            this.ctlLayeredBar85.ValueBase = 0F;
-            this.ctlLayeredBar85.ValueMainBar = 100F;
-            this.ctlLayeredBar85.ValueOverCap = 0F;
-            this.ctlLayeredBar85.ValueOverlay1 = 0F;
-            this.ctlLayeredBar85.ValueOverlay2 = 0F;
+            this.bar37.BackColor = System.Drawing.Color.Transparent;
+            this.bar37.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar37.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar37.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(163)))), ((int)(((byte)(1)))), ((int)(((byte)(231)))));
+            this.bar37.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar37.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar37.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar37.EnableBaseValue = false;
+            this.bar37.EnableOverCap = false;
+            this.bar37.EnableOverlay1 = false;
+            this.bar37.EnableOverlay2 = false;
+            this.bar37.Location = new System.Drawing.Point(193, 3);
+            this.bar37.MaximumBarValue = 100F;
+            this.bar37.MinimumBarValue = 0F;
+            this.bar37.Name = "bar37";
+            this.bar37.Size = new System.Drawing.Size(304, 13);
+            this.bar37.TabIndex = 0;
+            this.bar37.ValueBase = 0F;
+            this.bar37.ValueMainBar = 100F;
+            this.bar37.ValueOverCap = 0F;
+            this.bar37.ValueOverlay1 = 0F;
+            this.bar37.ValueOverlay2 = 0F;
             // 
-            // label80
+            // lv37
             // 
-            this.label80.AutoSize = true;
-            this.label80.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label80.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label80.Location = new System.Drawing.Point(103, 0);
-            this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(79, 22);
-            this.label80.TabIndex = 10;
-            this.label80.Text = "100.00%";
-            this.label80.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv37.AutoSize = true;
+            this.lv37.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv37.Location = new System.Drawing.Point(115, 0);
+            this.lv37.Name = "lv37";
+            this.lv37.Size = new System.Drawing.Size(72, 22);
+            this.lv37.TabIndex = 10;
+            this.lv37.Text = "100.00%";
+            this.lv37.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gradientPanel13
             // 
@@ -1973,12 +1975,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel12.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel12.ColumnCount = 3;
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.tableLayoutPanel12.Controls.Add(this.label77, 0, 0);
-            this.tableLayoutPanel12.Controls.Add(this.ctlLayeredBar81, 2, 0);
-            this.tableLayoutPanel12.Controls.Add(this.label78, 1, 0);
+            this.tableLayoutPanel12.Controls.Add(this.bar36, 2, 0);
+            this.tableLayoutPanel12.Controls.Add(this.lv36, 1, 0);
             this.tableLayoutPanel12.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel12.Name = "tableLayoutPanel12";
             this.tableLayoutPanel12.RowCount = 1;
@@ -1993,47 +1995,47 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label77.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label77.Location = new System.Drawing.Point(3, 0);
             this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(94, 22);
+            this.label77.Size = new System.Drawing.Size(106, 22);
             this.label77.TabIndex = 0;
             this.label77.Text = "Threat level:";
             this.label77.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar81
+            // bar36
             // 
-            this.ctlLayeredBar81.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar81.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar81.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(113)))), ((int)(((byte)(86)))), ((int)(((byte)(168)))));
-            this.ctlLayeredBar81.ColorMainBar = System.Drawing.Color.MediumPurple;
-            this.ctlLayeredBar81.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar81.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar81.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar81.EnableBaseValue = true;
-            this.ctlLayeredBar81.EnableOverCap = false;
-            this.ctlLayeredBar81.EnableOverlay1 = false;
-            this.ctlLayeredBar81.EnableOverlay2 = false;
-            this.ctlLayeredBar81.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar81.MaximumBarValue = 100F;
-            this.ctlLayeredBar81.MinimumBarValue = 0F;
-            this.ctlLayeredBar81.Name = "ctlLayeredBar81";
-            this.ctlLayeredBar81.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar81.TabIndex = 0;
-            this.ctlLayeredBar81.ValueBase = 0F;
-            this.ctlLayeredBar81.ValueMainBar = 100F;
-            this.ctlLayeredBar81.ValueOverCap = 0F;
-            this.ctlLayeredBar81.ValueOverlay1 = 0F;
-            this.ctlLayeredBar81.ValueOverlay2 = 0F;
+            this.bar36.BackColor = System.Drawing.Color.Transparent;
+            this.bar36.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar36.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(113)))), ((int)(((byte)(86)))), ((int)(((byte)(168)))));
+            this.bar36.ColorMainBar = System.Drawing.Color.MediumPurple;
+            this.bar36.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar36.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar36.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar36.EnableBaseValue = true;
+            this.bar36.EnableOverCap = false;
+            this.bar36.EnableOverlay1 = false;
+            this.bar36.EnableOverlay2 = false;
+            this.bar36.Location = new System.Drawing.Point(193, 3);
+            this.bar36.MaximumBarValue = 100F;
+            this.bar36.MinimumBarValue = 0F;
+            this.bar36.Name = "bar36";
+            this.bar36.Size = new System.Drawing.Size(304, 13);
+            this.bar36.TabIndex = 0;
+            this.bar36.ValueBase = 0F;
+            this.bar36.ValueMainBar = 100F;
+            this.bar36.ValueOverCap = 0F;
+            this.bar36.ValueOverlay1 = 0F;
+            this.bar36.ValueOverlay2 = 0F;
             // 
-            // label78
+            // lv36
             // 
-            this.label78.AutoSize = true;
-            this.label78.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label78.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label78.Location = new System.Drawing.Point(103, 0);
-            this.label78.Name = "label78";
-            this.label78.Size = new System.Drawing.Size(79, 22);
-            this.label78.TabIndex = 10;
-            this.label78.Text = "100.00%";
-            this.label78.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv36.AutoSize = true;
+            this.lv36.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv36.Location = new System.Drawing.Point(115, 0);
+            this.lv36.Name = "lv36";
+            this.lv36.Size = new System.Drawing.Size(72, 22);
+            this.lv36.TabIndex = 10;
+            this.lv36.Text = "100.00%";
+            this.lv36.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gradientPanel12
             // 
@@ -2055,12 +2057,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel11.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel11.ColumnCount = 3;
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.tableLayoutPanel11.Controls.Add(this.label75, 0, 0);
-            this.tableLayoutPanel11.Controls.Add(this.ctlLayeredBar78, 2, 0);
-            this.tableLayoutPanel11.Controls.Add(this.label76, 1, 0);
+            this.tableLayoutPanel11.Controls.Add(this.bar35, 2, 0);
+            this.tableLayoutPanel11.Controls.Add(this.lv35, 1, 0);
             this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 1;
@@ -2075,47 +2077,47 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label75.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label75.Location = new System.Drawing.Point(3, 0);
             this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(94, 22);
+            this.label75.Size = new System.Drawing.Size(106, 22);
             this.label75.TabIndex = 0;
             this.label75.Text = "EndRdx:";
             this.label75.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar78
+            // bar35
             // 
-            this.ctlLayeredBar78.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar78.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar78.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar78.ColorMainBar = System.Drawing.Color.RoyalBlue;
-            this.ctlLayeredBar78.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar78.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar78.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar78.EnableBaseValue = false;
-            this.ctlLayeredBar78.EnableOverCap = false;
-            this.ctlLayeredBar78.EnableOverlay1 = false;
-            this.ctlLayeredBar78.EnableOverlay2 = false;
-            this.ctlLayeredBar78.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar78.MaximumBarValue = 100F;
-            this.ctlLayeredBar78.MinimumBarValue = 0F;
-            this.ctlLayeredBar78.Name = "ctlLayeredBar78";
-            this.ctlLayeredBar78.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar78.TabIndex = 0;
-            this.ctlLayeredBar78.ValueBase = 0F;
-            this.ctlLayeredBar78.ValueMainBar = 100F;
-            this.ctlLayeredBar78.ValueOverCap = 0F;
-            this.ctlLayeredBar78.ValueOverlay1 = 0F;
-            this.ctlLayeredBar78.ValueOverlay2 = 0F;
+            this.bar35.BackColor = System.Drawing.Color.Transparent;
+            this.bar35.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar35.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar35.ColorMainBar = System.Drawing.Color.RoyalBlue;
+            this.bar35.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar35.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar35.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar35.EnableBaseValue = false;
+            this.bar35.EnableOverCap = false;
+            this.bar35.EnableOverlay1 = false;
+            this.bar35.EnableOverlay2 = false;
+            this.bar35.Location = new System.Drawing.Point(193, 3);
+            this.bar35.MaximumBarValue = 100F;
+            this.bar35.MinimumBarValue = 0F;
+            this.bar35.Name = "bar35";
+            this.bar35.Size = new System.Drawing.Size(304, 13);
+            this.bar35.TabIndex = 0;
+            this.bar35.ValueBase = 0F;
+            this.bar35.ValueMainBar = 100F;
+            this.bar35.ValueOverCap = 0F;
+            this.bar35.ValueOverlay1 = 0F;
+            this.bar35.ValueOverlay2 = 0F;
             // 
-            // label76
+            // lv35
             // 
-            this.label76.AutoSize = true;
-            this.label76.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label76.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label76.Location = new System.Drawing.Point(103, 0);
-            this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(79, 22);
-            this.label76.TabIndex = 10;
-            this.label76.Text = "+100.00%";
-            this.label76.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv35.AutoSize = true;
+            this.lv35.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv35.Location = new System.Drawing.Point(115, 0);
+            this.lv35.Name = "lv35";
+            this.lv35.Size = new System.Drawing.Size(72, 22);
+            this.lv35.TabIndex = 10;
+            this.lv35.Text = "+100.00%";
+            this.lv35.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gradientPanel11
             // 
@@ -2137,12 +2139,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel10.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel10.ColumnCount = 3;
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.tableLayoutPanel10.Controls.Add(this.label72, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.ctlLayeredBar71, 2, 0);
-            this.tableLayoutPanel10.Controls.Add(this.label73, 1, 0);
+            this.tableLayoutPanel10.Controls.Add(this.bar34, 2, 0);
+            this.tableLayoutPanel10.Controls.Add(this.lv34, 1, 0);
             this.tableLayoutPanel10.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 1;
@@ -2157,47 +2159,47 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label72.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label72.Location = new System.Drawing.Point(3, 0);
             this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(94, 22);
+            this.label72.Size = new System.Drawing.Size(106, 22);
             this.label72.TabIndex = 0;
             this.label72.Text = "Damage:";
             this.label72.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar71
+            // bar34
             // 
-            this.ctlLayeredBar71.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar71.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar71.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar71.ColorMainBar = System.Drawing.Color.Red;
-            this.ctlLayeredBar71.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar71.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar71.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar71.EnableBaseValue = true;
-            this.ctlLayeredBar71.EnableOverCap = true;
-            this.ctlLayeredBar71.EnableOverlay1 = false;
-            this.ctlLayeredBar71.EnableOverlay2 = false;
-            this.ctlLayeredBar71.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar71.MaximumBarValue = 500F;
-            this.ctlLayeredBar71.MinimumBarValue = 0F;
-            this.ctlLayeredBar71.Name = "ctlLayeredBar71";
-            this.ctlLayeredBar71.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar71.TabIndex = 0;
-            this.ctlLayeredBar71.ValueBase = 0F;
-            this.ctlLayeredBar71.ValueMainBar = 100F;
-            this.ctlLayeredBar71.ValueOverCap = 0F;
-            this.ctlLayeredBar71.ValueOverlay1 = 0F;
-            this.ctlLayeredBar71.ValueOverlay2 = 0F;
+            this.bar34.BackColor = System.Drawing.Color.Transparent;
+            this.bar34.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar34.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.bar34.ColorMainBar = System.Drawing.Color.Red;
+            this.bar34.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar34.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar34.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar34.EnableBaseValue = true;
+            this.bar34.EnableOverCap = false;
+            this.bar34.EnableOverlay1 = false;
+            this.bar34.EnableOverlay2 = false;
+            this.bar34.Location = new System.Drawing.Point(193, 3);
+            this.bar34.MaximumBarValue = 100F;
+            this.bar34.MinimumBarValue = 0F;
+            this.bar34.Name = "bar34";
+            this.bar34.Size = new System.Drawing.Size(304, 13);
+            this.bar34.TabIndex = 0;
+            this.bar34.ValueBase = 0F;
+            this.bar34.ValueMainBar = 100F;
+            this.bar34.ValueOverCap = 0F;
+            this.bar34.ValueOverlay1 = 0F;
+            this.bar34.ValueOverlay2 = 0F;
             // 
-            // label73
+            // lv34
             // 
-            this.label73.AutoSize = true;
-            this.label73.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label73.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label73.Location = new System.Drawing.Point(103, 0);
-            this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(79, 22);
-            this.label73.TabIndex = 10;
-            this.label73.Text = "+100.00%";
-            this.label73.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv34.AutoSize = true;
+            this.lv34.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv34.Location = new System.Drawing.Point(115, 0);
+            this.lv34.Name = "lv34";
+            this.lv34.Size = new System.Drawing.Size(72, 22);
+            this.lv34.TabIndex = 10;
+            this.lv34.Text = "+100.00%";
+            this.lv34.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gradientPanel10
             // 
@@ -2219,12 +2221,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel9.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel9.ColumnCount = 3;
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.tableLayoutPanel9.Controls.Add(this.label68, 0, 0);
-            this.tableLayoutPanel9.Controls.Add(this.ctlLayeredBar68, 2, 0);
-            this.tableLayoutPanel9.Controls.Add(this.label71, 1, 0);
+            this.tableLayoutPanel9.Controls.Add(this.bar33, 2, 0);
+            this.tableLayoutPanel9.Controls.Add(this.lv33, 1, 0);
             this.tableLayoutPanel9.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
             this.tableLayoutPanel9.RowCount = 1;
@@ -2239,47 +2241,47 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label68.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label68.Location = new System.Drawing.Point(3, 0);
             this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(94, 22);
+            this.label68.Size = new System.Drawing.Size(106, 22);
             this.label68.TabIndex = 0;
             this.label68.Text = "Accuracy:";
             this.label68.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar68
+            // bar33
             // 
-            this.ctlLayeredBar68.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar68.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar68.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar68.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar68.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar68.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar68.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar68.EnableBaseValue = false;
-            this.ctlLayeredBar68.EnableOverCap = false;
-            this.ctlLayeredBar68.EnableOverlay1 = false;
-            this.ctlLayeredBar68.EnableOverlay2 = false;
-            this.ctlLayeredBar68.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar68.MaximumBarValue = 100F;
-            this.ctlLayeredBar68.MinimumBarValue = 0F;
-            this.ctlLayeredBar68.Name = "ctlLayeredBar68";
-            this.ctlLayeredBar68.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar68.TabIndex = 0;
-            this.ctlLayeredBar68.ValueBase = 0F;
-            this.ctlLayeredBar68.ValueMainBar = 100F;
-            this.ctlLayeredBar68.ValueOverCap = 0F;
-            this.ctlLayeredBar68.ValueOverlay1 = 0F;
-            this.ctlLayeredBar68.ValueOverlay2 = 0F;
+            this.bar33.BackColor = System.Drawing.Color.Transparent;
+            this.bar33.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar33.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar33.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar33.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar33.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar33.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar33.EnableBaseValue = false;
+            this.bar33.EnableOverCap = false;
+            this.bar33.EnableOverlay1 = false;
+            this.bar33.EnableOverlay2 = false;
+            this.bar33.Location = new System.Drawing.Point(193, 3);
+            this.bar33.MaximumBarValue = 100F;
+            this.bar33.MinimumBarValue = 0F;
+            this.bar33.Name = "bar33";
+            this.bar33.Size = new System.Drawing.Size(304, 13);
+            this.bar33.TabIndex = 0;
+            this.bar33.ValueBase = 0F;
+            this.bar33.ValueMainBar = 100F;
+            this.bar33.ValueOverCap = 0F;
+            this.bar33.ValueOverlay1 = 0F;
+            this.bar33.ValueOverlay2 = 0F;
             // 
-            // label71
+            // lv33
             // 
-            this.label71.AutoSize = true;
-            this.label71.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label71.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label71.Location = new System.Drawing.Point(103, 0);
-            this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(79, 22);
-            this.label71.TabIndex = 10;
-            this.label71.Text = "+100.00%";
-            this.label71.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv33.AutoSize = true;
+            this.lv33.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv33.Location = new System.Drawing.Point(115, 0);
+            this.lv33.Name = "lv33";
+            this.lv33.Size = new System.Drawing.Size(72, 22);
+            this.lv33.TabIndex = 10;
+            this.lv33.Text = "+100.00%";
+            this.lv33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gradientPanel9
             // 
@@ -2301,12 +2303,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel8.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel8.ColumnCount = 3;
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.tableLayoutPanel8.Controls.Add(this.label65, 0, 0);
-            this.tableLayoutPanel8.Controls.Add(this.ctlLayeredBar56, 2, 0);
-            this.tableLayoutPanel8.Controls.Add(this.label67, 1, 0);
+            this.tableLayoutPanel8.Controls.Add(this.bar32, 2, 0);
+            this.tableLayoutPanel8.Controls.Add(this.lv32, 1, 0);
             this.tableLayoutPanel8.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
             this.tableLayoutPanel8.RowCount = 1;
@@ -2321,47 +2323,47 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label65.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label65.Location = new System.Drawing.Point(3, 0);
             this.label65.Name = "label65";
-            this.label65.Size = new System.Drawing.Size(94, 22);
+            this.label65.Size = new System.Drawing.Size(106, 22);
             this.label65.TabIndex = 0;
             this.label65.Text = "ToHit:";
             this.label65.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar56
+            // bar32
             // 
-            this.ctlLayeredBar56.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar56.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar56.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar56.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar56.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar56.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar56.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar56.EnableBaseValue = false;
-            this.ctlLayeredBar56.EnableOverCap = false;
-            this.ctlLayeredBar56.EnableOverlay1 = false;
-            this.ctlLayeredBar56.EnableOverlay2 = false;
-            this.ctlLayeredBar56.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar56.MaximumBarValue = 100F;
-            this.ctlLayeredBar56.MinimumBarValue = 0F;
-            this.ctlLayeredBar56.Name = "ctlLayeredBar56";
-            this.ctlLayeredBar56.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar56.TabIndex = 0;
-            this.ctlLayeredBar56.ValueBase = 0F;
-            this.ctlLayeredBar56.ValueMainBar = 100F;
-            this.ctlLayeredBar56.ValueOverCap = 0F;
-            this.ctlLayeredBar56.ValueOverlay1 = 0F;
-            this.ctlLayeredBar56.ValueOverlay2 = 0F;
+            this.bar32.BackColor = System.Drawing.Color.Transparent;
+            this.bar32.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar32.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar32.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.bar32.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar32.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar32.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar32.EnableBaseValue = false;
+            this.bar32.EnableOverCap = false;
+            this.bar32.EnableOverlay1 = false;
+            this.bar32.EnableOverlay2 = false;
+            this.bar32.Location = new System.Drawing.Point(193, 3);
+            this.bar32.MaximumBarValue = 100F;
+            this.bar32.MinimumBarValue = 0F;
+            this.bar32.Name = "bar32";
+            this.bar32.Size = new System.Drawing.Size(304, 13);
+            this.bar32.TabIndex = 0;
+            this.bar32.ValueBase = 0F;
+            this.bar32.ValueMainBar = 100F;
+            this.bar32.ValueOverCap = 0F;
+            this.bar32.ValueOverlay1 = 0F;
+            this.bar32.ValueOverlay2 = 0F;
             // 
-            // label67
+            // lv32
             // 
-            this.label67.AutoSize = true;
-            this.label67.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label67.Location = new System.Drawing.Point(103, 0);
-            this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(79, 22);
-            this.label67.TabIndex = 10;
-            this.label67.Text = "+100.00%";
-            this.label67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv32.AutoSize = true;
+            this.lv32.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv32.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv32.Location = new System.Drawing.Point(115, 0);
+            this.lv32.Name = "lv32";
+            this.lv32.Size = new System.Drawing.Size(72, 22);
+            this.lv32.TabIndex = 10;
+            this.lv32.Text = "+100.00%";
+            this.lv32.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gradientPanel8
             // 
@@ -2383,12 +2385,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel7.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel7.ColumnCount = 3;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.tableLayoutPanel7.Controls.Add(this.label69, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.ctlLayeredBar72, 2, 0);
-            this.tableLayoutPanel7.Controls.Add(this.label74, 1, 0);
+            this.tableLayoutPanel7.Controls.Add(this.bar31, 2, 0);
+            this.tableLayoutPanel7.Controls.Add(this.lv31, 1, 0);
             this.tableLayoutPanel7.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 1;
@@ -2403,47 +2405,47 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label69.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label69.Location = new System.Drawing.Point(3, 0);
             this.label69.Name = "label69";
-            this.label69.Size = new System.Drawing.Size(94, 22);
+            this.label69.Size = new System.Drawing.Size(106, 22);
             this.label69.TabIndex = 0;
             this.label69.Text = "Haste:";
             this.label69.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar72
+            // bar31
             // 
-            this.ctlLayeredBar72.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar72.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar72.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(102)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar72.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar72.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(56)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar72.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar72.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar72.EnableBaseValue = true;
-            this.ctlLayeredBar72.EnableOverCap = true;
-            this.ctlLayeredBar72.EnableOverlay1 = false;
-            this.ctlLayeredBar72.EnableOverlay2 = false;
-            this.ctlLayeredBar72.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar72.MaximumBarValue = 100F;
-            this.ctlLayeredBar72.MinimumBarValue = 0F;
-            this.ctlLayeredBar72.Name = "ctlLayeredBar72";
-            this.ctlLayeredBar72.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar72.TabIndex = 0;
-            this.ctlLayeredBar72.ValueBase = 0F;
-            this.ctlLayeredBar72.ValueMainBar = 100F;
-            this.ctlLayeredBar72.ValueOverCap = 0F;
-            this.ctlLayeredBar72.ValueOverlay1 = 0F;
-            this.ctlLayeredBar72.ValueOverlay2 = 0F;
+            this.bar31.BackColor = System.Drawing.Color.Transparent;
+            this.bar31.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar31.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(102)))), ((int)(((byte)(0)))));
+            this.bar31.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar31.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(56)))), ((int)(((byte)(0)))));
+            this.bar31.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar31.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar31.EnableBaseValue = true;
+            this.bar31.EnableOverCap = true;
+            this.bar31.EnableOverlay1 = false;
+            this.bar31.EnableOverlay2 = false;
+            this.bar31.Location = new System.Drawing.Point(193, 3);
+            this.bar31.MaximumBarValue = 100F;
+            this.bar31.MinimumBarValue = 0F;
+            this.bar31.Name = "bar31";
+            this.bar31.Size = new System.Drawing.Size(304, 13);
+            this.bar31.TabIndex = 0;
+            this.bar31.ValueBase = 0F;
+            this.bar31.ValueMainBar = 100F;
+            this.bar31.ValueOverCap = 0F;
+            this.bar31.ValueOverlay1 = 0F;
+            this.bar31.ValueOverlay2 = 0F;
             // 
-            // label74
+            // lv31
             // 
-            this.label74.AutoSize = true;
-            this.label74.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label74.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label74.Location = new System.Drawing.Point(103, 0);
-            this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(79, 22);
-            this.label74.TabIndex = 10;
-            this.label74.Text = "100.00%";
-            this.label74.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv31.AutoSize = true;
+            this.lv31.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv31.Location = new System.Drawing.Point(115, 0);
+            this.lv31.Name = "lv31";
+            this.lv31.Size = new System.Drawing.Size(72, 22);
+            this.lv31.TabIndex = 10;
+            this.lv31.Text = "100.00%";
+            this.lv31.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label52
             // 
@@ -2475,18 +2477,18 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel6.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel6.ColumnCount = 3;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
-            this.tableLayoutPanel6.Controls.Add(this.label53, 1, 2);
-            this.tableLayoutPanel6.Controls.Add(this.ctlLayeredBar57, 2, 2);
-            this.tableLayoutPanel6.Controls.Add(this.label54, 1, 1);
-            this.tableLayoutPanel6.Controls.Add(this.ctlLayeredBar60, 2, 1);
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
+            this.tableLayoutPanel6.Controls.Add(this.lv30, 1, 2);
+            this.tableLayoutPanel6.Controls.Add(this.bar30, 2, 2);
+            this.tableLayoutPanel6.Controls.Add(this.lv29, 1, 1);
+            this.tableLayoutPanel6.Controls.Add(this.bar29, 2, 1);
             this.tableLayoutPanel6.Controls.Add(this.label55, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.ctlLayeredBar63, 2, 0);
+            this.tableLayoutPanel6.Controls.Add(this.bar28, 2, 0);
             this.tableLayoutPanel6.Controls.Add(this.label56, 0, 1);
             this.tableLayoutPanel6.Controls.Add(this.label64, 0, 2);
-            this.tableLayoutPanel6.Controls.Add(this.label66, 1, 0);
+            this.tableLayoutPanel6.Controls.Add(this.lv28, 1, 0);
             this.tableLayoutPanel6.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 3;
@@ -2496,79 +2498,79 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel6.Size = new System.Drawing.Size(506, 58);
             this.tableLayoutPanel6.TabIndex = 11;
             // 
-            // label53
+            // lv30
             // 
-            this.label53.AutoSize = true;
-            this.label53.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label53.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label53.Location = new System.Drawing.Point(103, 38);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(79, 20);
-            this.label53.TabIndex = 12;
-            this.label53.Text = "100.00 ft";
-            this.label53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv30.AutoSize = true;
+            this.lv30.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv30.Location = new System.Drawing.Point(115, 38);
+            this.lv30.Name = "lv30";
+            this.lv30.Size = new System.Drawing.Size(72, 20);
+            this.lv30.TabIndex = 12;
+            this.lv30.Text = "100.00 ft";
+            this.lv30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar57
+            // bar30
             // 
-            this.ctlLayeredBar57.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar57.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar57.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(80)))), ((int)(((byte)(122)))));
-            this.ctlLayeredBar57.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(100)))), ((int)(((byte)(153)))));
-            this.ctlLayeredBar57.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(43)))), ((int)(((byte)(66)))));
-            this.ctlLayeredBar57.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar57.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar57.EnableBaseValue = true;
-            this.ctlLayeredBar57.EnableOverCap = true;
-            this.ctlLayeredBar57.EnableOverlay1 = false;
-            this.ctlLayeredBar57.EnableOverlay2 = false;
-            this.ctlLayeredBar57.Location = new System.Drawing.Point(188, 41);
-            this.ctlLayeredBar57.MaximumBarValue = 800F;
-            this.ctlLayeredBar57.MinimumBarValue = 0F;
-            this.ctlLayeredBar57.Name = "ctlLayeredBar57";
-            this.ctlLayeredBar57.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar57.TabIndex = 2;
-            this.ctlLayeredBar57.ValueBase = 0F;
-            this.ctlLayeredBar57.ValueMainBar = 100F;
-            this.ctlLayeredBar57.ValueOverCap = 0F;
-            this.ctlLayeredBar57.ValueOverlay1 = 0F;
-            this.ctlLayeredBar57.ValueOverlay2 = 0F;
+            this.bar30.BackColor = System.Drawing.Color.Transparent;
+            this.bar30.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar30.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(80)))), ((int)(((byte)(122)))));
+            this.bar30.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(100)))), ((int)(((byte)(153)))));
+            this.bar30.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(43)))), ((int)(((byte)(66)))));
+            this.bar30.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar30.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar30.EnableBaseValue = true;
+            this.bar30.EnableOverCap = true;
+            this.bar30.EnableOverlay1 = false;
+            this.bar30.EnableOverlay2 = false;
+            this.bar30.Location = new System.Drawing.Point(193, 41);
+            this.bar30.MaximumBarValue = 100F;
+            this.bar30.MinimumBarValue = 0F;
+            this.bar30.Name = "bar30";
+            this.bar30.Size = new System.Drawing.Size(304, 13);
+            this.bar30.TabIndex = 2;
+            this.bar30.ValueBase = 0F;
+            this.bar30.ValueMainBar = 100F;
+            this.bar30.ValueOverCap = 0F;
+            this.bar30.ValueOverlay1 = 0F;
+            this.bar30.ValueOverlay2 = 0F;
             // 
-            // label54
+            // lv29
             // 
-            this.label54.AutoSize = true;
-            this.label54.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label54.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label54.Location = new System.Drawing.Point(103, 19);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(79, 19);
-            this.label54.TabIndex = 11;
-            this.label54.Text = "100.00 ft";
-            this.label54.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv29.AutoSize = true;
+            this.lv29.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv29.Location = new System.Drawing.Point(115, 19);
+            this.lv29.Name = "lv29";
+            this.lv29.Size = new System.Drawing.Size(72, 19);
+            this.lv29.TabIndex = 11;
+            this.lv29.Text = "100.00 ft";
+            this.lv29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar60
+            // bar29
             // 
-            this.ctlLayeredBar60.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar60.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar60.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(95)))), ((int)(((byte)(107)))));
-            this.ctlLayeredBar60.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(121)))), ((int)(((byte)(136)))));
-            this.ctlLayeredBar60.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(59)))));
-            this.ctlLayeredBar60.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar60.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar60.EnableBaseValue = false;
-            this.ctlLayeredBar60.EnableOverCap = true;
-            this.ctlLayeredBar60.EnableOverlay1 = false;
-            this.ctlLayeredBar60.EnableOverlay2 = false;
-            this.ctlLayeredBar60.Location = new System.Drawing.Point(188, 22);
-            this.ctlLayeredBar60.MaximumBarValue = 800F;
-            this.ctlLayeredBar60.MinimumBarValue = 0F;
-            this.ctlLayeredBar60.Name = "ctlLayeredBar60";
-            this.ctlLayeredBar60.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar60.TabIndex = 1;
-            this.ctlLayeredBar60.ValueBase = 0F;
-            this.ctlLayeredBar60.ValueMainBar = 100F;
-            this.ctlLayeredBar60.ValueOverCap = 0F;
-            this.ctlLayeredBar60.ValueOverlay1 = 0F;
-            this.ctlLayeredBar60.ValueOverlay2 = 0F;
+            this.bar29.BackColor = System.Drawing.Color.Transparent;
+            this.bar29.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar29.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(95)))), ((int)(((byte)(107)))));
+            this.bar29.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(121)))), ((int)(((byte)(136)))));
+            this.bar29.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(59)))));
+            this.bar29.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar29.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar29.EnableBaseValue = false;
+            this.bar29.EnableOverCap = true;
+            this.bar29.EnableOverlay1 = false;
+            this.bar29.EnableOverlay2 = false;
+            this.bar29.Location = new System.Drawing.Point(193, 22);
+            this.bar29.MaximumBarValue = 100F;
+            this.bar29.MinimumBarValue = 0F;
+            this.bar29.Name = "bar29";
+            this.bar29.Size = new System.Drawing.Size(304, 13);
+            this.bar29.TabIndex = 1;
+            this.bar29.ValueBase = 0F;
+            this.bar29.ValueMainBar = 100F;
+            this.bar29.ValueOverCap = 0F;
+            this.bar29.ValueOverlay1 = 0F;
+            this.bar29.ValueOverlay2 = 0F;
             // 
             // label55
             // 
@@ -2577,35 +2579,35 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label55.Location = new System.Drawing.Point(3, 0);
             this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(94, 19);
+            this.label55.Size = new System.Drawing.Size(106, 19);
             this.label55.TabIndex = 0;
             this.label55.Text = "PvE:";
             this.label55.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar63
+            // bar28
             // 
-            this.ctlLayeredBar63.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar63.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar63.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(95)))), ((int)(((byte)(107)))));
-            this.ctlLayeredBar63.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(121)))), ((int)(((byte)(136)))));
-            this.ctlLayeredBar63.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(59)))));
-            this.ctlLayeredBar63.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar63.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar63.EnableBaseValue = false;
-            this.ctlLayeredBar63.EnableOverCap = true;
-            this.ctlLayeredBar63.EnableOverlay1 = false;
-            this.ctlLayeredBar63.EnableOverlay2 = false;
-            this.ctlLayeredBar63.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar63.MaximumBarValue = 800F;
-            this.ctlLayeredBar63.MinimumBarValue = 0F;
-            this.ctlLayeredBar63.Name = "ctlLayeredBar63";
-            this.ctlLayeredBar63.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar63.TabIndex = 0;
-            this.ctlLayeredBar63.ValueBase = 0F;
-            this.ctlLayeredBar63.ValueMainBar = 100F;
-            this.ctlLayeredBar63.ValueOverCap = 0F;
-            this.ctlLayeredBar63.ValueOverlay1 = 0F;
-            this.ctlLayeredBar63.ValueOverlay2 = 0F;
+            this.bar28.BackColor = System.Drawing.Color.Transparent;
+            this.bar28.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar28.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(95)))), ((int)(((byte)(107)))));
+            this.bar28.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(121)))), ((int)(((byte)(136)))));
+            this.bar28.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(59)))));
+            this.bar28.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar28.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar28.EnableBaseValue = false;
+            this.bar28.EnableOverCap = true;
+            this.bar28.EnableOverlay1 = false;
+            this.bar28.EnableOverlay2 = false;
+            this.bar28.Location = new System.Drawing.Point(193, 3);
+            this.bar28.MaximumBarValue = 100F;
+            this.bar28.MinimumBarValue = 0F;
+            this.bar28.Name = "bar28";
+            this.bar28.Size = new System.Drawing.Size(304, 13);
+            this.bar28.TabIndex = 0;
+            this.bar28.ValueBase = 0F;
+            this.bar28.ValueMainBar = 100F;
+            this.bar28.ValueOverCap = 0F;
+            this.bar28.ValueOverlay1 = 0F;
+            this.bar28.ValueOverlay2 = 0F;
             // 
             // label56
             // 
@@ -2614,7 +2616,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label56.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label56.Location = new System.Drawing.Point(3, 19);
             this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(94, 19);
+            this.label56.Size = new System.Drawing.Size(106, 19);
             this.label56.TabIndex = 1;
             this.label56.Text = "PvP:";
             this.label56.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2626,22 +2628,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label64.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label64.Location = new System.Drawing.Point(3, 38);
             this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(94, 20);
+            this.label64.Size = new System.Drawing.Size(106, 20);
             this.label64.TabIndex = 2;
             this.label64.Text = "Perception:";
             this.label64.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label66
+            // lv28
             // 
-            this.label66.AutoSize = true;
-            this.label66.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label66.Location = new System.Drawing.Point(103, 0);
-            this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(79, 19);
-            this.label66.TabIndex = 10;
-            this.label66.Text = "100.00 ft";
-            this.label66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv28.AutoSize = true;
+            this.lv28.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv28.Location = new System.Drawing.Point(115, 0);
+            this.lv28.Name = "lv28";
+            this.lv28.Size = new System.Drawing.Size(72, 19);
+            this.lv28.TabIndex = 10;
+            this.lv28.Text = "100.00 ft";
+            this.lv28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // radioButton4
             // 
@@ -2721,21 +2723,21 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel5.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel5.ColumnCount = 3;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
-            this.tableLayoutPanel5.Controls.Add(this.label57, 1, 3);
-            this.tableLayoutPanel5.Controls.Add(this.ctlLayeredBar48, 2, 3);
-            this.tableLayoutPanel5.Controls.Add(this.label58, 1, 2);
-            this.tableLayoutPanel5.Controls.Add(this.ctlLayeredBar49, 2, 2);
-            this.tableLayoutPanel5.Controls.Add(this.label59, 1, 1);
-            this.tableLayoutPanel5.Controls.Add(this.ctlLayeredBar50, 2, 1);
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.0303F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.9697F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
+            this.tableLayoutPanel5.Controls.Add(this.lv27, 1, 3);
+            this.tableLayoutPanel5.Controls.Add(this.bar27, 2, 3);
+            this.tableLayoutPanel5.Controls.Add(this.lv26, 1, 2);
+            this.tableLayoutPanel5.Controls.Add(this.bar26, 2, 2);
+            this.tableLayoutPanel5.Controls.Add(this.lv25, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.bar25, 2, 1);
             this.tableLayoutPanel5.Controls.Add(this.label60, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.ctlLayeredBar51, 2, 0);
+            this.tableLayoutPanel5.Controls.Add(this.bar24, 2, 0);
             this.tableLayoutPanel5.Controls.Add(this.label61, 0, 1);
             this.tableLayoutPanel5.Controls.Add(this.label62, 0, 2);
             this.tableLayoutPanel5.Controls.Add(this.label63, 0, 3);
-            this.tableLayoutPanel5.Controls.Add(this.label70, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.lv24, 1, 0);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 4;
@@ -2746,116 +2748,116 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel5.Size = new System.Drawing.Size(506, 77);
             this.tableLayoutPanel5.TabIndex = 11;
             // 
-            // label57
+            // lv27
             // 
-            this.label57.AutoSize = true;
-            this.label57.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label57.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label57.Location = new System.Drawing.Point(103, 57);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(79, 20);
-            this.label57.TabIndex = 13;
-            this.label57.Text = "100.00 mph";
-            this.label57.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv27.AutoSize = true;
+            this.lv27.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv27.Location = new System.Drawing.Point(104, 57);
+            this.lv27.Name = "lv27";
+            this.lv27.Size = new System.Drawing.Size(83, 20);
+            this.lv27.TabIndex = 13;
+            this.lv27.Text = "100.00 mph";
+            this.lv27.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar48
+            // bar27
             // 
-            this.ctlLayeredBar48.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar48.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar48.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
-            this.ctlLayeredBar48.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar48.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
-            this.ctlLayeredBar48.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar48.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar48.EnableBaseValue = true;
-            this.ctlLayeredBar48.EnableOverCap = true;
-            this.ctlLayeredBar48.EnableOverlay1 = false;
-            this.ctlLayeredBar48.EnableOverlay2 = false;
-            this.ctlLayeredBar48.Location = new System.Drawing.Point(188, 60);
-            this.ctlLayeredBar48.MaximumBarValue = 100F;
-            this.ctlLayeredBar48.MinimumBarValue = 0F;
-            this.ctlLayeredBar48.Name = "ctlLayeredBar48";
-            this.ctlLayeredBar48.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar48.TabIndex = 3;
-            this.ctlLayeredBar48.ValueBase = 0F;
-            this.ctlLayeredBar48.ValueMainBar = 100F;
-            this.ctlLayeredBar48.ValueOverCap = 0F;
-            this.ctlLayeredBar48.ValueOverlay1 = 0F;
-            this.ctlLayeredBar48.ValueOverlay2 = 0F;
+            this.bar27.BackColor = System.Drawing.Color.Transparent;
+            this.bar27.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar27.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.bar27.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.bar27.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.bar27.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar27.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar27.EnableBaseValue = true;
+            this.bar27.EnableOverCap = true;
+            this.bar27.EnableOverlay1 = false;
+            this.bar27.EnableOverlay2 = false;
+            this.bar27.Location = new System.Drawing.Point(193, 60);
+            this.bar27.MaximumBarValue = 100F;
+            this.bar27.MinimumBarValue = 0F;
+            this.bar27.Name = "bar27";
+            this.bar27.Size = new System.Drawing.Size(304, 13);
+            this.bar27.TabIndex = 3;
+            this.bar27.ValueBase = 0F;
+            this.bar27.ValueMainBar = 100F;
+            this.bar27.ValueOverCap = 0F;
+            this.bar27.ValueOverlay1 = 0F;
+            this.bar27.ValueOverlay2 = 0F;
             // 
-            // label58
+            // lv26
             // 
-            this.label58.AutoSize = true;
-            this.label58.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label58.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label58.Location = new System.Drawing.Point(103, 38);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(79, 19);
-            this.label58.TabIndex = 12;
-            this.label58.Text = "100.00 ft";
-            this.label58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv26.AutoSize = true;
+            this.lv26.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv26.Location = new System.Drawing.Point(104, 38);
+            this.lv26.Name = "lv26";
+            this.lv26.Size = new System.Drawing.Size(83, 19);
+            this.lv26.TabIndex = 12;
+            this.lv26.Text = "100.00 ft";
+            this.lv26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar49
+            // bar26
             // 
-            this.ctlLayeredBar49.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar49.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar49.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
-            this.ctlLayeredBar49.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar49.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
-            this.ctlLayeredBar49.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar49.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar49.EnableBaseValue = true;
-            this.ctlLayeredBar49.EnableOverCap = true;
-            this.ctlLayeredBar49.EnableOverlay1 = false;
-            this.ctlLayeredBar49.EnableOverlay2 = false;
-            this.ctlLayeredBar49.Location = new System.Drawing.Point(188, 41);
-            this.ctlLayeredBar49.MaximumBarValue = 100F;
-            this.ctlLayeredBar49.MinimumBarValue = 0F;
-            this.ctlLayeredBar49.Name = "ctlLayeredBar49";
-            this.ctlLayeredBar49.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar49.TabIndex = 2;
-            this.ctlLayeredBar49.ValueBase = 0F;
-            this.ctlLayeredBar49.ValueMainBar = 100F;
-            this.ctlLayeredBar49.ValueOverCap = 0F;
-            this.ctlLayeredBar49.ValueOverlay1 = 0F;
-            this.ctlLayeredBar49.ValueOverlay2 = 0F;
+            this.bar26.BackColor = System.Drawing.Color.Transparent;
+            this.bar26.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar26.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.bar26.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.bar26.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.bar26.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar26.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar26.EnableBaseValue = true;
+            this.bar26.EnableOverCap = true;
+            this.bar26.EnableOverlay1 = false;
+            this.bar26.EnableOverlay2 = false;
+            this.bar26.Location = new System.Drawing.Point(193, 41);
+            this.bar26.MaximumBarValue = 100F;
+            this.bar26.MinimumBarValue = 0F;
+            this.bar26.Name = "bar26";
+            this.bar26.Size = new System.Drawing.Size(304, 13);
+            this.bar26.TabIndex = 2;
+            this.bar26.ValueBase = 0F;
+            this.bar26.ValueMainBar = 100F;
+            this.bar26.ValueOverCap = 0F;
+            this.bar26.ValueOverlay1 = 0F;
+            this.bar26.ValueOverlay2 = 0F;
             // 
-            // label59
+            // lv25
             // 
-            this.label59.AutoSize = true;
-            this.label59.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label59.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label59.Location = new System.Drawing.Point(103, 19);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(79, 19);
-            this.label59.TabIndex = 11;
-            this.label59.Text = "100.00 mph";
-            this.label59.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv25.AutoSize = true;
+            this.lv25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv25.Location = new System.Drawing.Point(104, 19);
+            this.lv25.Name = "lv25";
+            this.lv25.Size = new System.Drawing.Size(83, 19);
+            this.lv25.TabIndex = 11;
+            this.lv25.Text = "100.00 mph";
+            this.lv25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar50
+            // bar25
             // 
-            this.ctlLayeredBar50.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar50.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar50.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
-            this.ctlLayeredBar50.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar50.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
-            this.ctlLayeredBar50.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar50.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar50.EnableBaseValue = true;
-            this.ctlLayeredBar50.EnableOverCap = true;
-            this.ctlLayeredBar50.EnableOverlay1 = false;
-            this.ctlLayeredBar50.EnableOverlay2 = false;
-            this.ctlLayeredBar50.Location = new System.Drawing.Point(188, 22);
-            this.ctlLayeredBar50.MaximumBarValue = 100F;
-            this.ctlLayeredBar50.MinimumBarValue = 0F;
-            this.ctlLayeredBar50.Name = "ctlLayeredBar50";
-            this.ctlLayeredBar50.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar50.TabIndex = 1;
-            this.ctlLayeredBar50.ValueBase = 0F;
-            this.ctlLayeredBar50.ValueMainBar = 100F;
-            this.ctlLayeredBar50.ValueOverCap = 0F;
-            this.ctlLayeredBar50.ValueOverlay1 = 0F;
-            this.ctlLayeredBar50.ValueOverlay2 = 0F;
+            this.bar25.BackColor = System.Drawing.Color.Transparent;
+            this.bar25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar25.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.bar25.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.bar25.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.bar25.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar25.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar25.EnableBaseValue = true;
+            this.bar25.EnableOverCap = true;
+            this.bar25.EnableOverlay1 = false;
+            this.bar25.EnableOverlay2 = false;
+            this.bar25.Location = new System.Drawing.Point(193, 22);
+            this.bar25.MaximumBarValue = 100F;
+            this.bar25.MinimumBarValue = 0F;
+            this.bar25.Name = "bar25";
+            this.bar25.Size = new System.Drawing.Size(304, 13);
+            this.bar25.TabIndex = 1;
+            this.bar25.ValueBase = 0F;
+            this.bar25.ValueMainBar = 100F;
+            this.bar25.ValueOverCap = 0F;
+            this.bar25.ValueOverlay1 = 0F;
+            this.bar25.ValueOverlay2 = 0F;
             // 
             // label60
             // 
@@ -2864,35 +2866,35 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label60.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label60.Location = new System.Drawing.Point(3, 0);
             this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(94, 19);
+            this.label60.Size = new System.Drawing.Size(95, 19);
             this.label60.TabIndex = 0;
             this.label60.Text = "Run Speed:";
             this.label60.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar51
+            // bar24
             // 
-            this.ctlLayeredBar51.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar51.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar51.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
-            this.ctlLayeredBar51.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.ctlLayeredBar51.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
-            this.ctlLayeredBar51.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar51.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar51.EnableBaseValue = true;
-            this.ctlLayeredBar51.EnableOverCap = true;
-            this.ctlLayeredBar51.EnableOverlay1 = false;
-            this.ctlLayeredBar51.EnableOverlay2 = false;
-            this.ctlLayeredBar51.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar51.MaximumBarValue = 100F;
-            this.ctlLayeredBar51.MinimumBarValue = 0F;
-            this.ctlLayeredBar51.Name = "ctlLayeredBar51";
-            this.ctlLayeredBar51.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar51.TabIndex = 0;
-            this.ctlLayeredBar51.ValueBase = 0F;
-            this.ctlLayeredBar51.ValueMainBar = 100F;
-            this.ctlLayeredBar51.ValueOverCap = 0F;
-            this.ctlLayeredBar51.ValueOverlay1 = 0F;
-            this.ctlLayeredBar51.ValueOverlay2 = 0F;
+            this.bar24.BackColor = System.Drawing.Color.Transparent;
+            this.bar24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar24.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
+            this.bar24.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.bar24.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
+            this.bar24.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar24.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar24.EnableBaseValue = true;
+            this.bar24.EnableOverCap = true;
+            this.bar24.EnableOverlay1 = false;
+            this.bar24.EnableOverlay2 = false;
+            this.bar24.Location = new System.Drawing.Point(193, 3);
+            this.bar24.MaximumBarValue = 100F;
+            this.bar24.MinimumBarValue = 0F;
+            this.bar24.Name = "bar24";
+            this.bar24.Size = new System.Drawing.Size(304, 13);
+            this.bar24.TabIndex = 0;
+            this.bar24.ValueBase = 0F;
+            this.bar24.ValueMainBar = 100F;
+            this.bar24.ValueOverCap = 0F;
+            this.bar24.ValueOverlay1 = 0F;
+            this.bar24.ValueOverlay2 = 0F;
             // 
             // label61
             // 
@@ -2901,7 +2903,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label61.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label61.Location = new System.Drawing.Point(3, 19);
             this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(94, 19);
+            this.label61.Size = new System.Drawing.Size(95, 19);
             this.label61.TabIndex = 1;
             this.label61.Text = "Jump Speed:";
             this.label61.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2913,7 +2915,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label62.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label62.Location = new System.Drawing.Point(3, 38);
             this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(94, 19);
+            this.label62.Size = new System.Drawing.Size(95, 19);
             this.label62.TabIndex = 2;
             this.label62.Text = "Jump Height:";
             this.label62.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2925,22 +2927,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label63.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label63.Location = new System.Drawing.Point(3, 57);
             this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(94, 20);
+            this.label63.Size = new System.Drawing.Size(95, 20);
             this.label63.TabIndex = 3;
             this.label63.Text = "Fly:";
             this.label63.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label70
+            // lv24
             // 
-            this.label70.AutoSize = true;
-            this.label70.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label70.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label70.Location = new System.Drawing.Point(103, 0);
-            this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(79, 19);
-            this.label70.TabIndex = 10;
-            this.label70.Text = "100.00 mph";
-            this.label70.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv24.AutoSize = true;
+            this.lv24.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv24.Location = new System.Drawing.Point(104, 0);
+            this.lv24.Name = "lv24";
+            this.lv24.Size = new System.Drawing.Size(83, 19);
+            this.lv24.TabIndex = 10;
+            this.lv24.Text = "100.00 mph";
+            this.lv24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tabPageAdv6
             // 
@@ -2990,13 +2992,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel15.ColumnCount = 3;
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
-            this.tableLayoutPanel15.Controls.Add(this.label106, 1, 10);
-            this.tableLayoutPanel15.Controls.Add(this.label107, 1, 9);
-            this.tableLayoutPanel15.Controls.Add(this.label108, 1, 8);
-            this.tableLayoutPanel15.Controls.Add(this.label109, 1, 7);
-            this.tableLayoutPanel15.Controls.Add(this.label110, 1, 6);
-            this.tableLayoutPanel15.Controls.Add(this.label111, 1, 5);
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
+            this.tableLayoutPanel15.Controls.Add(this.lv59, 1, 10);
+            this.tableLayoutPanel15.Controls.Add(this.lv58, 1, 9);
+            this.tableLayoutPanel15.Controls.Add(this.lv57, 1, 8);
+            this.tableLayoutPanel15.Controls.Add(this.lv56, 1, 7);
+            this.tableLayoutPanel15.Controls.Add(this.lv55, 1, 6);
+            this.tableLayoutPanel15.Controls.Add(this.lv54, 1, 5);
             this.tableLayoutPanel15.Controls.Add(this.label112, 0, 10);
             this.tableLayoutPanel15.Controls.Add(this.label113, 0, 9);
             this.tableLayoutPanel15.Controls.Add(this.label114, 0, 8);
@@ -3004,26 +3006,26 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel15.Controls.Add(this.label116, 0, 6);
             this.tableLayoutPanel15.Controls.Add(this.label117, 0, 5);
             this.tableLayoutPanel15.Controls.Add(this.label118, 0, 4);
-            this.tableLayoutPanel15.Controls.Add(this.label119, 1, 3);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar99, 2, 3);
-            this.tableLayoutPanel15.Controls.Add(this.label120, 1, 2);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar100, 2, 2);
-            this.tableLayoutPanel15.Controls.Add(this.label121, 1, 1);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar101, 2, 1);
+            this.tableLayoutPanel15.Controls.Add(this.lv52, 1, 3);
+            this.tableLayoutPanel15.Controls.Add(this.bar52, 2, 3);
+            this.tableLayoutPanel15.Controls.Add(this.lv51, 1, 2);
+            this.tableLayoutPanel15.Controls.Add(this.bar51, 2, 2);
+            this.tableLayoutPanel15.Controls.Add(this.lv50, 1, 1);
+            this.tableLayoutPanel15.Controls.Add(this.bar50, 2, 1);
             this.tableLayoutPanel15.Controls.Add(this.label122, 0, 0);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar102, 2, 0);
+            this.tableLayoutPanel15.Controls.Add(this.bar49, 2, 0);
             this.tableLayoutPanel15.Controls.Add(this.label123, 0, 1);
             this.tableLayoutPanel15.Controls.Add(this.label124, 0, 2);
             this.tableLayoutPanel15.Controls.Add(this.label125, 0, 3);
-            this.tableLayoutPanel15.Controls.Add(this.label126, 1, 0);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar103, 2, 4);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar104, 2, 5);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar105, 2, 6);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar106, 2, 7);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar107, 2, 8);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar108, 2, 9);
-            this.tableLayoutPanel15.Controls.Add(this.ctlLayeredBar109, 2, 10);
-            this.tableLayoutPanel15.Controls.Add(this.label127, 1, 4);
+            this.tableLayoutPanel15.Controls.Add(this.lv49, 1, 0);
+            this.tableLayoutPanel15.Controls.Add(this.bar53, 2, 4);
+            this.tableLayoutPanel15.Controls.Add(this.bar54, 2, 5);
+            this.tableLayoutPanel15.Controls.Add(this.bar55, 2, 6);
+            this.tableLayoutPanel15.Controls.Add(this.bar56, 2, 7);
+            this.tableLayoutPanel15.Controls.Add(this.bar57, 2, 8);
+            this.tableLayoutPanel15.Controls.Add(this.bar58, 2, 9);
+            this.tableLayoutPanel15.Controls.Add(this.bar59, 2, 10);
+            this.tableLayoutPanel15.Controls.Add(this.lv53, 1, 4);
             this.tableLayoutPanel15.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
             this.tableLayoutPanel15.RowCount = 11;
@@ -3041,77 +3043,77 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel15.Size = new System.Drawing.Size(506, 216);
             this.tableLayoutPanel15.TabIndex = 11;
             // 
-            // label106
+            // lv59
             // 
-            this.label106.AutoSize = true;
-            this.label106.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label106.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label106.Location = new System.Drawing.Point(112, 196);
-            this.label106.Name = "label106";
-            this.label106.Size = new System.Drawing.Size(70, 20);
-            this.label106.TabIndex = 12;
-            this.label106.Text = "100.00%";
-            this.label106.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv59.AutoSize = true;
+            this.lv59.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv59.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv59.Location = new System.Drawing.Point(115, 196);
+            this.lv59.Name = "lv59";
+            this.lv59.Size = new System.Drawing.Size(72, 20);
+            this.lv59.TabIndex = 12;
+            this.lv59.Text = "100.00%";
+            this.lv59.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label107
+            // lv58
             // 
-            this.label107.AutoSize = true;
-            this.label107.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label107.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label107.Location = new System.Drawing.Point(112, 176);
-            this.label107.Name = "label107";
-            this.label107.Size = new System.Drawing.Size(70, 20);
-            this.label107.TabIndex = 12;
-            this.label107.Text = "100.00%";
-            this.label107.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv58.AutoSize = true;
+            this.lv58.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv58.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv58.Location = new System.Drawing.Point(115, 176);
+            this.lv58.Name = "lv58";
+            this.lv58.Size = new System.Drawing.Size(72, 20);
+            this.lv58.TabIndex = 12;
+            this.lv58.Text = "100.00%";
+            this.lv58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label108
+            // lv57
             // 
-            this.label108.AutoSize = true;
-            this.label108.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label108.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label108.Location = new System.Drawing.Point(112, 156);
-            this.label108.Name = "label108";
-            this.label108.Size = new System.Drawing.Size(70, 20);
-            this.label108.TabIndex = 12;
-            this.label108.Text = "100.00%";
-            this.label108.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv57.AutoSize = true;
+            this.lv57.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv57.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv57.Location = new System.Drawing.Point(115, 156);
+            this.lv57.Name = "lv57";
+            this.lv57.Size = new System.Drawing.Size(72, 20);
+            this.lv57.TabIndex = 12;
+            this.lv57.Text = "100.00%";
+            this.lv57.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label109
+            // lv56
             // 
-            this.label109.AutoSize = true;
-            this.label109.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label109.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label109.Location = new System.Drawing.Point(112, 136);
-            this.label109.Name = "label109";
-            this.label109.Size = new System.Drawing.Size(70, 20);
-            this.label109.TabIndex = 12;
-            this.label109.Text = "100.00%";
-            this.label109.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv56.AutoSize = true;
+            this.lv56.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv56.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv56.Location = new System.Drawing.Point(115, 136);
+            this.lv56.Name = "lv56";
+            this.lv56.Size = new System.Drawing.Size(72, 20);
+            this.lv56.TabIndex = 12;
+            this.lv56.Text = "100.00%";
+            this.lv56.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label110
+            // lv55
             // 
-            this.label110.AutoSize = true;
-            this.label110.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label110.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label110.Location = new System.Drawing.Point(112, 116);
-            this.label110.Name = "label110";
-            this.label110.Size = new System.Drawing.Size(70, 20);
-            this.label110.TabIndex = 12;
-            this.label110.Text = "100.00%";
-            this.label110.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv55.AutoSize = true;
+            this.lv55.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv55.Location = new System.Drawing.Point(115, 116);
+            this.lv55.Name = "lv55";
+            this.lv55.Size = new System.Drawing.Size(72, 20);
+            this.lv55.TabIndex = 12;
+            this.lv55.Text = "100.00%";
+            this.lv55.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label111
+            // lv54
             // 
-            this.label111.AutoSize = true;
-            this.label111.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label111.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label111.Location = new System.Drawing.Point(112, 96);
-            this.label111.Name = "label111";
-            this.label111.Size = new System.Drawing.Size(70, 20);
-            this.label111.TabIndex = 12;
-            this.label111.Text = "100.00%";
-            this.label111.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv54.AutoSize = true;
+            this.lv54.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv54.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv54.Location = new System.Drawing.Point(115, 96);
+            this.lv54.Name = "lv54";
+            this.lv54.Size = new System.Drawing.Size(72, 20);
+            this.lv54.TabIndex = 12;
+            this.lv54.Text = "100.00%";
+            this.lv54.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label112
             // 
@@ -3120,7 +3122,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label112.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label112.Location = new System.Drawing.Point(3, 196);
             this.label112.Name = "label112";
-            this.label112.Size = new System.Drawing.Size(103, 20);
+            this.label112.Size = new System.Drawing.Size(106, 20);
             this.label112.TabIndex = 3;
             this.label112.Text = "Teleport:";
             this.label112.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3132,7 +3134,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label113.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label113.Location = new System.Drawing.Point(3, 176);
             this.label113.Name = "label113";
-            this.label113.Size = new System.Drawing.Size(103, 20);
+            this.label113.Size = new System.Drawing.Size(106, 20);
             this.label113.TabIndex = 3;
             this.label113.Text = "Placate:";
             this.label113.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3144,7 +3146,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label114.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label114.Location = new System.Drawing.Point(3, 156);
             this.label114.Name = "label114";
-            this.label114.Size = new System.Drawing.Size(103, 20);
+            this.label114.Size = new System.Drawing.Size(106, 20);
             this.label114.TabIndex = 3;
             this.label114.Text = "Taunt:";
             this.label114.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3156,7 +3158,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label115.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label115.Location = new System.Drawing.Point(3, 136);
             this.label115.Name = "label115";
-            this.label115.Size = new System.Drawing.Size(103, 20);
+            this.label115.Size = new System.Drawing.Size(106, 20);
             this.label115.TabIndex = 3;
             this.label115.Text = "Fear:";
             this.label115.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3168,7 +3170,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label116.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label116.Location = new System.Drawing.Point(3, 116);
             this.label116.Name = "label116";
-            this.label116.Size = new System.Drawing.Size(103, 20);
+            this.label116.Size = new System.Drawing.Size(106, 20);
             this.label116.TabIndex = 3;
             this.label116.Text = "Confuse:";
             this.label116.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3180,7 +3182,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label117.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label117.Location = new System.Drawing.Point(3, 96);
             this.label117.Name = "label117";
-            this.label117.Size = new System.Drawing.Size(103, 20);
+            this.label117.Size = new System.Drawing.Size(106, 20);
             this.label117.TabIndex = 3;
             this.label117.Text = "Repel:";
             this.label117.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3192,121 +3194,121 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label118.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label118.Location = new System.Drawing.Point(3, 76);
             this.label118.Name = "label118";
-            this.label118.Size = new System.Drawing.Size(103, 20);
+            this.label118.Size = new System.Drawing.Size(106, 20);
             this.label118.TabIndex = 3;
             this.label118.Text = "Knockback:";
             this.label118.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label119
+            // lv52
             // 
-            this.label119.AutoSize = true;
-            this.label119.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label119.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label119.Location = new System.Drawing.Point(112, 57);
-            this.label119.Name = "label119";
-            this.label119.Size = new System.Drawing.Size(70, 19);
-            this.label119.TabIndex = 13;
-            this.label119.Text = "100.00%";
-            this.label119.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv52.AutoSize = true;
+            this.lv52.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv52.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv52.Location = new System.Drawing.Point(115, 57);
+            this.lv52.Name = "lv52";
+            this.lv52.Size = new System.Drawing.Size(72, 19);
+            this.lv52.TabIndex = 13;
+            this.lv52.Text = "100.00%";
+            this.lv52.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar99
+            // bar52
             // 
-            this.ctlLayeredBar99.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar99.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar99.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar99.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar99.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar99.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar99.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar99.EnableBaseValue = false;
-            this.ctlLayeredBar99.EnableOverCap = false;
-            this.ctlLayeredBar99.EnableOverlay1 = false;
-            this.ctlLayeredBar99.EnableOverlay2 = false;
-            this.ctlLayeredBar99.Location = new System.Drawing.Point(188, 60);
-            this.ctlLayeredBar99.MaximumBarValue = 1000F;
-            this.ctlLayeredBar99.MinimumBarValue = 0F;
-            this.ctlLayeredBar99.Name = "ctlLayeredBar99";
-            this.ctlLayeredBar99.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar99.TabIndex = 3;
-            this.ctlLayeredBar99.ValueBase = 0F;
-            this.ctlLayeredBar99.ValueMainBar = 1000F;
-            this.ctlLayeredBar99.ValueOverCap = 0F;
-            this.ctlLayeredBar99.ValueOverlay1 = 0F;
-            this.ctlLayeredBar99.ValueOverlay2 = 0F;
+            this.bar52.BackColor = System.Drawing.Color.Transparent;
+            this.bar52.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar52.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar52.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar52.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar52.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar52.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar52.EnableBaseValue = false;
+            this.bar52.EnableOverCap = false;
+            this.bar52.EnableOverlay1 = false;
+            this.bar52.EnableOverlay2 = false;
+            this.bar52.Location = new System.Drawing.Point(193, 60);
+            this.bar52.MaximumBarValue = 100F;
+            this.bar52.MinimumBarValue = 0F;
+            this.bar52.Name = "bar52";
+            this.bar52.Size = new System.Drawing.Size(304, 13);
+            this.bar52.TabIndex = 3;
+            this.bar52.ValueBase = 0F;
+            this.bar52.ValueMainBar = 100F;
+            this.bar52.ValueOverCap = 0F;
+            this.bar52.ValueOverlay1 = 0F;
+            this.bar52.ValueOverlay2 = 0F;
             // 
-            // label120
+            // lv51
             // 
-            this.label120.AutoSize = true;
-            this.label120.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label120.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label120.Location = new System.Drawing.Point(112, 38);
-            this.label120.Name = "label120";
-            this.label120.Size = new System.Drawing.Size(70, 19);
-            this.label120.TabIndex = 12;
-            this.label120.Text = "100.00%";
-            this.label120.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv51.AutoSize = true;
+            this.lv51.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv51.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv51.Location = new System.Drawing.Point(115, 38);
+            this.lv51.Name = "lv51";
+            this.lv51.Size = new System.Drawing.Size(72, 19);
+            this.lv51.TabIndex = 12;
+            this.lv51.Text = "100.00%";
+            this.lv51.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar100
+            // bar51
             // 
-            this.ctlLayeredBar100.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar100.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar100.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar100.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar100.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar100.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar100.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar100.EnableBaseValue = false;
-            this.ctlLayeredBar100.EnableOverCap = false;
-            this.ctlLayeredBar100.EnableOverlay1 = false;
-            this.ctlLayeredBar100.EnableOverlay2 = false;
-            this.ctlLayeredBar100.Location = new System.Drawing.Point(188, 41);
-            this.ctlLayeredBar100.MaximumBarValue = 1000F;
-            this.ctlLayeredBar100.MinimumBarValue = 0F;
-            this.ctlLayeredBar100.Name = "ctlLayeredBar100";
-            this.ctlLayeredBar100.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar100.TabIndex = 2;
-            this.ctlLayeredBar100.ValueBase = 0F;
-            this.ctlLayeredBar100.ValueMainBar = 1000F;
-            this.ctlLayeredBar100.ValueOverCap = 0F;
-            this.ctlLayeredBar100.ValueOverlay1 = 0F;
-            this.ctlLayeredBar100.ValueOverlay2 = 0F;
+            this.bar51.BackColor = System.Drawing.Color.Transparent;
+            this.bar51.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar51.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar51.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar51.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar51.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar51.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar51.EnableBaseValue = false;
+            this.bar51.EnableOverCap = false;
+            this.bar51.EnableOverlay1 = false;
+            this.bar51.EnableOverlay2 = false;
+            this.bar51.Location = new System.Drawing.Point(193, 41);
+            this.bar51.MaximumBarValue = 100F;
+            this.bar51.MinimumBarValue = 0F;
+            this.bar51.Name = "bar51";
+            this.bar51.Size = new System.Drawing.Size(304, 13);
+            this.bar51.TabIndex = 2;
+            this.bar51.ValueBase = 0F;
+            this.bar51.ValueMainBar = 100F;
+            this.bar51.ValueOverCap = 0F;
+            this.bar51.ValueOverlay1 = 0F;
+            this.bar51.ValueOverlay2 = 0F;
             // 
-            // label121
+            // lv50
             // 
-            this.label121.AutoSize = true;
-            this.label121.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label121.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label121.Location = new System.Drawing.Point(112, 19);
-            this.label121.Name = "label121";
-            this.label121.Size = new System.Drawing.Size(70, 19);
-            this.label121.TabIndex = 11;
-            this.label121.Text = "100.00%";
-            this.label121.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv50.AutoSize = true;
+            this.lv50.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv50.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv50.Location = new System.Drawing.Point(115, 19);
+            this.lv50.Name = "lv50";
+            this.lv50.Size = new System.Drawing.Size(72, 19);
+            this.lv50.TabIndex = 11;
+            this.lv50.Text = "100.00%";
+            this.lv50.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar101
+            // bar50
             // 
-            this.ctlLayeredBar101.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar101.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar101.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar101.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar101.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar101.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar101.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar101.EnableBaseValue = false;
-            this.ctlLayeredBar101.EnableOverCap = false;
-            this.ctlLayeredBar101.EnableOverlay1 = false;
-            this.ctlLayeredBar101.EnableOverlay2 = false;
-            this.ctlLayeredBar101.Location = new System.Drawing.Point(188, 22);
-            this.ctlLayeredBar101.MaximumBarValue = 1000F;
-            this.ctlLayeredBar101.MinimumBarValue = 0F;
-            this.ctlLayeredBar101.Name = "ctlLayeredBar101";
-            this.ctlLayeredBar101.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar101.TabIndex = 1;
-            this.ctlLayeredBar101.ValueBase = 0F;
-            this.ctlLayeredBar101.ValueMainBar = 1000F;
-            this.ctlLayeredBar101.ValueOverCap = 0F;
-            this.ctlLayeredBar101.ValueOverlay1 = 0F;
-            this.ctlLayeredBar101.ValueOverlay2 = 0F;
+            this.bar50.BackColor = System.Drawing.Color.Transparent;
+            this.bar50.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar50.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar50.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar50.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar50.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar50.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar50.EnableBaseValue = false;
+            this.bar50.EnableOverCap = false;
+            this.bar50.EnableOverlay1 = false;
+            this.bar50.EnableOverlay2 = false;
+            this.bar50.Location = new System.Drawing.Point(193, 22);
+            this.bar50.MaximumBarValue = 100F;
+            this.bar50.MinimumBarValue = 0F;
+            this.bar50.Name = "bar50";
+            this.bar50.Size = new System.Drawing.Size(304, 13);
+            this.bar50.TabIndex = 1;
+            this.bar50.ValueBase = 0F;
+            this.bar50.ValueMainBar = 100F;
+            this.bar50.ValueOverCap = 0F;
+            this.bar50.ValueOverlay1 = 0F;
+            this.bar50.ValueOverlay2 = 0F;
             // 
             // label122
             // 
@@ -3315,35 +3317,35 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label122.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label122.Location = new System.Drawing.Point(3, 0);
             this.label122.Name = "label122";
-            this.label122.Size = new System.Drawing.Size(103, 19);
+            this.label122.Size = new System.Drawing.Size(106, 19);
             this.label122.TabIndex = 0;
             this.label122.Text = "Hold:";
             this.label122.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar102
+            // bar49
             // 
-            this.ctlLayeredBar102.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar102.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar102.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar102.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar102.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar102.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar102.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar102.EnableBaseValue = false;
-            this.ctlLayeredBar102.EnableOverCap = false;
-            this.ctlLayeredBar102.EnableOverlay1 = false;
-            this.ctlLayeredBar102.EnableOverlay2 = false;
-            this.ctlLayeredBar102.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar102.MaximumBarValue = 1000F;
-            this.ctlLayeredBar102.MinimumBarValue = 0F;
-            this.ctlLayeredBar102.Name = "ctlLayeredBar102";
-            this.ctlLayeredBar102.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar102.TabIndex = 0;
-            this.ctlLayeredBar102.ValueBase = 0F;
-            this.ctlLayeredBar102.ValueMainBar = 1000F;
-            this.ctlLayeredBar102.ValueOverCap = 0F;
-            this.ctlLayeredBar102.ValueOverlay1 = 0F;
-            this.ctlLayeredBar102.ValueOverlay2 = 0F;
+            this.bar49.BackColor = System.Drawing.Color.Transparent;
+            this.bar49.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar49.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar49.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar49.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar49.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar49.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar49.EnableBaseValue = false;
+            this.bar49.EnableOverCap = false;
+            this.bar49.EnableOverlay1 = false;
+            this.bar49.EnableOverlay2 = false;
+            this.bar49.Location = new System.Drawing.Point(193, 3);
+            this.bar49.MaximumBarValue = 100F;
+            this.bar49.MinimumBarValue = 0F;
+            this.bar49.Name = "bar49";
+            this.bar49.Size = new System.Drawing.Size(304, 13);
+            this.bar49.TabIndex = 0;
+            this.bar49.ValueBase = 0F;
+            this.bar49.ValueMainBar = 100F;
+            this.bar49.ValueOverCap = 0F;
+            this.bar49.ValueOverlay1 = 0F;
+            this.bar49.ValueOverlay2 = 0F;
             // 
             // label123
             // 
@@ -3352,7 +3354,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label123.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label123.Location = new System.Drawing.Point(3, 19);
             this.label123.Name = "label123";
-            this.label123.Size = new System.Drawing.Size(103, 19);
+            this.label123.Size = new System.Drawing.Size(106, 19);
             this.label123.TabIndex = 1;
             this.label123.Text = "Stunned:";
             this.label123.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3364,7 +3366,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label124.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label124.Location = new System.Drawing.Point(3, 38);
             this.label124.Name = "label124";
-            this.label124.Size = new System.Drawing.Size(103, 19);
+            this.label124.Size = new System.Drawing.Size(106, 19);
             this.label124.TabIndex = 2;
             this.label124.Text = "Sleep:";
             this.label124.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3376,209 +3378,209 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label125.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label125.Location = new System.Drawing.Point(3, 57);
             this.label125.Name = "label125";
-            this.label125.Size = new System.Drawing.Size(103, 19);
+            this.label125.Size = new System.Drawing.Size(106, 19);
             this.label125.TabIndex = 3;
             this.label125.Text = "Immob:";
             this.label125.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label126
+            // lv49
             // 
-            this.label126.AutoSize = true;
-            this.label126.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label126.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label126.Location = new System.Drawing.Point(112, 0);
-            this.label126.Name = "label126";
-            this.label126.Size = new System.Drawing.Size(70, 19);
-            this.label126.TabIndex = 10;
-            this.label126.Text = "100.00%";
-            this.label126.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv49.AutoSize = true;
+            this.lv49.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv49.Location = new System.Drawing.Point(115, 0);
+            this.lv49.Name = "lv49";
+            this.lv49.Size = new System.Drawing.Size(72, 19);
+            this.lv49.TabIndex = 10;
+            this.lv49.Text = "100.00%";
+            this.lv49.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar103
+            // bar53
             // 
-            this.ctlLayeredBar103.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar103.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar103.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar103.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar103.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar103.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar103.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar103.EnableBaseValue = false;
-            this.ctlLayeredBar103.EnableOverCap = false;
-            this.ctlLayeredBar103.EnableOverlay1 = false;
-            this.ctlLayeredBar103.EnableOverlay2 = false;
-            this.ctlLayeredBar103.Location = new System.Drawing.Point(188, 79);
-            this.ctlLayeredBar103.MaximumBarValue = 1000F;
-            this.ctlLayeredBar103.MinimumBarValue = 0F;
-            this.ctlLayeredBar103.Name = "ctlLayeredBar103";
-            this.ctlLayeredBar103.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar103.TabIndex = 14;
-            this.ctlLayeredBar103.ValueBase = 0F;
-            this.ctlLayeredBar103.ValueMainBar = 1000F;
-            this.ctlLayeredBar103.ValueOverCap = 0F;
-            this.ctlLayeredBar103.ValueOverlay1 = 0F;
-            this.ctlLayeredBar103.ValueOverlay2 = 0F;
+            this.bar53.BackColor = System.Drawing.Color.Transparent;
+            this.bar53.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar53.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar53.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar53.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar53.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar53.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar53.EnableBaseValue = false;
+            this.bar53.EnableOverCap = false;
+            this.bar53.EnableOverlay1 = false;
+            this.bar53.EnableOverlay2 = false;
+            this.bar53.Location = new System.Drawing.Point(193, 79);
+            this.bar53.MaximumBarValue = 100F;
+            this.bar53.MinimumBarValue = 0F;
+            this.bar53.Name = "bar53";
+            this.bar53.Size = new System.Drawing.Size(304, 13);
+            this.bar53.TabIndex = 14;
+            this.bar53.ValueBase = 0F;
+            this.bar53.ValueMainBar = 100F;
+            this.bar53.ValueOverCap = 0F;
+            this.bar53.ValueOverlay1 = 0F;
+            this.bar53.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar104
+            // bar54
             // 
-            this.ctlLayeredBar104.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar104.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar104.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar104.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar104.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar104.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar104.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar104.EnableBaseValue = false;
-            this.ctlLayeredBar104.EnableOverCap = false;
-            this.ctlLayeredBar104.EnableOverlay1 = false;
-            this.ctlLayeredBar104.EnableOverlay2 = false;
-            this.ctlLayeredBar104.Location = new System.Drawing.Point(188, 99);
-            this.ctlLayeredBar104.MaximumBarValue = 1000F;
-            this.ctlLayeredBar104.MinimumBarValue = 0F;
-            this.ctlLayeredBar104.Name = "ctlLayeredBar104";
-            this.ctlLayeredBar104.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar104.TabIndex = 15;
-            this.ctlLayeredBar104.ValueBase = 0F;
-            this.ctlLayeredBar104.ValueMainBar = 1000F;
-            this.ctlLayeredBar104.ValueOverCap = 0F;
-            this.ctlLayeredBar104.ValueOverlay1 = 0F;
-            this.ctlLayeredBar104.ValueOverlay2 = 0F;
+            this.bar54.BackColor = System.Drawing.Color.Transparent;
+            this.bar54.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar54.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar54.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar54.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar54.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar54.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar54.EnableBaseValue = false;
+            this.bar54.EnableOverCap = false;
+            this.bar54.EnableOverlay1 = false;
+            this.bar54.EnableOverlay2 = false;
+            this.bar54.Location = new System.Drawing.Point(193, 99);
+            this.bar54.MaximumBarValue = 100F;
+            this.bar54.MinimumBarValue = 0F;
+            this.bar54.Name = "bar54";
+            this.bar54.Size = new System.Drawing.Size(304, 13);
+            this.bar54.TabIndex = 15;
+            this.bar54.ValueBase = 0F;
+            this.bar54.ValueMainBar = 100F;
+            this.bar54.ValueOverCap = 0F;
+            this.bar54.ValueOverlay1 = 0F;
+            this.bar54.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar105
+            // bar55
             // 
-            this.ctlLayeredBar105.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar105.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar105.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar105.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar105.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar105.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar105.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar105.EnableBaseValue = false;
-            this.ctlLayeredBar105.EnableOverCap = false;
-            this.ctlLayeredBar105.EnableOverlay1 = false;
-            this.ctlLayeredBar105.EnableOverlay2 = false;
-            this.ctlLayeredBar105.Location = new System.Drawing.Point(188, 119);
-            this.ctlLayeredBar105.MaximumBarValue = 1000F;
-            this.ctlLayeredBar105.MinimumBarValue = 0F;
-            this.ctlLayeredBar105.Name = "ctlLayeredBar105";
-            this.ctlLayeredBar105.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar105.TabIndex = 16;
-            this.ctlLayeredBar105.ValueBase = 0F;
-            this.ctlLayeredBar105.ValueMainBar = 1000F;
-            this.ctlLayeredBar105.ValueOverCap = 0F;
-            this.ctlLayeredBar105.ValueOverlay1 = 0F;
-            this.ctlLayeredBar105.ValueOverlay2 = 0F;
+            this.bar55.BackColor = System.Drawing.Color.Transparent;
+            this.bar55.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar55.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar55.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar55.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar55.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar55.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar55.EnableBaseValue = false;
+            this.bar55.EnableOverCap = false;
+            this.bar55.EnableOverlay1 = false;
+            this.bar55.EnableOverlay2 = false;
+            this.bar55.Location = new System.Drawing.Point(193, 119);
+            this.bar55.MaximumBarValue = 100F;
+            this.bar55.MinimumBarValue = 0F;
+            this.bar55.Name = "bar55";
+            this.bar55.Size = new System.Drawing.Size(304, 13);
+            this.bar55.TabIndex = 16;
+            this.bar55.ValueBase = 0F;
+            this.bar55.ValueMainBar = 100F;
+            this.bar55.ValueOverCap = 0F;
+            this.bar55.ValueOverlay1 = 0F;
+            this.bar55.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar106
+            // bar56
             // 
-            this.ctlLayeredBar106.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar106.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar106.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar106.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar106.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar106.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar106.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar106.EnableBaseValue = false;
-            this.ctlLayeredBar106.EnableOverCap = false;
-            this.ctlLayeredBar106.EnableOverlay1 = false;
-            this.ctlLayeredBar106.EnableOverlay2 = false;
-            this.ctlLayeredBar106.Location = new System.Drawing.Point(188, 139);
-            this.ctlLayeredBar106.MaximumBarValue = 1000F;
-            this.ctlLayeredBar106.MinimumBarValue = 0F;
-            this.ctlLayeredBar106.Name = "ctlLayeredBar106";
-            this.ctlLayeredBar106.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar106.TabIndex = 17;
-            this.ctlLayeredBar106.ValueBase = 0F;
-            this.ctlLayeredBar106.ValueMainBar = 1000F;
-            this.ctlLayeredBar106.ValueOverCap = 0F;
-            this.ctlLayeredBar106.ValueOverlay1 = 0F;
-            this.ctlLayeredBar106.ValueOverlay2 = 0F;
+            this.bar56.BackColor = System.Drawing.Color.Transparent;
+            this.bar56.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar56.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar56.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar56.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar56.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar56.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar56.EnableBaseValue = false;
+            this.bar56.EnableOverCap = false;
+            this.bar56.EnableOverlay1 = false;
+            this.bar56.EnableOverlay2 = false;
+            this.bar56.Location = new System.Drawing.Point(193, 139);
+            this.bar56.MaximumBarValue = 100F;
+            this.bar56.MinimumBarValue = 0F;
+            this.bar56.Name = "bar56";
+            this.bar56.Size = new System.Drawing.Size(304, 13);
+            this.bar56.TabIndex = 17;
+            this.bar56.ValueBase = 0F;
+            this.bar56.ValueMainBar = 100F;
+            this.bar56.ValueOverCap = 0F;
+            this.bar56.ValueOverlay1 = 0F;
+            this.bar56.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar107
+            // bar57
             // 
-            this.ctlLayeredBar107.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar107.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar107.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar107.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar107.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar107.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar107.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar107.EnableBaseValue = false;
-            this.ctlLayeredBar107.EnableOverCap = false;
-            this.ctlLayeredBar107.EnableOverlay1 = false;
-            this.ctlLayeredBar107.EnableOverlay2 = false;
-            this.ctlLayeredBar107.Location = new System.Drawing.Point(188, 159);
-            this.ctlLayeredBar107.MaximumBarValue = 1000F;
-            this.ctlLayeredBar107.MinimumBarValue = 0F;
-            this.ctlLayeredBar107.Name = "ctlLayeredBar107";
-            this.ctlLayeredBar107.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar107.TabIndex = 18;
-            this.ctlLayeredBar107.ValueBase = 0F;
-            this.ctlLayeredBar107.ValueMainBar = 1000F;
-            this.ctlLayeredBar107.ValueOverCap = 0F;
-            this.ctlLayeredBar107.ValueOverlay1 = 0F;
-            this.ctlLayeredBar107.ValueOverlay2 = 0F;
+            this.bar57.BackColor = System.Drawing.Color.Transparent;
+            this.bar57.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar57.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar57.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar57.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar57.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar57.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar57.EnableBaseValue = false;
+            this.bar57.EnableOverCap = false;
+            this.bar57.EnableOverlay1 = false;
+            this.bar57.EnableOverlay2 = false;
+            this.bar57.Location = new System.Drawing.Point(193, 159);
+            this.bar57.MaximumBarValue = 100F;
+            this.bar57.MinimumBarValue = 0F;
+            this.bar57.Name = "bar57";
+            this.bar57.Size = new System.Drawing.Size(304, 13);
+            this.bar57.TabIndex = 18;
+            this.bar57.ValueBase = 0F;
+            this.bar57.ValueMainBar = 100F;
+            this.bar57.ValueOverCap = 0F;
+            this.bar57.ValueOverlay1 = 0F;
+            this.bar57.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar108
+            // bar58
             // 
-            this.ctlLayeredBar108.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar108.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar108.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar108.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar108.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar108.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar108.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar108.EnableBaseValue = false;
-            this.ctlLayeredBar108.EnableOverCap = false;
-            this.ctlLayeredBar108.EnableOverlay1 = false;
-            this.ctlLayeredBar108.EnableOverlay2 = false;
-            this.ctlLayeredBar108.Location = new System.Drawing.Point(188, 179);
-            this.ctlLayeredBar108.MaximumBarValue = 1000F;
-            this.ctlLayeredBar108.MinimumBarValue = 0F;
-            this.ctlLayeredBar108.Name = "ctlLayeredBar108";
-            this.ctlLayeredBar108.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar108.TabIndex = 19;
-            this.ctlLayeredBar108.ValueBase = 0F;
-            this.ctlLayeredBar108.ValueMainBar = 1000F;
-            this.ctlLayeredBar108.ValueOverCap = 0F;
-            this.ctlLayeredBar108.ValueOverlay1 = 0F;
-            this.ctlLayeredBar108.ValueOverlay2 = 0F;
+            this.bar58.BackColor = System.Drawing.Color.Transparent;
+            this.bar58.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar58.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar58.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar58.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar58.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar58.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar58.EnableBaseValue = false;
+            this.bar58.EnableOverCap = false;
+            this.bar58.EnableOverlay1 = false;
+            this.bar58.EnableOverlay2 = false;
+            this.bar58.Location = new System.Drawing.Point(193, 179);
+            this.bar58.MaximumBarValue = 100F;
+            this.bar58.MinimumBarValue = 0F;
+            this.bar58.Name = "bar58";
+            this.bar58.Size = new System.Drawing.Size(304, 13);
+            this.bar58.TabIndex = 19;
+            this.bar58.ValueBase = 0F;
+            this.bar58.ValueMainBar = 100F;
+            this.bar58.ValueOverCap = 0F;
+            this.bar58.ValueOverlay1 = 0F;
+            this.bar58.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar109
+            // bar59
             // 
-            this.ctlLayeredBar109.BackColor = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar109.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar109.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar109.ColorMainBar = System.Drawing.Color.Yellow;
-            this.ctlLayeredBar109.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar109.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar109.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar109.EnableBaseValue = false;
-            this.ctlLayeredBar109.EnableOverCap = false;
-            this.ctlLayeredBar109.EnableOverlay1 = false;
-            this.ctlLayeredBar109.EnableOverlay2 = false;
-            this.ctlLayeredBar109.Location = new System.Drawing.Point(188, 199);
-            this.ctlLayeredBar109.MaximumBarValue = 1000F;
-            this.ctlLayeredBar109.MinimumBarValue = 0F;
-            this.ctlLayeredBar109.Name = "ctlLayeredBar109";
-            this.ctlLayeredBar109.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar109.TabIndex = 20;
-            this.ctlLayeredBar109.ValueBase = 0F;
-            this.ctlLayeredBar109.ValueMainBar = 1000F;
-            this.ctlLayeredBar109.ValueOverCap = 0F;
-            this.ctlLayeredBar109.ValueOverlay1 = 0F;
-            this.ctlLayeredBar109.ValueOverlay2 = 0F;
+            this.bar59.BackColor = System.Drawing.Color.Transparent;
+            this.bar59.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar59.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar59.ColorMainBar = System.Drawing.Color.Yellow;
+            this.bar59.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar59.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar59.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar59.EnableBaseValue = false;
+            this.bar59.EnableOverCap = false;
+            this.bar59.EnableOverlay1 = false;
+            this.bar59.EnableOverlay2 = false;
+            this.bar59.Location = new System.Drawing.Point(193, 199);
+            this.bar59.MaximumBarValue = 100F;
+            this.bar59.MinimumBarValue = 0F;
+            this.bar59.Name = "bar59";
+            this.bar59.Size = new System.Drawing.Size(304, 13);
+            this.bar59.TabIndex = 20;
+            this.bar59.ValueBase = 0F;
+            this.bar59.ValueMainBar = 100F;
+            this.bar59.ValueOverCap = 0F;
+            this.bar59.ValueOverlay1 = 0F;
+            this.bar59.ValueOverlay2 = 0F;
             // 
-            // label127
+            // lv53
             // 
-            this.label127.AutoSize = true;
-            this.label127.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label127.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label127.Location = new System.Drawing.Point(112, 76);
-            this.label127.Name = "label127";
-            this.label127.Size = new System.Drawing.Size(70, 20);
-            this.label127.TabIndex = 11;
-            this.label127.Text = "100.00%";
-            this.label127.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv53.AutoSize = true;
+            this.lv53.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv53.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv53.Location = new System.Drawing.Point(115, 76);
+            this.lv53.Name = "lv53";
+            this.lv53.Size = new System.Drawing.Size(72, 20);
+            this.lv53.TabIndex = 11;
+            this.lv53.Text = "100.00%";
+            this.lv53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label104
             // 
@@ -3612,13 +3614,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel14.ColumnCount = 3;
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
-            this.tableLayoutPanel14.Controls.Add(this.label103, 1, 10);
-            this.tableLayoutPanel14.Controls.Add(this.label102, 1, 9);
-            this.tableLayoutPanel14.Controls.Add(this.label101, 1, 8);
-            this.tableLayoutPanel14.Controls.Add(this.label100, 1, 7);
-            this.tableLayoutPanel14.Controls.Add(this.label99, 1, 6);
-            this.tableLayoutPanel14.Controls.Add(this.label98, 1, 5);
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
+            this.tableLayoutPanel14.Controls.Add(this.lv48, 1, 10);
+            this.tableLayoutPanel14.Controls.Add(this.lv47, 1, 9);
+            this.tableLayoutPanel14.Controls.Add(this.lv46, 1, 8);
+            this.tableLayoutPanel14.Controls.Add(this.lv45, 1, 7);
+            this.tableLayoutPanel14.Controls.Add(this.lv44, 1, 6);
+            this.tableLayoutPanel14.Controls.Add(this.lv43, 1, 5);
             this.tableLayoutPanel14.Controls.Add(this.label96, 0, 10);
             this.tableLayoutPanel14.Controls.Add(this.label95, 0, 9);
             this.tableLayoutPanel14.Controls.Add(this.label94, 0, 8);
@@ -3626,26 +3628,26 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel14.Controls.Add(this.label92, 0, 6);
             this.tableLayoutPanel14.Controls.Add(this.label91, 0, 5);
             this.tableLayoutPanel14.Controls.Add(this.label90, 0, 4);
-            this.tableLayoutPanel14.Controls.Add(this.label82, 1, 3);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar88, 2, 3);
-            this.tableLayoutPanel14.Controls.Add(this.label83, 1, 2);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar91, 2, 2);
-            this.tableLayoutPanel14.Controls.Add(this.label84, 1, 1);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar94, 2, 1);
+            this.tableLayoutPanel14.Controls.Add(this.lv41, 1, 3);
+            this.tableLayoutPanel14.Controls.Add(this.bar41, 2, 3);
+            this.tableLayoutPanel14.Controls.Add(this.lv40, 1, 2);
+            this.tableLayoutPanel14.Controls.Add(this.bar40, 2, 2);
+            this.tableLayoutPanel14.Controls.Add(this.lv39, 1, 1);
+            this.tableLayoutPanel14.Controls.Add(this.bar39, 2, 1);
             this.tableLayoutPanel14.Controls.Add(this.label85, 0, 0);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar97, 2, 0);
+            this.tableLayoutPanel14.Controls.Add(this.bar38, 2, 0);
             this.tableLayoutPanel14.Controls.Add(this.label86, 0, 1);
             this.tableLayoutPanel14.Controls.Add(this.label87, 0, 2);
             this.tableLayoutPanel14.Controls.Add(this.label88, 0, 3);
-            this.tableLayoutPanel14.Controls.Add(this.label89, 1, 0);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar89, 2, 4);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar90, 2, 5);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar92, 2, 6);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar93, 2, 7);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar95, 2, 8);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar96, 2, 9);
-            this.tableLayoutPanel14.Controls.Add(this.ctlLayeredBar98, 2, 10);
-            this.tableLayoutPanel14.Controls.Add(this.label97, 1, 4);
+            this.tableLayoutPanel14.Controls.Add(this.lv38, 1, 0);
+            this.tableLayoutPanel14.Controls.Add(this.bar42, 2, 4);
+            this.tableLayoutPanel14.Controls.Add(this.bar43, 2, 5);
+            this.tableLayoutPanel14.Controls.Add(this.bar44, 2, 6);
+            this.tableLayoutPanel14.Controls.Add(this.bar45, 2, 7);
+            this.tableLayoutPanel14.Controls.Add(this.bar46, 2, 8);
+            this.tableLayoutPanel14.Controls.Add(this.bar47, 2, 9);
+            this.tableLayoutPanel14.Controls.Add(this.bar48, 2, 10);
+            this.tableLayoutPanel14.Controls.Add(this.lv42, 1, 4);
             this.tableLayoutPanel14.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 11;
@@ -3663,77 +3665,77 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel14.Size = new System.Drawing.Size(506, 216);
             this.tableLayoutPanel14.TabIndex = 11;
             // 
-            // label103
+            // lv48
             // 
-            this.label103.AutoSize = true;
-            this.label103.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label103.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label103.Location = new System.Drawing.Point(112, 196);
-            this.label103.Name = "label103";
-            this.label103.Size = new System.Drawing.Size(70, 20);
-            this.label103.TabIndex = 12;
-            this.label103.Text = "30";
-            this.label103.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv48.AutoSize = true;
+            this.lv48.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv48.Location = new System.Drawing.Point(115, 196);
+            this.lv48.Name = "lv48";
+            this.lv48.Size = new System.Drawing.Size(72, 20);
+            this.lv48.TabIndex = 12;
+            this.lv48.Text = "30";
+            this.lv48.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label102
+            // lv47
             // 
-            this.label102.AutoSize = true;
-            this.label102.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label102.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label102.Location = new System.Drawing.Point(112, 176);
-            this.label102.Name = "label102";
-            this.label102.Size = new System.Drawing.Size(70, 20);
-            this.label102.TabIndex = 12;
-            this.label102.Text = "30";
-            this.label102.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv47.AutoSize = true;
+            this.lv47.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv47.Location = new System.Drawing.Point(115, 176);
+            this.lv47.Name = "lv47";
+            this.lv47.Size = new System.Drawing.Size(72, 20);
+            this.lv47.TabIndex = 12;
+            this.lv47.Text = "30";
+            this.lv47.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label101
+            // lv46
             // 
-            this.label101.AutoSize = true;
-            this.label101.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label101.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label101.Location = new System.Drawing.Point(112, 156);
-            this.label101.Name = "label101";
-            this.label101.Size = new System.Drawing.Size(70, 20);
-            this.label101.TabIndex = 12;
-            this.label101.Text = "30";
-            this.label101.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv46.AutoSize = true;
+            this.lv46.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv46.Location = new System.Drawing.Point(115, 156);
+            this.lv46.Name = "lv46";
+            this.lv46.Size = new System.Drawing.Size(72, 20);
+            this.lv46.TabIndex = 12;
+            this.lv46.Text = "30";
+            this.lv46.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label100
+            // lv45
             // 
-            this.label100.AutoSize = true;
-            this.label100.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label100.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label100.Location = new System.Drawing.Point(112, 136);
-            this.label100.Name = "label100";
-            this.label100.Size = new System.Drawing.Size(70, 20);
-            this.label100.TabIndex = 12;
-            this.label100.Text = "30";
-            this.label100.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv45.AutoSize = true;
+            this.lv45.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv45.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv45.Location = new System.Drawing.Point(115, 136);
+            this.lv45.Name = "lv45";
+            this.lv45.Size = new System.Drawing.Size(72, 20);
+            this.lv45.TabIndex = 12;
+            this.lv45.Text = "30";
+            this.lv45.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label99
+            // lv44
             // 
-            this.label99.AutoSize = true;
-            this.label99.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label99.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label99.Location = new System.Drawing.Point(112, 116);
-            this.label99.Name = "label99";
-            this.label99.Size = new System.Drawing.Size(70, 20);
-            this.label99.TabIndex = 12;
-            this.label99.Text = "30";
-            this.label99.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv44.AutoSize = true;
+            this.lv44.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv44.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv44.Location = new System.Drawing.Point(115, 116);
+            this.lv44.Name = "lv44";
+            this.lv44.Size = new System.Drawing.Size(72, 20);
+            this.lv44.TabIndex = 12;
+            this.lv44.Text = "30";
+            this.lv44.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label98
+            // lv43
             // 
-            this.label98.AutoSize = true;
-            this.label98.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label98.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label98.Location = new System.Drawing.Point(112, 96);
-            this.label98.Name = "label98";
-            this.label98.Size = new System.Drawing.Size(70, 20);
-            this.label98.TabIndex = 12;
-            this.label98.Text = "30";
-            this.label98.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv43.AutoSize = true;
+            this.lv43.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv43.Location = new System.Drawing.Point(115, 96);
+            this.lv43.Name = "lv43";
+            this.lv43.Size = new System.Drawing.Size(72, 20);
+            this.lv43.TabIndex = 12;
+            this.lv43.Text = "30";
+            this.lv43.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label96
             // 
@@ -3742,7 +3744,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label96.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label96.Location = new System.Drawing.Point(3, 196);
             this.label96.Name = "label96";
-            this.label96.Size = new System.Drawing.Size(103, 20);
+            this.label96.Size = new System.Drawing.Size(106, 20);
             this.label96.TabIndex = 3;
             this.label96.Text = "Teleport:";
             this.label96.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3754,7 +3756,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label95.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label95.Location = new System.Drawing.Point(3, 176);
             this.label95.Name = "label95";
-            this.label95.Size = new System.Drawing.Size(103, 20);
+            this.label95.Size = new System.Drawing.Size(106, 20);
             this.label95.TabIndex = 3;
             this.label95.Text = "Placate:";
             this.label95.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3766,7 +3768,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label94.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label94.Location = new System.Drawing.Point(3, 156);
             this.label94.Name = "label94";
-            this.label94.Size = new System.Drawing.Size(103, 20);
+            this.label94.Size = new System.Drawing.Size(106, 20);
             this.label94.TabIndex = 3;
             this.label94.Text = "Taunt:";
             this.label94.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3778,7 +3780,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label93.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label93.Location = new System.Drawing.Point(3, 136);
             this.label93.Name = "label93";
-            this.label93.Size = new System.Drawing.Size(103, 20);
+            this.label93.Size = new System.Drawing.Size(106, 20);
             this.label93.TabIndex = 3;
             this.label93.Text = "Fear:";
             this.label93.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3790,7 +3792,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label92.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label92.Location = new System.Drawing.Point(3, 116);
             this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(103, 20);
+            this.label92.Size = new System.Drawing.Size(106, 20);
             this.label92.TabIndex = 3;
             this.label92.Text = "Confuse:";
             this.label92.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3802,7 +3804,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label91.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label91.Location = new System.Drawing.Point(3, 96);
             this.label91.Name = "label91";
-            this.label91.Size = new System.Drawing.Size(103, 20);
+            this.label91.Size = new System.Drawing.Size(106, 20);
             this.label91.TabIndex = 3;
             this.label91.Text = "Repel:";
             this.label91.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3814,121 +3816,121 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label90.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label90.Location = new System.Drawing.Point(3, 76);
             this.label90.Name = "label90";
-            this.label90.Size = new System.Drawing.Size(103, 20);
+            this.label90.Size = new System.Drawing.Size(106, 20);
             this.label90.TabIndex = 3;
             this.label90.Text = "Knockback:";
             this.label90.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label82
+            // lv41
             // 
-            this.label82.AutoSize = true;
-            this.label82.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label82.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label82.Location = new System.Drawing.Point(112, 57);
-            this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(70, 19);
-            this.label82.TabIndex = 13;
-            this.label82.Text = "30";
-            this.label82.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv41.AutoSize = true;
+            this.lv41.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv41.Location = new System.Drawing.Point(115, 57);
+            this.lv41.Name = "lv41";
+            this.lv41.Size = new System.Drawing.Size(72, 19);
+            this.lv41.TabIndex = 13;
+            this.lv41.Text = "30";
+            this.lv41.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar88
+            // bar41
             // 
-            this.ctlLayeredBar88.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar88.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar88.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar88.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar88.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar88.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar88.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar88.EnableBaseValue = false;
-            this.ctlLayeredBar88.EnableOverCap = false;
-            this.ctlLayeredBar88.EnableOverlay1 = false;
-            this.ctlLayeredBar88.EnableOverlay2 = false;
-            this.ctlLayeredBar88.Location = new System.Drawing.Point(188, 60);
-            this.ctlLayeredBar88.MaximumBarValue = 70F;
-            this.ctlLayeredBar88.MinimumBarValue = 0F;
-            this.ctlLayeredBar88.Name = "ctlLayeredBar88";
-            this.ctlLayeredBar88.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar88.TabIndex = 3;
-            this.ctlLayeredBar88.ValueBase = 0F;
-            this.ctlLayeredBar88.ValueMainBar = 70F;
-            this.ctlLayeredBar88.ValueOverCap = 0F;
-            this.ctlLayeredBar88.ValueOverlay1 = 0F;
-            this.ctlLayeredBar88.ValueOverlay2 = 0F;
+            this.bar41.BackColor = System.Drawing.Color.Transparent;
+            this.bar41.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar41.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar41.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar41.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar41.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar41.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar41.EnableBaseValue = false;
+            this.bar41.EnableOverCap = false;
+            this.bar41.EnableOverlay1 = false;
+            this.bar41.EnableOverlay2 = false;
+            this.bar41.Location = new System.Drawing.Point(193, 60);
+            this.bar41.MaximumBarValue = 100F;
+            this.bar41.MinimumBarValue = 0F;
+            this.bar41.Name = "bar41";
+            this.bar41.Size = new System.Drawing.Size(304, 13);
+            this.bar41.TabIndex = 3;
+            this.bar41.ValueBase = 0F;
+            this.bar41.ValueMainBar = 100F;
+            this.bar41.ValueOverCap = 0F;
+            this.bar41.ValueOverlay1 = 0F;
+            this.bar41.ValueOverlay2 = 0F;
             // 
-            // label83
+            // lv40
             // 
-            this.label83.AutoSize = true;
-            this.label83.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label83.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label83.Location = new System.Drawing.Point(112, 38);
-            this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(70, 19);
-            this.label83.TabIndex = 12;
-            this.label83.Text = "30";
-            this.label83.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv40.AutoSize = true;
+            this.lv40.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv40.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv40.Location = new System.Drawing.Point(115, 38);
+            this.lv40.Name = "lv40";
+            this.lv40.Size = new System.Drawing.Size(72, 19);
+            this.lv40.TabIndex = 12;
+            this.lv40.Text = "30";
+            this.lv40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar91
+            // bar40
             // 
-            this.ctlLayeredBar91.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar91.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar91.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar91.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar91.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar91.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar91.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar91.EnableBaseValue = false;
-            this.ctlLayeredBar91.EnableOverCap = false;
-            this.ctlLayeredBar91.EnableOverlay1 = false;
-            this.ctlLayeredBar91.EnableOverlay2 = false;
-            this.ctlLayeredBar91.Location = new System.Drawing.Point(188, 41);
-            this.ctlLayeredBar91.MaximumBarValue = 70F;
-            this.ctlLayeredBar91.MinimumBarValue = 0F;
-            this.ctlLayeredBar91.Name = "ctlLayeredBar91";
-            this.ctlLayeredBar91.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar91.TabIndex = 2;
-            this.ctlLayeredBar91.ValueBase = 0F;
-            this.ctlLayeredBar91.ValueMainBar = 70F;
-            this.ctlLayeredBar91.ValueOverCap = 0F;
-            this.ctlLayeredBar91.ValueOverlay1 = 0F;
-            this.ctlLayeredBar91.ValueOverlay2 = 0F;
+            this.bar40.BackColor = System.Drawing.Color.Transparent;
+            this.bar40.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar40.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar40.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar40.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar40.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar40.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar40.EnableBaseValue = false;
+            this.bar40.EnableOverCap = false;
+            this.bar40.EnableOverlay1 = false;
+            this.bar40.EnableOverlay2 = false;
+            this.bar40.Location = new System.Drawing.Point(193, 41);
+            this.bar40.MaximumBarValue = 100F;
+            this.bar40.MinimumBarValue = 0F;
+            this.bar40.Name = "bar40";
+            this.bar40.Size = new System.Drawing.Size(304, 13);
+            this.bar40.TabIndex = 2;
+            this.bar40.ValueBase = 0F;
+            this.bar40.ValueMainBar = 100F;
+            this.bar40.ValueOverCap = 0F;
+            this.bar40.ValueOverlay1 = 0F;
+            this.bar40.ValueOverlay2 = 0F;
             // 
-            // label84
+            // lv39
             // 
-            this.label84.AutoSize = true;
-            this.label84.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label84.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label84.Location = new System.Drawing.Point(112, 19);
-            this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(70, 19);
-            this.label84.TabIndex = 11;
-            this.label84.Text = "30";
-            this.label84.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv39.AutoSize = true;
+            this.lv39.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv39.Location = new System.Drawing.Point(115, 19);
+            this.lv39.Name = "lv39";
+            this.lv39.Size = new System.Drawing.Size(72, 19);
+            this.lv39.TabIndex = 11;
+            this.lv39.Text = "30";
+            this.lv39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar94
+            // bar39
             // 
-            this.ctlLayeredBar94.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar94.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar94.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar94.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar94.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar94.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar94.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar94.EnableBaseValue = false;
-            this.ctlLayeredBar94.EnableOverCap = false;
-            this.ctlLayeredBar94.EnableOverlay1 = false;
-            this.ctlLayeredBar94.EnableOverlay2 = false;
-            this.ctlLayeredBar94.Location = new System.Drawing.Point(188, 22);
-            this.ctlLayeredBar94.MaximumBarValue = 70F;
-            this.ctlLayeredBar94.MinimumBarValue = 0F;
-            this.ctlLayeredBar94.Name = "ctlLayeredBar94";
-            this.ctlLayeredBar94.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar94.TabIndex = 1;
-            this.ctlLayeredBar94.ValueBase = 0F;
-            this.ctlLayeredBar94.ValueMainBar = 70F;
-            this.ctlLayeredBar94.ValueOverCap = 0F;
-            this.ctlLayeredBar94.ValueOverlay1 = 0F;
-            this.ctlLayeredBar94.ValueOverlay2 = 0F;
+            this.bar39.BackColor = System.Drawing.Color.Transparent;
+            this.bar39.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar39.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar39.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar39.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar39.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar39.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar39.EnableBaseValue = false;
+            this.bar39.EnableOverCap = false;
+            this.bar39.EnableOverlay1 = false;
+            this.bar39.EnableOverlay2 = false;
+            this.bar39.Location = new System.Drawing.Point(193, 22);
+            this.bar39.MaximumBarValue = 100F;
+            this.bar39.MinimumBarValue = 0F;
+            this.bar39.Name = "bar39";
+            this.bar39.Size = new System.Drawing.Size(304, 13);
+            this.bar39.TabIndex = 1;
+            this.bar39.ValueBase = 0F;
+            this.bar39.ValueMainBar = 100F;
+            this.bar39.ValueOverCap = 0F;
+            this.bar39.ValueOverlay1 = 0F;
+            this.bar39.ValueOverlay2 = 0F;
             // 
             // label85
             // 
@@ -3937,35 +3939,35 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label85.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label85.Location = new System.Drawing.Point(3, 0);
             this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(103, 19);
+            this.label85.Size = new System.Drawing.Size(106, 19);
             this.label85.TabIndex = 0;
             this.label85.Text = "Hold:";
             this.label85.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar97
+            // bar38
             // 
-            this.ctlLayeredBar97.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar97.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar97.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar97.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar97.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar97.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar97.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar97.EnableBaseValue = false;
-            this.ctlLayeredBar97.EnableOverCap = false;
-            this.ctlLayeredBar97.EnableOverlay1 = false;
-            this.ctlLayeredBar97.EnableOverlay2 = false;
-            this.ctlLayeredBar97.Location = new System.Drawing.Point(188, 3);
-            this.ctlLayeredBar97.MaximumBarValue = 70F;
-            this.ctlLayeredBar97.MinimumBarValue = 0F;
-            this.ctlLayeredBar97.Name = "ctlLayeredBar97";
-            this.ctlLayeredBar97.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar97.TabIndex = 0;
-            this.ctlLayeredBar97.ValueBase = 0F;
-            this.ctlLayeredBar97.ValueMainBar = 70F;
-            this.ctlLayeredBar97.ValueOverCap = 0F;
-            this.ctlLayeredBar97.ValueOverlay1 = 0F;
-            this.ctlLayeredBar97.ValueOverlay2 = 0F;
+            this.bar38.BackColor = System.Drawing.Color.Transparent;
+            this.bar38.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar38.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar38.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar38.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar38.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar38.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar38.EnableBaseValue = false;
+            this.bar38.EnableOverCap = false;
+            this.bar38.EnableOverlay1 = false;
+            this.bar38.EnableOverlay2 = false;
+            this.bar38.Location = new System.Drawing.Point(193, 3);
+            this.bar38.MaximumBarValue = 100F;
+            this.bar38.MinimumBarValue = 0F;
+            this.bar38.Name = "bar38";
+            this.bar38.Size = new System.Drawing.Size(304, 13);
+            this.bar38.TabIndex = 0;
+            this.bar38.ValueBase = 0F;
+            this.bar38.ValueMainBar = 100F;
+            this.bar38.ValueOverCap = 0F;
+            this.bar38.ValueOverlay1 = 0F;
+            this.bar38.ValueOverlay2 = 0F;
             // 
             // label86
             // 
@@ -3974,7 +3976,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label86.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label86.Location = new System.Drawing.Point(3, 19);
             this.label86.Name = "label86";
-            this.label86.Size = new System.Drawing.Size(103, 19);
+            this.label86.Size = new System.Drawing.Size(106, 19);
             this.label86.TabIndex = 1;
             this.label86.Text = "Stunned:";
             this.label86.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3986,7 +3988,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label87.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label87.Location = new System.Drawing.Point(3, 38);
             this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(103, 19);
+            this.label87.Size = new System.Drawing.Size(106, 19);
             this.label87.TabIndex = 2;
             this.label87.Text = "Sleep:";
             this.label87.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3998,209 +4000,209 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label88.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label88.Location = new System.Drawing.Point(3, 57);
             this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(103, 19);
+            this.label88.Size = new System.Drawing.Size(106, 19);
             this.label88.TabIndex = 3;
             this.label88.Text = "Immob:";
             this.label88.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label89
+            // lv38
             // 
-            this.label89.AutoSize = true;
-            this.label89.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label89.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label89.Location = new System.Drawing.Point(112, 0);
-            this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(70, 19);
-            this.label89.TabIndex = 10;
-            this.label89.Text = "30";
-            this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv38.AutoSize = true;
+            this.lv38.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv38.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv38.Location = new System.Drawing.Point(115, 0);
+            this.lv38.Name = "lv38";
+            this.lv38.Size = new System.Drawing.Size(72, 19);
+            this.lv38.TabIndex = 10;
+            this.lv38.Text = "30";
+            this.lv38.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ctlLayeredBar89
+            // bar42
             // 
-            this.ctlLayeredBar89.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar89.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar89.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar89.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar89.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar89.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar89.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar89.EnableBaseValue = false;
-            this.ctlLayeredBar89.EnableOverCap = false;
-            this.ctlLayeredBar89.EnableOverlay1 = false;
-            this.ctlLayeredBar89.EnableOverlay2 = false;
-            this.ctlLayeredBar89.Location = new System.Drawing.Point(188, 79);
-            this.ctlLayeredBar89.MaximumBarValue = 70F;
-            this.ctlLayeredBar89.MinimumBarValue = 0F;
-            this.ctlLayeredBar89.Name = "ctlLayeredBar89";
-            this.ctlLayeredBar89.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar89.TabIndex = 14;
-            this.ctlLayeredBar89.ValueBase = 0F;
-            this.ctlLayeredBar89.ValueMainBar = 70F;
-            this.ctlLayeredBar89.ValueOverCap = 0F;
-            this.ctlLayeredBar89.ValueOverlay1 = 0F;
-            this.ctlLayeredBar89.ValueOverlay2 = 0F;
+            this.bar42.BackColor = System.Drawing.Color.Transparent;
+            this.bar42.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar42.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar42.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar42.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar42.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar42.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar42.EnableBaseValue = false;
+            this.bar42.EnableOverCap = false;
+            this.bar42.EnableOverlay1 = false;
+            this.bar42.EnableOverlay2 = false;
+            this.bar42.Location = new System.Drawing.Point(193, 79);
+            this.bar42.MaximumBarValue = 100F;
+            this.bar42.MinimumBarValue = 0F;
+            this.bar42.Name = "bar42";
+            this.bar42.Size = new System.Drawing.Size(304, 13);
+            this.bar42.TabIndex = 14;
+            this.bar42.ValueBase = 0F;
+            this.bar42.ValueMainBar = 100F;
+            this.bar42.ValueOverCap = 0F;
+            this.bar42.ValueOverlay1 = 0F;
+            this.bar42.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar90
+            // bar43
             // 
-            this.ctlLayeredBar90.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar90.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar90.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar90.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar90.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar90.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar90.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar90.EnableBaseValue = false;
-            this.ctlLayeredBar90.EnableOverCap = false;
-            this.ctlLayeredBar90.EnableOverlay1 = false;
-            this.ctlLayeredBar90.EnableOverlay2 = false;
-            this.ctlLayeredBar90.Location = new System.Drawing.Point(188, 99);
-            this.ctlLayeredBar90.MaximumBarValue = 70F;
-            this.ctlLayeredBar90.MinimumBarValue = 0F;
-            this.ctlLayeredBar90.Name = "ctlLayeredBar90";
-            this.ctlLayeredBar90.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar90.TabIndex = 15;
-            this.ctlLayeredBar90.ValueBase = 0F;
-            this.ctlLayeredBar90.ValueMainBar = 70F;
-            this.ctlLayeredBar90.ValueOverCap = 0F;
-            this.ctlLayeredBar90.ValueOverlay1 = 0F;
-            this.ctlLayeredBar90.ValueOverlay2 = 0F;
+            this.bar43.BackColor = System.Drawing.Color.Transparent;
+            this.bar43.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar43.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar43.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar43.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar43.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar43.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar43.EnableBaseValue = false;
+            this.bar43.EnableOverCap = false;
+            this.bar43.EnableOverlay1 = false;
+            this.bar43.EnableOverlay2 = false;
+            this.bar43.Location = new System.Drawing.Point(193, 99);
+            this.bar43.MaximumBarValue = 100F;
+            this.bar43.MinimumBarValue = 0F;
+            this.bar43.Name = "bar43";
+            this.bar43.Size = new System.Drawing.Size(304, 13);
+            this.bar43.TabIndex = 15;
+            this.bar43.ValueBase = 0F;
+            this.bar43.ValueMainBar = 100F;
+            this.bar43.ValueOverCap = 0F;
+            this.bar43.ValueOverlay1 = 0F;
+            this.bar43.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar92
+            // bar44
             // 
-            this.ctlLayeredBar92.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar92.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar92.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar92.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar92.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar92.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar92.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar92.EnableBaseValue = false;
-            this.ctlLayeredBar92.EnableOverCap = false;
-            this.ctlLayeredBar92.EnableOverlay1 = false;
-            this.ctlLayeredBar92.EnableOverlay2 = false;
-            this.ctlLayeredBar92.Location = new System.Drawing.Point(188, 119);
-            this.ctlLayeredBar92.MaximumBarValue = 70F;
-            this.ctlLayeredBar92.MinimumBarValue = 0F;
-            this.ctlLayeredBar92.Name = "ctlLayeredBar92";
-            this.ctlLayeredBar92.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar92.TabIndex = 16;
-            this.ctlLayeredBar92.ValueBase = 0F;
-            this.ctlLayeredBar92.ValueMainBar = 70F;
-            this.ctlLayeredBar92.ValueOverCap = 0F;
-            this.ctlLayeredBar92.ValueOverlay1 = 0F;
-            this.ctlLayeredBar92.ValueOverlay2 = 0F;
+            this.bar44.BackColor = System.Drawing.Color.Transparent;
+            this.bar44.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar44.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar44.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar44.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar44.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar44.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar44.EnableBaseValue = false;
+            this.bar44.EnableOverCap = false;
+            this.bar44.EnableOverlay1 = false;
+            this.bar44.EnableOverlay2 = false;
+            this.bar44.Location = new System.Drawing.Point(193, 119);
+            this.bar44.MaximumBarValue = 100F;
+            this.bar44.MinimumBarValue = 0F;
+            this.bar44.Name = "bar44";
+            this.bar44.Size = new System.Drawing.Size(304, 13);
+            this.bar44.TabIndex = 16;
+            this.bar44.ValueBase = 0F;
+            this.bar44.ValueMainBar = 100F;
+            this.bar44.ValueOverCap = 0F;
+            this.bar44.ValueOverlay1 = 0F;
+            this.bar44.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar93
+            // bar45
             // 
-            this.ctlLayeredBar93.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar93.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar93.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar93.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar93.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar93.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar93.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar93.EnableBaseValue = false;
-            this.ctlLayeredBar93.EnableOverCap = false;
-            this.ctlLayeredBar93.EnableOverlay1 = false;
-            this.ctlLayeredBar93.EnableOverlay2 = false;
-            this.ctlLayeredBar93.Location = new System.Drawing.Point(188, 139);
-            this.ctlLayeredBar93.MaximumBarValue = 70F;
-            this.ctlLayeredBar93.MinimumBarValue = 0F;
-            this.ctlLayeredBar93.Name = "ctlLayeredBar93";
-            this.ctlLayeredBar93.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar93.TabIndex = 17;
-            this.ctlLayeredBar93.ValueBase = 0F;
-            this.ctlLayeredBar93.ValueMainBar = 70F;
-            this.ctlLayeredBar93.ValueOverCap = 0F;
-            this.ctlLayeredBar93.ValueOverlay1 = 0F;
-            this.ctlLayeredBar93.ValueOverlay2 = 0F;
+            this.bar45.BackColor = System.Drawing.Color.Transparent;
+            this.bar45.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar45.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar45.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar45.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar45.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar45.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar45.EnableBaseValue = false;
+            this.bar45.EnableOverCap = false;
+            this.bar45.EnableOverlay1 = false;
+            this.bar45.EnableOverlay2 = false;
+            this.bar45.Location = new System.Drawing.Point(193, 139);
+            this.bar45.MaximumBarValue = 100F;
+            this.bar45.MinimumBarValue = 0F;
+            this.bar45.Name = "bar45";
+            this.bar45.Size = new System.Drawing.Size(304, 13);
+            this.bar45.TabIndex = 17;
+            this.bar45.ValueBase = 0F;
+            this.bar45.ValueMainBar = 100F;
+            this.bar45.ValueOverCap = 0F;
+            this.bar45.ValueOverlay1 = 0F;
+            this.bar45.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar95
+            // bar46
             // 
-            this.ctlLayeredBar95.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar95.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar95.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar95.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar95.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar95.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar95.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar95.EnableBaseValue = false;
-            this.ctlLayeredBar95.EnableOverCap = false;
-            this.ctlLayeredBar95.EnableOverlay1 = false;
-            this.ctlLayeredBar95.EnableOverlay2 = false;
-            this.ctlLayeredBar95.Location = new System.Drawing.Point(188, 159);
-            this.ctlLayeredBar95.MaximumBarValue = 70F;
-            this.ctlLayeredBar95.MinimumBarValue = 0F;
-            this.ctlLayeredBar95.Name = "ctlLayeredBar95";
-            this.ctlLayeredBar95.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar95.TabIndex = 18;
-            this.ctlLayeredBar95.ValueBase = 0F;
-            this.ctlLayeredBar95.ValueMainBar = 70F;
-            this.ctlLayeredBar95.ValueOverCap = 0F;
-            this.ctlLayeredBar95.ValueOverlay1 = 0F;
-            this.ctlLayeredBar95.ValueOverlay2 = 0F;
+            this.bar46.BackColor = System.Drawing.Color.Transparent;
+            this.bar46.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar46.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar46.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar46.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar46.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar46.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar46.EnableBaseValue = false;
+            this.bar46.EnableOverCap = false;
+            this.bar46.EnableOverlay1 = false;
+            this.bar46.EnableOverlay2 = false;
+            this.bar46.Location = new System.Drawing.Point(193, 159);
+            this.bar46.MaximumBarValue = 100F;
+            this.bar46.MinimumBarValue = 0F;
+            this.bar46.Name = "bar46";
+            this.bar46.Size = new System.Drawing.Size(304, 13);
+            this.bar46.TabIndex = 18;
+            this.bar46.ValueBase = 0F;
+            this.bar46.ValueMainBar = 100F;
+            this.bar46.ValueOverCap = 0F;
+            this.bar46.ValueOverlay1 = 0F;
+            this.bar46.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar96
+            // bar47
             // 
-            this.ctlLayeredBar96.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar96.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar96.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar96.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar96.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar96.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar96.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar96.EnableBaseValue = false;
-            this.ctlLayeredBar96.EnableOverCap = false;
-            this.ctlLayeredBar96.EnableOverlay1 = false;
-            this.ctlLayeredBar96.EnableOverlay2 = false;
-            this.ctlLayeredBar96.Location = new System.Drawing.Point(188, 179);
-            this.ctlLayeredBar96.MaximumBarValue = 70F;
-            this.ctlLayeredBar96.MinimumBarValue = 0F;
-            this.ctlLayeredBar96.Name = "ctlLayeredBar96";
-            this.ctlLayeredBar96.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar96.TabIndex = 19;
-            this.ctlLayeredBar96.ValueBase = 0F;
-            this.ctlLayeredBar96.ValueMainBar = 70F;
-            this.ctlLayeredBar96.ValueOverCap = 0F;
-            this.ctlLayeredBar96.ValueOverlay1 = 0F;
-            this.ctlLayeredBar96.ValueOverlay2 = 0F;
+            this.bar47.BackColor = System.Drawing.Color.Transparent;
+            this.bar47.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar47.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar47.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar47.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar47.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar47.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar47.EnableBaseValue = false;
+            this.bar47.EnableOverCap = false;
+            this.bar47.EnableOverlay1 = false;
+            this.bar47.EnableOverlay2 = false;
+            this.bar47.Location = new System.Drawing.Point(193, 179);
+            this.bar47.MaximumBarValue = 100F;
+            this.bar47.MinimumBarValue = 0F;
+            this.bar47.Name = "bar47";
+            this.bar47.Size = new System.Drawing.Size(304, 13);
+            this.bar47.TabIndex = 19;
+            this.bar47.ValueBase = 0F;
+            this.bar47.ValueMainBar = 100F;
+            this.bar47.ValueOverCap = 0F;
+            this.bar47.ValueOverlay1 = 0F;
+            this.bar47.ValueOverlay2 = 0F;
             // 
-            // ctlLayeredBar98
+            // bar48
             // 
-            this.ctlLayeredBar98.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar98.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar98.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar98.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ctlLayeredBar98.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar98.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar98.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar98.EnableBaseValue = false;
-            this.ctlLayeredBar98.EnableOverCap = false;
-            this.ctlLayeredBar98.EnableOverlay1 = false;
-            this.ctlLayeredBar98.EnableOverlay2 = false;
-            this.ctlLayeredBar98.Location = new System.Drawing.Point(188, 199);
-            this.ctlLayeredBar98.MaximumBarValue = 70F;
-            this.ctlLayeredBar98.MinimumBarValue = 0F;
-            this.ctlLayeredBar98.Name = "ctlLayeredBar98";
-            this.ctlLayeredBar98.Size = new System.Drawing.Size(307, 13);
-            this.ctlLayeredBar98.TabIndex = 20;
-            this.ctlLayeredBar98.ValueBase = 0F;
-            this.ctlLayeredBar98.ValueMainBar = 70F;
-            this.ctlLayeredBar98.ValueOverCap = 0F;
-            this.ctlLayeredBar98.ValueOverlay1 = 0F;
-            this.ctlLayeredBar98.ValueOverlay2 = 0F;
+            this.bar48.BackColor = System.Drawing.Color.Transparent;
+            this.bar48.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar48.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar48.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.bar48.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar48.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar48.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar48.EnableBaseValue = false;
+            this.bar48.EnableOverCap = false;
+            this.bar48.EnableOverlay1 = false;
+            this.bar48.EnableOverlay2 = false;
+            this.bar48.Location = new System.Drawing.Point(193, 199);
+            this.bar48.MaximumBarValue = 100F;
+            this.bar48.MinimumBarValue = 0F;
+            this.bar48.Name = "bar48";
+            this.bar48.Size = new System.Drawing.Size(304, 13);
+            this.bar48.TabIndex = 20;
+            this.bar48.ValueBase = 0F;
+            this.bar48.ValueMainBar = 100F;
+            this.bar48.ValueOverCap = 0F;
+            this.bar48.ValueOverlay1 = 0F;
+            this.bar48.ValueOverlay2 = 0F;
             // 
-            // label97
+            // lv42
             // 
-            this.label97.AutoSize = true;
-            this.label97.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label97.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label97.Location = new System.Drawing.Point(112, 76);
-            this.label97.Name = "label97";
-            this.label97.Size = new System.Drawing.Size(70, 20);
-            this.label97.TabIndex = 11;
-            this.label97.Text = "30";
-            this.label97.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv42.AutoSize = true;
+            this.lv42.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv42.Location = new System.Drawing.Point(115, 76);
+            this.lv42.Name = "lv42";
+            this.lv42.Size = new System.Drawing.Size(72, 20);
+            this.lv42.TabIndex = 11;
+            this.lv42.Text = "30";
+            this.lv42.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tabPageAdv1
             // 
@@ -4210,7 +4212,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tabPageAdv1.ImageSize = new System.Drawing.Size(16, 16);
             this.tabPageAdv1.Location = new System.Drawing.Point(0, 24);
             this.tabPageAdv1.Name = "tabPageAdv1";
-            this.tabPageAdv1.ShowCloseButton = false;
+            this.tabPageAdv1.ShowCloseButton = true;
             this.tabPageAdv1.Size = new System.Drawing.Size(532, 573);
             this.tabPageAdv1.TabIndex = 4;
             this.tabPageAdv1.Text = "Debuff Resistances";
@@ -4220,11 +4222,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.label128.AutoSize = true;
             this.label128.ForeColor = System.Drawing.Color.White;
-            this.label128.Location = new System.Drawing.Point(8, 45);
+            this.label128.Location = new System.Drawing.Point(8, 69);
             this.label128.Name = "label128";
-            this.label128.Size = new System.Drawing.Size(131, 16);
+            this.label128.Size = new System.Drawing.Size(125, 16);
             this.label128.TabIndex = 6;
-            this.label128.Text = "Debuff Resistances:";
+            this.label128.Text = "Debuff Resistance:";
             // 
             // gradientPanel17
             // 
@@ -4233,90 +4235,391 @@ namespace Hero_Designer.Forms.WindowMenuItems
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel17.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel17.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(227)))), ((int)(((byte)(227)))));
+            this.gradientPanel17.BorderColor = System.Drawing.Color.LightSeaGreen;
             this.gradientPanel17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel17.CanApplyTheme = false;
             this.gradientPanel17.Controls.Add(this.tableLayoutPanel16);
-            this.gradientPanel17.Location = new System.Drawing.Point(8, 64);
+            this.gradientPanel17.Location = new System.Drawing.Point(8, 88);
             this.gradientPanel17.Name = "gradientPanel17";
-            this.gradientPanel17.Size = new System.Drawing.Size(515, 158);
+            this.gradientPanel17.Size = new System.Drawing.Size(514, 160);
             this.gradientPanel17.TabIndex = 5;
             // 
             // tableLayoutPanel16
             // 
             this.tableLayoutPanel16.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel16.ColumnCount = 3;
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65.21739F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.78261F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 299F));
-            this.tableLayoutPanel16.Controls.Add(this.label133, 1, 6);
-            this.tableLayoutPanel16.Controls.Add(this.label134, 1, 5);
-            this.tableLayoutPanel16.Controls.Add(this.label139, 0, 6);
-            this.tableLayoutPanel16.Controls.Add(this.label140, 0, 5);
-            this.tableLayoutPanel16.Controls.Add(this.label141, 0, 4);
-            this.tableLayoutPanel16.Controls.Add(this.label142, 1, 3);
-            this.tableLayoutPanel16.Controls.Add(this.ctlLayeredBar110, 2, 3);
-            this.tableLayoutPanel16.Controls.Add(this.label143, 1, 2);
-            this.tableLayoutPanel16.Controls.Add(this.ctlLayeredBar111, 2, 2);
-            this.tableLayoutPanel16.Controls.Add(this.label144, 1, 1);
-            this.tableLayoutPanel16.Controls.Add(this.ctlLayeredBar112, 2, 1);
-            this.tableLayoutPanel16.Controls.Add(this.label145, 0, 0);
-            this.tableLayoutPanel16.Controls.Add(this.ctlLayeredBar113, 2, 0);
-            this.tableLayoutPanel16.Controls.Add(this.label146, 0, 1);
-            this.tableLayoutPanel16.Controls.Add(this.label147, 0, 2);
-            this.tableLayoutPanel16.Controls.Add(this.label148, 0, 3);
-            this.tableLayoutPanel16.Controls.Add(this.label149, 1, 0);
-            this.tableLayoutPanel16.Controls.Add(this.ctlLayeredBar114, 2, 4);
-            this.tableLayoutPanel16.Controls.Add(this.ctlLayeredBar115, 2, 5);
-            this.tableLayoutPanel16.Controls.Add(this.ctlLayeredBar116, 2, 6);
-            this.tableLayoutPanel16.Controls.Add(this.label150, 1, 4);
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 314F));
+            this.tableLayoutPanel16.Controls.Add(this.lv67, 1, 7);
+            this.tableLayoutPanel16.Controls.Add(this.lv66, 1, 6);
+            this.tableLayoutPanel16.Controls.Add(this.lv65, 1, 5);
+            this.tableLayoutPanel16.Controls.Add(this.lv64, 1, 4);
+            this.tableLayoutPanel16.Controls.Add(this.lv63, 1, 3);
+            this.tableLayoutPanel16.Controls.Add(this.lv62, 1, 2);
+            this.tableLayoutPanel16.Controls.Add(this.lv61, 1, 1);
+            this.tableLayoutPanel16.Controls.Add(this.bar60, 2, 0);
+            this.tableLayoutPanel16.Controls.Add(this.bar67, 2, 7);
+            this.tableLayoutPanel16.Controls.Add(this.bar61, 2, 1);
+            this.tableLayoutPanel16.Controls.Add(this.bar66, 2, 6);
+            this.tableLayoutPanel16.Controls.Add(this.bar62, 2, 2);
+            this.tableLayoutPanel16.Controls.Add(this.bar65, 2, 5);
+            this.tableLayoutPanel16.Controls.Add(this.bar63, 2, 3);
+            this.tableLayoutPanel16.Controls.Add(this.bar64, 2, 4);
+            this.tableLayoutPanel16.Controls.Add(this.label136, 0, 0);
+            this.tableLayoutPanel16.Controls.Add(this.label137, 0, 1);
+            this.tableLayoutPanel16.Controls.Add(this.label138, 0, 2);
+            this.tableLayoutPanel16.Controls.Add(this.label139, 0, 3);
+            this.tableLayoutPanel16.Controls.Add(this.label140, 0, 4);
+            this.tableLayoutPanel16.Controls.Add(this.label141, 0, 5);
+            this.tableLayoutPanel16.Controls.Add(this.label142, 0, 6);
+            this.tableLayoutPanel16.Controls.Add(this.label143, 0, 7);
+            this.tableLayoutPanel16.Controls.Add(this.lv60, 1, 0);
             this.tableLayoutPanel16.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel16.Name = "tableLayoutPanel16";
-            this.tableLayoutPanel16.RowCount = 7;
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(506, 152);
-            this.tableLayoutPanel16.TabIndex = 11;
+            this.tableLayoutPanel16.RowCount = 9;
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(505, 183);
+            this.tableLayoutPanel16.TabIndex = 10;
             // 
-            // label133
+            // lv67
             // 
-            this.label133.AutoSize = true;
-            this.label133.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label133.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label133.Location = new System.Drawing.Point(138, 128);
-            this.label133.Name = "label133";
-            this.label133.Size = new System.Drawing.Size(66, 24);
-            this.label133.TabIndex = 12;
-            this.label133.Text = "100.00%";
-            this.label133.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv67.AutoSize = true;
+            this.lv67.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv67.Location = new System.Drawing.Point(115, 133);
+            this.lv67.Name = "lv67";
+            this.lv67.Size = new System.Drawing.Size(72, 19);
+            this.lv67.TabIndex = 24;
+            this.lv67.Text = "100.00%";
+            this.lv67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label134
+            // lv66
             // 
-            this.label134.AutoSize = true;
-            this.label134.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label134.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label134.Location = new System.Drawing.Point(138, 108);
-            this.label134.Name = "label134";
-            this.label134.Size = new System.Drawing.Size(66, 20);
-            this.label134.TabIndex = 12;
-            this.label134.Text = "100.00%";
-            this.label134.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv66.AutoSize = true;
+            this.lv66.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv66.Location = new System.Drawing.Point(115, 114);
+            this.lv66.Name = "lv66";
+            this.lv66.Size = new System.Drawing.Size(72, 19);
+            this.lv66.TabIndex = 23;
+            this.lv66.Text = "100.00%";
+            this.lv66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv65
+            // 
+            this.lv65.AutoSize = true;
+            this.lv65.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv65.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv65.Location = new System.Drawing.Point(115, 95);
+            this.lv65.Name = "lv65";
+            this.lv65.Size = new System.Drawing.Size(72, 19);
+            this.lv65.TabIndex = 22;
+            this.lv65.Text = "100.00%";
+            this.lv65.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv64
+            // 
+            this.lv64.AutoSize = true;
+            this.lv64.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv64.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv64.Location = new System.Drawing.Point(115, 76);
+            this.lv64.Name = "lv64";
+            this.lv64.Size = new System.Drawing.Size(72, 19);
+            this.lv64.TabIndex = 21;
+            this.lv64.Text = "100.00%";
+            this.lv64.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv63
+            // 
+            this.lv63.AutoSize = true;
+            this.lv63.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv63.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv63.Location = new System.Drawing.Point(115, 57);
+            this.lv63.Name = "lv63";
+            this.lv63.Size = new System.Drawing.Size(72, 19);
+            this.lv63.TabIndex = 20;
+            this.lv63.Text = "100.00%";
+            this.lv63.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv62
+            // 
+            this.lv62.AutoSize = true;
+            this.lv62.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv62.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv62.Location = new System.Drawing.Point(115, 38);
+            this.lv62.Name = "lv62";
+            this.lv62.Size = new System.Drawing.Size(72, 19);
+            this.lv62.TabIndex = 19;
+            this.lv62.Text = "100.00%";
+            this.lv62.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv61
+            // 
+            this.lv61.AutoSize = true;
+            this.lv61.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv61.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv61.Location = new System.Drawing.Point(115, 19);
+            this.lv61.Name = "lv61";
+            this.lv61.Size = new System.Drawing.Size(72, 19);
+            this.lv61.TabIndex = 18;
+            this.lv61.Text = "100.00%";
+            this.lv61.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // bar60
+            // 
+            this.bar60.BackColor = System.Drawing.Color.Transparent;
+            this.bar60.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar60.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar60.ColorMainBar = System.Drawing.Color.Cyan;
+            this.bar60.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar60.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar60.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar60.EnableBaseValue = false;
+            this.bar60.EnableOverCap = false;
+            this.bar60.EnableOverlay1 = false;
+            this.bar60.EnableOverlay2 = false;
+            this.bar60.Location = new System.Drawing.Point(193, 3);
+            this.bar60.MaximumBarValue = 100F;
+            this.bar60.MinimumBarValue = 0F;
+            this.bar60.Name = "bar60";
+            this.bar60.Size = new System.Drawing.Size(303, 13);
+            this.bar60.TabIndex = 1;
+            this.bar60.ValueBase = 0F;
+            this.bar60.ValueMainBar = 100F;
+            this.bar60.ValueOverCap = 0F;
+            this.bar60.ValueOverlay1 = 0F;
+            this.bar60.ValueOverlay2 = 0F;
+            // 
+            // bar67
+            // 
+            this.bar67.BackColor = System.Drawing.Color.Transparent;
+            this.bar67.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar67.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar67.ColorMainBar = System.Drawing.Color.Cyan;
+            this.bar67.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar67.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar67.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar67.EnableBaseValue = false;
+            this.bar67.EnableOverCap = false;
+            this.bar67.EnableOverlay1 = false;
+            this.bar67.EnableOverlay2 = false;
+            this.bar67.Location = new System.Drawing.Point(193, 136);
+            this.bar67.MaximumBarValue = 100F;
+            this.bar67.MinimumBarValue = 0F;
+            this.bar67.Name = "bar67";
+            this.bar67.Size = new System.Drawing.Size(303, 13);
+            this.bar67.TabIndex = 8;
+            this.bar67.ValueBase = 0F;
+            this.bar67.ValueMainBar = 100F;
+            this.bar67.ValueOverCap = 0F;
+            this.bar67.ValueOverlay1 = 0F;
+            this.bar67.ValueOverlay2 = 0F;
+            // 
+            // bar61
+            // 
+            this.bar61.BackColor = System.Drawing.Color.Transparent;
+            this.bar61.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar61.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar61.ColorMainBar = System.Drawing.Color.Cyan;
+            this.bar61.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar61.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar61.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar61.EnableBaseValue = false;
+            this.bar61.EnableOverCap = false;
+            this.bar61.EnableOverlay1 = false;
+            this.bar61.EnableOverlay2 = false;
+            this.bar61.Location = new System.Drawing.Point(193, 22);
+            this.bar61.MaximumBarValue = 100F;
+            this.bar61.MinimumBarValue = 0F;
+            this.bar61.Name = "bar61";
+            this.bar61.Size = new System.Drawing.Size(303, 13);
+            this.bar61.TabIndex = 2;
+            this.bar61.ValueBase = 0F;
+            this.bar61.ValueMainBar = 100F;
+            this.bar61.ValueOverCap = 0F;
+            this.bar61.ValueOverlay1 = 0F;
+            this.bar61.ValueOverlay2 = 0F;
+            // 
+            // bar66
+            // 
+            this.bar66.BackColor = System.Drawing.Color.Transparent;
+            this.bar66.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar66.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar66.ColorMainBar = System.Drawing.Color.Cyan;
+            this.bar66.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar66.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar66.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar66.EnableBaseValue = false;
+            this.bar66.EnableOverCap = false;
+            this.bar66.EnableOverlay1 = false;
+            this.bar66.EnableOverlay2 = false;
+            this.bar66.Location = new System.Drawing.Point(193, 117);
+            this.bar66.MaximumBarValue = 100F;
+            this.bar66.MinimumBarValue = 0F;
+            this.bar66.Name = "bar66";
+            this.bar66.Size = new System.Drawing.Size(303, 13);
+            this.bar66.TabIndex = 7;
+            this.bar66.ValueBase = 0F;
+            this.bar66.ValueMainBar = 100F;
+            this.bar66.ValueOverCap = 0F;
+            this.bar66.ValueOverlay1 = 0F;
+            this.bar66.ValueOverlay2 = 0F;
+            // 
+            // bar62
+            // 
+            this.bar62.BackColor = System.Drawing.Color.Transparent;
+            this.bar62.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar62.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar62.ColorMainBar = System.Drawing.Color.Cyan;
+            this.bar62.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar62.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar62.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar62.EnableBaseValue = false;
+            this.bar62.EnableOverCap = false;
+            this.bar62.EnableOverlay1 = false;
+            this.bar62.EnableOverlay2 = false;
+            this.bar62.Location = new System.Drawing.Point(193, 41);
+            this.bar62.MaximumBarValue = 100F;
+            this.bar62.MinimumBarValue = 0F;
+            this.bar62.Name = "bar62";
+            this.bar62.Size = new System.Drawing.Size(303, 13);
+            this.bar62.TabIndex = 3;
+            this.bar62.ValueBase = 0F;
+            this.bar62.ValueMainBar = 100F;
+            this.bar62.ValueOverCap = 0F;
+            this.bar62.ValueOverlay1 = 0F;
+            this.bar62.ValueOverlay2 = 0F;
+            // 
+            // bar65
+            // 
+            this.bar65.BackColor = System.Drawing.Color.Transparent;
+            this.bar65.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar65.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar65.ColorMainBar = System.Drawing.Color.Cyan;
+            this.bar65.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar65.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar65.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar65.EnableBaseValue = false;
+            this.bar65.EnableOverCap = false;
+            this.bar65.EnableOverlay1 = false;
+            this.bar65.EnableOverlay2 = false;
+            this.bar65.Location = new System.Drawing.Point(193, 98);
+            this.bar65.MaximumBarValue = 100F;
+            this.bar65.MinimumBarValue = 0F;
+            this.bar65.Name = "bar65";
+            this.bar65.Size = new System.Drawing.Size(303, 13);
+            this.bar65.TabIndex = 6;
+            this.bar65.ValueBase = 0F;
+            this.bar65.ValueMainBar = 100F;
+            this.bar65.ValueOverCap = 0F;
+            this.bar65.ValueOverlay1 = 0F;
+            this.bar65.ValueOverlay2 = 0F;
+            // 
+            // bar63
+            // 
+            this.bar63.BackColor = System.Drawing.Color.Transparent;
+            this.bar63.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar63.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar63.ColorMainBar = System.Drawing.Color.Cyan;
+            this.bar63.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar63.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar63.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar63.EnableBaseValue = false;
+            this.bar63.EnableOverCap = false;
+            this.bar63.EnableOverlay1 = false;
+            this.bar63.EnableOverlay2 = false;
+            this.bar63.Location = new System.Drawing.Point(193, 60);
+            this.bar63.MaximumBarValue = 100F;
+            this.bar63.MinimumBarValue = 0F;
+            this.bar63.Name = "bar63";
+            this.bar63.Size = new System.Drawing.Size(303, 13);
+            this.bar63.TabIndex = 4;
+            this.bar63.ValueBase = 0F;
+            this.bar63.ValueMainBar = 100F;
+            this.bar63.ValueOverCap = 0F;
+            this.bar63.ValueOverlay1 = 0F;
+            this.bar63.ValueOverlay2 = 0F;
+            // 
+            // bar64
+            // 
+            this.bar64.BackColor = System.Drawing.Color.Transparent;
+            this.bar64.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar64.ColorBaseValue = System.Drawing.Color.Magenta;
+            this.bar64.ColorMainBar = System.Drawing.Color.Cyan;
+            this.bar64.ColorOverCap = System.Drawing.Color.Magenta;
+            this.bar64.ColorOverlay1 = System.Drawing.Color.Magenta;
+            this.bar64.ColorOverlay2 = System.Drawing.Color.Magenta;
+            this.bar64.EnableBaseValue = false;
+            this.bar64.EnableOverCap = false;
+            this.bar64.EnableOverlay1 = false;
+            this.bar64.EnableOverlay2 = false;
+            this.bar64.Location = new System.Drawing.Point(193, 79);
+            this.bar64.MaximumBarValue = 100F;
+            this.bar64.MinimumBarValue = 0F;
+            this.bar64.Name = "bar64";
+            this.bar64.Size = new System.Drawing.Size(303, 13);
+            this.bar64.TabIndex = 5;
+            this.bar64.ValueBase = 0F;
+            this.bar64.ValueMainBar = 100F;
+            this.bar64.ValueOverCap = 0F;
+            this.bar64.ValueOverlay1 = 0F;
+            this.bar64.ValueOverlay2 = 0F;
+            // 
+            // label136
+            // 
+            this.label136.AutoSize = true;
+            this.label136.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label136.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label136.Location = new System.Drawing.Point(3, 0);
+            this.label136.Name = "label136";
+            this.label136.Size = new System.Drawing.Size(106, 19);
+            this.label136.TabIndex = 9;
+            this.label136.Text = "Defense:";
+            this.label136.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label137
+            // 
+            this.label137.AutoSize = true;
+            this.label137.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label137.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label137.Location = new System.Drawing.Point(3, 19);
+            this.label137.Name = "label137";
+            this.label137.Size = new System.Drawing.Size(106, 19);
+            this.label137.TabIndex = 10;
+            this.label137.Text = "Endurance:";
+            this.label137.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label138
+            // 
+            this.label138.AutoSize = true;
+            this.label138.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label138.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label138.Location = new System.Drawing.Point(3, 38);
+            this.label138.Name = "label138";
+            this.label138.Size = new System.Drawing.Size(106, 19);
+            this.label138.TabIndex = 11;
+            this.label138.Text = "Recovery:";
+            this.label138.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label139
             // 
             this.label139.AutoSize = true;
             this.label139.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label139.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label139.Location = new System.Drawing.Point(3, 128);
+            this.label139.Location = new System.Drawing.Point(3, 57);
             this.label139.Name = "label139";
-            this.label139.Size = new System.Drawing.Size(129, 24);
-            this.label139.TabIndex = 3;
-            this.label139.Text = "Regen:";
+            this.label139.Size = new System.Drawing.Size(106, 19);
+            this.label139.TabIndex = 12;
+            this.label139.Text = "Perception:";
             this.label139.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label140
@@ -4324,11 +4627,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label140.AutoSize = true;
             this.label140.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label140.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label140.Location = new System.Drawing.Point(3, 108);
+            this.label140.Location = new System.Drawing.Point(3, 76);
             this.label140.Name = "label140";
-            this.label140.Size = new System.Drawing.Size(129, 20);
-            this.label140.TabIndex = 3;
-            this.label140.Text = "SpeedRunning:";
+            this.label140.Size = new System.Drawing.Size(106, 19);
+            this.label140.TabIndex = 13;
+            this.label140.Text = "ToHit:";
             this.label140.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label141
@@ -4336,10 +4639,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label141.AutoSize = true;
             this.label141.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label141.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label141.Location = new System.Drawing.Point(3, 88);
+            this.label141.Location = new System.Drawing.Point(3, 95);
             this.label141.Name = "label141";
-            this.label141.Size = new System.Drawing.Size(129, 20);
-            this.label141.TabIndex = 3;
+            this.label141.Size = new System.Drawing.Size(106, 19);
+            this.label141.TabIndex = 14;
             this.label141.Text = "RechargeTime:";
             this.label141.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -4348,283 +4651,36 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label142.AutoSize = true;
             this.label142.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label142.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label142.Location = new System.Drawing.Point(138, 66);
+            this.label142.Location = new System.Drawing.Point(3, 114);
             this.label142.Name = "label142";
-            this.label142.Size = new System.Drawing.Size(66, 22);
-            this.label142.TabIndex = 13;
-            this.label142.Text = "100.00%";
-            this.label142.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // ctlLayeredBar110
-            // 
-            this.ctlLayeredBar110.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar110.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar110.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar110.ColorMainBar = System.Drawing.Color.Cyan;
-            this.ctlLayeredBar110.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar110.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar110.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar110.EnableBaseValue = false;
-            this.ctlLayeredBar110.EnableOverCap = false;
-            this.ctlLayeredBar110.EnableOverlay1 = false;
-            this.ctlLayeredBar110.EnableOverlay2 = false;
-            this.ctlLayeredBar110.Location = new System.Drawing.Point(210, 69);
-            this.ctlLayeredBar110.MaximumBarValue = 100F;
-            this.ctlLayeredBar110.MinimumBarValue = 0F;
-            this.ctlLayeredBar110.Name = "ctlLayeredBar110";
-            this.ctlLayeredBar110.Size = new System.Drawing.Size(293, 16);
-            this.ctlLayeredBar110.TabIndex = 3;
-            this.ctlLayeredBar110.ValueBase = 0F;
-            this.ctlLayeredBar110.ValueMainBar = 100F;
-            this.ctlLayeredBar110.ValueOverCap = 0F;
-            this.ctlLayeredBar110.ValueOverlay1 = 0F;
-            this.ctlLayeredBar110.ValueOverlay2 = 0F;
+            this.label142.Size = new System.Drawing.Size(106, 19);
+            this.label142.TabIndex = 15;
+            this.label142.Text = "SpeedRunning:";
+            this.label142.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label143
             // 
             this.label143.AutoSize = true;
             this.label143.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label143.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label143.Location = new System.Drawing.Point(138, 44);
+            this.label143.Location = new System.Drawing.Point(3, 133);
             this.label143.Name = "label143";
-            this.label143.Size = new System.Drawing.Size(66, 22);
-            this.label143.TabIndex = 12;
-            this.label143.Text = "100.00%";
-            this.label143.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label143.Size = new System.Drawing.Size(106, 19);
+            this.label143.TabIndex = 16;
+            this.label143.Text = "Regen:";
+            this.label143.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ctlLayeredBar111
+            // lv60
             // 
-            this.ctlLayeredBar111.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar111.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar111.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar111.ColorMainBar = System.Drawing.Color.Cyan;
-            this.ctlLayeredBar111.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar111.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar111.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar111.EnableBaseValue = false;
-            this.ctlLayeredBar111.EnableOverCap = false;
-            this.ctlLayeredBar111.EnableOverlay1 = false;
-            this.ctlLayeredBar111.EnableOverlay2 = false;
-            this.ctlLayeredBar111.Location = new System.Drawing.Point(210, 47);
-            this.ctlLayeredBar111.MaximumBarValue = 100F;
-            this.ctlLayeredBar111.MinimumBarValue = 0F;
-            this.ctlLayeredBar111.Name = "ctlLayeredBar111";
-            this.ctlLayeredBar111.Size = new System.Drawing.Size(293, 16);
-            this.ctlLayeredBar111.TabIndex = 2;
-            this.ctlLayeredBar111.ValueBase = 0F;
-            this.ctlLayeredBar111.ValueMainBar = 100F;
-            this.ctlLayeredBar111.ValueOverCap = 0F;
-            this.ctlLayeredBar111.ValueOverlay1 = 0F;
-            this.ctlLayeredBar111.ValueOverlay2 = 0F;
-            // 
-            // label144
-            // 
-            this.label144.AutoSize = true;
-            this.label144.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label144.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label144.Location = new System.Drawing.Point(138, 22);
-            this.label144.Name = "label144";
-            this.label144.Size = new System.Drawing.Size(66, 22);
-            this.label144.TabIndex = 11;
-            this.label144.Text = "100.00%";
-            this.label144.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // ctlLayeredBar112
-            // 
-            this.ctlLayeredBar112.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar112.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar112.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar112.ColorMainBar = System.Drawing.Color.Cyan;
-            this.ctlLayeredBar112.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar112.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar112.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar112.EnableBaseValue = false;
-            this.ctlLayeredBar112.EnableOverCap = false;
-            this.ctlLayeredBar112.EnableOverlay1 = false;
-            this.ctlLayeredBar112.EnableOverlay2 = false;
-            this.ctlLayeredBar112.Location = new System.Drawing.Point(210, 25);
-            this.ctlLayeredBar112.MaximumBarValue = 100F;
-            this.ctlLayeredBar112.MinimumBarValue = 0F;
-            this.ctlLayeredBar112.Name = "ctlLayeredBar112";
-            this.ctlLayeredBar112.Size = new System.Drawing.Size(293, 16);
-            this.ctlLayeredBar112.TabIndex = 1;
-            this.ctlLayeredBar112.ValueBase = 0F;
-            this.ctlLayeredBar112.ValueMainBar = 100F;
-            this.ctlLayeredBar112.ValueOverCap = 0F;
-            this.ctlLayeredBar112.ValueOverlay1 = 0F;
-            this.ctlLayeredBar112.ValueOverlay2 = 0F;
-            // 
-            // label145
-            // 
-            this.label145.AutoSize = true;
-            this.label145.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label145.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label145.Location = new System.Drawing.Point(3, 0);
-            this.label145.Name = "label145";
-            this.label145.Size = new System.Drawing.Size(129, 22);
-            this.label145.TabIndex = 0;
-            this.label145.Text = "Defense:";
-            this.label145.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ctlLayeredBar113
-            // 
-            this.ctlLayeredBar113.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar113.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar113.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar113.ColorMainBar = System.Drawing.Color.Cyan;
-            this.ctlLayeredBar113.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar113.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar113.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar113.EnableBaseValue = false;
-            this.ctlLayeredBar113.EnableOverCap = false;
-            this.ctlLayeredBar113.EnableOverlay1 = false;
-            this.ctlLayeredBar113.EnableOverlay2 = false;
-            this.ctlLayeredBar113.Location = new System.Drawing.Point(210, 3);
-            this.ctlLayeredBar113.MaximumBarValue = 100F;
-            this.ctlLayeredBar113.MinimumBarValue = 0F;
-            this.ctlLayeredBar113.Name = "ctlLayeredBar113";
-            this.ctlLayeredBar113.Size = new System.Drawing.Size(293, 16);
-            this.ctlLayeredBar113.TabIndex = 0;
-            this.ctlLayeredBar113.ValueBase = 0F;
-            this.ctlLayeredBar113.ValueMainBar = 100F;
-            this.ctlLayeredBar113.ValueOverCap = 0F;
-            this.ctlLayeredBar113.ValueOverlay1 = 0F;
-            this.ctlLayeredBar113.ValueOverlay2 = 0F;
-            // 
-            // label146
-            // 
-            this.label146.AutoSize = true;
-            this.label146.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label146.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label146.Location = new System.Drawing.Point(3, 22);
-            this.label146.Name = "label146";
-            this.label146.Size = new System.Drawing.Size(129, 22);
-            this.label146.TabIndex = 1;
-            this.label146.Text = "Endurance:";
-            this.label146.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label147
-            // 
-            this.label147.AutoSize = true;
-            this.label147.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label147.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label147.Location = new System.Drawing.Point(3, 44);
-            this.label147.Name = "label147";
-            this.label147.Size = new System.Drawing.Size(129, 22);
-            this.label147.TabIndex = 2;
-            this.label147.Text = "PerceptionRadius:";
-            this.label147.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label148
-            // 
-            this.label148.AutoSize = true;
-            this.label148.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label148.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label148.Location = new System.Drawing.Point(3, 66);
-            this.label148.Name = "label148";
-            this.label148.Size = new System.Drawing.Size(129, 22);
-            this.label148.TabIndex = 3;
-            this.label148.Text = "ToHit:";
-            this.label148.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label149
-            // 
-            this.label149.AutoSize = true;
-            this.label149.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label149.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label149.Location = new System.Drawing.Point(138, 0);
-            this.label149.Name = "label149";
-            this.label149.Size = new System.Drawing.Size(66, 22);
-            this.label149.TabIndex = 10;
-            this.label149.Text = "100.00%";
-            this.label149.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // ctlLayeredBar114
-            // 
-            this.ctlLayeredBar114.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar114.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar114.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar114.ColorMainBar = System.Drawing.Color.Cyan;
-            this.ctlLayeredBar114.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar114.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar114.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar114.EnableBaseValue = false;
-            this.ctlLayeredBar114.EnableOverCap = false;
-            this.ctlLayeredBar114.EnableOverlay1 = false;
-            this.ctlLayeredBar114.EnableOverlay2 = false;
-            this.ctlLayeredBar114.Location = new System.Drawing.Point(210, 91);
-            this.ctlLayeredBar114.MaximumBarValue = 100F;
-            this.ctlLayeredBar114.MinimumBarValue = 0F;
-            this.ctlLayeredBar114.Name = "ctlLayeredBar114";
-            this.ctlLayeredBar114.Size = new System.Drawing.Size(293, 14);
-            this.ctlLayeredBar114.TabIndex = 14;
-            this.ctlLayeredBar114.ValueBase = 0F;
-            this.ctlLayeredBar114.ValueMainBar = 100F;
-            this.ctlLayeredBar114.ValueOverCap = 0F;
-            this.ctlLayeredBar114.ValueOverlay1 = 0F;
-            this.ctlLayeredBar114.ValueOverlay2 = 0F;
-            // 
-            // ctlLayeredBar115
-            // 
-            this.ctlLayeredBar115.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar115.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar115.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar115.ColorMainBar = System.Drawing.Color.Cyan;
-            this.ctlLayeredBar115.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar115.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar115.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar115.EnableBaseValue = false;
-            this.ctlLayeredBar115.EnableOverCap = false;
-            this.ctlLayeredBar115.EnableOverlay1 = false;
-            this.ctlLayeredBar115.EnableOverlay2 = false;
-            this.ctlLayeredBar115.Location = new System.Drawing.Point(210, 111);
-            this.ctlLayeredBar115.MaximumBarValue = 100F;
-            this.ctlLayeredBar115.MinimumBarValue = 0F;
-            this.ctlLayeredBar115.Name = "ctlLayeredBar115";
-            this.ctlLayeredBar115.Size = new System.Drawing.Size(293, 14);
-            this.ctlLayeredBar115.TabIndex = 15;
-            this.ctlLayeredBar115.ValueBase = 0F;
-            this.ctlLayeredBar115.ValueMainBar = 100F;
-            this.ctlLayeredBar115.ValueOverCap = 0F;
-            this.ctlLayeredBar115.ValueOverlay1 = 0F;
-            this.ctlLayeredBar115.ValueOverlay2 = 0F;
-            // 
-            // ctlLayeredBar116
-            // 
-            this.ctlLayeredBar116.BackColor = System.Drawing.Color.Transparent;
-            this.ctlLayeredBar116.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ctlLayeredBar116.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar116.ColorMainBar = System.Drawing.Color.Cyan;
-            this.ctlLayeredBar116.ColorOverCap = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar116.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar116.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.ctlLayeredBar116.EnableBaseValue = false;
-            this.ctlLayeredBar116.EnableOverCap = false;
-            this.ctlLayeredBar116.EnableOverlay1 = false;
-            this.ctlLayeredBar116.EnableOverlay2 = false;
-            this.ctlLayeredBar116.Location = new System.Drawing.Point(210, 131);
-            this.ctlLayeredBar116.MaximumBarValue = 100F;
-            this.ctlLayeredBar116.MinimumBarValue = 0F;
-            this.ctlLayeredBar116.Name = "ctlLayeredBar116";
-            this.ctlLayeredBar116.Size = new System.Drawing.Size(293, 16);
-            this.ctlLayeredBar116.TabIndex = 16;
-            this.ctlLayeredBar116.ValueBase = 0F;
-            this.ctlLayeredBar116.ValueMainBar = 100F;
-            this.ctlLayeredBar116.ValueOverCap = 0F;
-            this.ctlLayeredBar116.ValueOverlay1 = 0F;
-            this.ctlLayeredBar116.ValueOverlay2 = 0F;
-            // 
-            // label150
-            // 
-            this.label150.AutoSize = true;
-            this.label150.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label150.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label150.Location = new System.Drawing.Point(138, 88);
-            this.label150.Name = "label150";
-            this.label150.Size = new System.Drawing.Size(66, 20);
-            this.label150.TabIndex = 11;
-            this.label150.Text = "100.00%";
-            this.label150.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv60.AutoSize = true;
+            this.lv60.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv60.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv60.Location = new System.Drawing.Point(115, 0);
+            this.lv60.Name = "lv60";
+            this.lv60.Size = new System.Drawing.Size(72, 19);
+            this.lv60.TabIndex = 17;
+            this.lv60.Text = "100.00%";
+            this.lv60.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // frmTotalsV2
             // 
@@ -4632,17 +4688,18 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(538, 631);
-            this.Controls.Add(this.pContainer1);
+            this.Controls.Add(this.panel1);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmTotalsV2";
             this.Text = "Totals for Self";
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopMost)).EndInit();
-            this.pContainer1.ResumeLayout(false);
-            this.pContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tabControlAdv1)).EndInit();
-            this.tabControlAdv1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tabControlAdv2)).EndInit();
+            this.tabControlAdv2.ResumeLayout(false);
             this.tabPageAdv4.ResumeLayout(false);
             this.tabPageAdv4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gradientPanel4)).EndInit();
@@ -4724,9 +4781,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
         #endregion
         private PictureBox pbClose;
         private PictureBox pbTopMost;
-        private Panel pContainer1;
-        private Panel pContainer2;
-        private Syncfusion.Windows.Forms.Tools.TabControlAdv tabControlAdv1;
+        private Panel panel1;
+        private Panel panel2;
+        private Syncfusion.Windows.Forms.Tools.TabControlAdv tabControlAdv2;
         private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv4;
         private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv6;
         private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv5;
@@ -4736,28 +4793,29 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel3;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel2;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel1;
-        private ctlLayeredBar ctlLayeredBar3;
-        private ctlLayeredBar ctlLayeredBar12;
-        private ctlLayeredBar ctlLayeredBar11;
-        private ctlLayeredBar ctlLayeredBar10;
-        private ctlLayeredBar ctlLayeredBar9;
-        private ctlLayeredBar ctlLayeredBar8;
-        private ctlLayeredBar ctlLayeredBar7;
-        private ctlLayeredBar ctlLayeredBar6;
-        private ctlLayeredBar ctlLayeredBar5;
-        private ctlLayeredBar ctlLayeredBar4;
-        private ctlLayeredBar ctlLayeredBar13;
+        private midsControls.ctlLayeredBar bar1;
+        private midsControls.ctlLayeredBar bar10;
+        private midsControls.ctlLayeredBar bar9;
+        private midsControls.ctlLayeredBar bar8;
+        private midsControls.ctlLayeredBar bar7;
+        private midsControls.ctlLayeredBar bar6;
+        private midsControls.ctlLayeredBar bar5;
+        private midsControls.ctlLayeredBar bar4;
+        private midsControls.ctlLayeredBar bar3;
+        private midsControls.ctlLayeredBar bar2;
+        private midsControls.ctlLayeredBar bar11;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel4;
         private Label label4;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
-        private ctlLayeredBar ctlLayeredBar25;
-        private ctlLayeredBar ctlLayeredBar24;
-        private ctlLayeredBar ctlLayeredBar23;
-        private ctlLayeredBar ctlLayeredBar22;
-        private ctlLayeredBar ctlLayeredBar21;
-        private ctlLayeredBar ctlLayeredBar20;
+        private midsControls.ctlLayeredBar bar18;
+        private midsControls.ctlLayeredBar bar17;
+        private midsControls.ctlLayeredBar bar16;
+        private midsControls.ctlLayeredBar bar15;
+        private midsControls.ctlLayeredBar bar14;
+        private midsControls.ctlLayeredBar bar13;
+        private midsControls.ctlLayeredBar bar12;
         private TableLayoutPanel tableLayoutPanel4;
         private Label label5;
         private Label label6;
@@ -4769,16 +4827,16 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private Label label12;
         private Label label13;
         private Label label14;
-        private Label label24;
-        private Label label23;
-        private Label label22;
-        private Label label21;
-        private Label label20;
-        private Label label19;
-        private Label label18;
-        private Label label17;
-        private Label label16;
-        private Label label15;
+        private Label lv10;
+        private Label lv9;
+        private Label lv8;
+        private Label lv7;
+        private Label lv6;
+        private Label lv5;
+        private Label lv4;
+        private Label lv3;
+        private Label lv2;
+        private Label lv1;
         private Label label25;
         private Label label26;
         private Label label27;
@@ -4787,36 +4845,34 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private Label label30;
         private Label label31;
         private Label label32;
-        private Label label40;
-        private Label label39;
-        private Label label38;
-        private Label label37;
-        private Label label36;
-        private Label label35;
-        private Label label34;
-        private Label label33;
-        private Label label44;
+        private Label lv18;
+        private Label lv17;
+        private Label lv16;
+        private Label lv15;
+        private Label lv14;
+        private Label lv13;
+        private Label lv12;
+        private Label lv11;
+        private Label lv20;
         private Label label41;
         private Label label42;
-        private Label label43;
-        private Label label50;
-        private Label label49;
+        private Label lv19;
+        private Label lv23;
+        private Label lv22;
         private Label label45;
         private Label label46;
         private Label label47;
-        private Label label48;
+        private Label lv21;
         private Label label52;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel6;
         private TableLayoutPanel tableLayoutPanel6;
-        private Label label53;
-        private ctlLayeredBar ctlLayeredBar57;
-        private Label label54;
-        private ctlLayeredBar ctlLayeredBar60;
+        private Label lv30;
+        private midsControls.ctlLayeredBar bar30;
+        private Label lv29;
         private Label label55;
-        private ctlLayeredBar ctlLayeredBar63;
         private Label label56;
         private Label label64;
-        private Label label66;
+        private Label lv28;
         private RadioButton radioButton4;
         private RadioButton radioButton3;
         private RadioButton radioButton2;
@@ -4824,62 +4880,56 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private Label label51;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel5;
         private TableLayoutPanel tableLayoutPanel5;
-        private Label label57;
-        private ctlLayeredBar ctlLayeredBar48;
-        private Label label58;
-        private ctlLayeredBar ctlLayeredBar49;
-        private Label label59;
-        private ctlLayeredBar ctlLayeredBar50;
+        private Label lv27;
+        private midsControls.ctlLayeredBar bar27;
+        private Label lv26;
+        private midsControls.ctlLayeredBar bar26;
+        private Label lv25;
         private Label label60;
-        private ctlLayeredBar ctlLayeredBar51;
         private Label label61;
         private Label label62;
         private Label label63;
-        private Label label70;
+        private Label lv24;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel7;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel13;
         private TableLayoutPanel tableLayoutPanel12;
         private Label label77;
-        private ctlLayeredBar ctlLayeredBar81;
-        private Label label78;
+        private midsControls.ctlLayeredBar bar36;
+        private Label lv36;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel12;
         private TableLayoutPanel tableLayoutPanel11;
         private Label label75;
-        private ctlLayeredBar ctlLayeredBar78;
-        private Label label76;
+        private midsControls.ctlLayeredBar bar35;
+        private Label lv35;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel11;
         private TableLayoutPanel tableLayoutPanel10;
         private Label label72;
-        private ctlLayeredBar ctlLayeredBar71;
-        private Label label73;
+        private Label lv34;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel10;
         private TableLayoutPanel tableLayoutPanel9;
         private Label label68;
-        private ctlLayeredBar ctlLayeredBar68;
-        private Label label71;
+        private Label lv33;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel9;
         private TableLayoutPanel tableLayoutPanel8;
         private Label label65;
-        private ctlLayeredBar ctlLayeredBar56;
-        private Label label67;
+        private Label lv32;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel8;
         private TableLayoutPanel tableLayoutPanel7;
         private Label label69;
-        private Label label74;
+        private Label lv31;
         private Label label81;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel14;
         private TableLayoutPanel tableLayoutPanel13;
         private Label label79;
-        private ctlLayeredBar ctlLayeredBar85;
-        private Label label80;
+        private Label lv37;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel15;
         private TableLayoutPanel tableLayoutPanel14;
-        private Label label103;
-        private Label label102;
-        private Label label101;
-        private Label label100;
-        private Label label99;
-        private Label label98;
+        private Label lv48;
+        private Label lv47;
+        private Label lv46;
+        private Label lv45;
+        private Label lv44;
+        private Label lv43;
         private Label label96;
         private Label label95;
         private Label label94;
@@ -4887,34 +4937,34 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private Label label92;
         private Label label91;
         private Label label90;
-        private Label label82;
-        private ctlLayeredBar ctlLayeredBar88;
-        private Label label83;
-        private ctlLayeredBar ctlLayeredBar91;
-        private Label label84;
-        private ctlLayeredBar ctlLayeredBar94;
+        private Label lv41;
+        private midsControls.ctlLayeredBar bar41;
+        private Label lv40;
+        private midsControls.ctlLayeredBar bar40;
+        private Label lv39;
+        private midsControls.ctlLayeredBar bar39;
         private Label label85;
         private Label label86;
         private Label label87;
         private Label label88;
-        private Label label89;
-        private ctlLayeredBar ctlLayeredBar89;
-        private ctlLayeredBar ctlLayeredBar90;
-        private ctlLayeredBar ctlLayeredBar92;
-        private ctlLayeredBar ctlLayeredBar93;
-        private ctlLayeredBar ctlLayeredBar95;
-        private ctlLayeredBar ctlLayeredBar96;
-        private ctlLayeredBar ctlLayeredBar98;
-        private Label label97;
+        private Label lv38;
+        private midsControls.ctlLayeredBar bar42;
+        private midsControls.ctlLayeredBar bar43;
+        private midsControls.ctlLayeredBar bar44;
+        private midsControls.ctlLayeredBar bar45;
+        private midsControls.ctlLayeredBar bar46;
+        private midsControls.ctlLayeredBar bar47;
+        private midsControls.ctlLayeredBar bar48;
+        private Label lv42;
         private Label label105;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel16;
         private TableLayoutPanel tableLayoutPanel15;
-        private Label label106;
-        private Label label107;
-        private Label label108;
-        private Label label109;
-        private Label label110;
-        private Label label111;
+        private Label lv59;
+        private Label lv58;
+        private Label lv57;
+        private Label lv56;
+        private Label lv55;
+        private Label lv54;
         private Label label112;
         private Label label113;
         private Label label114;
@@ -4922,59 +4972,69 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private Label label116;
         private Label label117;
         private Label label118;
-        private Label label119;
-        private ctlLayeredBar ctlLayeredBar99;
-        private Label label120;
-        private ctlLayeredBar ctlLayeredBar100;
-        private Label label121;
-        private ctlLayeredBar ctlLayeredBar101;
+        private Label lv52;
+        private midsControls.ctlLayeredBar bar52;
+        private Label lv51;
+        private midsControls.ctlLayeredBar bar51;
+        private Label lv50;
+        private midsControls.ctlLayeredBar bar50;
         private Label label122;
-        private ctlLayeredBar ctlLayeredBar102;
+        private midsControls.ctlLayeredBar bar49;
         private Label label123;
         private Label label124;
         private Label label125;
-        private Label label126;
-        private ctlLayeredBar ctlLayeredBar103;
-        private ctlLayeredBar ctlLayeredBar104;
-        private ctlLayeredBar ctlLayeredBar105;
-        private ctlLayeredBar ctlLayeredBar106;
-        private ctlLayeredBar ctlLayeredBar107;
-        private ctlLayeredBar ctlLayeredBar108;
-        private ctlLayeredBar ctlLayeredBar109;
-        private Label label127;
+        private Label lv49;
+        private midsControls.ctlLayeredBar bar53;
+        private midsControls.ctlLayeredBar bar54;
+        private midsControls.ctlLayeredBar bar55;
+        private midsControls.ctlLayeredBar bar56;
+        private midsControls.ctlLayeredBar bar57;
+        private midsControls.ctlLayeredBar bar58;
+        private midsControls.ctlLayeredBar bar59;
+        private Label lv53;
         private Label label104;
+        private midsControls.ctlLayeredBar bar21;
+        private midsControls.ctlLayeredBar bar23;
+        private midsControls.ctlLayeredBar bar22;
+        private midsControls.ctlLayeredBar bar19;
+        private midsControls.ctlLayeredBar bar20;
+        private midsControls.ctlLayeredBar bar37;
+        private midsControls.ctlLayeredBar bar34;
+        private midsControls.ctlLayeredBar bar33;
+        private midsControls.ctlLayeredBar bar32;
+        private midsControls.ctlLayeredBar bar31;
+        private midsControls.ctlLayeredBar bar29;
+        private midsControls.ctlLayeredBar bar28;
+        private midsControls.ctlLayeredBar bar25;
+        private midsControls.ctlLayeredBar bar24;
+        private midsControls.ctlLayeredBar bar38;
         private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv1;
         private Label label128;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel17;
         private TableLayoutPanel tableLayoutPanel16;
-        private Label label133;
-        private Label label134;
+        private Label lv67;
+        private Label lv66;
+        private Label lv65;
+        private Label lv64;
+        private Label lv63;
+        private Label lv62;
+        private Label lv61;
+        private midsControls.ctlLayeredBar bar60;
+        private midsControls.ctlLayeredBar bar67;
+        private midsControls.ctlLayeredBar bar61;
+        private midsControls.ctlLayeredBar bar66;
+        private midsControls.ctlLayeredBar bar62;
+        private midsControls.ctlLayeredBar bar65;
+        private midsControls.ctlLayeredBar bar63;
+        private midsControls.ctlLayeredBar bar64;
+        private Label label136;
+        private Label label137;
+        private Label label138;
         private Label label139;
         private Label label140;
         private Label label141;
         private Label label142;
         private Label label143;
-        private Label label144;
-        private Label label145;
-        private Label label146;
-        private Label label147;
-        private Label label148;
-        private Label label149;
-        private Label label150;
-        private ctlLayeredBar ctlLayeredBar18;
-        private ctlLayeredBar ctlLayeredBar17;
-        private ctlLayeredBar ctlLayeredBar72;
-        private ctlLayeredBar ctlLayeredBar97;
-        private ctlLayeredBar ctlLayeredBar16;
-        private ctlLayeredBar ctlLayeredBar14;
-        private ctlLayeredBar ctlLayeredBar15;
-        private ctlLayeredBar ctlLayeredBar19;
-        private ctlLayeredBar ctlLayeredBar110;
-        private ctlLayeredBar ctlLayeredBar111;
-        private ctlLayeredBar ctlLayeredBar112;
-        private ctlLayeredBar ctlLayeredBar113;
-        private ctlLayeredBar ctlLayeredBar114;
-        private ctlLayeredBar ctlLayeredBar115;
-        private ctlLayeredBar ctlLayeredBar116;
+        private Label lv60;
     }
 }
