@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Base;
 using Base.Data_Classes;
 using Hero_Designer.My;
 using midsControls;
@@ -144,7 +143,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             if (r != DialogResult.OK) return;
 
             Modifiers m = new Modifiers();
-            m = JsonConvert.DeserializeObject<Modifiers>(File.ReadAllText(f.FileNames[0]));
+            try
+            {
+                m = JsonConvert.DeserializeObject<Modifiers>(File.ReadAllText(f.FileName));
+            }
+            catch (JsonSerializationException ex)
+            {
+                MessageBox.Show("Error parsing JSON file.\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                return;
+            }
 
             int nAt = m.Modifier[0].Table.Length;
             int nMods = m.Modifier.Length;

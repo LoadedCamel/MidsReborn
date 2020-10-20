@@ -2158,6 +2158,9 @@
     <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.resx">
+      <DependentUpon>frmEditAttribMod.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.resx">
       <DependentUpon>frmSetEditPvPNEW.cs</DependentUpon>
     </EmbeddedResource>
