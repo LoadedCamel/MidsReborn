@@ -3002,6 +3002,7 @@ namespace Hero_Designer.Forms.Controls
             if (num > pBase.VariableMax)
                 num = pBase.VariableMax;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
+            MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
             if (num == pLastScaleVal)
                 return;
             SetPowerScaler();

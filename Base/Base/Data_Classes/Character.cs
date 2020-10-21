@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Base.Display;
 using Base.Master_Classes;
 
@@ -496,6 +497,30 @@ namespace Base.Data_Classes
 
             foreach (var power in CurrentBuild.Powers)
             {
+                if (power?.Power == null) continue;
+                var powName = power.Power.PowerName;
+                switch (powName)
+                {
+                    default:
+                        if (power.Chosen | power.Power.InherentType == Enums.eGridType.Class | power.Power.InherentType == Enums.eGridType.Inherent | power.Power.InherentType == Enums.eGridType.Power | power.Power.InherentType == Enums.eGridType.Powerset)
+                        {
+                            power.Power.Taken = true;
+                        }
+
+                        if (!power.StatInclude)
+                        {
+                            power.Power.Active = false;
+                        }
+                        else if (power.StatInclude && !power.HasProc())
+                        {
+                            power.Power.Active = true;
+                        }
+                        break;
+                }
+            }
+
+            foreach (var power in CurrentBuild.Powers)
+            {
                 if (power == null || power.Power == null || !power.StatInclude) continue;
                 switch (power.Power.PowerName.ToUpper())
                 {
@@ -638,72 +663,285 @@ namespace Base.Data_Classes
                 }
 
                 var powName = power.Power.PowerName;
-                switch (powName)
+                //Console.WriteLine($@"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
+
+                foreach (var effect in power.Power.Effects)
                 {
-                    default:
-                        if (power.Chosen | power.Power.InherentType == Enums.eGridType.Class | power.Power.InherentType == Enums.eGridType.Inherent | power.Power.InherentType == Enums.eGridType.Power | power.Power.InherentType == Enums.eGridType.Powerset)
-                        {
-                            power.Power.Taken = true;
-                        }
-
-                        if (!power.StatInclude)
-                        {
-                            power.Power.Active = false;
-                        }
-                        else if (power.StatInclude && !power.HasProc())
-                        {
-                            power.Power.Active = true;
-                        }
-
-                        break;
-                }
-                Console.WriteLine($@"Power: {power.Power.DisplayName} - Active: {power.Power.Active} - Taken: {power.Power.Taken}");
-
-                if (power.Power.Active)
-                {
-                    foreach (var effect in power.Power.Effects)
+                    var getCondition = new Regex("(:.*)");
+                    var getConditionPower = new Regex("(.*:)");
+                    IPower? conditionPower;
+                    var conditionsMet = false;
+                    switch (effect.PowerAttribs)
                     {
-                        switch (effect.PowerAttribs)
-                        {
-                            case Enums.ePowerAttribs.Accuracy:
-                                power.Power.Accuracy = effect.AtrAccuracy;
-                                break;
-                            case Enums.ePowerAttribs.ActivateInterval:
-                                power.Power.ActivatePeriod = effect.AtrActivatePeriod;
-                                break;
-                            case Enums.ePowerAttribs.Arc:
-                                power.Power.Arc = effect.AtrArc;
-                                break;
-                            case Enums.ePowerAttribs.CastTime:
-                                power.Power.CastTime = effect.AtrCastTime;
-                                break;
-                            case Enums.ePowerAttribs.EffectArea:
-                                power.Power.EffectArea = effect.AtrEffectArea;
-                                break;
-                            case Enums.ePowerAttribs.EnduranceCost:
-                                power.Power.EndCost = effect.AtrEnduranceCost;
-                                break;
-                            case Enums.ePowerAttribs.InterruptTime:
-                                power.Power.InterruptTime = effect.AtrInterruptTime;
-                                break;
-                            case Enums.ePowerAttribs.MaxTargets:
-                                power.Power.MaxTargets = effect.AtrMaxTargets;
-                                break;
-                            case Enums.ePowerAttribs.Radius:
-                                power.Power.Radius = effect.AtrRadius;
-                                break;
-                            case Enums.ePowerAttribs.Range:
-                                power.Power.Range = effect.AtrRange;
-                                break;
-                            case Enums.ePowerAttribs.RechargeTime:
-                                power.Power.RechargeTime = effect.AtrRechargeTime;
-                                break;
-                            case Enums.ePowerAttribs.SecondaryRange:
-                                power.Power.RangeSecondary = effect.AtrSecondaryRange;
-                                break;
-                        }
+                        case Enums.ePowerAttribs.Accuracy:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active"))
+                                    {
+                                        if (conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value)))
+                                        {
+                                            conditionsMet = true;
+                                        }
+                                        else
+                                        {
+                                            conditionsMet = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            power.Power.Accuracy = conditionsMet ? effect.AtrModAccuracy : effect.AtrOrigAccuracy;
+                            break;
+                        case Enums.ePowerAttribs.ActivateInterval:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.ActivatePeriod = effect.AtrModActivatePeriod;
+                                        }
+                                        else
+                                        {
+                                            power.Power.ActivatePeriod = effect.AtrOrigActivatePeriod;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.Arc:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.Arc = effect.AtrModArc;
+                                        }
+                                        else
+                                        {
+                                            power.Power.Arc = effect.AtrOrigArc;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.CastTime:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.CastTime = effect.AtrModCastTime;
+                                        }
+                                        else
+                                        {
+                                            power.Power.CastTime = effect.AtrOrigCastTime;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.EffectArea:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.EffectArea = effect.AtrModEffectArea;
+                                        }
+                                        else
+                                        {
+                                            power.Power.EffectArea = effect.AtrOrigEffectArea;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.EnduranceCost:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.EndCost = effect.AtrModEnduranceCost;
+                                        }
+                                        else
+                                        {
+                                            power.Power.EndCost = effect.AtrOrigEnduranceCost;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.InterruptTime:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.InterruptTime = effect.AtrModInterruptTime;
+                                        }
+                                        else
+                                        {
+                                            power.Power.InterruptTime = effect.AtrOrigInterruptTime;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.MaxTargets:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.MaxTargets = effect.AtrModMaxTargets;
+                                        }
+                                        else
+                                        {
+                                            power.Power.MaxTargets = effect.AtrOrigMaxTargets;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.Radius:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.Radius = effect.AtrModRadius;
+                                        }
+                                        else
+                                        {
+                                            power.Power.Radius = effect.AtrOrigRadius;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.Range:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.Range = effect.AtrModRange;
+                                        }
+                                        else
+                                        {
+                                            power.Power.Range = effect.AtrOrigRange;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.RechargeTime:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.RechargeTime = effect.AtrModRechargeTime;
+                                        }
+                                        else
+                                        {
+                                            power.Power.RechargeTime = effect.AtrOrigRechargeTime;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case Enums.ePowerAttribs.SecondaryRange:
+                            if (effect.ActiveConditionals.Count > 0)
+                            {
+                                foreach (var cVp in effect.ActiveConditionals)
+                                {
+                                    var condition = getCondition.Replace(cVp.Key, "");
+                                    var conditionPowerName = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                                    conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
+                                    if (condition.Equals("Active") && cVp.Value == "True")
+                                    {
+                                        if (conditionPower.Active)
+                                        {
+                                            power.Power.RangeSecondary = effect.AtrModSecondaryRange;
+                                        }
+                                        else
+                                        {
+                                            power.Power.RangeSecondary = effect.AtrOrigSecondaryRange;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
                     }
                 }
+
 
                 if (!power.Chosen)
                 {
@@ -784,8 +1022,6 @@ namespace Base.Data_Classes
                     }
                 }
             }
-
-            //MessageBox.Show(EquipRobot.ToString());
         }
 
         private string GetEnhSetName(string longName)

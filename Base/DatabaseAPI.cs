@@ -1151,6 +1151,22 @@ public static class DatabaseAPI
         Database.Salvage = JsonConvert.DeserializeObject<Salvage[]>(output, settings);
     }
 
+    public static void SaveAttribMods()
+    {
+        var settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Formatting = Formatting.Indented
+        };
+        var serialized = JsonConvert.SerializeObject(Database.AttribMods, settings);
+        File.WriteAllText($"{Application.StartupPath}\\Data\\AttribMods.json", serialized);
+    }
+
+    public static void ImportAttribMods()
+    {
+        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        Database.AttribMods = JsonConvert.DeserializeObject<Modifiers>(File.ReadAllText($"{Application.StartupPath}\\Data\\AttribMods.json"), settings);
+    }
 
     public static void SaveMainDatabase(ISerialize serializer)
     {
