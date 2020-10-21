@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Base.Data_Classes;
 
 public interface IEffect : IComparable, ICloneable
 {
@@ -19,6 +20,8 @@ public interface IEffect : IComparable, ICloneable
     bool VariableModified { get; set; }
 
     bool InherentSpecial { get; }
+
+    bool InherentSpecial2 { get; }
 
     float BaseProbability { get; set; }
 
@@ -128,25 +131,41 @@ public interface IEffect : IComparable, ICloneable
 
     float ProcsPerMinute { get; set; }
 
-    float AtrAccuracy { get; set; }
-    float AtrActivatePeriod { get; set; }
-    int AtrArc { get; set; }
-    float AtrCastTime { get; set; }
-    Enums.eEffectArea AtrEffectArea { get; set; }
-    float AtrEnduranceCost { get; set; }
-    float AtrInterruptTime { get; set; }
-    int AtrMaxTargets { get; set; }
-    float AtrRadius { get; set; }
-    float AtrRange { get; set; }
-    float AtrRechargeTime { get; set; }
-    float AtrSecondaryRange { get; set; }
+    float AtrOrigAccuracy { get; set; }
+    float AtrOrigActivatePeriod { get; set; }
+    int AtrOrigArc { get; set; }
+    float AtrOrigCastTime { get; set; }
+    Enums.eEffectArea AtrOrigEffectArea { get; set; }
+    float AtrOrigEnduranceCost { get; set; }
+    float AtrOrigInterruptTime { get; set; }
+    int AtrOrigMaxTargets { get; set; }
+    float AtrOrigRadius { get; set; }
+    float AtrOrigRange { get; set; }
+    float AtrOrigRechargeTime { get; set; }
+    float AtrOrigSecondaryRange { get; set; }
 
+    float AtrModAccuracy { get; set; }
+    float AtrModActivatePeriod { get; set; }
+    int AtrModArc { get; set; }
+    float AtrModCastTime { get; set; }
+    Enums.eEffectArea AtrModEffectArea { get; set; }
+    float AtrModEnduranceCost { get; set; }
+    float AtrModInterruptTime { get; set; }
+    int AtrModMaxTargets { get; set; }
+    float AtrModRadius { get; set; }
+    float AtrModRange { get; set; }
+    float AtrModRechargeTime { get; set; }
+    float AtrModSecondaryRange { get; set; }
+
+    
     Dictionary<string, string> ActiveConditionals { get; set; }
 
     IPower GetPower();
     void SetPower(IPower power);
 
     bool isDamage();
+
+    bool CheckConditional(string type = "", string powername = "");
 
     string BuildEffectStringShort(bool NoMag = false, bool simple = false, bool useBaseProbability = false);
 

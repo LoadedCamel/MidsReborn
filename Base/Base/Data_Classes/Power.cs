@@ -51,6 +51,9 @@ namespace Base.Data_Classes
                 }
 
             StaticIndex = num + 1;
+            Active = false;
+            Taken = false;
+            Stacks = 0;
         }
 
         public Power(IPower template)
@@ -323,6 +326,7 @@ namespace Base.Data_Classes
             HiddenPower = reader.ReadBoolean();
             Active = reader.ReadBoolean();
             Taken = reader.ReadBoolean();
+            Stacks = reader.ReadInt32();
         }
 
         public IPowerset GetPowerSet()
@@ -569,8 +573,9 @@ namespace Base.Data_Classes
             return false;
         }
 
-        public bool Active { get; set; } = false;
-        public bool Taken { get; set; } = false;
+        public bool Active { get; set; }
+        public bool Taken { get; set; }
+        public int Stacks { get; set; }
 
         public void StoreTo(ref BinaryWriter writer)
         {
@@ -668,6 +673,7 @@ namespace Base.Data_Classes
             writer.Write(HiddenPower);
             writer.Write(Active);
             writer.Write(Taken);
+            writer.Write(Stacks);
         }
 
         public float FXGetDamageValue()
@@ -919,6 +925,11 @@ namespace Base.Data_Classes
                         numArray1[index1] += -100;
                     }
 
+                    if (Effects[index1].InherentSpecial2)
+                    {
+                        numArray1[index1] += -100;
+                    }
+
                     if ((Effects[index1].ToWho == Enums.eToWho.Self) & ((Effects[index1].Mag > 0.0) |
                                                                         (Effects[index1].EffectType ==
                                                                          Enums.eEffectType.Mez)))
@@ -1148,6 +1159,13 @@ namespace Base.Data_Classes
                     applies = true;
                 }
 
+
+                if ((Effects[index].Probability > (double) probability) & !Effects[index].CheckConditional("active", "Defiance"))
+                {
+                    applies = true;
+                }
+                //write in where active conditionals true clause doesnt coincide with defiance
+
                 if (Effects[index].Buffable & !buffable)
                 {
                     applies = true;
@@ -1158,12 +1176,36 @@ namespace Base.Data_Classes
                     applies = true;
                 }
 
-                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) &
-                    (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
+                if (!Effects[index].CheckConditional("active", "Defiance"))
+                {
+                    applies = true;
+                }
+
+                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
                 {
                     if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
                     {
                         if (Effects[index].Mag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination)
+                        {
+                            applies = true;
+                        }
+
+                        if (Effects[index].Mag > (double) mag || Effects[index].CheckConditional("active", "Domination"))
+                        {
+                            applies = true;
+                        }
+                    }
+                    else
+                    {
+                        applies = true;
+                    }
+                }
+
+                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double)duration) & !Effects[index].isEnhancementEffect & !Effects[index].CheckConditional("active", "Defiance") && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
+                {
+                    if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
+                    {
+                        if (Effects[index].Mag > (double)mag || Effects[index].CheckConditional("active", "Domination"))
                         {
                             applies = true;
                         }
@@ -1196,6 +1238,12 @@ namespace Base.Data_Classes
                     applies = false;
                 }
 
+                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].CheckConditional("active", "Domination") ? 1 : 0)) != 0)
+                {
+                    applies = false;
+                }
+
+                
                 if ((Effects[index].EffectType == Enums.eEffectType.EntCreate) & !isEntCreate &
                     (Effects[index].DelayedTime < 20.0) & (eEffectType != Enums.eEffectType.Mez))
                 {
@@ -1472,7 +1520,7 @@ namespace Base.Data_Classes
             {
                 if (Effects[iIndex].EffectType != iEffect ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
-                    Effects[iIndex].InherentSpecial || !Effects[iIndex].PvXInclude() ||
+                    Effects[iIndex].InherentSpecial || Effects[iIndex].InherentSpecial2 || !Effects[iIndex].PvXInclude() ||
                     !(Effects[iIndex].DelayedTime <= 5.0) && !allowDelay ||
                     iTarget != Enums.eToWho.Unspecified && Effects[iIndex].ToWho != Enums.eToWho.All &&
                     iTarget != Effects[iIndex].ToWho)

@@ -50,6 +50,7 @@ namespace Hero_Designer
             var statDictionary = new Dictionary<string, string>();
             var damTypes = Enum.GetNames(Enums.eDamage.None.GetType());
 
+            
 
             #region DefenseStats
             for (var index = 0; index < totalStat.Def.Length; index++)

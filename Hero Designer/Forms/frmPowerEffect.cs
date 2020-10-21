@@ -209,6 +209,7 @@ namespace Hero_Designer.Forms
             chkNearGround.Checked = fx.NearGround;
             IgnoreED.Checked = fx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int) fx.SpecialCase;
+            UpdateConditionals();
             cbFXClass.SelectedIndex = (int) fx.EffectClass;
             chkVariable.Checked = fx.VariableModifiedOverride;
             clbSuppression.BeginUpdate();
@@ -260,6 +261,7 @@ namespace Hero_Designer.Forms
             cbAffects.Items.Clear();
             cbFXClass.Items.AddRange(Enum.GetNames(myFX.EffectClass.GetType()));
             cbFXSpecialCase.Items.AddRange(Enum.GetNames(myFX.SpecialCase.GetType()));
+            UpdateConditionalTypes();
             cbPercentageOverride.Items.Add("Auto");
             cbPercentageOverride.Items.Add("Yes");
             cbPercentageOverride.Items.Add("No");
@@ -307,70 +309,83 @@ namespace Hero_Designer.Forms
         //change storing of Atr attributes from power to effect
         private void FillPowerAttribs()
         {
+            // look at possibly using class to set modified and original values
             var power = myPower;
-            if (myFX.AtrAccuracy == 0)
+
+            if (Math.Abs(myFX.AtrOrigAccuracy - (-1)) < float.Epsilon)
             {
-                myFX.AtrAccuracy = power.Accuracy;
+                myFX.AtrOrigAccuracy = power.Accuracy;
+                myFX.AtrModAccuracy = power.Accuracy;
             }
-            if (myFX.AtrActivatePeriod == 0)
+            if (Math.Abs(myFX.AtrOrigActivatePeriod - (-1)) < float.Epsilon)
             {
-                myFX.AtrActivatePeriod = power.ActivatePeriod;
+                myFX.AtrOrigActivatePeriod = power.ActivatePeriod;
+                myFX.AtrModActivatePeriod = power.ActivatePeriod;
             }
-            if (myFX.AtrArc == 0)
+            if (myFX.AtrOrigArc == -1)
             {
-                myFX.AtrArc = power.Arc;
+                myFX.AtrOrigArc = power.Arc;
+                myFX.AtrModArc = power.Arc;
             }
-            if (myFX.AtrCastTime == 0)
+            if (Math.Abs(myFX.AtrOrigCastTime - (-1)) < float.Epsilon)
             {
-                myFX.AtrCastTime = power.CastTime;
+                myFX.AtrOrigCastTime = power.CastTime;
+                myFX.AtrModCastTime = power.CastTime;
             }
-            if (myFX.AtrEffectArea == Enums.eEffectArea.None)
+            if (myFX.AtrOrigEffectArea == Enums.eEffectArea.None)
             {
-                myFX.AtrEffectArea = power.EffectArea;
+                myFX.AtrOrigEffectArea = power.EffectArea;
+                myFX.AtrModEffectArea = power.EffectArea;
             }
-            if (myFX.AtrEnduranceCost == 0)
+            if (Math.Abs(myFX.AtrOrigEnduranceCost - (-1)) < float.Epsilon)
             {
-                myFX.AtrEnduranceCost = power.EndCost;
+                myFX.AtrOrigEnduranceCost = power.EndCost;
+                myFX.AtrModEnduranceCost = power.EndCost;
             }
-            if (myFX.AtrInterruptTime == 0)
+            if (Math.Abs(myFX.AtrOrigInterruptTime - (-1)) < float.Epsilon)
             {
-                myFX.AtrInterruptTime = power.InterruptTime;
+                myFX.AtrOrigInterruptTime = power.InterruptTime;
+                myFX.AtrModInterruptTime = power.InterruptTime;
             }
-            if (myFX.AtrMaxTargets == 0)
+            if (myFX.AtrOrigMaxTargets == -1)
             {
-                myFX.AtrMaxTargets = power.MaxTargets;
+                myFX.AtrOrigMaxTargets = power.MaxTargets;
+                myFX.AtrModMaxTargets = power.MaxTargets;
             }
-            if (myFX.AtrRadius == 0)
+            if (Math.Abs(myFX.AtrOrigRadius - (-1)) < float.Epsilon)
             {
-                myFX.AtrRadius = power.Radius;
+                myFX.AtrOrigRadius = power.Radius;
+                myFX.AtrModRadius = power.Radius;
             }
-            if (myFX.AtrRange == 0)
+            if (Math.Abs(myFX.AtrOrigRange - (-1)) < float.Epsilon)
             {
-                myFX.AtrRange = power.Range;
+                myFX.AtrOrigRange = power.Range;
+                myFX.AtrModRange = power.Range;
             }
-            if (myFX.AtrRechargeTime == 0)
+            if (Math.Abs(myFX.AtrOrigRechargeTime - (-1)) < float.Epsilon)
             {
-                myFX.AtrRechargeTime = power.RechargeTime;
+                myFX.AtrOrigRechargeTime = power.RechargeTime;
+                myFX.AtrModRechargeTime = power.RechargeTime;
+            }
+            if (Math.Abs(myFX.AtrOrigSecondaryRange - (-1)) < float.Epsilon)
+            {
+                myFX.AtrOrigSecondaryRange = power.RangeSecondary;
+                myFX.AtrModSecondaryRange = power.RangeSecondary;
             }
 
-            if (myFX.AtrSecondaryRange == 0)
-            {
-                myFX.AtrSecondaryRange = power.RangeSecondary;
-            }
-
-            txtFXAccuracy.Text = myFX.AtrAccuracy.ToString("0.##");
-            txtFXActivateInterval.Text = myFX.AtrActivatePeriod.ToString("0.##");
-            txtFXArc.Text = myFX.AtrArc.ToString("##");
-            txtFXCastTime.Text = myFX.AtrCastTime.ToString("0.##");
-            cbFXEffectArea.Items.AddRange(Enum.GetNames(myFX.AtrEffectArea.GetType()));
-            cbFXEffectArea.SelectedIndex = (int)myFX.AtrEffectArea;
-            txtFXEnduranceCost.Text = myFX.AtrEnduranceCost.ToString("0.##");
-            txtFXInterruptTime.Text = myFX.AtrInterruptTime.ToString("0.##");
-            txtFXMaxTargets.Text = myFX.AtrMaxTargets.ToString("##");
-            txtFXRadius.Text = myFX.AtrRadius.ToString("0.##");
-            txtFXRange.Text = myFX.AtrRange.ToString("0.##");
-            txtFXRechargeTime.Text = myFX.AtrRechargeTime.ToString("0.##");
-            txtFXSecondaryRange.Text = myFX.AtrSecondaryRange.ToString("0.##");
+            txtFXAccuracy.Text = myFX.AtrModAccuracy.ToString();
+            txtFXActivateInterval.Text = myFX.AtrModActivatePeriod.ToString();
+            txtFXArc.Text = myFX.AtrModArc.ToString();
+            txtFXCastTime.Text = myFX.AtrModCastTime.ToString();
+            cbFXEffectArea.Items.AddRange(Enum.GetNames(myFX.AtrModEffectArea.GetType()));
+            cbFXEffectArea.SelectedIndex = (int) myFX.AtrModEffectArea;
+            txtFXEnduranceCost.Text = myFX.AtrModEnduranceCost.ToString();
+            txtFXInterruptTime.Text = myFX.AtrModInterruptTime.ToString();
+            txtFXMaxTargets.Text = myFX.AtrModMaxTargets.ToString();
+            txtFXRadius.Text = myFX.AtrModRadius.ToString();
+            txtFXRange.Text = myFX.AtrModRange.ToString();
+            txtFXRechargeTime.Text = myFX.AtrModRechargeTime.ToString();
+            txtFXSecondaryRange.Text = myFX.AtrModSecondaryRange.ToString();
         }
 
         private void FullCopy()
@@ -671,88 +686,88 @@ namespace Hero_Designer.Forms
                 myFX.ProcsPerMinute = ppm;
         }
 
+
+
         private void txtFXAccuracy_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrAccuracy = Convert.ToSingle(txtFXAccuracy.Text);
+            myFX.AtrModAccuracy = Convert.ToSingle(txtFXAccuracy.Text);
             UpdateFXText();
         }
         private void txtFXActivateInterval_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrActivatePeriod = Convert.ToSingle(txtFXActivateInterval.Text);
+            myFX.AtrModActivatePeriod = Convert.ToSingle(txtFXActivateInterval.Text);
             UpdateFXText();
         }
         private void txtFXArc_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrArc = Convert.ToInt32(txtFXArc.Text);
+            myFX.AtrModArc = Convert.ToInt32(txtFXArc.Text);
             UpdateFXText();
         }
         private void txtFXCastTime_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrCastTime = Convert.ToSingle(txtFXCastTime.Text);
+            myFX.AtrModCastTime = Convert.ToSingle(txtFXCastTime.Text);
             UpdateFXText();
         }
         private void cbFXEffectArea_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrEffectArea = (Enums.eEffectArea) cbFXEffectArea.SelectedIndex;
+            myFX.AtrModEffectArea = (Enums.eEffectArea) cbFXEffectArea.SelectedIndex;
             UpdateFXText();
         }
         private void txtFXEnduranceCost_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrEnduranceCost = Convert.ToSingle(txtFXEnduranceCost.Text);
+            myFX.AtrModEnduranceCost = Convert.ToSingle(txtFXEnduranceCost.Text);
             UpdateFXText();
         }
         private void txtFXInterruptTime_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrInterruptTime = Convert.ToSingle(txtFXInterruptTime.Text);
+            myFX.AtrModInterruptTime = Convert.ToSingle(txtFXInterruptTime.Text);
             UpdateFXText();
         }
         private void txtFXMaxTargets_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrMaxTargets = Convert.ToInt32(txtFXAccuracy.Text);
+            myFX.AtrModMaxTargets = Convert.ToInt32(txtFXAccuracy.Text);
             UpdateFXText();
         }
         private void txtFXRadius_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrRadius = Convert.ToInt32(txtFXRadius.Text);
+            myFX.AtrModRadius = Convert.ToSingle(txtFXRadius.Text);
             UpdateFXText();
         }
         private void txtFXRange_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrRange = Convert.ToSingle(txtFXRange.Text);
+            myFX.AtrModRange = Convert.ToSingle(txtFXRange.Text);
             UpdateFXText();
         }
         private void txtFXRechargeTime_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrRechargeTime = Convert.ToSingle(txtFXRechargeTime.Text);
+            myFX.AtrModRechargeTime = Convert.ToSingle(txtFXRechargeTime.Text);
             UpdateFXText();
         }
         private void txtFXSecondaryRange_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.AtrSecondaryRange = Convert.ToSingle(txtFXSecondaryRange.Text);
+            myFX.AtrModSecondaryRange = Convert.ToSingle(txtFXSecondaryRange.Text);
             UpdateFXText();
         }
 
@@ -763,9 +778,9 @@ namespace Hero_Designer.Forms
             {
                 case "Power Active":
                     var powerName = lvSubConditional.SelectedItems[0].Name;
-                    //var power = DatabaseAPI.GetPowerByFullName(powerName);
+                    var power = DatabaseAPI.GetPowerByFullName(powerName);
                     var value = lvConditionalBool.SelectedItems[0].Text;
-                    lvActiveConditionals.Items.Add($"Active:{powerName}").SubItems.Add(value);
+                    lvActiveConditionals.Items.Add($"Active:{power?.DisplayName}").SubItems.Add(value);
                     lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
                     lvActiveConditionals.Columns[0].Width = -2;
                     lvActiveConditionals.Columns[1].Text = @"Value";
@@ -774,14 +789,25 @@ namespace Hero_Designer.Forms
                     break;
                 case "Power Taken":
                     powerName = lvSubConditional.SelectedItems[0].Name;
-                    //power = DatabaseAPI.GetPowerByFullName(powerName);
+                    power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    lvActiveConditionals.Items.Add($"Taken:{powerName}").SubItems.Add(value);
+                    lvActiveConditionals.Items.Add($"Taken:{power?.DisplayName}").SubItems.Add(value);
                     lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
                     lvActiveConditionals.Columns[0].Width = -2;
                     lvActiveConditionals.Columns[1].Text = @"Value";
                     lvActiveConditionals.Columns[1].Width = -2;
                     myFX.ActiveConditionals.Add($"Taken:{powerName}", value);
+                    break;
+                case "Stacks":
+                    powerName = lvSubConditional.SelectedItems[0].Name;
+                    power = DatabaseAPI.GetPowerByFullName(powerName);
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    lvActiveConditionals.Items.Add($"Stacks:{power?.DisplayName}").SubItems.Add(value);
+                    lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
+                    lvActiveConditionals.Columns[0].Width = -2;
+                    lvActiveConditionals.Columns[1].Text = @"Value";
+                    lvActiveConditionals.Columns[1].Width = -2;
+                    myFX.ActiveConditionals.Add($"Stacks:{powerName}", value);
                     break;
             }
 
@@ -796,7 +822,16 @@ namespace Hero_Designer.Forms
 
         private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            var selected = DatabaseAPI.GetPowerByFullName(e.Item.Name);
+            IPower? selected;
+            string powName = string.Empty;
+
+            if (lvSubConditional.SelectedItems.Count != 0)
+            {
+                powName = lvSubConditional.SelectedItems[0].Name;
+            }
+
+            selected = DatabaseAPI.GetPowerByFullName(powName);
+
             lvConditionalBool.Items.Clear();
             switch (lvConditionalType.SelectedItems[0].Text)
             {
@@ -813,6 +848,22 @@ namespace Hero_Designer.Forms
                     lvConditionalBool.Items.Add("True");
                     lvConditionalBool.Items.Add("False");
                     lvConditionalBool.Columns[0].Text = @"Power Taken?";
+                    lvConditionalBool.Columns[0].Width = -2;
+                    lvConditionalBool.EndUpdate();
+                    break;
+                case "Stacks":
+                    lvConditionalBool.BeginUpdate();
+                    if (selected != null)
+                    {
+                        var stackRange = selected.VariableMin == 0 ? Enumerable.Range(selected.VariableMin, selected.VariableMax + 1) : Enumerable.Range(selected.VariableMin, selected.VariableMax);
+
+                        foreach (var stackNum in stackRange)
+                        {
+                            lvConditionalBool.Items.Add(stackNum.ToString());
+                        }
+                    }
+
+                    lvConditionalBool.Columns[0].Text = @"Stacks Equal?";
                     lvConditionalBool.Columns[0].Width = -2;
                     lvConditionalBool.EndUpdate();
                     break;
@@ -872,7 +923,30 @@ namespace Hero_Designer.Forms
                     lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
                     break;
-                case "Other Condition":
+
+                case "Stacks":
+                    lvConditionalBool.Enabled = true;
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    pArray = DatabaseAPI.Database.Power;
+                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
+                    foreach (var power in pArray)
+                    {
+                        var pSetType = power.GetPowerSet().SetType;
+                        var isType = power.VariableEnabled;
+                        var isUsable = !eArray.Contains((int)pSetType);
+                        if (isUsable && isType)
+                        {
+                            var pItem = new Regex("[_]");
+                            var pStrings = pItem.Replace(power.FullName, " ").Split('.');
+                            var pMatch = new Regex("[ ].*");
+                            var pArchetype = pMatch.Replace(pStrings[0], "");
+                            lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
+                        }
+                    }
+                    lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
+                    lvSubConditional.Columns[0].Width = -2;
+                    lvSubConditional.EndUpdate();
                     break;
             }
         }
@@ -880,10 +954,14 @@ namespace Hero_Designer.Forms
         private void UpdateConditionals()
         {
             lvActiveConditionals.BeginUpdate();
-            foreach (var pair in myFX.ActiveConditionals)
+            var getCondition = new Regex("(:.*)");
+            var getConditionPower = new Regex("(.*:)");
+            foreach (var cVp in myFX.ActiveConditionals)
             {
-                Console.WriteLine($@"Key: {pair.Key} Value: {pair.Value}");
-                lvActiveConditionals.Items.Add(pair.Key).SubItems.Add(pair.Value);
+                var condition = getCondition.Replace(cVp.Key, "");
+                var conditionPower = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
+                var power = DatabaseAPI.GetPowerByFullName(conditionPower);
+                lvActiveConditionals.Items.Add($"{condition}:{power?.DisplayName}").SubItems.Add(cVp.Value);
             }
             lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
             lvActiveConditionals.Columns[0].Width = -2;
@@ -894,7 +972,7 @@ namespace Hero_Designer.Forms
         private void UpdateConditionalTypes()
         {
             lvConditionalType.BeginUpdate();
-            var cTypes = new List<string> { "Power Active", "Power Taken", "Other Condition" }.ToArray();
+            var cTypes = new List<string> { "Power Active", "Power Taken", "Stacks" }.ToArray();
             var indexVal = -1;
             for (var index = 0; index < cTypes.Length; index++)
             {
