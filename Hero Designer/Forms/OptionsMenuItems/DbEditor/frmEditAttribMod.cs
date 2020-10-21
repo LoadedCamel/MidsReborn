@@ -143,13 +143,49 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             if (r != DialogResult.OK) return;
 
             Modifiers m = new Modifiers();
+            string src = File.ReadAllText(f.FileName);
+            JsonSerializerSettings jsonOpt = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+
             try
             {
-                m = JsonConvert.DeserializeObject<Modifiers>(File.ReadAllText(f.FileName));
+                if (src.TrimStart(' ', '\t', '\r', '\n', '\0').StartsWith("["))
+                {
+                    Modifiers.ModifierTable[] tables =
+                        JsonConvert.DeserializeObject<Modifiers.ModifierTable[]>(src, jsonOpt);
+                    if (tables == null) throw new FormatException("JSON file contains no modifier tables.");
+
+                    m.Modifier = (Modifiers.ModifierTable[]) tables.Clone();
+                    m.Revision = Database.Instance.AttribMods.Revision + 1;
+                    m.RevisionDate = DateTime.Now;
+                    m.SourceIndex = string.Empty;
+                    m.SourceTables = f.FileName;
+                }
+                else if (src.TrimStart(' ', '\t', '\r', '\n', '\0').StartsWith("{"))
+                {
+                    m = JsonConvert.DeserializeObject<Modifiers>(src, jsonOpt);
+                    if (m == null) throw new FormatException("JSON file contains no usable data.");
+                }
+                else
+                {
+                    throw new FormatException("Malformed JSON file.");
+                }
             }
             catch (JsonSerializationException ex)
             {
-                MessageBox.Show("Error parsing JSON file.\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show("[JsonSerializationException] Error deserializing JSON.\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                return;
+            }
+            catch (JsonReaderException ex)
+            {
+                MessageBox.Show("[JsonReaderException] Error reading JSON.\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                return;
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show("[FormatException] JSON file format exception.\r\n" + ex.Message + "\r\n" + ex.StackTrace);
                 return;
             }
 
@@ -157,7 +193,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             int nMods = m.Modifier.Length;
 
             r = MessageBox.Show(
-                Convert.ToString(nAt, null) + " Archetype" + (nAt != 1 ? "s" : "") + " found,\n" +
+                Convert.ToString(nAt, null) + " Archetype" + (nAt != 1 ? "s" : "") + "/Entit" + (nAt != 1 ? "ies" : "y") + " found,\n" +
                 Convert.ToString(nMods, null) + " Mod" + (nMods!= 1 ? "s" : "") + " found.\n\nProceed to import? This will overwrite current values.\n",
                 "JSON tables import", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -475,6 +511,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             pbGraph.Graph.SmoothDraw = smoothDraw;
             pbGraph.Graph.DetectPlateau = detectPlateau;
             pbGraph.Graph.IgnoreValue = ignoreValue;
+            pbGraph.Graph.ForceInvertValues = TempAttribMods.Modifier[modIdx].ID.ToLower().Contains("damage");
 
             pbGraph.Graph.SetDataPoints(dataSeries);
             pbGraph.Refresh();

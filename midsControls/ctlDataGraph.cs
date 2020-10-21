@@ -35,6 +35,7 @@ namespace midsControls
             public int DotRadius = 1;
             private Size BitmapDimensions;
             private List<float> DataSeries;
+            public bool ForceInvertValues;
 
             public DataGraph()
             {
@@ -181,7 +182,7 @@ namespace midsControls
 
                 #region Graph: Lines
                 // Note: negate values if they are all negative, e.g. for damage tables.
-                bool reverseValues = CheckAllNegativeValues();
+                bool reverseValues = ForceInvertValues || CheckAllNegativeValues();
                 float val;
 
                 // Not using Array for graph data points.

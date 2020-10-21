@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 public class Modifiers : ICloneable
 {
@@ -12,10 +14,21 @@ public class Modifiers : ICloneable
     public string SourceIndex = string.Empty;
     public string SourceTables = string.Empty;
 
+    #region ICloneable implementation
     public object Clone()
     {
         return MemberwiseClone();
     }
+    #endregion
+
+    #region ICollection implementation
+
+    public int Count()
+    {
+        return Modifier.Length;
+    }
+    #endregion
+
 
     public bool ImportModifierTablefromCSV(string baseFn, string tableFn, int iRevision)
     {
@@ -208,8 +221,14 @@ public class Modifiers : ICloneable
 
     public class ModifierTable
     {
+        // https://www.codeproject.com/Questions/1278760/How-to-deserialize-json-array-Csharp
+        [JsonProperty("Table")]
         public readonly float[][] Table = new float[55][];
+        
+        [JsonProperty("BaseIndex")]
         public int BaseIndex;
+        
+        [JsonProperty("ID")]
         public string ID = string.Empty;
 
         public ModifierTable()
