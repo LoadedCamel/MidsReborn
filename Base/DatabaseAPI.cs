@@ -12,6 +12,7 @@ using Base.Data_Classes;
 using Base.IO_Classes;
 using Base.Master_Classes;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
 using Zstandard.Net;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
@@ -28,6 +29,7 @@ public static class DatabaseAPI
     private const string SalvageName = "Mids' Hero Designer Salvage Database";
 
     private const string EnhancementDbName = "Mids' Hero Designer Enhancement Database";
+
     private static readonly IDictionary<string, int> AttribMod = new Dictionary<string, int>();
 
     private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
@@ -44,44 +46,25 @@ public static class DatabaseAPI
     public static int NidFromUidAttribMod(string uID)
     {
         if (string.IsNullOrEmpty(uID))
+        {
             return -1;
+        }
+
         if (AttribMod.ContainsKey(uID))
+        {
             return AttribMod[uID];
+        }
+
         for (var index = 0; index <= Database.AttribMods.Modifier.Length - 1; ++index)
         {
             if (!string.Equals(uID, Database.AttribMods.Modifier[index].ID, StringComparison.OrdinalIgnoreCase))
                 continue;
+            Console.WriteLine($"{uID}, {index}");
             AttribMod.Add(uID, index);
             return index;
         }
 
         return -1;
-    }
-
-    public static void ExportAttribMods()
-    {
-        var pathA = $"{Application.StartupPath}\\Data\\Database\\attribMods.json";
-        var pathB = $"{Application.StartupPath}\\Data\\Database\\classes.json";
-        using StreamWriter file1 = new StreamWriter(File.OpenWrite(pathA));
-        var serializer = new JsonSerializer {Formatting = Formatting.Indented};
-        serializer.Serialize(file1, Database.AttribMods.Modifier);
-
-        using StreamWriter file2 = new StreamWriter(File.OpenWrite(pathB));
-        var serializer2 = new JsonSerializer { Formatting = Formatting.Indented };
-        serializer2.Serialize(file2, Database.Classes);
-        MessageBox.Show($"Export complete\r\nYou can now close this window.", "Json Export", MessageBoxButtons.OK,
-            MessageBoxIcon.Information);
-    }
-
-    public static void ExportGlobalChanceMods()
-    {
-        var path = $"{Application.StartupPath}\\Data\\Database\\GCMs.json";
-        /*using StreamWriter file = new StreamWriter(File.OpenWrite(path));
-        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
-        serializer.Serialize(file, Database.EffectIds);*/
-        File.WriteAllText(path, JsonConvert.SerializeObject(Database.EffectIds));
-        MessageBox.Show($"Export complete\r\nYou can now close this window.", "Json Export", MessageBoxButtons.OK,
-            MessageBoxIcon.Information);
     }
 
     public static int NidFromUidClass(string uidClass)
@@ -369,17 +352,6 @@ public static class DatabaseAPI
 
     public static int GetPowerIndexByDisplayName(string iName, int iArchetype)
     {
-        /*for (int index = 0; index < Database.Power.Length; ++index)
-        {
-            int num = -1;
-            if (Database.Power[index].PowerSetID > -1)
-                num = Database.Powersets[Database.Power[index].PowerSetID].nArchetype;
-            if ((iArchetype == num || num == -1) && string.Equals(iName, Database.Power[index].DisplayName))
-                return index;
-        }
-        return -1;
-        */
-
         return Array.IndexOf(Database.Power, Database.Power.Where(p =>
             p.DisplayName == iName &&
             (p.PowerSetID <= -1 || Database.Powersets[p.PowerSetID].nArchetype == iArchetype ||
@@ -1152,23 +1124,6 @@ public static class DatabaseAPI
         Database.Salvage = JsonConvert.DeserializeObject<Salvage[]>(output, settings);
     }
 
-    public static void SaveAttribMods()
-    {
-        var settings = new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.Auto,
-            Formatting = Formatting.Indented
-        };
-        var serialized = JsonConvert.SerializeObject(Database.AttribMods, settings);
-        File.WriteAllText($"{Application.StartupPath}\\Data\\AttribMods.json", serialized);
-    }
-
-    public static void ImportAttribMods()
-    {
-        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-        Database.AttribMods = JsonConvert.DeserializeObject<Modifiers>(File.ReadAllText($"{Application.StartupPath}\\Data\\AttribMods.json"), settings);
-    }
-
     public static void SaveMainDatabase(ISerialize serializer)
     {
         //MergeDatabaseFile();
@@ -1201,15 +1156,11 @@ public static class DatabaseAPI
             writer.Write(Database.Classes.Length - 1);
             for (var index = 0; index <= Database.Classes.Length - 1; ++index)
                 Database.Classes[index].StoreTo(ref writer);
-            /*foreach (var index in Database.Classes)
-                index.StoreTo(ref writer);*/
-
             writer.Write("BEGIN:POWERSETS");
             Database.PowersetVersion.StoreTo(writer);
             writer.Write(Database.Powersets.Length - 1);
             for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
                 Database.Powersets[index].StoreTo(ref writer);
-
             writer.Write("BEGIN:POWERS");
             Database.PowerVersion.StoreTo(writer);
             Database.PowerLevelVersion.StoreTo(writer);
@@ -1217,8 +1168,6 @@ public static class DatabaseAPI
             Database.IOAssignmentVersion.StoreTo(writer);
             writer.Write(Database.Power.Length - 1);
             for (var index = 0; index <= Database.Power.Length - 1; ++index) Database.Power[index].StoreTo(ref writer);
-            /*foreach (var index in Database.Power)
-                index.StoreTo(ref writer);*/
             writer.Write("BEGIN:SUMMONS");
             Database.StoreEntities(writer);
             writer.Close();
@@ -1429,6 +1378,7 @@ public static class DatabaseAPI
         }
         return true;
     }
+
     public static void SaveEffectIdsDatabase()
     {
         var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds);
@@ -2544,8 +2494,12 @@ public static class DatabaseAPI
     private static void MatchModifierIDs()
     {
         foreach (var power in Database.Power)
-        foreach (var effect in power.Effects)
-            effect.nModifierTable = NidFromUidAttribMod(effect.ModifierTable);
+        {
+            foreach (var effect in power.Effects)
+            {
+                effect.nModifierTable = NidFromUidAttribMod(effect.ModifierTable);
+            }
+        }
     }
 
     public static void MatchSummonIDs()
