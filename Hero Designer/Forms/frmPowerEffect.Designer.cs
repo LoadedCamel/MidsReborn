@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using midsControls;
 
 namespace Hero_Designer.Forms
 {
@@ -32,6 +33,9 @@ namespace Hero_Designer.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Equal To");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Greater Than");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
             this.btnPaste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.chkStack = new System.Windows.Forms.CheckBox();
@@ -54,16 +58,19 @@ namespace Hero_Designer.Forms
             this.cbFXClass = new System.Windows.Forms.ComboBox();
             this.cbFXSpecialCase = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lvConditionalOp = new midsControls.ctlListViewColored();
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.removeConditional = new System.Windows.Forms.Button();
             this.addConditional = new System.Windows.Forms.Button();
             this.lvActiveConditionals = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvConditionalBool = new System.Windows.Forms.ListView();
+            this.lvConditionalBool = new midsControls.ctlListViewColored();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvConditionalType = new System.Windows.Forms.ListView();
+            this.lvConditionalType = new midsControls.ctlListViewColored();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvSubConditional = new System.Windows.Forms.ListView();
+            this.lvSubConditional = new midsControls.ctlListViewColored();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -81,11 +88,11 @@ namespace Hero_Designer.Forms
             this.cbAspect = new System.Windows.Forms.ComboBox();
             this.chkNearGround = new System.Windows.Forms.CheckBox();
             this.lblAffectsCaster = new System.Windows.Forms.Label();
-            this.lvEffectType = new System.Windows.Forms.ListView();
+            this.lvEffectType = new midsControls.ctlListViewColored();
             this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvSubAttribute = new System.Windows.Forms.ListView();
+            this.lvSubAttribute = new midsControls.ctlListViewColored();
             this.chSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvSubSub = new System.Windows.Forms.ListView();
+            this.lvSubSub = new midsControls.ctlListViewColored();
             this.chSubSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Label9 = new System.Windows.Forms.Label();
             this.cmbEffectId = new System.Windows.Forms.ComboBox();
@@ -174,6 +181,7 @@ namespace Hero_Designer.Forms
             // 
             // GroupBox3
             // 
+            this.GroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.GroupBox3.Controls.Add(this.clbSuppression);
             this.GroupBox3.Location = new System.Drawing.Point(1040, 150);
             this.GroupBox3.Name = "GroupBox3";
@@ -358,6 +366,7 @@ namespace Hero_Designer.Forms
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lvConditionalOp);
             this.groupBox2.Controls.Add(this.removeConditional);
             this.groupBox2.Controls.Add(this.addConditional);
             this.groupBox2.Controls.Add(this.lvActiveConditionals);
@@ -370,6 +379,36 @@ namespace Hero_Designer.Forms
             this.groupBox2.TabIndex = 160;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Conditionals";
+            // 
+            // lvConditionalOp
+            // 
+            this.lvConditionalOp.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader7});
+            this.lvConditionalOp.FullRowSelect = true;
+            this.lvConditionalOp.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvConditionalOp.HideSelection = false;
+            this.lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
+            this.lvConditionalOp.Location = new System.Drawing.Point(460, 14);
+            this.lvConditionalOp.LostFocusItem = -1;
+            this.lvConditionalOp.MultiSelect = false;
+            this.lvConditionalOp.Name = "lvConditionalOp";
+            this.lvConditionalOp.OwnerDraw = true;
+            this.lvConditionalOp.Size = new System.Drawing.Size(97, 83);
+            this.lvConditionalOp.TabIndex = 166;
+            this.lvConditionalOp.UseCompatibleStateImageBehavior = false;
+            this.lvConditionalOp.View = System.Windows.Forms.View.Details;
+            this.lvConditionalOp.Visible = false;
+            this.lvConditionalOp.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvConditionalOp.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
+            this.lvConditionalOp.Leave += new System.EventHandler(this.ListView_Leave);
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "Stack is?";
+            this.columnHeader7.Width = 81;
             // 
             // removeConditional
             // 
@@ -395,6 +434,7 @@ namespace Hero_Designer.Forms
             // 
             this.lvActiveConditionals.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader5,
+            this.columnHeader8,
             this.columnHeader6});
             this.lvActiveConditionals.FullRowSelect = true;
             this.lvActiveConditionals.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -410,7 +450,12 @@ namespace Hero_Designer.Forms
             // columnHeader5
             // 
             this.columnHeader5.Text = "Active Conditional";
-            this.columnHeader5.Width = 170;
+            this.columnHeader5.Width = 138;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "";
+            this.columnHeader8.Width = 27;
             // 
             // columnHeader6
             // 
@@ -420,17 +465,21 @@ namespace Hero_Designer.Forms
             // 
             this.lvConditionalBool.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4});
-            this.lvConditionalBool.Enabled = false;
             this.lvConditionalBool.FullRowSelect = true;
             this.lvConditionalBool.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvConditionalBool.HideSelection = false;
             this.lvConditionalBool.Location = new System.Drawing.Point(460, 14);
+            this.lvConditionalBool.LostFocusItem = -1;
             this.lvConditionalBool.MultiSelect = false;
             this.lvConditionalBool.Name = "lvConditionalBool";
+            this.lvConditionalBool.OwnerDraw = true;
             this.lvConditionalBool.Size = new System.Drawing.Size(97, 259);
             this.lvConditionalBool.TabIndex = 162;
             this.lvConditionalBool.UseCompatibleStateImageBehavior = false;
             this.lvConditionalBool.View = System.Windows.Forms.View.Details;
+            this.lvConditionalBool.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvConditionalBool.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
+            this.lvConditionalBool.Leave += new System.EventHandler(this.ListView_Leave);
             // 
             // columnHeader4
             // 
@@ -445,13 +494,18 @@ namespace Hero_Designer.Forms
             this.lvConditionalType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvConditionalType.HideSelection = false;
             this.lvConditionalType.Location = new System.Drawing.Point(6, 14);
+            this.lvConditionalType.LostFocusItem = -1;
             this.lvConditionalType.MultiSelect = false;
             this.lvConditionalType.Name = "lvConditionalType";
+            this.lvConditionalType.OwnerDraw = true;
             this.lvConditionalType.Size = new System.Drawing.Size(116, 294);
             this.lvConditionalType.TabIndex = 161;
             this.lvConditionalType.UseCompatibleStateImageBehavior = false;
             this.lvConditionalType.View = System.Windows.Forms.View.Details;
+            this.lvConditionalType.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvConditionalType.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
             this.lvConditionalType.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvConditionalType_SelectionChanged);
+            this.lvConditionalType.Leave += new System.EventHandler(this.ListView_Leave);
             // 
             // columnHeader3
             // 
@@ -466,13 +520,18 @@ namespace Hero_Designer.Forms
             this.lvSubConditional.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubConditional.HideSelection = false;
             this.lvSubConditional.Location = new System.Drawing.Point(128, 14);
+            this.lvSubConditional.LostFocusItem = -1;
             this.lvSubConditional.MultiSelect = false;
             this.lvSubConditional.Name = "lvSubConditional";
+            this.lvSubConditional.OwnerDraw = true;
             this.lvSubConditional.Size = new System.Drawing.Size(326, 294);
             this.lvSubConditional.TabIndex = 160;
             this.lvSubConditional.UseCompatibleStateImageBehavior = false;
             this.lvSubConditional.View = System.Windows.Forms.View.Details;
+            this.lvSubConditional.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvSubConditional.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
             this.lvSubConditional.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvSubConditional_SelectionChanged);
+            this.lvSubConditional.Leave += new System.EventHandler(this.ListView_Leave);
             // 
             // columnHeader2
             // 
@@ -651,13 +710,18 @@ namespace Hero_Designer.Forms
             this.lvEffectType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvEffectType.HideSelection = false;
             this.lvEffectType.Location = new System.Drawing.Point(246, 158);
+            this.lvEffectType.LostFocusItem = -1;
             this.lvEffectType.MultiSelect = false;
             this.lvEffectType.Name = "lvEffectType";
+            this.lvEffectType.OwnerDraw = true;
             this.lvEffectType.Size = new System.Drawing.Size(226, 275);
             this.lvEffectType.TabIndex = 141;
             this.lvEffectType.UseCompatibleStateImageBehavior = false;
             this.lvEffectType.View = System.Windows.Forms.View.Details;
+            this.lvEffectType.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvEffectType.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
             this.lvEffectType.SelectedIndexChanged += new System.EventHandler(this.lvEffectType_SelectedIndexChanged);
+            this.lvEffectType.Leave += new System.EventHandler(this.ListView_Leave);
             // 
             // ColumnHeader1
             // 
@@ -671,14 +735,19 @@ namespace Hero_Designer.Forms
             this.lvSubAttribute.FullRowSelect = true;
             this.lvSubAttribute.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubAttribute.HideSelection = false;
-            this.lvSubAttribute.Location = new System.Drawing.Point(478, 167);
+            this.lvSubAttribute.Location = new System.Drawing.Point(478, 158);
+            this.lvSubAttribute.LostFocusItem = -1;
             this.lvSubAttribute.MultiSelect = false;
             this.lvSubAttribute.Name = "lvSubAttribute";
-            this.lvSubAttribute.Size = new System.Drawing.Size(275, 266);
+            this.lvSubAttribute.OwnerDraw = true;
+            this.lvSubAttribute.Size = new System.Drawing.Size(275, 275);
             this.lvSubAttribute.TabIndex = 142;
             this.lvSubAttribute.UseCompatibleStateImageBehavior = false;
             this.lvSubAttribute.View = System.Windows.Forms.View.Details;
+            this.lvSubAttribute.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvSubAttribute.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
             this.lvSubAttribute.SelectedIndexChanged += new System.EventHandler(this.lvSubAttribute_SelectedIndexChanged);
+            this.lvSubAttribute.Leave += new System.EventHandler(this.ListView_Leave);
             // 
             // chSub
             // 
@@ -693,13 +762,18 @@ namespace Hero_Designer.Forms
             this.lvSubSub.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSubSub.HideSelection = false;
             this.lvSubSub.Location = new System.Drawing.Point(759, 158);
+            this.lvSubSub.LostFocusItem = -1;
             this.lvSubSub.MultiSelect = false;
             this.lvSubSub.Name = "lvSubSub";
+            this.lvSubSub.OwnerDraw = true;
             this.lvSubSub.Size = new System.Drawing.Size(275, 275);
             this.lvSubSub.TabIndex = 144;
             this.lvSubSub.UseCompatibleStateImageBehavior = false;
             this.lvSubSub.View = System.Windows.Forms.View.Details;
+            this.lvSubSub.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvSubSub.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
             this.lvSubSub.SelectedIndexChanged += new System.EventHandler(this.lvSubSub_SelectedIndexChanged);
+            this.lvSubSub.Leave += new System.EventHandler(this.ListView_Leave);
             // 
             // chSubSub
             // 
@@ -708,6 +782,7 @@ namespace Hero_Designer.Forms
             // 
             // Label9
             // 
+            this.Label9.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Label9.Location = new System.Drawing.Point(1081, 438);
             this.Label9.Name = "Label9";
             this.Label9.Size = new System.Drawing.Size(120, 19);
@@ -717,7 +792,7 @@ namespace Hero_Designer.Forms
             // 
             // cmbEffectId
             // 
-            this.cmbEffectId.FormattingEnabled = true;
+            this.cmbEffectId.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.cmbEffectId.Location = new System.Drawing.Point(1062, 460);
             this.cmbEffectId.Name = "cmbEffectId";
             this.cmbEffectId.Size = new System.Drawing.Size(166, 22);
@@ -738,6 +813,7 @@ namespace Hero_Designer.Forms
             // 
             // Label10
             // 
+            this.Label10.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Label10.Location = new System.Drawing.Point(1076, 494);
             this.Label10.Name = "Label10";
             this.Label10.Size = new System.Drawing.Size(143, 19);
@@ -747,6 +823,7 @@ namespace Hero_Designer.Forms
             // 
             // txtOverride
             // 
+            this.txtOverride.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.txtOverride.Location = new System.Drawing.Point(1062, 516);
             this.txtOverride.Name = "txtOverride";
             this.txtOverride.Size = new System.Drawing.Size(166, 20);
@@ -1357,9 +1434,6 @@ namespace Hero_Designer.Forms
         Label Label9;
         Label lblAffectsCaster;
         Label lblEffectDescription;
-        ListView lvEffectType;
-        ListView lvSubAttribute;
-        ListView lvSubSub;
         TextBox txtFXDelay;
         TextBox txtFXDuration;
         TextBox txtFXMag;
@@ -1405,16 +1479,22 @@ namespace Hero_Designer.Forms
         private TextBox txtFXArc;
         private TextBox txtFXMaxTargets;
         private GroupBox groupBox2;
-        private ListView lvConditionalType;
         private ColumnHeader columnHeader3;
-        private ListView lvSubConditional;
+        private ctlListViewColored lvSubConditional;
         private ColumnHeader columnHeader2;
         private ListView lvActiveConditionals;
         private ColumnHeader columnHeader5;
         private ColumnHeader columnHeader6;
-        private ListView lvConditionalBool;
         private ColumnHeader columnHeader4;
         private Button removeConditional;
         private Button addConditional;
+        private ColumnHeader columnHeader7;
+        private ctlListViewColored lvEffectType;
+        private ctlListViewColored lvSubAttribute;
+        private ctlListViewColored lvSubSub;
+        private ctlListViewColored lvConditionalType;
+        private ctlListViewColored lvConditionalBool;
+        private ctlListViewColored lvConditionalOp;
+        private ColumnHeader columnHeader8;
     }
 }

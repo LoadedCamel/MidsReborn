@@ -116,6 +116,21 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
         }
 
+        private void btnFXEdit_Click(object sender, EventArgs e)
+        {
+            if (lvFX.SelectedIndices.Count <= 0)
+                return;
+            var power1 = myPower;
+            var selectedIndex = lvFX.SelectedIndices[0];
+            var iFX = (IEffect)myPower.Effects[selectedIndex].Clone();
+            using var frmPowerEffect = new frmPowerEffect(iFX, power1);
+            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
+                return;
+            myPower.Effects[selectedIndex] = (IEffect)frmPowerEffect.myFX.Clone();
+            RefreshFXData();
+            lvFX.SelectedIndex = selectedIndex;
+        }
+
         private void btnFXDown_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndices.Count <= 0)
@@ -149,21 +164,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             power1.Effects[power1.Effects.Length - 1] = (IEffect) frmPowerEffect.myFX.Clone();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
-        }
-
-        private void btnFXEdit_Click(object sender, EventArgs e)
-        {
-            if (lvFX.SelectedIndices.Count <= 0)
-                return;
-            var power1 = myPower;
-            var selectedIndex = lvFX.SelectedIndices[0];
-            var iFX = (IEffect) myPower.Effects[selectedIndex].Clone();
-            using var frmPowerEffect = new frmPowerEffect(iFX, power1);
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
-                return;
-            myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.myFX.Clone();
-            RefreshFXData();
-            lvFX.SelectedIndex = selectedIndex;
         }
 
         private void btnFXRemove_Click(object sender, EventArgs e)

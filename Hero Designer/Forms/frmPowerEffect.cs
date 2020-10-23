@@ -12,6 +12,7 @@ using Base.Data_Classes;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using midsControls;
 
 namespace Hero_Designer.Forms
 {
@@ -254,6 +255,8 @@ namespace Hero_Designer.Forms
             cbAffects.BeginUpdate();
             cbFXClass.Items.Clear();
             cbFXSpecialCase.Items.Clear();
+            cmbEffectId.BeginUpdate();
+            cmbEffectId.Items.Clear();
             cbPercentageOverride.Items.Clear();
             cbAttribute.Items.Clear();
             cbAspect.Items.Clear();
@@ -273,6 +276,11 @@ namespace Hero_Designer.Forms
             cbAffects.Items.Add("None");
             cbAffects.Items.Add("Target");
             cbAffects.Items.Add("Self");
+            foreach (var effectId in DatabaseAPI.Database.EffectIds)
+            {
+                cmbEffectId.Items.Add(effectId);
+            }
+            cmbEffectId.EndUpdate();
             cbFXClass.EndUpdate();
             cbFXSpecialCase.EndUpdate();
             cbPercentageOverride.EndUpdate();
@@ -280,7 +288,7 @@ namespace Hero_Designer.Forms
             cbAspect.EndUpdate();
             cbModifier.EndUpdate();
             cbAffects.EndUpdate();
-            var strArray = new string[DatabaseAPI.Database.EffectIds.Count - 1 + 1];
+            /*var strArray = new string[DatabaseAPI.Database.EffectIds.Count - 1 + 1];
             var num2 = DatabaseAPI.Database.EffectIds.Count - 1;
             for (var index = 0; index <= num2; ++index)
                 strArray[index] = Convert.ToString(DatabaseAPI.Database.EffectIds[index]);
@@ -288,7 +296,7 @@ namespace Hero_Designer.Forms
                 return;
             var num3 = strArray.Length - 1;
             for (var index = 0; index <= num3; ++index)
-                cmbEffectId.Items.Add(strArray[index]);
+                cmbEffectId.Items.Add(strArray[index]);*/
             lvSubAttribute.Enabled = true;
         }
 
@@ -771,6 +779,43 @@ namespace Hero_Designer.Forms
             UpdateFXText();
         }
 
+        private void ListView_Leave(object sender, EventArgs e)
+        {
+            var lvControl = (ctlListViewColored)sender;
+            lvControl.LostFocusItem = lvControl.FocusedItem.Index;
+        }
+
+        private void ListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            var lvControl = (ctlListViewColored)sender;
+            if (e.Item.Selected)
+            {
+                if (lvControl.LostFocusItem == e.Item.Index)
+                {
+                    e.Item.BackColor = Color.Goldenrod;
+                    e.Item.ForeColor = Color.Black;
+                    lvControl.LostFocusItem = -1;
+                }
+                else if (lvControl.Focused) 
+                {
+                    e.Item.ForeColor = SystemColors.HighlightText;
+                    e.Item.BackColor = SystemColors.Highlight;
+                }
+            }
+            else
+            {
+                e.Item.BackColor = lvControl.BackColor;
+                e.Item.ForeColor = lvControl.ForeColor;
+            }
+            e.DrawBackground();
+            e.DrawText();
+        }
+
         private void addConditional_Click(object sender, EventArgs e)
         {
             //To do: Reference selected items and add to active conditional view and assign item name as the power fullname.
@@ -780,7 +825,10 @@ namespace Hero_Designer.Forms
                     var powerName = lvSubConditional.SelectedItems[0].Name;
                     var power = DatabaseAPI.GetPowerByFullName(powerName);
                     var value = lvConditionalBool.SelectedItems[0].Text;
-                    lvActiveConditionals.Items.Add($"Active:{power?.DisplayName}").SubItems.Add(value);
+                    var item = new ListViewItem { Text = $@"Active:{power?.DisplayName}" };
+                    item.SubItems.Add("");
+                    item.SubItems.Add(value);
+                    lvActiveConditionals.Items.Add(item);
                     lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
                     lvActiveConditionals.Columns[0].Width = -2;
                     lvActiveConditionals.Columns[1].Text = @"Value";
@@ -791,7 +839,10 @@ namespace Hero_Designer.Forms
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    lvActiveConditionals.Items.Add($"Taken:{power?.DisplayName}").SubItems.Add(value);
+                    item = new ListViewItem { Text = $@"Taken:{power?.DisplayName}" };
+                    item.SubItems.Add("");
+                    item.SubItems.Add(value);
+                    lvActiveConditionals.Items.Add(item);
                     lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
                     lvActiveConditionals.Columns[0].Width = -2;
                     lvActiveConditionals.Columns[1].Text = @"Value";
@@ -801,13 +852,31 @@ namespace Hero_Designer.Forms
                 case "Stacks":
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
+                    var cOp = string.Empty;
+                    switch (lvConditionalOp.SelectedItems[0].Text)
+                    {
+                        case "Equal To":
+                            cOp = "=";
+                            break;
+                        case "Greater Than":
+                            cOp = ">";
+                            break;
+                        case "Less Than":
+                            cOp = "<";
+                            break;
+                    }
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    lvActiveConditionals.Items.Add($"Stacks:{power?.DisplayName}").SubItems.Add(value);
+                    item = new ListViewItem { Text = $@"Stacks:{power?.DisplayName}" };
+                    item.SubItems.Add(cOp);
+                    item.SubItems.Add(value);
+                    lvActiveConditionals.Items.Add(item);
                     lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
                     lvActiveConditionals.Columns[0].Width = -2;
-                    lvActiveConditionals.Columns[1].Text = @"Value";
+                    lvActiveConditionals.Columns[1].Text = "";
                     lvActiveConditionals.Columns[1].Width = -2;
-                    myFX.ActiveConditionals.Add($"Stacks:{powerName}", value);
+                    lvActiveConditionals.Columns[2].Text = @"Value";
+                    lvActiveConditionals.Columns[2].Width = -2;
+                    myFX.ActiveConditionals.Add($"Stacks:{powerName}", $"{cOp} {value}");
                     break;
             }
 
@@ -823,7 +892,7 @@ namespace Hero_Designer.Forms
         private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             IPower? selected;
-            string powName = string.Empty;
+            var powName = string.Empty;
 
             if (lvSubConditional.SelectedItems.Count != 0)
             {
@@ -863,8 +932,8 @@ namespace Hero_Designer.Forms
                         }
                     }
 
-                    lvConditionalBool.Columns[0].Text = @"Stacks Equal?";
-                    lvConditionalBool.Columns[0].Width = -2;
+                    lvConditionalBool.Columns[0].Text = @"Stacks?";
+                    //lvConditionalBool.Columns[0].Width = -2;
                     lvConditionalBool.EndUpdate();
                     break;
             }
@@ -895,6 +964,9 @@ namespace Hero_Designer.Forms
                             lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                         }
                     }
+                    lvConditionalBool.Size = new Size(97, 259);
+                    lvConditionalBool.Location = new Point(460, 14);
+                    lvConditionalOp.Visible = false;
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
                     lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
@@ -919,6 +991,9 @@ namespace Hero_Designer.Forms
                             lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                         }
                     }
+                    lvConditionalBool.Size = new Size(97, 259);
+                    lvConditionalBool.Location = new Point(460, 14);
+                    lvConditionalOp.Visible = false;
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
                     lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
@@ -941,6 +1016,9 @@ namespace Hero_Designer.Forms
                             var pStrings = pItem.Replace(power.FullName, " ").Split('.');
                             var pMatch = new Regex("[ ].*");
                             var pArchetype = pMatch.Replace(pStrings[0], "");
+                            lvConditionalBool.Size = new Size(97, 170);
+                            lvConditionalBool.Location = new Point(460, 103);
+                            lvConditionalOp.Visible = true;
                             lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                         }
                     }
@@ -961,12 +1039,35 @@ namespace Hero_Designer.Forms
                 var condition = getCondition.Replace(cVp.Key, "");
                 var conditionPower = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
                 var power = DatabaseAPI.GetPowerByFullName(conditionPower);
-                lvActiveConditionals.Items.Add($"{condition}:{power?.DisplayName}").SubItems.Add(cVp.Value);
+                switch (condition)
+                {
+                    case "Active":
+                        var item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}" };
+                        item.SubItems.Add("");
+                        item.SubItems.Add(cVp.Value);
+                        lvActiveConditionals.Items.Add(item);
+                        break;
+                    case "Taken":
+                        item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}" };
+                        item.SubItems.Add("");
+                        item.SubItems.Add(cVp.Value);
+                        lvActiveConditionals.Items.Add(item);
+                        break;
+                    case "Stacks":
+                        item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}" };
+                        var cVSplit = cVp.Value.Split(' ');
+                        item.SubItems.Add(cVSplit[0]);
+                        item.SubItems.Add(cVSplit[1]);
+                        lvActiveConditionals.Items.Add(item);
+                        break;
+                }
             }
             lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
             lvActiveConditionals.Columns[0].Width = -2;
-            lvActiveConditionals.Columns[1].Text = @"Value";
+            lvActiveConditionals.Columns[1].Text = "";
             lvActiveConditionals.Columns[1].Width = -2;
+            lvActiveConditionals.Columns[2].Text = @"Value";
+            lvActiveConditionals.Columns[2].Width = -2;
             lvActiveConditionals.EndUpdate();
         }
         private void UpdateConditionalTypes()

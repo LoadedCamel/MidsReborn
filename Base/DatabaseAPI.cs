@@ -76,9 +76,10 @@ public static class DatabaseAPI
     public static void ExportGlobalChanceMods()
     {
         var path = $"{Application.StartupPath}\\Data\\Database\\GCMs.json";
-        using StreamWriter file = new StreamWriter(File.OpenWrite(path));
+        /*using StreamWriter file = new StreamWriter(File.OpenWrite(path));
         var serializer = new JsonSerializer { Formatting = Formatting.Indented };
-        serializer.Serialize(file, Database.EffectIds);
+        serializer.Serialize(file, Database.EffectIds);*/
+        File.WriteAllText(path, JsonConvert.SerializeObject(Database.EffectIds));
         MessageBox.Show($"Export complete\r\nYou can now close this window.", "Json Export", MessageBoxButtons.OK,
             MessageBoxIcon.Information);
     }
@@ -1392,6 +1393,74 @@ public static class DatabaseAPI
         }
 
         return num2;
+    }
+
+    public static bool LoadEffectIdsDatabase()
+    {
+        var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds);
+        Database.EffectIds.Clear();
+        FileStream fileStream;
+        BinaryReader reader;
+        try
+        {
+            fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            reader = new BinaryReader(fileStream);
+        }
+        catch
+        {
+            return false;
+        }
+
+        try
+        {
+            var efIdCount = reader.ReadInt32();
+            for (var index = 0; index < efIdCount; index++)
+            {
+                Database.EffectIds.Add(reader.ReadString());
+            }
+            reader.Close();
+            fileStream.Close();
+        }
+        catch
+        {
+            reader.Close();
+            fileStream.Close();
+            return false;
+        }
+        return true;
+    }
+    public static void SaveEffectIdsDatabase()
+    {
+        var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds);
+        FileStream fileStream;
+        BinaryWriter writer;
+        try
+        {
+            fileStream = new FileStream(path, FileMode.Create);
+            writer = new BinaryWriter(fileStream);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(@"Failed to save the EffectIds DB: " + ex.Message);
+            return;
+        }
+
+        try
+        {
+            writer.Write(Database.EffectIds.Count);
+            foreach (var effectId in Database.EffectIds)
+            {
+                writer.Write(effectId);
+            }
+            writer.Close();
+            fileStream.Close();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+            writer.Close();
+            fileStream.Close();
+        }
     }
 
     public static bool LoadLevelsDatabase()

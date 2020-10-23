@@ -55,6 +55,12 @@ namespace Hero_Designer
                     Application.Exit();
                 }
 
+                iFrm?.SetMessage("Loading Global Chance Modifiers...");
+                if (!DatabaseAPI.LoadEffectIdsDatabase())
+                {
+                    Application.Exit();
+                }
+
                 iFrm?.SetMessage("Loading Enhancement Database...");
                 if (!DatabaseAPI.LoadEnhancementClasses())
                 {
