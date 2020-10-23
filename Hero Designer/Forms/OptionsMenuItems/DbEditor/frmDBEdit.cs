@@ -15,8 +15,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
     {
         private Button btnClose;
 
-        private Button btnCSV;
-
         private Button btnDate;
 
         private Button btnEditEnh;
@@ -184,12 +182,13 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private void frmDBEdit_Load(object sender, EventArgs e)
         {
             btnDate.Visible = MidsContext.Config.MasterMode;
-            btnCSV.Visible = MidsContext.Config.MasterMode;
             txtDBVer.Enabled = MidsContext.Config.MasterMode;
             UdIssue.Enabled = MidsContext.Config.MasterMode;
             btnFileReport.Visible = MidsContext.Config.MasterMode;
             btnExportJSON.Visible = MidsContext.Config.MasterMode;
             btnJsonImporter.Visible = MidsContext.Config.MasterMode;
+            btnGCMIO.Visible = MidsContext.Config.MasterMode;
+            btnImportMods.Visible = MidsContext.Config.MasterMode;
             DisplayInfo();
         }
 
@@ -231,9 +230,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.ExportAttribMods();
         }
 
-        private void btnExportGCM_Click(object sender, EventArgs e)
+        private void btnImportMods_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.ExportGlobalChanceMods();
+            var iParent = _frmMain;
+            FrmAttribModImporter attribModImporter = new FrmAttribModImporter(ref iParent);
+            attribModImporter.ShowDialog();
         }
 
         private void btnGCMIO_Click(object sender, EventArgs e)

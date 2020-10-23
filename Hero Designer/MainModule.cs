@@ -33,9 +33,7 @@ namespace Hero_Designer
                 iFrm?.SetMessage("Loading Data...");
                 iFrm?.SetMessage("Loading Attribute Modifiers...");
                 DatabaseAPI.Database.AttribMods = new Modifiers();
-                if (!DatabaseAPI.Database.AttribMods.Load())
-                {
-                }
+                if (!DatabaseAPI.Database.AttribMods.Load()) {}
 
                 iFrm?.SetMessage("Loading Powerset Database...");
                 if (!DatabaseAPI.LoadLevelsDatabase())
