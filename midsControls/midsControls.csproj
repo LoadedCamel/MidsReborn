@@ -40,6 +40,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -73,6 +76,12 @@
     </Compile>
     <Compile Include="ctlDamageDisplay.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlListViewColored.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlListViewColored.Designer.cs">
+      <DependentUpon>ctlListViewColored.cs</DependentUpon>
     </Compile>
     <Compile Include="ctlMultiGraph.cs">
       <SubType>UserControl</SubType>
@@ -149,6 +158,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>MySettings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Base\Base.csproj">

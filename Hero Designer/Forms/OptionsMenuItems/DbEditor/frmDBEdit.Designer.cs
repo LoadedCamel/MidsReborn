@@ -69,6 +69,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnExportJSON = new System.Windows.Forms.Button();
             this.btnJsonImporter = new System.Windows.Forms.Button();
             this.btnExportAttrib = new System.Windows.Forms.Button();
+            this.btnGCMIO = new System.Windows.Forms.Button();
             this.btnExportGCM = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             this.GroupBox1.SuspendLayout();
@@ -383,14 +384,16 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // btnCSV
             // 
             this.btnCSV.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnCSV.Enabled = false;
             this.btnCSV.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCSV.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnCSV.Location = new System.Drawing.Point(48, 323);
             this.btnCSV.Name = "btnCSV";
             this.btnCSV.Size = new System.Drawing.Size(160, 24);
             this.btnCSV.TabIndex = 16;
-            this.btnCSV.Text = "CSV Importer";
+            this.btnCSV.Text = "CSV Importer (Decom)";
             this.btnCSV.UseVisualStyleBackColor = true;
+            this.btnCSV.Visible = false;
             this.btnCSV.Click += new System.EventHandler(this.btnCSV_Click);
             // 
             // btnEditEntity
@@ -442,7 +445,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnFileReport.Enabled = false;
             this.btnFileReport.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFileReport.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnFileReport.Location = new System.Drawing.Point(236, 228);
+            this.btnFileReport.Location = new System.Drawing.Point(236, 353);
             this.btnFileReport.Name = "btnFileReport";
             this.btnFileReport.Size = new System.Drawing.Size(164, 24);
             this.btnFileReport.TabIndex = 23;
@@ -506,22 +509,37 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // btnExportAttrib
             // 
             this.btnExportAttrib.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnExportAttrib.Enabled = false;
             this.btnExportAttrib.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportAttrib.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnExportAttrib.Location = new System.Drawing.Point(236, 288);
+            this.btnExportAttrib.Location = new System.Drawing.Point(236, 323);
             this.btnExportAttrib.Name = "btnExportAttrib";
             this.btnExportAttrib.Size = new System.Drawing.Size(164, 24);
             this.btnExportAttrib.TabIndex = 28;
             this.btnExportAttrib.Text = "Export AttribMods (JSON)";
             this.btnExportAttrib.UseVisualStyleBackColor = true;
+            this.btnExportAttrib.Visible = false;
             this.btnExportAttrib.Click += new System.EventHandler(this.btnExportAttrib_Click);
+            // 
+            // btnGCMIO
+            // 
+            this.btnGCMIO.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnGCMIO.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGCMIO.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnGCMIO.Location = new System.Drawing.Point(236, 228);
+            this.btnGCMIO.Name = "btnGCMIO";
+            this.btnGCMIO.Size = new System.Drawing.Size(164, 24);
+            this.btnGCMIO.TabIndex = 30;
+            this.btnGCMIO.Text = "Global Chance Mod Editor";
+            this.btnGCMIO.UseVisualStyleBackColor = true;
+            this.btnGCMIO.Click += new System.EventHandler(this.btnGCMIO_Click);
             // 
             // btnExportGCM
             // 
             this.btnExportGCM.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnExportGCM.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportGCM.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnExportGCM.Location = new System.Drawing.Point(236, 323);
+            this.btnExportGCM.Location = new System.Drawing.Point(236, 288);
             this.btnExportGCM.Name = "btnExportGCM";
             this.btnExportGCM.Size = new System.Drawing.Size(164, 24);
             this.btnExportGCM.TabIndex = 29;
@@ -534,6 +552,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(416, 422);
+            this.Controls.Add(this.btnGCMIO);
             this.Controls.Add(this.btnExportGCM);
             this.Controls.Add(this.btnExportAttrib);
             this.Controls.Add(this.btnJsonImporter);
@@ -578,6 +597,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private Button btnExportJSON;
         private Button btnJsonImporter;
         private Button btnExportAttrib;
+        private Button btnGCMIO;
         private Button btnExportGCM;
     }
 }

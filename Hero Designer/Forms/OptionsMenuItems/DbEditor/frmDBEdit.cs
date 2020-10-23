@@ -235,5 +235,14 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             DatabaseAPI.ExportGlobalChanceMods();
         }
+
+        private void btnGCMIO_Click(object sender, EventArgs e)
+        {
+            var iParent = _frmMain;
+            FrmGCMEditor gcmEditor = new FrmGCMEditor(ref iParent);
+            gcmEditor.ShowDialog();
+        }
+
+        private readonly frmMain _frmMain;
     }
 }

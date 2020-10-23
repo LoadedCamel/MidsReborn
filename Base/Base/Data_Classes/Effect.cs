@@ -995,36 +995,20 @@ namespace Base.Data_Classes
             {
                 var getCondition = new Regex("(:.*)");
                 var getConditionPower = new Regex("(.*:)");
+                var conList = new List<string>();
                 foreach (var cVp in ActiveConditionals)
                 {
                     var condition = getCondition.Replace(cVp.Key, "").Replace(":", "");
                     var conditionPower = DatabaseAPI.GetPowerByFullName(getConditionPower.Replace(cVp.Key, "").Replace(":", ""));
                     string conditionOperator;
-                    if (cVp.Value.Equals("True")) { conditionOperator = "is"; }
-                    else if (cVp.Value.Equals("False")) { conditionOperator = "not"; }
-                    else { conditionOperator = "equal"; }
-                    if (ActiveConditionals.Count > 1)
-                    {
-                        if (condition != "Stacks")
-                        {
-                            sConditional += $" and {conditionPower} {conditionOperator}{condition}";
-                        }
-                        else
-                        {
-                            sConditional += $" and {conditionPower} {condition} {conditionOperator} {cVp.Value}";
-                        }
-                    }
-                    else
-                    {
-                        if (condition != "Stacks")
-                        {
-                            sConditional = $"{conditionPower} {conditionOperator}{condition}";
-                        }
-                        else
-                        {
-                            sConditional = $"{conditionPower} {condition} {conditionOperator} {cVp.Value}";
-                        }
-                    }
+                    if (cVp.Value.Equals("True")) { conditionOperator = "is "; }
+                    else if (cVp.Value.Equals("False")) { conditionOperator = "not "; }
+                    else { conditionOperator = ""; }
+
+                    conList.Add(!condition.Equals("Stacks")
+                        ? $"{conditionPower} {conditionOperator}{condition}"
+                        : $"{conditionPower} {condition} {cVp.Value}");
+                    sConditional = string.Join(" AND ", conList);
                 }
             }
 
@@ -1406,7 +1390,15 @@ namespace Base.Data_Classes
             }
 
             if (sExtra.Equals(" ()")) { sExtra = ""; }
-            return sEnh + sBuild + sExtra + sExtra2 + sBuff + sVariable + sStack + sSuppress;
+
+            if (sConditional != "")
+            {
+                return sEnh + sBuild + sExtra2 + sBuff + sVariable + sStack + sSuppress;
+            }
+            else
+            {
+                return sEnh + sBuild + sExtra + sBuff + sVariable + sStack + sSuppress;
+            }
         }
 
 
@@ -2050,6 +2042,16 @@ namespace Base.Data_Classes
             return Ticks;
         }
 
+        private bool IsGreaterThan(int compareA, int compareB)
+        {
+            return compareA > compareB;
+        }
+
+        private bool IsLessThan(int compareA, int compareB)
+        {
+            return compareA < compareB;
+        }
+
         public bool CheckConditional(string cType, string cPowername)
         {
             var conditionsMet = false;
@@ -2097,14 +2099,18 @@ namespace Base.Data_Classes
                 }
                 else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition.Equals("Stacks"))
                 {
-                    if (conditionPower.Stacks.Equals(Convert.ToInt32(cVp.Value)))
+                    var cOp = cVp.Value.Split(' ');
+                    switch (cOp[0])
                     {
-                        conditionsMet = true;
-                    }
-                    else
-                    {
-                        conditionsMet = false;
-                        break;
+                        case "=":
+                            conditionsMet = conditionPower.Stacks.Equals(Convert.ToInt32(cVp.Value));
+                            break;
+                        case ">":
+                            conditionsMet = conditionPower.Stacks > Convert.ToInt32(cVp.Value);
+                            break;
+                        case "<":
+                            conditionsMet = conditionPower.Stacks < Convert.ToInt32(cVp.Value);
+                            break;
                     }
                 }
                 else
@@ -2147,10 +2153,30 @@ namespace Base.Data_Classes
                 }
                 else if (condition.Equals("Stacks"))
                 {
-                    if (conditionPower == null || !conditionPower.Stacks.Equals(Convert.ToInt32(cVp.Value)))
+                    var cVal = cVp.Value.Split(' ');
+                    switch (cVal[0])
                     {
-                        conditionsMet = false;
-                        break;
+                        case "=":
+                            if (conditionPower != null)
+                            {
+                                conditionsMet = !conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
+                            }
+
+                            break;
+                        case ">":
+                            if (conditionPower != null)
+                            {
+                                conditionsMet = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
+                            }
+
+                            break;
+                        case "<":
+                            if (conditionPower != null)
+                            {
+                                conditionsMet = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
+                            }
+
+                            break;
                     }
                 }
             }
@@ -2412,11 +2438,7 @@ namespace Base.Data_Classes
                 var conditionPower = DatabaseAPI.GetPowerByFullName(conditionPowerName);
                 if (condition.Equals("Active"))
                 {
-                    if (conditionPower != null && conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value)))
-                    {
-                        conditionsMet = true;
-                    }
-                    else
+                    if (conditionPower == null || !conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value)))
                     {
                         conditionsMet = false;
                         break;
@@ -2424,11 +2446,7 @@ namespace Base.Data_Classes
                 }
                 else if (condition.Equals("Taken"))
                 {
-                    if (conditionPower != null && conditionPower.Taken.Equals(Convert.ToBoolean(cVp.Value)))
-                    {
-                        conditionsMet = true;
-                    }
-                    else
+                    if (conditionPower == null || !conditionPower.Taken.Equals(Convert.ToBoolean(cVp.Value)))
                     {
                         conditionsMet = false;
                         break;
@@ -2436,14 +2454,30 @@ namespace Base.Data_Classes
                 }
                 else if (condition.Equals("Stacks"))
                 {
-                    if (conditionPower != null && conditionPower.Stacks.Equals(Convert.ToInt32(cVp.Value)))
+                    var cVal = cVp.Value.Split(' ');
+                    switch (cVal[0])
                     {
-                        conditionsMet = true;
-                    }
-                    else
-                    {
-                        conditionsMet = false;
-                        break;
+                        case "=":
+                            if (conditionPower != null)
+                            {
+                                conditionsMet = !conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
+                            }
+
+                            break;
+                        case ">":
+                            if (conditionPower != null)
+                            {
+                                conditionsMet = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
+                            }
+
+                            break;
+                        case "<":
+                            if (conditionPower != null)
+                            {
+                                conditionsMet = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
+                            }
+
+                            break;
                     }
                 }
             }
