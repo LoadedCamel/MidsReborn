@@ -1154,10 +1154,10 @@ namespace Base.Data_Classes
                     applies = true;
                 }
 
-                if ((Effects[index].Probability > (double) probability) & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance))
+                /*if ((Effects[index].Probability > (double) probability) & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance))
                 {
                     applies = true;
-                }
+                }*/
 
 
                 if ((Effects[index].Probability > (double) probability) & !Effects[index].CheckConditional("active", "Defiance"))
@@ -1171,17 +1171,17 @@ namespace Base.Data_Classes
                     applies = true;
                 }
 
-                if ((Effects[index].SpecialCase != Enums.eSpecialCase.Defiance) & isDefiance)
+                /*if ((Effects[index].SpecialCase != Enums.eSpecialCase.Defiance) & isDefiance)
                 {
                     applies = true;
-                }
+                }*/
 
                 if (!Effects[index].CheckConditional("active", "Defiance"))
                 {
                     applies = true;
                 }
 
-                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
+                /*if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
                 {
                     if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
                     {
@@ -1199,7 +1199,7 @@ namespace Base.Data_Classes
                     {
                         applies = true;
                     }
-                }
+                }*/
 
                 if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double)duration) & !Effects[index].isEnhancementEffect & !Effects[index].CheckConditional("active", "Defiance") && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
                 {
@@ -1233,10 +1233,10 @@ namespace Base.Data_Classes
                     applies = false;
                 }
 
-                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (Effects[index].SpecialCase != Enums.eSpecialCase.Domination ? 1 : !MidsContext.Character.Domination ? 1 : 0)) != 0)
+                /*if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (Effects[index].SpecialCase != Enums.eSpecialCase.Domination ? 1 : !MidsContext.Character.Domination ? 1 : 0)) != 0)
                 {
                     applies = false;
-                }
+                }*/
 
                 if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].CheckConditional("active", "Domination") ? 1 : 0)) != 0)
                 {
