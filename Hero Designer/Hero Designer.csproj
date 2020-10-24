@@ -97,6 +97,12 @@
     <Compile Include="Forms\Controls\InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProgress.Designer.cs">
+      <DependentUpon>frmProgress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WindowMenuItems\frmTotalsV2.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -295,9 +301,6 @@
     <Compile Include="Forms\ImportExportItems\frmImport_Power.Designer.cs">
       <DependentUpon>frmImport_Power.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_mod.Designer.cs">
-      <DependentUpon>frmImport_mod.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ImportExportItems\frmImport_Entities.Designer.cs">
       <DependentUpon>frmImport_Entities.cs</DependentUpon>
     </Compile>
@@ -417,6 +420,7 @@
     <Content Include="Images\Classes\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Data\AttribMod.json" />
     <None Include="Images\defaultAvatar.png" />
     <Content Include="Images\Enhancements\Acc.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -2140,6 +2144,9 @@
     <EmbeddedResource Include="Forms\Controls\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmProgress.resx">
+      <DependentUpon>frmProgress.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmColorOptions.resx">
       <DependentUpon>frmColorOptions.cs</DependentUpon>
     </EmbeddedResource>
@@ -2280,9 +2287,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ImportExportItems\frmImport_Entities.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_mod.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ImportExportItems\frmImport_Power.cs">
@@ -2431,9 +2435,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Entities.resx">
       <DependentUpon>frmImport_Entities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_mod.resx">
-      <DependentUpon>frmImport_mod.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Power.resx">
       <DependentUpon>frmImport_Power.cs</DependentUpon>

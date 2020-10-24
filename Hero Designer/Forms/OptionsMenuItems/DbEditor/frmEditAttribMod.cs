@@ -16,6 +16,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
     public partial class frmEditAttribMod : Form
     {
         private Modifiers TempAttribMods = new Modifiers();
+        private frmBusy _bFrm;
 
         public frmEditAttribMod()
         {
@@ -24,10 +25,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void frmEditAttribMod_Load(object sender, EventArgs e)
         {
-            TempAttribMods = (Modifiers)Database.Instance.AttribMods.Clone(); // Safer to work on a temp copy...
+            // Safer to work on a temp copy...
+            TempAttribMods = (Modifiers)Database.Instance.AttribMods.Clone();
 
             lblRevision.Text = Convert.ToString(TempAttribMods.Revision, null);
-            lblRevisionDate.Text = TempAttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
+            lblRevisionDate.Text = TempAttribMods.RevisionDate.ToString("MM/dd/yyyy", null);
 
             UpdateModifiersList();
             UpdateClassesList();
@@ -35,6 +37,21 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             InitializeDataGrid();
             PopulateTableGrid(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
             DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
+        }
+
+        private void BusyHide()
+        {
+            if (_bFrm == null)
+                return;
+            _bFrm.Close();
+            _bFrm = null;
+        }
+
+        private void BusyMsg(string sMessage)
+        {
+            using frmBusy bFrm = new frmBusy();
+            bFrm.Show(this);
+            bFrm.SetMessage(sMessage);
         }
 
         #region Event Handlers
@@ -88,42 +105,21 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            TempAttribMods.Revision = Convert.ToInt32(lblRevision.Text);
+            TempAttribMods.RevisionDate = Convert.ToDateTime(lblRevisionDate.Text);
             Database.Instance.AttribMods = (Modifiers)TempAttribMods.Clone();
-            Database.Instance.AttribMods.Store(MyApplication.GetSerializer());
-            
+            //Database.Instance.AttribMods.Store(MyApplication.GetSerializer());
+            //DatabaseAPI.UpdateModifiersDict(Database.Instance.AttribMods.Modifier);
+
+            // This one barely shows up.
+            // May only be needed if one has Mids on a ZIP drive!
+            BusyMsg("Saving newly imported Attribute Modifiers...");
+            Database.Instance.AttribMods = (Modifiers)TempAttribMods.Clone();
+            DatabaseAPI.Database.AttribMods?.Store(MyApplication.GetSerializer());
+            BusyHide();
+            //MessageBox.Show($@"Attribute Modifiers have been saved.", @"Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DialogResult = DialogResult.OK;
             Close();
-        }
-
-        private void btnImportCsv_Click(object sender, EventArgs e)
-        {
-            if (listBoxTables.SelectedIndex < 0 || cbArchetype.SelectedIndex < 0) return;
-            
-            using OpenFileDialog f = new OpenFileDialog()
-            {
-                Title = "Select CSV source for " + listBoxTables.Items[listBoxTables.SelectedIndex],
-                DefaultExt = "csv",
-                Filter = "CSV files(*.csv)|*.csv|Text files(*.txt)|*.txt|All files(*.*)|*.*",
-                FilterIndex = 0,
-                CheckFileExists = true,
-                CheckPathExists = true,
-                Multiselect = false
-            };
-
-            DialogResult r = f.ShowDialog();
-            if (r != DialogResult.OK) return;
-
-            int atIdx = cbArchetype.SelectedIndex;
-            int modIdx = listBoxTables.SelectedIndex;
-            string[] csvLines = File.ReadAllLines(f.FileNames[0]);
-            float[] table = CSV.ToArray(csvLines[0]).Select(e => float.Parse(e, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture)).ToArray();
-
-            for (int i = 0; i < TempAttribMods.Modifier[listBoxTables.SelectedIndex].Table.Length; i++)
-            {
-                TempAttribMods.Modifier[modIdx].Table[i][atIdx] = table[i];
-            }
-
-            PopulateTableGrid(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
-            DrawDataGraph(listBoxTables.SelectedIndex, cbArchetype.SelectedIndex);
         }
 
         private void btnImportJson_Click(object sender, EventArgs e)
@@ -146,7 +142,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             string src = File.ReadAllText(f.FileName);
             JsonSerializerSettings jsonOpt = new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.Auto
+                TypeNameHandling = TypeNameHandling.Auto,
+                NullValueHandling = NullValueHandling.Ignore,
+                PreserveReferencesHandling = PreserveReferencesHandling.None,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Ignore
             };
 
             try
@@ -208,79 +208,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             UpdateClassesList();
         }
 
-        private void btnImportDef_Click(object sender, EventArgs e)
-        {
-            using OpenFileDialog f = new OpenFileDialog()
-            {
-                Title = "Select DEF classes source",
-                DefaultExt = "txt",
-                Filter = "Text files(*.txt)|*.txt|DEF files(*.def)|*.def|All files(*.*)|*.*",
-                FilterIndex = 0,
-                CheckFileExists = true,
-                CheckPathExists = true,
-                Multiselect = false
-            };
-
-            DialogResult r = f.ShowDialog();
-            if (r != DialogResult.OK) return;
-
-            AttribModDefParser defParser = new AttribModDefParser(f.FileNames[0]);
-            Dictionary<string, Dictionary<string, float[]>> parsedDefs = defParser.ParseMods();
-
-            if (parsedDefs.Count == 0)
-            {
-                MessageBox.Show("No mod tables found.", "Bloop", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int nAt = parsedDefs.Count;
-            int nTables = parsedDefs.Sum(el => parsedDefs[el.Key].Count);
-
-            r = MessageBox.Show(
-                Convert.ToString(nAt, null) + " Archetype" + (nAt != 1 ? "s" : "") + " found,\n" +
-                Convert.ToString(nTables, null) + " Table" + (nTables != 1 ? "s" : "") + " found.\n\nProceed to import? This will overwrite current values.\n" +
-                "Note: new tables will -not- be created.",
-                "DEF tables import", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (r != DialogResult.Yes) return;
-
-            Dictionary<string, int> modsIndexDictionary = new Dictionary<string, int>();
-            int i;
-            for (i = 0; i < TempAttribMods.Modifier.Length; i++)
-            {
-                modsIndexDictionary.Add(TempAttribMods.Modifier[i].ID, i);
-            }
-
-            Dictionary<string, int> atIndexDictionary = new Dictionary<string, int>();
-            for (i = 0; i < Database.Instance.Classes.Length; i++)
-            {
-                atIndexDictionary.Add(Database.Instance.Classes[i].ClassName, i);
-            }
-
-            foreach (KeyValuePair<string, Dictionary<string, float[]>> el in parsedDefs)
-            {
-                int atIdx = atIndexDictionary.ContainsKey(el.Key) ? atIndexDictionary[el.Key] : -1;
-                if (atIdx == -1) continue;
-
-                foreach (KeyValuePair<string, float[]> tData in parsedDefs[el.Key])
-                {
-                    int modIdx = modsIndexDictionary.ContainsKey(tData.Key) ? modsIndexDictionary[tData.Key] : -1;
-                    if (modIdx == -1) continue; // Todo: create mod table if new
-                    
-                    for (int k = 0; k < Math.Min(tData.Value.Length, TempAttribMods.Modifier[modIdx].Table.Length); k++)
-                    {   
-                        TempAttribMods.Modifier[modIdx].Table[k][atIdx] = parsedDefs[el.Key][tData.Key][k];
-                    }
-                }
-            }
-
-            lblRevision.Text = Convert.ToString(TempAttribMods.Revision, null);
-            lblRevisionDate.Text = TempAttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
-
-            UpdateModifiersList();
-            UpdateClassesList();
-        }
-
         private void dgCellsLabel_MouseEnter(object sender, EventArgs e)
         {
             // http://csharphelper.com/blog/2014/09/use-an-event-handler-for-multiple-controls-in-c/
@@ -320,15 +247,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lblRevision.Text = res ? lblRevision.Text.Trim() : Convert.ToString(TempAttribMods.Revision, null);
         }
 
-        private void lblRevisionDate_TextChanged(object sender, EventArgs e)
+        private void lblRevisionDate_Leave(object sender, EventArgs e)
         {
             bool res = DateTime.TryParseExact(
                 lblRevisionDate.Text.Trim(),
-                "dd/mm/yyyy",
+                "MM/dd/yyyy",
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.AdjustToUniversal,
                 out TempAttribMods.RevisionDate);
-            lblRevisionDate.Text = res ? lblRevisionDate.Text.Trim() : TempAttribMods.RevisionDate.ToString("dd/MM/yyyy", null);
+            lblRevisionDate.Text = res ? lblRevisionDate.Text.Trim() : TempAttribMods.RevisionDate.ToString("MM/dd/yyyy", null);
         }
 
         private void lblRevisionDate_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -515,6 +442,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
             pbGraph.Graph.SetDataPoints(dataSeries);
             pbGraph.Refresh();
+        }
+
+        private void btnExportJson_Click(object sender, EventArgs e)
+        {
+            DatabaseAPI.ExportAttribMods();
+            MessageBox.Show("Export complete.", "Woop", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

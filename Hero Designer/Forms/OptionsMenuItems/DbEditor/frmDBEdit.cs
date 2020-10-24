@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms.JsonImport;
@@ -228,8 +229,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void btnExportJSON_Click(object sender, EventArgs e)
         {
-            var serializer = MyApplication.GetSerializer();
-            DatabaseAPI.SaveJsonDatabase(serializer);
+            ISerialize serializer = MyApplication.GetSerializer();
+            using frmProgress prg = new frmProgress {WindowTitle = "DB Export progress", OperationText = "", Value = 0};
+            prg.Show(this);
+            DatabaseAPI.SaveJsonDatabaseProgress(serializer, prg.Handle, this);
+            prg.Close();
+            prg.Dispose();
         }
 
         private void btnJsonImporter_Click(object sender, EventArgs e)

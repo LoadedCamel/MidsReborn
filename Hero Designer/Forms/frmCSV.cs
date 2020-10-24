@@ -192,9 +192,6 @@ namespace Hero_Designer.Forms
 
         private void DisplayInfo()
         {
-            mod_Date.Text = Strings.Format(DatabaseAPI.Database.AttribMods.RevisionDate, "dd/MMM/yy HH:mm:ss");
-            mod_Revision.Text = Convert.ToString(DatabaseAPI.Database.AttribMods.Revision);
-            mod_Count.Text = Convert.ToString(DatabaseAPI.Database.AttribMods.Modifier.Length);
             at_Date.Text = Strings.Format(DatabaseAPI.Database.ArchetypeVersion.RevisionDate, "dd/MMM/yy HH:mm:ss");
             at_Revision.Text = Convert.ToString(DatabaseAPI.Database.ArchetypeVersion.Revision);
             at_Count.Text = Convert.ToString(DatabaseAPI.Database.Classes.Length);
@@ -240,13 +237,6 @@ namespace Hero_Designer.Forms
 
         {
             var num = (int) new frmImportPowerLevels().ShowDialog();
-            DisplayInfo();
-        }
-
-        private void mod_Import_Click(object sender, EventArgs e)
-
-        {
-            var num = (int) new frmImport_mod().ShowDialog();
             DisplayInfo();
         }
 

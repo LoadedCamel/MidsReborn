@@ -36,9 +36,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEditAttribMod));
             this.listBoxTables = new System.Windows.Forms.ListBox();
-            this.btnImportCsv = new System.Windows.Forms.Button();
             this.btnImportJson = new System.Windows.Forms.Button();
-            this.btnImportDef = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
@@ -61,6 +59,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.bnRemoveTable = new System.Windows.Forms.Button();
             this.lblRevision = new System.Windows.Forms.NumericUpDown();
             this.lblRevisionDate = new System.Windows.Forms.TextBox();
+            this.btnExportJson = new System.Windows.Forms.Button();
             this.pbGraph = new midsControls.ctlDataGraph();
             ((System.ComponentModel.ISupportInitialize)(this.lblRevision)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).BeginInit();
@@ -76,35 +75,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.listBoxTables.TabIndex = 0;
             this.listBoxTables.SelectedValueChanged += new System.EventHandler(this.listBoxTables_SelectedValueChanged);
             // 
-            // btnImportCsv
-            // 
-            this.btnImportCsv.Location = new System.Drawing.Point(606, 4);
-            this.btnImportCsv.Name = "btnImportCsv";
-            this.btnImportCsv.Size = new System.Drawing.Size(102, 23);
-            this.btnImportCsv.TabIndex = 1;
-            this.btnImportCsv.Text = "Import from CSV";
-            this.btnImportCsv.UseVisualStyleBackColor = true;
-            this.btnImportCsv.Click += new System.EventHandler(this.btnImportCsv_Click);
-            // 
             // btnImportJson
             // 
-            this.btnImportJson.Location = new System.Drawing.Point(714, 4);
+            this.btnImportJson.Location = new System.Drawing.Point(671, 4);
             this.btnImportJson.Name = "btnImportJson";
             this.btnImportJson.Size = new System.Drawing.Size(102, 23);
             this.btnImportJson.TabIndex = 2;
             this.btnImportJson.Text = "Import from JSON";
             this.btnImportJson.UseVisualStyleBackColor = true;
             this.btnImportJson.Click += new System.EventHandler(this.btnImportJson_Click);
-            // 
-            // btnImportDef
-            // 
-            this.btnImportDef.Location = new System.Drawing.Point(822, 4);
-            this.btnImportDef.Name = "btnImportDef";
-            this.btnImportDef.Size = new System.Drawing.Size(102, 23);
-            this.btnImportDef.TabIndex = 3;
-            this.btnImportDef.Text = "Import from DEF";
-            this.btnImportDef.UseVisualStyleBackColor = true;
-            this.btnImportDef.Click += new System.EventHandler(this.btnImportDef_Click);
             // 
             // label1
             // 
@@ -284,7 +263,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.cbArchetype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbArchetype.FormattingEnabled = true;
-            this.cbArchetype.Location = new System.Drawing.Point(375, 5);
+            this.cbArchetype.Location = new System.Drawing.Point(299, 5);
             this.cbArchetype.Name = "cbArchetype";
             this.cbArchetype.Size = new System.Drawing.Size(209, 21);
             this.cbArchetype.TabIndex = 24;
@@ -294,7 +273,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(303, 9);
+            this.label17.Location = new System.Drawing.Point(227, 9);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(68, 13);
             this.label17.TabIndex = 25;
@@ -351,9 +330,19 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.lblRevisionDate.Name = "lblRevisionDate";
             this.lblRevisionDate.Size = new System.Drawing.Size(91, 20);
             this.lblRevisionDate.TabIndex = 29;
-            this.lblRevisionDate.Text = "DD/MM/AAAA";
-            this.lblRevisionDate.TextChanged += new System.EventHandler(this.lblRevisionDate_TextChanged);
+            this.lblRevisionDate.Text = "MM/DD/AAAA";
+            this.lblRevisionDate.Leave += new System.EventHandler(this.lblRevisionDate_Leave);
             this.lblRevisionDate.Validating += new System.ComponentModel.CancelEventHandler(this.lblRevisionDate_Validating);
+            // 
+            // btnExportJson
+            // 
+            this.btnExportJson.Location = new System.Drawing.Point(797, 4);
+            this.btnExportJson.Name = "btnExportJson";
+            this.btnExportJson.Size = new System.Drawing.Size(102, 23);
+            this.btnExportJson.TabIndex = 31;
+            this.btnExportJson.Text = "Export to JSON";
+            this.btnExportJson.UseVisualStyleBackColor = true;
+            this.btnExportJson.Click += new System.EventHandler(this.btnExportJson_Click);
             // 
             // pbGraph
             // 
@@ -369,6 +358,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(928, 450);
+            this.Controls.Add(this.btnExportJson);
             this.Controls.Add(this.pbGraph);
             this.Controls.Add(this.lblRevisionDate);
             this.Controls.Add(this.lblRevision);
@@ -392,9 +382,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnImportDef);
             this.Controls.Add(this.btnImportJson);
-            this.Controls.Add(this.btnImportCsv);
             this.Controls.Add(this.listBoxTables);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -411,9 +399,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         #endregion
 
         private System.Windows.Forms.ListBox listBoxTables;
-        private System.Windows.Forms.Button btnImportCsv;
         private System.Windows.Forms.Button btnImportJson;
-        private System.Windows.Forms.Button btnImportDef;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSave;
@@ -438,5 +424,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private NumericUpDown lblRevision;
         private TextBox lblRevisionDate;
         private midsControls.ctlDataGraph pbGraph;
+        private Button btnExportJson;
     }
 }
