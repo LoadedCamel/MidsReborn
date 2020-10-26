@@ -5577,7 +5577,7 @@ namespace Hero_Designer.Forms
             //FloatTotals(true);
             var iParent = this;
             frmTotalsV2 totalTest = new frmTotalsV2(ref iParent);
-            totalTest.ShowDialog();
+            totalTest.Show();
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
