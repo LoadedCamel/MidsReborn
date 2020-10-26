@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -43,7 +44,24 @@ namespace midsControls
             if (_CanUpdate) return;
             
             _CanUpdate = true;
-            if (forceUpdate) SetValues();
+            if (!forceUpdate) return;
+
+            SetValues();
+            if (_EnableOverCap)
+            {
+                Color overCapColor = panel1.BackColor;
+                Color mainColor = panel3.BackColor;
+                if (Math.Abs(_Value - _ValueUncapped) < float.Epsilon)
+                {
+                    panel1.BackColor = mainColor;
+                    panel3.BackColor = overCapColor;
+                }
+                else
+                {
+                    panel1.BackColor = overCapColor;
+                    panel3.BackColor = mainColor;
+                }
+            }
         }
 
         #region SubBarsDimensions sub-class
@@ -167,7 +185,11 @@ namespace midsControls
         public float ValueMainBar
         {
             get => _Value;
-            set => _Value = value;
+            set
+            {
+                _Value = value;
+                if (!_EnableBaseValue && !_EnableOverCap) SetValues();
+            }
         }
 
         [Description("Over cap value"), Category("Data"),
@@ -282,11 +304,6 @@ namespace midsControls
             return (int)Math.Floor(Width / Math.Abs(_MaximumValue - _MinimumValue) * (value - _MinimumValue));
         }
 
-        private int Value2Pixels(float value, float vMax)
-        {
-            return (int)Math.Floor(Width / Math.Abs(vMax - _MinimumValue) * (value - _MinimumValue));
-        }
-
         #region CalcSubBarsDimensions() overloads
         private SubBarsDimensions CalcSubBarsDimensions(float value)
         {
@@ -294,6 +311,8 @@ namespace midsControls
             {
                 P3Width = Value2Pixels(value)
             };
+
+            Debug.WriteLine(Convert.ToString(value) + " --> " + Convert.ToString(dim.P3Width));
 
             return dim;
         }
@@ -304,19 +323,19 @@ namespace midsControls
             if (_EnableOverCap)
             {
                 // auxValue: overCapValue
-                float relativeMax = Math.Max(_MaximumValue, auxValue);
+                //float relativeMax = Math.Max(_MaximumValue, auxValue);
                 if (auxValue > mainValue)
                 {
 
-                    dim.P1Width = Value2Pixels(auxValue, relativeMax);
-                    dim.P3Width = Value2Pixels(mainValue, relativeMax);
+                    dim.P1Width = Value2Pixels(auxValue);
+                    dim.P3Width = Value2Pixels(mainValue);
                     dim.P3Pos = 0;
                 }
                 else
                 {
-                    dim.P1Width = Value2Pixels(mainValue, relativeMax);
-                    dim.P3Width = Value2Pixels(mainValue - auxValue, relativeMax);
-                    dim.P3Pos = Value2Pixels(auxValue, relativeMax);
+                    dim.P1Width = Value2Pixels(mainValue);
+                    dim.P3Width = Value2Pixels(mainValue - auxValue);
+                    dim.P3Pos = Value2Pixels(auxValue);
                     int offset = dim.P3Pos - dim.P1Width;
                     dim.P3Pos -= offset;
                     dim.P3Width += offset;
@@ -352,17 +371,17 @@ namespace midsControls
                 P3Pos = 0
             };
 
-            float relativeMax = Math.Max(_MaximumValue, uncappedValue);
-            dim.P1Width = Value2Pixels(uncappedValue, relativeMax);
-            dim.P2Width = Value2Pixels(baseValue, relativeMax);
+            //float relativeMax = Math.Max(_MaximumValue, uncappedValue);
+            dim.P1Width = Value2Pixels(uncappedValue);
+            dim.P2Width = Value2Pixels(baseValue);
             if (uncappedValue > mainValue)
             {
-                dim.P3Width = Value2Pixels(mainValue, relativeMax);
+                dim.P3Width = Value2Pixels(mainValue);
             }
             else
             {
-                dim.P3Width = Value2Pixels(mainValue - uncappedValue, relativeMax);
-                dim.P3Pos = Value2Pixels(uncappedValue, relativeMax);
+                dim.P3Width = Value2Pixels(mainValue - uncappedValue);
+                dim.P3Pos = Value2Pixels(uncappedValue);
                 int offset = dim.P3Pos - dim.P1Width + 1;
                 dim.P3Pos -= offset;
                 dim.P3Width += offset;
@@ -370,8 +389,8 @@ namespace midsControls
 
             if (baseValue < mainValue)
             {
-                dim.P3Width = Value2Pixels(mainValue - baseValue, relativeMax);
-                dim.P3Pos = Value2Pixels(baseValue, relativeMax);
+                dim.P3Width = Value2Pixels(mainValue - baseValue);
+                dim.P3Pos = Value2Pixels(baseValue);
                 int offset = dim.P3Pos - dim.P2Width + 1;
                 dim.P3Pos -= offset;
                 dim.P3Width += offset;
@@ -383,7 +402,7 @@ namespace midsControls
         private SubBarsDimensions CalcSubBarsDimensions(float mainValue, float baseValue, float uncappedValue, float overlay1Value)
         {
             SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue);
-            dim.P4Width = Value2Pixels(overlay1Value, Math.Max(_MaximumValue, uncappedValue));
+            dim.P4Width = Value2Pixels(overlay1Value);
 
             return dim;
         }
@@ -391,7 +410,7 @@ namespace midsControls
         private SubBarsDimensions CalcSubBarsDimensions(float mainValue, float baseValue, float uncappedValue, float overlay1Value, float overlay2Value)
         {
             SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value);
-            dim.P5Width = Value2Pixels(overlay2Value, Math.Max(_MaximumValue, uncappedValue));
+            dim.P5Width = Value2Pixels(overlay2Value);
 
             return dim;
         }
@@ -423,6 +442,7 @@ namespace midsControls
         public void SetValues(float value)
         {
             SubBarsDimensions dim = CalcSubBarsDimensions(value);
+            Debug.WriteLine(Name + " - P3Width: " + Convert.ToString(dim.P3Width));
             panel3.Width = dim.P3Width;
         }
 

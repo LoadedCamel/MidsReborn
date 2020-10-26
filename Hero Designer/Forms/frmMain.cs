@@ -1810,7 +1810,7 @@ namespace Hero_Designer.Forms
                 if (fTotals == null)
                 {
                     var iParent = this;
-                    fTotals = new frmTotals(ref iParent);
+                    fTotals = new frmTotalsV2(ref iParent);
                 }
 
                 DoRedraw();
@@ -6338,7 +6338,7 @@ namespace Hero_Designer.Forms
         private frmSetFind fSetFinder;
         private frmSetViewer fSets;
         private frmTemp fTemp;
-        private frmTotals fTotals;
+        private frmTotalsV2 fTotals;
         private bool HasSentBack;
         private bool HasSentForwards;
         private bool LastClickPlacedSlot;
