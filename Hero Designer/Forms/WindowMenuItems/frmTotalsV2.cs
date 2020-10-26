@@ -213,6 +213,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 0 => $"{value:##0.##}%", // Percentage
                 1 => $"{value:##0.##}", // Numeric, 2 decimals
                 2 => (value > 0 ? "+" : "") + $"{value:##0.##}", // Numeric, 2 decimals, with sign
+                3 => $"{Math.Abs(value):##0.##}", // Numeric, 2 decimals (for mez protection)
                 _ => $"{value:##0.##}"
             };
         }
@@ -572,70 +573,40 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             ///////////////////////////////
 
-            FetchBar(Enums.eBarType.MezProtectionHold).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Held];
-            FetchBar(Enums.eBarType.MezProtectionStunned).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Stunned];
-            FetchBar(Enums.eBarType.MezProtectionSleep).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Sleep];
-            FetchBar(Enums.eBarType.MezProtectionImmob).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Immobilized];
-            FetchBar(Enums.eBarType.MezProtectionKnockback).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Knockback];
-            FetchBar(Enums.eBarType.MezProtectionRepel).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Repel];
-            FetchBar(Enums.eBarType.MezProtectionConfuse).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Confused];
-            FetchBar(Enums.eBarType.MezProtectionFear).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Terrorized];
-            FetchBar(Enums.eBarType.MezProtectionTaunt).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Taunt];
-            FetchBar(Enums.eBarType.MezProtectionPlacate).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Placate];
-            FetchBar(Enums.eBarType.MezProtectionTeleport).ValueMainBar =
-                MidsContext.Character.Totals.Mez[(int) Enums.eMez.Teleport];
+            FetchBar(Enums.eBarType.MezProtectionHold).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Held]);
+            FetchBar(Enums.eBarType.MezProtectionStunned).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Stunned]);
+            FetchBar(Enums.eBarType.MezProtectionSleep).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Sleep]);
+            FetchBar(Enums.eBarType.MezProtectionImmob).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Immobilized]);
+            FetchBar(Enums.eBarType.MezProtectionKnockback).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Knockback]);
+            FetchBar(Enums.eBarType.MezProtectionRepel).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Repel]);
+            FetchBar(Enums.eBarType.MezProtectionConfuse).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Confused]);
+            FetchBar(Enums.eBarType.MezProtectionFear).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Terrorized]);
+            FetchBar(Enums.eBarType.MezProtectionTaunt).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Taunt]);
+            FetchBar(Enums.eBarType.MezProtectionPlacate).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Placate]);
+            FetchBar(Enums.eBarType.MezProtectionTeleport).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Teleport]);
 
-            FetchBar(Enums.eBarType.MezResistanceHold).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Held];
-            FetchBar(Enums.eBarType.MezResistanceStunned).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Stunned];
-            FetchBar(Enums.eBarType.MezResistanceSleep).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Sleep];
-            FetchBar(Enums.eBarType.MezResistanceImmob).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Immobilized];
-            FetchBar(Enums.eBarType.MezResistanceKnockback).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Knockback];
-            FetchBar(Enums.eBarType.MezResistanceRepel).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Repel];
-            FetchBar(Enums.eBarType.MezResistanceConfuse).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Confused];
-            FetchBar(Enums.eBarType.MezResistanceFear).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Terrorized];
-            FetchBar(Enums.eBarType.MezResistanceTaunt).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Taunt];
-            FetchBar(Enums.eBarType.MezResistancePlacate).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Placate];
-            FetchBar(Enums.eBarType.MezResistanceTeleport).ValueMainBar =
-                MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Teleport];
+            FetchBar(Enums.eBarType.MezResistanceHold).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Held];
+            FetchBar(Enums.eBarType.MezResistanceStunned).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Stunned];
+            FetchBar(Enums.eBarType.MezResistanceSleep).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Sleep];
+            FetchBar(Enums.eBarType.MezResistanceImmob).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Immobilized];
+            FetchBar(Enums.eBarType.MezResistanceKnockback).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Knockback];
+            FetchBar(Enums.eBarType.MezResistanceRepel).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Repel];
+            FetchBar(Enums.eBarType.MezResistanceConfuse).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Confused];
+            FetchBar(Enums.eBarType.MezResistanceFear).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Terrorized];
+            FetchBar(Enums.eBarType.MezResistanceTaunt).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Taunt];
+            FetchBar(Enums.eBarType.MezResistancePlacate).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Placate];
+            FetchBar(Enums.eBarType.MezResistanceTeleport).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Teleport];
 
             ///////////////////////////////
 
-            FetchBar(Enums.eBarType.DebuffResistanceDefense).ValueMainBar =
-                MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Defense];
-            FetchBar(Enums.eBarType.DebuffResistanceEndurance).ValueMainBar =
-                MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Endurance];
-            FetchBar(Enums.eBarType.DebuffResistanceRecovery).ValueMainBar =
-                MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Recovery];
-            FetchBar(Enums.eBarType.DebuffResistancePerception).ValueMainBar =
-                MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.PerceptionRadius];
-            FetchBar(Enums.eBarType.DebuffResistanceToHit).ValueMainBar =
-                MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.ToHit];
-            FetchBar(Enums.eBarType.DebuffResistanceRechargeTime).ValueMainBar =
-                MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.RechargeTime];
-            FetchBar(Enums.eBarType.DebuffResistanceSpeedRunning).ValueMainBar =
-                MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.SpeedRunning];
-            FetchBar(Enums.eBarType.DebuffResistanceRegen).ValueMainBar =
-                MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Regeneration];
+            FetchBar(Enums.eBarType.DebuffResistanceDefense).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Defense];
+            FetchBar(Enums.eBarType.DebuffResistanceEndurance).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Endurance];
+            FetchBar(Enums.eBarType.DebuffResistanceRecovery).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Recovery];
+            FetchBar(Enums.eBarType.DebuffResistancePerception).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.PerceptionRadius];
+            FetchBar(Enums.eBarType.DebuffResistanceToHit).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.ToHit];
+            FetchBar(Enums.eBarType.DebuffResistanceRechargeTime).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.RechargeTime];
+            FetchBar(Enums.eBarType.DebuffResistanceSpeedRunning).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.SpeedRunning];
+            FetchBar(Enums.eBarType.DebuffResistanceRegen).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Regeneration];
 
             #endregion
 
@@ -670,21 +641,15 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             ///////////////////////////////
 
-            FetchLv(Enums.eBarType.RunSpeed).Text =
-                FormatValue(1, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
-            FetchLv(Enums.eBarType.JumpSpeed).Text =
-                FormatValue(1, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
-            FetchLv(Enums.eBarType.JumpHeight).Text =
-                FormatValue(1, displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond)) + "ft";
-            FetchLv(Enums.eBarType.FlySpeed).Text =
-                FormatValue(1, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
+            FetchLv(Enums.eBarType.RunSpeed).Text = FormatValue(1, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
+            FetchLv(Enums.eBarType.JumpSpeed).Text = FormatValue(1, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
+            FetchLv(Enums.eBarType.JumpHeight).Text = FormatValue(1, displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond)) + "ft";
+            FetchLv(Enums.eBarType.FlySpeed).Text = FormatValue(1, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
 
             ///////////////////////////////
 
-            FetchLv(Enums.eBarType.StealthPvE).Text =
-                FormatValue(1, MidsContext.Character.Totals.StealthPvE) + "ft"; // ???
-            FetchLv(Enums.eBarType.StealthPvP).Text =
-                FormatValue(1, MidsContext.Character.Totals.StealthPvP) + "ft"; // ???
+            FetchLv(Enums.eBarType.StealthPvE).Text = FormatValue(1, MidsContext.Character.Totals.StealthPvE) + "ft"; // ???
+            FetchLv(Enums.eBarType.StealthPvP).Text = FormatValue(1, MidsContext.Character.Totals.StealthPvP) + "ft"; // ???
             FetchLv(Enums.eBarType.Perception).Text = FormatValue(1, displayStats.Perception(false)) + "ft";
 
             ///////////////////////////////
@@ -692,60 +657,36 @@ namespace Hero_Designer.Forms.WindowMenuItems
             FetchLv(Enums.eBarType.Haste).Text = FormatValue(0, displayStats.BuffHaste(false));
             FetchLv(Enums.eBarType.ToHit).Text = FormatValue(0, displayStats.BuffToHit);
             FetchLv(Enums.eBarType.Accuracy).Text = FormatValue(0, displayStats.BuffAccuracy);
-            FetchLv(Enums.eBarType.Damage).Text =
-                FormatValue(0, displayStats.BuffDamage(false)); // Need to add +100 here ?
+            FetchLv(Enums.eBarType.Damage).Text = FormatValue(0, displayStats.BuffDamage(false)); // Need to add +100 here ?
             FetchLv(Enums.eBarType.EndRdx).Text = FormatValue(0, displayStats.BuffEndRdx);
-            FetchLv(Enums.eBarType.ThreatLevel).Text =
-                Convert.ToString(displayStats.ThreatLevel, CultureInfo.InvariantCulture); // ???
+            FetchLv(Enums.eBarType.ThreatLevel).Text = Convert.ToString(displayStats.ThreatLevel, CultureInfo.InvariantCulture); // ???
             FetchLv(Enums.eBarType.Elusivity).Text = FormatValue(0, MidsContext.Character.Totals.Elusivity);
 
             ///////////////////////////////
 
-            FetchLv(Enums.eBarType.MezProtectionHold).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Held]);
-            FetchLv(Enums.eBarType.MezProtectionStunned).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Stunned]);
-            FetchLv(Enums.eBarType.MezProtectionSleep).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Sleep]);
-            FetchLv(Enums.eBarType.MezProtectionImmob).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Immobilized]);
-            FetchLv(Enums.eBarType.MezProtectionKnockback).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Knockback]);
-            FetchLv(Enums.eBarType.MezProtectionRepel).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Repel]);
-            FetchLv(Enums.eBarType.MezProtectionConfuse).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Confused]);
-            FetchLv(Enums.eBarType.MezProtectionFear).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Terrorized]);
-            FetchLv(Enums.eBarType.MezProtectionTaunt).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Taunt]);
-            FetchLv(Enums.eBarType.MezProtectionPlacate).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Placate]);
-            FetchLv(Enums.eBarType.MezProtectionTeleport).Text =
-                FormatValue(1, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Teleport]);
+            FetchLv(Enums.eBarType.MezProtectionHold).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Held]);
+            FetchLv(Enums.eBarType.MezProtectionStunned).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Stunned]);
+            FetchLv(Enums.eBarType.MezProtectionSleep).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Sleep]);
+            FetchLv(Enums.eBarType.MezProtectionImmob).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Immobilized]);
+            FetchLv(Enums.eBarType.MezProtectionKnockback).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Knockback]);
+            FetchLv(Enums.eBarType.MezProtectionRepel).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Repel]);
+            FetchLv(Enums.eBarType.MezProtectionConfuse).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Confused]);
+            FetchLv(Enums.eBarType.MezProtectionFear).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Terrorized]);
+            FetchLv(Enums.eBarType.MezProtectionTaunt).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Taunt]);
+            FetchLv(Enums.eBarType.MezProtectionPlacate).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Placate]);
+            FetchLv(Enums.eBarType.MezProtectionTeleport).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Teleport]);
 
-            FetchLv(Enums.eBarType.MezResistanceHold).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Held]);
-            FetchLv(Enums.eBarType.MezResistanceStunned).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Stunned]);
-            FetchLv(Enums.eBarType.MezResistanceSleep).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Sleep]);
-            FetchLv(Enums.eBarType.MezResistanceImmob).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Immobilized]);
-            FetchLv(Enums.eBarType.MezResistanceKnockback).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Knockback]);
-            FetchLv(Enums.eBarType.MezResistanceRepel).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Repel]);
-            FetchLv(Enums.eBarType.MezResistanceConfuse).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Confused]);
-            FetchLv(Enums.eBarType.MezResistanceFear).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Terrorized]);
-            FetchLv(Enums.eBarType.MezResistanceTaunt).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Taunt]);
-            FetchLv(Enums.eBarType.MezResistancePlacate).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Placate]);
-            FetchLv(Enums.eBarType.MezResistanceTeleport).Text =
-                FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Teleport]);
+            FetchLv(Enums.eBarType.MezResistanceHold).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Held]);
+            FetchLv(Enums.eBarType.MezResistanceStunned).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Stunned]);
+            FetchLv(Enums.eBarType.MezResistanceSleep).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Sleep]);
+            FetchLv(Enums.eBarType.MezResistanceImmob).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Immobilized]);
+            FetchLv(Enums.eBarType.MezResistanceKnockback).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Knockback]);
+            FetchLv(Enums.eBarType.MezResistanceRepel).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Repel]);
+            FetchLv(Enums.eBarType.MezResistanceConfuse).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Confused]);
+            FetchLv(Enums.eBarType.MezResistanceFear).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Terrorized]);
+            FetchLv(Enums.eBarType.MezResistanceTaunt).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Taunt]);
+            FetchLv(Enums.eBarType.MezResistancePlacate).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Placate]);
+            FetchLv(Enums.eBarType.MezResistanceTeleport).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Teleport]);
 
             ///////////////////////////////
 

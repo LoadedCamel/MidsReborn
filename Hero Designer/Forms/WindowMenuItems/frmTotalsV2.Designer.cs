@@ -464,7 +464,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.17308F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.82692F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 337F));
             this.tableLayoutPanel1.Controls.Add(this.lv23, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.lv22, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.bar21, 2, 0);
@@ -489,7 +489,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv23.AutoSize = true;
             this.lv23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.lv23.Location = new System.Drawing.Point(101, 38);
+            this.lv23.Location = new System.Drawing.Point(100, 38);
             this.lv23.Name = "lv23";
             this.lv23.Size = new System.Drawing.Size(64, 19);
             this.lv23.TabIndex = 11;
@@ -501,7 +501,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv22.AutoSize = true;
             this.lv22.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.lv22.Location = new System.Drawing.Point(101, 19);
+            this.lv22.Location = new System.Drawing.Point(100, 19);
             this.lv22.Name = "lv22";
             this.lv22.Size = new System.Drawing.Size(64, 19);
             this.lv22.TabIndex = 10;
@@ -521,7 +521,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar21.EnableOverCap = true;
             this.bar21.EnableOverlay1 = false;
             this.bar21.EnableOverlay2 = false;
-            this.bar21.Location = new System.Drawing.Point(171, 3);
+            this.bar21.Location = new System.Drawing.Point(170, 3);
             this.bar21.MaximumBarValue = 10F;
             this.bar21.MinimumBarValue = 0F;
             this.bar21.Name = "bar21";
@@ -546,7 +546,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar23.EnableOverCap = false;
             this.bar23.EnableOverlay1 = false;
             this.bar23.EnableOverlay2 = false;
-            this.bar23.Location = new System.Drawing.Point(171, 41);
+            this.bar23.Location = new System.Drawing.Point(170, 41);
             this.bar23.MaximumBarValue = 200F;
             this.bar23.MinimumBarValue = 0F;
             this.bar23.Name = "bar23";
@@ -571,7 +571,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar22.EnableOverCap = false;
             this.bar22.EnableOverlay1 = false;
             this.bar22.EnableOverlay2 = false;
-            this.bar22.Location = new System.Drawing.Point(171, 22);
+            this.bar22.Location = new System.Drawing.Point(170, 22);
             this.bar22.MaximumBarValue = 15F;
             this.bar22.MinimumBarValue = 0F;
             this.bar22.Name = "bar22";
@@ -590,7 +590,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label45.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label45.Location = new System.Drawing.Point(3, 0);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(92, 19);
+            this.label45.Size = new System.Drawing.Size(91, 19);
             this.label45.TabIndex = 6;
             this.label45.Text = "End Rec:";
             this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -602,7 +602,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label46.Location = new System.Drawing.Point(3, 19);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(92, 19);
+            this.label46.Size = new System.Drawing.Size(91, 19);
             this.label46.TabIndex = 7;
             this.label46.Text = "End Use:";
             this.label46.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -614,7 +614,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label47.Location = new System.Drawing.Point(3, 38);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(92, 19);
+            this.label47.Size = new System.Drawing.Size(91, 19);
             this.label47.TabIndex = 8;
             this.label47.Text = "Max End:";
             this.label47.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -624,7 +624,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv21.AutoSize = true;
             this.lv21.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.lv21.Location = new System.Drawing.Point(101, 0);
+            this.lv21.Location = new System.Drawing.Point(100, 0);
             this.lv21.Name = "lv21";
             this.lv21.Size = new System.Drawing.Size(64, 19);
             this.lv21.TabIndex = 9;
@@ -693,7 +693,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 59.40594F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.59406F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 337F));
             this.tableLayoutPanel2.Controls.Add(this.lv20, 1, 1);
             this.tableLayoutPanel2.Controls.Add(this.bar19, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.bar20, 2, 1);
@@ -716,7 +716,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv20.Location = new System.Drawing.Point(103, 19);
             this.lv20.Name = "lv20";
-            this.lv20.Size = new System.Drawing.Size(63, 19);
+            this.lv20.Size = new System.Drawing.Size(62, 19);
             this.lv20.TabIndex = 7;
             this.lv20.Text = "100.00%";
             this.lv20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -734,7 +734,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar19.EnableOverCap = true;
             this.bar19.EnableOverlay1 = false;
             this.bar19.EnableOverlay2 = false;
-            this.bar19.Location = new System.Drawing.Point(172, 3);
+            this.bar19.Location = new System.Drawing.Point(171, 3);
             this.bar19.MaximumBarValue = 1500F;
             this.bar19.MinimumBarValue = 0F;
             this.bar19.Name = "bar19";
@@ -759,7 +759,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar20.EnableOverCap = true;
             this.bar20.EnableOverlay1 = true;
             this.bar20.EnableOverlay2 = false;
-            this.bar20.Location = new System.Drawing.Point(172, 22);
+            this.bar20.Location = new System.Drawing.Point(171, 22);
             this.bar20.MaximumBarValue = 4500F;
             this.bar20.MinimumBarValue = 0F;
             this.bar20.Name = "bar20";
@@ -802,7 +802,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv19.Location = new System.Drawing.Point(103, 0);
             this.lv19.Name = "lv19";
-            this.lv19.Size = new System.Drawing.Size(63, 19);
+            this.lv19.Size = new System.Drawing.Size(62, 19);
             this.lv19.TabIndex = 6;
             this.lv19.Text = "100.00%";
             this.lv19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -829,7 +829,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel3.ColumnCount = 3;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 335F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336F));
             this.tableLayoutPanel3.Controls.Add(this.lv18, 1, 7);
             this.tableLayoutPanel3.Controls.Add(this.lv17, 1, 6);
             this.tableLayoutPanel3.Controls.Add(this.lv16, 1, 5);
@@ -876,7 +876,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv18.Location = new System.Drawing.Point(102, 133);
             this.lv18.Name = "lv18";
-            this.lv18.Size = new System.Drawing.Size(64, 19);
+            this.lv18.Size = new System.Drawing.Size(63, 19);
             this.lv18.TabIndex = 24;
             this.lv18.Text = "100.00%";
             this.lv18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -888,7 +888,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv17.Location = new System.Drawing.Point(102, 114);
             this.lv17.Name = "lv17";
-            this.lv17.Size = new System.Drawing.Size(64, 19);
+            this.lv17.Size = new System.Drawing.Size(63, 19);
             this.lv17.TabIndex = 23;
             this.lv17.Text = "100.00%";
             this.lv17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -900,7 +900,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv16.Location = new System.Drawing.Point(102, 95);
             this.lv16.Name = "lv16";
-            this.lv16.Size = new System.Drawing.Size(64, 19);
+            this.lv16.Size = new System.Drawing.Size(63, 19);
             this.lv16.TabIndex = 22;
             this.lv16.Text = "100.00%";
             this.lv16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -912,7 +912,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv15.Location = new System.Drawing.Point(102, 76);
             this.lv15.Name = "lv15";
-            this.lv15.Size = new System.Drawing.Size(64, 19);
+            this.lv15.Size = new System.Drawing.Size(63, 19);
             this.lv15.TabIndex = 21;
             this.lv15.Text = "100.00%";
             this.lv15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -924,7 +924,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv14.Location = new System.Drawing.Point(102, 57);
             this.lv14.Name = "lv14";
-            this.lv14.Size = new System.Drawing.Size(64, 19);
+            this.lv14.Size = new System.Drawing.Size(63, 19);
             this.lv14.TabIndex = 20;
             this.lv14.Text = "100.00%";
             this.lv14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -936,7 +936,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv13.Location = new System.Drawing.Point(102, 38);
             this.lv13.Name = "lv13";
-            this.lv13.Size = new System.Drawing.Size(64, 19);
+            this.lv13.Size = new System.Drawing.Size(63, 19);
             this.lv13.TabIndex = 19;
             this.lv13.Text = "100.00%";
             this.lv13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -948,7 +948,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv12.Location = new System.Drawing.Point(102, 19);
             this.lv12.Name = "lv12";
-            this.lv12.Size = new System.Drawing.Size(64, 19);
+            this.lv12.Size = new System.Drawing.Size(63, 19);
             this.lv12.TabIndex = 18;
             this.lv12.Text = "100.00%";
             this.lv12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -966,7 +966,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar11.EnableOverCap = true;
             this.bar11.EnableOverlay1 = false;
             this.bar11.EnableOverlay2 = false;
-            this.bar11.Location = new System.Drawing.Point(172, 3);
+            this.bar11.Location = new System.Drawing.Point(171, 3);
             this.bar11.MaximumBarValue = 100F;
             this.bar11.MinimumBarValue = 0F;
             this.bar11.Name = "bar11";
@@ -991,7 +991,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar18.EnableOverCap = true;
             this.bar18.EnableOverlay1 = false;
             this.bar18.EnableOverlay2 = false;
-            this.bar18.Location = new System.Drawing.Point(172, 136);
+            this.bar18.Location = new System.Drawing.Point(171, 136);
             this.bar18.MaximumBarValue = 100F;
             this.bar18.MinimumBarValue = 0F;
             this.bar18.Name = "bar18";
@@ -1016,7 +1016,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar12.EnableOverCap = true;
             this.bar12.EnableOverlay1 = false;
             this.bar12.EnableOverlay2 = false;
-            this.bar12.Location = new System.Drawing.Point(172, 22);
+            this.bar12.Location = new System.Drawing.Point(171, 22);
             this.bar12.MaximumBarValue = 100F;
             this.bar12.MinimumBarValue = 0F;
             this.bar12.Name = "bar12";
@@ -1041,7 +1041,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar17.EnableOverCap = true;
             this.bar17.EnableOverlay1 = false;
             this.bar17.EnableOverlay2 = false;
-            this.bar17.Location = new System.Drawing.Point(172, 117);
+            this.bar17.Location = new System.Drawing.Point(171, 117);
             this.bar17.MaximumBarValue = 100F;
             this.bar17.MinimumBarValue = 0F;
             this.bar17.Name = "bar17";
@@ -1066,7 +1066,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar13.EnableOverCap = true;
             this.bar13.EnableOverlay1 = false;
             this.bar13.EnableOverlay2 = false;
-            this.bar13.Location = new System.Drawing.Point(172, 41);
+            this.bar13.Location = new System.Drawing.Point(171, 41);
             this.bar13.MaximumBarValue = 100F;
             this.bar13.MinimumBarValue = 0F;
             this.bar13.Name = "bar13";
@@ -1091,7 +1091,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar16.EnableOverCap = true;
             this.bar16.EnableOverlay1 = false;
             this.bar16.EnableOverlay2 = false;
-            this.bar16.Location = new System.Drawing.Point(172, 98);
+            this.bar16.Location = new System.Drawing.Point(171, 98);
             this.bar16.MaximumBarValue = 100F;
             this.bar16.MinimumBarValue = 0F;
             this.bar16.Name = "bar16";
@@ -1116,7 +1116,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar14.EnableOverCap = true;
             this.bar14.EnableOverlay1 = false;
             this.bar14.EnableOverlay2 = false;
-            this.bar14.Location = new System.Drawing.Point(172, 60);
+            this.bar14.Location = new System.Drawing.Point(171, 60);
             this.bar14.MaximumBarValue = 100F;
             this.bar14.MinimumBarValue = 0F;
             this.bar14.Name = "bar14";
@@ -1141,7 +1141,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar15.EnableOverCap = true;
             this.bar15.EnableOverlay1 = false;
             this.bar15.EnableOverlay2 = false;
-            this.bar15.Location = new System.Drawing.Point(172, 79);
+            this.bar15.Location = new System.Drawing.Point(171, 79);
             this.bar15.MaximumBarValue = 100F;
             this.bar15.MinimumBarValue = 0F;
             this.bar15.Name = "bar15";
@@ -1256,7 +1256,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv11.Location = new System.Drawing.Point(102, 0);
             this.lv11.Name = "lv11";
-            this.lv11.Size = new System.Drawing.Size(64, 19);
+            this.lv11.Size = new System.Drawing.Size(63, 19);
             this.lv11.TabIndex = 17;
             this.lv11.Text = "100.00%";
             this.lv11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1283,7 +1283,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel4.ColumnCount = 3;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 337F));
             this.tableLayoutPanel4.Controls.Add(this.lv10, 1, 9);
             this.tableLayoutPanel4.Controls.Add(this.bar10, 2, 9);
             this.tableLayoutPanel4.Controls.Add(this.lv9, 1, 8);
@@ -1337,7 +1337,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv10.Location = new System.Drawing.Point(102, 171);
             this.lv10.Name = "lv10";
-            this.lv10.Size = new System.Drawing.Size(64, 19);
+            this.lv10.Size = new System.Drawing.Size(63, 19);
             this.lv10.TabIndex = 19;
             this.lv10.Text = "100.00%";
             this.lv10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1355,7 +1355,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar10.EnableOverCap = false;
             this.bar10.EnableOverlay1 = false;
             this.bar10.EnableOverlay2 = false;
-            this.bar10.Location = new System.Drawing.Point(172, 174);
+            this.bar10.Location = new System.Drawing.Point(171, 174);
             this.bar10.MaximumBarValue = 100F;
             this.bar10.MinimumBarValue = 0F;
             this.bar10.Name = "bar10";
@@ -1374,7 +1374,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv9.Location = new System.Drawing.Point(102, 152);
             this.lv9.Name = "lv9";
-            this.lv9.Size = new System.Drawing.Size(64, 19);
+            this.lv9.Size = new System.Drawing.Size(63, 19);
             this.lv9.TabIndex = 18;
             this.lv9.Text = "100.00%";
             this.lv9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1392,7 +1392,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar9.EnableOverCap = false;
             this.bar9.EnableOverlay1 = false;
             this.bar9.EnableOverlay2 = false;
-            this.bar9.Location = new System.Drawing.Point(172, 155);
+            this.bar9.Location = new System.Drawing.Point(171, 155);
             this.bar9.MaximumBarValue = 100F;
             this.bar9.MinimumBarValue = 0F;
             this.bar9.Name = "bar9";
@@ -1411,7 +1411,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv8.Location = new System.Drawing.Point(102, 133);
             this.lv8.Name = "lv8";
-            this.lv8.Size = new System.Drawing.Size(64, 19);
+            this.lv8.Size = new System.Drawing.Size(63, 19);
             this.lv8.TabIndex = 17;
             this.lv8.Text = "100.00%";
             this.lv8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1429,7 +1429,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar8.EnableOverCap = false;
             this.bar8.EnableOverlay1 = false;
             this.bar8.EnableOverlay2 = false;
-            this.bar8.Location = new System.Drawing.Point(172, 136);
+            this.bar8.Location = new System.Drawing.Point(171, 136);
             this.bar8.MaximumBarValue = 100F;
             this.bar8.MinimumBarValue = 0F;
             this.bar8.Name = "bar8";
@@ -1448,7 +1448,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv7.Location = new System.Drawing.Point(102, 114);
             this.lv7.Name = "lv7";
-            this.lv7.Size = new System.Drawing.Size(64, 19);
+            this.lv7.Size = new System.Drawing.Size(63, 19);
             this.lv7.TabIndex = 16;
             this.lv7.Text = "100.00%";
             this.lv7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1466,7 +1466,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar7.EnableOverCap = false;
             this.bar7.EnableOverlay1 = false;
             this.bar7.EnableOverlay2 = false;
-            this.bar7.Location = new System.Drawing.Point(172, 117);
+            this.bar7.Location = new System.Drawing.Point(171, 117);
             this.bar7.MaximumBarValue = 100F;
             this.bar7.MinimumBarValue = 0F;
             this.bar7.Name = "bar7";
@@ -1485,7 +1485,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv6.Location = new System.Drawing.Point(102, 95);
             this.lv6.Name = "lv6";
-            this.lv6.Size = new System.Drawing.Size(64, 19);
+            this.lv6.Size = new System.Drawing.Size(63, 19);
             this.lv6.TabIndex = 15;
             this.lv6.Text = "100.00%";
             this.lv6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1503,7 +1503,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar6.EnableOverCap = false;
             this.bar6.EnableOverlay1 = false;
             this.bar6.EnableOverlay2 = false;
-            this.bar6.Location = new System.Drawing.Point(172, 98);
+            this.bar6.Location = new System.Drawing.Point(171, 98);
             this.bar6.MaximumBarValue = 100F;
             this.bar6.MinimumBarValue = 0F;
             this.bar6.Name = "bar6";
@@ -1522,7 +1522,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv5.Location = new System.Drawing.Point(102, 76);
             this.lv5.Name = "lv5";
-            this.lv5.Size = new System.Drawing.Size(64, 19);
+            this.lv5.Size = new System.Drawing.Size(63, 19);
             this.lv5.TabIndex = 14;
             this.lv5.Text = "100.00%";
             this.lv5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1540,7 +1540,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar5.EnableOverCap = false;
             this.bar5.EnableOverlay1 = false;
             this.bar5.EnableOverlay2 = false;
-            this.bar5.Location = new System.Drawing.Point(172, 79);
+            this.bar5.Location = new System.Drawing.Point(171, 79);
             this.bar5.MaximumBarValue = 100F;
             this.bar5.MinimumBarValue = 0F;
             this.bar5.Name = "bar5";
@@ -1559,7 +1559,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv4.Location = new System.Drawing.Point(102, 57);
             this.lv4.Name = "lv4";
-            this.lv4.Size = new System.Drawing.Size(64, 19);
+            this.lv4.Size = new System.Drawing.Size(63, 19);
             this.lv4.TabIndex = 13;
             this.lv4.Text = "100.00%";
             this.lv4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1577,7 +1577,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar4.EnableOverCap = false;
             this.bar4.EnableOverlay1 = false;
             this.bar4.EnableOverlay2 = false;
-            this.bar4.Location = new System.Drawing.Point(172, 60);
+            this.bar4.Location = new System.Drawing.Point(171, 60);
             this.bar4.MaximumBarValue = 100F;
             this.bar4.MinimumBarValue = 0F;
             this.bar4.Name = "bar4";
@@ -1596,7 +1596,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv3.Location = new System.Drawing.Point(102, 38);
             this.lv3.Name = "lv3";
-            this.lv3.Size = new System.Drawing.Size(64, 19);
+            this.lv3.Size = new System.Drawing.Size(63, 19);
             this.lv3.TabIndex = 12;
             this.lv3.Text = "100.00%";
             this.lv3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1614,7 +1614,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar3.EnableOverCap = false;
             this.bar3.EnableOverlay1 = false;
             this.bar3.EnableOverlay2 = false;
-            this.bar3.Location = new System.Drawing.Point(172, 41);
+            this.bar3.Location = new System.Drawing.Point(171, 41);
             this.bar3.MaximumBarValue = 100F;
             this.bar3.MinimumBarValue = 0F;
             this.bar3.Name = "bar3";
@@ -1633,7 +1633,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv2.Location = new System.Drawing.Point(102, 19);
             this.lv2.Name = "lv2";
-            this.lv2.Size = new System.Drawing.Size(64, 19);
+            this.lv2.Size = new System.Drawing.Size(63, 19);
             this.lv2.TabIndex = 11;
             this.lv2.Text = "100.00%";
             this.lv2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1651,7 +1651,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar2.EnableOverCap = false;
             this.bar2.EnableOverlay1 = false;
             this.bar2.EnableOverlay2 = false;
-            this.bar2.Location = new System.Drawing.Point(172, 22);
+            this.bar2.Location = new System.Drawing.Point(171, 22);
             this.bar2.MaximumBarValue = 100F;
             this.bar2.MinimumBarValue = 0F;
             this.bar2.Name = "bar2";
@@ -1688,7 +1688,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar1.EnableOverCap = false;
             this.bar1.EnableOverlay1 = false;
             this.bar1.EnableOverlay2 = false;
-            this.bar1.Location = new System.Drawing.Point(172, 3);
+            this.bar1.Location = new System.Drawing.Point(171, 3);
             this.bar1.MaximumBarValue = 100F;
             this.bar1.MinimumBarValue = 0F;
             this.bar1.Name = "bar1";
@@ -1815,7 +1815,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv1.Location = new System.Drawing.Point(102, 0);
             this.lv1.Name = "lv1";
-            this.lv1.Size = new System.Drawing.Size(64, 19);
+            this.lv1.Size = new System.Drawing.Size(63, 19);
             this.lv1.TabIndex = 10;
             this.lv1.Text = "100.00%";
             this.lv1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1896,7 +1896,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel13.ColumnCount = 3;
             this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 331F));
             this.tableLayoutPanel13.Controls.Add(this.label79, 0, 0);
             this.tableLayoutPanel13.Controls.Add(this.bar37, 2, 0);
             this.tableLayoutPanel13.Controls.Add(this.lv37, 1, 0);
@@ -1914,7 +1914,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label79.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label79.Location = new System.Drawing.Point(3, 0);
             this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(97, 22);
+            this.label79.Size = new System.Drawing.Size(96, 22);
             this.label79.TabIndex = 0;
             this.label79.Text = "Elusivity:";
             this.label79.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1932,7 +1932,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar37.EnableOverCap = false;
             this.bar37.EnableOverlay1 = false;
             this.bar37.EnableOverlay2 = false;
-            this.bar37.Location = new System.Drawing.Point(178, 3);
+            this.bar37.Location = new System.Drawing.Point(177, 3);
             this.bar37.MaximumBarValue = 100F;
             this.bar37.MinimumBarValue = 0F;
             this.bar37.Name = "bar37";
@@ -1949,7 +1949,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv37.AutoSize = true;
             this.lv37.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.lv37.Location = new System.Drawing.Point(106, 0);
+            this.lv37.Location = new System.Drawing.Point(105, 0);
             this.lv37.Name = "lv37";
             this.lv37.Size = new System.Drawing.Size(66, 22);
             this.lv37.TabIndex = 10;
@@ -1978,7 +1978,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel12.ColumnCount = 3;
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 331F));
             this.tableLayoutPanel12.Controls.Add(this.label77, 0, 0);
             this.tableLayoutPanel12.Controls.Add(this.bar36, 2, 0);
             this.tableLayoutPanel12.Controls.Add(this.lv36, 1, 0);
@@ -1996,7 +1996,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label77.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label77.Location = new System.Drawing.Point(3, 0);
             this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(97, 22);
+            this.label77.Size = new System.Drawing.Size(96, 22);
             this.label77.TabIndex = 0;
             this.label77.Text = "Threat level:";
             this.label77.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2014,7 +2014,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar36.EnableOverCap = false;
             this.bar36.EnableOverlay1 = false;
             this.bar36.EnableOverlay2 = false;
-            this.bar36.Location = new System.Drawing.Point(178, 3);
+            this.bar36.Location = new System.Drawing.Point(177, 3);
             this.bar36.MaximumBarValue = 100F;
             this.bar36.MinimumBarValue = 0F;
             this.bar36.Name = "bar36";
@@ -2031,7 +2031,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv36.AutoSize = true;
             this.lv36.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.lv36.Location = new System.Drawing.Point(106, 0);
+            this.lv36.Location = new System.Drawing.Point(105, 0);
             this.lv36.Name = "lv36";
             this.lv36.Size = new System.Drawing.Size(66, 22);
             this.lv36.TabIndex = 10;
@@ -2060,7 +2060,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel11.ColumnCount = 3;
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 331F));
             this.tableLayoutPanel11.Controls.Add(this.label75, 0, 0);
             this.tableLayoutPanel11.Controls.Add(this.bar35, 2, 0);
             this.tableLayoutPanel11.Controls.Add(this.lv35, 1, 0);
@@ -2078,7 +2078,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label75.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label75.Location = new System.Drawing.Point(3, 0);
             this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(97, 22);
+            this.label75.Size = new System.Drawing.Size(96, 22);
             this.label75.TabIndex = 0;
             this.label75.Text = "EndRdx:";
             this.label75.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2096,7 +2096,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar35.EnableOverCap = false;
             this.bar35.EnableOverlay1 = false;
             this.bar35.EnableOverlay2 = false;
-            this.bar35.Location = new System.Drawing.Point(178, 3);
+            this.bar35.Location = new System.Drawing.Point(177, 3);
             this.bar35.MaximumBarValue = 100F;
             this.bar35.MinimumBarValue = 0F;
             this.bar35.Name = "bar35";
@@ -2113,7 +2113,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv35.AutoSize = true;
             this.lv35.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.lv35.Location = new System.Drawing.Point(106, 0);
+            this.lv35.Location = new System.Drawing.Point(105, 0);
             this.lv35.Name = "lv35";
             this.lv35.Size = new System.Drawing.Size(66, 22);
             this.lv35.TabIndex = 10;
@@ -2142,7 +2142,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel10.ColumnCount = 3;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 331F));
             this.tableLayoutPanel10.Controls.Add(this.label72, 0, 0);
             this.tableLayoutPanel10.Controls.Add(this.bar34, 2, 0);
             this.tableLayoutPanel10.Controls.Add(this.lv34, 1, 0);
@@ -2160,7 +2160,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label72.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label72.Location = new System.Drawing.Point(3, 0);
             this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(97, 22);
+            this.label72.Size = new System.Drawing.Size(96, 22);
             this.label72.TabIndex = 0;
             this.label72.Text = "Damage:";
             this.label72.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2178,7 +2178,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar34.EnableOverCap = false;
             this.bar34.EnableOverlay1 = false;
             this.bar34.EnableOverlay2 = false;
-            this.bar34.Location = new System.Drawing.Point(178, 3);
+            this.bar34.Location = new System.Drawing.Point(177, 3);
             this.bar34.MaximumBarValue = 100F;
             this.bar34.MinimumBarValue = 0F;
             this.bar34.Name = "bar34";
@@ -2195,7 +2195,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv34.AutoSize = true;
             this.lv34.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.lv34.Location = new System.Drawing.Point(106, 0);
+            this.lv34.Location = new System.Drawing.Point(105, 0);
             this.lv34.Name = "lv34";
             this.lv34.Size = new System.Drawing.Size(66, 22);
             this.lv34.TabIndex = 10;
@@ -2224,7 +2224,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel9.ColumnCount = 3;
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 331F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 332F));
             this.tableLayoutPanel9.Controls.Add(this.label68, 0, 0);
             this.tableLayoutPanel9.Controls.Add(this.bar33, 2, 0);
             this.tableLayoutPanel9.Controls.Add(this.lv33, 1, 0);
@@ -2260,7 +2260,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar33.EnableOverCap = false;
             this.bar33.EnableOverlay1 = false;
             this.bar33.EnableOverlay2 = false;
-            this.bar33.Location = new System.Drawing.Point(177, 3);
+            this.bar33.Location = new System.Drawing.Point(176, 3);
             this.bar33.MaximumBarValue = 100F;
             this.bar33.MinimumBarValue = 0F;
             this.bar33.Name = "bar33";
@@ -2279,7 +2279,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv33.Location = new System.Drawing.Point(105, 0);
             this.lv33.Name = "lv33";
-            this.lv33.Size = new System.Drawing.Size(66, 22);
+            this.lv33.Size = new System.Drawing.Size(65, 22);
             this.lv33.TabIndex = 10;
             this.lv33.Text = "+100.00%";
             this.lv33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2306,7 +2306,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel8.ColumnCount = 3;
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 331F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 332F));
             this.tableLayoutPanel8.Controls.Add(this.label65, 0, 0);
             this.tableLayoutPanel8.Controls.Add(this.bar32, 2, 0);
             this.tableLayoutPanel8.Controls.Add(this.lv32, 1, 0);
@@ -2342,7 +2342,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar32.EnableOverCap = false;
             this.bar32.EnableOverlay1 = false;
             this.bar32.EnableOverlay2 = false;
-            this.bar32.Location = new System.Drawing.Point(177, 3);
+            this.bar32.Location = new System.Drawing.Point(176, 3);
             this.bar32.MaximumBarValue = 100F;
             this.bar32.MinimumBarValue = 0F;
             this.bar32.Name = "bar32";
@@ -2361,7 +2361,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv32.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv32.Location = new System.Drawing.Point(105, 0);
             this.lv32.Name = "lv32";
-            this.lv32.Size = new System.Drawing.Size(66, 22);
+            this.lv32.Size = new System.Drawing.Size(65, 22);
             this.lv32.TabIndex = 10;
             this.lv32.Text = "+100.00%";
             this.lv32.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2388,7 +2388,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel7.ColumnCount = 3;
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 331F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 332F));
             this.tableLayoutPanel7.Controls.Add(this.label69, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.bar31, 2, 0);
             this.tableLayoutPanel7.Controls.Add(this.lv31, 1, 0);
@@ -2424,7 +2424,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar31.EnableOverCap = true;
             this.bar31.EnableOverlay1 = false;
             this.bar31.EnableOverlay2 = false;
-            this.bar31.Location = new System.Drawing.Point(177, 3);
+            this.bar31.Location = new System.Drawing.Point(176, 3);
             this.bar31.MaximumBarValue = 100F;
             this.bar31.MinimumBarValue = 0F;
             this.bar31.Name = "bar31";
@@ -2443,7 +2443,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv31.Location = new System.Drawing.Point(105, 0);
             this.lv31.Name = "lv31";
-            this.lv31.Size = new System.Drawing.Size(66, 22);
+            this.lv31.Size = new System.Drawing.Size(65, 22);
             this.lv31.TabIndex = 10;
             this.lv31.Text = "100.00%";
             this.lv31.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2480,7 +2480,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel6.ColumnCount = 3;
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 337F));
             this.tableLayoutPanel6.Controls.Add(this.lv30, 1, 2);
             this.tableLayoutPanel6.Controls.Add(this.bar30, 2, 2);
             this.tableLayoutPanel6.Controls.Add(this.lv29, 1, 1);
@@ -2506,7 +2506,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv30.Location = new System.Drawing.Point(102, 38);
             this.lv30.Name = "lv30";
-            this.lv30.Size = new System.Drawing.Size(64, 20);
+            this.lv30.Size = new System.Drawing.Size(63, 20);
             this.lv30.TabIndex = 12;
             this.lv30.Text = "100.00 ft";
             this.lv30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2524,7 +2524,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar30.EnableOverCap = true;
             this.bar30.EnableOverlay1 = false;
             this.bar30.EnableOverlay2 = false;
-            this.bar30.Location = new System.Drawing.Point(172, 41);
+            this.bar30.Location = new System.Drawing.Point(171, 41);
             this.bar30.MaximumBarValue = 100F;
             this.bar30.MinimumBarValue = 0F;
             this.bar30.Name = "bar30";
@@ -2543,7 +2543,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv29.Location = new System.Drawing.Point(102, 19);
             this.lv29.Name = "lv29";
-            this.lv29.Size = new System.Drawing.Size(64, 19);
+            this.lv29.Size = new System.Drawing.Size(63, 19);
             this.lv29.TabIndex = 11;
             this.lv29.Text = "100.00 ft";
             this.lv29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2561,7 +2561,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar29.EnableOverCap = true;
             this.bar29.EnableOverlay1 = false;
             this.bar29.EnableOverlay2 = false;
-            this.bar29.Location = new System.Drawing.Point(172, 22);
+            this.bar29.Location = new System.Drawing.Point(171, 22);
             this.bar29.MaximumBarValue = 100F;
             this.bar29.MinimumBarValue = 0F;
             this.bar29.Name = "bar29";
@@ -2598,7 +2598,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar28.EnableOverCap = true;
             this.bar28.EnableOverlay1 = false;
             this.bar28.EnableOverlay2 = false;
-            this.bar28.Location = new System.Drawing.Point(172, 3);
+            this.bar28.Location = new System.Drawing.Point(171, 3);
             this.bar28.MaximumBarValue = 100F;
             this.bar28.MinimumBarValue = 0F;
             this.bar28.Name = "bar28";
@@ -2641,7 +2641,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv28.Location = new System.Drawing.Point(102, 0);
             this.lv28.Name = "lv28";
-            this.lv28.Size = new System.Drawing.Size(64, 19);
+            this.lv28.Size = new System.Drawing.Size(63, 19);
             this.lv28.TabIndex = 10;
             this.lv28.Text = "100.00 ft";
             this.lv28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2730,7 +2730,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel5.ColumnCount = 3;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.36787F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.63213F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 313F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 314F));
             this.tableLayoutPanel5.Controls.Add(this.lv27, 1, 3);
             this.tableLayoutPanel5.Controls.Add(this.bar27, 2, 3);
             this.tableLayoutPanel5.Controls.Add(this.lv26, 1, 2);
@@ -2760,7 +2760,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv27.Location = new System.Drawing.Point(105, 51);
             this.lv27.Name = "lv27";
-            this.lv27.Size = new System.Drawing.Size(84, 17);
+            this.lv27.Size = new System.Drawing.Size(83, 17);
             this.lv27.TabIndex = 13;
             this.lv27.Text = "100.00 mph";
             this.lv27.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2778,7 +2778,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar27.EnableOverCap = true;
             this.bar27.EnableOverlay1 = false;
             this.bar27.EnableOverlay2 = false;
-            this.bar27.Location = new System.Drawing.Point(195, 53);
+            this.bar27.Location = new System.Drawing.Point(194, 53);
             this.bar27.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bar27.MaximumBarValue = 100F;
             this.bar27.MinimumBarValue = 0F;
@@ -2798,7 +2798,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv26.Location = new System.Drawing.Point(105, 34);
             this.lv26.Name = "lv26";
-            this.lv26.Size = new System.Drawing.Size(84, 17);
+            this.lv26.Size = new System.Drawing.Size(83, 17);
             this.lv26.TabIndex = 12;
             this.lv26.Text = "100.00 ft";
             this.lv26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2816,7 +2816,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar26.EnableOverCap = true;
             this.bar26.EnableOverlay1 = false;
             this.bar26.EnableOverlay2 = false;
-            this.bar26.Location = new System.Drawing.Point(195, 36);
+            this.bar26.Location = new System.Drawing.Point(194, 36);
             this.bar26.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bar26.MaximumBarValue = 100F;
             this.bar26.MinimumBarValue = 0F;
@@ -2836,7 +2836,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv25.Location = new System.Drawing.Point(105, 17);
             this.lv25.Name = "lv25";
-            this.lv25.Size = new System.Drawing.Size(84, 17);
+            this.lv25.Size = new System.Drawing.Size(83, 17);
             this.lv25.TabIndex = 11;
             this.lv25.Text = "100.00 mph";
             this.lv25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2854,7 +2854,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar25.EnableOverCap = true;
             this.bar25.EnableOverlay1 = false;
             this.bar25.EnableOverlay2 = false;
-            this.bar25.Location = new System.Drawing.Point(195, 19);
+            this.bar25.Location = new System.Drawing.Point(194, 19);
             this.bar25.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bar25.MaximumBarValue = 100F;
             this.bar25.MinimumBarValue = 0F;
@@ -2892,7 +2892,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar24.EnableOverCap = true;
             this.bar24.EnableOverlay1 = false;
             this.bar24.EnableOverlay2 = false;
-            this.bar24.Location = new System.Drawing.Point(195, 2);
+            this.bar24.Location = new System.Drawing.Point(194, 2);
             this.bar24.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bar24.MaximumBarValue = 100F;
             this.bar24.MinimumBarValue = 0F;
@@ -2948,7 +2948,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv24.Location = new System.Drawing.Point(105, 0);
             this.lv24.Name = "lv24";
-            this.lv24.Size = new System.Drawing.Size(84, 17);
+            this.lv24.Size = new System.Drawing.Size(83, 17);
             this.lv24.TabIndex = 10;
             this.lv24.Text = "100.00 mph";
             this.lv24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3001,7 +3001,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel15.ColumnCount = 3;
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 337F));
             this.tableLayoutPanel15.Controls.Add(this.lv59, 1, 10);
             this.tableLayoutPanel15.Controls.Add(this.lv58, 1, 9);
             this.tableLayoutPanel15.Controls.Add(this.lv57, 1, 8);
@@ -3059,7 +3059,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv59.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv59.Location = new System.Drawing.Point(102, 196);
             this.lv59.Name = "lv59";
-            this.lv59.Size = new System.Drawing.Size(64, 20);
+            this.lv59.Size = new System.Drawing.Size(63, 20);
             this.lv59.TabIndex = 12;
             this.lv59.Text = "100.00%";
             this.lv59.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3071,7 +3071,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv58.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv58.Location = new System.Drawing.Point(102, 176);
             this.lv58.Name = "lv58";
-            this.lv58.Size = new System.Drawing.Size(64, 20);
+            this.lv58.Size = new System.Drawing.Size(63, 20);
             this.lv58.TabIndex = 12;
             this.lv58.Text = "100.00%";
             this.lv58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3083,7 +3083,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv57.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv57.Location = new System.Drawing.Point(102, 156);
             this.lv57.Name = "lv57";
-            this.lv57.Size = new System.Drawing.Size(64, 20);
+            this.lv57.Size = new System.Drawing.Size(63, 20);
             this.lv57.TabIndex = 12;
             this.lv57.Text = "100.00%";
             this.lv57.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3095,7 +3095,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv56.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv56.Location = new System.Drawing.Point(102, 136);
             this.lv56.Name = "lv56";
-            this.lv56.Size = new System.Drawing.Size(64, 20);
+            this.lv56.Size = new System.Drawing.Size(63, 20);
             this.lv56.TabIndex = 12;
             this.lv56.Text = "100.00%";
             this.lv56.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3107,7 +3107,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv55.Location = new System.Drawing.Point(102, 116);
             this.lv55.Name = "lv55";
-            this.lv55.Size = new System.Drawing.Size(64, 20);
+            this.lv55.Size = new System.Drawing.Size(63, 20);
             this.lv55.TabIndex = 12;
             this.lv55.Text = "100.00%";
             this.lv55.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3119,7 +3119,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv54.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv54.Location = new System.Drawing.Point(102, 96);
             this.lv54.Name = "lv54";
-            this.lv54.Size = new System.Drawing.Size(64, 20);
+            this.lv54.Size = new System.Drawing.Size(63, 20);
             this.lv54.TabIndex = 12;
             this.lv54.Text = "100.00%";
             this.lv54.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3215,7 +3215,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv52.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv52.Location = new System.Drawing.Point(102, 57);
             this.lv52.Name = "lv52";
-            this.lv52.Size = new System.Drawing.Size(64, 19);
+            this.lv52.Size = new System.Drawing.Size(63, 19);
             this.lv52.TabIndex = 13;
             this.lv52.Text = "100.00%";
             this.lv52.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3233,8 +3233,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar52.EnableOverCap = false;
             this.bar52.EnableOverlay1 = false;
             this.bar52.EnableOverlay2 = false;
-            this.bar52.Location = new System.Drawing.Point(172, 60);
-            this.bar52.MaximumBarValue = 100F;
+            this.bar52.Location = new System.Drawing.Point(171, 60);
+            this.bar52.MaximumBarValue = 250F;
             this.bar52.MinimumBarValue = 0F;
             this.bar52.Name = "bar52";
             this.bar52.Size = new System.Drawing.Size(304, 13);
@@ -3252,7 +3252,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv51.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv51.Location = new System.Drawing.Point(102, 38);
             this.lv51.Name = "lv51";
-            this.lv51.Size = new System.Drawing.Size(64, 19);
+            this.lv51.Size = new System.Drawing.Size(63, 19);
             this.lv51.TabIndex = 12;
             this.lv51.Text = "100.00%";
             this.lv51.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3270,8 +3270,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar51.EnableOverCap = false;
             this.bar51.EnableOverlay1 = false;
             this.bar51.EnableOverlay2 = false;
-            this.bar51.Location = new System.Drawing.Point(172, 41);
-            this.bar51.MaximumBarValue = 100F;
+            this.bar51.Location = new System.Drawing.Point(171, 41);
+            this.bar51.MaximumBarValue = 250F;
             this.bar51.MinimumBarValue = 0F;
             this.bar51.Name = "bar51";
             this.bar51.Size = new System.Drawing.Size(304, 13);
@@ -3289,7 +3289,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv50.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv50.Location = new System.Drawing.Point(102, 19);
             this.lv50.Name = "lv50";
-            this.lv50.Size = new System.Drawing.Size(64, 19);
+            this.lv50.Size = new System.Drawing.Size(63, 19);
             this.lv50.TabIndex = 11;
             this.lv50.Text = "100.00%";
             this.lv50.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3307,8 +3307,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar50.EnableOverCap = false;
             this.bar50.EnableOverlay1 = false;
             this.bar50.EnableOverlay2 = false;
-            this.bar50.Location = new System.Drawing.Point(172, 22);
-            this.bar50.MaximumBarValue = 100F;
+            this.bar50.Location = new System.Drawing.Point(171, 22);
+            this.bar50.MaximumBarValue = 250F;
             this.bar50.MinimumBarValue = 0F;
             this.bar50.Name = "bar50";
             this.bar50.Size = new System.Drawing.Size(304, 13);
@@ -3344,8 +3344,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar49.EnableOverCap = false;
             this.bar49.EnableOverlay1 = false;
             this.bar49.EnableOverlay2 = false;
-            this.bar49.Location = new System.Drawing.Point(172, 3);
-            this.bar49.MaximumBarValue = 100F;
+            this.bar49.Location = new System.Drawing.Point(171, 3);
+            this.bar49.MaximumBarValue = 250F;
             this.bar49.MinimumBarValue = 0F;
             this.bar49.Name = "bar49";
             this.bar49.Size = new System.Drawing.Size(304, 13);
@@ -3399,7 +3399,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv49.Location = new System.Drawing.Point(102, 0);
             this.lv49.Name = "lv49";
-            this.lv49.Size = new System.Drawing.Size(64, 19);
+            this.lv49.Size = new System.Drawing.Size(63, 19);
             this.lv49.TabIndex = 10;
             this.lv49.Text = "100.00%";
             this.lv49.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3417,8 +3417,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar53.EnableOverCap = false;
             this.bar53.EnableOverlay1 = false;
             this.bar53.EnableOverlay2 = false;
-            this.bar53.Location = new System.Drawing.Point(172, 79);
-            this.bar53.MaximumBarValue = 100F;
+            this.bar53.Location = new System.Drawing.Point(171, 79);
+            this.bar53.MaximumBarValue = 250F;
             this.bar53.MinimumBarValue = 0F;
             this.bar53.Name = "bar53";
             this.bar53.Size = new System.Drawing.Size(304, 13);
@@ -3442,8 +3442,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar54.EnableOverCap = false;
             this.bar54.EnableOverlay1 = false;
             this.bar54.EnableOverlay2 = false;
-            this.bar54.Location = new System.Drawing.Point(172, 99);
-            this.bar54.MaximumBarValue = 100F;
+            this.bar54.Location = new System.Drawing.Point(171, 99);
+            this.bar54.MaximumBarValue = 250F;
             this.bar54.MinimumBarValue = 0F;
             this.bar54.Name = "bar54";
             this.bar54.Size = new System.Drawing.Size(304, 13);
@@ -3467,8 +3467,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar55.EnableOverCap = false;
             this.bar55.EnableOverlay1 = false;
             this.bar55.EnableOverlay2 = false;
-            this.bar55.Location = new System.Drawing.Point(172, 119);
-            this.bar55.MaximumBarValue = 100F;
+            this.bar55.Location = new System.Drawing.Point(171, 119);
+            this.bar55.MaximumBarValue = 250F;
             this.bar55.MinimumBarValue = 0F;
             this.bar55.Name = "bar55";
             this.bar55.Size = new System.Drawing.Size(304, 13);
@@ -3492,8 +3492,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar56.EnableOverCap = false;
             this.bar56.EnableOverlay1 = false;
             this.bar56.EnableOverlay2 = false;
-            this.bar56.Location = new System.Drawing.Point(172, 139);
-            this.bar56.MaximumBarValue = 100F;
+            this.bar56.Location = new System.Drawing.Point(171, 139);
+            this.bar56.MaximumBarValue = 250F;
             this.bar56.MinimumBarValue = 0F;
             this.bar56.Name = "bar56";
             this.bar56.Size = new System.Drawing.Size(304, 13);
@@ -3517,8 +3517,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar57.EnableOverCap = false;
             this.bar57.EnableOverlay1 = false;
             this.bar57.EnableOverlay2 = false;
-            this.bar57.Location = new System.Drawing.Point(172, 159);
-            this.bar57.MaximumBarValue = 100F;
+            this.bar57.Location = new System.Drawing.Point(171, 159);
+            this.bar57.MaximumBarValue = 250F;
             this.bar57.MinimumBarValue = 0F;
             this.bar57.Name = "bar57";
             this.bar57.Size = new System.Drawing.Size(304, 13);
@@ -3542,8 +3542,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar58.EnableOverCap = false;
             this.bar58.EnableOverlay1 = false;
             this.bar58.EnableOverlay2 = false;
-            this.bar58.Location = new System.Drawing.Point(172, 179);
-            this.bar58.MaximumBarValue = 100F;
+            this.bar58.Location = new System.Drawing.Point(171, 179);
+            this.bar58.MaximumBarValue = 250F;
             this.bar58.MinimumBarValue = 0F;
             this.bar58.Name = "bar58";
             this.bar58.Size = new System.Drawing.Size(304, 13);
@@ -3567,8 +3567,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar59.EnableOverCap = false;
             this.bar59.EnableOverlay1 = false;
             this.bar59.EnableOverlay2 = false;
-            this.bar59.Location = new System.Drawing.Point(172, 199);
-            this.bar59.MaximumBarValue = 100F;
+            this.bar59.Location = new System.Drawing.Point(171, 199);
+            this.bar59.MaximumBarValue = 250F;
             this.bar59.MinimumBarValue = 0F;
             this.bar59.Name = "bar59";
             this.bar59.Size = new System.Drawing.Size(304, 13);
@@ -3586,7 +3586,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv53.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv53.Location = new System.Drawing.Point(102, 76);
             this.lv53.Name = "lv53";
-            this.lv53.Size = new System.Drawing.Size(64, 20);
+            this.lv53.Size = new System.Drawing.Size(63, 20);
             this.lv53.TabIndex = 11;
             this.lv53.Text = "100.00%";
             this.lv53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3623,7 +3623,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel14.ColumnCount = 3;
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
-            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336F));
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 337F));
             this.tableLayoutPanel14.Controls.Add(this.lv48, 1, 10);
             this.tableLayoutPanel14.Controls.Add(this.lv47, 1, 9);
             this.tableLayoutPanel14.Controls.Add(this.lv46, 1, 8);
@@ -3681,7 +3681,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv48.Location = new System.Drawing.Point(102, 196);
             this.lv48.Name = "lv48";
-            this.lv48.Size = new System.Drawing.Size(64, 20);
+            this.lv48.Size = new System.Drawing.Size(63, 20);
             this.lv48.TabIndex = 12;
             this.lv48.Text = "30";
             this.lv48.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3693,7 +3693,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv47.Location = new System.Drawing.Point(102, 176);
             this.lv47.Name = "lv47";
-            this.lv47.Size = new System.Drawing.Size(64, 20);
+            this.lv47.Size = new System.Drawing.Size(63, 20);
             this.lv47.TabIndex = 12;
             this.lv47.Text = "30";
             this.lv47.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3705,7 +3705,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv46.Location = new System.Drawing.Point(102, 156);
             this.lv46.Name = "lv46";
-            this.lv46.Size = new System.Drawing.Size(64, 20);
+            this.lv46.Size = new System.Drawing.Size(63, 20);
             this.lv46.TabIndex = 12;
             this.lv46.Text = "30";
             this.lv46.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3717,7 +3717,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv45.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv45.Location = new System.Drawing.Point(102, 136);
             this.lv45.Name = "lv45";
-            this.lv45.Size = new System.Drawing.Size(64, 20);
+            this.lv45.Size = new System.Drawing.Size(63, 20);
             this.lv45.TabIndex = 12;
             this.lv45.Text = "30";
             this.lv45.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3729,7 +3729,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv44.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv44.Location = new System.Drawing.Point(102, 116);
             this.lv44.Name = "lv44";
-            this.lv44.Size = new System.Drawing.Size(64, 20);
+            this.lv44.Size = new System.Drawing.Size(63, 20);
             this.lv44.TabIndex = 12;
             this.lv44.Text = "30";
             this.lv44.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3741,7 +3741,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv43.Location = new System.Drawing.Point(102, 96);
             this.lv43.Name = "lv43";
-            this.lv43.Size = new System.Drawing.Size(64, 20);
+            this.lv43.Size = new System.Drawing.Size(63, 20);
             this.lv43.TabIndex = 12;
             this.lv43.Text = "30";
             this.lv43.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3837,7 +3837,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv41.Location = new System.Drawing.Point(102, 57);
             this.lv41.Name = "lv41";
-            this.lv41.Size = new System.Drawing.Size(64, 19);
+            this.lv41.Size = new System.Drawing.Size(63, 19);
             this.lv41.TabIndex = 13;
             this.lv41.Text = "30";
             this.lv41.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3855,7 +3855,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar41.EnableOverCap = false;
             this.bar41.EnableOverlay1 = false;
             this.bar41.EnableOverlay2 = false;
-            this.bar41.Location = new System.Drawing.Point(172, 60);
+            this.bar41.Location = new System.Drawing.Point(171, 60);
             this.bar41.MaximumBarValue = 100F;
             this.bar41.MinimumBarValue = 0F;
             this.bar41.Name = "bar41";
@@ -3874,7 +3874,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv40.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv40.Location = new System.Drawing.Point(102, 38);
             this.lv40.Name = "lv40";
-            this.lv40.Size = new System.Drawing.Size(64, 19);
+            this.lv40.Size = new System.Drawing.Size(63, 19);
             this.lv40.TabIndex = 12;
             this.lv40.Text = "30";
             this.lv40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3892,7 +3892,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar40.EnableOverCap = false;
             this.bar40.EnableOverlay1 = false;
             this.bar40.EnableOverlay2 = false;
-            this.bar40.Location = new System.Drawing.Point(172, 41);
+            this.bar40.Location = new System.Drawing.Point(171, 41);
             this.bar40.MaximumBarValue = 100F;
             this.bar40.MinimumBarValue = 0F;
             this.bar40.Name = "bar40";
@@ -3911,7 +3911,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv39.Location = new System.Drawing.Point(102, 19);
             this.lv39.Name = "lv39";
-            this.lv39.Size = new System.Drawing.Size(64, 19);
+            this.lv39.Size = new System.Drawing.Size(63, 19);
             this.lv39.TabIndex = 11;
             this.lv39.Text = "30";
             this.lv39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3929,7 +3929,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar39.EnableOverCap = false;
             this.bar39.EnableOverlay1 = false;
             this.bar39.EnableOverlay2 = false;
-            this.bar39.Location = new System.Drawing.Point(172, 22);
+            this.bar39.Location = new System.Drawing.Point(171, 22);
             this.bar39.MaximumBarValue = 100F;
             this.bar39.MinimumBarValue = 0F;
             this.bar39.Name = "bar39";
@@ -3966,7 +3966,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar38.EnableOverCap = false;
             this.bar38.EnableOverlay1 = false;
             this.bar38.EnableOverlay2 = false;
-            this.bar38.Location = new System.Drawing.Point(172, 3);
+            this.bar38.Location = new System.Drawing.Point(171, 3);
             this.bar38.MaximumBarValue = 100F;
             this.bar38.MinimumBarValue = 0F;
             this.bar38.Name = "bar38";
@@ -4021,7 +4021,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv38.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv38.Location = new System.Drawing.Point(102, 0);
             this.lv38.Name = "lv38";
-            this.lv38.Size = new System.Drawing.Size(64, 19);
+            this.lv38.Size = new System.Drawing.Size(63, 19);
             this.lv38.TabIndex = 10;
             this.lv38.Text = "30";
             this.lv38.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4039,7 +4039,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar42.EnableOverCap = false;
             this.bar42.EnableOverlay1 = false;
             this.bar42.EnableOverlay2 = false;
-            this.bar42.Location = new System.Drawing.Point(172, 79);
+            this.bar42.Location = new System.Drawing.Point(171, 79);
             this.bar42.MaximumBarValue = 100F;
             this.bar42.MinimumBarValue = 0F;
             this.bar42.Name = "bar42";
@@ -4064,7 +4064,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar43.EnableOverCap = false;
             this.bar43.EnableOverlay1 = false;
             this.bar43.EnableOverlay2 = false;
-            this.bar43.Location = new System.Drawing.Point(172, 99);
+            this.bar43.Location = new System.Drawing.Point(171, 99);
             this.bar43.MaximumBarValue = 100F;
             this.bar43.MinimumBarValue = 0F;
             this.bar43.Name = "bar43";
@@ -4089,7 +4089,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar44.EnableOverCap = false;
             this.bar44.EnableOverlay1 = false;
             this.bar44.EnableOverlay2 = false;
-            this.bar44.Location = new System.Drawing.Point(172, 119);
+            this.bar44.Location = new System.Drawing.Point(171, 119);
             this.bar44.MaximumBarValue = 100F;
             this.bar44.MinimumBarValue = 0F;
             this.bar44.Name = "bar44";
@@ -4114,7 +4114,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar45.EnableOverCap = false;
             this.bar45.EnableOverlay1 = false;
             this.bar45.EnableOverlay2 = false;
-            this.bar45.Location = new System.Drawing.Point(172, 139);
+            this.bar45.Location = new System.Drawing.Point(171, 139);
             this.bar45.MaximumBarValue = 100F;
             this.bar45.MinimumBarValue = 0F;
             this.bar45.Name = "bar45";
@@ -4139,7 +4139,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar46.EnableOverCap = false;
             this.bar46.EnableOverlay1 = false;
             this.bar46.EnableOverlay2 = false;
-            this.bar46.Location = new System.Drawing.Point(172, 159);
+            this.bar46.Location = new System.Drawing.Point(171, 159);
             this.bar46.MaximumBarValue = 100F;
             this.bar46.MinimumBarValue = 0F;
             this.bar46.Name = "bar46";
@@ -4164,7 +4164,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar47.EnableOverCap = false;
             this.bar47.EnableOverlay1 = false;
             this.bar47.EnableOverlay2 = false;
-            this.bar47.Location = new System.Drawing.Point(172, 179);
+            this.bar47.Location = new System.Drawing.Point(171, 179);
             this.bar47.MaximumBarValue = 100F;
             this.bar47.MinimumBarValue = 0F;
             this.bar47.Name = "bar47";
@@ -4189,7 +4189,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar48.EnableOverCap = false;
             this.bar48.EnableOverlay1 = false;
             this.bar48.EnableOverlay2 = false;
-            this.bar48.Location = new System.Drawing.Point(172, 199);
+            this.bar48.Location = new System.Drawing.Point(171, 199);
             this.bar48.MaximumBarValue = 100F;
             this.bar48.MinimumBarValue = 0F;
             this.bar48.Name = "bar48";
@@ -4208,7 +4208,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv42.Location = new System.Drawing.Point(102, 76);
             this.lv42.Name = "lv42";
-            this.lv42.Size = new System.Drawing.Size(64, 20);
+            this.lv42.Size = new System.Drawing.Size(63, 20);
             this.lv42.TabIndex = 11;
             this.lv42.Text = "30";
             this.lv42.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4259,7 +4259,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel16.ColumnCount = 3;
             this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65.88235F));
             this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.11765F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 335F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336F));
             this.tableLayoutPanel16.Controls.Add(this.lv67, 1, 7);
             this.tableLayoutPanel16.Controls.Add(this.lv66, 1, 6);
             this.tableLayoutPanel16.Controls.Add(this.lv65, 1, 5);
@@ -4306,7 +4306,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv67.Location = new System.Drawing.Point(114, 133);
             this.lv67.Name = "lv67";
-            this.lv67.Size = new System.Drawing.Size(52, 19);
+            this.lv67.Size = new System.Drawing.Size(51, 19);
             this.lv67.TabIndex = 24;
             this.lv67.Text = "100.00%";
             this.lv67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4318,7 +4318,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv66.Location = new System.Drawing.Point(114, 114);
             this.lv66.Name = "lv66";
-            this.lv66.Size = new System.Drawing.Size(52, 19);
+            this.lv66.Size = new System.Drawing.Size(51, 19);
             this.lv66.TabIndex = 23;
             this.lv66.Text = "100.00%";
             this.lv66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4330,7 +4330,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv65.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv65.Location = new System.Drawing.Point(114, 95);
             this.lv65.Name = "lv65";
-            this.lv65.Size = new System.Drawing.Size(52, 19);
+            this.lv65.Size = new System.Drawing.Size(51, 19);
             this.lv65.TabIndex = 22;
             this.lv65.Text = "100.00%";
             this.lv65.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4342,7 +4342,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv64.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv64.Location = new System.Drawing.Point(114, 76);
             this.lv64.Name = "lv64";
-            this.lv64.Size = new System.Drawing.Size(52, 19);
+            this.lv64.Size = new System.Drawing.Size(51, 19);
             this.lv64.TabIndex = 21;
             this.lv64.Text = "100.00%";
             this.lv64.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4354,7 +4354,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv63.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv63.Location = new System.Drawing.Point(114, 57);
             this.lv63.Name = "lv63";
-            this.lv63.Size = new System.Drawing.Size(52, 19);
+            this.lv63.Size = new System.Drawing.Size(51, 19);
             this.lv63.TabIndex = 20;
             this.lv63.Text = "100.00%";
             this.lv63.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4366,7 +4366,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv62.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv62.Location = new System.Drawing.Point(114, 38);
             this.lv62.Name = "lv62";
-            this.lv62.Size = new System.Drawing.Size(52, 19);
+            this.lv62.Size = new System.Drawing.Size(51, 19);
             this.lv62.TabIndex = 19;
             this.lv62.Text = "100.00%";
             this.lv62.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4378,7 +4378,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv61.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv61.Location = new System.Drawing.Point(114, 19);
             this.lv61.Name = "lv61";
-            this.lv61.Size = new System.Drawing.Size(52, 19);
+            this.lv61.Size = new System.Drawing.Size(51, 19);
             this.lv61.TabIndex = 18;
             this.lv61.Text = "100.00%";
             this.lv61.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -4396,7 +4396,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar60.EnableOverCap = false;
             this.bar60.EnableOverlay1 = false;
             this.bar60.EnableOverlay2 = false;
-            this.bar60.Location = new System.Drawing.Point(172, 3);
+            this.bar60.Location = new System.Drawing.Point(171, 3);
             this.bar60.MaximumBarValue = 100F;
             this.bar60.MinimumBarValue = 0F;
             this.bar60.Name = "bar60";
@@ -4421,7 +4421,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar67.EnableOverCap = false;
             this.bar67.EnableOverlay1 = false;
             this.bar67.EnableOverlay2 = false;
-            this.bar67.Location = new System.Drawing.Point(172, 136);
+            this.bar67.Location = new System.Drawing.Point(171, 136);
             this.bar67.MaximumBarValue = 100F;
             this.bar67.MinimumBarValue = 0F;
             this.bar67.Name = "bar67";
@@ -4446,7 +4446,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar61.EnableOverCap = false;
             this.bar61.EnableOverlay1 = false;
             this.bar61.EnableOverlay2 = false;
-            this.bar61.Location = new System.Drawing.Point(172, 22);
+            this.bar61.Location = new System.Drawing.Point(171, 22);
             this.bar61.MaximumBarValue = 100F;
             this.bar61.MinimumBarValue = 0F;
             this.bar61.Name = "bar61";
@@ -4471,7 +4471,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar66.EnableOverCap = false;
             this.bar66.EnableOverlay1 = false;
             this.bar66.EnableOverlay2 = false;
-            this.bar66.Location = new System.Drawing.Point(172, 117);
+            this.bar66.Location = new System.Drawing.Point(171, 117);
             this.bar66.MaximumBarValue = 100F;
             this.bar66.MinimumBarValue = 0F;
             this.bar66.Name = "bar66";
@@ -4496,7 +4496,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar62.EnableOverCap = false;
             this.bar62.EnableOverlay1 = false;
             this.bar62.EnableOverlay2 = false;
-            this.bar62.Location = new System.Drawing.Point(172, 41);
+            this.bar62.Location = new System.Drawing.Point(171, 41);
             this.bar62.MaximumBarValue = 100F;
             this.bar62.MinimumBarValue = 0F;
             this.bar62.Name = "bar62";
@@ -4521,7 +4521,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar65.EnableOverCap = false;
             this.bar65.EnableOverlay1 = false;
             this.bar65.EnableOverlay2 = false;
-            this.bar65.Location = new System.Drawing.Point(172, 98);
+            this.bar65.Location = new System.Drawing.Point(171, 98);
             this.bar65.MaximumBarValue = 100F;
             this.bar65.MinimumBarValue = 0F;
             this.bar65.Name = "bar65";
@@ -4546,7 +4546,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar63.EnableOverCap = false;
             this.bar63.EnableOverlay1 = false;
             this.bar63.EnableOverlay2 = false;
-            this.bar63.Location = new System.Drawing.Point(172, 60);
+            this.bar63.Location = new System.Drawing.Point(171, 60);
             this.bar63.MaximumBarValue = 100F;
             this.bar63.MinimumBarValue = 0F;
             this.bar63.Name = "bar63";
@@ -4571,7 +4571,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar64.EnableOverCap = false;
             this.bar64.EnableOverlay1 = false;
             this.bar64.EnableOverlay2 = false;
-            this.bar64.Location = new System.Drawing.Point(172, 79);
+            this.bar64.Location = new System.Drawing.Point(171, 79);
             this.bar64.MaximumBarValue = 100F;
             this.bar64.MinimumBarValue = 0F;
             this.bar64.Name = "bar64";
@@ -4686,7 +4686,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv60.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.lv60.Location = new System.Drawing.Point(114, 0);
             this.lv60.Name = "lv60";
-            this.lv60.Size = new System.Drawing.Size(52, 19);
+            this.lv60.Size = new System.Drawing.Size(51, 19);
             this.lv60.TabIndex = 17;
             this.lv60.Text = "100.00%";
             this.lv60.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
