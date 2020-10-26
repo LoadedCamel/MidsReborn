@@ -16,7 +16,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
     public partial class frmTotalsV2 : Form
     {
         private readonly frmMain _myParent;
-        private bool _keepOnTop;
+        private bool KeepOnTop { get; set; }
 
         public Control StatControl(string tab, int panel, string type, int control)
         {
@@ -76,7 +76,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
         public frmTotalsV2(ref frmMain iParent)
         {
             Load += OnLoad;
-            _keepOnTop = true;
+            KeepOnTop = true;
             InitializeComponent();
             _myParent = iParent;
 
@@ -136,8 +136,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void PbTopMostClick(object sender, EventArgs e)
         {
-            _keepOnTop = !_keepOnTop;
-            TopMost = _keepOnTop;
+            KeepOnTop = !KeepOnTop;
+            TopMost = KeepOnTop;
             pbTopMost.Refresh();
         }
 
@@ -146,7 +146,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             if (_myParent?.Drawing == null) return;
 
             var index = 2;
-            if (_keepOnTop) index = 3;
+            if (KeepOnTop) index = 3;
             var iStr = "Keep On top";
             var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
                 _myParent.Drawing.bxPower[index].Size.Height);
