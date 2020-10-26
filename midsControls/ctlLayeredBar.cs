@@ -312,7 +312,7 @@ namespace midsControls
                 P3Width = Value2Pixels(value)
             };
 
-            Debug.WriteLine(Convert.ToString(value) + " --> " + Convert.ToString(dim.P3Width));
+            //Debug.WriteLine(Convert.ToString(value) + " --> " + Convert.ToString(dim.P3Width));
 
             return dim;
         }
@@ -442,7 +442,7 @@ namespace midsControls
         public void SetValues(float value)
         {
             SubBarsDimensions dim = CalcSubBarsDimensions(value);
-            Debug.WriteLine(Name + " - P3Width: " + Convert.ToString(dim.P3Width));
+            //Debug.WriteLine(Name + " - P3Width: " + Convert.ToString(dim.P3Width));
             panel3.Width = dim.P3Width;
         }
 
