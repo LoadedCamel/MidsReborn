@@ -169,8 +169,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			Close();
-		}
+			DialogResult = DialogResult.Cancel;
+			Hide();
+        }
 
 		private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
 		{

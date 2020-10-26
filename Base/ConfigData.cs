@@ -72,7 +72,7 @@ public class ConfigData
             {
                 MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             }
-
+        TeamMembers = new Dictionary<string, int>();
         IntializeComponent();
     }
 
@@ -81,6 +81,7 @@ public class ConfigData
     public IncludeExclude Inc { get; } = new IncludeExclude();
     public Si9 I9 { get; } = new Si9();
     public FontSettings RtFont { get; } = new FontSettings();
+    public Dictionary<string, int> TeamMembers { get; } = new Dictionary<string, int>();
 
     public Size LastSize
     {

@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Data_Classes;
+using Base.Master_Classes;
 using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -819,13 +820,19 @@ namespace Hero_Designer.Forms
         private void addConditional_Click(object sender, EventArgs e)
         {
             //To do: Reference selected items and add to active conditional view and assign item name as the power fullname.
+            string powerName;
+            string cOp = string.Empty;
+            IPower? power;
+            string value;
+            ListViewItem item;
+
             switch (lvConditionalType.SelectedItems[0].Text)
             {
                 case "Power Active":
-                    var powerName = lvSubConditional.SelectedItems[0].Name;
-                    var power = DatabaseAPI.GetPowerByFullName(powerName);
-                    var value = lvConditionalBool.SelectedItems[0].Text;
-                    var item = new ListViewItem { Text = $@"Active:{power?.DisplayName}" };
+                    powerName = lvSubConditional.SelectedItems[0].Name;
+                    power = DatabaseAPI.GetPowerByFullName(powerName);
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    item = new ListViewItem { Text = $@"Active:{power?.DisplayName}" };
                     item.SubItems.Add("");
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
@@ -852,7 +859,6 @@ namespace Hero_Designer.Forms
                 case "Stacks":
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
-                    var cOp = string.Empty;
                     switch (lvConditionalOp.SelectedItems[0].Text)
                     {
                         case "Equal To":
@@ -878,6 +884,33 @@ namespace Hero_Designer.Forms
                     lvActiveConditionals.Columns[2].Width = -2;
                     myFX.ActiveConditionals.Add($"Stacks:{powerName}", $"{cOp} {value}");
                     break;
+                case "Team Members":
+                    var archetype = lvSubConditional.SelectedItems[0].Text;
+                    switch (lvConditionalOp.SelectedItems[0].Text)
+                    {
+                        case "Equal To":
+                            cOp = "=";
+                            break;
+                        case "Greater Than":
+                            cOp = ">";
+                            break;
+                        case "Less Than":
+                            cOp = "<";
+                            break;
+                    }
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    item = new ListViewItem {Text = $@"Team:{archetype}"};
+                    item.SubItems.Add(cOp);
+                    item.SubItems.Add(value);
+                    lvActiveConditionals.Items.Add(item);
+                    lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
+                    lvActiveConditionals.Columns[0].Width = -2;
+                    lvActiveConditionals.Columns[1].Text = "";
+                    lvActiveConditionals.Columns[1].Width = -2;
+                    lvActiveConditionals.Columns[2].Text = @"Value";
+                    lvActiveConditionals.Columns[2].Width = -2;
+                    myFX.ActiveConditionals.Add($"Team:{archetype}", $"{cOp} {value}");
+                    break;
             }
 
             UpdateFXText();
@@ -891,7 +924,6 @@ namespace Hero_Designer.Forms
 
         private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            IPower? selected;
             var powName = string.Empty;
 
             if (lvSubConditional.SelectedItems.Count != 0)
@@ -899,7 +931,7 @@ namespace Hero_Designer.Forms
                 powName = lvSubConditional.SelectedItems[0].Name;
             }
 
-            selected = DatabaseAPI.GetPowerByFullName(powName);
+            var selected = DatabaseAPI.GetPowerByFullName(powName);
 
             lvConditionalBool.Items.Clear();
             switch (lvConditionalType.SelectedItems[0].Text)
@@ -909,7 +941,6 @@ namespace Hero_Designer.Forms
                     lvConditionalBool.Items.Add("True");
                     lvConditionalBool.Items.Add("False");
                     lvConditionalBool.Columns[0].Text = @"Power Active?";
-                    lvConditionalBool.Columns[0].Width = -2;
                     lvConditionalBool.EndUpdate();
                     break;
                 case "Power Taken":
@@ -917,7 +948,6 @@ namespace Hero_Designer.Forms
                     lvConditionalBool.Items.Add("True");
                     lvConditionalBool.Items.Add("False");
                     lvConditionalBool.Columns[0].Text = @"Power Taken?";
-                    lvConditionalBool.Columns[0].Width = -2;
                     lvConditionalBool.EndUpdate();
                     break;
                 case "Stacks":
@@ -932,8 +962,18 @@ namespace Hero_Designer.Forms
                         }
                     }
 
-                    lvConditionalBool.Columns[0].Text = @"Stacks?";
-                    //lvConditionalBool.Columns[0].Width = -2;
+                    lvConditionalBool.Columns[0].Text = @"# of Stacks?";
+                    lvConditionalBool.EndUpdate();
+                    break;
+                case "Team Members":
+                    var tRange = Enumerable.Range(1, 7);
+                    lvConditionalBool.BeginUpdate();
+                    lvConditionalBool.Items.Clear();
+                    foreach (var num in tRange)
+                    {
+                        lvConditionalBool.Items.Add(num.ToString());
+                    }
+                    lvConditionalBool.Columns[0].Text = @"# of Members";
                     lvConditionalBool.EndUpdate();
                     break;
             }
@@ -1022,7 +1062,46 @@ namespace Hero_Designer.Forms
                             lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                         }
                     }
+
+                    lvConditionalOp.Columns[0].Text = @"Stacks are?";
+                    lvConditionalBool.Columns[0].Text = @"# of Stacks";
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
+                    lvSubConditional.Columns[0].Width = -2;
+                    lvSubConditional.EndUpdate();
+                    break;
+                case "Team Members":
+                    lvConditionalBool.Size = new Size(97, 170);
+                    lvConditionalBool.Location = new Point(460, 103);
+                    lvConditionalOp.Visible = true;
+                    lvConditionalBool.Enabled = true;
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    var teamATs = new List<string>
+                    {
+                        "Any",
+                        "Blaster",
+                        "Controller",
+                        "Defender",
+                        "Scrapper",
+                        "Tanker",
+                        "Peacebringer",
+                        "Warshade",
+                        "Sentinel",
+                        "Brute",
+                        "Stalker",
+                        "Mastermind",
+                        "Dominator",
+                        "Corruptor",
+                        "Arachnos Soldier",
+                        "Arachnos Widow"
+
+                    };
+                    foreach (var member in teamATs)
+                    {
+                        lvSubConditional.Items.Add(member);
+                    }
+                    lvConditionalOp.Columns[0].Text = @"Members are?";
+                    lvSubConditional.Columns[0].Text = @"Team Members";
                     lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
                     break;
@@ -1060,6 +1139,13 @@ namespace Hero_Designer.Forms
                         item.SubItems.Add(cVSplit[1]);
                         lvActiveConditionals.Items.Add(item);
                         break;
+                    case "Team":
+                        item = new ListViewItem { Text = $@"{condition}:{conditionPower}" };
+                        cVSplit = cVp.Value.Split(' ');
+                        item.SubItems.Add(cVSplit[0]);
+                        item.SubItems.Add(cVSplit[1]);
+                        lvActiveConditionals.Items.Add(item);
+                        break;
                 }
             }
             lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
@@ -1073,9 +1159,9 @@ namespace Hero_Designer.Forms
         private void UpdateConditionalTypes()
         {
             lvConditionalType.BeginUpdate();
-            var cTypes = new List<string> { "Power Active", "Power Taken", "Stacks" }.ToArray();
+            var cTypes = new List<string> {"Power Active", "Power Taken", "Stacks", "Team Members"};
             var indexVal = -1;
-            for (var index = 0; index < cTypes.Length; index++)
+            for (var index = 0; index < cTypes.Count; index++)
             {
                 lvConditionalType.Items.Add(cTypes[index]);
                 indexVal = index;

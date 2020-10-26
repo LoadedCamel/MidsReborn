@@ -59,7 +59,6 @@ public static class DatabaseAPI
         {
             if (!string.Equals(uID, Database.AttribMods.Modifier[index].ID, StringComparison.OrdinalIgnoreCase))
                 continue;
-            Console.WriteLine($"{uID}, {index}");
             AttribMod.Add(uID, index);
             return index;
         }

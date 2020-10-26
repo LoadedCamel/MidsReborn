@@ -59,6 +59,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.Label3 = new System.Windows.Forms.Label();
             this.GroupBox3 = new System.Windows.Forms.GroupBox();
+            this.overideScale = new System.Windows.Forms.CheckBox();
             this.Label28 = new System.Windows.Forms.Label();
             this.udScaleMax = new System.Windows.Forms.NumericUpDown();
             this.Label27 = new System.Windows.Forms.Label();
@@ -218,7 +219,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnFullPaste = new System.Windows.Forms.Button();
             this.btnFullCopy = new System.Windows.Forms.Button();
             this.btnCSVImport = new System.Windows.Forms.Button();
-            this.overideScale = new System.Windows.Forms.CheckBox();
             this.tcPower.SuspendLayout();
             this.tpText.SuspendLayout();
             this.GroupBox4.SuspendLayout();
@@ -556,6 +556,17 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.GroupBox3.TabIndex = 8;
             this.GroupBox3.TabStop = false;
             this.GroupBox3.Text = "Power Scaling";
+            // 
+            // overideScale
+            // 
+            this.overideScale.AutoSize = true;
+            this.overideScale.Location = new System.Drawing.Point(182, 20);
+            this.overideScale.Name = "overideScale";
+            this.overideScale.Size = new System.Drawing.Size(125, 18);
+            this.overideScale.TabIndex = 8;
+            this.overideScale.Text = "Override scaling limit";
+            this.overideScale.UseVisualStyleBackColor = true;
+            this.overideScale.CheckedChanged += new System.EventHandler(this.overideScale_CheckedChanged);
             // 
             // Label28
             // 
@@ -1501,6 +1512,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             // lvFX
             // 
+            this.lvFX.HorizontalScrollbar = true;
             this.lvFX.ItemHeight = 14;
             this.lvFX.Location = new System.Drawing.Point(8, 8);
             this.lvFX.Name = "lvFX";
@@ -2252,17 +2264,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnCSVImport.Text = "Import CSV String";
             this.btnCSVImport.UseVisualStyleBackColor = true;
             this.btnCSVImport.Click += new System.EventHandler(this.btnCSVImport_Click);
-            // 
-            // overideScale
-            // 
-            this.overideScale.AutoSize = true;
-            this.overideScale.Location = new System.Drawing.Point(182, 20);
-            this.overideScale.Name = "overideScale";
-            this.overideScale.Size = new System.Drawing.Size(125, 18);
-            this.overideScale.TabIndex = 8;
-            this.overideScale.Text = "Override scaling limit";
-            this.overideScale.UseVisualStyleBackColor = true;
-            this.overideScale.CheckedChanged += new System.EventHandler(this.overideScale_CheckedChanged);
             // 
             // frmEditPower
             // 
