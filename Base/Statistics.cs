@@ -25,8 +25,12 @@ public class Statistics
     public float EnduranceMaxEnd => _character.Totals.EndMax + 100f;
 
     public float EnduranceRecoveryNumeric
-        => (float) (EnduranceRecovery(false) * (double) (_character.Archetype.BaseRecovery * BaseMagic) *
-                    (_character.TotalsCapped.EndMax / 100.0 + 1.0));
+        => EnduranceRecovery(false) * (_character.Archetype.BaseRecovery * BaseMagic) *
+                    (_character.TotalsCapped.EndMax / 100 + 1);
+
+    public float EnduranceRecoveryNumericUncapped
+        => EnduranceRecovery(true) * (_character.Archetype.BaseRecovery * BaseMagic) *
+                   (_character.Totals.EndMax / 100 + 1);
 
     public float EnduranceTimeToFull => EnduranceMaxEnd / EnduranceRecoveryNumeric;
 

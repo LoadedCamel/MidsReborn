@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace midsControls
@@ -46,22 +45,21 @@ namespace midsControls
             _CanUpdate = true;
             if (!forceUpdate) return;
 
-            SetValues();
-            if (_EnableOverCap)
+            if (_EnableOverCap & !_EnableBaseValue)
             {
-                Color overCapColor = panel1.BackColor;
-                Color mainColor = panel3.BackColor;
-                if (Math.Abs(_Value - _ValueUncapped) < float.Epsilon)
+                if (_ValueUncapped <= _Value)
                 {
-                    panel1.BackColor = mainColor;
-                    panel3.BackColor = overCapColor;
+                    panel1.BackColor = _BarColor;
+                    panel3.BackColor = _OverCapColor;
                 }
                 else
                 {
-                    panel1.BackColor = overCapColor;
-                    panel3.BackColor = mainColor;
+                    panel1.BackColor = _OverCapColor;
+                    panel3.BackColor = _BarColor;
                 }
             }
+
+            SetValues();
         }
 
         #region SubBarsDimensions sub-class
@@ -312,8 +310,6 @@ namespace midsControls
                 P3Width = Value2Pixels(value)
             };
 
-            //Debug.WriteLine(Convert.ToString(value) + " --> " + Convert.ToString(dim.P3Width));
-
             return dim;
         }
 
@@ -323,7 +319,6 @@ namespace midsControls
             if (_EnableOverCap)
             {
                 // auxValue: overCapValue
-                //float relativeMax = Math.Max(_MaximumValue, auxValue);
                 if (auxValue > mainValue)
                 {
 
@@ -366,14 +361,12 @@ namespace midsControls
 
         private SubBarsDimensions CalcSubBarsDimensions(float mainValue, float baseValue, float uncappedValue)
         {
-            SubBarsDimensions dim = new SubBarsDimensions()
+            SubBarsDimensions dim = new SubBarsDimensions
             {
-                P3Pos = 0
+                P3Pos = 0, P1Width = Value2Pixels(uncappedValue), P2Width = Value2Pixels(baseValue)
             };
 
             //float relativeMax = Math.Max(_MaximumValue, uncappedValue);
-            dim.P1Width = Value2Pixels(uncappedValue);
-            dim.P2Width = Value2Pixels(baseValue);
             if (uncappedValue > mainValue)
             {
                 dim.P3Width = Value2Pixels(mainValue);
@@ -442,7 +435,6 @@ namespace midsControls
         public void SetValues(float value)
         {
             SubBarsDimensions dim = CalcSubBarsDimensions(value);
-            //Debug.WriteLine(Name + " - P3Width: " + Convert.ToString(dim.P3Width));
             panel3.Width = dim.P3Width;
         }
 
