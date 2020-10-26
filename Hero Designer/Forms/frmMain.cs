@@ -2016,8 +2016,10 @@ namespace Hero_Designer.Forms
                 }
 
                 drawing.ColorSwitch();
+                fTotals?.Refresh();
                 SetTitleBar();
                 UpdateColors();
+                
                 DoRedraw();
             }
             catch (Exception ex)
@@ -5574,10 +5576,7 @@ namespace Hero_Designer.Forms
 
         private void tsViewTotals_Click(object sender, EventArgs e)
         {
-            //FloatTotals(true);
-            var iParent = this;
-            frmTotalsV2 totalTest = new frmTotalsV2(ref iParent);
-            totalTest.Show();
+            FloatTotals(true);
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)

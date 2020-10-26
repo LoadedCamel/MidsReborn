@@ -55,26 +55,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             return null;
         }
 
-        private void SetTabPanelColorScheme()
+       public frmTotalsV2(ref frmMain iParent)
         {
-            if (MidsContext.Character.IsHero())
-            {
-                tabControlAdv2.InactiveTabColor = Color.DodgerBlue;
-                tabControlAdv2.TabPanelBackColor = Color.DodgerBlue;
-                tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
-                tabControlAdv2.ActiveTabColor = Color.Goldenrod;
-            }
-            else
-            {
-                tabControlAdv2.InactiveTabColor = Color.FromArgb(193, 23, 23);
-                tabControlAdv2.TabPanelBackColor = Color.FromArgb(193, 23, 23);
-                tabControlAdv2.FixedSingleBorderColor = Color.FromArgb(198, 128, 29);
-                tabControlAdv2.ActiveTabColor = Color.FromArgb(198, 128, 29);
-            }
-        }
-
-        public frmTotalsV2(ref frmMain iParent)
-        {
+            FormClosed += frmTotalsV2_FormClosed;
             Load += OnLoad;
             KeepOnTop = true;
             InitializeComponent();
@@ -86,12 +69,40 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // Windows theme is in use.
             tabControlAdv2.ActiveTabForeColor = Color.White;
             tabControlAdv2.InActiveTabForeColor = Color.Black;
-            SetTabPanelColorScheme();
+        }
+
+        public override void Refresh()
+        {
+            if (MidsContext.Character.IsHero())
+            {
+                tabControlAdv2.InactiveTabColor = Color.FromArgb(61, 111, 161);
+                tabControlAdv2.TabPanelBackColor = Color.FromArgb(61, 111, 161);
+                tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
+                tabControlAdv2.ActiveTabColor = Color.Goldenrod;
+            }
+            else
+            {
+                /*tabControlAdv2.InactiveTabColor = Color.FromArgb(193, 23, 23);
+                tabControlAdv2.TabPanelBackColor = Color.FromArgb(193, 23, 23);
+                tabControlAdv2.FixedSingleBorderColor = Color.FromArgb(198, 128, 29);
+                tabControlAdv2.ActiveTabColor = Color.FromArgb(198, 128, 29);*/
+                tabControlAdv2.InactiveTabColor = Color.FromArgb(138, 62, 57);
+                tabControlAdv2.TabPanelBackColor = Color.FromArgb(138, 62, 57);
+                tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
+                tabControlAdv2.ActiveTabColor = Color.Goldenrod;
+            }
+            base.Refresh();
         }
 
         private void OnLoad(object sender, EventArgs e)
         {
             CenterToParent();
+            Refresh();
+        }
+
+        private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _myParent.FloatTotals(false);
         }
 
         private void PbCloseClick(object sender, EventArgs e)
