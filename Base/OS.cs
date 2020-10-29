@@ -1,56 +1,16 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 public static class OS
 {
-    private const int Windows2000Major = 5;
-
-    private const int Windows2000Minor = 0;
-
-    private const int WindowsXpMajor = 5;
-
-    private const int WindowsXpMinor = 1;
-
-    private const int Windows2003Major = 5;
-
-    private const int Windows2003Minor = 2;
-
-    private const int WindowsVistaMajor = 6;
-
-    private const int WindowsVistaMinor = 0;
-
-    public const string SaveFolderName = "Hero & Villain Builds";
+    public const string SaveParentFolder = "Mids Reborn Builds";
 
     private static string AddSlash(string iPath)
 
     {
         return !iPath.EndsWith("\\") ? iPath + "\\" : iPath;
-    }
-
-    private static WindowsVersion GetWindowsVersion()
-
-    {
-        return Environment.OSVersion.Platform != PlatformID.Unix
-            ? Environment.OSVersion.Version.Major >= 5
-                ? !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 0))
-                    ? !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 1))
-                        ? !((Environment.OSVersion.Version.Major == 5) & (Environment.OSVersion.Version.Minor == 2))
-                            ? !((Environment.OSVersion.Version.Major == 6) & (Environment.OSVersion.Version.Minor == 0))
-                                ? !((Environment.OSVersion.Version.Major >= 6) &
-                                    (Environment.OSVersion.Version.Minor >= 0)) ? WindowsVersion.WinXP :
-                                WindowsVersion.NewerThanVista
-                                : WindowsVersion.Vista
-                            : WindowsVersion.Win2K3
-                        : WindowsVersion.WinXP
-                    : WindowsVersion.Win2K
-                : WindowsVersion.OlderThan2K
-            : WindowsVersion.WinXP;
-    }
-
-    public static string GetQuickOsid()
-    {
-        var windowsVersion = GetWindowsVersion();
-        return Enum.GetName(windowsVersion.GetType(), windowsVersion);
     }
 
     public static string GetMyDocumentsPath()
@@ -66,32 +26,5 @@ public static class OS
     public static string GetApplicationPath()
     {
         return AddSlash(Application.StartupPath);
-    }
-
-    public static string VistaUacErrorText()
-    {
-        //TODO: this isn't being used, but if we find a reason to use it, the app name needs to be updated
-        var str1 = "In order for installation and updates to function correctly," + '\n' +
-                   "you may need to set the application's shortcut to run as an adminstrator." + '\n' + '\n' +
-                   "To do this, right-click on the shortcut to Mids' Hero Designer and select Properties->Compatability->Always run as Administrator.";
-        var str2 = GetWindowsVersion() switch
-        {
-            WindowsVersion.Vista => 20 + "IMPORTANT: You are running Windows Vista! " + str1,
-            WindowsVersion.NewerThanVista => 20 + "IMPORTANT: You are running an unidentified version of Windows! " +
-                                             str1,
-            _ => ""
-        };
-        return str2;
-    }
-
-    private enum WindowsVersion
-
-    {
-        OlderThan2K,
-        Win2K,
-        WinXP,
-        Win2K3,
-        Vista,
-        NewerThanVista
     }
 }

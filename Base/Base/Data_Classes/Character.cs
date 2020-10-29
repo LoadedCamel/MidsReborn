@@ -202,24 +202,7 @@ namespace Base.Data_Classes
         {
             Console.WriteLine(nameof(BoxingBuff));
         }
-        /*public int SlotsRemaining
-        {
-            get
-            {
-                int num1;
-                if (Level < DatabaseAPI.Database.Levels.Length && DatabaseAPI.Database.Levels[Level].Slots > 0)
-                {
-                    int num2 = DatabaseAPI.Database.Levels[Level].Slots - CurrentBuild.SlotsPlacedAtLevel(Level);
-                    if (num2 < 0)
-                        num2 = 0;
-                    num1 = num2;
-                }
-                else
-                    num1 = 0;
-                return num1;
-            }
-        }*/
-
+        
         public bool CanPlaceSlot
         {
             get
@@ -320,29 +303,6 @@ namespace Base.Data_Classes
         // returns the last thing it tried to read from, for inclusion in the error message
         public void LoadPowersetsByName2(IList<string> names, ref string blameName)
         {
-            /*var powersets = names.Select(n => string.IsNullOrEmpty(n) ? null : DatabaseAPI.GetPowersetByName(n)).ToArray();
-            var toBlame = powersets.Select((ps, i) => new { Index = i, Ps = ps }).FirstOrDefault(x => x.Ps == null);
-            if (toBlame != null)
-                blameName = names[toBlame.Index];
-
-            if (names.Count > Powersets.Length + 1)
-                Powersets = new IPowerset[names.Count];
-            IPowerset powersetByName1 = DatabaseAPI.GetPowersetByName(names[0]);
-            if (powersetByName1 == null)
-                blameName = names[0];
-            Powersets[0] = powersetByName1;
-            IPowerset powersetByName2 = DatabaseAPI.GetPowersetByName(names[1]);
-            if (powersetByName2 == null)
-                blameName = names[1];
-            Powersets[1] = powersetByName2;
-
-            for (int index = 2; index < names.Count; ++index)
-            {
-                IPowerset powersetByName3 = DatabaseAPI.GetPowersetByName(names[index]);
-                if (powersetByName3 == null)
-                    blameName = names[index];
-                Powersets[index + 1] = powersetByName3;
-            }*/
             Powersets = new IPowerset[8];
             var m = 0;
             var k = 3;

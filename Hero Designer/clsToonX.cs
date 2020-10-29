@@ -2361,7 +2361,7 @@ namespace Hero_Designer
                     if (strArray != null)
                         a = strArray.Length <= 0 ? "" : strArray[0];
                     else
-                        throw new Exception("Reached end of data wihout finding header.");
+                        throw new Exception("Reached end of data without finding header.");
                 } while (!(string.Equals(a, Files.Headers.Save.Uncompressed, StringComparison.OrdinalIgnoreCase) |
                            string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase)));
             }

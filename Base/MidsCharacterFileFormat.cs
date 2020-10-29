@@ -162,9 +162,9 @@ public static class MidsCharacterFileFormat
                 str3 = "<br />";
             }
 
-            // TODO: review this string for update to Mid's Reborn
+            // TODO: review this string for update to Mids Reborn
             // needs checking the reader to see if changing this will break anything
-            var str5 = "| Copy & Paste this data into Mids' Reborn : Hero Designer to view the build |" + str3;
+            var str5 = "| Copy & Paste this data into Mids Reborn : Hero Designer to view the build |" + str3;
             if (flag1)
                 str5 = str5.Replace(" ", "&nbsp;");
             str4 = str5 + "|-------------------------------------------------------------------|" + str3;
@@ -426,8 +426,7 @@ public static class MidsCharacterFileFormat
         }
     }
 
-    public static eLoadReturnCode MxDExtractAndLoad(
-        Stream iStream)
+    public static eLoadReturnCode MxDExtractAndLoad(Stream iStream)
     {
         StreamReader streamReader;
         try

@@ -2136,17 +2136,11 @@ namespace Hero_Designer.Forms
             HidePopup();
         }
 
-        private void ibMode_ButtonClicked()
+        private void ibTeam_ButtonClicked()
         {
-            if (MainModule.MidsController.Toon == null) return;
-            MidsContext.Config.BuildMode = MidsContext.Config.BuildMode != Enums.dmModes.Dynamic
-                ? Enums.dmModes.Dynamic
-                : Enums.dmModes.LevelUp;
-            MidsContext.Character.ResetLevel();
-            // changing from dynamic view to level up or reverse is not a file modification
-            PowerModified(false);
-            UpdateDMBuffer();
-            pbDynMode.Refresh();
+            var iParent = this;
+            FrmTeam frmTeam = new FrmTeam(ref iParent);
+            frmTeam.ShowDialog();
         }
 
         private void ibPopup_ButtonClicked()
@@ -3168,7 +3162,7 @@ namespace Hero_Designer.Forms
             Application.DoEvents();
             UpdateControls();
             RefreshInfo();
-            UpdateDynamicModeInfo();
+            //UpdateDynamicModeInfo();
             pbDynMode.Refresh();
         }
 
@@ -5636,7 +5630,7 @@ namespace Hero_Designer.Forms
             var ibs = new[]
             {
                 ibSets, ibPvX, incarnateButton, tempPowersButton, petsButton, accoladeButton, heroVillain,
-                prestigeButton, ibTotals, ibMode, ibSlotLevels,
+                prestigeButton, ibTotals, ibTeam, ibSlotLevels,
                 ibPopup, ibRecipe, ibAccolade
             };
             foreach (var ib in ibs)
@@ -5891,7 +5885,7 @@ namespace Hero_Designer.Forms
                 tsLevelUp.Checked = true;
             }
 
-            ibMode.TextOff = MidsContext.Config.BuildMode != Enums.dmModes.Dynamic
+            ibTeam.TextOff = MidsContext.Config.BuildMode != Enums.dmModes.Dynamic
                 ? !MainModule.MidsController.Toon.Complete ? "Level-Up: " + (MidsContext.Character.Level + 1) :
                 "Level-Up"
                 : "Dynamic";

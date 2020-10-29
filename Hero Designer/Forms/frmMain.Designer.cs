@@ -202,7 +202,7 @@ namespace Hero_Designer.Forms
             this.I9Popup = new midsControls.ctlPopUp();
             this.ibTotals = new midsControls.ImageButton();
             this.ibSlotLevels = new midsControls.ImageButton();
-            this.ibMode = new midsControls.ImageButton();
+            this.ibTeam = new midsControls.ImageButton();
             this.ibSets = new midsControls.ImageButton();
             this.ibAccolade = new midsControls.ImageButton();
             this.MenuBar.SuspendLayout();
@@ -1924,17 +1924,17 @@ namespace Hero_Designer.Forms
             // 
             // ibMode
             // 
-            this.ibMode.Checked = false;
-            this.ibMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibMode.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibMode.Location = new System.Drawing.Point(244, 80);
-            this.ibMode.Name = "ibMode";
-            this.ibMode.Size = new System.Drawing.Size(105, 22);
-            this.ibMode.TabIndex = 100;
-            this.ibMode.TextOff = "Mode Switch";
-            this.ibMode.TextOn = "Alt Text";
-            this.ibMode.Toggle = false;
-            this.ibMode.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibMode_ButtonClicked);
+            this.ibTeam.Checked = false;
+            this.ibTeam.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibTeam.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.ibTeam.Location = new System.Drawing.Point(244, 80);
+            this.ibTeam.Name = "ibTeam";
+            this.ibTeam.Size = new System.Drawing.Size(105, 22);
+            this.ibTeam.TabIndex = 100;
+            this.ibTeam.TextOff = "Team Members";
+            this.ibTeam.TextOn = "Alt Text";
+            this.ibTeam.Toggle = false;
+            this.ibTeam.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibTeam_ButtonClicked);
             // 
             // ibSets
             // 
@@ -1974,7 +1974,7 @@ namespace Hero_Designer.Forms
             this.Controls.Add(this.lblLockedSecondary);
             this.Controls.Add(this.ibTotals);
             this.Controls.Add(this.ibSlotLevels);
-            this.Controls.Add(this.ibMode);
+            this.Controls.Add(this.ibTeam);
             this.Controls.Add(this.ibSets);
             this.Controls.Add(this.pbDynMode);
             this.Controls.Add(this.topPanel);
@@ -2132,7 +2132,7 @@ namespace Hero_Designer.Forms
         I9Picker i9Picker;
         ctlPopUp I9Popup;
         ImageButton ibAccolade;
-        ImageButton ibMode;
+        ImageButton ibTeam;
         ImageButton ibPopup;
         ImageButton ibPvX;
         ImageButton ibRecipe;

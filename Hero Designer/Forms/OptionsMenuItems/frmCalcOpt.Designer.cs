@@ -709,14 +709,17 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // Label16
             // 
+            this.Label16.Enabled = false;
             this.Label16.Location = new System.Drawing.Point(587, 297);
             this.Label16.Name = "Label16";
             this.Label16.Size = new System.Drawing.Size(57, 18);
             this.Label16.TabIndex = 66;
             this.Label16.Text = "Team Size";
+            this.Label16.Visible = false;
             // 
             // TeamSize
             // 
+            this.TeamSize.Enabled = false;
             this.TeamSize.Location = new System.Drawing.Point(650, 295);
             this.TeamSize.Maximum = new decimal(new int[] {
             8,
@@ -737,6 +740,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             0,
             0,
             0});
+            this.TeamSize.Visible = false;
             // 
             // GroupBox2
             // 
