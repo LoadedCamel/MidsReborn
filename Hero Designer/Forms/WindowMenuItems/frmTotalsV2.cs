@@ -206,6 +206,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
+        #region FormatValue overloads
+
         private string FormatValue(int formatType, float value)
         {
             return formatType switch
@@ -214,6 +216,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 1 => $"{value:##0.##}", // Numeric, 2 decimals
                 2 => (value > 0 ? "+" : "") + $"{value:##0.##}", // Numeric, 2 decimals, with sign
                 3 => $"{Math.Abs(value):##0.##}", // Numeric, 2 decimals (for mez protection)
+                4 => $"{value:##0.##}/s", // Numeric, 2 decimals, per second
                 _ => $"{value:##0.##}"
             };
         }
@@ -251,6 +254,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     cs = $"{Math.Abs(capValue):##0.##}";
                     break;
 
+                case 4:
+                    vs = $"{value:##0.##}/s";
+                    uvs = $"{uncappedValue:##0.##}/s";
+                    cs = $"{capValue:##0.##}/s";
+                    break;
+
                 default:
                     vs = $"{value:##0.##}";
                     uvs = $"{uncappedValue:##0.##}";
@@ -259,7 +268,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             }
 
             return value <= uncappedValue
-                ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType} ({atName} {statType.ToLower()} cap: {cs})"
+                ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}" + (capValue > 0 ? $" ({atName} {statType.ToLower()} cap: {cs})" : "")
                 : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}";
         }
 
@@ -300,6 +309,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     bs = $"{Math.Abs(baseValue):##0.##}";
                     break;
 
+                case 4:
+                    vs = $"{value:##0.##}/s";
+                    uvs = $"{uncappedValue:##0.##}/s";
+                    cs = $"{capValue:##0.##}/s";
+                    bs = $"{baseValue:##0.##}/s";
+                    break;
+
                 default:
                     vs = $"{value:##0.##}";
                     uvs = $"{uncappedValue:##0.##}";
@@ -309,12 +325,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
             }
 
             return (value <= uncappedValue
-                       ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType} ({atName} {statType} cap: {cs})"
+                       ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}" + (capValue > 0 ? $" ({atName} {statType} cap: {cs})" :"")
                        : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}") +
-                   (baseValue != 0 ? $"\r\nBase: {bs}" : "");
+                             (baseValue != 0 ? $"\r\nBase: {bs}" : "");
         }
 
-        private string FormatValue(int formatType, float value, float uncappedValue, float baseValue, float capValue, float overlay1Value, string statType, string overlay1Stat, string dmgType, string atName)
+        private string FormatValue(int formatType, float value, float uncappedValue, float baseValue, float capValue,
+            float overlay1Value, string statType, string overlay1Stat, string dmgType, string atName)
         {
             string vs;
             string uvs;
@@ -356,6 +373,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     o1s = $"{Math.Abs(overlay1Value):##0.##}";
                     break;
 
+                case 4:
+                    vs = $"{value:##0.##}/s";
+                    uvs = $"{uncappedValue:##0.##}/s";
+                    cs = $"{capValue:##0.##}/s";
+                    bs = $"{baseValue:##0.##}/s";
+                    o1s = $"{overlay1Value:##0.##}/s";
+                    break;
+
                 default:
                     vs = $"{value:##0.##}";
                     uvs = $"{uncappedValue:##0.##}";
@@ -365,12 +390,29 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     break;
             }
 
+            if (statType == "HP")
+            {
+                return (value <= uncappedValue
+                           ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}" +
+                             (capValue > 0 ? $"({atName} {statType} cap: {cs})" : "")
+                           : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}"
+                       ) +
+                       (baseValue != 0 ? $"\r\nBase: {bs}" : "") +
+                       (overlay1Value != 0 ? $"\r\n{overlay1Stat}: {o1s} ({(overlay1Value / baseValue * 100):##0.##}% of base HP)" : "");
+            }
+
             return (value <= uncappedValue
-                       ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType} ({atName} {statType} cap: {cs})"
-                       : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}") +
+                       ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}" +
+                         (capValue > 0 ? $"({atName} {statType} cap: {cs})" : "")
+                       : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}"
+                   ) +
                    (baseValue != 0 ? $"\r\nBase: {bs}" : "") +
                    (overlay1Value != 0 ? $"\r\n{overlay1Stat}: {o1s}" : "");
         }
+
+        #endregion
+
+        #region Bars/Labels indexes
 
         private ctlLayeredBar FetchBar(int n)
         {
@@ -531,6 +573,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             return FetchLv((int) barType);
         }
+        #endregion
 
         #region frmTotals import
 
@@ -624,7 +667,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             FetchBar(Enums.eBarType.ResistancePsionic).ResumeUpdate();
 
             FetchBar(Enums.eBarType.Regeneration).SuspendUpdate();
-            FetchBar(Enums.eBarType.Regeneration).ValueBase = MidsContext.Character.Archetype.BaseRegen;
+            FetchBar(Enums.eBarType.Regeneration).ValueBase = MidsContext.Character.Archetype.BaseRegen * 100;
             FetchBar(Enums.eBarType.Regeneration).ValueMainBar = displayStats.HealthRegenPercent(false);
             FetchBar(Enums.eBarType.Regeneration).ValueOverCap = displayStats.HealthRegenPercent(true);
             FetchBar(Enums.eBarType.Regeneration).ResumeUpdate();
@@ -944,8 +987,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 0,
                 displayStats.HealthRegenPercent(false),
                 displayStats.HealthRegenPercent(true),
-                MidsContext.Character.Archetype.BaseRegen,
-                MidsContext.Character.Archetype.RegenCap,
+                MidsContext.Character.Archetype.BaseRegen * 100,
+                MidsContext.Character.Archetype.RegenCap * 100,
                 "Regeneration",
                 "",
                 MidsContext.Character.Archetype.DisplayName);
@@ -962,6 +1005,27 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 "",
                 MidsContext.Character.Archetype.DisplayName);
 
+            FetchBar(Enums.eBarType.EndRec).Tip = FormatValue(
+                4,
+                displayStats.EnduranceRecoveryNumeric,
+                displayStats.EnduranceRecoveryNumericUncapped,
+                MidsContext.Character.Archetype.BaseRecovery,
+                MidsContext.Character.Archetype.RecoveryCap,
+                "End. Recovery",
+                "",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.EndUse).Tip = "End. use: " + FormatValue(1, displayStats.EnduranceUsage) + "/s";
+
+            FetchBar(Enums.eBarType.MaxEnd).Tip = FormatValue(
+                1,
+                displayStats.EnduranceMaxEnd,
+                displayStats.EnduranceMaxEnd,
+                100,
+                0,
+                "Max End",
+                "",
+                MidsContext.Character.Archetype.DisplayName);
             #endregion
 
             tabControlAdv2.ResumeLayout();

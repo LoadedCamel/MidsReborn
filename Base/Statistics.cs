@@ -91,7 +91,7 @@ public class Statistics
         return uncapped ? _character.Totals.HPMax : _character.TotalsCapped.HPMax;
     }
 
-    public float Absorb => _character.Totals.Absorb;
+    public float Absorb => (_character.Totals.Absorb < 1 ? _character.Totals.Absorb * _character.Archetype.Hitpoints : _character.Totals.Absorb);
 
     public float DamageResistance(int dType, bool uncapped)
     {
