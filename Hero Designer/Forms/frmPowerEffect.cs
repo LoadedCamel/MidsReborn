@@ -819,7 +819,6 @@ namespace Hero_Designer.Forms
 
         private void addConditional_Click(object sender, EventArgs e)
         {
-            //To do: Reference selected items and add to active conditional view and assign item name as the power fullname.
             string powerName;
             string cOp = string.Empty;
             IPower? power;
@@ -832,7 +831,7 @@ namespace Hero_Designer.Forms
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    item = new ListViewItem { Text = $@"Active:{power?.DisplayName}" };
+                    item = new ListViewItem { Text = $@"Active:{power?.DisplayName}", Name = power?.FullName };
                     item.SubItems.Add("");
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
@@ -846,7 +845,7 @@ namespace Hero_Designer.Forms
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    item = new ListViewItem { Text = $@"Taken:{power?.DisplayName}" };
+                    item = new ListViewItem { Text = $@"Taken:{power?.DisplayName}", Name = power?.FullName };
                     item.SubItems.Add("");
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
@@ -872,7 +871,7 @@ namespace Hero_Designer.Forms
                             break;
                     }
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    item = new ListViewItem { Text = $@"Stacks:{power?.DisplayName}" };
+                    item = new ListViewItem { Text = $@"Stacks:{power?.DisplayName}", Name = power?.FullName };
                     item.SubItems.Add(cOp);
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
@@ -899,7 +898,7 @@ namespace Hero_Designer.Forms
                             break;
                     }
                     value = lvConditionalBool.SelectedItems[0].Text;
-                    item = new ListViewItem {Text = $@"Team:{archetype}"};
+                    item = new ListViewItem { Text = $@"Team:{archetype}", Name = archetype };
                     item.SubItems.Add(cOp);
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
@@ -918,8 +917,13 @@ namespace Hero_Designer.Forms
 
         private void removeConditional_Click(object sender, EventArgs e)
         {
-            myFX.ActiveConditionals.Remove(lvActiveConditionals.SelectedItems[0].Text);
+            foreach (var cVp in myFX.ActiveConditionals
+                .Where(kv => kv.Key.Contains(lvActiveConditionals.SelectedItems[0].Name)).ToList())
+            {
+                myFX.ActiveConditionals.Remove(cVp.Key);
+            }
             lvActiveConditionals.SelectedItems[0].Remove();
+            UpdateFXText();
         }
 
         private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -1121,26 +1125,26 @@ namespace Hero_Designer.Forms
                 switch (condition)
                 {
                     case "Active":
-                        var item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}" };
+                        var item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}", Name = power?.FullName };
                         item.SubItems.Add("");
                         item.SubItems.Add(cVp.Value);
                         lvActiveConditionals.Items.Add(item);
                         break;
                     case "Taken":
-                        item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}" };
+                        item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}", Name = power?.FullName };
                         item.SubItems.Add("");
                         item.SubItems.Add(cVp.Value);
                         lvActiveConditionals.Items.Add(item);
                         break;
                     case "Stacks":
-                        item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}" };
+                        item = new ListViewItem { Text = $@"{condition}:{power?.DisplayName}", Name = power?.FullName };
                         var cVSplit = cVp.Value.Split(' ');
                         item.SubItems.Add(cVSplit[0]);
                         item.SubItems.Add(cVSplit[1]);
                         lvActiveConditionals.Items.Add(item);
                         break;
                     case "Team":
-                        item = new ListViewItem { Text = $@"{condition}:{conditionPower}" };
+                        item = new ListViewItem { Text = $@"{condition}:{conditionPower}", Name = conditionPower };
                         cVSplit = cVp.Value.Split(' ');
                         item.SubItems.Add(cVSplit[0]);
                         item.SubItems.Add(cVSplit[1]);
@@ -1156,6 +1160,7 @@ namespace Hero_Designer.Forms
             lvActiveConditionals.Columns[2].Width = -2;
             lvActiveConditionals.EndUpdate();
         }
+
         private void UpdateConditionalTypes()
         {
             lvConditionalType.BeginUpdate();
