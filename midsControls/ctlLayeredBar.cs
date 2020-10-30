@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace midsControls
@@ -21,7 +22,8 @@ namespace midsControls
         private float _ValueOverlay2;
         private float _MinimumValue;
         private float _MaximumValue = 100;
-        private ulong _AnimDuration = 1000;
+        private string _Tip = "";
+        //private ulong _AnimDuration = 1000;
         private Color _OverCapColor = Color.Magenta;
         private Color _BaseValueColor = Color.Magenta;
         private Color _BarColor = Color.Magenta;
@@ -32,6 +34,14 @@ namespace midsControls
         // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
         protected override Size DefaultSize => new Size(277, 13);
         public new static Color DefaultBackColor => Color.Transparent;
+
+        [field: AccessedThroughProperty("TTip")]
+        protected virtual ToolTip TTip
+        {
+            get;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            set;
+        }
 
         public void SuspendUpdate()
         {
@@ -295,6 +305,15 @@ namespace midsControls
                 Refresh();
             }
         }
+
+        [Description("Tooltip text"), Category("Appearance"),
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public string Tip
+        {
+            get => _Tip;
+            set => _Tip = value;
+        }
         #endregion
 
         private int Value2Pixels(float value)
@@ -489,14 +508,42 @@ namespace midsControls
 
         public ctlLayeredBar()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
-            InitializeComponent();
+            try
+            {
+                SetStyle(
+                    ControlStyles.AllPaintingInWmPaint |
+                    ControlStyles.OptimizedDoubleBuffer |
+                    ControlStyles.ResizeRedraw |
+                    ControlStyles.UserPaint,
+                    true);
+                InitializeComponent();
+                TTip = new ToolTip
+                {
+                    AutoPopDelay = 10000,
+                    InitialDelay = 500,
+                    ReshowDelay = 100
+                };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Exception {ex.GetType()}\r\n{ex.Message}\r\n\r\n{ex.StackTrace}");
+            }
         }
 
         private void ctlLayeredBar_Load(object sender, EventArgs e)
         {
             // Required to avoid artifacts in the designer with bars showing a single color at 100%
             SetValues();
+        }
+
+        private void ctlLayeredBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            TTip.SetToolTip(this, _Tip);
+        }
+
+        private void ctlLayeredBar_MouseLeave(object sender, EventArgs e)
+        {
+            TTip.Hide(this);
         }
     }
 }

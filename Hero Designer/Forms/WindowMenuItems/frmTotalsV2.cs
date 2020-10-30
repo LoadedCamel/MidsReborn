@@ -218,6 +218,160 @@ namespace Hero_Designer.Forms.WindowMenuItems
             };
         }
 
+        private string FormatValue(int formatType, float value, float uncappedValue, float capValue, string statType,
+            string dmgType, string atName)
+        {
+            string vs;
+            string uvs;
+            string cs;
+
+            switch (formatType)
+            {
+                case 0:
+                    vs = $"{value:##0.##}%";
+                    uvs = $"{uncappedValue:##0.##}%";
+                    cs = $"{capValue:##0.##}%";
+                    break;
+
+                case 1:
+                    vs = $"{value:##0.##}";
+                    uvs = $"{uncappedValue:##0.##}";
+                    cs = $"{capValue:##0.##}";
+                    break;
+
+                case 2:
+                    vs = (value > 0 ? "+" : "") + $"{value:##0.##}";
+                    uvs = (uncappedValue > 0 ? "+" : "") + $"{uncappedValue:##0.##}";
+                    cs = (capValue > 0 ? "+" : "") + $"{capValue:##0.##}";
+                    break;
+
+                case 3:
+                    vs = $"{Math.Abs(value):##0.##}";
+                    uvs = $"{Math.Abs(uncappedValue):##0.##}";
+                    cs = $"{Math.Abs(capValue):##0.##}";
+                    break;
+
+                default:
+                    vs = $"{value:##0.##}";
+                    uvs = $"{uncappedValue:##0.##}";
+                    cs = $"{capValue:##0.##}";
+                    break;
+            }
+
+            return value <= uncappedValue
+                ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType} ({atName} {statType.ToLower()} cap: {cs})"
+                : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}";
+        }
+
+        private string FormatValue(int formatType, float value, float uncappedValue, float baseValue, float capValue, string statType, string dmgType, string atName)
+        {
+            string vs;
+            string uvs;
+            string bs;
+            string cs;
+
+            switch (formatType)
+            {
+                case 0:
+                    vs = $"{value:##0.##}%";
+                    uvs = $"{uncappedValue:##0.##}%";
+                    cs = $"{capValue:##0.##}%";
+                    bs = $"{baseValue:##0.##}%";
+                    break;
+
+                case 1:
+                    vs = $"{value:##0.##}";
+                    uvs = $"{uncappedValue:##0.##}";
+                    cs = $"{capValue:##0.##}";
+                    bs = $"{baseValue:##0.##}";
+                    break;
+
+                case 2:
+                    vs = (value > 0 ? "+" : "") + $"{value:##0.##}";
+                    uvs = (uncappedValue > 0 ? "+" : "") + $"{uncappedValue:##0.##}";
+                    cs = (capValue > 0 ? "+" : "") + $"{capValue:##0.##}";
+                    bs = (baseValue > 0 ? "+" : "") + $"{baseValue:##0.##}";
+                    break;
+
+                case 3:
+                    vs = $"{Math.Abs(value):##0.##}";
+                    uvs = $"{Math.Abs(uncappedValue):##0.##}";
+                    cs = $"{Math.Abs(capValue):##0.##}";
+                    bs = $"{Math.Abs(baseValue):##0.##}";
+                    break;
+
+                default:
+                    vs = $"{value:##0.##}";
+                    uvs = $"{uncappedValue:##0.##}";
+                    cs = $"{capValue:##0.##}";
+                    bs = $"{capValue:##0.##}";
+                    break;
+            }
+
+            return (value <= uncappedValue
+                       ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType} ({atName} {statType} cap: {cs})"
+                       : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}") +
+                   (baseValue != 0 ? $"\r\nBase: {bs}" : "");
+        }
+
+        private string FormatValue(int formatType, float value, float uncappedValue, float baseValue, float capValue, float overlay1Value, string statType, string overlay1Stat, string dmgType, string atName)
+        {
+            string vs;
+            string uvs;
+            string bs;
+            string cs;
+            string o1s;
+
+            switch (formatType)
+            {
+                case 0:
+                    vs = $"{value:##0.##}%";
+                    uvs = $"{uncappedValue:##0.##}%";
+                    cs = $"{capValue:##0.##}%";
+                    bs = $"{baseValue:##0.##}%";
+                    o1s = $"{overlay1Value:##0.##}%";
+                    break;
+
+                case 1:
+                    vs = $"{value:##0.##}";
+                    uvs = $"{uncappedValue:##0.##}";
+                    cs = $"{capValue:##0.##}";
+                    bs = $"{baseValue:##0.##}";
+                    o1s = $"{overlay1Value:##0.##}";
+                    break;
+
+                case 2:
+                    vs = (value > 0 ? "+" : "") + $"{value:##0.##}";
+                    uvs = (uncappedValue > 0 ? "+" : "") + $"{uncappedValue:##0.##}";
+                    cs = (capValue > 0 ? "+" : "") + $"{capValue:##0.##}";
+                    bs = (baseValue > 0 ? "+" : "") + $"{baseValue:##0.##}";
+                    o1s = (overlay1Value > 0 ? "+" : "") + $"{overlay1Value:##0.##}";
+                    break;
+
+                case 3:
+                    vs = $"{Math.Abs(value):##0.##}";
+                    uvs = $"{Math.Abs(uncappedValue):##0.##}";
+                    cs = $"{Math.Abs(capValue):##0.##}";
+                    bs = $"{Math.Abs(baseValue):##0.##}";
+                    o1s = $"{Math.Abs(overlay1Value):##0.##}";
+                    break;
+
+                default:
+                    vs = $"{value:##0.##}";
+                    uvs = $"{uncappedValue:##0.##}";
+                    cs = $"{capValue:##0.##}";
+                    bs = $"{capValue:##0.##}";
+                    o1s = $"{overlay1Value:##0.##}";
+                    break;
+            }
+
+            return (value <= uncappedValue
+                       ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType} ({atName} {statType} cap: {cs})"
+                       : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}") +
+                   (baseValue != 0 ? $"\r\nBase: {bs}" : "") +
+                   (overlay1Value != 0 ? $"\r\n{overlay1Stat}: {o1s}" : "");
+        }
+
         private ctlLayeredBar FetchBar(int n)
         {
             return n switch
@@ -514,19 +668,18 @@ namespace Hero_Designer.Forms.WindowMenuItems
             //Debug.WriteLine($"Jump speed:\r\nBase: {Statistics.BaseJumpSpeed}, Main: {displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false)}, Overcap: {displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true)}");
 
             FetchBar(Enums.eBarType.JumpHeight).SuspendUpdate();
+            float jumpHeight = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
             FetchBar(Enums.eBarType.JumpHeight).ValueBase = Statistics.BaseJumpHeight;
-            FetchBar(Enums.eBarType.JumpHeight).ValueMainBar = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
-            FetchBar(Enums.eBarType.JumpHeight).ValueOverCap = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
+            FetchBar(Enums.eBarType.JumpHeight).ValueMainBar = jumpHeight;
+            FetchBar(Enums.eBarType.JumpHeight).ValueOverCap = jumpHeight;
             FetchBar(Enums.eBarType.JumpHeight).ResumeUpdate();
             //Debug.WriteLine($"Jump height:\r\nBase: {Statistics.BaseJumpHeight}, Main: {displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond)}");
 
             FetchBar(Enums.eBarType.FlySpeed).SuspendUpdate();
-            float baseFlySpeed = Statistics.BaseFlySpeed;
             float flySpeed = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false);
-            float uncappedFlySpeed = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true);
-            FetchBar(Enums.eBarType.FlySpeed).ValueBase = (flySpeed == 0) ? 0 : baseFlySpeed;
+            FetchBar(Enums.eBarType.FlySpeed).ValueBase = (flySpeed == 0) ? 0 : Statistics.BaseFlySpeed;
             FetchBar(Enums.eBarType.FlySpeed).ValueMainBar = flySpeed;
-            FetchBar(Enums.eBarType.FlySpeed).ValueOverCap = uncappedFlySpeed;
+            FetchBar(Enums.eBarType.FlySpeed).ValueOverCap = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true);
             FetchBar(Enums.eBarType.FlySpeed).ResumeUpdate();
 
             ///////////////////////////////
@@ -620,6 +773,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             FetchLv(Enums.eBarType.DefenseRanged).Text = FormatValue(0, displayStats.Defense(11));
             FetchLv(Enums.eBarType.DefenseAoE).Text = FormatValue(0, displayStats.Defense(12));
 
+            
             FetchLv(Enums.eBarType.ResistanceSmashing).Text = FormatValue(0, displayStats.DamageResistance(1, false));
             FetchLv(Enums.eBarType.ResistanceLethal).Text = FormatValue(0, displayStats.DamageResistance(2, false));
             FetchLv(Enums.eBarType.ResistanceFire).Text = FormatValue(0, displayStats.DamageResistance(3, false));
@@ -697,6 +851,119 @@ namespace Hero_Designer.Forms.WindowMenuItems
             FetchLv(Enums.eBarType.DebuffResistanceRegen).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Regeneration]);
 
             #endregion
+
+            #region Tooltips setup
+            FetchBar(Enums.eBarType.DefenseSmashing).Tip = FormatValue(0, displayStats.Defense(1)) + " Smashing Defense";
+            FetchBar(Enums.eBarType.DefenseLethal).Tip = FormatValue(0, displayStats.Defense(2)) + " Lethal Defense";
+            FetchBar(Enums.eBarType.DefenseFire).Tip = FormatValue(0, displayStats.Defense(3)) + " Fire Defense";
+            FetchBar(Enums.eBarType.DefenseCold).Tip = FormatValue(0, displayStats.Defense(4)) + " Cold Defense";
+            FetchBar(Enums.eBarType.DefenseEnergy).Tip = FormatValue(0, displayStats.Defense(5)) + " Energy Defense";
+            FetchBar(Enums.eBarType.DefenseNegative).Tip = FormatValue(0, displayStats.Defense(6)) + " Negative Defense";
+            FetchBar(Enums.eBarType.DefensePsionic).Tip = FormatValue(0, displayStats.Defense(8)) + " Psionic Defense";
+            FetchBar(Enums.eBarType.DefenseMelee).Tip = FormatValue(0, displayStats.Defense(10)) + " Melee Defense";
+            FetchBar(Enums.eBarType.DefenseRanged).Tip = FormatValue(0, displayStats.Defense(11)) + " Ranged Defense";
+            FetchBar(Enums.eBarType.DefenseAoE).Tip = FormatValue(0, displayStats.Defense(12)) + " AoE Defense";
+
+            ///////////////////////////////
+
+            FetchBar(Enums.eBarType.ResistanceSmashing).Tip = FormatValue(
+                0,
+                displayStats.DamageResistance(1, true),
+                displayStats.DamageResistance(1, false),
+                MidsContext.Character.Archetype.ResCap * 100,
+                "Resistance",
+                "Smashing",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.ResistanceLethal).Tip = FormatValue(
+                0,
+                displayStats.DamageResistance(2, true),
+                displayStats.DamageResistance(2, false),
+                MidsContext.Character.Archetype.ResCap * 100,
+                "Resistance",
+                "Lethal",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.ResistanceFire).Tip = FormatValue(
+                0,
+                displayStats.DamageResistance(3, true),
+                displayStats.DamageResistance(3, false),
+                MidsContext.Character.Archetype.ResCap * 100,
+                "Resistance",
+                "Fire",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.ResistanceCold).Tip = FormatValue(
+                0,
+                displayStats.DamageResistance(4, true),
+                displayStats.DamageResistance(4, false),
+                MidsContext.Character.Archetype.ResCap * 100,
+                "Resistance",
+                "Cold",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.ResistanceEnergy).Tip = FormatValue(
+                0,
+                displayStats.DamageResistance(5, true),
+                displayStats.DamageResistance(5, false),
+                MidsContext.Character.Archetype.ResCap * 100,
+                "Resistance",
+                "Energy",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.ResistanceNegative).Tip = FormatValue(
+                0,
+                displayStats.DamageResistance(6, true),
+                displayStats.DamageResistance(6, false),
+                MidsContext.Character.Archetype.ResCap * 100,
+                "Resistance",
+                "Negative",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.ResistanceToxic).Tip = FormatValue(
+                0,
+                displayStats.DamageResistance(7, true),
+                displayStats.DamageResistance(7, false),
+                MidsContext.Character.Archetype.ResCap * 100,
+                "Resistance",
+                "Toxic",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.ResistancePsionic).Tip = FormatValue(
+                0,
+                displayStats.DamageResistance(8, true),
+                displayStats.DamageResistance(8, false),
+                MidsContext.Character.Archetype.ResCap * 100,
+                "Resistance",
+                "Psionic",
+                MidsContext.Character.Archetype.DisplayName);
+
+            ///////////////////////////////
+
+            FetchBar(Enums.eBarType.Regeneration).Tip = FormatValue(
+                0,
+                displayStats.HealthRegenPercent(false),
+                displayStats.HealthRegenPercent(true),
+                MidsContext.Character.Archetype.BaseRegen,
+                MidsContext.Character.Archetype.RegenCap,
+                "Regeneration",
+                "",
+                MidsContext.Character.Archetype.DisplayName);
+
+            FetchBar(Enums.eBarType.MaxHPAbsorb).Tip = FormatValue(
+                1,
+                displayStats.HealthHitpointsNumeric(false),
+                displayStats.HealthHitpointsNumeric(true),
+                MidsContext.Character.Archetype.Hitpoints,
+                MidsContext.Character.Archetype.HPCap,
+                Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints),
+                "HP",
+                "Absorb",
+                "",
+                MidsContext.Character.Archetype.DisplayName);
+
+            #endregion
+
             tabControlAdv2.ResumeLayout();
 
             watch.Stop();

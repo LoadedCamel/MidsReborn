@@ -44,6 +44,8 @@ namespace midsControls
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(277, 11);
             this.panel1.TabIndex = 1;
+            this.panel1.MouseLeave += new System.EventHandler(this.ctlLayeredBar_MouseLeave);
+            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBar_MouseMove);
             // 
             // panel2
             // 
@@ -53,6 +55,8 @@ namespace midsControls
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(277, 11);
             this.panel2.TabIndex = 2;
+            this.panel2.MouseLeave += new System.EventHandler(this.ctlLayeredBar_MouseLeave);
+            this.panel2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBar_MouseMove);
             // 
             // panel3
             // 
@@ -62,6 +66,8 @@ namespace midsControls
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(277, 11);
             this.panel3.TabIndex = 3;
+            this.panel3.MouseLeave += new System.EventHandler(this.ctlLayeredBar_MouseLeave);
+            this.panel3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBar_MouseMove);
             // 
             // panel4
             // 
@@ -71,6 +77,8 @@ namespace midsControls
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(277, 11);
             this.panel4.TabIndex = 4;
+            this.panel4.MouseLeave += new System.EventHandler(this.ctlLayeredBar_MouseLeave);
+            this.panel4.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBar_MouseMove);
             // 
             // panel5
             // 
@@ -80,6 +88,8 @@ namespace midsControls
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(277, 11);
             this.panel5.TabIndex = 5;
+            this.panel5.MouseLeave += new System.EventHandler(this.ctlLayeredBar_MouseLeave);
+            this.panel5.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBar_MouseMove);
             // 
             // ctlLayeredBar
             // 
@@ -94,6 +104,8 @@ namespace midsControls
             this.Name = "ctlLayeredBar";
             this.Size = new System.Drawing.Size(277, 13);
             this.Load += new System.EventHandler(this.ctlLayeredBar_Load);
+            this.MouseLeave += new System.EventHandler(this.ctlLayeredBar_MouseLeave);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBar_MouseMove);
             this.ResumeLayout(false);
 
         }
