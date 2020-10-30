@@ -422,6 +422,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             Statistics displayStats = MidsContext.Character.DisplayStats;
             Character.TotalStatistics uncappedStats = MidsContext.Character.Totals;
             Character.TotalStatistics cappedStats = MidsContext.Character.TotalsCapped;
+            Stopwatch watch = Stopwatch.StartNew();
             tabControlAdv2.SuspendLayout();
             #region Bars setup
             FetchBar(Enums.eBarType.DefenseSmashing).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Smashing);
@@ -480,8 +481,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             FetchBar(Enums.eBarType.MaxHPAbsorb).ValueBase = MidsContext.Character.Archetype.Hitpoints;
             FetchBar(Enums.eBarType.MaxHPAbsorb).ValueMainBar = displayStats.HealthHitpointsNumeric(false);
             FetchBar(Enums.eBarType.MaxHPAbsorb).ValueOverCap = displayStats.HealthHitpointsNumeric(true);
-            FetchBar(Enums.eBarType.MaxHPAbsorb).ValueOverlay1 =
-                Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints);
+            FetchBar(Enums.eBarType.MaxHPAbsorb).ValueOverlay1 = Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints);
             FetchBar(Enums.eBarType.MaxHPAbsorb).ResumeUpdate();
 
             FetchBar(Enums.eBarType.EndRec).SuspendUpdate();
@@ -490,8 +490,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
             FetchBar(Enums.eBarType.EndRec).ValueOverCap = displayStats.EnduranceRecoveryNumericUncapped; //displayStats.EnduranceRecoveryNumeric;
             FetchBar(Enums.eBarType.EndRec).ResumeUpdate();
             
-            //Debug.WriteLine($"EndRec: {MidsContext.Character.Archetype.BaseRecovery} / {cappedStats.EndRec + 1} / {uncappedStats.EndRec + 1} / {displayStats.EnduranceRecoveryNumeric} / {displayStats.EnduranceRecoveryNumericUncapped}");
-
             FetchBar(Enums.eBarType.EndUse).ValueMainBar = displayStats.EnduranceUsage;
 
             FetchBar(Enums.eBarType.MaxEnd).SuspendUpdate();
@@ -502,50 +500,49 @@ namespace Hero_Designer.Forms.WindowMenuItems
             ///////////////////////////////
 
             FetchBar(Enums.eBarType.RunSpeed).SuspendUpdate();
-            FetchBar(Enums.eBarType.RunSpeed).ValueBase = Statistics.BaseRunSpeed;
-            FetchBar(Enums.eBarType.RunSpeed).ValueMainBar =
-                displayStats.MovementRunSpeed(Enums.eSpeedMeasure.MilesPerHour, false);
-            FetchBar(Enums.eBarType.RunSpeed).ValueOverCap =
-                displayStats.MovementRunSpeed(Enums.eSpeedMeasure.MilesPerHour, true);
+            FetchBar(Enums.eBarType.RunSpeed).ValueBase = Statistics.BaseRunSpeed; // ft/s
+            FetchBar(Enums.eBarType.RunSpeed).ValueMainBar = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
+            FetchBar(Enums.eBarType.RunSpeed).ValueOverCap = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true);
             FetchBar(Enums.eBarType.RunSpeed).ResumeUpdate();
+            //Debug.WriteLine($"Run speed:\r\nBase: {Statistics.BaseRunSpeed}, Main: {displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false)}, Overcap: {displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true)}");
+
             FetchBar(Enums.eBarType.JumpSpeed).SuspendUpdate();
             FetchBar(Enums.eBarType.JumpSpeed).ValueBase = Statistics.BaseJumpSpeed;
-            FetchBar(Enums.eBarType.JumpSpeed).ValueMainBar =
-                displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.MilesPerHour, false);
-            FetchBar(Enums.eBarType.JumpSpeed).ValueOverCap =
-                displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.MilesPerHour, true);
+            FetchBar(Enums.eBarType.JumpSpeed).ValueMainBar = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
+            FetchBar(Enums.eBarType.JumpSpeed).ValueOverCap = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true);
             FetchBar(Enums.eBarType.JumpSpeed).ResumeUpdate();
+            //Debug.WriteLine($"Jump speed:\r\nBase: {Statistics.BaseJumpSpeed}, Main: {displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false)}, Overcap: {displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true)}");
+
             FetchBar(Enums.eBarType.JumpHeight).SuspendUpdate();
             FetchBar(Enums.eBarType.JumpHeight).ValueBase = Statistics.BaseJumpHeight;
-            FetchBar(Enums.eBarType.JumpHeight).ValueMainBar =
-                displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
-            FetchBar(Enums.eBarType.JumpHeight).ValueOverCap =
-                displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond); // No cap ?
+            FetchBar(Enums.eBarType.JumpHeight).ValueMainBar = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
+            FetchBar(Enums.eBarType.JumpHeight).ValueOverCap = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
             FetchBar(Enums.eBarType.JumpHeight).ResumeUpdate();
+            //Debug.WriteLine($"Jump height:\r\nBase: {Statistics.BaseJumpHeight}, Main: {displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond)}");
+
             FetchBar(Enums.eBarType.FlySpeed).SuspendUpdate();
-            FetchBar(Enums.eBarType.FlySpeed).ValueBase = Statistics.BaseFlySpeed;
-            FetchBar(Enums.eBarType.FlySpeed).ValueMainBar =
-                displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false);
-            FetchBar(Enums.eBarType.FlySpeed).ValueOverCap =
-                displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true);
+            float baseFlySpeed = Statistics.BaseFlySpeed;
+            float flySpeed = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false);
+            float uncappedFlySpeed = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true);
+            FetchBar(Enums.eBarType.FlySpeed).ValueBase = (flySpeed == 0) ? 0 : baseFlySpeed;
+            FetchBar(Enums.eBarType.FlySpeed).ValueMainBar = flySpeed;
+            FetchBar(Enums.eBarType.FlySpeed).ValueOverCap = uncappedFlySpeed;
             FetchBar(Enums.eBarType.FlySpeed).ResumeUpdate();
 
             ///////////////////////////////
 
             FetchBar(Enums.eBarType.StealthPvE).SuspendUpdate();
             FetchBar(Enums.eBarType.StealthPvE).ValueBase = 0;
-            FetchBar(Enums.eBarType.StealthPvE).ValueMainBar = MidsContext.Character.Totals.StealthPvE; // ???
-            FetchBar(Enums.eBarType.StealthPvE).ValueOverCap =
-                0; //displayStats.Distance(0, Enums.eSpeedMeasure.FeetPerSecond, true); // ???
+            FetchBar(Enums.eBarType.StealthPvE).ValueMainBar = MidsContext.Character.Totals.StealthPvE;
+            FetchBar(Enums.eBarType.StealthPvE).ValueOverCap = MidsContext.Character.Totals.StealthPvE;
             FetchBar(Enums.eBarType.StealthPvE).ResumeUpdate();
             FetchBar(Enums.eBarType.StealthPvP).SuspendUpdate();
             FetchBar(Enums.eBarType.StealthPvP).ValueBase = 0;
-            FetchBar(Enums.eBarType.StealthPvP).ValueMainBar = MidsContext.Character.Totals.StealthPvP; // ???
-            FetchBar(Enums.eBarType.StealthPvP).ValueOverCap =
-                0; //displayStats.Distance(0, Enums.eSpeedMeasure.FeetPerSecond, true); // ???
+            FetchBar(Enums.eBarType.StealthPvP).ValueMainBar = MidsContext.Character.Totals.StealthPvP;
+            FetchBar(Enums.eBarType.StealthPvP).ValueOverCap = MidsContext.Character.Totals.StealthPvP;
             FetchBar(Enums.eBarType.StealthPvP).ResumeUpdate();
             FetchBar(Enums.eBarType.Perception).SuspendUpdate();
-            //FetchBar(Enums.eBarType.Perception).ValueBase = MidsContext.Character.Archetype.BasePerception;
+            FetchBar(Enums.eBarType.Perception).ValueBase = Statistics.BasePerception;
             FetchBar(Enums.eBarType.Perception).ValueMainBar = displayStats.Perception(false);
             FetchBar(Enums.eBarType.Perception).ValueOverCap = displayStats.Perception(true);
             FetchBar(Enums.eBarType.Perception).ResumeUpdate();
@@ -701,6 +698,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             #endregion
             tabControlAdv2.ResumeLayout();
+
+            watch.Stop();
+            Debug.WriteLine($"frmTotalsV2.UpdateData(): {watch.ElapsedMilliseconds}ms");
         }
     }
 }
