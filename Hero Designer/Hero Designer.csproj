@@ -2606,6 +2606,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FastDeepCloner">
+      <Version>1.3.5</Version>
+    </PackageReference>
     <PackageReference Include="FontAwesome.Sharp">
       <Version>5.15.1</Version>
     </PackageReference>
