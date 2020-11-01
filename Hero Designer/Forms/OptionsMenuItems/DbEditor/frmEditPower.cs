@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
+using FastDeepCloner;
 using Hero_Designer.Forms.Controls;
 using Import;
 using Microsoft.VisualBasic;
@@ -149,7 +150,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             lvFX.SelectedIndex = selectedIndex + 1;
         }
 
-        private void btnFXDuplicate_Click(object sender, EventArgs e)
+        /*private void btnFXDuplicate_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndices.Count <= 0)
                 return;
@@ -164,7 +165,32 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             power1.Effects[power1.Effects.Length - 1] = (IEffect) frmPowerEffect.myFX.Clone();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
+        }*/
+
+        private void btnFXDuplicate_Click(object sender, EventArgs e)
+        {
+            if (lvFX.SelectedIndices.Count <= 0)
+                return;
+
+            IEffect[] newEffects = new IEffect[myPower.Effects.Length + 1];
+            for (var index = 0; index < myPower.Effects.Length; index++)
+            {
+                newEffects[index] = myPower.Effects[index];
+            }
+
+            newEffects[newEffects.Length - 1] ??= DeepCloner.Clone(myPower.Effects[lvFX.SelectedIndices[0]]);
+            var newEffect = newEffects[newEffects.Length - 1];
+            using var frmPowerEffect = new frmPowerEffect(newEffect, myPower);
+            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
+                return;
+            newEffects[newEffects.Length - 1] = frmPowerEffect.myFX;
+            myPower.Effects = new IEffect[newEffects.Length];
+            myPower.Effects = newEffects;
+            RefreshFXData();
+            lvFX.SelectedIndex = lvFX.Items.Count - 1;
         }
+
+
 
         private void btnFXRemove_Click(object sender, EventArgs e)
         {
