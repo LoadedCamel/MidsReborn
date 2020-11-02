@@ -29,16 +29,16 @@ namespace midsControls
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel1 = new BarPanel();
+            this.panel2 = new BarPanel();
+            this.panel3 = new BarPanel();
+            this.panel4 = new BarPanel();
+            this.panel5 = new BarPanel();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.Magenta;
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(128, 0, 128);
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -49,7 +49,7 @@ namespace midsControls
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.Magenta;
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(191, 0, 191);
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
@@ -71,7 +71,7 @@ namespace midsControls
             // 
             // panel4
             // 
-            this.panel4.BackColor = System.Drawing.Color.Magenta;
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(255, 64, 255);
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
@@ -82,7 +82,7 @@ namespace midsControls
             // 
             // panel5
             // 
-            this.panel5.BackColor = System.Drawing.Color.Magenta;
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(255, 128, 255);
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
@@ -112,10 +112,10 @@ namespace midsControls
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Panel panel5;
+        private BarPanel panel1;
+        private BarPanel panel2;
+        private BarPanel panel3;
+        private BarPanel panel4;
+        private BarPanel panel5;
     }
 }

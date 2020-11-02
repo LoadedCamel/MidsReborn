@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Data_Classes;
@@ -58,6 +59,21 @@ namespace Hero_Designer.Forms.WindowMenuItems
             return null;
         }
 
+        private IEnumerable<Control> GetControlHierarchy(Control root)
+        {
+            Queue<Control> queue = new Queue<Control>();
+            queue.Enqueue(root);
+            do
+            {
+                Control control = queue.Dequeue();
+                yield return control;
+                foreach (Control child in control.Controls.OfType<Control>())
+                {
+                    queue.Enqueue(child);
+                }
+            } while (queue.Count > 0);
+        }
+
         public frmTotalsV2(ref frmMain iParent)
         {
             FormClosed += frmTotalsV2_FormClosed;
@@ -65,6 +81,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
             KeepOnTop = true;
             InitializeComponent();
             _myParent = iParent;
+            foreach (Control control in GetControlHierarchy(tabControlAdv2))
+            {
+                if (control.Name.Contains("bar"))
+                {
+                    //control.MouseEnter += Bar_Enter;
+                    //control.MouseLeave += Bar_Leave;
+                }
+            }
 
             // Tab Foreground Colors don't stick in the designer.
             // Note: default colors will be used anyway.
@@ -74,18 +98,59 @@ namespace Hero_Designer.Forms.WindowMenuItems
             tabControlAdv2.InActiveTabForeColor = Color.Black;
         }
 
+        private Enums.eBarType GetValueType(ctlLayeredBar bar)
+        {
+            return (Enums.eBarType) GetBarIndex(bar);
+        }
+
+        private int GetBarIndex(ctlLayeredBar bar)
+        {
+            return Convert.ToInt32(bar.Name.Substring(3)) - 1;
+        }
+
+        private string GetValueGroup(ctlLayeredBar bar)
+        {
+            return bar.Group;
+        }
+
+        private void SetBarsBulk(string group, float[] v)
+        {
+
+        }
+
+        private void SetBarsBulk(string group, float[] v1, float[] v2)
+        {
+
+        }
+
+        private void SetBarsBulk(string group, float[] v1, float[] v2, float[] v3)
+        {
+
+        }
+
+        private void SetBarSingle(Enums.eBarType barType, float value, float baseValue=0, float overCapValue=0, float overlay1Value=0, float overlay2Value=0)
+        {
+            ctlLayeredBar bar = FetchBar((int) barType);
+            bar.SuspendUpdate();
+            bar.ValueMainBar = value;
+            bar.ValueBase = baseValue;
+            bar.ValueOverCap = overCapValue;
+            bar.ValueOverlay1 = overlay1Value;
+            bar.ValueOverlay2 = overlay2Value;
+            bar.ResumeUpdate();
+        }
+
         private void Radio_CheckedChanged(object sender, EventArgs e)
         {
-            var sendingControl = (RadioButton) sender;
-            var radioControls = Controls.OfType<RadioButton>();
-            if (sendingControl.Checked)
+            RadioButton sendingControl = (RadioButton) sender;
+            IEnumerable<RadioButton> radioControls = Controls.OfType<RadioButton>();
+            if (!sendingControl.Checked) return;
+
+            foreach (RadioButton radio in radioControls)
             {
-                foreach (var radio in radioControls)
+                if (radio.Name != sendingControl.Name)
                 {
-                    if (radio.Name != sendingControl.Name)
-                    {
-                        radio.Checked = false;
-                    }
+                    radio.Checked = false;
                 }
             }
         }

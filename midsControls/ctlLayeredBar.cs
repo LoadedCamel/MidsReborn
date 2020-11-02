@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
@@ -23,17 +26,14 @@ namespace midsControls
         private float _MinimumValue;
         private float _MaximumValue = 100;
         private string _Tip = "";
-        //private ulong _AnimDuration = 1000;
-        private Color _OverCapColor = Color.Magenta;
-        private Color _BaseValueColor = Color.Magenta;
+        private string _Group = "";
+        private Color _OverCapColor = Color.FromArgb(128, 0, 128);
+        private Color _BaseValueColor = Color.FromArgb(191, 0, 191);
         private Color _BarColor = Color.Magenta;
-        private Color _Overlay1Color = Color.Magenta;
-        private Color _Overlay2Color = Color.Magenta;
-
-        // https://stackoverflow.com/a/34299931
-        // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
-        protected override Size DefaultSize => new Size(277, 13);
-        public new static Color DefaultBackColor => Color.Transparent;
+        private Color _Overlay1Color = Color.FromArgb(255, 64, 255);
+        private Color _Overlay2Color = Color.FromArgb(255, 128, 255);
+        public delegate void BarEventHandler(object sender);
+        public event BarEventHandler BarHover;
 
         [field: AccessedThroughProperty("TTip")]
         protected virtual ToolTip TTip
@@ -42,6 +42,16 @@ namespace midsControls
             [MethodImpl(MethodImplOptions.Synchronized)]
             set;
         }
+
+        public void SetTip(string iTip)
+        {
+            TTip.SetToolTip(this, iTip);
+        }
+
+        // https://stackoverflow.com/a/34299931
+        // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
+        protected override Size DefaultSize => new Size(277, 13);
+        public new static Color DefaultBackColor => Color.Transparent;
 
         public void SuspendUpdate()
         {
@@ -234,6 +244,15 @@ namespace midsControls
         {
             get => _ValueOverlay2;
             set => _ValueOverlay2 = value;
+        }
+
+        [Description("Bar group"), Category("Data"),
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public string Group
+        {
+            get => _Group;
+            set => _Group = value;
         }
 
         [Description("Over cap bar color"), Category("Appearance"),
@@ -517,12 +536,12 @@ namespace midsControls
                     ControlStyles.UserPaint,
                     true);
                 InitializeComponent();
-                TTip = new ToolTip
+                /*TTip = new ToolTip
                 {
                     AutoPopDelay = 10000,
                     InitialDelay = 500,
                     ReshowDelay = 100
-                };
+                };*/
             }
             catch (Exception ex)
             {
@@ -538,12 +557,41 @@ namespace midsControls
 
         private void ctlLayeredBar_MouseMove(object sender, MouseEventArgs e)
         {
-            TTip.SetToolTip(this, _Tip);
+            BarHover?.Invoke(sender);
         }
-
         private void ctlLayeredBar_MouseLeave(object sender, EventArgs e)
         {
-            TTip.Hide(this);
+            TTip.SetToolTip(this, "");
+        }
+    }
+
+    public class BarPanel : Panel
+    {
+        private IContainer components;
+
+        [field: AccessedThroughProperty("TTip")]
+        protected virtual ToolTip Tip
+        {
+            get;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            set;
+        }
+
+        public BarPanel()
+        {
+            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            InitializeComponent();
+        }
+        private void InitializeComponent()
+        {
+            components = new Container();
+            Tip = new ToolTip(components);
+            Name = "BarPanel1";
+        }
+
+        public void SetTip(string iTip)
+        {
+            Tip.SetToolTip(this, iTip);
         }
     }
 }
