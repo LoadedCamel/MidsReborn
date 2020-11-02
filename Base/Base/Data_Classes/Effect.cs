@@ -2112,33 +2112,85 @@ namespace Base.Data_Classes
                 else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition.Equals("Stacks"))
                 {
                     var cOp = cVp.Value.Split(' ');
-                    switch (cOp[0])
+                    if (cOp[0] == "=")
                     {
-                        case "=":
-                            conditionsMet = conditionPower.Stacks.Equals(Convert.ToInt32(cOp[1]));
+                        if (conditionPower.Stacks.Equals(Convert.ToInt32(cOp[1])))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
-                        case ">":
-                            conditionsMet = conditionPower.Stacks > Convert.ToInt32(cOp[1]);
+                        }
+
+                    }
+                    else if (cOp[0] == ">")
+                    {
+                        if (conditionPower.Stacks > Convert.ToInt32(cOp[1]))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
-                        case "<":
-                            conditionsMet = conditionPower.Stacks < Convert.ToInt32(cOp[1]);
+                        }
+                    }
+                    else if (cOp[0] == "<")
+                    {
+                        if (conditionPower.Stacks < Convert.ToInt32(cOp[1]))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
+                        }
                     }
                 }
                 else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition.Equals("Team"))
                 {
                     var cVal = cVp.Value.Split(' ');
-                    switch (cVal[0])
+                    if (cVal[0] == "=")
                     {
-                        case "=":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1]));
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config
+                            .TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
-                        case ">":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]);
+                        }
+                    }
+                    else if (cVal[0] == ">")
+                    {
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                            MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
-                        case "<":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]);
+                        }
+                    }
+                    else if (cVal[0] == "<")
+                    {
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                            MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
+                        }
                     }
                 }
                 else
@@ -2182,45 +2234,89 @@ namespace Base.Data_Classes
                 else if (condition.Equals("Stacks"))
                 {
                     var cVal = cVp.Value.Split(' ');
-                    switch (cVal[0])
+                    if (cVal[0] == "=")
                     {
-                        case "=":
-                            if (conditionPower != null)
+                        if (conditionPower != null)
+                        {
+                            if (!conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1])))
                             {
-                                conditionsMet = !conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
+                                conditionsMet = false;
+                                break;
                             }
-
-                            break;
-                        case ">":
-                            if (conditionPower != null)
+                        }
+                    }
+                    else if (cVal[0] == ">")
+                    {
+                        if (conditionPower != null)
+                        {
+                            if (conditionPower.Stacks > Convert.ToInt32(cVal[1]))
                             {
-                                conditionsMet = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
+                                conditionsMet = true;
                             }
-
-                            break;
-                        case "<":
-                            if (conditionPower != null)
+                            else
                             {
-                                conditionsMet = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
+                                conditionsMet = false;
+                                break;
                             }
-
-                            break;
+                        }
+                    }
+                    else if (cVal[0] == "<")
+                    {
+                        if (conditionPower != null)
+                        {
+                            if (conditionPower.Stacks < Convert.ToInt32(cVal[1]))
+                            {
+                                conditionsMet = true;
+                            }
+                            else
+                            {
+                                conditionsMet = false;
+                                break;
+                            }
+                        }
                     }
                 }
                 else if (condition.Equals("Team"))
                 {
                     var cVal = cVp.Value.Split(' ');
-                    switch (cVal[0])
+                    if (cVal[0] == "=")
                     {
-                        case "=":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1]));
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config
+                            .TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
-                        case ">":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]);
+                        }
+                    }
+                    else if (cVal[0] == ">")
+                    {
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                            MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
-                        case "<":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]);
+                        }
+                    }
+                    else if (cVal[0] == "<")
+                    {
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                            MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
+                        }
                     }
                 }
             }
@@ -2259,271 +2355,93 @@ namespace Base.Data_Classes
                 else if (condition.Equals("Stacks"))
                 {
                     var cVal = cVp.Value.Split(' ');
-                    switch (cVal[0])
+                    if (cVal[0] == "=")
                     {
-                        case "=":
-                            if (conditionPower != null)
+                        if (conditionPower != null)
+                        {
+                            if (!conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1])))
                             {
-                                conditionsMet = !conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
+                                conditionsMet = false;
+                                break;
                             }
-
-                            break;
-                        case ">":
-                            if (conditionPower != null)
+                        }
+                    }
+                    else if (cVal[0] == ">")
+                    {
+                        if (conditionPower != null)
+                        {
+                            if (conditionPower.Stacks > Convert.ToInt32(cVal[1]))
                             {
-                                conditionsMet = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
+                                conditionsMet = true;
                             }
-
-                            break;
-                        case "<":
-                            if (conditionPower != null)
+                            else
                             {
-                                conditionsMet = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
+                                conditionsMet = false;
+                                break;
                             }
-
-                            break;
+                        }
+                    }
+                    else if (cVal[0] == "<")
+                    {
+                        if (conditionPower != null)
+                        {
+                            if (conditionPower.Stacks < Convert.ToInt32(cVal[1]))
+                            {
+                                conditionsMet = true;
+                            }
+                            else
+                            {
+                                conditionsMet = false;
+                                break;
+                            }
+                        }
                     }
                 }
                 else if (condition.Equals("Team"))
                 {
                     var cVal = cVp.Value.Split(' ');
-                    switch (cVal[0])
+                    if (cVal[0] == "=")
                     {
-                        case "=":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1]));
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config
+                            .TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
-                        case ">":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]);
+                        }
+                    }
+                    else if (cVal[0] == ">")
+                    {
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                            MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
-                        case "<":
-                            conditionsMet = MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]);
+                        }
+                    }
+                    else if (cVal[0] == "<")
+                    {
+                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                            MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]))
+                        {
+                            conditionsMet = true;
+                        }
+                        else
+                        {
+                            conditionsMet = false;
                             break;
+                        }
                     }
                 }
             }
             return conditionsMet;
-
-            /*switch (SpecialCase)
-            {
-                case Enums.eSpecialCase.None:
-                    return true;
-                case Enums.eSpecialCase.Hidden:
-                    if (MidsContext.Character.IsStalker || MidsContext.Character.IsArachnos)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Domination:
-                    if (MidsContext.Character.Domination)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Scourge:
-                    if (MidsContext.Character.Scourge)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.CriticalHit:
-                    if (MidsContext.Character.CriticalHits || MidsContext.Character.IsStalker)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.CriticalBoss:
-                    if (MidsContext.Character.CriticalHits)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.CriticalMinion:
-                    if (MidsContext.Character.CriticalHits)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Assassination:
-                    if (MidsContext.Character.IsStalker && MidsContext.Character.Assassination)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Containment:
-                    if (MidsContext.Character.Containment)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Defiance:
-                    if (MidsContext.Character.Defiance)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.TargetDroneActive:
-                    if (MidsContext.Character.IsBlaster && MidsContext.Character.TargetDroneActive)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotDisintegrated:
-                    if (!MidsContext.Character.DisintegrateActive)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Disintegrated:
-                    if (MidsContext.Character.DisintegrateActive)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotAccelerated:
-                    if (!MidsContext.Character.AcceleratedActive)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Accelerated:
-                    if (MidsContext.Character.AcceleratedActive)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotDelayed:
-                    if (!MidsContext.Character.DelayedActive)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Delayed:
-                    if (MidsContext.Character.DelayedActive)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.ComboLevel0:
-                    if (MidsContext.Character.ActiveComboLevel == 0)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.ComboLevel1:
-                    if (MidsContext.Character.ActiveComboLevel == 1)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.ComboLevel2:
-                    if (MidsContext.Character.ActiveComboLevel == 2)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.ComboLevel3:
-                    if (MidsContext.Character.ActiveComboLevel == 3)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.FastMode:
-                    if (MidsContext.Character.FastModeActive)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotAssassination:
-                    if (!MidsContext.Character.Assassination)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfBody0:
-                    if (MidsContext.Character.PerfectionOfBodyLevel == 0)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfBody1:
-                    if (MidsContext.Character.PerfectionOfBodyLevel == 1)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfBody2:
-                    if (MidsContext.Character.PerfectionOfBodyLevel == 2)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfBody3:
-                    if (MidsContext.Character.PerfectionOfBodyLevel == 3)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfMind0:
-                    if (MidsContext.Character.PerfectionOfMindLevel == 0)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfMind1:
-                    if (MidsContext.Character.PerfectionOfMindLevel == 1)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfMind2:
-                    if (MidsContext.Character.PerfectionOfMindLevel == 2)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfMind3:
-                    if (MidsContext.Character.PerfectionOfMindLevel == 3)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfSoul0:
-                    if (MidsContext.Character.PerfectionOfSoulLevel == 0)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfSoul1:
-                    if (MidsContext.Character.PerfectionOfSoulLevel == 1)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfSoul2:
-                    if (MidsContext.Character.PerfectionOfSoulLevel == 2)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PerfectionOfSoul3:
-                    if (MidsContext.Character.PerfectionOfSoulLevel == 3)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.TeamSize1:
-                    if (MidsContext.Config.TeamSize > 1)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.TeamSize2:
-                    if (MidsContext.Config.TeamSize > 2)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.TeamSize3:
-                    if (MidsContext.Config.TeamSize > 3)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotComboLevel3:
-                    if (MidsContext.Character.ActiveComboLevel != 3)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.ToHit97:
-                    if (MidsContext.Character.DisplayStats.BuffToHit >= 22.0)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.DefensiveAdaptation:
-                    if (MidsContext.Character.DefensiveAdaptation)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.EfficientAdaptation:
-                    if (MidsContext.Character.EfficientAdaptation)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.OffensiveAdaptation:
-                    if (MidsContext.Character.OffensiveAdaptation)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotDefensiveAdaptation:
-                    if (!MidsContext.Character.DefensiveAdaptation)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotDefensiveNorOffensiveAdaptation:
-                    if (!MidsContext.Character.OffensiveAdaptation && !MidsContext.Character.DefensiveAdaptation)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.BoxingBuff:
-                    if (MidsContext.Character.BoxingBuff)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.KickBuff:
-                    if (MidsContext.Character.KickBuff)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.Supremacy:
-                    if (MidsContext.Character.Supremacy && !MidsContext.Character.PackMentality)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.SupremacyAndBuffPwr:
-                    if (MidsContext.Character.Supremacy && MidsContext.Character.PackMentality)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PetTier2:
-                    if (MidsContext.Character.PetTier2)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PetTier3:
-                    if (MidsContext.Character.PetTier3)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.PackMentality:
-                    if (MidsContext.Character.PackMentality)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotPackMentality:
-                    if (!MidsContext.Character.PackMentality)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.FastSnipe:
-                    if (MidsContext.Character.FastSnipe)
-                        return true;
-                    break;
-                case Enums.eSpecialCase.NotFastSnipe:
-                    if (!MidsContext.Character.FastSnipe)
-                        return true;
-                    break;
-            }*/
         }
 
         public bool PvXInclude()
