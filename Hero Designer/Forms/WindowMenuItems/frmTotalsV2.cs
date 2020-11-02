@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -113,24 +114,65 @@ namespace Hero_Designer.Forms.WindowMenuItems
             return bar.Group;
         }
 
-        private void SetBarsBulk(string group, float[] v)
+        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] v)
         {
+            List<ctlLayeredBar> barsGroup = controlsList
+                .Cast<ctlLayeredBar>()
+                .Where(e => e.Group == group)
+                .ToList();
 
+            barsGroup.Sort((a, b) => GetBarIndex(a).CompareTo(GetBarIndex(b)));
+
+            for (int i = 0; i < barsGroup.Count; i++)
+            {
+                SetBarSingle(barsGroup[i], v[i]);
+            }
         }
 
-        private void SetBarsBulk(string group, float[] v1, float[] v2)
+        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] v1, float[] v2, bool auxIsBase)
         {
+            List<ctlLayeredBar> barsGroup = controlsList
+                .Cast<ctlLayeredBar>()
+                .Where(e => e.Group == group)
+                .ToList();
 
+            barsGroup.Sort((a, b) => GetBarIndex(a).CompareTo(GetBarIndex(b)));
+
+            for (int i = 0; i < barsGroup.Count; i++)
+            {
+                if (auxIsBase)
+                {
+                    SetBarSingle(barsGroup[i], v1[i], v2[i]);
+                }
+                else
+                {
+                    SetBarSingle(barsGroup[i], v1[i], 0, v2[i]);
+                }
+            }
         }
 
-        private void SetBarsBulk(string group, float[] v1, float[] v2, float[] v3)
+        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] v1, float[] v2, float[] v3)
         {
+            List<ctlLayeredBar> barsGroup = controlsList
+                .Cast<ctlLayeredBar>()
+                .Where(e => e.Group == group)
+                .ToList();
 
+            barsGroup.Sort((a, b) => GetBarIndex(a).CompareTo(GetBarIndex(b)));
+
+            for (int i = 0; i < barsGroup.Count; i++)
+            {
+                SetBarSingle(barsGroup[i], v1[i], v2[i], v3[i]);
+            }
         }
 
         private void SetBarSingle(Enums.eBarType barType, float value, float baseValue=0, float overCapValue=0, float overlay1Value=0, float overlay2Value=0)
         {
-            ctlLayeredBar bar = FetchBar((int) barType);
+            SetBarSingle(FetchBar((int) barType), value, baseValue, overCapValue, overlay1Value, overlay2Value);
+        }
+
+        private void SetBarSingle(ctlLayeredBar bar, float value, float baseValue = 0, float overCapValue = 0, float overlay1Value = 0, float overlay2Value = 0)
+        {
             bar.SuspendUpdate();
             bar.ValueMainBar = value;
             bar.ValueBase = baseValue;
@@ -686,186 +728,164 @@ namespace Hero_Designer.Forms.WindowMenuItems
             Character.TotalStatistics cappedStats = MidsContext.Character.TotalsCapped;
             Stopwatch watch = Stopwatch.StartNew();
             tabControlAdv2.SuspendLayout();
+            IEnumerable<ctlLayeredBar> barsList = GetControlHierarchy(tabControlAdv2).Cast<ctlLayeredBar>().ToList();
+            List<Enums.eDamage> defenseDamageList = new List<Enums.eDamage>
+            {
+                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Melee,
+                Enums.eDamage.Ranged, Enums.eDamage.AoE
+            };
+
+            List<Enums.eDamage> resistanceDamageList = new List<Enums.eDamage>
+            {
+                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Toxic, Enums.eDamage.Psionic
+            };
+
+            List<Enums.eMez> mezList = new List<Enums.eMez>
+            {
+                Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized,
+                Enums.eMez.Knockback, Enums.eMez.Repel, Enums.eMez.Confused, Enums.eMez.Terrorized,
+                Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
+            };
+
+            List<Enums.eEffectType> debuffEffectsList = new List<Enums.eEffectType>
+            {
+                Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
+                Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
+                Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
+            };
+
             #region Bars setup
-            FetchBar(Enums.eBarType.DefenseSmashing).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Smashing);
-            FetchBar(Enums.eBarType.DefenseLethal).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Lethal);
-            FetchBar(Enums.eBarType.DefenseFire).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Fire);
-            FetchBar(Enums.eBarType.DefenseCold).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Cold);
-            FetchBar(Enums.eBarType.DefenseEnergy).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Energy);
-            FetchBar(Enums.eBarType.DefenseNegative).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Negative);
-            FetchBar(Enums.eBarType.DefensePsionic).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Psionic);
-            FetchBar(Enums.eBarType.DefenseMelee).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Melee);
-            FetchBar(Enums.eBarType.DefenseRanged).ValueMainBar = displayStats.Defense((int)Enums.eDamage.Ranged);
-            FetchBar(Enums.eBarType.DefenseAoE).ValueMainBar = displayStats.Defense((int)Enums.eDamage.AoE);
 
-            FetchBar(Enums.eBarType.ResistanceSmashing).SuspendUpdate();
-            FetchBar(Enums.eBarType.ResistanceSmashing).ValueMainBar = displayStats.DamageResistance((int)Enums.eDamage.Smashing, false);
-            FetchBar(Enums.eBarType.ResistanceSmashing).ValueOverCap = displayStats.DamageResistance((int)Enums.eDamage.Smashing, true);
-            FetchBar(Enums.eBarType.ResistanceSmashing).ResumeUpdate();
-            FetchBar(Enums.eBarType.ResistanceLethal).SuspendUpdate();
-            FetchBar(Enums.eBarType.ResistanceLethal).ValueMainBar = displayStats.DamageResistance((int)Enums.eDamage.Lethal, false);
-            FetchBar(Enums.eBarType.ResistanceLethal).ValueOverCap = displayStats.DamageResistance((int)Enums.eDamage.Lethal, true);
-            FetchBar(Enums.eBarType.ResistanceLethal).ResumeUpdate();
-            FetchBar(Enums.eBarType.ResistanceFire).SuspendUpdate();
-            FetchBar(Enums.eBarType.ResistanceFire).ValueMainBar = displayStats.DamageResistance((int)Enums.eDamage.Fire, false);
-            FetchBar(Enums.eBarType.ResistanceFire).ValueOverCap = displayStats.DamageResistance((int)Enums.eDamage.Fire, true);
-            FetchBar(Enums.eBarType.ResistanceFire).ResumeUpdate();
-            FetchBar(Enums.eBarType.ResistanceCold).SuspendUpdate();
-            FetchBar(Enums.eBarType.ResistanceCold).ValueMainBar = displayStats.DamageResistance((int)Enums.eDamage.Cold, false);
-            FetchBar(Enums.eBarType.ResistanceCold).ValueOverCap = displayStats.DamageResistance((int)Enums.eDamage.Cold, true);
-            FetchBar(Enums.eBarType.ResistanceCold).ResumeUpdate();
-            FetchBar(Enums.eBarType.ResistanceEnergy).SuspendUpdate();
-            FetchBar(Enums.eBarType.ResistanceEnergy).ValueMainBar = displayStats.DamageResistance((int)Enums.eDamage.Energy, false);
-            FetchBar(Enums.eBarType.ResistanceEnergy).ValueOverCap = displayStats.DamageResistance((int)Enums.eDamage.Energy, true);
-            FetchBar(Enums.eBarType.ResistanceEnergy).ResumeUpdate();
-            FetchBar(Enums.eBarType.ResistanceNegative).SuspendUpdate();
-            FetchBar(Enums.eBarType.ResistanceNegative).ValueMainBar = displayStats.DamageResistance((int)Enums.eDamage.Negative, false);
-            FetchBar(Enums.eBarType.ResistanceNegative).ValueOverCap = displayStats.DamageResistance((int)Enums.eDamage.Negative, true);
-            FetchBar(Enums.eBarType.ResistanceNegative).ResumeUpdate();
-            FetchBar(Enums.eBarType.ResistanceToxic).SuspendUpdate();
-            FetchBar(Enums.eBarType.ResistanceToxic).ValueMainBar = displayStats.DamageResistance((int)Enums.eDamage.Toxic, false);
-            FetchBar(Enums.eBarType.ResistanceToxic).ValueOverCap = displayStats.DamageResistance((int)Enums.eDamage.Toxic, true);
-            FetchBar(Enums.eBarType.ResistanceToxic).ResumeUpdate();
-            FetchBar(Enums.eBarType.ResistancePsionic).SuspendUpdate();
-            FetchBar(Enums.eBarType.ResistancePsionic).ValueMainBar = displayStats.DamageResistance((int)Enums.eDamage.Psionic, false);
-            FetchBar(Enums.eBarType.ResistancePsionic).ValueOverCap = displayStats.DamageResistance((int)Enums.eDamage.Psionic, true);
-            FetchBar(Enums.eBarType.ResistancePsionic).ResumeUpdate();
+            SetBarsBulk(
+                barsList,
+                "Defense",
+                defenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+            );
 
-            FetchBar(Enums.eBarType.Regeneration).SuspendUpdate();
-            FetchBar(Enums.eBarType.Regeneration).ValueBase = MidsContext.Character.Archetype.BaseRegen * 100;
-            FetchBar(Enums.eBarType.Regeneration).ValueMainBar = displayStats.HealthRegenPercent(false);
-            FetchBar(Enums.eBarType.Regeneration).ValueOverCap = displayStats.HealthRegenPercent(true);
-            FetchBar(Enums.eBarType.Regeneration).ResumeUpdate();
+            SetBarsBulk(
+                barsList,
+                "Resistance",
+                resistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray(),
+                resistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, true)).ToArray(),
+                false
+            );
 
+            SetBarSingle(Enums.eBarType.Regeneration,
+                displayStats.HealthRegenPercent(false),
+                MidsContext.Character.Archetype.BaseRegen * 100,
+                displayStats.HealthRegenPercent(true));
+            
             //Debug.WriteLine($"Regen: {MidsContext.Character.Archetype.BaseRegen} / {displayStats.HealthRegenPercent(false)} / {displayStats.HealthRegenPercent(true)}");
 
-            FetchBar(Enums.eBarType.MaxHPAbsorb).SuspendUpdate();
-            FetchBar(Enums.eBarType.MaxHPAbsorb).ValueBase = MidsContext.Character.Archetype.Hitpoints;
-            FetchBar(Enums.eBarType.MaxHPAbsorb).ValueMainBar = displayStats.HealthHitpointsNumeric(false);
-            FetchBar(Enums.eBarType.MaxHPAbsorb).ValueOverCap = displayStats.HealthHitpointsNumeric(true);
-            FetchBar(Enums.eBarType.MaxHPAbsorb).ValueOverlay1 = Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints);
-            FetchBar(Enums.eBarType.MaxHPAbsorb).ResumeUpdate();
-
-            FetchBar(Enums.eBarType.EndRec).SuspendUpdate();
-            FetchBar(Enums.eBarType.EndRec).ValueBase = MidsContext.Character.Archetype.BaseRecovery;
-            FetchBar(Enums.eBarType.EndRec).ValueMainBar = displayStats.EnduranceRecoveryNumeric;
-            FetchBar(Enums.eBarType.EndRec).ValueOverCap = displayStats.EnduranceRecoveryNumericUncapped; //displayStats.EnduranceRecoveryNumeric;
-            FetchBar(Enums.eBarType.EndRec).ResumeUpdate();
+            SetBarSingle(Enums.eBarType.MaxHPAbsorb,
+                displayStats.HealthHitpointsNumeric(false),
+                MidsContext.Character.Archetype.Hitpoints,
+                displayStats.HealthHitpointsNumeric(true),
+                Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints));
             
-            FetchBar(Enums.eBarType.EndUse).ValueMainBar = displayStats.EnduranceUsage;
-
-            FetchBar(Enums.eBarType.MaxEnd).SuspendUpdate();
-            FetchBar(Enums.eBarType.MaxEnd).ValueBase = 100;
-            FetchBar(Enums.eBarType.MaxEnd).ValueMainBar = displayStats.EnduranceMaxEnd;
-            FetchBar(Enums.eBarType.MaxEnd).ResumeUpdate();
+            SetBarSingle(Enums.eBarType.EndRec,
+                displayStats.EnduranceRecoveryNumeric,
+                MidsContext.Character.Archetype.BaseRecovery,
+                displayStats.EnduranceRecoveryNumericUncapped);
+            SetBarSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
+            SetBarSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd, 100);
 
             ///////////////////////////////
 
-            FetchBar(Enums.eBarType.RunSpeed).SuspendUpdate();
-            FetchBar(Enums.eBarType.RunSpeed).ValueBase = Statistics.BaseRunSpeed; // ft/s
-            FetchBar(Enums.eBarType.RunSpeed).ValueMainBar = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
-            FetchBar(Enums.eBarType.RunSpeed).ValueOverCap = displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true);
-            FetchBar(Enums.eBarType.RunSpeed).ResumeUpdate();
+            SetBarsBulk(
+                barsList,
+                "Defense",
+                new List<Enums.eDamage>
+                {
+                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Melee,
+                    Enums.eDamage.Ranged, Enums.eDamage.AoE
+                }.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+            );
+
+            SetBarsBulk(
+                barsList,
+                "Movement",
+                new[]
+                {
+                    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
+                    displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
+                    displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false)
+                },
+                new[]
+                {
+                    Statistics.BaseRunSpeed, // ft/s
+                    Statistics.BaseJumpSpeed,
+                    Statistics.BaseJumpHeight,
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) == 0 ? 0 : Statistics.BaseFlySpeed
+                },
+                new[]
+                {
+                    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
+                    displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
+                    displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true)
+                });
+
             //Debug.WriteLine($"Run speed:\r\nBase: {Statistics.BaseRunSpeed}, Main: {displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false)}, Overcap: {displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true)}");
-
-            FetchBar(Enums.eBarType.JumpSpeed).SuspendUpdate();
-            FetchBar(Enums.eBarType.JumpSpeed).ValueBase = Statistics.BaseJumpSpeed;
-            FetchBar(Enums.eBarType.JumpSpeed).ValueMainBar = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false);
-            FetchBar(Enums.eBarType.JumpSpeed).ValueOverCap = displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true);
-            FetchBar(Enums.eBarType.JumpSpeed).ResumeUpdate();
             //Debug.WriteLine($"Jump speed:\r\nBase: {Statistics.BaseJumpSpeed}, Main: {displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false)}, Overcap: {displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true)}");
-
-            FetchBar(Enums.eBarType.JumpHeight).SuspendUpdate();
-            float jumpHeight = displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond);
-            FetchBar(Enums.eBarType.JumpHeight).ValueBase = Statistics.BaseJumpHeight;
-            FetchBar(Enums.eBarType.JumpHeight).ValueMainBar = jumpHeight;
-            FetchBar(Enums.eBarType.JumpHeight).ValueOverCap = jumpHeight;
-            FetchBar(Enums.eBarType.JumpHeight).ResumeUpdate();
             //Debug.WriteLine($"Jump height:\r\nBase: {Statistics.BaseJumpHeight}, Main: {displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond)}");
 
-            FetchBar(Enums.eBarType.FlySpeed).SuspendUpdate();
-            float flySpeed = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false);
-            FetchBar(Enums.eBarType.FlySpeed).ValueBase = (flySpeed == 0) ? 0 : Statistics.BaseFlySpeed;
-            FetchBar(Enums.eBarType.FlySpeed).ValueMainBar = flySpeed;
-            FetchBar(Enums.eBarType.FlySpeed).ValueOverCap = displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true);
-            FetchBar(Enums.eBarType.FlySpeed).ResumeUpdate();
+            ///////////////////////////////
+            
+            SetBarsBulk(
+                barsList,
+                "Perception",
+                new []
+                {
+                    MidsContext.Character.Totals.StealthPvE,
+                    MidsContext.Character.Totals.StealthPvP,
+                    displayStats.Perception(false)
+                },
+                new []
+                {
+                    0,
+                    0,
+                    Statistics.BasePerception
+                },
+                new []
+                {
+                    MidsContext.Character.Totals.StealthPvE,
+                    MidsContext.Character.Totals.StealthPvP,
+                    displayStats.Perception(true)
+                });
 
             ///////////////////////////////
 
-            FetchBar(Enums.eBarType.StealthPvE).SuspendUpdate();
-            FetchBar(Enums.eBarType.StealthPvE).ValueBase = 0;
-            FetchBar(Enums.eBarType.StealthPvE).ValueMainBar = MidsContext.Character.Totals.StealthPvE;
-            FetchBar(Enums.eBarType.StealthPvE).ValueOverCap = MidsContext.Character.Totals.StealthPvE;
-            FetchBar(Enums.eBarType.StealthPvE).ResumeUpdate();
-            FetchBar(Enums.eBarType.StealthPvP).SuspendUpdate();
-            FetchBar(Enums.eBarType.StealthPvP).ValueBase = 0;
-            FetchBar(Enums.eBarType.StealthPvP).ValueMainBar = MidsContext.Character.Totals.StealthPvP;
-            FetchBar(Enums.eBarType.StealthPvP).ValueOverCap = MidsContext.Character.Totals.StealthPvP;
-            FetchBar(Enums.eBarType.StealthPvP).ResumeUpdate();
-            FetchBar(Enums.eBarType.Perception).SuspendUpdate();
-            FetchBar(Enums.eBarType.Perception).ValueBase = Statistics.BasePerception;
-            FetchBar(Enums.eBarType.Perception).ValueMainBar = displayStats.Perception(false);
-            FetchBar(Enums.eBarType.Perception).ValueOverCap = displayStats.Perception(true);
-            FetchBar(Enums.eBarType.Perception).ResumeUpdate();
+            SetBarSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false), 100, displayStats.BuffHaste(true));
+            SetBarSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
+            SetBarSingle(Enums.eBarType.ToHit, displayStats.BuffAccuracy);
+            SetBarSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true));
+            SetBarSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
+            SetBarSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel, MidsContext.Character.Archetype.BaseThreat);
+            SetBarSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity);
 
             ///////////////////////////////
 
-            FetchBar(Enums.eBarType.Haste).SuspendUpdate();
-            FetchBar(Enums.eBarType.Haste).ValueBase = 100;
-            FetchBar(Enums.eBarType.Haste).ValueMainBar = displayStats.BuffHaste(false);
-            FetchBar(Enums.eBarType.Haste).ValueOverCap = displayStats.BuffHaste(true);
-            FetchBar(Enums.eBarType.Haste).ResumeUpdate();
-            FetchBar(Enums.eBarType.ToHit).ValueMainBar = displayStats.BuffToHit;
-            FetchBar(Enums.eBarType.Accuracy).ValueMainBar = displayStats.BuffAccuracy;
-            FetchBar(Enums.eBarType.Damage).SuspendUpdate();
-            FetchBar(Enums.eBarType.Damage).ValueBase = 100;
-            FetchBar(Enums.eBarType.Damage).ValueMainBar = displayStats.BuffDamage(false); // Need to add +100 here ?
-            FetchBar(Enums.eBarType.Damage).ValueOverCap = displayStats.BuffDamage(true); // Need to add +100 here ?
-            FetchBar(Enums.eBarType.Damage).ResumeUpdate();
-            FetchBar(Enums.eBarType.EndRdx).ValueMainBar = displayStats.BuffEndRdx;
-            FetchBar(Enums.eBarType.ThreatLevel).SuspendUpdate();
-            FetchBar(Enums.eBarType.ThreatLevel).ValueBase = MidsContext.Character.Archetype.BaseThreat;
-            FetchBar(Enums.eBarType.ThreatLevel).ValueMainBar = displayStats.ThreatLevel;
-            FetchBar(Enums.eBarType.ThreatLevel).ResumeUpdate();
-            FetchBar(Enums.eBarType.Elusivity).ValueMainBar = MidsContext.Character.Totals.Elusivity;
+            SetBarsBulk(
+                barsList,
+                "Status Protection",
+                mezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray());
+
+            SetBarsBulk(
+                barsList,
+                "Status Resistance",
+                mezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
 
             ///////////////////////////////
 
-            FetchBar(Enums.eBarType.MezProtectionHold).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Held]);
-            FetchBar(Enums.eBarType.MezProtectionStunned).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Stunned]);
-            FetchBar(Enums.eBarType.MezProtectionSleep).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Sleep]);
-            FetchBar(Enums.eBarType.MezProtectionImmob).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Immobilized]);
-            FetchBar(Enums.eBarType.MezProtectionKnockback).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Knockback]);
-            FetchBar(Enums.eBarType.MezProtectionRepel).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Repel]);
-            FetchBar(Enums.eBarType.MezProtectionConfuse).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Confused]);
-            FetchBar(Enums.eBarType.MezProtectionFear).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Terrorized]);
-            FetchBar(Enums.eBarType.MezProtectionTaunt).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Taunt]);
-            FetchBar(Enums.eBarType.MezProtectionPlacate).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Placate]);
-            FetchBar(Enums.eBarType.MezProtectionTeleport).ValueMainBar = Math.Abs(MidsContext.Character.Totals.Mez[(int) Enums.eMez.Teleport]);
-
-            FetchBar(Enums.eBarType.MezResistanceHold).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Held];
-            FetchBar(Enums.eBarType.MezResistanceStunned).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Stunned];
-            FetchBar(Enums.eBarType.MezResistanceSleep).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Sleep];
-            FetchBar(Enums.eBarType.MezResistanceImmob).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Immobilized];
-            FetchBar(Enums.eBarType.MezResistanceKnockback).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Knockback];
-            FetchBar(Enums.eBarType.MezResistanceRepel).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Repel];
-            FetchBar(Enums.eBarType.MezResistanceConfuse).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Confused];
-            FetchBar(Enums.eBarType.MezResistanceFear).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Terrorized];
-            FetchBar(Enums.eBarType.MezResistanceTaunt).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Taunt];
-            FetchBar(Enums.eBarType.MezResistancePlacate).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Placate];
-            FetchBar(Enums.eBarType.MezResistanceTeleport).ValueMainBar = MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Teleport];
-
-            ///////////////////////////////
-
-            FetchBar(Enums.eBarType.DebuffResistanceDefense).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Defense];
-            FetchBar(Enums.eBarType.DebuffResistanceEndurance).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Endurance];
-            FetchBar(Enums.eBarType.DebuffResistanceRecovery).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Recovery];
-            FetchBar(Enums.eBarType.DebuffResistancePerception).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.PerceptionRadius];
-            FetchBar(Enums.eBarType.DebuffResistanceToHit).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.ToHit];
-            FetchBar(Enums.eBarType.DebuffResistanceRechargeTime).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.RechargeTime];
-            FetchBar(Enums.eBarType.DebuffResistanceSpeedRunning).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.SpeedRunning];
-            FetchBar(Enums.eBarType.DebuffResistanceRegen).ValueMainBar = MidsContext.Character.Totals.DebuffRes[(int) Enums.eEffectType.Regeneration];
-
+            SetBarsBulk(
+                barsList,
+                "Debuff Resistance",
+                debuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray());
             #endregion
 
             #region Labels setup
@@ -1097,6 +1117,29 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             watch.Stop();
             Debug.WriteLine($"frmTotalsV2.UpdateData(): {watch.ElapsedMilliseconds}ms");
+        }
+    }
+
+    public class BarLabel : Label
+    {
+        [Description("Label group"), Category("Data"),
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public string Group;
+
+        [Description("Format type\r\n0: Percentage\r\n1: Numeric, 2 decimals\r\n2: Numeric, 2 decimals, with sign\r\n3: Numeric, 2 decimals (for mez protection)\r\n4: Numeric, 2 decimals, per second"), Category("Data"),
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public int FormatType;
+
+        public BarLabel()
+        {
+            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            InitializeComponent();
+        }
+        private void InitializeComponent()
+        {
+            Name = "BarLabel1";
         }
     }
 }
