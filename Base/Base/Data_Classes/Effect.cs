@@ -84,7 +84,7 @@ namespace Base.Data_Classes
             AtrOrigRange = -1;
             AtrOrigRechargeTime = -1;
             AtrOrigSecondaryRange = -1;
-            ActiveConditionals = new Dictionary<string, string>();
+            ActiveConditionals = new List<KeyValue<string, string>>();
             AtrModAccuracy = -1;
             AtrModActivatePeriod = -1;
             AtrModArc = -1;
@@ -179,7 +179,7 @@ namespace Base.Data_Classes
             {
                 var cKey = reader.ReadString();
                 var cValue = reader.ReadString();
-                ActiveConditionals[cKey] = cValue;
+                ActiveConditionals.Add(new KeyValue<string, string>(cKey, cValue));
             }
 
             /*if (DatabaseAPI.Database.EffectIds.Contains(EffectId))
@@ -637,8 +637,7 @@ namespace Base.Data_Classes
         public float AtrModRange { get; set; }
         public float AtrModRechargeTime { get; set; }
         public float AtrModSecondaryRange { get; set; }
-
-        public Dictionary<string, string> ActiveConditionals { get; set; }
+        public List<KeyValue<string, string>> ActiveConditionals { get; set; }
 
         public int nOverride
         {
@@ -2707,6 +2706,19 @@ namespace Base.Data_Classes
             }
 
             return num1;
+        }
+    }
+    public class KeyValue<TKey, TValue>
+    {
+        public TKey Key { get; set; }
+        public TValue Value { get; set; }
+
+        public KeyValue() { }
+
+        public KeyValue(TKey key, TValue value)
+        {
+            Key = key;
+            Value = value;
         }
     }
 }

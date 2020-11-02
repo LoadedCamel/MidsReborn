@@ -839,7 +839,7 @@ namespace Hero_Designer.Forms
                     lvActiveConditionals.Columns[0].Width = -2;
                     lvActiveConditionals.Columns[1].Text = @"Value";
                     lvActiveConditionals.Columns[1].Width = -2;
-                    myFX.ActiveConditionals.Add($"Active:{powerName}", value);
+                    myFX.ActiveConditionals.Add(new KeyValue<string, string>($"Active:{powerName}", value));
                     break;
                 case "Power Taken":
                     powerName = lvSubConditional.SelectedItems[0].Name;
@@ -853,7 +853,7 @@ namespace Hero_Designer.Forms
                     lvActiveConditionals.Columns[0].Width = -2;
                     lvActiveConditionals.Columns[1].Text = @"Value";
                     lvActiveConditionals.Columns[1].Width = -2;
-                    myFX.ActiveConditionals.Add($"Taken:{powerName}", value);
+                    myFX.ActiveConditionals.Add(new KeyValue<string, string>($"Taken:{powerName}", value));
                     break;
                 case "Stacks":
                     powerName = lvSubConditional.SelectedItems[0].Name;
@@ -881,7 +881,7 @@ namespace Hero_Designer.Forms
                     lvActiveConditionals.Columns[1].Width = -2;
                     lvActiveConditionals.Columns[2].Text = @"Value";
                     lvActiveConditionals.Columns[2].Width = -2;
-                    myFX.ActiveConditionals.Add($"Stacks:{powerName}", $"{cOp} {value}");
+                    myFX.ActiveConditionals.Add(new KeyValue<string, string>($"Stacks:{powerName}", $"{cOp} {value}"));
                     break;
                 case "Team Members":
                     var archetype = lvSubConditional.SelectedItems[0].Text;
@@ -908,7 +908,7 @@ namespace Hero_Designer.Forms
                     lvActiveConditionals.Columns[1].Width = -2;
                     lvActiveConditionals.Columns[2].Text = @"Value";
                     lvActiveConditionals.Columns[2].Width = -2;
-                    myFX.ActiveConditionals.Add($"Team:{archetype}", $"{cOp} {value}");
+                    myFX.ActiveConditionals.Add(new KeyValue<string, string>($"Team:{archetype}", $"{cOp} {value}"));
                     break;
             }
 
@@ -920,7 +920,7 @@ namespace Hero_Designer.Forms
             foreach (var cVp in myFX.ActiveConditionals
                 .Where(kv => kv.Key.Contains(lvActiveConditionals.SelectedItems[0].Name)).ToList())
             {
-                myFX.ActiveConditionals.Remove(cVp.Key);
+                myFX.ActiveConditionals.Remove(cVp);
             }
             lvActiveConditionals.SelectedItems[0].Remove();
             UpdateFXText();
