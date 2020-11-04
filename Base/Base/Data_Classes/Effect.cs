@@ -2188,7 +2188,6 @@ namespace Base.Data_Classes
                 var condition = getCondition.Replace(cVp.Key, "");
                 var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
                 var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                var buildPowers = MidsContext.Character.CurrentBuild.Powers;
                 var cVal = cVp.Value.Split(' ');
                 var powerDisplayName = conditionPower?.DisplayName;
                 if (powerDisplayName == null || !powerDisplayName.Contains(cPowername))
@@ -2200,32 +2199,34 @@ namespace Base.Data_Classes
                 {
                     cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
                 }
-                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Taken")
+                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) &&
+                         condition == "Taken")
                 {
                     cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
                         .Equals(Convert.ToBoolean(cVp.Value));
                 }
-                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Stacks")
+                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) &&
+                         condition == "Stacks")
                 {
-                    var stacks = buildPowers.Where(x => x.Power == conditionPower).Select(x => x.Power.Stacks).ToList();
                     switch (cVal[0])
                     {
                         case "=":
 
-                            cVp.Validated = stacks[0].Equals(Convert.ToInt32(cVal[1]));
+                            cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
 
                             break;
                         case ">":
-                            cVp.Validated = stacks[0] > Convert.ToInt32(cVal[1]);
+                            cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
 
                             break;
                         case "<":
-                            cVp.Validated = stacks[0] < Convert.ToInt32(cVal[1]);
+                            cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
 
                             break;
                     }
                 }
-                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Team")
+                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) &&
+                         condition == "Team")
                 {
                     switch (cVal[0])
                     {
@@ -2401,7 +2402,7 @@ namespace Base.Data_Classes
 
         public bool CanGrantPower()
         {
-            if (MidsContext.Character == null || ActiveConditionals == null)
+            if (MidsContext.Character == null | ActiveConditionals == null | ActiveConditionals?.Count == 0)
                 return true;
             var getCondition = new Regex("(:.*)");
             var getConditionItem = new Regex("(.*:)");
@@ -2410,116 +2411,111 @@ namespace Base.Data_Classes
                 var condition = getCondition.Replace(cVp.Key, "");
                 var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
                 var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                if (condition.Equals("Active"))
+                var cVal = cVp.Value.Split(' ');
+                switch (condition)
                 {
-                    if (conditionPower == null || !conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value)))
-                    {
-                        cVp.Validated = false;
-                    }
-                    else
-                    {
-                        cVp.Validated = true;
-                    }
-                }
-                else if (condition.Equals("Taken"))
-                {
-                    if (conditionPower == null || !MidsContext.Character.CurrentBuild.PowerUsed(conditionPower).Equals(Convert.ToBoolean(cVp.Value)))
-                    {
-                        cVp.Validated = false;
-                    }
-                    else
-                    {
-                        cVp.Validated = true;
-                    }
-                }
-                else if (condition.Equals("Stacks"))
-                {
-                    var cVal = cVp.Value.Split(' ');
-                    if (cVal[0] == "=")
-                    {
-                        if (conditionPower != null && conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1])))
+                    case "Active":
+                        if (conditionPower != null)
                         {
-                            cVp.Validated = true;
+                            cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
                         }
-                        else
+
+                        break;
+                    case "Taken":
+                        if (conditionPower != null)
                         {
-                            cVp.Validated = false;
+                            cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower).Equals(Convert.ToBoolean(cVp.Value));
                         }
-                    }
-                    else if (cVal[0] == ">")
-                    {
-                        if (conditionPower != null && conditionPower.Stacks > Convert.ToInt32(cVal[1]))
+
+                        break;
+                    case "Stacks":
+                        if (conditionPower != null)
                         {
-                            cVp.Validated = true;
+                            switch (cVal[0])
+                            {
+                                case "=":
+
+                                    cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
+
+                                    break;
+                                case ">":
+                                    cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
+
+                                    break;
+                                case "<":
+                                    cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
+
+                                    break;
+                            }
                         }
-                        else
+
+                        break;
+                    case "Team":
+                        switch (cVal[0])
                         {
-                            cVp.Validated = false;
+                            case "=":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
+                                    .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
+                            case ">":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                                    MidsContext.Config.TeamMembers[conditionItemName] >
+                                    Convert.ToInt32(cVal[1]))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
+                            case "<":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                                    MidsContext.Config.TeamMembers[conditionItemName] <
+                                    Convert.ToInt32(cVal[1]))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
                         }
-                    }
-                    else if (cVal[0] == "<")
-                    {
-                        if (conditionPower != null && conditionPower.Stacks < Convert.ToInt32(cVal[1]))
-                        {
-                            cVp.Validated = true;
-                        }
-                        else
-                        {
-                            cVp.Validated = false;
-                        }
-                    }
-                }
-                else if (condition.Equals("Team"))
-                {
-                    var cVal = cVp.Value.Split(' ');
-                    if (cVal[0] == "=")
-                    {
-                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
-                        {
-                            cVp.Validated = true;
-                        }
-                        else
-                        {
-                            cVp.Validated = false;
-                        }
-                    }
-                    else if (cVal[0] == ">")
-                    {
-                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]))
-                        {
-                            cVp.Validated = true;
-                        }
-                        else
-                        {
-                            cVp.Validated = false;
-                        }
-                    }
-                    else if (cVal[0] == "<")
-                    {
-                        if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]))
-                        {
-                            cVp.Validated = true;
-                        }
-                        else
-                        {
-                            cVp.Validated = false;
-                        }
-                    }
+
+                        break;
                 }
             }
-
             var validCount = ActiveConditionals.Count(b => b.Validated);
             var invalidCount = ActiveConditionals.Count(b => !b.Validated);
             if (ActiveConditionals.Count > 0)
             {
-                Console.WriteLine($"{BuildEffectString()}\r\nValid:{validCount}\r\nInvalid:{invalidCount}");
+                Validated = validCount == ActiveConditionals.Count;
+                /*Console.WriteLine($"{BuildEffectString(true)}");
+                Console.WriteLine($"    # Conditionals in Effect: {ActiveConditionals.Count}");
+                Console.WriteLine($"    # Conditionals Valid: {validCount}");
+                Console.WriteLine($"    # Conditionals Invalid: {invalidCount}");
+                Console.WriteLine($"    Effect Validated: {Validated}");*/
+                if (Validated)
+                {
+                    return true;
+                }
+                if (!Validated)
+                {
+                    return false;
+                }
             }
 
-
-            if (validCount == ActiveConditionals.Count)
-            {
-                Validated = true;
-            }
             return false;
         }
 
