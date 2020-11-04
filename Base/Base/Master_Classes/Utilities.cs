@@ -4,7 +4,7 @@ namespace Base.Master_Classes
     {
         public static string FixDP(float iNum)
         {
-            return (double) iNum < 100.0 && (double) iNum > -100.0 ? FixDP(iNum, 2) : FixDP(iNum, 1);
+            return iNum < 100.0 && iNum > -100.0 ? FixDP(iNum, 2) : FixDP(iNum, 1);
         }
 
         public static string FixDP(float iNum, int maxDecimal)

@@ -1491,7 +1491,7 @@ namespace Hero_Designer.Forms.Controls
                     /*iList.AddItem(FastItem("ToHit", effectMagSum1, effectMagSum2, "%", false, false,
                         pBase.Effects[effectMagSum1.Index[0]].SpecialCase == Enums.eSpecialCase.Combo, false,
                         effectMagSum1));*/
-                    iList.AddItem(FastItem("ToHit", effectMagSum1, effectMagSum2, "%", false, false, pBase.Effects[effectMagSum1.Index[0]].CheckConditional("active", "Combo"), false, effectMagSum1));
+                    iList.AddItem(FastItem("ToHit", effectMagSum1, effectMagSum2, "%", false, false, pBase.Effects[effectMagSum1.Index[0]].ValidateConditional("active", "Combo"), false, effectMagSum1));
                 }
 
                 if (sFXCheck(effectMagSum1))
@@ -1507,7 +1507,7 @@ namespace Hero_Designer.Forms.Controls
                     // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
                     for (var index2 = 0; index2 <= num3; ++index2)
                     {
-                        if (pEnh.Effects[shortFxArray[index1].Index[index2]].CheckConditional("active", "Defiance"))
+                        if (pEnh.Effects[shortFxArray[index1].Index[index2]].ValidateConditional("active", "Defiance"))
                             continue;
                         flag = false;
                         break;
@@ -1520,7 +1520,7 @@ namespace Hero_Designer.Forms.Controls
                                 .BuildEffectString(false, "Damage Buff (Defiance)"))
                         : new ctlPairedList.ItemPair("DmgBuff:",
                             Utilities.FixDP(shortFxArray[index1].Value[0]) + "%", false,
-                            pEnh.Effects[shortFxArray[index1].Index[0]].CheckConditional("active", "Combo"),
+                            pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional("active", "Combo"),
                             false, Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
                     if (pEnh.Effects[shortFxArray[index1].Index[0]].isEnhancementEffect)
                         iList.SetUnique();
@@ -1880,21 +1880,28 @@ namespace Hero_Designer.Forms.Controls
             var num2 = pBase.Effects.Length - 1;
             for (var index = 0; index <= num2; ++index)
             {
-                if (!((pBase.Effects[index].EffectType == Enums.eEffectType.GlobalChanceMod) &
-                      (pBase.Effects[index].Probability > 0.0)))
+                if (!((pBase.Effects[index].EffectType == Enums.eEffectType.GlobalChanceMod) & (pBase.Effects[index].Probability > 0.0)))
+                {
                     continue;
+                }
+
                 var iTip = string.Empty + pEnh.Effects[index].BuildEffectString();
                 var iValue = Convert.ToString(pBase.Effects[index].MagPercent, CultureInfo.InvariantCulture) + "%";
                 if ((pBase.Effects[index].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                {
                     iValue = "(suppressed)";
-                var iItem = new ctlPairedList.ItemPair(pBase.Effects[index].Reward + ":", iValue, false,
-                    pBase.Effects[index].Probability < 1.0, false, iTip);
+                }
+
+                var iItem = new ctlPairedList.ItemPair(pBase.Effects[index].Reward + ":", iValue, false, pBase.Effects[index].Probability < 1.0, false, iTip);
                 iList.AddItem(iItem);
                 ++num1;
             }
 
             if (num1 > 0 && flag)
+            {
                 iLabel.Text = "Modify Effect";
+            }
+
             return num1;
         }
 
@@ -2040,7 +2047,7 @@ namespace Hero_Designer.Forms.Controls
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0";
-                        var iItem = new ctlPairedList.ItemPair(CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].CheckConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
+                        var iItem = new ctlPairedList.ItemPair(CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, iAlternate2, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
                         iList.AddItem(iItem);
                         if (pBase.Effects[iTagID].isEnhancementEffect)
                             iList.SetUnique();
@@ -2053,7 +2060,7 @@ namespace Hero_Designer.Forms.Controls
                         if ((pBase.Effects[iTagID].Suppression & MidsContext.Config.Suppression) !=
                             Enums.eSuppress.None)
                             iValue = "0%";
-                        var iItem = new ctlPairedList.ItemPair(CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, false, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].CheckConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
+                        var iItem = new ctlPairedList.ItemPair(CapString(names[(int)pBase.Effects[iTagID].MezType], 7) + ":", iValue, false, (pBase.Effects[iTagID].Probability < 1.0) | (pBase.Effects[iTagID].ValidateConditional("active", "Combo")), pBase.Effects[iTagID].ActiveConditionals.Count > 0, iTagID);
                         iList.AddItem(iItem);
                         if (pBase.Effects[iTagID].isEnhancementEffect)
                             iList.SetUnique();

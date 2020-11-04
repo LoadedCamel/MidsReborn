@@ -363,7 +363,7 @@ namespace Hero_Designer
                             {
                                 if (iEffect == Enums.eEffectType.DamageBuff)
                                 {
-                                    if (!((effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)) | effect.CheckConditional("active", "Defiance")))
+                                    if (!((effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)) | effect.ValidateConditional("active", "Defiance")))
                                         nBuffs.Damage[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
                                 }
                                 else if (!((effect.ETModifies == Enums.eEffectType.Accuracy) & enhancementPass))
@@ -892,9 +892,7 @@ namespace Hero_Designer
                 return ret;
             for (var index = 0; index <= ret.Effects.Length - 1; ++index)
             {
-                if (ret.Effects[index].EffectType != Enums.eEffectType.PowerRedirect ||
-                    !((ret.Effects[index].nOverride > -1) & (Math.Abs(ret.Effects[index].Probability - 1f) < 0.01) &
-                      ret.Effects[index].CanInclude()))
+                if (ret.Effects[index].EffectType != Enums.eEffectType.PowerRedirect || !((ret.Effects[index].nOverride > -1) & (Math.Abs(ret.Effects[index].Probability - 1f) < 0.01) & ret.Effects[index].CanInclude()))
                     continue;
                 var level = ret.Level;
                 ret = new Power(DatabaseAPI.Database.Power[ret.Effects[index].nOverride])
@@ -910,15 +908,28 @@ namespace Hero_Designer
         private bool GBPA_MultiplyVariable(ref IPower iPower, int hIDX)
         {
             if (iPower == null)
+            {
                 return false;
+            }
+
             if (hIDX < 0)
+            {
                 return false;
+            }
+
             if (!iPower.VariableEnabled)
+            {
                 return false;
+            }
+
             var num = iPower.Effects.Length - 1;
             for (var index = 0; index <= num; ++index)
+            {
                 if (iPower.Effects[index].VariableModified)
+                {
                     iPower.Effects[index].Scale *= CurrentBuild.Powers[hIDX].VariableValue;
+                }
+            }
 
             return true;
         }

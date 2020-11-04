@@ -1160,7 +1160,7 @@ namespace Base.Data_Classes
                 }*/
 
 
-                if ((Effects[index].Probability > (double) probability) & !Effects[index].CheckConditional("active", "Defiance"))
+                if ((Effects[index].Probability > (double) probability) & !Effects[index].ValidateConditional("active", "Defiance"))
                 {
                     applies = true;
                 }
@@ -1176,7 +1176,7 @@ namespace Base.Data_Classes
                     applies = true;
                 }*/
 
-                if (!Effects[index].CheckConditional("active", "Defiance"))
+                if (!Effects[index].ValidateConditional("active", "Defiance"))
                 {
                     applies = true;
                 }
@@ -1201,11 +1201,11 @@ namespace Base.Data_Classes
                     }
                 }*/
 
-                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double)duration) & !Effects[index].isEnhancementEffect & !Effects[index].CheckConditional("active", "Defiance") && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
+                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double)duration) & !Effects[index].isEnhancementEffect & !Effects[index].ValidateConditional("active", "Defiance") && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
                 {
                     if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
                     {
-                        if (Effects[index].Mag > (double)mag || Effects[index].CheckConditional("active", "Domination"))
+                        if (Effects[index].Mag > (double)mag || Effects[index].ValidateConditional("active", "Domination"))
                         {
                             applies = true;
                         }
@@ -1238,7 +1238,7 @@ namespace Base.Data_Classes
                     applies = false;
                 }*/
 
-                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].CheckConditional("active", "Domination") ? 1 : 0)) != 0)
+                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("active", "Domination") ? 1 : 0)) != 0)
                 {
                     applies = false;
                 }
