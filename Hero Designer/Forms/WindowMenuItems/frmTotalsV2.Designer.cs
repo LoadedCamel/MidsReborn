@@ -495,6 +495,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv23.TabIndex = 11;
             this.lv23.Text = "100.00%";
             this.lv23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv23.Group = "Endurance";
+            this.lv23.FormatType = 4;
             // 
             // lv22
             // 
@@ -507,6 +509,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv22.TabIndex = 10;
             this.lv22.Text = "100.00%";
             this.lv22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv22.Group = "Endurance";
+            this.lv22.FormatType = 4;
             // 
             // bar21
             // 
@@ -636,6 +640,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv21.TabIndex = 9;
             this.lv21.Text = "100.00%";
             this.lv21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv21.Group = "Endurance";
+            this.lv21.FormatType = 1;
             // 
             // label4
             // 
@@ -726,6 +732,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv20.TabIndex = 7;
             this.lv20.Text = "100.00%";
             this.lv20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv20.Group = "HP";
+            this.lv20.FormatType = 0;
             // 
             // bar19
             // 
@@ -816,6 +824,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv19.TabIndex = 6;
             this.lv19.Text = "100.00%";
             this.lv19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv19.Group = "HP";
+            this.lv19.FormatType = 0;
             // 
             // gradientPanel2
             // 
@@ -890,6 +900,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv18.TabIndex = 24;
             this.lv18.Text = "100.00%";
             this.lv18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv18.Group = "Resistance";
+            this.lv18.FormatType = 0;
             // 
             // lv17
             // 
@@ -902,6 +914,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv17.TabIndex = 23;
             this.lv17.Text = "100.00%";
             this.lv17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv17.Group = "Resistance";
+            this.lv17.FormatType = 0;
             // 
             // lv16
             // 
@@ -914,6 +928,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv16.TabIndex = 22;
             this.lv16.Text = "100.00%";
             this.lv16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv16.Group = "Resistance";
+            this.lv16.FormatType = 0;
             // 
             // lv15
             // 
@@ -926,6 +942,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv15.TabIndex = 21;
             this.lv15.Text = "100.00%";
             this.lv15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv15.Group = "Resistance";
+            this.lv15.FormatType = 0;
             // 
             // lv14
             // 
@@ -938,6 +956,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv14.TabIndex = 20;
             this.lv14.Text = "100.00%";
             this.lv14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv14.Group = "Resistance";
+            this.lv14.FormatType = 0;
             // 
             // lv13
             // 
@@ -950,6 +970,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv13.TabIndex = 19;
             this.lv13.Text = "100.00%";
             this.lv13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv13.Group = "Resistance";
+            this.lv13.FormatType = 0;
             // 
             // lv12
             // 
@@ -962,6 +984,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv12.TabIndex = 18;
             this.lv12.Text = "100.00%";
             this.lv12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv12.Group = "Resistance";
+            this.lv12.FormatType = 0;
             // 
             // bar11
             // 
@@ -1286,6 +1310,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv11.TabIndex = 17;
             this.lv11.Text = "100.00%";
             this.lv11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv11.Group = "Resistance";
+            this.lv11.FormatType = 0;
             // 
             // gradientPanel1
             // 
@@ -1367,6 +1393,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv10.TabIndex = 19;
             this.lv10.Text = "100.00%";
             this.lv10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv10.Group = "Defense";
+            this.lv10.FormatType = 0;
             // 
             // bar10
             // 
@@ -1406,6 +1434,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv9.TabIndex = 18;
             this.lv9.Text = "100.00%";
             this.lv9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv9.Group = "Defense";
+            this.lv9.FormatType = 0;
             // 
             // bar9
             // 
@@ -1445,6 +1475,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv8.TabIndex = 17;
             this.lv8.Text = "100.00%";
             this.lv8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv8.Group = "Defense";
+            this.lv8.FormatType = 0;
             // 
             // bar8
             // 
@@ -1484,6 +1516,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv7.TabIndex = 16;
             this.lv7.Text = "100.00%";
             this.lv7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv7.Group = "Defense";
+            this.lv7.FormatType = 0;
             // 
             // bar7
             // 
@@ -1523,6 +1557,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv6.TabIndex = 15;
             this.lv6.Text = "100.00%";
             this.lv6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv6.Group = "Defense";
+            this.lv6.FormatType = 0;
             // 
             // bar6
             // 
@@ -1562,6 +1598,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv5.TabIndex = 14;
             this.lv5.Text = "100.00%";
             this.lv5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv5.Group = "Defense";
+            this.lv5.FormatType = 0;
             // 
             // bar5
             // 
@@ -1601,6 +1639,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv4.TabIndex = 13;
             this.lv4.Text = "100.00%";
             this.lv4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv4.Group = "Defense";
+            this.lv4.FormatType = 0;
             // 
             // bar4
             // 
@@ -1640,6 +1680,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv3.TabIndex = 12;
             this.lv3.Text = "100.00%";
             this.lv3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv3.Group = "Defense";
+            this.lv3.FormatType = 0;
             // 
             // bar3
             // 
@@ -1679,6 +1721,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv2.TabIndex = 11;
             this.lv2.Text = "100.00%";
             this.lv2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv2.Group = "Defense";
+            this.lv2.FormatType = 0;
             // 
             // bar2
             // 
@@ -1865,6 +1909,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv1.TabIndex = 10;
             this.lv1.Text = "100.00%";
             this.lv1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv1.Group = "Defense";
+            this.lv1.FormatType = 0;
             // 
             // tabPageAdv5
             // 
@@ -2003,6 +2049,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv37.TabIndex = 10;
             this.lv37.Text = "100.00%";
             this.lv37.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv37.Group = "";
+            this.lv37.FormatType = 0;
             // 
             // gradientPanel13
             // 
@@ -2087,6 +2135,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv36.TabIndex = 10;
             this.lv36.Text = "100.00%";
             this.lv36.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv36.Group = "";
+            this.lv36.FormatType = 0;
             // 
             // gradientPanel12
             // 
@@ -2171,6 +2221,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv35.TabIndex = 10;
             this.lv35.Text = "+100.00%";
             this.lv35.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv35.Group = "";
+            this.lv35.FormatType = 2;
             // 
             // gradientPanel11
             // 
@@ -2255,6 +2307,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv34.TabIndex = 10;
             this.lv34.Text = "+100.00%";
             this.lv34.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv34.Group = "";
+            this.lv34.FormatType = 2;
             // 
             // gradientPanel10
             // 
@@ -2339,6 +2393,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv33.TabIndex = 10;
             this.lv33.Text = "+100.00%";
             this.lv33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv33.Group = "";
+            this.lv33.FormatType = 2;
             // 
             // gradientPanel9
             // 
@@ -2423,6 +2479,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv32.TabIndex = 10;
             this.lv32.Text = "+100.00%";
             this.lv32.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv32.Group = "";
+            this.lv32.FormatType = 2;
             // 
             // gradientPanel8
             // 
@@ -2507,6 +2565,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv31.TabIndex = 10;
             this.lv31.Text = "100.00%";
             this.lv31.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv31.Group = "";
+            this.lv31.FormatType = 2;
             // 
             // label52
             // 
@@ -2570,6 +2630,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv30.TabIndex = 12;
             this.lv30.Text = "100.00 ft";
             this.lv30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv30.Group = "Movement";
+            this.lv30.FormatType = 6;
             // 
             // bar30
             // 
@@ -2609,6 +2671,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv29.TabIndex = 11;
             this.lv29.Text = "100.00 ft";
             this.lv29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv29.Group = "Movement";
+            this.lv29.FormatType = 6;
             // 
             // bar29
             // 
@@ -2711,6 +2775,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv28.TabIndex = 10;
             this.lv28.Text = "100.00 ft";
             this.lv28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv28.Group = "Perception";
+            this.lv28.FormatType = 6;
             // 
             // radioButton4
             // 
@@ -2830,6 +2896,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv27.TabIndex = 13;
             this.lv27.Text = "100.00 mph";
             this.lv27.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv27.Group = "Movement";
+            this.lv27.FormatType = 5;
             // 
             // bar27
             // 
@@ -2870,6 +2938,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv26.TabIndex = 12;
             this.lv26.Text = "100.00 ft";
             this.lv26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv26.Group = "Movement";
+            this.lv26.FormatType = 6;
             // 
             // bar26
             // 
@@ -2910,6 +2980,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv25.TabIndex = 11;
             this.lv25.Text = "100.00 mph";
             this.lv25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv25.Group = "Movement";
+            this.lv25.FormatType = 5;
             // 
             // bar25
             // 
@@ -3026,6 +3098,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv24.TabIndex = 10;
             this.lv24.Text = "100.00 mph";
             this.lv24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv24.Group = "Movement";
+            this.lv24.FormatType = 5;
             // 
             // tabPageAdv6
             // 
@@ -3137,6 +3211,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv59.TabIndex = 12;
             this.lv59.Text = "100.00%";
             this.lv59.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv59.Group = "Status Resistance";
+            this.lv59.FormatType = 0;
             // 
             // lv58
             // 
@@ -3149,6 +3225,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv58.TabIndex = 12;
             this.lv58.Text = "100.00%";
             this.lv58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv58.Group = "Status Resistance";
+            this.lv58.FormatType = 0;
             // 
             // lv57
             // 
@@ -3161,6 +3239,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv57.TabIndex = 12;
             this.lv57.Text = "100.00%";
             this.lv57.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv57.Group = "Status Resistance";
+            this.lv57.FormatType = 0;
             // 
             // lv56
             // 
@@ -3173,6 +3253,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv56.TabIndex = 12;
             this.lv56.Text = "100.00%";
             this.lv56.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv56.Group = "Status Resistance";
+            this.lv56.FormatType = 0;
             // 
             // lv55
             // 
@@ -3185,6 +3267,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv55.TabIndex = 12;
             this.lv55.Text = "100.00%";
             this.lv55.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv55.Group = "Status Resistance";
+            this.lv55.FormatType = 0;
             // 
             // lv54
             // 
@@ -3197,6 +3281,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv54.TabIndex = 12;
             this.lv54.Text = "100.00%";
             this.lv54.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv54.Group = "Status Resistance";
+            this.lv54.FormatType = 0;
             // 
             // label112
             // 
@@ -3293,6 +3379,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv52.TabIndex = 13;
             this.lv52.Text = "100.00%";
             this.lv52.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv52.Group = "Status Resistance";
+            this.lv52.FormatType = 0;
             // 
             // bar52
             // 
@@ -3332,6 +3420,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv51.TabIndex = 12;
             this.lv51.Text = "100.00%";
             this.lv51.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv51.Group = "Status Resistance";
+            this.lv51.FormatType = 0;
             // 
             // bar51
             // 
@@ -3371,6 +3461,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv50.TabIndex = 11;
             this.lv50.Text = "100.00%";
             this.lv50.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv50.Group = "Status Resistance";
+            this.lv50.FormatType = 0;
             // 
             // bar50
             // 
@@ -3485,6 +3577,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv49.TabIndex = 10;
             this.lv49.Text = "100.00%";
             this.lv49.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv49.Group = "Status Resistance";
+            this.lv49.FormatType = 0;
             // 
             // bar53
             // 
@@ -3686,6 +3780,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv53.TabIndex = 11;
             this.lv53.Text = "100.00%";
             this.lv53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv53.Group = "Status Resistance";
+            this.lv53.FormatType = 0;
             // 
             // label104
             // 
@@ -3781,6 +3877,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv48.TabIndex = 12;
             this.lv48.Text = "30";
             this.lv48.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv48.Group = "Status Protection";
+            this.lv48.FormatType = 3;
             // 
             // lv47
             // 
@@ -3793,6 +3891,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv47.TabIndex = 12;
             this.lv47.Text = "30";
             this.lv47.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv47.Group = "Status Protection";
+            this.lv47.FormatType = 3;
             // 
             // lv46
             // 
@@ -3805,6 +3905,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv46.TabIndex = 12;
             this.lv46.Text = "30";
             this.lv46.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv46.Group = "Status Protection";
+            this.lv46.FormatType = 3;
             // 
             // lv45
             // 
@@ -3817,6 +3919,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv45.TabIndex = 12;
             this.lv45.Text = "30";
             this.lv45.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv45.Group = "Status Protection";
+            this.lv45.FormatType = 3;
             // 
             // lv44
             // 
@@ -3829,6 +3933,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv44.TabIndex = 12;
             this.lv44.Text = "30";
             this.lv44.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv44.Group = "Status Protection";
+            this.lv44.FormatType = 3;
             // 
             // lv43
             // 
@@ -3841,6 +3947,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv43.TabIndex = 12;
             this.lv43.Text = "30";
             this.lv43.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv43.Group = "Status Protection";
+            this.lv43.FormatType = 3;
             // 
             // label96
             // 
@@ -3937,6 +4045,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv41.TabIndex = 13;
             this.lv41.Text = "30";
             this.lv41.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv41.Group = "Status Protection";
+            this.lv41.FormatType = 3;
             // 
             // bar41
             // 
@@ -3976,6 +4086,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv40.TabIndex = 12;
             this.lv40.Text = "30";
             this.lv40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv40.Group = "Status Protection";
+            this.lv40.FormatType = 3;
             // 
             // bar40
             // 
@@ -4015,6 +4127,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv39.TabIndex = 11;
             this.lv39.Text = "30";
             this.lv39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv39.Group = "Status Protection";
+            this.lv39.FormatType = 3;
             // 
             // bar39
             // 
@@ -4129,6 +4243,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv38.TabIndex = 10;
             this.lv38.Text = "30";
             this.lv38.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv38.Group = "Status Protection";
+            this.lv38.FormatType = 3;
             // 
             // bar42
             // 
@@ -4330,6 +4446,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv42.TabIndex = 11;
             this.lv42.Text = "30";
             this.lv42.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv42.Group = "Status Protection";
+            this.lv42.FormatType = 3;
             // 
             // tabPageAdv1
             // 
@@ -4428,6 +4546,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv67.TabIndex = 24;
             this.lv67.Text = "100.00%";
             this.lv67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv67.Group = "Debuff Resistance";
+            this.lv67.FormatType = 0;
             // 
             // lv66
             // 
@@ -4440,6 +4560,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv66.TabIndex = 23;
             this.lv66.Text = "100.00%";
             this.lv66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv66.Group = "Debuff Resistance";
+            this.lv66.FormatType = 0;
             // 
             // lv65
             // 
@@ -4452,6 +4574,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv65.TabIndex = 22;
             this.lv65.Text = "100.00%";
             this.lv65.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv65.Group = "Debuff Resistance";
+            this.lv65.FormatType = 0;
             // 
             // lv64
             // 
@@ -4464,6 +4588,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv64.TabIndex = 21;
             this.lv64.Text = "100.00%";
             this.lv64.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv64.Group = "Debuff Resistance";
+            this.lv64.FormatType = 0;
             // 
             // lv63
             // 
@@ -4476,6 +4602,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv63.TabIndex = 20;
             this.lv63.Text = "100.00%";
             this.lv63.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv63.Group = "Debuff Resistance";
+            this.lv63.FormatType = 0;
             // 
             // lv62
             // 
@@ -4488,6 +4616,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv62.TabIndex = 19;
             this.lv62.Text = "100.00%";
             this.lv62.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv62.Group = "Debuff Resistance";
+            this.lv62.FormatType = 0;
             // 
             // lv61
             // 
@@ -4500,6 +4630,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv61.TabIndex = 18;
             this.lv61.Text = "100.00%";
             this.lv61.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv61.Group = "Debuff Resistance";
+            this.lv61.FormatType = 0;
             // 
             // bar60
             // 
@@ -4824,6 +4956,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv60.TabIndex = 17;
             this.lv60.Text = "100.00%";
             this.lv60.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lv60.Group = "Debuff Resistance";
+            this.lv60.FormatType = 0;
             // 
             // frmTotalsV2
             // 

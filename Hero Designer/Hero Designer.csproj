@@ -337,6 +337,7 @@
     <Compile Include="Forms\frmBusy.Designer.cs">
       <DependentUpon>frmBusy.cs</DependentUpon>
     </Compile>
+    <Compile Include="clsConvertibleUnitValue.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

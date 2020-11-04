@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Data_Classes;
@@ -114,7 +113,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             return bar.Group;
         }
 
-        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] v)
+        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues)
         {
             List<ctlLayeredBar> barsGroup = controlsList
                 .Cast<ctlLayeredBar>()
@@ -125,11 +124,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             for (int i = 0; i < barsGroup.Count; i++)
             {
-                SetBarSingle(barsGroup[i], v[i]);
+                SetBarSingle(barsGroup[i], mainValues[i]);
             }
         }
 
-        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] v1, float[] v2, bool auxIsBase)
+        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues, float[] auxValues, bool auxIsBase)
         {
             List<ctlLayeredBar> barsGroup = controlsList
                 .Cast<ctlLayeredBar>()
@@ -142,16 +141,16 @@ namespace Hero_Designer.Forms.WindowMenuItems
             {
                 if (auxIsBase)
                 {
-                    SetBarSingle(barsGroup[i], v1[i], v2[i]);
+                    SetBarSingle(barsGroup[i], mainValues[i], auxValues[i]);
                 }
                 else
                 {
-                    SetBarSingle(barsGroup[i], v1[i], 0, v2[i]);
+                    SetBarSingle(barsGroup[i], mainValues[i], 0, auxValues[i]);
                 }
             }
         }
 
-        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] v1, float[] v2, float[] v3)
+        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues, float[] baseValues, float[] overcapValues)
         {
             List<ctlLayeredBar> barsGroup = controlsList
                 .Cast<ctlLayeredBar>()
@@ -162,7 +161,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             for (int i = 0; i < barsGroup.Count; i++)
             {
-                SetBarSingle(barsGroup[i], v1[i], v2[i], v3[i]);
+                SetBarSingle(barsGroup[i], mainValues[i], baseValues[i], overcapValues[i]);
             }
         }
 
@@ -180,6 +179,46 @@ namespace Hero_Designer.Forms.WindowMenuItems
             bar.ValueOverlay1 = overlay1Value;
             bar.ValueOverlay2 = overlay2Value;
             bar.ResumeUpdate();
+        }
+
+        private int GetLvIndex(BarLabel lv)
+        {
+            return Convert.ToInt32(lv.Name.Substring(2)) - 1;
+        }
+        
+        private void SetLvsBulk(IEnumerable<Control> controlsList, string group, float[] values)
+        {
+            List<BarLabel> lvGroup = controlsList
+                .Cast<BarLabel>()
+                .Where(e => e.Group == group)
+                .ToList();
+
+            lvGroup.Sort((a, b) => GetLvIndex(a).CompareTo(GetLvIndex(b)));
+
+            for (int i = 0; i < lvGroup.Count; i++)
+            {
+                SetLvSingle(lvGroup[i], values[i]);
+            }
+        }
+
+        private void SetLvSingle(BarLabel lv, float value)
+        {
+            lv.Text = Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
+        private void SetLvSingle(BarLabel lv, string valueText)
+        {
+            lv.Text = valueText;
+        }
+
+        private void SetLvSingle(Enums.eBarType barType, float value)
+        {
+            FetchLv(barType).Text = Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
+        private void SetLvSingle(Enums.eBarType barType, string valueText)
+        {
+            FetchLv(barType).Text = valueText;
         }
 
         private void Radio_CheckedChanged(object sender, EventArgs e)
@@ -236,6 +275,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             StoreLocation();
         }
+
+        #region PictureBox buttons handlers
 
         private void PbCloseClick(object sender, EventArgs e)
         {
@@ -313,20 +354,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
-        #region FormatValue overloads
+        #endregion
 
-        private string FormatValue(int formatType, float value)
-        {
-            return formatType switch
-            {
-                0 => $"{value:##0.##}%", // Percentage
-                1 => $"{value:##0.##}", // Numeric, 2 decimals
-                2 => (value > 0 ? "+" : "") + $"{value:##0.##}", // Numeric, 2 decimals, with sign
-                3 => $"{Math.Abs(value):##0.##}", // Numeric, 2 decimals (for mez protection)
-                4 => $"{value:##0.##}/s", // Numeric, 2 decimals, per second
-                _ => $"{value:##0.##}"
-            };
-        }
+        #region FormatValue overloads
 
         private string FormatValue(int formatType, float value, float uncappedValue, float capValue, string statType,
             string dmgType, string atName)
@@ -729,6 +759,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             Stopwatch watch = Stopwatch.StartNew();
             tabControlAdv2.SuspendLayout();
             IEnumerable<ctlLayeredBar> barsList = GetControlHierarchy(tabControlAdv2).Cast<ctlLayeredBar>().ToList();
+            IEnumerable<BarLabel> lvList = GetControlHierarchy(tabControlAdv2).Cast<BarLabel>().ToList();
             List<Enums.eDamage> defenseDamageList = new List<Enums.eDamage>
             {
                 Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
@@ -793,17 +824,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetBarSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd, 100);
 
             ///////////////////////////////
-
-            SetBarsBulk(
-                barsList,
-                "Defense",
-                new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Melee,
-                    Enums.eDamage.Ranged, Enums.eDamage.AoE
-                }.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
-            );
 
             SetBarsBulk(
                 barsList,
@@ -890,227 +910,78 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             #region Labels setup
 
-            FetchLv(Enums.eBarType.DefenseSmashing).Text = FormatValue(0, displayStats.Defense(1));
-            FetchLv(Enums.eBarType.DefenseLethal).Text = FormatValue(0, displayStats.Defense(2));
-            FetchLv(Enums.eBarType.DefenseFire).Text = FormatValue(0, displayStats.Defense(3));
-            FetchLv(Enums.eBarType.DefenseCold).Text = FormatValue(0, displayStats.Defense(4));
-            FetchLv(Enums.eBarType.DefenseEnergy).Text = FormatValue(0, displayStats.Defense(5));
-            FetchLv(Enums.eBarType.DefenseNegative).Text = FormatValue(0, displayStats.Defense(6));
-            FetchLv(Enums.eBarType.DefensePsionic).Text = FormatValue(0, displayStats.Defense(8));
-            FetchLv(Enums.eBarType.DefenseMelee).Text = FormatValue(0, displayStats.Defense(10));
-            FetchLv(Enums.eBarType.DefenseRanged).Text = FormatValue(0, displayStats.Defense(11));
-            FetchLv(Enums.eBarType.DefenseAoE).Text = FormatValue(0, displayStats.Defense(12));
+            SetLvsBulk(
+                lvList,
+                "Defense",
+                defenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+            );
 
-            
-            FetchLv(Enums.eBarType.ResistanceSmashing).Text = FormatValue(0, displayStats.DamageResistance(1, false));
-            FetchLv(Enums.eBarType.ResistanceLethal).Text = FormatValue(0, displayStats.DamageResistance(2, false));
-            FetchLv(Enums.eBarType.ResistanceFire).Text = FormatValue(0, displayStats.DamageResistance(3, false));
-            FetchLv(Enums.eBarType.ResistanceCold).Text = FormatValue(0, displayStats.DamageResistance(4, false));
-            FetchLv(Enums.eBarType.ResistanceEnergy).Text = FormatValue(0, displayStats.DamageResistance(5, false));
-            FetchLv(Enums.eBarType.ResistanceNegative).Text = FormatValue(0, displayStats.DamageResistance(6, false));
-            FetchLv(Enums.eBarType.ResistanceToxic).Text = FormatValue(0, displayStats.DamageResistance(7, false));
-            FetchLv(Enums.eBarType.ResistancePsionic).Text = FormatValue(0, displayStats.DamageResistance(8, false));
+            SetLvsBulk(
+                lvList,
+                "Resistance",
+                resistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray()
+            );
 
-            FetchLv(Enums.eBarType.Regeneration).Text = FormatValue(0, displayStats.HealthRegenPercent(false));
-            FetchLv(Enums.eBarType.MaxHPAbsorb).Text = FormatValue(1, displayStats.HealthHitpointsNumeric(false));
-
-            FetchLv(Enums.eBarType.EndRec).Text = FormatValue(1, displayStats.EnduranceRecoveryNumeric) + "/s";
-            FetchLv(Enums.eBarType.EndUse).Text = FormatValue(1, displayStats.EnduranceUsage) + "/s";
-            FetchLv(Enums.eBarType.MaxEnd).Text = FormatValue(0, displayStats.EnduranceMaxEnd);
+            SetLvSingle(Enums.eBarType.Regeneration, displayStats.HealthRegenPercent(false));
+            SetLvSingle(Enums.eBarType.MaxHPAbsorb, displayStats.HealthHitpointsNumeric(false));
+            SetLvSingle(Enums.eBarType.EndRec, displayStats.EnduranceRecoveryNumeric);
+            SetLvSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
+            SetLvSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd);
 
             ///////////////////////////////
 
-            FetchLv(Enums.eBarType.RunSpeed).Text = FormatValue(1, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
-            FetchLv(Enums.eBarType.JumpSpeed).Text = FormatValue(1, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
-            FetchLv(Enums.eBarType.JumpHeight).Text = FormatValue(1, displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond)) + "ft";
-            FetchLv(Enums.eBarType.FlySpeed).Text = FormatValue(1, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false)) + "mph";
+            SetLvsBulk(
+                lvList,
+                "Movement",
+                new[]
+                {
+                    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
+                    displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
+                    displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false)
+                });
 
             ///////////////////////////////
 
-            FetchLv(Enums.eBarType.StealthPvE).Text = FormatValue(1, MidsContext.Character.Totals.StealthPvE) + "ft"; // ???
-            FetchLv(Enums.eBarType.StealthPvP).Text = FormatValue(1, MidsContext.Character.Totals.StealthPvP) + "ft"; // ???
-            FetchLv(Enums.eBarType.Perception).Text = FormatValue(1, displayStats.Perception(false)) + "ft";
+            SetLvsBulk(
+                lvList,
+                "Perception",
+                new[]
+                {
+                    MidsContext.Character.Totals.StealthPvE,
+                    MidsContext.Character.Totals.StealthPvP,
+                    displayStats.Perception(false)
+                });
 
             ///////////////////////////////
 
-            FetchLv(Enums.eBarType.Haste).Text = FormatValue(0, displayStats.BuffHaste(false));
-            FetchLv(Enums.eBarType.ToHit).Text = FormatValue(0, displayStats.BuffToHit);
-            FetchLv(Enums.eBarType.Accuracy).Text = FormatValue(0, displayStats.BuffAccuracy);
-            FetchLv(Enums.eBarType.Damage).Text = FormatValue(0, displayStats.BuffDamage(false)); // Need to add +100 here ?
-            FetchLv(Enums.eBarType.EndRdx).Text = FormatValue(0, displayStats.BuffEndRdx);
-            FetchLv(Enums.eBarType.ThreatLevel).Text = Convert.ToString(displayStats.ThreatLevel, CultureInfo.InvariantCulture); // ???
-            FetchLv(Enums.eBarType.Elusivity).Text = FormatValue(0, MidsContext.Character.Totals.Elusivity);
+            SetLvSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false));
+            SetLvSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
+            SetLvSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
+            SetLvSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false)); // Need to add +100 here ?
+            SetLvSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
+            SetLvSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel);
+            SetLvSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity);
 
             ///////////////////////////////
 
-            FetchLv(Enums.eBarType.MezProtectionHold).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Held]);
-            FetchLv(Enums.eBarType.MezProtectionStunned).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Stunned]);
-            FetchLv(Enums.eBarType.MezProtectionSleep).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Sleep]);
-            FetchLv(Enums.eBarType.MezProtectionImmob).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Immobilized]);
-            FetchLv(Enums.eBarType.MezProtectionKnockback).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Knockback]);
-            FetchLv(Enums.eBarType.MezProtectionRepel).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Repel]);
-            FetchLv(Enums.eBarType.MezProtectionConfuse).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Confused]);
-            FetchLv(Enums.eBarType.MezProtectionFear).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Terrorized]);
-            FetchLv(Enums.eBarType.MezProtectionTaunt).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Taunt]);
-            FetchLv(Enums.eBarType.MezProtectionPlacate).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Placate]);
-            FetchLv(Enums.eBarType.MezProtectionTeleport).Text = FormatValue(3, MidsContext.Character.Totals.Mez[(int) Enums.eMez.Teleport]);
+            SetLvsBulk(
+                lvList,
+                "Status Protection",
+                mezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int)m])).ToArray());
 
-            FetchLv(Enums.eBarType.MezResistanceHold).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Held]);
-            FetchLv(Enums.eBarType.MezResistanceStunned).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Stunned]);
-            FetchLv(Enums.eBarType.MezResistanceSleep).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Sleep]);
-            FetchLv(Enums.eBarType.MezResistanceImmob).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Immobilized]);
-            FetchLv(Enums.eBarType.MezResistanceKnockback).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Knockback]);
-            FetchLv(Enums.eBarType.MezResistanceRepel).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Repel]);
-            FetchLv(Enums.eBarType.MezResistanceConfuse).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Confused]);
-            FetchLv(Enums.eBarType.MezResistanceFear).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Terrorized]);
-            FetchLv(Enums.eBarType.MezResistanceTaunt).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Taunt]);
-            FetchLv(Enums.eBarType.MezResistancePlacate).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Placate]);
-            FetchLv(Enums.eBarType.MezResistanceTeleport).Text = FormatValue(0, MidsContext.Character.Totals.MezRes[(int) Enums.eMez.Teleport]);
+            SetLvsBulk(
+                lvList,
+                "Status Resistance",
+                mezList.Select(m => MidsContext.Character.Totals.MezRes[(int)m]).ToArray());
 
             ///////////////////////////////
 
-            FetchLv(Enums.eBarType.DebuffResistanceDefense).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Defense]);
-            FetchLv(Enums.eBarType.DebuffResistanceEndurance).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Endurance]);
-            FetchLv(Enums.eBarType.DebuffResistanceRecovery).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Recovery]);
-            FetchLv(Enums.eBarType.DebuffResistancePerception).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.PerceptionRadius]);
-            FetchLv(Enums.eBarType.DebuffResistanceToHit).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.ToHit]);
-            FetchLv(Enums.eBarType.DebuffResistanceRechargeTime).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.RechargeTime]);
-            FetchLv(Enums.eBarType.DebuffResistanceSpeedRunning).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.SpeedRunning]);
-            FetchLv(Enums.eBarType.DebuffResistanceRegen).Text = FormatValue(0, MidsContext.Character.Totals.DebuffRes[(int)Enums.eEffectType.Regeneration]);
+            SetLvsBulk(
+                lvList,
+                "Debuff Resistance",
+                debuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int)e]).ToArray());
 
-            #endregion
-
-            #region Tooltips setup
-            FetchBar(Enums.eBarType.DefenseSmashing).Tip = FormatValue(0, displayStats.Defense(1)) + " Smashing Defense";
-            FetchBar(Enums.eBarType.DefenseLethal).Tip = FormatValue(0, displayStats.Defense(2)) + " Lethal Defense";
-            FetchBar(Enums.eBarType.DefenseFire).Tip = FormatValue(0, displayStats.Defense(3)) + " Fire Defense";
-            FetchBar(Enums.eBarType.DefenseCold).Tip = FormatValue(0, displayStats.Defense(4)) + " Cold Defense";
-            FetchBar(Enums.eBarType.DefenseEnergy).Tip = FormatValue(0, displayStats.Defense(5)) + " Energy Defense";
-            FetchBar(Enums.eBarType.DefenseNegative).Tip = FormatValue(0, displayStats.Defense(6)) + " Negative Defense";
-            FetchBar(Enums.eBarType.DefensePsionic).Tip = FormatValue(0, displayStats.Defense(8)) + " Psionic Defense";
-            FetchBar(Enums.eBarType.DefenseMelee).Tip = FormatValue(0, displayStats.Defense(10)) + " Melee Defense";
-            FetchBar(Enums.eBarType.DefenseRanged).Tip = FormatValue(0, displayStats.Defense(11)) + " Ranged Defense";
-            FetchBar(Enums.eBarType.DefenseAoE).Tip = FormatValue(0, displayStats.Defense(12)) + " AoE Defense";
-
-            ///////////////////////////////
-
-            FetchBar(Enums.eBarType.ResistanceSmashing).Tip = FormatValue(
-                0,
-                displayStats.DamageResistance(1, true),
-                displayStats.DamageResistance(1, false),
-                MidsContext.Character.Archetype.ResCap * 100,
-                "Resistance",
-                "Smashing",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.ResistanceLethal).Tip = FormatValue(
-                0,
-                displayStats.DamageResistance(2, true),
-                displayStats.DamageResistance(2, false),
-                MidsContext.Character.Archetype.ResCap * 100,
-                "Resistance",
-                "Lethal",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.ResistanceFire).Tip = FormatValue(
-                0,
-                displayStats.DamageResistance(3, true),
-                displayStats.DamageResistance(3, false),
-                MidsContext.Character.Archetype.ResCap * 100,
-                "Resistance",
-                "Fire",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.ResistanceCold).Tip = FormatValue(
-                0,
-                displayStats.DamageResistance(4, true),
-                displayStats.DamageResistance(4, false),
-                MidsContext.Character.Archetype.ResCap * 100,
-                "Resistance",
-                "Cold",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.ResistanceEnergy).Tip = FormatValue(
-                0,
-                displayStats.DamageResistance(5, true),
-                displayStats.DamageResistance(5, false),
-                MidsContext.Character.Archetype.ResCap * 100,
-                "Resistance",
-                "Energy",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.ResistanceNegative).Tip = FormatValue(
-                0,
-                displayStats.DamageResistance(6, true),
-                displayStats.DamageResistance(6, false),
-                MidsContext.Character.Archetype.ResCap * 100,
-                "Resistance",
-                "Negative",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.ResistanceToxic).Tip = FormatValue(
-                0,
-                displayStats.DamageResistance(7, true),
-                displayStats.DamageResistance(7, false),
-                MidsContext.Character.Archetype.ResCap * 100,
-                "Resistance",
-                "Toxic",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.ResistancePsionic).Tip = FormatValue(
-                0,
-                displayStats.DamageResistance(8, true),
-                displayStats.DamageResistance(8, false),
-                MidsContext.Character.Archetype.ResCap * 100,
-                "Resistance",
-                "Psionic",
-                MidsContext.Character.Archetype.DisplayName);
-
-            ///////////////////////////////
-
-            FetchBar(Enums.eBarType.Regeneration).Tip = FormatValue(
-                0,
-                displayStats.HealthRegenPercent(false),
-                displayStats.HealthRegenPercent(true),
-                MidsContext.Character.Archetype.BaseRegen * 100,
-                MidsContext.Character.Archetype.RegenCap * 100,
-                "Regeneration",
-                "",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.MaxHPAbsorb).Tip = FormatValue(
-                1,
-                displayStats.HealthHitpointsNumeric(false),
-                displayStats.HealthHitpointsNumeric(true),
-                MidsContext.Character.Archetype.Hitpoints,
-                MidsContext.Character.Archetype.HPCap,
-                Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints),
-                "HP",
-                "Absorb",
-                "",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.EndRec).Tip = FormatValue(
-                4,
-                displayStats.EnduranceRecoveryNumeric,
-                displayStats.EnduranceRecoveryNumericUncapped,
-                MidsContext.Character.Archetype.BaseRecovery,
-                MidsContext.Character.Archetype.RecoveryCap,
-                "End. Recovery",
-                "",
-                MidsContext.Character.Archetype.DisplayName);
-
-            FetchBar(Enums.eBarType.EndUse).Tip = "End. use: " + FormatValue(1, displayStats.EnduranceUsage) + "/s";
-
-            FetchBar(Enums.eBarType.MaxEnd).Tip = FormatValue(
-                1,
-                displayStats.EnduranceMaxEnd,
-                displayStats.EnduranceMaxEnd,
-                100,
-                0,
-                "Max End",
-                "",
-                MidsContext.Character.Archetype.DisplayName);
             #endregion
 
             tabControlAdv2.ResumeLayout();
@@ -1125,12 +996,21 @@ namespace Hero_Designer.Forms.WindowMenuItems
         [Description("Label group"), Category("Data"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public string Group;
+        public string Group = "";
 
-        [Description("Format type\r\n0: Percentage\r\n1: Numeric, 2 decimals\r\n2: Numeric, 2 decimals, with sign\r\n3: Numeric, 2 decimals (for mez protection)\r\n4: Numeric, 2 decimals, per second"), Category("Data"),
+        [Description("Format type\r\n0: Percentage\r\n1: Numeric, 2 decimals\r\n2: Numeric, 2 decimals, with sign\r\n3: Numeric, 2 decimals (for mez protection)\r\n4: Numeric, 2 decimals, per second\r\n5: Numeric, 2 decimals, speed\r\n6: Numeric, 2 decimals, distance"), Category("Data"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public int FormatType;
+        public int FormatType = 0;
+
+        [Description("Bar label text"), Category("Appearance"),
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public new string Text
+        {
+            get => base.Text;
+            set => base.Text = clsConvertibleUnitValue.FormatValue(FormatType, value);
+        }
 
         public BarLabel()
         {
