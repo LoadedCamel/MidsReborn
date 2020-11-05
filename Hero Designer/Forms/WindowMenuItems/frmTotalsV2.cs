@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
@@ -19,6 +20,43 @@ namespace Hero_Designer.Forms.WindowMenuItems
     {
         private readonly frmMain _myParent;
         private bool KeepOnTop { get; set; }
+
+        private readonly List<Enums.eDamage> DefenseDamageList = new List<Enums.eDamage>
+        {
+            Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+            Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Melee,
+            Enums.eDamage.Ranged, Enums.eDamage.AoE
+        };
+
+        private readonly List<Enums.eDamage> ResistanceDamageList = new List<Enums.eDamage>
+        {
+            Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+            Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Toxic, Enums.eDamage.Psionic
+        };
+
+        private readonly List<Enums.eEffectType> MovementTypesList = new List<Enums.eEffectType>
+        {
+            Enums.eEffectType.SpeedRunning, Enums.eEffectType.SpeedJumping, Enums.eEffectType.JumpHeight, Enums.eEffectType.SpeedFlying
+        };
+
+        private readonly List<Enums.eEffectType> PerceptionEffectsList = new List<Enums.eEffectType>
+        {
+            Enums.eEffectType.StealthRadius, Enums.eEffectType.StealthRadiusPlayer, Enums.eEffectType.PerceptionRadius
+        };
+
+        private readonly List<Enums.eMez> MezList = new List<Enums.eMez>
+        {
+            Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized,
+            Enums.eMez.Knockback, Enums.eMez.Repel, Enums.eMez.Confused, Enums.eMez.Terrorized,
+            Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
+        };
+
+        private readonly List<Enums.eEffectType> DebuffEffectsList = new List<Enums.eEffectType>
+        {
+            Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
+            Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
+            Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
+        };
 
         public Control StatControl(string tab, int panel, string type, int control)
         {
@@ -83,11 +121,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
             _myParent = iParent;
             foreach (Control control in GetControlHierarchy(tabControlAdv2))
             {
-                if (control.Name.Contains("bar"))
-                {
-                    //control.MouseEnter += Bar_Enter;
-                    //control.MouseLeave += Bar_Leave;
-                }
+                if (!control.Name.Contains("bar")) continue;
+
+                control.MouseEnter += Bar_Enter;
+                control.MouseLeave += Bar_Leave;
             }
 
             // Tab Foreground Colors don't stick in the designer.
@@ -96,6 +133,108 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // Windows theme is in use.
             tabControlAdv2.ActiveTabForeColor = Color.White;
             tabControlAdv2.InActiveTabForeColor = Color.Black;
+        }
+
+        private List<string> GetVectorTypesList(string[] enumNames, IEnumerable<int> targetValues)
+        {
+            List<string> ret = new List<string>();
+            ret.AddRange(targetValues.Select(k => enumNames[k]).ToList());
+
+            return ret;
+        }
+
+        private string UCFirst(string s)
+        {
+            return char.ToUpper(s[0]) + s.Substring(1).ToLower();
+        }
+
+        private void Bar_Enter(object sender, EventArgs e)
+        {
+            ctlLayeredBar trigger = (ctlLayeredBar) sender;
+            Character.TotalStatistics totals = MidsContext.Character.Totals;
+            Character.TotalStatistics cappedTotals = MidsContext.Character.TotalsCapped;
+            string barGroup = trigger.Group;
+            int barIndex = GetBarIndex(trigger);
+            int vectorTypeIndex = string.IsNullOrEmpty(trigger.Group) ? -1 : GetBarVectorTypeIndex(barIndex, barGroup);
+            string atName = MidsContext.Character.Archetype.DisplayName;
+            string tooltipText = "";
+            List<string> vectorTypes;
+
+            switch (barGroup)
+            {
+                case "Defense":
+                    vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eDamage)), DefenseDamageList.Cast<int>());
+                    tooltipText = $"{trigger.ValueMainBar:##0.##}% {vectorTypes[vectorTypeIndex]} defense";
+                    break;
+
+                case "Resistance":
+                    vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eDamage)), ResistanceDamageList.Cast<int>());
+                    tooltipText = trigger.ValueMainBar <= trigger.ValueOverCap
+                        ? $"{trigger.ValueMainBar:##0.##}% {vectorTypes[vectorTypeIndex]} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
+                        : $"{trigger.ValueOverCap:##0.##}% {vectorTypes[vectorTypeIndex]} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)";
+                    break;
+
+                case "HP" when barIndex == (int)Enums.eBarType.MaxHPAbsorb:
+                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
+                               ? $"{trigger.ValueMainBar:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap})"
+                               : $"{trigger.ValueOverCap:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap}"
+                           ) +
+                           $"\r\nBase: {trigger.ValueBase}" +
+                           (trigger.ValueOverlay1 != 0 ? $"\r\nAbsorb: {trigger.ValueOverlay1:##0.##} ({(trigger.ValueOverlay1 / trigger.ValueBase * 100):##0.##}% of base HP)" : "");
+                    break;
+
+                // Triple bars main + base + overcap
+                // Todo
+                case "HP" when barIndex == (int)Enums.eBarType.Regeneration:
+                case "Endurance" when trigger.EnableBaseValue && trigger.EnableOverCap:
+                case "Movement":
+                case "" when trigger.EnableBaseValue && trigger.EnableOverCap:
+                    break;
+
+                // Dual bar main + overcap
+                case "Endurance" when !trigger.EnableBaseValue && trigger.EnableOverCap:
+                case "" when !trigger.EnableBaseValue && trigger.EnableOverCap:
+                    break;
+
+                // Dual bar main + base
+                case "Endurance" when trigger.EnableBaseValue && !trigger.EnableOverCap:
+                case "" when trigger.EnableBaseValue && !trigger.EnableOverCap:
+                    break;
+
+                case "Status Protection":
+                    vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eMez)), MezList.Cast<int>());
+                    tooltipText = $"{Math.Abs(trigger.ValueMainBar):##0.##} {UCFirst(trigger.Group)} to {UCFirst(vectorTypes[vectorTypeIndex])}";
+                    break;
+                case "Status Resistance":
+                case "Debuff Resistance":
+                    vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eMez)), MezList.Cast<int>());
+                    tooltipText = $"{trigger.ValueMainBar:##0.##}% {UCFirst(trigger.Group)} to {UCFirst(vectorTypes[vectorTypeIndex])}";
+                    break;
+
+                default:
+                    tooltipText = "";
+                    break;
+            }
+        }
+
+        private int GetBarVectorTypeIndex(int barIndex, string barGroup)
+        {
+            return barGroup switch
+            {
+                "Defense" => (int) DefenseDamageList[barIndex - 1],
+                "Resistance" => (int) ResistanceDamageList[barIndex - 11],
+                "Movement" => (int) MovementTypesList[barIndex - 24],
+                "Perception" => (int) PerceptionEffectsList[barIndex - 28],
+                "Status Protection" => (int) MezList[barIndex - 38],
+                "Status Resistance" => (int) MezList[barIndex - 49],
+                "Debuff Protection" => (int) MezList[barIndex - 60],
+                _ => -1
+            };
+        }
+
+        private void Bar_Leave(object sender, EventArgs e)
+        {
+            //TTip.SetToolTip(this, "");
         }
 
         private Enums.eBarType GetValueType(ctlLayeredBar bar)
@@ -356,199 +495,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         #endregion
 
-        #region FormatValue overloads
-
-        private string FormatValue(int formatType, float value, float uncappedValue, float capValue, string statType,
-            string dmgType, string atName)
-        {
-            string vs;
-            string uvs;
-            string cs;
-
-            switch (formatType)
-            {
-                case 0:
-                    vs = $"{value:##0.##}%";
-                    uvs = $"{uncappedValue:##0.##}%";
-                    cs = $"{capValue:##0.##}%";
-                    break;
-
-                case 1:
-                    vs = $"{value:##0.##}";
-                    uvs = $"{uncappedValue:##0.##}";
-                    cs = $"{capValue:##0.##}";
-                    break;
-
-                case 2:
-                    vs = (value > 0 ? "+" : "") + $"{value:##0.##}";
-                    uvs = (uncappedValue > 0 ? "+" : "") + $"{uncappedValue:##0.##}";
-                    cs = (capValue > 0 ? "+" : "") + $"{capValue:##0.##}";
-                    break;
-
-                case 3:
-                    vs = $"{Math.Abs(value):##0.##}";
-                    uvs = $"{Math.Abs(uncappedValue):##0.##}";
-                    cs = $"{Math.Abs(capValue):##0.##}";
-                    break;
-
-                case 4:
-                    vs = $"{value:##0.##}/s";
-                    uvs = $"{uncappedValue:##0.##}/s";
-                    cs = $"{capValue:##0.##}/s";
-                    break;
-
-                default:
-                    vs = $"{value:##0.##}";
-                    uvs = $"{uncappedValue:##0.##}";
-                    cs = $"{capValue:##0.##}";
-                    break;
-            }
-
-            return value <= uncappedValue
-                ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}" + (capValue > 0 ? $" ({atName} {statType.ToLower()} cap: {cs})" : "")
-                : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}";
-        }
-
-        private string FormatValue(int formatType, float value, float uncappedValue, float baseValue, float capValue, string statType, string dmgType, string atName)
-        {
-            string vs;
-            string uvs;
-            string bs;
-            string cs;
-
-            switch (formatType)
-            {
-                case 0:
-                    vs = $"{value:##0.##}%";
-                    uvs = $"{uncappedValue:##0.##}%";
-                    cs = $"{capValue:##0.##}%";
-                    bs = $"{baseValue:##0.##}%";
-                    break;
-
-                case 1:
-                    vs = $"{value:##0.##}";
-                    uvs = $"{uncappedValue:##0.##}";
-                    cs = $"{capValue:##0.##}";
-                    bs = $"{baseValue:##0.##}";
-                    break;
-
-                case 2:
-                    vs = (value > 0 ? "+" : "") + $"{value:##0.##}";
-                    uvs = (uncappedValue > 0 ? "+" : "") + $"{uncappedValue:##0.##}";
-                    cs = (capValue > 0 ? "+" : "") + $"{capValue:##0.##}";
-                    bs = (baseValue > 0 ? "+" : "") + $"{baseValue:##0.##}";
-                    break;
-
-                case 3:
-                    vs = $"{Math.Abs(value):##0.##}";
-                    uvs = $"{Math.Abs(uncappedValue):##0.##}";
-                    cs = $"{Math.Abs(capValue):##0.##}";
-                    bs = $"{Math.Abs(baseValue):##0.##}";
-                    break;
-
-                case 4:
-                    vs = $"{value:##0.##}/s";
-                    uvs = $"{uncappedValue:##0.##}/s";
-                    cs = $"{capValue:##0.##}/s";
-                    bs = $"{baseValue:##0.##}/s";
-                    break;
-
-                default:
-                    vs = $"{value:##0.##}";
-                    uvs = $"{uncappedValue:##0.##}";
-                    cs = $"{capValue:##0.##}";
-                    bs = $"{capValue:##0.##}";
-                    break;
-            }
-
-            return (value <= uncappedValue
-                       ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}" + (capValue > 0 ? $" ({atName} {statType} cap: {cs})" :"")
-                       : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}") +
-                             (baseValue != 0 ? $"\r\nBase: {bs}" : "");
-        }
-
-        private string FormatValue(int formatType, float value, float uncappedValue, float baseValue, float capValue,
-            float overlay1Value, string statType, string overlay1Stat, string dmgType, string atName)
-        {
-            string vs;
-            string uvs;
-            string bs;
-            string cs;
-            string o1s;
-
-            switch (formatType)
-            {
-                case 0:
-                    vs = $"{value:##0.##}%";
-                    uvs = $"{uncappedValue:##0.##}%";
-                    cs = $"{capValue:##0.##}%";
-                    bs = $"{baseValue:##0.##}%";
-                    o1s = $"{overlay1Value:##0.##}%";
-                    break;
-
-                case 1:
-                    vs = $"{value:##0.##}";
-                    uvs = $"{uncappedValue:##0.##}";
-                    cs = $"{capValue:##0.##}";
-                    bs = $"{baseValue:##0.##}";
-                    o1s = $"{overlay1Value:##0.##}";
-                    break;
-
-                case 2:
-                    vs = (value > 0 ? "+" : "") + $"{value:##0.##}";
-                    uvs = (uncappedValue > 0 ? "+" : "") + $"{uncappedValue:##0.##}";
-                    cs = (capValue > 0 ? "+" : "") + $"{capValue:##0.##}";
-                    bs = (baseValue > 0 ? "+" : "") + $"{baseValue:##0.##}";
-                    o1s = (overlay1Value > 0 ? "+" : "") + $"{overlay1Value:##0.##}";
-                    break;
-
-                case 3:
-                    vs = $"{Math.Abs(value):##0.##}";
-                    uvs = $"{Math.Abs(uncappedValue):##0.##}";
-                    cs = $"{Math.Abs(capValue):##0.##}";
-                    bs = $"{Math.Abs(baseValue):##0.##}";
-                    o1s = $"{Math.Abs(overlay1Value):##0.##}";
-                    break;
-
-                case 4:
-                    vs = $"{value:##0.##}/s";
-                    uvs = $"{uncappedValue:##0.##}/s";
-                    cs = $"{capValue:##0.##}/s";
-                    bs = $"{baseValue:##0.##}/s";
-                    o1s = $"{overlay1Value:##0.##}/s";
-                    break;
-
-                default:
-                    vs = $"{value:##0.##}";
-                    uvs = $"{uncappedValue:##0.##}";
-                    cs = $"{capValue:##0.##}";
-                    bs = $"{capValue:##0.##}";
-                    o1s = $"{overlay1Value:##0.##}";
-                    break;
-            }
-
-            if (statType == "HP")
-            {
-                return (value <= uncappedValue
-                           ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}" +
-                             (capValue > 0 ? $"({atName} {statType} cap: {cs})" : "")
-                           : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}"
-                       ) +
-                       (baseValue != 0 ? $"\r\nBase: {bs}" : "") +
-                       (overlay1Value != 0 ? $"\r\n{overlay1Stat}: {o1s} ({(overlay1Value / baseValue * 100):##0.##}% of base HP)" : "");
-            }
-
-            return (value <= uncappedValue
-                       ? $"{vs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}" +
-                         (capValue > 0 ? $"({atName} {statType} cap: {cs})" : "")
-                       : $"{uvs}{(string.IsNullOrEmpty(dmgType) ? "" : " " + dmgType)} {statType}, capped at {cs}"
-                   ) +
-                   (baseValue != 0 ? $"\r\nBase: {bs}" : "") +
-                   (overlay1Value != 0 ? $"\r\n{overlay1Stat}: {o1s}" : "");
-        }
-
-        #endregion
-
         #region Bars/Labels indexes
 
         private ctlLayeredBar FetchBar(int n)
@@ -760,46 +706,20 @@ namespace Hero_Designer.Forms.WindowMenuItems
             tabControlAdv2.SuspendLayout();
             IEnumerable<ctlLayeredBar> barsList = GetControlHierarchy(tabControlAdv2).Cast<ctlLayeredBar>().ToList();
             IEnumerable<BarLabel> lvList = GetControlHierarchy(tabControlAdv2).Cast<BarLabel>().ToList();
-            List<Enums.eDamage> defenseDamageList = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Melee,
-                Enums.eDamage.Ranged, Enums.eDamage.AoE
-            };
-
-            List<Enums.eDamage> resistanceDamageList = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Toxic, Enums.eDamage.Psionic
-            };
-
-            List<Enums.eMez> mezList = new List<Enums.eMez>
-            {
-                Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized,
-                Enums.eMez.Knockback, Enums.eMez.Repel, Enums.eMez.Confused, Enums.eMez.Terrorized,
-                Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
-            };
-
-            List<Enums.eEffectType> debuffEffectsList = new List<Enums.eEffectType>
-            {
-                Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
-                Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
-                Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
-            };
 
             #region Bars setup
 
             SetBarsBulk(
                 barsList,
                 "Defense",
-                defenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+                DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
             );
 
             SetBarsBulk(
                 barsList,
                 "Resistance",
-                resistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray(),
-                resistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, true)).ToArray(),
+                ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray(),
+                ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, true)).ToArray(),
                 false
             );
 
@@ -893,19 +813,19 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetBarsBulk(
                 barsList,
                 "Status Protection",
-                mezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray());
+                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray());
 
             SetBarsBulk(
                 barsList,
                 "Status Resistance",
-                mezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
+                MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
 
             ///////////////////////////////
 
             SetBarsBulk(
                 barsList,
                 "Debuff Resistance",
-                debuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray());
+                DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray());
             #endregion
 
             #region Labels setup
@@ -913,13 +833,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetLvsBulk(
                 lvList,
                 "Defense",
-                defenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+                DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
             );
 
             SetLvsBulk(
                 lvList,
                 "Resistance",
-                resistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray()
+                ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray()
             );
 
             SetLvSingle(Enums.eBarType.Regeneration, displayStats.HealthRegenPercent(false));
@@ -968,19 +888,19 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetLvsBulk(
                 lvList,
                 "Status Protection",
-                mezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int)m])).ToArray());
+                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int)m])).ToArray());
 
             SetLvsBulk(
                 lvList,
                 "Status Resistance",
-                mezList.Select(m => MidsContext.Character.Totals.MezRes[(int)m]).ToArray());
+                MezList.Select(m => MidsContext.Character.Totals.MezRes[(int)m]).ToArray());
 
             ///////////////////////////////
 
             SetLvsBulk(
                 lvList,
                 "Debuff Resistance",
-                debuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int)e]).ToArray());
+                DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int)e]).ToArray());
 
             #endregion
 
