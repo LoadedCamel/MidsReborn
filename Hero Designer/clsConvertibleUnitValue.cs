@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Base.Master_Classes;
 
 namespace Hero_Designer
@@ -51,13 +52,16 @@ namespace Hero_Designer
                 4 => $"{value:##0.##}/s", // Numeric, 2 decimals, per second
                 5 => $"{value:##0.##} {FormatSpeedUnit()}", // Movement, speed
                 6 => $"{value:##0.##} {FormatDistanceUnit()}", // Movement, distance
+                7 => (value > 0 ? "+" : "") + $"{value:##0.##}%", // Percentage, 2 decimals, with sign
                 _ => $"{value:##0.##}"
             };
         }
 
         public static string FormatValue(int formatType, string valueText)
         {
-            return FormatValue(formatType, Convert.ToSingle(valueText));
+            // Required for designer-set values
+            Regex r = new Regex(@"[^0-9\.\-]");
+            return FormatValue(formatType, Convert.ToSingle(r.Replace(valueText, ""), CultureInfo.InvariantCulture.NumberFormat));
         }
     }
 }

@@ -536,12 +536,12 @@ namespace midsControls
                     ControlStyles.UserPaint,
                     true);
                 InitializeComponent();
-                /*TTip = new ToolTip
+                TTip = new ToolTip
                 {
                     AutoPopDelay = 10000,
                     InitialDelay = 500,
                     ReshowDelay = 100
-                };*/
+                };
             }
             catch (Exception ex)
             {

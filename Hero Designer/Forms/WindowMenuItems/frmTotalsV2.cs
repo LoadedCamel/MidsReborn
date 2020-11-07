@@ -117,29 +117,200 @@ namespace Hero_Designer.Forms.WindowMenuItems
             } while (queue.Count > 0);
         }
 
+        private IEnumerable<Control> GetControlHierarchy<T>(Control root)
+        {
+            Queue<Control> queue = new Queue<Control>();
+            queue.Enqueue(root);
+            do
+            {
+                Control control = queue.Dequeue();
+                if (control.GetType() == typeof(T)) yield return control;
+                foreach (Control child in control.Controls.OfType<Control>())
+                {
+                    queue.Enqueue(child);
+                }
+            } while (queue.Count > 0);
+        }
+
         #endregion
 
         public frmTotalsV2(ref frmMain iParent)
         {
-            FormClosed += frmTotalsV2_FormClosed;
-            Load += OnLoad;
-            KeepOnTop = true;
-            InitializeComponent();
-            _myParent = iParent;
-            foreach (Control control in GetControlHierarchy(tabControlAdv2))
+            try
             {
-                if (!control.Name.Contains("bar")) continue;
+                FormClosed += frmTotalsV2_FormClosed;
 
-                control.MouseEnter += Bar_Enter;
-                control.MouseLeave += Bar_Leave;
+                Load += OnLoad;
+                KeepOnTop = true;
+                InitializeComponent();
+                SetLvTypes();
+                _myParent = iParent;
+                foreach (Control control in GetControlHierarchy(tabControlAdv2))
+                {
+                    if (!control.Name.Contains("bar")) continue;
+
+                    control.MouseEnter += Bar_Enter;
+                    control.MouseLeave += Bar_Leave;
+                }
+
+                // Tab Foreground Colors don't stick in the designer.
+                // Note: default colors will be used anyway.
+                // This may only cause issues if a custom
+                // Windows theme is in use.
+                tabControlAdv2.ActiveTabForeColor = Color.White;
+                tabControlAdv2.InActiveTabForeColor = Color.Black;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
+        }
 
-            // Tab Foreground Colors don't stick in the designer.
-            // Note: default colors will be used anyway.
-            // This may only cause issues if a custom
-            // Windows theme is in use.
-            tabControlAdv2.ActiveTabForeColor = Color.White;
-            tabControlAdv2.InActiveTabForeColor = Color.Black;
+        private void SetLvTypes()
+        {
+            lv1.Group = "Defense";
+            lv1.FormatType = 0;
+            lv2.Group = "Defense";
+            lv2.FormatType = 0;
+            lv3.Group = "Defense";
+            lv3.FormatType = 0;
+            lv4.Group = "Defense";
+            lv4.FormatType = 0;
+            lv5.Group = "Defense";
+            lv5.FormatType = 0;
+            lv6.Group = "Defense";
+            lv6.FormatType = 0;
+            lv7.Group = "Defense";
+            lv7.FormatType = 0;
+            lv8.Group = "Defense";
+            lv8.FormatType = 0;
+            lv9.Group = "Defense";
+            lv9.FormatType = 0;
+            lv10.Group = "Defense";
+            lv10.FormatType = 0;
+
+            lv11.Group = "Resistance";
+            lv11.FormatType = 0;
+            lv12.Group = "Resistance";
+            lv12.FormatType = 0;
+            lv13.Group = "Resistance";
+            lv13.FormatType = 0;
+            lv14.Group = "Resistance";
+            lv14.FormatType = 0;
+            lv15.Group = "Resistance";
+            lv15.FormatType = 0;
+            lv16.Group = "Resistance";
+            lv16.FormatType = 0;
+            lv17.Group = "Resistance";
+            lv17.FormatType = 0;
+            lv18.Group = "Resistance";
+            lv18.FormatType = 0;
+
+            lv19.Group = "HP";
+            lv19.FormatType = 0;
+            lv20.Group = "HP";
+            lv20.FormatType = 1;
+
+            lv21.Group = "Endurance";
+            lv21.FormatType = 4;
+            lv22.Group = "Endurance";
+            lv22.FormatType = 4;
+            lv23.Group = "Endurance";
+            lv23.FormatType = 0;
+
+            lv24.Group = "Movement";
+            lv24.FormatType = 5;
+            lv25.Group = "Movement";
+            lv25.FormatType = 5;
+            lv26.Group = "Movement";
+            lv26.FormatType = 6;
+            lv27.Group = "Movement";
+            lv27.FormatType = 5;
+
+            lv28.Group = "Perception";
+            lv28.FormatType = 6;
+            lv29.Group = "Perception";
+            lv29.FormatType = 6;
+            lv30.Group = "Perception";
+            lv30.FormatType = 6;
+
+            lv31.Group = "";
+            lv31.FormatType = 7;
+            lv32.Group = "";
+            lv32.FormatType = 7;
+            lv33.Group = "";
+            lv33.FormatType = 7;
+            lv34.Group = "";
+            lv34.FormatType = 7;
+            lv35.Group = "";
+            lv35.FormatType = 7;
+            lv36.Group = "";
+            lv36.FormatType = 0;
+            lv37.Group = "";
+            lv37.FormatType = 0;
+
+            lv38.Group = "Status Protection";
+            lv38.FormatType = 3;
+            lv39.Group = "Status Protection";
+            lv39.FormatType = 3;
+            lv40.Group = "Status Protection";
+            lv40.FormatType = 3;
+            lv41.Group = "Status Protection";
+            lv41.FormatType = 3;
+            lv42.Group = "Status Protection";
+            lv42.FormatType = 3;
+            lv43.Group = "Status Protection";
+            lv43.FormatType = 3;
+            lv44.Group = "Status Protection";
+            lv44.FormatType = 3;
+            lv45.Group = "Status Protection";
+            lv45.FormatType = 3;
+            lv46.Group = "Status Protection";
+            lv46.FormatType = 3;
+            lv47.Group = "Status Protection";
+            lv47.FormatType = 3;
+            lv48.Group = "Status Protection";
+            lv48.FormatType = 3;
+
+            lv49.Group = "Status Resistance";
+            lv49.FormatType = 0;
+            lv50.Group = "Status Resistance";
+            lv50.FormatType = 0;
+            lv51.Group = "Status Resistance";
+            lv51.FormatType = 0;
+            lv52.Group = "Status Resistance";
+            lv52.FormatType = 0;
+            lv53.Group = "Status Resistance";
+            lv53.FormatType = 0;
+            lv54.Group = "Status Resistance";
+            lv54.FormatType = 0;
+            lv55.Group = "Status Resistance";
+            lv55.FormatType = 0;
+            lv56.Group = "Status Resistance";
+            lv56.FormatType = 0;
+            lv57.Group = "Status Resistance";
+            lv57.FormatType = 0;
+            lv58.Group = "Status Resistance";
+            lv58.FormatType = 0;
+            lv59.Group = "Status Resistance";
+            lv59.FormatType = 0;
+
+            lv60.Group = "Debuff Resistance";
+            lv60.FormatType = 0;
+            lv61.Group = "Debuff Resistance";
+            lv61.FormatType = 0;
+            lv62.Group = "Debuff Resistance";
+            lv62.FormatType = 0;
+            lv63.Group = "Debuff Resistance";
+            lv63.FormatType = 0;
+            lv64.Group = "Debuff Resistance";
+            lv64.FormatType = 0;
+            lv65.Group = "Debuff Resistance";
+            lv65.FormatType = 0;
+            lv66.Group = "Debuff Resistance";
+            lv66.FormatType = 0;
+            lv67.Group = "Debuff Resistance";
+            lv67.FormatType = 0;
         }
 
         private List<string> GetVectorTypesList(string[] enumNames, IEnumerable<int> targetValues)
@@ -157,109 +328,134 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void Bar_Enter(object sender, EventArgs e)
         {
-            ctlLayeredBar trigger = (ctlLayeredBar) sender;
-            Character.TotalStatistics totals = MidsContext.Character.Totals;
-            Character.TotalStatistics cappedTotals = MidsContext.Character.TotalsCapped;
-            Statistics displayStats = MidsContext.Character.DisplayStats;
-            string barGroup = trigger.Group;
-            int barIndex = GetBarIndex(trigger);
-            int vectorTypeIndex = string.IsNullOrEmpty(trigger.Group) ? -1 : GetBarVectorTypeIndex(barIndex, barGroup);
-            string atName = MidsContext.Character.Archetype.DisplayName;
-            string tooltipText = "";
-            List<string> vectorTypes;
-            string[] barTypesNames = Enum.GetNames(typeof(Enums.eBarType));
-            Regex r = new Regex(@"/([A-Z])/");
-            barTypesNames = barTypesNames.Select(e => r.Replace(e, " $1").TrimStart()).ToArray();
-            BarLabel lv;
-            string percentageSign;
-            bool plusSignEnabled;
+            Debug.WriteLine("Bar_Enter start");
 
-            switch (barGroup)
+            try
             {
-                case "Defense":
-                    vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eDamage)), DefenseDamageList.Cast<int>());
-                    tooltipText = $"{trigger.ValueMainBar:##0.##}% {vectorTypes[vectorTypeIndex]} defense";
-                    break;
+                ctlLayeredBar trigger = (ctlLayeredBar) sender;
+                Statistics displayStats = MidsContext.Character.DisplayStats;
+                string barGroup = trigger.Group;
+                int barIndex = GetBarIndex(trigger);
+                int vectorTypeIndex =
+                    string.IsNullOrEmpty(trigger.Group) ? -1 : GetBarVectorTypeIndex(barIndex, barGroup);
+                string atName = MidsContext.Character.Archetype.DisplayName;
+                string tooltipText = "";
+                List<string> vectorTypes;
+                string[] barTypesNames = Enum.GetNames(typeof(Enums.eBarType));
+                Regex r = new Regex(@"/([A-Z])/");
+                barTypesNames = barTypesNames.Select(e => r.Replace(e, " $1").TrimStart()).ToArray();
+                BarLabel lv;
+                string percentageSign;
+                bool plusSignEnabled;
 
-                case "Resistance":
-                    vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eDamage)), ResistanceDamageList.Cast<int>());
-                    tooltipText = trigger.ValueMainBar <= trigger.ValueOverCap
-                        ? $"{trigger.ValueMainBar:##0.##}% {vectorTypes[vectorTypeIndex]} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
-                        : $"{trigger.ValueOverCap:##0.##}% {vectorTypes[vectorTypeIndex]} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)";
-                    break;
+                switch (barGroup)
+                {
+                    case "Defense":
+                        vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eDamage)),
+                            DefenseDamageList.Cast<int>());
+                        tooltipText = $"{trigger.ValueMainBar:##0.##}% {vectorTypes[vectorTypeIndex]} defense";
+                        break;
 
-                case "HP" when barIndex == (int)Enums.eBarType.MaxHPAbsorb:
-                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
-                               ? $"{trigger.ValueMainBar:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap})"
-                               : $"{trigger.ValueOverCap:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap}") +
-                           $"\r\nBase: {trigger.ValueBase:##0.##}" +
-                           (trigger.ValueOverlay1 != 0 ? $"\r\nAbsorb: {trigger.ValueOverlay1:##0.##} ({(trigger.ValueOverlay1 / trigger.ValueBase * 100):##0.##}% of base HP)" : "");
-                    break;
+                    case "Resistance":
+                        vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eDamage)),
+                            ResistanceDamageList.Cast<int>());
+                        tooltipText = trigger.ValueMainBar <= trigger.ValueOverCap
+                            ? $"{trigger.ValueMainBar:##0.##}% {vectorTypes[vectorTypeIndex]} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
+                            : $"{trigger.ValueOverCap:##0.##}% {vectorTypes[vectorTypeIndex]} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)";
+                        break;
 
-                case "Endurance" when barIndex == (int)Enums.eBarType.EndRec:
-                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
-                        ? $"{trigger.ValueMainBar:##0.##}/s End. ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap})"
-                        : $"{trigger.ValueOverCap:##0.##}/s End., capped at {MidsContext.Character.Archetype.RecoveryCap}") +
-                          $"\r\nBase: {trigger.ValueBase:##0.##}/s";
-                    break;
+                    case "HP" when barIndex == (int) Enums.eBarType.MaxHPAbsorb:
+                        tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
+                                          ? $"{trigger.ValueMainBar:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap})"
+                                          : $"{trigger.ValueOverCap:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap}"
+                                      ) +
+                                      $"\r\nBase: {trigger.ValueBase:##0.##}" +
+                                      (trigger.ValueOverlay1 != 0
+                                          ? $"\r\nAbsorb: {trigger.ValueOverlay1:##0.##} ({(trigger.ValueOverlay1 / trigger.ValueBase * 100):##0.##}% of base HP)"
+                                          : "");
+                        break;
 
-                case "Endurance" when barIndex == (int)Enums.eBarType.EndUse:
-                    tooltipText = $"{trigger.ValueMainBar:##0.##}/s End. (Net gain: {displayStats.EnduranceRecoveryNet:##0.##}/s)";
-                    break;
+                    case "Endurance" when barIndex == (int) Enums.eBarType.EndRec:
+                        tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
+                                          ? $"{trigger.ValueMainBar:##0.##}/s End. ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap})"
+                                          : $"{trigger.ValueOverCap:##0.##}/s End., capped at {MidsContext.Character.Archetype.RecoveryCap}"
+                                      ) +
+                                      $"\r\nBase: {trigger.ValueBase:##0.##}/s";
+                        break;
 
-                case "Endurance" when barIndex == (int)Enums.eBarType.MaxEnd:
-                    tooltipText = $"{trigger.ValueMainBar:##0.##} maximum Endurance (base: {trigger.ValueBase:##0.##})";
-                    break;
+                    case "Endurance" when barIndex == (int) Enums.eBarType.EndUse:
+                        tooltipText =
+                            $"{trigger.ValueMainBar:##0.##}/s End. (Net gain: {displayStats.EnduranceRecoveryNet:##0.##}/s)";
+                        break;
 
-                // Triple bar main + base + overcap
-                case "HP" when barIndex == (int)Enums.eBarType.Regeneration:
-                case "" when trigger.EnableBaseValue && trigger.EnableOverCap:
-                    lv = FetchLv(barIndex);
-                    percentageSign = lv.FormatType == 0 ? "%" : "";
-                    plusSignEnabled = lv.FormatType == 2;
-                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
-                                      ? $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}"
-                                      : $"{(plusSignEnabled && trigger.ValueOverCap > 0 ? "+" : "")}{trigger.ValueOverCap:##0.##}{percentageSign} {barTypesNames[barIndex]}, capped at {(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign}"
-                                  ) +
-                                  (trigger.ValueBase > 0 ? $"\r\nBase: {(plusSignEnabled && trigger.ValueBase > 0 ? "+" : "")}{trigger.ValueBase:##0.##}{percentageSign}" : "");
-                    break;
+                    case "Endurance" when barIndex == (int) Enums.eBarType.MaxEnd:
+                        tooltipText =
+                            $"{trigger.ValueMainBar:##0.##} maximum Endurance (base: {trigger.ValueBase:##0.##})";
+                        break;
 
-                case "Movement":
-                    break;
+                    // Triple bar main + base + overcap
+                    case "HP" when barIndex == (int) Enums.eBarType.Regeneration:
+                    case "" when trigger.EnableBaseValue && trigger.EnableOverCap:
+                        lv = FetchLv(barIndex);
+                        percentageSign = lv.FormatType == 0 ? "%" : "";
+                        plusSignEnabled = lv.FormatType == 2;
+                        tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
+                                          ? $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}"
+                                          : $"{(plusSignEnabled && trigger.ValueOverCap > 0 ? "+" : "")}{trigger.ValueOverCap:##0.##}{percentageSign} {barTypesNames[barIndex]}, capped at {(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign}"
+                                      ) +
+                                      (trigger.ValueBase > 0
+                                          ? $"\r\nBase: {(plusSignEnabled && trigger.ValueBase > 0 ? "+" : "")}{trigger.ValueBase:##0.##}{percentageSign}"
+                                          : "");
+                        break;
 
-                // Dual bar main + overcap
-                case "" when !trigger.EnableBaseValue && trigger.EnableOverCap:
-                    lv = FetchLv(barIndex);
-                    percentageSign = lv.FormatType == 0 ? "%" : "";
-                    plusSignEnabled = lv.FormatType == 2;
-                    tooltipText = trigger.ValueMainBar <= trigger.ValueOverCap
-                        ? $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}"
-                        : $"{(plusSignEnabled && trigger.ValueOverCap > 0 ? "+" : "")}{trigger.ValueOverCap:##0.##}{percentageSign} {barTypesNames[barIndex]}, capped at {(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign}";
+                    case "Movement":
+                        break;
 
-                    break;
+                    // Dual bar main + overcap
+                    case "" when !trigger.EnableBaseValue && trigger.EnableOverCap:
+                        lv = FetchLv(barIndex);
+                        percentageSign = lv.FormatType == 0 ? "%" : "";
+                        plusSignEnabled = lv.FormatType == 2;
+                        tooltipText = trigger.ValueMainBar <= trigger.ValueOverCap
+                            ? $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}"
+                            : $"{(plusSignEnabled && trigger.ValueOverCap > 0 ? "+" : "")}{trigger.ValueOverCap:##0.##}{percentageSign} {barTypesNames[barIndex]}, capped at {(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign}";
 
-                // Dual bar main + base
-                case "" when trigger.EnableBaseValue && !trigger.EnableOverCap:
-                    lv = FetchLv(barIndex);
-                    percentageSign = lv.FormatType == 0 ? "%" : "";
-                    plusSignEnabled = lv.FormatType == 2;
-                    tooltipText = $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}" +
-                                  (trigger.ValueBase > 0 ? $"\r\nBase: {(plusSignEnabled && trigger.ValueBase > 0 ? "+" : "")}{trigger.ValueBase:##0.##}{percentageSign}" : "");
-                    break;
+                        break;
 
-                case "Status Protection":
-                    vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eMez)), MezList.Cast<int>());
-                    tooltipText = $"{Math.Abs(trigger.ValueMainBar):##0.##} {UCFirst(trigger.Group)} to {UCFirst(vectorTypes[vectorTypeIndex])}";
-                    break;
-                case "Status Resistance":
-                case "Debuff Resistance":
-                    vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eMez)), MezList.Cast<int>());
-                    tooltipText = $"{trigger.ValueMainBar:##0.##}% {UCFirst(trigger.Group)} to {UCFirst(vectorTypes[vectorTypeIndex])}";
-                    break;
+                    // Dual bar main + base
+                    case "" when trigger.EnableBaseValue && !trigger.EnableOverCap:
+                        lv = FetchLv(barIndex);
+                        percentageSign = lv.FormatType == 0 ? "%" : "";
+                        plusSignEnabled = lv.FormatType == 2;
+                        tooltipText =
+                            $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}" +
+                            (trigger.ValueBase > 0
+                                ? $"\r\nBase: {(plusSignEnabled && trigger.ValueBase > 0 ? "+" : "")}{trigger.ValueBase:##0.##}{percentageSign}"
+                                : "");
+                        break;
 
-                default:
-                    tooltipText = "";
-                    break;
+                    case "Status Protection":
+                        vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eMez)), MezList.Cast<int>());
+                        tooltipText =
+                            $"{Math.Abs(trigger.ValueMainBar):##0.##} {UCFirst(trigger.Group)} to {UCFirst(vectorTypes[vectorTypeIndex])}";
+                        break;
+                    case "Status Resistance":
+                    case "Debuff Resistance":
+                        vectorTypes = GetVectorTypesList(Enum.GetNames(typeof(Enums.eMez)), MezList.Cast<int>());
+                        tooltipText =
+                            $"{trigger.ValueMainBar:##0.##}% {UCFirst(trigger.Group)} to {UCFirst(vectorTypes[vectorTypeIndex])}";
+                        break;
+
+                    default:
+                        tooltipText = "";
+                        break;
+                }
+
+                trigger.SetTip(tooltipText);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 
@@ -280,7 +476,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void Bar_Leave(object sender, EventArgs e)
         {
-            //TTip.SetToolTip(this, "");
+            ctlLayeredBar trigger = (ctlLayeredBar)sender;
+            trigger.SetTip("");
         }
 
         private Enums.eBarType GetValueType(ctlLayeredBar bar)
@@ -380,7 +577,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             lvGroup.Sort((a, b) => GetLvIndex(a).CompareTo(GetLvIndex(b)));
 
-            for (int i = 0; i < lvGroup.Count; i++)
+            Debug.WriteLine("lvGroup " + group + " length: " + lvGroup.Count);
+            int i;
+            for (i = 0; i < lvGroup.Count; i++)
+            {
+                Debug.WriteLine(lvGroup[i].Name + " - " + lvGroup[i].FormatType);
+            }
+
+            for (i = 0; i < lvGroup.Count; i++)
             {
                 SetLvSingle(lvGroup[i], values[i]);
             }
@@ -398,12 +602,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void SetLvSingle(Enums.eBarType barType, float value)
         {
-            FetchLv(barType).Text = Convert.ToString(value, CultureInfo.InvariantCulture);
+            FetchLv(barType).SetText(value);
         }
 
         private void SetLvSingle(Enums.eBarType barType, string valueText)
         {
-            FetchLv(barType).Text = valueText;
+            FetchLv(barType).SetText(valueText);
         }
 
         private void Radio_CheckedChanged(object sender, EventArgs e)
@@ -698,7 +902,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             };
         }
 
-        private Label FetchLv(Enums.eBarType barType)
+        private BarLabel FetchLv(Enums.eBarType barType)
         {
             return FetchLv((int) barType);
         }
@@ -743,6 +947,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         public void UpdateData()
         {
+            Debug.WriteLine("UpdateData start");
+
             //pbClose.Refresh();
             //pbTopMost.Refresh();
             Statistics displayStats = MidsContext.Character.DisplayStats;
@@ -750,16 +956,27 @@ namespace Hero_Designer.Forms.WindowMenuItems
             Character.TotalStatistics cappedStats = MidsContext.Character.TotalsCapped;
             Stopwatch watch = Stopwatch.StartNew();
             tabControlAdv2.SuspendLayout();
-            IEnumerable<ctlLayeredBar> barsList = GetControlHierarchy(tabControlAdv2).Cast<ctlLayeredBar>().ToList();
-            IEnumerable<BarLabel> lvList = GetControlHierarchy(tabControlAdv2).Cast<BarLabel>().ToList();
+            IEnumerable<ctlLayeredBar> barsList = new List<ctlLayeredBar>();
+            IEnumerable<BarLabel> lvList = new List<BarLabel>();
+            barsList = GetControlHierarchy<ctlLayeredBar>(tabControlAdv2).Cast<ctlLayeredBar>().ToList();
+            lvList = GetControlHierarchy<BarLabel>(tabControlAdv2).Cast<BarLabel>().ToList();
 
             #region Bars setup
 
-            SetBarsBulk(
-                barsList,
-                "Defense",
-                DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
-            );
+            Debug.WriteLine("UpdateData - tab 1 bars");
+
+            try
+            {
+                SetBarsBulk(
+                    barsList,
+                    "Defense",
+                    DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+                );
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
 
             SetBarsBulk(
                 barsList,
@@ -790,6 +1007,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetBarSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd, 100);
 
             ///////////////////////////////
+
+            Debug.WriteLine("UpdateData - tab 2 bars");
 
             SetBarsBulk(
                 barsList,
@@ -848,13 +1067,15 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             SetBarSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false), 100, displayStats.BuffHaste(true));
             SetBarSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
-            SetBarSingle(Enums.eBarType.ToHit, displayStats.BuffAccuracy);
+            SetBarSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
             SetBarSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true));
             SetBarSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
             SetBarSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel, MidsContext.Character.Archetype.BaseThreat);
             SetBarSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity);
 
             ///////////////////////////////
+
+            Debug.WriteLine("UpdateData - tab 3 bars");
 
             SetBarsBulk(
                 barsList,
@@ -876,6 +1097,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             #region Labels setup
 
+            Debug.WriteLine("UpdateData - labels");
+
             SetLvsBulk(
                 lvList,
                 "Defense",
@@ -896,6 +1119,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             ///////////////////////////////
 
+            Debug.WriteLine("UpdateData - tab 2 labels");
+            Debug.WriteLine("UpdateData - movement group");
+
             SetLvsBulk(
                 lvList,
                 "Movement",
@@ -909,6 +1135,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             ///////////////////////////////
 
+            Debug.WriteLine("UpdateData - perception group");
+
             SetLvsBulk(
                 lvList,
                 "Perception",
@@ -921,6 +1149,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             ///////////////////////////////
 
+            Debug.WriteLine("UpdateData - misc group");
+
             SetLvSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false));
             SetLvSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
             SetLvSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
@@ -930,6 +1160,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetLvSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity);
 
             ///////////////////////////////
+
+            Debug.WriteLine("UpdateData - tab 3 labels");
 
             SetLvsBulk(
                 lvList,
@@ -942,6 +1174,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 MezList.Select(m => MidsContext.Character.Totals.MezRes[(int)m]).ToArray());
 
             ///////////////////////////////
+
+            Debug.WriteLine("UpdateData - tab 4 labels");
 
             SetLvsBulk(
                 lvList,
@@ -964,10 +1198,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public string Group = "";
 
-        [Description("Format type\r\n0: Percentage\r\n1: Numeric, 2 decimals\r\n2: Numeric, 2 decimals, with sign\r\n3: Numeric, 2 decimals (for mez protection)\r\n4: Numeric, 2 decimals, per second\r\n5: Numeric, 2 decimals, speed\r\n6: Numeric, 2 decimals, distance"), Category("Data"),
+        [Description("Format type\r\n0: Percentage\r\n1: Numeric, 2 decimals\r\n2: Numeric, 2 decimals, with sign\r\n3: Numeric, 2 decimals (for mez protection)\r\n4: Numeric, 2 decimals, per second\r\n5: Numeric, 2 decimals, speed\r\n6: Numeric, 2 decimals, distance\r\n7: Percentage, 2 decimals, with sign"), Category("Data"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public int FormatType = 0;
+        public int FormatType;
 
         [Description("Bar label text"), Category("Appearance"),
          Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
@@ -976,6 +1210,16 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             get => base.Text;
             set => base.Text = clsConvertibleUnitValue.FormatValue(FormatType, value);
+        }
+
+        public void SetText(float value)
+        {
+            Text = Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
+        public void SetText(string valueText)
+        {
+            Text = valueText;
         }
 
         public BarLabel()
