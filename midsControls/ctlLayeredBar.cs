@@ -32,22 +32,7 @@ namespace midsControls
         private Color _BarColor = Color.Magenta;
         private Color _Overlay1Color = Color.FromArgb(255, 64, 255);
         private Color _Overlay2Color = Color.FromArgb(255, 128, 255);
-        public delegate void BarEventHandler(object sender);
-        public event BarEventHandler BarHover;
-
-        [field: AccessedThroughProperty("TTip")]
-        protected virtual ToolTip TTip
-        {
-            get;
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set;
-        }
-
-        public void SetTip(string iTip)
-        {
-            TTip.SetToolTip(this, iTip);
-        }
-
+       
         // https://stackoverflow.com/a/34299931
         // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
         protected override Size DefaultSize => new Size(277, 13);
@@ -536,12 +521,6 @@ namespace midsControls
                     ControlStyles.UserPaint,
                     true);
                 InitializeComponent();
-                TTip = new ToolTip
-                {
-                    AutoPopDelay = 10000,
-                    InitialDelay = 500,
-                    ReshowDelay = 100
-                };
             }
             catch (Exception ex)
             {
@@ -555,6 +534,11 @@ namespace midsControls
             SetValues();
         }
 
+        public void SetTip(string iTip)
+        {
+            TTip.SetToolTip(this, iTip);
+        }
+
         private void ctlLayeredBar_MouseMove(object sender, MouseEventArgs e)
         {
             BarHover?.Invoke(sender);
@@ -563,6 +547,8 @@ namespace midsControls
         {
             TTip.SetToolTip(this, "");
         }
+        public delegate void BarEventHandler(object sender);
+        public event BarEventHandler BarHover;
     }
 
     public class BarPanel : Panel
@@ -586,7 +572,7 @@ namespace midsControls
         {
             components = new Container();
             Tip = new ToolTip(components);
-            Name = "BarPanel1";
+            Name = "BarPanel";
         }
 
         public void SetTip(string iTip)

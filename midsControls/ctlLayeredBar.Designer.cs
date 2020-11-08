@@ -29,16 +29,18 @@ namespace midsControls
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new BarPanel();
-            this.panel2 = new BarPanel();
-            this.panel3 = new BarPanel();
-            this.panel4 = new BarPanel();
-            this.panel5 = new BarPanel();
+            this.components = new System.ComponentModel.Container();
+            this.panel1 = new midsControls.BarPanel();
+            this.panel2 = new midsControls.BarPanel();
+            this.panel3 = new midsControls.BarPanel();
+            this.panel4 = new midsControls.BarPanel();
+            this.panel5 = new midsControls.BarPanel();
+            this.TTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(128, 0, 128);
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -49,7 +51,7 @@ namespace midsControls
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(191, 0, 191);
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(0)))), ((int)(((byte)(191)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
@@ -71,7 +73,7 @@ namespace midsControls
             // 
             // panel4
             // 
-            this.panel4.BackColor = System.Drawing.Color.FromArgb(255, 64, 255);
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(64)))), ((int)(((byte)(255)))));
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
@@ -82,7 +84,7 @@ namespace midsControls
             // 
             // panel5
             // 
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(255, 128, 255);
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
@@ -90,6 +92,12 @@ namespace midsControls
             this.panel5.TabIndex = 5;
             this.panel5.MouseLeave += new System.EventHandler(this.ctlLayeredBar_MouseLeave);
             this.panel5.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBar_MouseMove);
+            // 
+            // TTip
+            // 
+            this.TTip.AutoPopDelay = 10000;
+            this.TTip.InitialDelay = 500;
+            this.TTip.ReshowDelay = 100;
             // 
             // ctlLayeredBar
             // 
@@ -117,5 +125,6 @@ namespace midsControls
         private BarPanel panel3;
         private BarPanel panel4;
         private BarPanel panel5;
+        private System.Windows.Forms.ToolTip TTip;
     }
 }

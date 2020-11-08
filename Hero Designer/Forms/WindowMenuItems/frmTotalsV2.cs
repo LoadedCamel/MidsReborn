@@ -5,11 +5,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
+using Microsoft.VisualBasic.CompilerServices;
 using midsControls;
 using Newtonsoft.Json;
 using Syncfusion.Windows.Forms.Tools;
@@ -150,8 +152,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 {
                     if (!control.Name.Contains("bar")) continue;
 
-                    control.MouseEnter += Bar_Enter;
-                    control.MouseLeave += Bar_Leave;
+                    var bar = Controls.Find(control.Name, true).Cast<ctlLayeredBar>().FirstOrDefault();
+                    if (bar != null)
+                        bar.BarHover += Bar_Hover;
                 }
 
                 // Tab Foreground Colors don't stick in the designer.
@@ -331,9 +334,21 @@ namespace Hero_Designer.Forms.WindowMenuItems
             return char.ToUpper(s[0]) + s.Substring(1).ToLower();
         }
 
-        private void Bar_Enter(object sender, EventArgs e)
+        private void Bar_Hover(object sender)
         {
-            ctlLayeredBar trigger = (ctlLayeredBar) sender;
+            bool isPanel = false;
+            ctlLayeredBar trigger;
+            if (sender is BarPanel panel)
+            {
+                isPanel = true;
+                var parentControl = panel.Parent;
+                trigger = (ctlLayeredBar)parentControl;
+            }
+            else
+            {
+                isPanel = false;
+                trigger = (ctlLayeredBar) sender;
+            }
             Statistics displayStats = MidsContext.Character.DisplayStats;
             string barGroup = trigger.Group;
             int barIndex = GetBarIndex(trigger);
@@ -472,7 +487,15 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     break;
             }
 
-            trigger.SetTip(tooltipText);
+            if (isPanel)
+            {
+                var panelTrigger = (BarPanel) sender;
+                panelTrigger.SetTip(tooltipText);
+            }
+            else
+            {
+                trigger.SetTip(tooltipText);
+            }
         }
 
         private int GetBarVectorTypeIndex(int barIndex, string barGroup)
@@ -509,8 +532,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void Bar_Leave(object sender, EventArgs e)
         {
-            ctlLayeredBar trigger = (ctlLayeredBar)sender;
-            trigger.SetTip("");
+            var trigger = (ctlLayeredBar)sender;
+            //trigger.SetTip("");
         }
 
         private Enums.eBarType GetValueType(ctlLayeredBar bar)
