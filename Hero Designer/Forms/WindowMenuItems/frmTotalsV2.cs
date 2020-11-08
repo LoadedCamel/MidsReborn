@@ -5,15 +5,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
-using Microsoft.VisualBasic.CompilerServices;
 using midsControls;
-using Newtonsoft.Json;
 using Syncfusion.Windows.Forms.Tools;
 
 namespace Hero_Designer.Forms.WindowMenuItems
@@ -321,14 +317,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         #endregion
 
-        private List<string> GetVectorTypesList(string[] enumNames, IEnumerable<int> targetValues)
-        {
-            List<string> ret = new List<string>();
-            ret.AddRange(targetValues.Select(k => enumNames[k]).ToList());
-
-            return ret;
-        }
-
         private string UCFirst(string s)
         {
             return char.ToUpper(s[0]) + s.Substring(1).ToLower();
@@ -530,27 +518,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
             };
         }
 
-        private void Bar_Leave(object sender, EventArgs e)
-        {
-            var trigger = (ctlLayeredBar)sender;
-            //trigger.SetTip("");
-        }
-
-        private Enums.eBarType GetValueType(ctlLayeredBar bar)
-        {
-            return (Enums.eBarType) GetBarIndex(bar);
-        }
-
         private int GetBarIndex(ctlLayeredBar bar)
         {
             return Convert.ToInt32(bar.Name.Substring(3)) - 1;
         }
-
-        private string GetValueGroup(ctlLayeredBar bar)
-        {
-            return bar.Group;
-        }
-
+        
         private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues)
         {
             List<ctlLayeredBar> barsGroup = controlsList
