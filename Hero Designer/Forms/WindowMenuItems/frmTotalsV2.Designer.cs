@@ -1964,7 +1964,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar37.TabIndex = 0;
             this.bar37.Tip = "";
             this.bar37.ValueBase = 0F;
-            this.bar37.ValueMainBar = 100F;
+            this.bar37.ValueMainBar = 50F;
             this.bar37.ValueOverCap = 0F;
             this.bar37.ValueOverlay1 = 0F;
             this.bar37.ValueOverlay2 = 0F;
@@ -2000,8 +2000,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel12.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel12.ColumnCount = 3;
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.7444F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.2556F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60.25641F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 39.74359F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 349F));
             this.tableLayoutPanel12.Controls.Add(this.label77, 0, 0);
             this.tableLayoutPanel12.Controls.Add(this.bar36, 2, 0);
@@ -2020,7 +2020,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label77.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.label77.Location = new System.Drawing.Point(3, 0);
             this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(86, 32);
+            this.label77.Size = new System.Drawing.Size(88, 22);
             this.label77.TabIndex = 0;
             this.label77.Text = "Threat level:";
             this.label77.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2057,9 +2057,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lv36.AutoSize = true;
             this.lv36.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.lv36.Location = new System.Drawing.Point(95, 0);
+            this.lv36.Location = new System.Drawing.Point(97, 0);
             this.lv36.Name = "lv36";
-            this.lv36.Size = new System.Drawing.Size(58, 32);
+            this.lv36.Size = new System.Drawing.Size(56, 22);
             this.lv36.TabIndex = 10;
             this.lv36.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
