@@ -1080,7 +1080,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetBarSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true));
             SetBarSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
             SetBarSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel, MidsContext.Character.Archetype.BaseThreat * 100);
-            SetBarSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity);
+            SetBarSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
 
             ///////////////////////////////
 
@@ -1152,10 +1152,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetLvSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false));
             SetLvSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
             SetLvSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
-            SetLvSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false)); // Need to add +100 here ?
+            SetLvSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false));
             SetLvSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
             SetLvSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel);
-            SetLvSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity);
+            SetLvSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
 
             ///////////////////////////////
 
