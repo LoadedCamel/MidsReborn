@@ -479,10 +479,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
             {
                 var panelTrigger = (BarPanel) sender;
                 panelTrigger.SetTip(tooltipText);
+                var parentBarCtl = (ctlLayeredBar) panelTrigger.Parent;
+                parentBarCtl.HighlightBarColors();
             }
             else
             {
                 trigger.SetTip(tooltipText);
+                trigger.HighlightBarColors();
             }
         }
 
