@@ -170,6 +170,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void llLeft_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
         {
+            var pIDX = Item.Index;
             if (Button == MouseButtons.Right)
             {
                 _locked = false;
@@ -181,29 +182,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
             {
                 if (Item.ItemState == ListLabelV3.LLItemState.Disabled)
                     return;
-
-                var flag = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[Item.Index]);
-                var num1 = llLeft.Items.Length - 1;
-                for (var index = 0; index <= num1; ++index)
+                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[pIDX]))
                 {
-                    if (llLeft.Items[index].ItemState == ListLabelV3.LLItemState.Selected)
-                        llLeft.Items[index].ItemState = ListLabelV3.LLItemState.Enabled;
-                    if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]))
-                        MidsContext.Character.CurrentBuild.RemovePower(_myPowers[index]);
+                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[pIDX]);
+                    Item.ItemState = ListLabelV3.LLItemState.Enabled;
                 }
-
-                var num2 = llRight.Items.Length - 1;
-                for (var index = 0; index <= num2; ++index)
+                else
                 {
-                    if (llRight.Items[index].ItemState == ListLabelV3.LLItemState.Selected)
-                        llRight.Items[index].ItemState = ListLabelV3.LLItemState.Enabled;
-                    if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index + llLeft.Items.Length]))
-                        MidsContext.Character.CurrentBuild.RemovePower(_myPowers[index + llLeft.Items.Length]);
-                }
-
-                if (flag)
-                {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index], 49).StatInclude = true;
+                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX], 49).StatInclude = true;
                     Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
 
@@ -245,7 +231,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 }
                 else
                 {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX]).StatInclude = true;
+                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX], 49).StatInclude = true;
                     Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
 

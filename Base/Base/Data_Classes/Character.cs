@@ -187,7 +187,7 @@ namespace Base.Data_Classes
         public Statistics DisplayStats { get; }
 
         public int displayIndex { get; set; }
-        public List<PowerEntry> inherentPowers { get; set; }
+        public List<IPower> inherentPowers { get; set; }
         public int SlotsRemaining
         {
             get
@@ -452,7 +452,7 @@ namespace Base.Data_Classes
             NotPackMentality = true;
             FastSnipe = false;
             NotFastSnipe = true;
-            inherentPowers = new List<PowerEntry>();
+            inherentPowers = new List<IPower>();
 
             foreach (var power in CurrentBuild.Powers)
             {
@@ -461,10 +461,7 @@ namespace Base.Data_Classes
                 switch (powName)
                 {
                     default:
-                        if (power.Chosen | power.Power.InherentType == Enums.eGridType.Class |
-                            power.Power.InherentType == Enums.eGridType.Inherent |
-                            power.Power.InherentType == Enums.eGridType.Power |
-                            power.Power.InherentType == Enums.eGridType.Powerset)
+                        if (power.Chosen || !power.Chosen && CurrentBuild.PowerUsed(power.Power))
                         {
                             power.Power.Taken = true;
                         }
@@ -916,62 +913,54 @@ namespace Base.Data_Classes
                             break;
                     }
                 }
-                
-                if (!power.Chosen)
-                {
-                    inherentPowers.Add(power);
-                    if (power.Power.InherentType == Enums.eGridType.Class)
-                    {
-                        displayIndex = 0;
-                        power.Power.DisplayLocation = displayIndex;
-                    }
 
-                    if (power.Power.InherentType == Enums.eGridType.Inherent)
+                if (!power.Chosen && CurrentBuild.PowerUsed(power.Power))
+                {
+                    inherentPowers.Add(power.Power);
+                    Console.WriteLine($"Added {power.Power.DisplayName}");
+                    Console.WriteLine($"Powers Added: {inherentPowers.Count}\r\n");
+                    switch (power.Power.InherentType)
                     {
-                        if (powName.Equals("Brawl"))
-                        {
+                        case Enums.eGridType.Class:
+                            displayIndex = 0;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
+                        case Enums.eGridType.Inherent when powName.Equals("Brawl"):
                             displayIndex = 1;
                             power.Power.DisplayLocation = displayIndex;
-                        }
-                        else if (powName.Equals("Sprint"))
-                        {
+                            break;
+                        case Enums.eGridType.Inherent when powName.Equals("Sprint"):
                             displayIndex = 2;
                             power.Power.DisplayLocation = displayIndex;
-                        }
-                        else if (powName.Equals("Rest"))
-                        {
+                            break;
+                        case Enums.eGridType.Inherent when powName.Equals("Rest"):
                             displayIndex = 3;
                             power.Power.DisplayLocation = displayIndex;
-                        }
-                        else if (powName.Equals("Swift"))
-                        {
+                            break;
+                        case Enums.eGridType.Inherent when powName.Equals("Swift"):
                             displayIndex = 4;
                             power.Power.DisplayLocation = displayIndex;
-                        }
-                        else if (powName.Equals("Hurdle"))
-                        {
+                            break;
+                        case Enums.eGridType.Inherent when powName.Equals("Hurdle"):
                             displayIndex = 5;
                             power.Power.DisplayLocation = displayIndex;
-                        }
-                        else if (powName.Equals("Health"))
-                        {
+                            break;
+                        case Enums.eGridType.Inherent when powName.Equals("Health"):
                             displayIndex = 6;
                             power.Power.DisplayLocation = displayIndex;
-                        }
-                        else if (powName.Equals("Stamina"))
-                        {
+                            break;
+                        case Enums.eGridType.Inherent when powName.Equals("Stamina"):
                             displayIndex = 7;
                             power.Power.DisplayLocation = displayIndex;
-                        }
-                    }
-                    else
-                    {
-                        displayIndex = inherentPowers.Count - 1;
-                        if (displayIndex > 7 && displayIndex < 59)
-                        {
-                            power.Power.DisplayLocation = displayIndex;
-                            ++displayIndex;
-                        }
+                            break;
+                        default:
+                            displayIndex = inherentPowers.Count - 1;
+                            if (displayIndex > 7 && displayIndex < 59)
+                            {
+                                power.Power.DisplayLocation = displayIndex;
+                                ++displayIndex;
+                            }
+                            break;
                     }
                 }
 

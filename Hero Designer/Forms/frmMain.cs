@@ -400,7 +400,12 @@ namespace Hero_Designer.Forms
                 var iPowers = new List<IPower>();
                 var num = power.NIDSubPower.Length - 1;
                 for (var index = 0; index <= num; ++index)
-                    iPowers.Add(DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
+                {
+                    var thisPower = DatabaseAPI.Database.Power[power.NIDSubPower[index]];
+                    if (thisPower.ClickBuff || thisPower.PowerType == Enums.ePowerType.Auto_ | thisPower.PowerType == Enums.ePowerType.Toggle)
+                        iPowers.Add(thisPower);
+                }
+
                 fAccolade = new frmAccolade(iParent, iPowers);
             }
 
@@ -2218,7 +2223,7 @@ namespace Hero_Designer.Forms
                 var iParent = this;
                 var iPowers = new List<IPower>();
                 foreach (var power in DatabaseAPI.Database.Power)
-                    if (power.InherentType == Enums.eGridType.Prestige)
+                    if (power.InherentType == Enums.eGridType.Prestige && power.PowerType == Enums.ePowerType.Toggle)
                         iPowers.Add(power);
                 fPrestige = new frmPrestige(iParent, iPowers);
             }
@@ -4826,7 +4831,12 @@ namespace Hero_Designer.Forms
                 var iPowers = new List<IPower>();
                 var num = power.NIDSubPower.Length - 1;
                 for (var index = 0; index <= num; ++index)
-                    iPowers.Add(DatabaseAPI.Database.Power[power.NIDSubPower[index]]);
+                {
+                    var thisPower = DatabaseAPI.Database.Power[power.NIDSubPower[index]];
+                    if (thisPower.ClickBuff || thisPower.PowerType == Enums.ePowerType.Auto_ | thisPower.PowerType == Enums.ePowerType.Toggle)
+                        iPowers.Add(thisPower);
+                }
+
                 fTemp = new frmTemp(this, iPowers)
                 {
                     Text = "Temporary Powers"
