@@ -38,9 +38,9 @@ public class ConfigData
     public enum ETotalsWindowTitleStyle
     {
         Generic,
-        CharName_AT_Powersets,
-        BuildFile_AT_Powersets,
-        CharName_BuildFile
+        CharNameAtPowersets,
+        BuildFileAtPowersets,
+        CharNameBuildFile
     }
 
     private const string header = "Mids' Hero Designer Config V2";

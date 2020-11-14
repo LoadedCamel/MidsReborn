@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -678,7 +679,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             string titleTxt;
             int epicPowersetIndex = GetEpicPowersetIndex();
-            string buildFileName = frm._myParent.GetBuildFile(true);
+            string buildFileName = Path.GetFileName(frm._myParent.GetBuildFile());
 
             switch (MidsContext.Config.TotalsWindowTitleStyle)
             {
@@ -686,14 +687,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     frm.Text = "Totals for Self";
                     break;
 
-                case ConfigData.ETotalsWindowTitleStyle.CharName_AT_Powersets:
+                case ConfigData.ETotalsWindowTitleStyle.CharNameAtPowersets:
                     titleTxt = (!string.IsNullOrWhiteSpace(MidsContext.Character.Name)
                         ? MidsContext.Character.Name + " - "
                         : "")
                           + MidsContext.Character.Archetype.DisplayName;
                     if (!MidsContext.Character.IsKheldian)
                     {
-                        epicPowersetIndex = GetEpicPowersetIndex();
                         titleTxt += " [ " +
                                     MidsContext.Character.Powersets[0].DisplayName + " / " +
                                     MidsContext.Character.Powersets[1].DisplayName +
@@ -703,16 +703,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
                                     " ]";
                     }
 
-                    Debug.WriteLine("L694: " + MidsContext.Character.Archetype.DisplayName);
-
                     frm.Text = "Totals - " + titleTxt;
                     break;
 
-                case ConfigData.ETotalsWindowTitleStyle.BuildFile_AT_Powersets:
+                case ConfigData.ETotalsWindowTitleStyle.BuildFileAtPowersets:
                     titleTxt = "";
                     if (!MidsContext.Character.IsKheldian)
                     {
-                        epicPowersetIndex = GetEpicPowersetIndex();
                         titleTxt += MidsContext.Character.Powersets[0].DisplayName + " / " +
                                     MidsContext.Character.Powersets[1].DisplayName +
                                     (epicPowersetIndex != -1
@@ -721,14 +718,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     }
 
                     titleTxt += MidsContext.Character.Archetype.DisplayName +
-                        MainModule.MidsController.Toon != null && !string.IsNullOrEmpty(buildFileName)
-                            ? " (" + buildFileName + ")"
-                            : "";
+                        (MainModule.MidsController.Toon != null && !string.IsNullOrEmpty(buildFileName)
+                            ? " [" + buildFileName + "]"
+                            : "");
 
                     frm.Text = "Totals - " + titleTxt;
                     break;
 
-                case ConfigData.ETotalsWindowTitleStyle.CharName_BuildFile:
+                case ConfigData.ETotalsWindowTitleStyle.CharNameBuildFile:
                     titleTxt = !string.IsNullOrWhiteSpace(MidsContext.Character.Name)
                         ? MidsContext.Character.Name + " "
                         : "";
@@ -738,7 +735,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     }
                     else
                     {
-                        titleTxt += !string.IsNullOrEmpty(buildFileName) ? "(" + buildFileName + ")" : "";
+                        titleTxt += !string.IsNullOrEmpty(buildFileName) ? "[" + buildFileName + "]" : "";
                     }
 
                     frm.Text = titleTxt == "" ? "Totals for Self" : "Totals - " + titleTxt;
@@ -748,8 +745,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     frm.Text = "Totals for Self";
                     break;
             }
-
-            Debug.WriteLine(frm.Text);
         }
 
         public override void Refresh()
