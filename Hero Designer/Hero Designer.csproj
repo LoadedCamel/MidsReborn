@@ -107,6 +107,12 @@
     <Compile Include="Forms\frmTeam.Designer.cs">
       <DependentUpon>frmTeam.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBDiffing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBDiffing.Designer.cs">
+      <DependentUpon>frmDBDiffing.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmGCMEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2170,6 +2176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
       <DependentUpon>frmJsonImportMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmDBDiffing.resx">
+      <DependentUpon>frmDBDiffing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmGCMEditor.resx">
       <DependentUpon>frmGCMEditor.cs</DependentUpon>

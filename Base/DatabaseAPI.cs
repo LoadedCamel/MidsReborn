@@ -22,7 +22,7 @@ public static class DatabaseAPI
     public const int VillainAccolades = 3258;
     public const int TempPowers = 3259;
 
-    private const string MainDbName = "Mids' Hero Designer Database MK II";
+    public const string MainDbName = "Mids' Hero Designer Database MK II";
 
     private const string RecipeName = "Mids' Hero Designer Recipe Database";
 
@@ -853,81 +853,7 @@ public static class DatabaseAPI
         return -1;
     }
 
-    private static void SaveMainDbRaw(ISerialize serializer, string fn, string name)
-    {
-        var powersetPowers = Database.Powersets.SelectMany(x => x.Powers).Select(p => p.PowerIndex).Distinct().ToList();
-        // only powers that aren't in a powerset
-        var powers = Database.Power.Where(p => powersetPowers.Contains(p.PowerIndex) == false).ToList();
-        var toSerialize = new
-        {
-            name,
-            Database.Version,
-            Database.Date,
-            Database.Issue,
-            Database.ArchetypeVersion,
-            Archetypes = Database.Classes,
-            Database.PowersetVersion,
-            // out of memory exception
-            //Database.Powersets,
-            Powers = new
-            {
-                Database.PowerVersion,
-                Database.PowerLevelVersion,
-                Database.PowerEffectVersion,
-                Database.IOAssignmentVersion,
-                // out of memory exception
-                //Database.Power
-                // just powers not in power sets
-                Powers = powers
-            },
-            Database.Entities
-        };
-        ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
-        var archPowersets = Database.Powersets; // .Where(ps => ps.nArchetype >= 0);
-        var dbPath = Path.Combine(Path.GetDirectoryName(fn), "db");
-        var playerPath = Path.Combine(dbPath, "Player");
-        var otherPath = Path.Combine(dbPath, "Other");
-        var toWrite = new List<FHash>();
-        foreach (var path in new[] {dbPath, playerPath, otherPath}.Where(p => !Directory.Exists(p)))
-        {
-            Directory.CreateDirectory(path);
-        }
-        var metadataPath = Path.Combine(Path.GetDirectoryName(fn), "db_metadata" + Path.GetExtension(fn));
-        var (hasPrevious, prev) = ConfigData.LoadRawMhd<FHash[]>(serializer, metadataPath);
-        foreach (var ps in archPowersets)
-        {
-            var at = Database.Classes.FirstOrDefault(cl => ps.nArchetype != -1 && cl.Idx == ps.nArchetype);
-            var at2 = Database.Classes.Length > ps.nArchetype && ps.nArchetype != -1 ? Database.Classes[ps.nArchetype] : null;
-            if (ps.FullName?.Length == 0 || ps.FullName?.Length > 100)
-            {
-                continue;
-            }
-
-            if (ps.FullName?.Contains(";") == true || string.IsNullOrWhiteSpace(ps.FullName))
-            {
-                Console.Error.WriteLine("hmmm:" + ps.DisplayName);
-            }
-
-            var psFn = Path.Combine(ps.nArchetype >= 0 ? playerPath : otherPath, ps.ATClass + "_" + ps.FullName + Path.GetExtension(fn));
-            if (psFn.Length > 240)
-            {
-                continue;
-            }
-
-            var psPrevious = hasPrevious ? prev.FirstOrDefault(psm => psm.Fullname == ps.FullName && psm.Archetype == ps.ATClass) : null;
-            var lastSaveResult = hasPrevious && psPrevious != null ? new RawSaveResult(hash: psPrevious.Hash, length: psPrevious.Length) : null;
-            var saveresult = ConfigData.SaveRawMhd(serializer, ps, psFn, lastSaveResult);
-            toWrite.Add(new FHash(
-                fullname: ps.FullName,
-                archetype: ps.ATClass,
-                hash: saveresult.Hash,
-                length: saveresult.Length
-            ));
-        }
-
-        ConfigData.SaveRawMhd(serializer, toWrite, metadataPath, null);
-    }
-
+    #region ImportCode (Unused ATM)
 
     private static readonly List<string> DataFile = new List<string>
     {
@@ -1122,16 +1048,13 @@ public static class DatabaseAPI
         var output = Encoding.Unicode.GetString(mStream.ToArray());
         Database.Salvage = JsonConvert.DeserializeObject<Salvage[]>(output, settings);
     }
+    #endregion
 
     public static void SaveMainDatabase(ISerialize serializer)
     {
         //MergeDatabaseFile();
         //Task.Delay(1500);
         var path = Files.SelectDataFileSave(Files.MxdbFileDB);
-        if (Debugger.IsAttached)
-        {
-            SaveMainDbRaw(serializer, path, MainDbName);
-        }
 
         FileStream fileStream;
         BinaryWriter writer;

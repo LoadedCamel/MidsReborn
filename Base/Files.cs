@@ -94,7 +94,7 @@ public static class Files
         return str;
     }
 
-    internal static string SelectDataFileSave(string iDataFile)
+    public static string SelectDataFileSave(string iDataFile)
     {
         try
         {
