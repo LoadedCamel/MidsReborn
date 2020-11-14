@@ -496,12 +496,6 @@ namespace Hero_Designer
             Totals.HPRegen = _selfBuffs.Effect[(int)Enums.eStatType.HPRegen];
             Totals.EndRec = _selfBuffs.Effect[(int)Enums.eStatType.EndRec];
             Totals.Absorb = _selfBuffs.Effect[(int)Enums.eStatType.Absorb];
-            //Debug.WriteLine("----------------------");
-            //for (var index = 0; index < _selfBuffs.Effect.Length; index++)
-            //{
-            //    Debug.WriteLine("Effect #" + Convert.ToString(index, null) + ": " + Convert.ToString(_selfBuffs.Effect[index], null));
-            //}
-
             Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
             // this number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
             Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseFlySpeed;

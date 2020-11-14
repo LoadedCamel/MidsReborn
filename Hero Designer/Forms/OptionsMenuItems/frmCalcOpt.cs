@@ -3,14 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms.ImportExportItems;
-using Microsoft.VisualBasic;
 
 namespace Hero_Designer.Forms.OptionsMenuItems
 {
@@ -571,6 +566,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems
                 defActs[index] = config.DragDropScenarioAction[index];
                 ++index;
             } while (index <= 19);
+
+            cbTotalsWindowTitleOpt.SelectedIndex = (int)config.TotalsWindowTitleStyle;
         }
 
         private void setupScenarios()
@@ -777,12 +774,23 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             config.UseArcanaTime = chkUseArcanaTime.Checked;
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
             config.UpdatePath = cbUpdateURL.Text;
+            config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle) cbTotalsWindowTitleOpt.SelectedIndex;
             var index = 0;
             do
             {
                 config.DragDropScenarioAction[index] = defActs[index];
                 ++index;
             } while (index <= 19);
+        }
+
+        private void btnFileAssoc_Click(object sender, EventArgs e)
+        {
+            FileAssociation.AddToOpenResult result = FileAssociation.AddToOpenWithLists(Application.ExecutablePath);
+            if (result != FileAssociation.AddToOpenResult.Success)
+            {
+                MessageBox.Show("Error setting file associations: unauthorized registry access.", "Oh snap",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

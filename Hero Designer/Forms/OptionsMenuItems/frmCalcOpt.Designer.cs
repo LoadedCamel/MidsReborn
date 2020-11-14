@@ -150,6 +150,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.csAdd = new System.Windows.Forms.Button();
             this.csList = new System.Windows.Forms.ListBox();
             this.TabPage5 = new System.Windows.Forms.TabPage();
+            this.lblAssocStatus = new System.Windows.Forms.Label();
+            this.lblFileAssoc = new System.Windows.Forms.Label();
+            this.btnFileAssoc = new System.Windows.Forms.Button();
             this.cbUpdateURL = new System.Windows.Forms.ComboBox();
             this.lblUpdateURL = new System.Windows.Forms.Label();
             this.btnSaveFolderReset = new System.Windows.Forms.Button();
@@ -175,6 +178,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbTotalsWindowTitleOpt = new System.Windows.Forms.ComboBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.GroupBox17.SuspendLayout();
@@ -208,6 +214,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.TabPage1.SuspendLayout();
             this.GroupBox9.SuspendLayout();
             this.GroupBox7.SuspendLayout();
+            this.groupBox18.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOK
@@ -247,6 +254,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // TabPage3
             // 
+            this.TabPage3.Controls.Add(this.groupBox18);
             this.TabPage3.Controls.Add(this.chkNoTips);
             this.TabPage3.Controls.Add(this.chkMiddle);
             this.TabPage3.Controls.Add(this.GroupBox17);
@@ -272,7 +280,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // chkMiddle
             // 
-            this.chkMiddle.Location = new System.Drawing.Point(207, 282);
+            this.chkMiddle.Location = new System.Drawing.Point(207, 285);
             this.chkMiddle.Name = "chkMiddle";
             this.chkMiddle.Size = new System.Drawing.Size(222, 18);
             this.chkMiddle.TabIndex = 77;
@@ -292,9 +300,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.GroupBox17.Controls.Add(this.Label21);
             this.GroupBox17.Controls.Add(this.udStatSize);
             this.GroupBox17.Controls.Add(this.udRTFSize);
-            this.GroupBox17.Location = new System.Drawing.Point(196, 136);
+            this.GroupBox17.Location = new System.Drawing.Point(196, 166);
             this.GroupBox17.Name = "GroupBox17";
-            this.GroupBox17.Size = new System.Drawing.Size(545, 143);
+            this.GroupBox17.Size = new System.Drawing.Size(545, 116);
             this.GroupBox17.TabIndex = 76;
             this.GroupBox17.TabStop = false;
             this.GroupBox17.Text = "Font Size/Colors:";
@@ -302,7 +310,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // chkColorInherent
             // 
             this.chkColorInherent.Enabled = false;
-            this.chkColorInherent.Location = new System.Drawing.Point(11, 117);
+            this.chkColorInherent.Location = new System.Drawing.Point(11, 92);
             this.chkColorInherent.Name = "chkColorInherent";
             this.chkColorInherent.Size = new System.Drawing.Size(222, 20);
             this.chkColorInherent.TabIndex = 70;
@@ -312,7 +320,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // chkShowAlphaPopup
             // 
-            this.chkShowAlphaPopup.Location = new System.Drawing.Point(11, 91);
+            this.chkShowAlphaPopup.Location = new System.Drawing.Point(11, 74);
             this.chkShowAlphaPopup.Name = "chkShowAlphaPopup";
             this.chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
             this.chkShowAlphaPopup.TabIndex = 79;
@@ -320,7 +328,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // chkHighVis
             // 
-            this.chkHighVis.Location = new System.Drawing.Point(262, 91);
+            this.chkHighVis.Location = new System.Drawing.Point(262, 74);
             this.chkHighVis.Name = "chkHighVis";
             this.chkHighVis.Size = new System.Drawing.Size(222, 20);
             this.chkHighVis.TabIndex = 69;
@@ -330,7 +338,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // Label36
             // 
-            this.Label36.Location = new System.Drawing.Point(138, 9);
+            this.Label36.Location = new System.Drawing.Point(138, 8);
             this.Label36.Name = "Label36";
             this.Label36.Size = new System.Drawing.Size(39, 16);
             this.Label36.TabIndex = 64;
@@ -340,7 +348,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // chkStatBold
             // 
             this.chkStatBold.AutoSize = true;
-            this.chkStatBold.Location = new System.Drawing.Point(150, 51);
+            this.chkStatBold.Location = new System.Drawing.Point(150, 50);
             this.chkStatBold.Name = "chkStatBold";
             this.chkStatBold.Size = new System.Drawing.Size(15, 14);
             this.chkStatBold.TabIndex = 63;
@@ -349,7 +357,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // chkTextBold
             // 
             this.chkTextBold.AutoSize = true;
-            this.chkTextBold.Location = new System.Drawing.Point(150, 26);
+            this.chkTextBold.Location = new System.Drawing.Point(150, 25);
             this.chkTextBold.Name = "chkTextBold";
             this.chkTextBold.Size = new System.Drawing.Size(15, 14);
             this.chkTextBold.TabIndex = 62;
@@ -357,7 +365,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // btnFontColor
             // 
-            this.btnFontColor.Location = new System.Drawing.Point(312, 36);
+            this.btnFontColor.Location = new System.Drawing.Point(312, 30);
             this.btnFontColor.Name = "btnFontColor";
             this.btnFontColor.Size = new System.Drawing.Size(172, 27);
             this.btnFontColor.TabIndex = 61;
@@ -367,7 +375,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // Label22
             // 
-            this.Label22.Location = new System.Drawing.Point(7, 48);
+            this.Label22.Location = new System.Drawing.Point(7, 47);
             this.Label22.Name = "Label22";
             this.Label22.Size = new System.Drawing.Size(78, 20);
             this.Label22.TabIndex = 60;
@@ -377,7 +385,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // chkVillainColor
             // 
             this.chkVillainColor.Enabled = false;
-            this.chkVillainColor.Location = new System.Drawing.Point(262, 117);
+            this.chkVillainColor.Location = new System.Drawing.Point(262, 92);
             this.chkVillainColor.Name = "chkVillainColor";
             this.chkVillainColor.Size = new System.Drawing.Size(222, 20);
             this.chkVillainColor.TabIndex = 68;
@@ -387,7 +395,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // Label21
             // 
-            this.Label21.Location = new System.Drawing.Point(7, 23);
+            this.Label21.Location = new System.Drawing.Point(7, 22);
             this.Label21.Name = "Label21";
             this.Label21.Size = new System.Drawing.Size(78, 20);
             this.Label21.TabIndex = 59;
@@ -397,7 +405,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // udStatSize
             // 
             this.udStatSize.DecimalPlaces = 2;
-            this.udStatSize.Location = new System.Drawing.Point(87, 48);
+            this.udStatSize.Location = new System.Drawing.Point(87, 47);
             this.udStatSize.Maximum = new decimal(new int[] {
             14,
             0,
@@ -419,7 +427,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // udRTFSize
             // 
-            this.udRTFSize.Location = new System.Drawing.Point(87, 22);
+            this.udRTFSize.Location = new System.Drawing.Point(87, 21);
             this.udRTFSize.Maximum = new decimal(new int[] {
             14,
             0,
@@ -455,7 +463,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.GroupBox5.Controls.Add(this.rbGraphTwoLine);
             this.GroupBox5.Location = new System.Drawing.Point(388, 4);
             this.GroupBox5.Name = "GroupBox5";
-            this.GroupBox5.Size = new System.Drawing.Size(353, 125);
+            this.GroupBox5.Size = new System.Drawing.Size(353, 117);
             this.GroupBox5.TabIndex = 72;
             this.GroupBox5.TabStop = false;
             this.GroupBox5.Text = "Damage Graph Style:";
@@ -473,7 +481,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // rbGraphSimple
             // 
-            this.rbGraphSimple.Location = new System.Drawing.Point(6, 95);
+            this.rbGraphSimple.Location = new System.Drawing.Point(6, 87);
             this.rbGraphSimple.Name = "rbGraphSimple";
             this.rbGraphSimple.Size = new System.Drawing.Size(164, 23);
             this.rbGraphSimple.TabIndex = 5;
@@ -482,7 +490,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // rbGraphStacked
             // 
-            this.rbGraphStacked.Location = new System.Drawing.Point(6, 70);
+            this.rbGraphStacked.Location = new System.Drawing.Point(6, 66);
             this.rbGraphStacked.Name = "rbGraphStacked";
             this.rbGraphStacked.Size = new System.Drawing.Size(286, 23);
             this.rbGraphStacked.TabIndex = 4;
@@ -509,14 +517,14 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.GroupBox14.Controls.Add(this.udIOLevel);
             this.GroupBox14.Location = new System.Drawing.Point(196, 4);
             this.GroupBox14.Name = "GroupBox14";
-            this.GroupBox14.Size = new System.Drawing.Size(188, 125);
+            this.GroupBox14.Size = new System.Drawing.Size(188, 117);
             this.GroupBox14.TabIndex = 69;
             this.GroupBox14.TabStop = false;
             this.GroupBox14.Text = "Inventions:";
             // 
             // chkIOLevel
             // 
-            this.chkIOLevel.Location = new System.Drawing.Point(8, 44);
+            this.chkIOLevel.Location = new System.Drawing.Point(8, 40);
             this.chkIOLevel.Name = "chkIOLevel";
             this.chkIOLevel.Size = new System.Drawing.Size(172, 24);
             this.chkIOLevel.TabIndex = 60;
@@ -525,7 +533,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             // btnIOReset
             // 
-            this.btnIOReset.Location = new System.Drawing.Point(8, 72);
+            this.btnIOReset.Location = new System.Drawing.Point(8, 63);
             this.btnIOReset.Name = "btnIOReset";
             this.btnIOReset.Size = new System.Drawing.Size(172, 44);
             this.btnIOReset.TabIndex = 59;
@@ -1541,6 +1549,35 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.TabPage5.Text = "Updates & Paths";
             this.TabPage5.UseVisualStyleBackColor = true;
             // 
+            // lblAssocStatus
+            // 
+            this.lblAssocStatus.AutoSize = true;
+            this.lblAssocStatus.Location = new System.Drawing.Point(577, 224);
+            this.lblAssocStatus.Name = "lblAssocStatus";
+            this.lblAssocStatus.Size = new System.Drawing.Size(52, 14);
+            this.lblAssocStatus.TabIndex = 70;
+            this.lblAssocStatus.Text = "Status: --";
+            // 
+            // lblFileAssoc
+            // 
+            this.lblFileAssoc.AutoSize = true;
+            this.lblFileAssoc.Location = new System.Drawing.Point(5, 220);
+            this.lblFileAssoc.Name = "lblFileAssoc";
+            this.lblFileAssoc.Size = new System.Drawing.Size(356, 28);
+            this.lblFileAssoc.TabIndex = 69;
+            this.lblFileAssoc.Text = "Click this button if you want to associate .MHD and .MXD files\r\nwith HeroDesigner" +
+    ", so they can be directly opened from the file explorer.";
+            // 
+            // btnFileAssoc
+            // 
+            this.btnFileAssoc.Location = new System.Drawing.Point(390, 214);
+            this.btnFileAssoc.Name = "btnFileAssoc";
+            this.btnFileAssoc.Size = new System.Drawing.Size(155, 36);
+            this.btnFileAssoc.TabIndex = 68;
+            this.btnFileAssoc.Text = "Rebuild file associations";
+            this.btnFileAssoc.UseVisualStyleBackColor = true;
+            this.btnFileAssoc.Click += new System.EventHandler(this.btnFileAssoc_Click);
+            // 
             // cbUpdateURL
             // 
             this.cbUpdateURL.AutoCompleteCustomSource.AddRange(new string[] {
@@ -1787,6 +1824,40 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             // 
             this.cPicker.FullOpen = true;
             // 
+            // groupBox18
+            // 
+            this.groupBox18.Controls.Add(this.cbTotalsWindowTitleOpt);
+            this.groupBox18.Controls.Add(this.label2);
+            this.groupBox18.Location = new System.Drawing.Point(196, 120);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(545, 44);
+            this.groupBox18.TabIndex = 79;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "Totals Window:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(95, 19);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(85, 14);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Show in titlebar:";
+            // 
+            // cbTotalsWindowTitleOpt
+            // 
+            this.cbTotalsWindowTitleOpt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTotalsWindowTitleOpt.FormattingEnabled = true;
+            this.cbTotalsWindowTitleOpt.Items.AddRange(new object[] {
+            "Generic - Totals for Self",
+            "Character name (if set) + Archetype + Powersets",
+            "Build file name (if set) + Archetype + Powersets",
+            "Character name (if set) + Build file name (fallback to generic if none)"});
+            this.cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(186, 14);
+            this.cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
+            this.cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(268, 22);
+            this.cbTotalsWindowTitleOpt.TabIndex = 1;
+            // 
             // frmCalcOpt
             // 
             this.AcceptButton = this.btnOK;
@@ -1846,6 +1917,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems
             this.TabPage1.PerformLayout();
             this.GroupBox9.ResumeLayout(false);
             this.GroupBox7.ResumeLayout(false);
+            this.groupBox18.ResumeLayout(false);
+            this.groupBox18.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1999,5 +2072,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems
         private Label lblFileAssoc;
         private Button btnFileAssoc;
         private Label lblAssocStatus;
+        private GroupBox groupBox18;
+        private ComboBox cbTotalsWindowTitleOpt;
+        private Label label2;
     }
 }

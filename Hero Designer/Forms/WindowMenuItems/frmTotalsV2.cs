@@ -649,6 +649,109 @@ namespace Hero_Designer.Forms.WindowMenuItems
             }
         }
 
+        private static int GetEpicPowersetIndex()
+        {
+            int idx = -1;
+            int i;
+            
+            // Fetch ancillary/epic powerset index
+            for (i = 0; i < MidsContext.Character.Powersets.Length; i++)
+            {
+                if (MidsContext.Character.Powersets[i] == null) continue;
+                if (MidsContext.Character.Powersets[i].GroupName == "Epic") idx = i;
+            }
+
+            if (idx == -1) return -1;
+
+            // Check if power taken in pool
+            for (i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+            {
+                if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset == MidsContext.Character.Powersets[idx].nID) return idx;
+            }
+
+            return -1;
+        }
+
+        public static void SetTitle(frmTotalsV2 frm)
+        {
+            if (frm == null) return;
+
+            string titleTxt;
+            int epicPowersetIndex = GetEpicPowersetIndex();
+            string buildFileName = frm._myParent.GetBuildFile(true);
+
+            switch (MidsContext.Config.TotalsWindowTitleStyle)
+            {
+                case ConfigData.ETotalsWindowTitleStyle.Generic:
+                    frm.Text = "Totals for Self";
+                    break;
+
+                case ConfigData.ETotalsWindowTitleStyle.CharName_AT_Powersets:
+                    titleTxt = (!string.IsNullOrWhiteSpace(MidsContext.Character.Name)
+                        ? MidsContext.Character.Name + " - "
+                        : "")
+                          + MidsContext.Character.Archetype.DisplayName;
+                    if (!MidsContext.Character.IsKheldian)
+                    {
+                        epicPowersetIndex = GetEpicPowersetIndex();
+                        titleTxt += " [ " +
+                                    MidsContext.Character.Powersets[0].DisplayName + " / " +
+                                    MidsContext.Character.Powersets[1].DisplayName +
+                                    (epicPowersetIndex != -1
+                                        ? " / " + MidsContext.Character.Powersets[epicPowersetIndex].DisplayName
+                                        : "") +
+                                    " ]";
+                    }
+
+                    Debug.WriteLine("L694: " + MidsContext.Character.Archetype.DisplayName);
+
+                    frm.Text = "Totals - " + titleTxt;
+                    break;
+
+                case ConfigData.ETotalsWindowTitleStyle.BuildFile_AT_Powersets:
+                    titleTxt = "";
+                    if (!MidsContext.Character.IsKheldian)
+                    {
+                        epicPowersetIndex = GetEpicPowersetIndex();
+                        titleTxt += MidsContext.Character.Powersets[0].DisplayName + " / " +
+                                    MidsContext.Character.Powersets[1].DisplayName +
+                                    (epicPowersetIndex != -1
+                                        ? " / " + MidsContext.Character.Powersets[epicPowersetIndex].DisplayName
+                                        : "") + " ";
+                    }
+
+                    titleTxt += MidsContext.Character.Archetype.DisplayName +
+                        MainModule.MidsController.Toon != null && !string.IsNullOrEmpty(buildFileName)
+                            ? " (" + buildFileName + ")"
+                            : "";
+
+                    frm.Text = "Totals - " + titleTxt;
+                    break;
+
+                case ConfigData.ETotalsWindowTitleStyle.CharName_BuildFile:
+                    titleTxt = !string.IsNullOrWhiteSpace(MidsContext.Character.Name)
+                        ? MidsContext.Character.Name + " "
+                        : "";
+                    if (titleTxt == "")
+                    {
+                        titleTxt = !string.IsNullOrEmpty(buildFileName) ? buildFileName : "";
+                    }
+                    else
+                    {
+                        titleTxt += !string.IsNullOrEmpty(buildFileName) ? "(" + buildFileName + ")" : "";
+                    }
+
+                    frm.Text = titleTxt == "" ? "Totals for Self" : "Totals - " + titleTxt;
+                    break;
+
+                default:
+                    frm.Text = "Totals for Self";
+                    break;
+            }
+
+            Debug.WriteLine(frm.Text);
+        }
+
         public override void Refresh()
         {
             if (MidsContext.Character.IsHero())
@@ -677,6 +780,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             CenterToParent();
             Refresh();
+            SetTitle(this);
         }
 
         private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)

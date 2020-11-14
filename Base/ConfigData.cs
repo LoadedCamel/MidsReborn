@@ -35,6 +35,14 @@ public class ConfigData
         MultiPage
     }
 
+    public enum ETotalsWindowTitleStyle
+    {
+        Generic,
+        CharName_AT_Powersets,
+        BuildFile_AT_Powersets,
+        CharName_BuildFile
+    }
+
     private const string header = "Mids' Hero Designer Config V2";
 
     private const string OverrideNames = "Mids' Hero Designer Comparison Overrides";
@@ -58,6 +66,7 @@ public class ConfigData
         DamageMath.Calculate = EDamageMath.Average;
         DamageMath.ReturnValue = EDamageReturn.Numeric;
         I9.DefaultIOLevel = 49;
+        TotalsWindowTitleStyle = ETotalsWindowTitleStyle.Generic;
         RtFont.SetDefault();
         Tips = new Tips();
         Export = new ExportConfig();
@@ -166,6 +175,8 @@ public class ConfigData
         }
     }
 
+    public ETotalsWindowTitleStyle TotalsWindowTitleStyle { get; set; }
+
     internal static ConfigData Current
     {
         get
@@ -266,22 +277,22 @@ public class ConfigData
             double num5 = reader.ReadSingle();
             double num6 = reader.ReadSingle();
             double num7 = reader.ReadSingle();
-            CalcEnhLevel = (Enums.eEnhRelative) reader.ReadInt32();
-            CalcEnhOrigin = (Enums.eEnhGrade) reader.ReadInt32();
+            CalcEnhLevel = (Enums.eEnhRelative)reader.ReadInt32();
+            CalcEnhOrigin = (Enums.eEnhGrade)reader.ReadInt32();
             ExempHigh = reader.ReadInt32();
             ExempLow = reader.ReadInt32();
             Inc.DisablePvE = !reader.ReadBoolean();
             reader.ReadBoolean();
-            DamageMath.Calculate = (EDamageMath) reader.ReadInt32();
+            DamageMath.Calculate = (EDamageMath)reader.ReadInt32();
             reader.ReadSingle();
             if (version < 1.24000000953674)
                 reader.ReadBoolean();
             else
                 reader.ReadInt32();
-            DamageMath.ReturnValue = (EDamageReturn) reader.ReadInt32();
+            DamageMath.ReturnValue = (EDamageReturn)reader.ReadInt32();
             DisableDataDamageGraph = !reader.ReadBoolean();
             DataDamageGraphPercentageOnly = reader.ReadBoolean();
-            DataGraphType = (Enums.eDDGraph) reader.ReadInt32();
+            DataGraphType = (Enums.eDDGraph)reader.ReadInt32();
             ExportScheme = reader.ReadInt32();
             ExportTarget = reader.ReadInt32();
             if (version >= 1.24000000953674)
@@ -297,8 +308,8 @@ public class ConfigData
             Columns = reader.ReadInt32();
             _lastSize.Width = reader.ReadInt32();
             _lastSize.Height = reader.ReadInt32();
-            DvState = (Enums.eVisibleSize) reader.ReadInt32();
-            StatGraphStyle = (Enums.GraphStyle) reader.ReadInt32();
+            DvState = (Enums.eVisibleSize)reader.ReadInt32();
+            StatGraphStyle = (Enums.GraphStyle)reader.ReadInt32();
             if (version >= 1.0)
                 IsInitialized = !reader.ReadBoolean();
             if (version >= 1.10000002384186)
@@ -366,8 +377,8 @@ public class ConfigData
             {
                 EnhanceVisibility = reader.ReadBoolean();
                 reader.ReadBoolean();
-                BuildMode = (Enums.dmModes) reader.ReadInt32();
-                BuildOption = (Enums.dmItem) reader.ReadInt32();
+                BuildMode = (Enums.dmModes)reader.ReadInt32();
+                BuildOption = (Enums.dmItem)reader.ReadInt32();
                 //this.UpdatePath =
                 reader.ReadString();
                 //if (string.IsNullOrEmpty(this.UpdatePath))
@@ -383,7 +394,7 @@ public class ConfigData
                     DisableAlphaPopup = !reader.ReadBoolean();
                 PopupRecipes = reader.ReadBoolean();
                 ShoppingListIncludesRecipes = reader.ReadBoolean();
-                PrintProfile = (PrintOptionProfile) reader.ReadInt32();
+                PrintProfile = (PrintOptionProfile)reader.ReadInt32();
                 PrintHistory = reader.ReadBoolean();
                 LastPrinter = reader.ReadString();
                 DisablePrintProfileEnh = !reader.ReadBoolean();
@@ -394,7 +405,7 @@ public class ConfigData
             if (version >= 1.25999999046326)
                 DisableExportHex = !reader.ReadBoolean();
             if (version >= 1.26999998092651)
-                SpeedFormat = (Enums.eSpeedMeasure) reader.ReadInt32();
+                SpeedFormat = (Enums.eSpeedMeasure)reader.ReadInt32();
             if (version >= 1.27999997138977)
                 SaveFolderChecked = reader.ReadBoolean();
             if (version >= 1.28999996185303)
