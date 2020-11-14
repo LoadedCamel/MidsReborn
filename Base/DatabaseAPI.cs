@@ -1128,7 +1128,11 @@ public static class DatabaseAPI
         //MergeDatabaseFile();
         //Task.Delay(1500);
         var path = Files.SelectDataFileSave(Files.MxdbFileDB);
-        //SaveMainDbRaw(serializer, path, MainDbName);
+        if (Debugger.IsAttached)
+        {
+            SaveMainDbRaw(serializer, path, MainDbName);
+        }
+
         FileStream fileStream;
         BinaryWriter writer;
         try
