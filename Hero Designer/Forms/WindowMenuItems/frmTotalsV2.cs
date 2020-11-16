@@ -63,45 +63,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         #region Controls querying
 
-        public Control StatControl(string tab, int panel, string type, int control)
-        {
-            Regex regEx = new Regex(@"^\d+");
-            TabPageAdv page = tabControlAdv2.Controls.OfType<TabPageAdv>().First(t => t.Text.Contains(tab));
-            List<GradientPanel> gradientList = page.Controls.OfType<GradientPanel>().ToList();
-            List<GradientPanel> gradientPanels = gradientList.OrderBy(x => x.Name).ToList();
-            List<TableLayoutPanel> tablePanels = gradientPanels[panel - 1].Controls.OfType<TableLayoutPanel>().ToList();
-
-            switch (type)
-            {
-                case "Bar":
-                    List<Control> controls = new List<Control>();
-                    for (int rowIndex = 0; rowIndex < tablePanels[0].RowCount; rowIndex++)
-                    {
-                        Control tControl = tablePanels[0].GetControlFromPosition(2, rowIndex);
-                        controls.Add(tControl);
-                    }
-
-                    List<ctlLayeredBar> barList = controls.OfType<ctlLayeredBar>().ToList();
-                    List<ctlLayeredBar> bars = barList.OrderBy(x => regEx.Match(x.Name).Value).ToList();
-
-                    return bars[control - 1];
-                case "Label":
-                    controls = new List<Control>();
-                    for (int rowIndex = 0; rowIndex < tablePanels[0].RowCount; rowIndex++)
-                    {
-                        Control tControl = tablePanels[0].GetControlFromPosition(1, rowIndex);
-                        controls.Add(tControl);
-                    }
-
-                    List<Label> labelList = controls.OfType<Label>().ToList();
-                    List<Label> labels = labelList.OrderBy(x => regEx.Match(x.Name).Value).ToList();
-
-                    return labels[control - 1];
-            }
-
-            return null;
-        }
-
         private IEnumerable<Control> GetControlHierarchy(Control root)
         {
             Queue<Control> queue = new Queue<Control>();
@@ -139,8 +100,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             try
             {
                 FormClosed += frmTotalsV2_FormClosed;
-
                 Load += OnLoad;
+
                 KeepOnTop = true;
                 InitializeComponent();
                 SetLvTypes();
@@ -148,18 +109,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 foreach (Control control in GetControlHierarchy(tabControlAdv2))
                 {
                     if (!control.Name.Contains("bar")) continue;
-
-                    var bar = Controls.Find(control.Name, true).Cast<ctlLayeredBar>().FirstOrDefault();
-                    if (bar != null)
-                        bar.BarHover += Bar_Hover;
+                    //ctlLayeredBar bar = Controls.Find(control.Name, true).Cast<ctlLayeredBar>().FirstOrDefault();
+                    ctlLayeredBar bar = (ctlLayeredBar) control;
+                    bar.BarHover += Bar_Hover;
                 }
 
                 // Tab Foreground Colors don't stick in the designer.
                 // Note: default colors will be used anyway.
                 // This may only cause issues if a custom
                 // Windows theme is in use.
-                tabControlAdv2.ActiveTabForeColor = Color.White;
-                tabControlAdv2.InActiveTabForeColor = Color.Black;
+                tabControlAdv2.ActiveTabForeColor = Color.WhiteSmoke;
+                tabControlAdv2.InActiveTabForeColor = Color.WhiteSmoke;
             }
             catch (Exception ex)
             {
@@ -318,7 +278,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         #endregion
 
-        private string UCFirst(string s)
+        private string UcFirst(string s)
         {
             return char.ToUpper(s[0]) + s.Substring(1).ToLower();
         }
@@ -330,8 +290,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             if (sender is BarPanel panel)
             {
                 isPanel = true;
-                var parentControl = panel.Parent;
-                trigger = (ctlLayeredBar)parentControl;
+                Control parentControl = panel.Parent;
+                trigger = (ctlLayeredBar) parentControl;
             }
             else
             {
@@ -409,17 +369,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
                 case "Status Protection":
                     tooltipText =
-                        $"{Math.Abs(trigger.ValueMainBar):##0.##} {UCFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eMez), vectorTypeIndex)}";
+                        $"{Math.Abs(trigger.ValueMainBar):##0.##} {UcFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eMez), vectorTypeIndex)}";
                     break;
 
                 case "Status Resistance":
                     tooltipText =
-                        $"{trigger.ValueMainBar:##0.##}% {UCFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eMez), vectorTypeIndex)}";
+                        $"{trigger.ValueMainBar:##0.##}% {UcFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eMez), vectorTypeIndex)}";
                     break;
 
                 case "Debuff Resistance":
                     tooltipText =
-                        $"{trigger.ValueMainBar:##0.##}% {UCFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eEffectType), vectorTypeIndex)}";
+                        $"{trigger.ValueMainBar:##0.##}% {UcFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eEffectType), vectorTypeIndex)}";
                     break;
 
                 // Triple bar main + base + overcap
@@ -478,9 +438,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             if (isPanel)
             {
-                var panelTrigger = (BarPanel) sender;
+                BarPanel panelTrigger = (BarPanel) sender;
                 panelTrigger.SetTip(tooltipText);
-                var parentBarCtl = (ctlLayeredBar) panelTrigger.Parent;
+                ctlLayeredBar parentBarCtl = (ctlLayeredBar) panelTrigger.Parent;
                 parentBarCtl.HighlightBarColors();
             }
             else
@@ -507,7 +467,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private string FormatVectorType(Type enumType, int vectorTypeIndex)
         {
-            string name = UCFirst(Enum.GetName(enumType, vectorTypeIndex));
+            string name = UcFirst(Enum.GetName(enumType, vectorTypeIndex));
             Regex r = new Regex(@"([A-Z])");
             name = r.Replace(name, " " + "$1").TrimStart();
 
@@ -648,6 +608,19 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     radio.Checked = false;
                 }
             }
+
+            Enums.eSpeedMeasure previousCfgSpeedMeasure = MidsContext.Config.SpeedFormat;
+
+            MidsContext.Config.SpeedFormat = sendingControl.Name switch
+            {
+                "radioButton1" => Enums.eSpeedMeasure.MilesPerHour,
+                "radioButton2" => Enums.eSpeedMeasure.KilometersPerHour,
+                "radioButton3" => Enums.eSpeedMeasure.FeetPerSecond,
+                "radioButton4" => Enums.eSpeedMeasure.MetersPerSecond,
+                _ => Enums.eSpeedMeasure.MilesPerHour
+            };
+
+            if (previousCfgSpeedMeasure != MidsContext.Config.SpeedFormat) UpdateData();
         }
 
         private static int GetEpicPowersetIndex()
@@ -659,7 +632,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
             for (i = 0; i < MidsContext.Character.Powersets.Length; i++)
             {
                 if (MidsContext.Character.Powersets[i] == null) continue;
-                if (MidsContext.Character.Powersets[i].GroupName == "Epic") idx = i;
+                if (MidsContext.Character.Powersets[i].GroupName == "Epic")
+                {
+                    idx = i;
+                    break;
+                }
             }
 
             if (idx == -1) return -1;
@@ -671,6 +648,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
             }
 
             return -1;
+        }
+
+        private void SetUnitRadioButtons()
+        {
+            radioButton1.Checked = MidsContext.Config.SpeedFormat == Enums.eSpeedMeasure.MilesPerHour;
+            radioButton2.Checked = MidsContext.Config.SpeedFormat == Enums.eSpeedMeasure.KilometersPerHour;
+            radioButton3.Checked = MidsContext.Config.SpeedFormat == Enums.eSpeedMeasure.FeetPerSecond;
+            radioButton4.Checked = MidsContext.Config.SpeedFormat == Enums.eSpeedMeasure.MetersPerSecond;
         }
 
         public static void SetTitle(frmTotalsV2 frm)
@@ -751,21 +736,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             if (MidsContext.Character.IsHero())
             {
-                tabControlAdv2.InactiveTabColor = Color.FromArgb(61, 111, 161);
+                /*tabControlAdv2.InactiveTabColor = Color.FromArgb(61, 111, 161);
                 tabControlAdv2.TabPanelBackColor = Color.FromArgb(61, 111, 161);
                 tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
-                tabControlAdv2.ActiveTabColor = Color.Goldenrod;
+                tabControlAdv2.ActiveTabColor = Color.Goldenrod;*/
+
+                tabControlAdv2.InactiveTabColor = Color.FromArgb(30, 85, 130);
+                tabControlAdv2.TabPanelBackColor = Color.FromArgb(30, 85, 130);
+                tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
+                tabControlAdv2.ActiveTabColor = Color.FromArgb(46, 156, 246);
             }
             else
             {
-                /*tabControlAdv2.InactiveTabColor = Color.FromArgb(193, 23, 23);
-                tabControlAdv2.TabPanelBackColor = Color.FromArgb(193, 23, 23);
-                tabControlAdv2.FixedSingleBorderColor = Color.FromArgb(198, 128, 29);
-                tabControlAdv2.ActiveTabColor = Color.FromArgb(198, 128, 29);*/
-                tabControlAdv2.InactiveTabColor = Color.FromArgb(138, 62, 57);
-                tabControlAdv2.TabPanelBackColor = Color.FromArgb(138, 62, 57);
-                tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
-                tabControlAdv2.ActiveTabColor = Color.Goldenrod;
+                tabControlAdv2.InactiveTabColor = Color.FromArgb(86, 12, 12);
+                tabControlAdv2.TabPanelBackColor = Color.FromArgb(86, 12, 12);
+                tabControlAdv2.FixedSingleBorderColor = Color.FromArgb(184, 184, 187);
+                tabControlAdv2.ActiveTabColor = Color.FromArgb(191, 74, 56);
             }
 
             base.Refresh();
@@ -776,6 +762,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             CenterToParent();
             Refresh();
             SetTitle(this);
+            SetUnitRadioButtons();
         }
 
         private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)
@@ -799,33 +786,33 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             if (_myParent?.Drawing == null) return;
 
-            var iStr = "Close";
-            var rectangle = new Rectangle();
-            ref var local = ref rectangle;
-            var size = MidsContext.Character.IsHero()
+            string iStr = "Close";
+            Rectangle rectangle = new Rectangle();
+            ref Rectangle local = ref rectangle;
+            Size size = MidsContext.Character.IsHero()
                 ? _myParent.Drawing.bxPower[2].Size
                 : _myParent.Drawing.bxPower[4].Size;
-            var width = size.Width;
+            int width = size.Width;
             size = MidsContext.Character.IsHero()
                 ? _myParent.Drawing.bxPower[2].Size
                 : _myParent.Drawing.bxPower[4].Size;
-            var height1 = size.Height;
+            int height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
-            var destRect = new Rectangle(0, 0, 105, 22);
-            using var stringFormat = new StringFormat();
-            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            Rectangle destRect = new Rectangle(0, 0, 105, 22);
+            using StringFormat stringFormat = new StringFormat();
+            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-            using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             extendedBitmap.Graphics.DrawImage(
                 MidsContext.Character.IsHero()
                     ? _myParent.Drawing.bxPower[2].Bitmap
                     : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                 GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-            var height2 = bFont.GetHeight(e.Graphics) + 2;
-            var Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
-            var graphics = extendedBitmap.Graphics;
+            float height2 = bFont.GetHeight(e.Graphics) + 2;
+            RectangleF Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
+            Graphics graphics = extendedBitmap.Graphics;
             clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
@@ -841,17 +828,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             if (_myParent?.Drawing == null) return;
 
-            var index = 2;
+            int index = 2;
             if (KeepOnTop) index = 3;
-            var iStr = "Keep On top";
-            var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
+            string iStr = "Keep On top";
+            Rectangle rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
                 _myParent.Drawing.bxPower[index].Size.Height);
-            var destRect = new Rectangle(0, 0, 105, 22);
-            using var stringFormat = new StringFormat();
-            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            Rectangle destRect = new Rectangle(0, 0, 105, 22);
+            using StringFormat stringFormat = new StringFormat();
+            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-            using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             if (index == 3)
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
@@ -859,9 +846,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             else
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
                     rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-            var height = bFont.GetHeight(e.Graphics) + 2;
-            var Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
-            var graphics = extendedBitmap.Graphics;
+            float height = bFont.GetHeight(e.Graphics) + 2;
+            RectangleF Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
+            Graphics graphics = extendedBitmap.Graphics;
             clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
@@ -1033,23 +1020,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         #region frmTotals import
 
-        /*
-        private void RbSpeedCheckedChanged(object sender, EventArgs e)
-        {
-            if (!MainModule.MidsController.IsAppInitialized)
-                return;
-            if (rbMPH.Checked)
-                MidsContext.Config.SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
-            else if (rbKPH.Checked)
-                MidsContext.Config.SpeedFormat = Enums.eSpeedMeasure.KilometersPerHour;
-            else if (rbFPS.Checked)
-                MidsContext.Config.SpeedFormat = Enums.eSpeedMeasure.FeetPerSecond;
-            else if (rbMSec.Checked)
-                MidsContext.Config.SpeedFormat = Enums.eSpeedMeasure.MetersPerSecond;
-            UpdateData();
-        }
-        */
-
         private void StoreLocation()
         {
             if (!MainModule.MidsController.IsAppInitialized) return;
@@ -1130,17 +1100,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 "Movement",
                 new[]
                 {
-                    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
+                    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), // Enums.eSpeedMeasure.FeetPerSecond
                     displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
                     displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
-                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false)
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) // Enums.eSpeedMeasure.MilesPerHour
                 },
                 new[]
                 {
-                    Statistics.BaseRunSpeed, // ft/s
-                    Statistics.BaseJumpSpeed,
-                    Statistics.BaseJumpHeight,
-                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) == 0 ? 0 : Statistics.BaseFlySpeed
+                    displayStats.Speed(Statistics.BaseRunSpeed, Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.Speed(Statistics.BaseJumpSpeed, Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.Speed(Statistics.BaseJumpHeight, Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) == 0 ? 0 : displayStats.Speed(Statistics.BaseFlySpeed, Enums.eSpeedMeasure.MilesPerHour)
                 },
                 new[]
                 {
@@ -1231,10 +1201,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 "Movement",
                 new[]
                 {
-                    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
-                    displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
-                    displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
-                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false)
+                    displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, false),
+                    displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false),
+                    displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat),
+                    displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false)
                 });
 
             ///////////////////////////////
@@ -1244,9 +1214,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 "Perception",
                 new[]
                 {
-                    MidsContext.Character.Totals.StealthPvE,
-                    MidsContext.Character.Totals.StealthPvP,
-                    displayStats.Perception(false)
+                    displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat),
+                    displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat),
+                    displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat)
                 });
 
             ///////////////////////////////
