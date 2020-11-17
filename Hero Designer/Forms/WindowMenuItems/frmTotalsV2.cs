@@ -122,7 +122,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 // Windows theme is in use.
                 tabControlAdv2.ActiveTabForeColor = Color.WhiteSmoke;
                 tabControlAdv2.InActiveTabForeColor = Color.WhiteSmoke;
-                //tabControlAdv2.DrawItem += DrawItems;
             }
             catch (Exception ex)
             {
