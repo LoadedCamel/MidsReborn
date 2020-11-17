@@ -39,7 +39,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private readonly List<Enums.eEffectType> MovementTypesList = new List<Enums.eEffectType>
         {
-            Enums.eEffectType.SpeedRunning, Enums.eEffectType.SpeedJumping, Enums.eEffectType.JumpHeight, Enums.eEffectType.SpeedFlying
+            Enums.eEffectType.SpeedRunning, Enums.eEffectType.SpeedJumping, Enums.eEffectType.JumpHeight,
+            Enums.eEffectType.SpeedFlying
         };
 
         private readonly List<Enums.eEffectType> PerceptionEffectsList = new List<Enums.eEffectType>
@@ -300,6 +301,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 isPanel = false;
                 trigger = (ctlLayeredBar) sender;
             }
+
             Statistics displayStats = MidsContext.Character.DisplayStats;
             string barGroup = trigger.Group;
             int barIndex = GetBarIndex(trigger);
@@ -317,7 +319,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             switch (barGroup)
             {
                 case "Defense":
-                    tooltipText = $"{trigger.ValueMainBar:##0.##}% {FormatVectorType(typeof(Enums.eDamage), vectorTypeIndex)} defense";
+                    tooltipText =
+                        $"{trigger.ValueMainBar:##0.##}% {FormatVectorType(typeof(Enums.eDamage), vectorTypeIndex)} defense";
                     break;
 
                 case "Resistance":
@@ -385,7 +388,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     break;
 
                 // Triple bar main + base + overcap
-                case "HP" when barIndex == (int)Enums.eBarType.Regeneration:
+                case "HP" when barIndex == (int) Enums.eBarType.Regeneration:
                 case "Perception" when trigger.EnableBaseValue && trigger.EnableOverCap:
                 case "" when trigger.EnableBaseValue && trigger.EnableOverCap:
                     lv = FetchLv(barIndex);
@@ -399,7 +402,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                                       ? $"\r\nBase: {(plusSignEnabled && trigger.ValueBase > 0 ? "+" : "")}{trigger.ValueBase:##0.##}{percentageSign}"
                                       : "");
                     break;
-                
+
                 // Dual bar main + overcap
                 case "Perception" when !trigger.EnableBaseValue && trigger.EnableOverCap:
                 case "" when !trigger.EnableBaseValue && trigger.EnableOverCap:
@@ -488,7 +491,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             return Convert.ToInt32(bar.Name.Substring(3)) - 1;
         }
-        
+
         private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues)
         {
             List<ctlLayeredBar> barsGroup = controlsList
@@ -504,7 +507,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             }
         }
 
-        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues, float[] auxValues, bool auxIsBase)
+        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues, float[] auxValues,
+            bool auxIsBase)
         {
             List<ctlLayeredBar> barsGroup = controlsList
                 .Cast<ctlLayeredBar>()
@@ -526,7 +530,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             }
         }
 
-        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues, float[] baseValues, float[] overcapValues)
+        private void SetBarsBulk(IEnumerable<Control> controlsList, string group, float[] mainValues,
+            float[] baseValues, float[] overcapValues)
         {
             List<ctlLayeredBar> barsGroup = controlsList
                 .Cast<ctlLayeredBar>()
@@ -541,12 +546,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
             }
         }
 
-        private void SetBarSingle(Enums.eBarType barType, float value, float baseValue=0, float overCapValue=0, float overlay1Value=0, float overlay2Value=0)
+        private void SetBarSingle(Enums.eBarType barType, float value, float baseValue = 0, float overCapValue = 0,
+            float overlay1Value = 0, float overlay2Value = 0)
         {
             SetBarSingle(FetchBar((int) barType), value, baseValue, overCapValue, overlay1Value, overlay2Value);
         }
 
-        private void SetBarSingle(ctlLayeredBar bar, float value, float baseValue = 0, float overCapValue = 0, float overlay1Value = 0, float overlay2Value = 0)
+        private void SetBarSingle(ctlLayeredBar bar, float value, float baseValue = 0, float overCapValue = 0,
+            float overlay1Value = 0, float overlay2Value = 0)
         {
             bar.SuspendUpdate();
             bar.ValueMainBar = value;
@@ -561,7 +568,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             return Convert.ToInt32(lv.Name.Substring(2)) - 1;
         }
-        
+
         private void SetLvsBulk(IEnumerable<Control> controlsList, string group, float[] values)
         {
             List<BarLabel> lvGroup = controlsList
@@ -629,7 +636,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             int idx = -1;
             int i;
-            
+
             // Fetch ancillary/epic powerset index
             for (i = 0; i < MidsContext.Character.Powersets.Length; i++)
             {
@@ -646,7 +653,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // Check if power taken in pool
             for (i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
             {
-                if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset == MidsContext.Character.Powersets[idx].nID) return idx;
+                if (MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset ==
+                    MidsContext.Character.Powersets[idx].nID) return idx;
             }
 
             return -1;
@@ -676,9 +684,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
                 case ConfigData.ETotalsWindowTitleStyle.CharNameAtPowersets:
                     titleTxt = (!string.IsNullOrWhiteSpace(MidsContext.Character.Name)
-                        ? MidsContext.Character.Name + " - "
-                        : "")
-                          + MidsContext.Character.Archetype.DisplayName;
+                                   ? MidsContext.Character.Name + " - "
+                                   : "")
+                               + MidsContext.Character.Archetype.DisplayName;
                     if (!MidsContext.Character.IsKheldian)
                     {
                         titleTxt += " [ " +
@@ -705,9 +713,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     }
 
                     titleTxt += MidsContext.Character.Archetype.DisplayName +
-                        (MainModule.MidsController.Toon != null && !string.IsNullOrEmpty(buildFileName)
-                            ? " [" + buildFileName + "]"
-                            : "");
+                                (MainModule.MidsController.Toon != null && !string.IsNullOrEmpty(buildFileName)
+                                    ? " [" + buildFileName + "]"
+                                    : "");
 
                     frm.Text = "Totals - " + titleTxt;
                     break;
@@ -754,552 +762,565 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 tabControlAdv2.InactiveTabColor = Color.FromArgb(86, 12, 12);
                 tabControlAdv2.TabPanelBackColor = Color.FromArgb(86, 12, 12);
                 tabControlAdv2.FixedSingleBorderColor = Color.FromArgb(184, 184, 187);
+                //tabControlAdv2.ActiveTabColor = Color.FromArgb(184, 184, 187);
                 /* Turned off ActiveTabColor setting here in order to not interfere with the designer setting - Metalios
                 tabControlAdv2.ActiveTabColor = Color.FromArgb(191, 74, 56);*/
-}
+            }
 
-base.Refresh();
-}
+            base.Refresh();
+        }
 
-private void OnLoad(object sender, EventArgs e)
-{
-CenterToParent();
-Refresh();
-SetTitle(this);
-SetUnitRadioButtons();
-}
+        private void OnLoad(object sender, EventArgs e)
+        {
+            CenterToParent();
+            Refresh();
+            SetTitle(this);
+            SetUnitRadioButtons();
+        }
 
-private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)
-{
-_myParent.FloatTotals(false);
-}
+        private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _myParent.FloatTotals(false);
+        }
 
-private void frmTotalsV2_Move(object sender, EventArgs e)
-{
-StoreLocation();
-}
+        private void frmTotalsV2_Move(object sender, EventArgs e)
+        {
+            StoreLocation();
+        }
 
-#region PictureBox buttons handlers
+        #region PictureBox buttons handlers
 
-private void PbCloseClick(object sender, EventArgs e)
-{
-Close();
-}
+        private void PbCloseClick(object sender, EventArgs e)
+        {
+            Close();
+        }
 
-private void PbClosePaint(object sender, PaintEventArgs e)
-{
-if (_myParent?.Drawing == null) return;
+        private void PbClosePaint(object sender, PaintEventArgs e)
+        {
+            if (_myParent?.Drawing == null) return;
 
-string iStr = "Close";
-Rectangle rectangle = new Rectangle();
-ref Rectangle local = ref rectangle;
-Size size = MidsContext.Character.IsHero()
-? _myParent.Drawing.bxPower[2].Size
-: _myParent.Drawing.bxPower[4].Size;
-int width = size.Width;
-size = MidsContext.Character.IsHero()
-? _myParent.Drawing.bxPower[2].Size
-: _myParent.Drawing.bxPower[4].Size;
-int height1 = size.Height;
-local = new Rectangle(0, 0, width, height1);
-Rectangle destRect = new Rectangle(0, 0, 105, 22);
-using StringFormat stringFormat = new StringFormat();
-using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
-stringFormat.Alignment = StringAlignment.Center;
-stringFormat.LineAlignment = StringAlignment.Center;
-using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
-extendedBitmap.Graphics.Clear(BackColor);
-extendedBitmap.Graphics.DrawImage(
-MidsContext.Character.IsHero()
-    ? _myParent.Drawing.bxPower[2].Bitmap
-    : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-float height2 = bFont.GetHeight(e.Graphics) + 2;
-RectangleF Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
-Graphics graphics = extendedBitmap.Graphics;
-clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
-e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
-}
+            string iStr = "Close";
+            Rectangle rectangle = new Rectangle();
+            ref Rectangle local = ref rectangle;
+            Size size = MidsContext.Character.IsHero()
+                ? _myParent.Drawing.bxPower[2].Size
+                : _myParent.Drawing.bxPower[4].Size;
+            int width = size.Width;
+            size = MidsContext.Character.IsHero()
+                ? _myParent.Drawing.bxPower[2].Size
+                : _myParent.Drawing.bxPower[4].Size;
+            int height1 = size.Height;
+            local = new Rectangle(0, 0, width, height1);
+            Rectangle destRect = new Rectangle(0, 0, 105, 22);
+            using StringFormat stringFormat = new StringFormat();
+            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            stringFormat.Alignment = StringAlignment.Center;
+            stringFormat.LineAlignment = StringAlignment.Center;
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            extendedBitmap.Graphics.Clear(BackColor);
+            extendedBitmap.Graphics.DrawImage(
+                MidsContext.Character.IsHero()
+                    ? _myParent.Drawing.bxPower[2].Bitmap
+                    : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+            float height2 = bFont.GetHeight(e.Graphics) + 2;
+            RectangleF Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
+            Graphics graphics = extendedBitmap.Graphics;
+            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
+            e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
+        }
 
-private void PbTopMostClick(object sender, EventArgs e)
-{
-KeepOnTop = !KeepOnTop;
-TopMost = KeepOnTop;
-pbTopMost.Refresh();
-}
+        private void PbTopMostClick(object sender, EventArgs e)
+        {
+            KeepOnTop = !KeepOnTop;
+            TopMost = KeepOnTop;
+            pbTopMost.Refresh();
+        }
 
-private void PbTopMostPaint(object sender, PaintEventArgs e)
-{
-if (_myParent?.Drawing == null) return;
+        private void PbTopMostPaint(object sender, PaintEventArgs e)
+        {
+            if (_myParent?.Drawing == null) return;
 
-int index = 2;
-if (KeepOnTop) index = 3;
-string iStr = "Keep On top";
-Rectangle rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
-_myParent.Drawing.bxPower[index].Size.Height);
-Rectangle destRect = new Rectangle(0, 0, 105, 22);
-using StringFormat stringFormat = new StringFormat();
-using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
-stringFormat.Alignment = StringAlignment.Center;
-stringFormat.LineAlignment = StringAlignment.Center;
-using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
-extendedBitmap.Graphics.Clear(BackColor);
-if (index == 3)
-extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
-    rectangle.Width, rectangle.Height, GraphicsUnit.Pixel);
-else
-extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
-    rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-float height = bFont.GetHeight(e.Graphics) + 2;
-RectangleF Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
-Graphics graphics = extendedBitmap.Graphics;
-clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
-e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
-}
+            int index = 2;
+            if (KeepOnTop) index = 3;
+            string iStr = "Keep On top";
+            Rectangle rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
+                _myParent.Drawing.bxPower[index].Size.Height);
+            Rectangle destRect = new Rectangle(0, 0, 105, 22);
+            using StringFormat stringFormat = new StringFormat();
+            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            stringFormat.Alignment = StringAlignment.Center;
+            stringFormat.LineAlignment = StringAlignment.Center;
+            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            extendedBitmap.Graphics.Clear(BackColor);
+            if (index == 3)
+                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
+                    rectangle.Width, rectangle.Height, GraphicsUnit.Pixel);
+            else
+                extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
+                    rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+            float height = bFont.GetHeight(e.Graphics) + 2;
+            RectangleF Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
+            Graphics graphics = extendedBitmap.Graphics;
+            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
+            e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
+        }
 
-#endregion
+        #endregion
 
-#region Bars/Labels indexes
+        #region Bars/Labels indexes
 
-private ctlLayeredBar FetchBar(int n)
-{
-return n switch
-{
-0 => bar1,
-1 => bar2,
-2 => bar3,
-3 => bar4,
-4 => bar5,
-5 => bar6,
-6 => bar7,
-7 => bar8,
-8 => bar9,
-9 => bar10,
-10 => bar11,
-11 => bar12,
-12 => bar13,
-13 => bar14,
-14 => bar15,
-15 => bar16,
-16 => bar17,
-17 => bar18,
-18 => bar19,
-19 => bar20,
-20 => bar21,
-21 => bar22,
-22 => bar23,
-23 => bar24,
-24 => bar25,
-25 => bar26,
-26 => bar27,
-27 => bar28,
-28 => bar29,
-29 => bar30,
-30 => bar31,
-31 => bar32,
-32 => bar33,
-33 => bar34,
-34 => bar35,
-35 => bar36,
-36 => bar37,
-37 => bar38,
-38 => bar39,
-39 => bar40,
-40 => bar41,
-41 => bar42,
-42 => bar43,
-43 => bar44,
-44 => bar45,
-45 => bar46,
-46 => bar47,
-47 => bar48,
-48 => bar49,
-49 => bar50,
-50 => bar51,
-51 => bar52,
-52 => bar53,
-53 => bar54,
-54 => bar55,
-55 => bar56,
-56 => bar57,
-57 => bar58,
-58 => bar59,
-59 => bar60,
-60 => bar61,
-61 => bar62,
-62 => bar63,
-63 => bar64,
-64 => bar65,
-65 => bar66,
-66 => bar67,
-_ => bar1
-};
-}
+        private ctlLayeredBar FetchBar(int n)
+        {
+            return n switch
+            {
+                0 => bar1,
+                1 => bar2,
+                2 => bar3,
+                3 => bar4,
+                4 => bar5,
+                5 => bar6,
+                6 => bar7,
+                7 => bar8,
+                8 => bar9,
+                9 => bar10,
+                10 => bar11,
+                11 => bar12,
+                12 => bar13,
+                13 => bar14,
+                14 => bar15,
+                15 => bar16,
+                16 => bar17,
+                17 => bar18,
+                18 => bar19,
+                19 => bar20,
+                20 => bar21,
+                21 => bar22,
+                22 => bar23,
+                23 => bar24,
+                24 => bar25,
+                25 => bar26,
+                26 => bar27,
+                27 => bar28,
+                28 => bar29,
+                29 => bar30,
+                30 => bar31,
+                31 => bar32,
+                32 => bar33,
+                33 => bar34,
+                34 => bar35,
+                35 => bar36,
+                36 => bar37,
+                37 => bar38,
+                38 => bar39,
+                39 => bar40,
+                40 => bar41,
+                41 => bar42,
+                42 => bar43,
+                43 => bar44,
+                44 => bar45,
+                45 => bar46,
+                46 => bar47,
+                47 => bar48,
+                48 => bar49,
+                49 => bar50,
+                50 => bar51,
+                51 => bar52,
+                52 => bar53,
+                53 => bar54,
+                54 => bar55,
+                55 => bar56,
+                56 => bar57,
+                57 => bar58,
+                58 => bar59,
+                59 => bar60,
+                60 => bar61,
+                61 => bar62,
+                62 => bar63,
+                63 => bar64,
+                64 => bar65,
+                65 => bar66,
+                66 => bar67,
+                _ => bar1
+            };
+        }
 
-private ctlLayeredBar FetchBar(Enums.eBarType barType)
-{
-return FetchBar((int) barType);
-}
+        private ctlLayeredBar FetchBar(Enums.eBarType barType)
+        {
+            return FetchBar((int) barType);
+        }
 
-private BarLabel FetchLv(int n)
-{
-return n switch
-{
-0 => lv1,
-1 => lv2,
-2 => lv3,
-3 => lv4,
-4 => lv5,
-5 => lv6,
-6 => lv7,
-7 => lv8,
-8 => lv9,
-9 => lv10,
-10 => lv11,
-11 => lv12,
-12 => lv13,
-13 => lv14,
-14 => lv15,
-15 => lv16,
-16 => lv17,
-17 => lv18,
-18 => lv19,
-19 => lv20,
-20 => lv21,
-21 => lv22,
-22 => lv23,
-23 => lv24,
-24 => lv25,
-25 => lv26,
-26 => lv27,
-27 => lv28,
-28 => lv29,
-29 => lv30,
-30 => lv31,
-31 => lv32,
-32 => lv33,
-33 => lv34,
-34 => lv35,
-35 => lv36,
-36 => lv37,
-37 => lv38,
-38 => lv39,
-39 => lv40,
-40 => lv41,
-41 => lv42,
-42 => lv43,
-43 => lv44,
-44 => lv45,
-45 => lv46,
-46 => lv47,
-47 => lv48,
-48 => lv49,
-49 => lv50,
-50 => lv51,
-51 => lv52,
-52 => lv53,
-53 => lv54,
-54 => lv55,
-55 => lv56,
-56 => lv57,
-57 => lv58,
-58 => lv59,
-59 => lv60,
-60 => lv61,
-61 => lv62,
-62 => lv63,
-63 => lv64,
-64 => lv65,
-65 => lv66,
-66 => lv67,
-_ => lv1
-};
-}
+        private BarLabel FetchLv(int n)
+        {
+            return n switch
+            {
+                0 => lv1,
+                1 => lv2,
+                2 => lv3,
+                3 => lv4,
+                4 => lv5,
+                5 => lv6,
+                6 => lv7,
+                7 => lv8,
+                8 => lv9,
+                9 => lv10,
+                10 => lv11,
+                11 => lv12,
+                12 => lv13,
+                13 => lv14,
+                14 => lv15,
+                15 => lv16,
+                16 => lv17,
+                17 => lv18,
+                18 => lv19,
+                19 => lv20,
+                20 => lv21,
+                21 => lv22,
+                22 => lv23,
+                23 => lv24,
+                24 => lv25,
+                25 => lv26,
+                26 => lv27,
+                27 => lv28,
+                28 => lv29,
+                29 => lv30,
+                30 => lv31,
+                31 => lv32,
+                32 => lv33,
+                33 => lv34,
+                34 => lv35,
+                35 => lv36,
+                36 => lv37,
+                37 => lv38,
+                38 => lv39,
+                39 => lv40,
+                40 => lv41,
+                41 => lv42,
+                42 => lv43,
+                43 => lv44,
+                44 => lv45,
+                45 => lv46,
+                46 => lv47,
+                47 => lv48,
+                48 => lv49,
+                49 => lv50,
+                50 => lv51,
+                51 => lv52,
+                52 => lv53,
+                53 => lv54,
+                54 => lv55,
+                55 => lv56,
+                56 => lv57,
+                57 => lv58,
+                58 => lv59,
+                59 => lv60,
+                60 => lv61,
+                61 => lv62,
+                62 => lv63,
+                63 => lv64,
+                64 => lv65,
+                65 => lv66,
+                66 => lv67,
+                _ => lv1
+            };
+        }
 
-private BarLabel FetchLv(Enums.eBarType barType)
-{
-return FetchLv((int) barType);
-}
-#endregion
+        private BarLabel FetchLv(Enums.eBarType barType)
+        {
+            return FetchLv((int) barType);
+        }
 
-#region frmTotals import
+        #endregion
 
-private void StoreLocation()
-{
-if (!MainModule.MidsController.IsAppInitialized) return;
+        #region frmTotals import
 
-MainModule.MidsController.SzFrmTotals.X = Left;
-MainModule.MidsController.SzFrmTotals.Y = Top;
-MainModule.MidsController.SzFrmTotals.Width = Width;
-MainModule.MidsController.SzFrmTotals.Height = Height;
-}
+        private void StoreLocation()
+        {
+            if (!MainModule.MidsController.IsAppInitialized) return;
 
-public void SetLocation()
-{
-Top = MainModule.MidsController.SzFrmTotals.X;
-Left = MainModule.MidsController.SzFrmTotals.Y;
-}
+            MainModule.MidsController.SzFrmTotals.X = Left;
+            MainModule.MidsController.SzFrmTotals.Y = Top;
+            MainModule.MidsController.SzFrmTotals.Width = Width;
+            MainModule.MidsController.SzFrmTotals.Height = Height;
+        }
 
-#endregion
+        public void SetLocation()
+        {
+            Top = MainModule.MidsController.SzFrmTotals.X;
+            Left = MainModule.MidsController.SzFrmTotals.Y;
+        }
 
-public void UpdateData()
-{
+        #endregion
+
+        public void UpdateData()
+        {
 //pbClose.Refresh();
 //pbTopMost.Refresh();
 //Character.TotalStatistics uncappedStats = MidsContext.Character.Totals;
 //Character.TotalStatistics cappedStats = MidsContext.Character.TotalsCapped;
-Statistics displayStats = MidsContext.Character.DisplayStats;
-Stopwatch watch = Stopwatch.StartNew();
-tabControlAdv2.SuspendLayout();
-IEnumerable<ctlLayeredBar> barsList = new List<ctlLayeredBar>();
-IEnumerable<BarLabel> lvList = new List<BarLabel>();
-barsList = GetControlHierarchy<ctlLayeredBar>(tabControlAdv2).Cast<ctlLayeredBar>().ToList();
-lvList = GetControlHierarchy<BarLabel>(tabControlAdv2).Cast<BarLabel>().ToList();
+            Statistics displayStats = MidsContext.Character.DisplayStats;
+            Stopwatch watch = Stopwatch.StartNew();
+            tabControlAdv2.SuspendLayout();
+            IEnumerable<ctlLayeredBar> barsList = new List<ctlLayeredBar>();
+            IEnumerable<BarLabel> lvList = new List<BarLabel>();
+            barsList = GetControlHierarchy<ctlLayeredBar>(tabControlAdv2).Cast<ctlLayeredBar>().ToList();
+            lvList = GetControlHierarchy<BarLabel>(tabControlAdv2).Cast<BarLabel>().ToList();
 
-#region Bars setup
+            #region Bars setup
 
-try
-{
-SetBarsBulk(
-    barsList,
-    "Defense",
-    DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
-);
-}
-catch (Exception ex)
-{
-MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
-}
+            try
+            {
+                SetBarsBulk(
+                    barsList,
+                    "Defense",
+                    DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+                );
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
+            }
 
-SetBarsBulk(
-barsList,
-"Resistance",
-ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray(),
-ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, true)).ToArray(),
-false
-);
+            SetBarsBulk(
+                barsList,
+                "Resistance",
+                ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray(),
+                ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, true)).ToArray(),
+                false
+            );
 
-SetBarSingle(Enums.eBarType.Regeneration,
-displayStats.HealthRegenPercent(false),
-MidsContext.Character.Archetype.BaseRegen * 100,
-displayStats.HealthRegenPercent(true));
+            SetBarSingle(Enums.eBarType.Regeneration,
+                displayStats.HealthRegenPercent(false),
+                MidsContext.Character.Archetype.BaseRegen * 100,
+                displayStats.HealthRegenPercent(true));
 
-SetBarSingle(Enums.eBarType.MaxHPAbsorb,
-displayStats.HealthHitpointsNumeric(false),
-MidsContext.Character.Archetype.Hitpoints,
-displayStats.HealthHitpointsNumeric(true),
-Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints));
+            SetBarSingle(Enums.eBarType.MaxHPAbsorb,
+                displayStats.HealthHitpointsNumeric(false),
+                MidsContext.Character.Archetype.Hitpoints,
+                displayStats.HealthHitpointsNumeric(true),
+                Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints));
 
-SetBarSingle(Enums.eBarType.EndRec,
-displayStats.EnduranceRecoveryNumeric,
-MidsContext.Character.Archetype.BaseRecovery,
-displayStats.EnduranceRecoveryNumericUncapped);
-SetBarSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
-SetBarSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd, 100);
-
-///////////////////////////////
-
-SetBarsBulk(
-barsList,
-"Movement",
-new[]
-{
-    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), // Enums.eSpeedMeasure.FeetPerSecond
-    displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
-    displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
-    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) // Enums.eSpeedMeasure.MilesPerHour
-},
-new[]
-{
-    displayStats.Speed(Statistics.BaseRunSpeed, Enums.eSpeedMeasure.FeetPerSecond),
-    displayStats.Speed(Statistics.BaseJumpSpeed, Enums.eSpeedMeasure.FeetPerSecond),
-    displayStats.Speed(Statistics.BaseJumpHeight, Enums.eSpeedMeasure.FeetPerSecond),
-    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) == 0 ? 0 : displayStats.Speed(Statistics.BaseFlySpeed, Enums.eSpeedMeasure.MilesPerHour)
-},
-new[]
-{
-    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
-    displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
-    displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
-    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true)
-});
+            SetBarSingle(Enums.eBarType.EndRec,
+                displayStats.EnduranceRecoveryNumeric,
+                MidsContext.Character.Archetype.BaseRecovery,
+                displayStats.EnduranceRecoveryNumericUncapped);
+            SetBarSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
+            SetBarSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd, 100);
 
 ///////////////////////////////
 
-SetBarsBulk(
-barsList,
-"Perception",
-new []
-{
-    MidsContext.Character.Totals.StealthPvE,
-    MidsContext.Character.Totals.StealthPvP,
-    displayStats.Perception(false)
-},
-new []
-{
-    0,
-    0,
-    Statistics.BasePerception
-},
-new []
-{
-    MidsContext.Character.Totals.StealthPvE,
-    MidsContext.Character.Totals.StealthPvP,
-    displayStats.Perception(true)
-});
+            SetBarsBulk(
+                barsList,
+                "Movement",
+                new[]
+                {
+                    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond,
+                        false), // Enums.eSpeedMeasure.FeetPerSecond
+                    displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
+                    displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour,
+                        false) // Enums.eSpeedMeasure.MilesPerHour
+                },
+                new[]
+                {
+                    displayStats.Speed(Statistics.BaseRunSpeed, Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.Speed(Statistics.BaseJumpSpeed, Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.Speed(Statistics.BaseJumpHeight, Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) == 0
+                        ? 0
+                        : displayStats.Speed(Statistics.BaseFlySpeed, Enums.eSpeedMeasure.MilesPerHour)
+                },
+                new[]
+                {
+                    displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
+                    displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
+                    displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
+                    displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true)
+                });
 
 ///////////////////////////////
 
-SetBarSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false), 100, displayStats.BuffHaste(true));
-SetBarSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
-SetBarSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
-SetBarSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true));
-SetBarSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
-SetBarSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel, MidsContext.Character.Archetype.BaseThreat * 100);
-SetBarSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
+            SetBarsBulk(
+                barsList,
+                "Perception",
+                new[]
+                {
+                    MidsContext.Character.Totals.StealthPvE,
+                    MidsContext.Character.Totals.StealthPvP,
+                    displayStats.Perception(false)
+                },
+                new[]
+                {
+                    0,
+                    0,
+                    Statistics.BasePerception
+                },
+                new[]
+                {
+                    MidsContext.Character.Totals.StealthPvE,
+                    MidsContext.Character.Totals.StealthPvP,
+                    displayStats.Perception(true)
+                });
 
 ///////////////////////////////
 
-SetBarsBulk(
-barsList,
-"Status Protection",
-MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray());
-
-SetBarsBulk(
-barsList,
-"Status Resistance",
-MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
-
-///////////////////////////////
-
-SetBarsBulk(
-barsList,
-"Debuff Resistance",
-DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray());
-#endregion
-
-#region Labels setup
-
-SetLvsBulk(
-lvList,
-"Defense",
-DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
-);
-
-SetLvsBulk(
-lvList,
-"Resistance",
-ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray()
-);
-
-SetLvSingle(Enums.eBarType.Regeneration, displayStats.HealthRegenPercent(false));
-SetLvSingle(Enums.eBarType.MaxHPAbsorb, displayStats.HealthHitpointsNumeric(false));
-SetLvSingle(Enums.eBarType.EndRec, displayStats.EnduranceRecoveryNumeric);
-SetLvSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
-SetLvSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd);
+            SetBarSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false), 100, displayStats.BuffHaste(true));
+            SetBarSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
+            SetBarSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
+            SetBarSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true));
+            SetBarSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
+            SetBarSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel,
+                MidsContext.Character.Archetype.BaseThreat * 100);
+            SetBarSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
 
 ///////////////////////////////
 
-SetLvsBulk(
-lvList,
-"Movement",
-new[]
-{
-    displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, false),
-    displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false),
-    displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat),
-    displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false)
-});
+            SetBarsBulk(
+                barsList,
+                "Status Protection",
+                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray());
+
+            SetBarsBulk(
+                barsList,
+                "Status Resistance",
+                MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
 
 ///////////////////////////////
 
-SetLvsBulk(
-lvList,
-"Perception",
-new[]
-{
-    displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat),
-    displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat),
-    displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat)
-});
+            SetBarsBulk(
+                barsList,
+                "Debuff Resistance",
+                DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray());
+
+            #endregion
+
+            #region Labels setup
+
+            SetLvsBulk(
+                lvList,
+                "Defense",
+                DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+            );
+
+            SetLvsBulk(
+                lvList,
+                "Resistance",
+                ResistanceDamageList.Cast<int>().Select(t => displayStats.DamageResistance(t, false)).ToArray()
+            );
+
+            SetLvSingle(Enums.eBarType.Regeneration, displayStats.HealthRegenPercent(false));
+            SetLvSingle(Enums.eBarType.MaxHPAbsorb, displayStats.HealthHitpointsNumeric(false));
+            SetLvSingle(Enums.eBarType.EndRec, displayStats.EnduranceRecoveryNumeric);
+            SetLvSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
+            SetLvSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd);
 
 ///////////////////////////////
 
-SetLvSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false));
-SetLvSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
-SetLvSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
-SetLvSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false));
-SetLvSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
-SetLvSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel);
-SetLvSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
+            SetLvsBulk(
+                lvList,
+                "Movement",
+                new[]
+                {
+                    displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, false),
+                    displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false),
+                    displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat),
+                    displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false)
+                });
 
 ///////////////////////////////
 
-SetLvsBulk(
-lvList,
-"Status Protection",
-MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int)m])).ToArray());
-
-SetLvsBulk(
-lvList,
-"Status Resistance",
-MezList.Select(m => MidsContext.Character.Totals.MezRes[(int)m]).ToArray());
+            SetLvsBulk(
+                lvList,
+                "Perception",
+                new[]
+                {
+                    displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat),
+                    displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat),
+                    displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat)
+                });
 
 ///////////////////////////////
 
-SetLvsBulk(
-lvList,
-"Debuff Resistance",
-DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int)e]).ToArray());
+            SetLvSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false));
+            SetLvSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
+            SetLvSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
+            SetLvSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false));
+            SetLvSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
+            SetLvSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel);
+            SetLvSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
 
-#endregion
+///////////////////////////////
 
-tabControlAdv2.ResumeLayout();
+            SetLvsBulk(
+                lvList,
+                "Status Protection",
+                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray());
 
-watch.Stop();
-Debug.WriteLine($"frmTotalsV2.UpdateData(): {watch.ElapsedMilliseconds}ms");
-}
-}
+            SetLvsBulk(
+                lvList,
+                "Status Resistance",
+                MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
 
-public class BarLabel : Label
-{
-[Description("Label group"), Category("Data"),
-Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
-DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-public string Group = "";
+///////////////////////////////
 
-[Description("Format type\r\n0: Percentage\r\n1: Numeric, 2 decimals\r\n2: Numeric, 2 decimals, with sign\r\n3: Numeric, 2 decimals (for mez protection)\r\n4: Numeric, 2 decimals, per second\r\n5: Numeric, 2 decimals, speed\r\n6: Numeric, 2 decimals, distance\r\n7: Percentage, 2 decimals, with sign"), Category("Data"),
-Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
-DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-public int FormatType;
+            SetLvsBulk(
+                lvList,
+                "Debuff Resistance",
+                DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray());
 
-[Description("Bar label text"), Category("Appearance"),
-Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
-DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-public new string Text
-{
-get => base.Text;
-set => base.Text = clsConvertibleUnitValue.FormatValue(FormatType, value);
-}
+            #endregion
 
-public void SetText(float value)
-{
-Text = Convert.ToString(value, CultureInfo.InvariantCulture);
-}
+            tabControlAdv2.ResumeLayout();
 
-public void SetText(string valueText)
-{
-Text = valueText;
-}
+            watch.Stop();
+            Debug.WriteLine($"frmTotalsV2.UpdateData(): {watch.ElapsedMilliseconds}ms");
+        }
+    }
 
-public BarLabel()
-{
-SetStyle(ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-InitializeComponent();
-}
-private void InitializeComponent()
-{
-Name = "BarLabel1";
-}
-}
+    public class BarLabel : Label
+    {
+        [Description("Label group"), Category("Data"),
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public string Group = "";
+
+        [Description(
+             "Format type\r\n0: Percentage\r\n1: Numeric, 2 decimals\r\n2: Numeric, 2 decimals, with sign\r\n3: Numeric, 2 decimals (for mez protection)\r\n4: Numeric, 2 decimals, per second\r\n5: Numeric, 2 decimals, speed\r\n6: Numeric, 2 decimals, distance\r\n7: Percentage, 2 decimals, with sign"),
+         Category("Data"),
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public int FormatType;
+
+        [Description("Bar label text"), Category("Appearance"),
+         Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public new string Text
+        {
+            get => base.Text;
+            set => base.Text = clsConvertibleUnitValue.FormatValue(FormatType, value);
+        }
+
+        public void SetText(float value)
+        {
+            Text = Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
+        public void SetText(string valueText)
+        {
+            Text = valueText;
+        }
+
+        public BarLabel()
+        {
+            SetStyle(
+                ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.SupportsTransparentBackColor, true);
+            InitializeComponent();
+        }
+
+        private void InitializeComponent()
+        {
+            Name = "BarLabel1";
+        }
+    }
 }
