@@ -37,6 +37,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Syncfusion.Shared.Base, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
+    <Reference Include="Syncfusion.Tools.Windows, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -68,6 +70,12 @@
     </Compile>
     <Compile Include="ctlDamageDisplay.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlEnhTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlEnhTabControl.Designer.cs">
+      <DependentUpon>ctlEnhTabControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ctlMultiGraph.cs">
       <SubType>UserControl</SubType>
