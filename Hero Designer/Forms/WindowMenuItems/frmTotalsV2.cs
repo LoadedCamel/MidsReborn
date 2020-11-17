@@ -32,7 +32,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private readonly frmMain _myParent;
         private bool KeepOnTop { get; set; }
-        private readonly TabColorScheme TabColors = new TabColorScheme();
+        private readonly TabColorScheme _tabColors = new TabColorScheme();
 
         #region Enums sub-lists (groups)
 
@@ -133,10 +133,22 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 // Note: default colors will be used anyway.
                 // This may only cause issues if a custom
                 // Windows theme is in use.
-                tabControlAdv2.ActiveTabForeColor = TabColors.TabTextColor;
-                tabControlAdv2.ActiveTabOutlineColor = TabColors.TabOutlineColor;
-                tabControlAdv2.InActiveTabForeColor = TabColors.TabTextColor;
-                tabControlAdv2.InactiveTabOutlineColor = TabColors.TabOutlineColor;
+                tabControlAdv2.SelectedTab.ForeColor = _tabColors.TabTextColor;
+                tabControlAdv2.ActiveTabOutlineColor = _tabColors.TabOutlineColor;
+                tabControlAdv2.InactiveTabOutlineColor = _tabColors.TabOutlineColor;
+                for (var i = 0; i < tabControlAdv2.TabPages.Count; i++)
+                {
+                    tabControlAdv2.TabPages[i].ForeColor = _tabColors.TabTextColor;
+                }
+
+                //Set Tab Text Colors for Inactive Tabs
+                /*for (var i = 0; i < tabControlAdv2.TabPages.Count; i++)
+                {
+                    if (i != tabControlAdv2.SelectedTab.TabIndex)
+                    {
+                        tabControlAdv2.TabPages[i].ForeColor = _tabColors.TabTextColor;
+                    }
+                }*/
             }
             catch (Exception ex)
             {
@@ -302,7 +314,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void Bar_Hover(object sender)
         {
-            bool isPanel = false;
+            var isPanel = false;
             ctlLayeredBar trigger;
             if (sender is BarPanel panel)
             {
@@ -317,10 +329,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
             }
 
             Statistics displayStats = MidsContext.Character.DisplayStats;
-            string barGroup = trigger.Group;
-            int barIndex = GetBarIndex(trigger);
-            int vectorTypeIndex = string.IsNullOrEmpty(trigger.Group) ? -1 : GetBarVectorTypeIndex(barIndex, barGroup);
-            string atName = MidsContext.Character.Archetype.DisplayName;
+            var barGroup = trigger.Group;
+            var barIndex = GetBarIndex(trigger);
+            var vectorTypeIndex = string.IsNullOrEmpty(trigger.Group) ? -1 : GetBarVectorTypeIndex(barIndex, barGroup);
+            var atName = MidsContext.Character.Archetype.DisplayName;
             string tooltipText;
             string[] barTypesNames = Enum.GetNames(typeof(Enums.eBarType));
             Regex r = new Regex(@"/([A-Z])/");
@@ -486,7 +498,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private string FormatVectorType(Type enumType, int vectorTypeIndex)
         {
-            string name = UcFirst(Enum.GetName(enumType, vectorTypeIndex));
+            var name = UcFirst(Enum.GetName(enumType, vectorTypeIndex));
             Regex r = new Regex(@"([A-Z])");
             name = r.Replace(name, " " + "$1").TrimStart();
 
@@ -515,7 +527,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             barsGroup.Sort((a, b) => GetBarIndex(a).CompareTo(GetBarIndex(b)));
 
-            for (int i = 0; i < barsGroup.Count; i++)
+            for (var i = 0; i < barsGroup.Count; i++)
             {
                 SetBarSingle(barsGroup[i], mainValues[i]);
             }
@@ -531,7 +543,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             barsGroup.Sort((a, b) => GetBarIndex(a).CompareTo(GetBarIndex(b)));
 
-            for (int i = 0; i < barsGroup.Count; i++)
+            for (var i = 0; i < barsGroup.Count; i++)
             {
                 if (auxIsBase)
                 {
@@ -554,7 +566,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             barsGroup.Sort((a, b) => GetBarIndex(a).CompareTo(GetBarIndex(b)));
 
-            for (int i = 0; i < barsGroup.Count; i++)
+            for (var i = 0; i < barsGroup.Count; i++)
             {
                 SetBarSingle(barsGroup[i], mainValues[i], baseValues[i], overcapValues[i]);
             }
@@ -592,7 +604,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             lvGroup.Sort((a, b) => GetLvIndex(a).CompareTo(GetLvIndex(b)));
 
-            for (int i = 0; i < lvGroup.Count; i++)
+            for (var i = 0; i < lvGroup.Count; i++)
             {
                 SetLvSingle(lvGroup[i], values[i]);
             }
@@ -648,7 +660,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private static int GetEpicPowersetIndex()
         {
-            int idx = -1;
+            var idx = -1;
             int i;
 
             // Fetch ancillary/epic powerset index
@@ -687,8 +699,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             if (frm == null) return;
 
             string titleTxt;
-            int epicPowersetIndex = GetEpicPowersetIndex();
-            string buildFileName = Path.GetFileName(frm._myParent.GetBuildFile());
+            var epicPowersetIndex = GetEpicPowersetIndex();
+            var buildFileName = Path.GetFileName(frm._myParent.GetBuildFile());
 
             switch (MidsContext.Config.TotalsWindowTitleStyle)
             {
@@ -760,17 +772,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             if (MidsContext.Character.IsHero())
             {
-                tabControlAdv2.InactiveTabColor = TabColors.HeroInactiveTabColor;
-                tabControlAdv2.TabPanelBackColor = TabColors.HeroInactiveTabColor;
-                tabControlAdv2.FixedSingleBorderColor = TabColors.HeroBorderColor;
-                tabControlAdv2.ActiveTabColor = TabColors.HeroActiveTabColor;
+                tabControlAdv2.InactiveTabColor = _tabColors.HeroInactiveTabColor;
+                tabControlAdv2.TabPanelBackColor = _tabColors.HeroInactiveTabColor;
+                tabControlAdv2.FixedSingleBorderColor = _tabColors.HeroBorderColor;
+                tabControlAdv2.ActiveTabColor = _tabColors.HeroActiveTabColor;
             }
             else
             {
-                tabControlAdv2.InactiveTabColor = TabColors.VillainInactiveTabColor;
-                tabControlAdv2.TabPanelBackColor = TabColors.VillainInactiveTabColor;
-                tabControlAdv2.FixedSingleBorderColor = TabColors.VillainBorderColor;
-                tabControlAdv2.ActiveTabColor = TabColors.VillainActiveTabColor;
+                tabControlAdv2.InactiveTabColor = _tabColors.VillainInactiveTabColor;
+                tabControlAdv2.TabPanelBackColor = _tabColors.VillainInactiveTabColor;
+                tabControlAdv2.FixedSingleBorderColor = _tabColors.VillainBorderColor;
+                tabControlAdv2.ActiveTabColor = _tabColors.VillainActiveTabColor;
             }
 
             base.Refresh();
@@ -805,17 +817,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             if (_myParent?.Drawing == null) return;
 
-            string iStr = "Close";
+            var iStr = "Close";
             Rectangle rectangle = new Rectangle();
             ref Rectangle local = ref rectangle;
             Size size = MidsContext.Character.IsHero()
                 ? _myParent.Drawing.bxPower[2].Size
                 : _myParent.Drawing.bxPower[4].Size;
-            int width = size.Width;
+            var width = size.Width;
             size = MidsContext.Character.IsHero()
                 ? _myParent.Drawing.bxPower[2].Size
                 : _myParent.Drawing.bxPower[4].Size;
-            int height1 = size.Height;
+            var height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
             Rectangle destRect = new Rectangle(0, 0, 105, 22);
             using StringFormat stringFormat = new StringFormat();
@@ -829,7 +841,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     ? _myParent.Drawing.bxPower[2].Bitmap
                     : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                 GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-            float height2 = bFont.GetHeight(e.Graphics) + 2;
+            var height2 = bFont.GetHeight(e.Graphics) + 2;
             RectangleF Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
             Graphics graphics = extendedBitmap.Graphics;
             clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
@@ -847,9 +859,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             if (_myParent?.Drawing == null) return;
 
-            int index = 2;
+            var index = 2;
             if (KeepOnTop) index = 3;
-            string iStr = "Keep On top";
+            var iStr = "Keep On top";
             Rectangle rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
                 _myParent.Drawing.bxPower[index].Size.Height);
             Rectangle destRect = new Rectangle(0, 0, 105, 22);
@@ -865,7 +877,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             else
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
                     rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
-            float height = bFont.GetHeight(e.Graphics) + 2;
+            var height = bFont.GetHeight(e.Graphics) + 2;
             RectangleF Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
             Graphics graphics = extendedBitmap.Graphics;
             clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
