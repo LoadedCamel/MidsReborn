@@ -3,24 +3,36 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Base.Display;
 using Base.Master_Classes;
 using midsControls;
-using Syncfusion.Windows.Forms.Tools;
 
 namespace Hero_Designer.Forms.WindowMenuItems
 {
     public partial class frmTotalsV2 : Form
     {
+        private class TabColorScheme
+        {
+            public readonly Color TabTextColor = Color.WhiteSmoke;
+            public readonly Color TabOutlineColor = Color.Black;
+
+            public readonly Color HeroInactiveTabColor = Color.FromArgb(30, 85, 130);
+            public readonly Color HeroBorderColor = Color.Goldenrod;
+            public readonly Color HeroActiveTabColor = Color.Goldenrod;
+
+            public readonly Color VillainInactiveTabColor = Color.FromArgb(86, 12, 12);
+            public readonly Color VillainBorderColor = Color.FromArgb(184, 184, 187);
+            public readonly Color VillainActiveTabColor = Color.FromArgb(184, 184, 187);
+        }
+
         private readonly frmMain _myParent;
         private bool KeepOnTop { get; set; }
+        private readonly TabColorScheme TabColors = new TabColorScheme();
 
         #region Enums sub-lists (groups)
 
@@ -121,8 +133,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 // Note: default colors will be used anyway.
                 // This may only cause issues if a custom
                 // Windows theme is in use.
-                tabControlAdv2.ActiveTabForeColor = Color.WhiteSmoke;
-                tabControlAdv2.InActiveTabForeColor = Color.WhiteSmoke;
+                tabControlAdv2.ActiveTabForeColor = TabColors.TabTextColor;
+                tabControlAdv2.ActiveTabOutlineColor = TabColors.TabOutlineColor;
+                tabControlAdv2.InActiveTabForeColor = TabColors.TabTextColor;
+                tabControlAdv2.InactiveTabOutlineColor = TabColors.TabOutlineColor;
             }
             catch (Exception ex)
             {
@@ -746,25 +760,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             if (MidsContext.Character.IsHero())
             {
-                /*tabControlAdv2.InactiveTabColor = Color.FromArgb(61, 111, 161);
-                tabControlAdv2.TabPanelBackColor = Color.FromArgb(61, 111, 161);
-                tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
-                tabControlAdv2.ActiveTabColor = Color.Goldenrod;*/
-
-                tabControlAdv2.InactiveTabColor = Color.FromArgb(30, 85, 130);
-                tabControlAdv2.TabPanelBackColor = Color.FromArgb(30, 85, 130);
-                tabControlAdv2.FixedSingleBorderColor = Color.Goldenrod;
-                /* Turned off ActiveTabColor setting here in order to not interfere with the designer setting - Metalios
-                tabControlAdv2.ActiveTabColor = Color.FromArgb(46, 156, 246);*/
+                tabControlAdv2.InactiveTabColor = TabColors.HeroInactiveTabColor;
+                tabControlAdv2.TabPanelBackColor = TabColors.HeroInactiveTabColor;
+                tabControlAdv2.FixedSingleBorderColor = TabColors.HeroBorderColor;
+                tabControlAdv2.ActiveTabColor = TabColors.HeroActiveTabColor;
             }
             else
             {
-                tabControlAdv2.InactiveTabColor = Color.FromArgb(86, 12, 12);
-                tabControlAdv2.TabPanelBackColor = Color.FromArgb(86, 12, 12);
-                tabControlAdv2.FixedSingleBorderColor = Color.FromArgb(184, 184, 187);
-                //tabControlAdv2.ActiveTabColor = Color.FromArgb(184, 184, 187);
-                /* Turned off ActiveTabColor setting here in order to not interfere with the designer setting - Metalios
-                tabControlAdv2.ActiveTabColor = Color.FromArgb(191, 74, 56);*/
+                tabControlAdv2.InactiveTabColor = TabColors.VillainInactiveTabColor;
+                tabControlAdv2.TabPanelBackColor = TabColors.VillainInactiveTabColor;
+                tabControlAdv2.FixedSingleBorderColor = TabColors.VillainBorderColor;
+                tabControlAdv2.ActiveTabColor = TabColors.VillainActiveTabColor;
             }
 
             base.Refresh();
@@ -1054,10 +1060,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         public void UpdateData()
         {
-//pbClose.Refresh();
-//pbTopMost.Refresh();
-//Character.TotalStatistics uncappedStats = MidsContext.Character.Totals;
-//Character.TotalStatistics cappedStats = MidsContext.Character.TotalsCapped;
+            //pbClose.Refresh();
+            //pbTopMost.Refresh();
+            //Character.TotalStatistics uncappedStats = MidsContext.Character.Totals;
+            //Character.TotalStatistics cappedStats = MidsContext.Character.TotalsCapped;
             Statistics displayStats = MidsContext.Character.DisplayStats;
             Stopwatch watch = Stopwatch.StartNew();
             tabControlAdv2.SuspendLayout();
@@ -1107,7 +1113,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetBarSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
             SetBarSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd, 100);
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetBarsBulk(
                 barsList,
@@ -1138,7 +1144,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true)
                 });
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetBarsBulk(
                 barsList,
@@ -1162,7 +1168,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     displayStats.Perception(true)
                 });
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetBarSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false), 100, displayStats.BuffHaste(true));
             SetBarSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
@@ -1173,7 +1179,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 MidsContext.Character.Archetype.BaseThreat * 100);
             SetBarSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetBarsBulk(
                 barsList,
@@ -1185,7 +1191,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 "Status Resistance",
                 MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetBarsBulk(
                 barsList,
@@ -1214,7 +1220,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetLvSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
             SetLvSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd);
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetLvsBulk(
                 lvList,
@@ -1227,7 +1233,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false)
                 });
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetLvsBulk(
                 lvList,
@@ -1239,7 +1245,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat)
                 });
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetLvSingle(Enums.eBarType.Haste, displayStats.BuffHaste(false));
             SetLvSingle(Enums.eBarType.ToHit, displayStats.BuffToHit);
@@ -1249,7 +1255,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             SetLvSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel);
             SetLvSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetLvsBulk(
                 lvList,
@@ -1261,7 +1267,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 "Status Resistance",
                 MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
 
-///////////////////////////////
+            ///////////////////////////////
 
             SetLvsBulk(
                 lvList,
@@ -1320,7 +1326,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void InitializeComponent()
         {
-            Name = "BarLabel1";
+            Name = "BarLabel";
         }
     }
 }
