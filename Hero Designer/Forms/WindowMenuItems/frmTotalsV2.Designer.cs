@@ -41,36 +41,24 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tabPageAdv4 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.gradientPanel4 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv23 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv22 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar21 = new midsControls.ctlLayeredBar();
             this.bar23 = new midsControls.ctlLayeredBar();
             this.bar22 = new midsControls.ctlLayeredBar();
             this.label45 = new System.Windows.Forms.Label();
             this.label46 = new System.Windows.Forms.Label();
             this.label47 = new System.Windows.Forms.Label();
-            this.lv21 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.gradientPanel3 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv20 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar19 = new midsControls.ctlLayeredBar();
             this.bar20 = new midsControls.ctlLayeredBar();
             this.label41 = new System.Windows.Forms.Label();
             this.label42 = new System.Windows.Forms.Label();
-            this.lv19 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel2 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv18 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv17 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv16 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv15 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv14 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv13 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv12 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar11 = new midsControls.ctlLayeredBar();
             this.bar18 = new midsControls.ctlLayeredBar();
             this.bar12 = new midsControls.ctlLayeredBar();
@@ -87,26 +75,16 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label30 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
-            this.lv11 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel1 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv10 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar10 = new midsControls.ctlLayeredBar();
-            this.lv9 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar9 = new midsControls.ctlLayeredBar();
-            this.lv8 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar8 = new midsControls.ctlLayeredBar();
-            this.lv7 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar7 = new midsControls.ctlLayeredBar();
-            this.lv6 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar6 = new midsControls.ctlLayeredBar();
-            this.lv5 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar5 = new midsControls.ctlLayeredBar();
-            this.lv4 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar4 = new midsControls.ctlLayeredBar();
-            this.lv3 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar3 = new midsControls.ctlLayeredBar();
-            this.lv2 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar2 = new midsControls.ctlLayeredBar();
             this.label5 = new System.Windows.Forms.Label();
             this.bar1 = new midsControls.ctlLayeredBar();
@@ -119,7 +97,6 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.lv1 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.tabPageAdv5 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.label81 = new System.Windows.Forms.Label();
             this.gradientPanel7 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
@@ -127,49 +104,39 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
             this.label79 = new System.Windows.Forms.Label();
             this.bar37 = new midsControls.ctlLayeredBar();
-            this.lv37 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel13 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
             this.label77 = new System.Windows.Forms.Label();
             this.bar36 = new midsControls.ctlLayeredBar();
-            this.lv36 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel12 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.label75 = new System.Windows.Forms.Label();
             this.bar35 = new midsControls.ctlLayeredBar();
-            this.lv35 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel11 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
             this.label72 = new System.Windows.Forms.Label();
             this.bar34 = new midsControls.ctlLayeredBar();
-            this.lv34 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel10 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.label68 = new System.Windows.Forms.Label();
             this.bar33 = new midsControls.ctlLayeredBar();
-            this.lv33 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel9 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.label65 = new System.Windows.Forms.Label();
             this.bar32 = new midsControls.ctlLayeredBar();
-            this.lv32 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel8 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.label69 = new System.Windows.Forms.Label();
             this.bar31 = new midsControls.ctlLayeredBar();
-            this.lv31 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.label52 = new System.Windows.Forms.Label();
             this.gradientPanel6 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv30 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar30 = new midsControls.ctlLayeredBar();
-            this.lv29 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar29 = new midsControls.ctlLayeredBar();
             this.label55 = new System.Windows.Forms.Label();
             this.bar28 = new midsControls.ctlLayeredBar();
             this.label56 = new System.Windows.Forms.Label();
             this.label64 = new System.Windows.Forms.Label();
-            this.lv28 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -177,28 +144,18 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label51 = new System.Windows.Forms.Label();
             this.gradientPanel5 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv27 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar27 = new midsControls.ctlLayeredBar();
-            this.lv26 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar26 = new midsControls.ctlLayeredBar();
-            this.lv25 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar25 = new midsControls.ctlLayeredBar();
             this.label60 = new System.Windows.Forms.Label();
             this.bar24 = new midsControls.ctlLayeredBar();
             this.label61 = new System.Windows.Forms.Label();
             this.label62 = new System.Windows.Forms.Label();
             this.label63 = new System.Windows.Forms.Label();
-            this.lv24 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.tabPageAdv6 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.label105 = new System.Windows.Forms.Label();
             this.gradientPanel16 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv59 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv58 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv57 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv56 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv55 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv54 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.label112 = new System.Windows.Forms.Label();
             this.label113 = new System.Windows.Forms.Label();
             this.label114 = new System.Windows.Forms.Label();
@@ -206,18 +163,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label116 = new System.Windows.Forms.Label();
             this.label117 = new System.Windows.Forms.Label();
             this.label118 = new System.Windows.Forms.Label();
-            this.lv52 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar52 = new midsControls.ctlLayeredBar();
-            this.lv51 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar51 = new midsControls.ctlLayeredBar();
-            this.lv50 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar50 = new midsControls.ctlLayeredBar();
             this.label122 = new System.Windows.Forms.Label();
             this.bar49 = new midsControls.ctlLayeredBar();
             this.label123 = new System.Windows.Forms.Label();
             this.label124 = new System.Windows.Forms.Label();
             this.label125 = new System.Windows.Forms.Label();
-            this.lv49 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar53 = new midsControls.ctlLayeredBar();
             this.bar54 = new midsControls.ctlLayeredBar();
             this.bar55 = new midsControls.ctlLayeredBar();
@@ -225,16 +178,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar57 = new midsControls.ctlLayeredBar();
             this.bar58 = new midsControls.ctlLayeredBar();
             this.bar59 = new midsControls.ctlLayeredBar();
-            this.lv53 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.label104 = new System.Windows.Forms.Label();
             this.gradientPanel15 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv48 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv47 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv46 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv45 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv44 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv43 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.label96 = new System.Windows.Forms.Label();
             this.label95 = new System.Windows.Forms.Label();
             this.label94 = new System.Windows.Forms.Label();
@@ -242,18 +188,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label92 = new System.Windows.Forms.Label();
             this.label91 = new System.Windows.Forms.Label();
             this.label90 = new System.Windows.Forms.Label();
-            this.lv41 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar41 = new midsControls.ctlLayeredBar();
-            this.lv40 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar40 = new midsControls.ctlLayeredBar();
-            this.lv39 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar39 = new midsControls.ctlLayeredBar();
             this.label85 = new System.Windows.Forms.Label();
             this.bar38 = new midsControls.ctlLayeredBar();
             this.label86 = new System.Windows.Forms.Label();
             this.label87 = new System.Windows.Forms.Label();
             this.label88 = new System.Windows.Forms.Label();
-            this.lv38 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar42 = new midsControls.ctlLayeredBar();
             this.bar43 = new midsControls.ctlLayeredBar();
             this.bar44 = new midsControls.ctlLayeredBar();
@@ -261,18 +203,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar46 = new midsControls.ctlLayeredBar();
             this.bar47 = new midsControls.ctlLayeredBar();
             this.bar48 = new midsControls.ctlLayeredBar();
-            this.lv42 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.tabPageAdv1 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.label128 = new System.Windows.Forms.Label();
             this.gradientPanel17 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
-            this.lv67 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv66 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv65 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv64 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv63 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv62 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
-            this.lv61 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.bar60 = new midsControls.ctlLayeredBar();
             this.bar67 = new midsControls.ctlLayeredBar();
             this.bar61 = new midsControls.ctlLayeredBar();
@@ -289,6 +223,72 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label141 = new System.Windows.Forms.Label();
             this.label142 = new System.Windows.Forms.Label();
             this.label143 = new System.Windows.Forms.Label();
+            this.lv23 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv22 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv21 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv20 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv19 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv18 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv17 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv16 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv15 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv14 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv13 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv12 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv11 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv10 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv9 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv8 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv7 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv6 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv5 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv4 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv3 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv2 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv1 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv37 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv36 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv35 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv34 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv33 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv32 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv31 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv30 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv29 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv28 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv27 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv26 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv25 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv24 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv59 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv58 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv57 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv56 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv55 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv54 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv52 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv51 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv50 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv49 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv53 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv48 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv47 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv46 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv45 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv44 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv43 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv41 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv40 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv39 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv38 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv42 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv67 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv66 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv65 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv64 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv63 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv62 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
+            this.lv61 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             this.lv60 = new Hero_Designer.Forms.WindowMenuItems.BarLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopMost)).BeginInit();
@@ -1736,7 +1736,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label6.AutoSize = true;
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label6.Location = new System.Drawing.Point(3, 19);
+            this.label6.Location = new System.Drawing.Point(3, 32);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(78, 19);
             this.label6.TabIndex = 1;
@@ -1748,7 +1748,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label7.AutoSize = true;
             this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label7.Location = new System.Drawing.Point(3, 38);
+            this.label7.Location = new System.Drawing.Point(3, 51);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(78, 19);
             this.label7.TabIndex = 2;
@@ -1760,7 +1760,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label8.AutoSize = true;
             this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label8.Location = new System.Drawing.Point(3, 57);
+            this.label8.Location = new System.Drawing.Point(3, 70);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(78, 19);
             this.label8.TabIndex = 3;
@@ -1772,7 +1772,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label9.AutoSize = true;
             this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label9.Location = new System.Drawing.Point(3, 76);
+            this.label9.Location = new System.Drawing.Point(3, 89);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(78, 19);
             this.label9.TabIndex = 4;
@@ -1784,7 +1784,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label10.AutoSize = true;
             this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label10.Location = new System.Drawing.Point(3, 95);
+            this.label10.Location = new System.Drawing.Point(3, 108);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(78, 19);
             this.label10.TabIndex = 5;
@@ -1796,7 +1796,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label11.AutoSize = true;
             this.label11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label11.Location = new System.Drawing.Point(3, 114);
+            this.label11.Location = new System.Drawing.Point(3, 127);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(78, 19);
             this.label11.TabIndex = 6;
@@ -1808,7 +1808,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label12.AutoSize = true;
             this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label12.Location = new System.Drawing.Point(3, 133);
+            this.label12.Location = new System.Drawing.Point(3, 146);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(78, 19);
             this.label12.TabIndex = 7;
@@ -1820,7 +1820,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label13.AutoSize = true;
             this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label13.Location = new System.Drawing.Point(3, 152);
+            this.label13.Location = new System.Drawing.Point(3, 165);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(78, 19);
             this.label13.TabIndex = 8;
@@ -1832,7 +1832,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label14.AutoSize = true;
             this.label14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.label14.Location = new System.Drawing.Point(3, 171);
+            this.label14.Location = new System.Drawing.Point(3, 184);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(78, 19);
             this.label14.TabIndex = 9;
@@ -4756,6 +4756,732 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.label143.TabIndex = 16;
             this.label143.Text = "Regen:";
             this.label143.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lv23
+            // 
+            this.lv23.AutoSize = true;
+            this.lv23.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv23.Location = new System.Drawing.Point(81, 38);
+            this.lv23.Name = "lv23";
+            this.lv23.Size = new System.Drawing.Size(50, 19);
+            this.lv23.TabIndex = 11;
+            this.lv23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv22
+            // 
+            this.lv22.AutoSize = true;
+            this.lv22.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv22.Location = new System.Drawing.Point(81, 19);
+            this.lv22.Name = "lv22";
+            this.lv22.Size = new System.Drawing.Size(50, 19);
+            this.lv22.TabIndex = 10;
+            this.lv22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv21
+            // 
+            this.lv21.AutoSize = true;
+            this.lv21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv21.Location = new System.Drawing.Point(81, 0);
+            this.lv21.Name = "lv21";
+            this.lv21.Size = new System.Drawing.Size(50, 19);
+            this.lv21.TabIndex = 9;
+            this.lv21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv20
+            // 
+            this.lv20.AutoSize = true;
+            this.lv20.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv20.Location = new System.Drawing.Point(84, 19);
+            this.lv20.Name = "lv20";
+            this.lv20.Size = new System.Drawing.Size(48, 19);
+            this.lv20.TabIndex = 7;
+            this.lv20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv19
+            // 
+            this.lv19.AutoSize = true;
+            this.lv19.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv19.Location = new System.Drawing.Point(84, 0);
+            this.lv19.Name = "lv19";
+            this.lv19.Size = new System.Drawing.Size(48, 19);
+            this.lv19.TabIndex = 6;
+            this.lv19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv18
+            // 
+            this.lv18.AutoSize = true;
+            this.lv18.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv18.Location = new System.Drawing.Point(82, 133);
+            this.lv18.Name = "lv18";
+            this.lv18.Size = new System.Drawing.Size(50, 19);
+            this.lv18.TabIndex = 24;
+            this.lv18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv17
+            // 
+            this.lv17.AutoSize = true;
+            this.lv17.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv17.Location = new System.Drawing.Point(82, 114);
+            this.lv17.Name = "lv17";
+            this.lv17.Size = new System.Drawing.Size(50, 19);
+            this.lv17.TabIndex = 23;
+            this.lv17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv16
+            // 
+            this.lv16.AutoSize = true;
+            this.lv16.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv16.Location = new System.Drawing.Point(82, 95);
+            this.lv16.Name = "lv16";
+            this.lv16.Size = new System.Drawing.Size(50, 19);
+            this.lv16.TabIndex = 22;
+            this.lv16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv15
+            // 
+            this.lv15.AutoSize = true;
+            this.lv15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv15.Location = new System.Drawing.Point(82, 76);
+            this.lv15.Name = "lv15";
+            this.lv15.Size = new System.Drawing.Size(50, 19);
+            this.lv15.TabIndex = 21;
+            this.lv15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv14
+            // 
+            this.lv14.AutoSize = true;
+            this.lv14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv14.Location = new System.Drawing.Point(82, 57);
+            this.lv14.Name = "lv14";
+            this.lv14.Size = new System.Drawing.Size(50, 19);
+            this.lv14.TabIndex = 20;
+            this.lv14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv13
+            // 
+            this.lv13.AutoSize = true;
+            this.lv13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv13.Location = new System.Drawing.Point(82, 38);
+            this.lv13.Name = "lv13";
+            this.lv13.Size = new System.Drawing.Size(50, 19);
+            this.lv13.TabIndex = 19;
+            this.lv13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv12
+            // 
+            this.lv12.AutoSize = true;
+            this.lv12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv12.Location = new System.Drawing.Point(82, 19);
+            this.lv12.Name = "lv12";
+            this.lv12.Size = new System.Drawing.Size(50, 19);
+            this.lv12.TabIndex = 18;
+            this.lv12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv11
+            // 
+            this.lv11.AutoSize = true;
+            this.lv11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv11.Location = new System.Drawing.Point(82, 0);
+            this.lv11.Name = "lv11";
+            this.lv11.Size = new System.Drawing.Size(50, 19);
+            this.lv11.TabIndex = 17;
+            this.lv11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv10
+            // 
+            this.lv10.AutoSize = true;
+            this.lv10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv10.Location = new System.Drawing.Point(83, 184);
+            this.lv10.Name = "lv10";
+            this.lv10.Size = new System.Drawing.Size(49, 19);
+            this.lv10.TabIndex = 19;
+            this.lv10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv9
+            // 
+            this.lv9.AutoSize = true;
+            this.lv9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv9.Location = new System.Drawing.Point(83, 165);
+            this.lv9.Name = "lv9";
+            this.lv9.Size = new System.Drawing.Size(49, 19);
+            this.lv9.TabIndex = 18;
+            this.lv9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv8
+            // 
+            this.lv8.AutoSize = true;
+            this.lv8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv8.Location = new System.Drawing.Point(83, 146);
+            this.lv8.Name = "lv8";
+            this.lv8.Size = new System.Drawing.Size(49, 19);
+            this.lv8.TabIndex = 17;
+            this.lv8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv7
+            // 
+            this.lv7.AutoSize = true;
+            this.lv7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv7.Location = new System.Drawing.Point(83, 127);
+            this.lv7.Name = "lv7";
+            this.lv7.Size = new System.Drawing.Size(49, 19);
+            this.lv7.TabIndex = 16;
+            this.lv7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv6
+            // 
+            this.lv6.AutoSize = true;
+            this.lv6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv6.Location = new System.Drawing.Point(83, 108);
+            this.lv6.Name = "lv6";
+            this.lv6.Size = new System.Drawing.Size(49, 19);
+            this.lv6.TabIndex = 15;
+            this.lv6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv5
+            // 
+            this.lv5.AutoSize = true;
+            this.lv5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv5.Location = new System.Drawing.Point(83, 89);
+            this.lv5.Name = "lv5";
+            this.lv5.Size = new System.Drawing.Size(49, 19);
+            this.lv5.TabIndex = 14;
+            this.lv5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv4
+            // 
+            this.lv4.AutoSize = true;
+            this.lv4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv4.Location = new System.Drawing.Point(83, 70);
+            this.lv4.Name = "lv4";
+            this.lv4.Size = new System.Drawing.Size(49, 19);
+            this.lv4.TabIndex = 13;
+            this.lv4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv3
+            // 
+            this.lv3.AutoSize = true;
+            this.lv3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv3.Location = new System.Drawing.Point(83, 51);
+            this.lv3.Name = "lv3";
+            this.lv3.Size = new System.Drawing.Size(49, 19);
+            this.lv3.TabIndex = 12;
+            this.lv3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv2
+            // 
+            this.lv2.AutoSize = true;
+            this.lv2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv2.Location = new System.Drawing.Point(83, 32);
+            this.lv2.Name = "lv2";
+            this.lv2.Size = new System.Drawing.Size(49, 19);
+            this.lv2.TabIndex = 11;
+            this.lv2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv1
+            // 
+            this.lv1.AutoSize = true;
+            this.lv1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv1.Location = new System.Drawing.Point(83, 0);
+            this.lv1.Name = "lv1";
+            this.lv1.Size = new System.Drawing.Size(49, 32);
+            this.lv1.TabIndex = 10;
+            this.lv1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv37
+            // 
+            this.lv37.AutoSize = true;
+            this.lv37.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv37.Location = new System.Drawing.Point(79, 0);
+            this.lv37.Name = "lv37";
+            this.lv37.Size = new System.Drawing.Size(59, 22);
+            this.lv37.TabIndex = 10;
+            this.lv37.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv36
+            // 
+            this.lv36.AutoSize = true;
+            this.lv36.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv36.Location = new System.Drawing.Point(80, 0);
+            this.lv36.Name = "lv36";
+            this.lv36.Size = new System.Drawing.Size(58, 22);
+            this.lv36.TabIndex = 10;
+            this.lv36.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv35
+            // 
+            this.lv35.AutoSize = true;
+            this.lv35.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv35.Location = new System.Drawing.Point(80, 0);
+            this.lv35.Name = "lv35";
+            this.lv35.Size = new System.Drawing.Size(58, 22);
+            this.lv35.TabIndex = 10;
+            this.lv35.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv34
+            // 
+            this.lv34.AutoSize = true;
+            this.lv34.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv34.Location = new System.Drawing.Point(80, 0);
+            this.lv34.Name = "lv34";
+            this.lv34.Size = new System.Drawing.Size(58, 22);
+            this.lv34.TabIndex = 10;
+            this.lv34.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv33
+            // 
+            this.lv33.AutoSize = true;
+            this.lv33.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv33.Location = new System.Drawing.Point(80, 0);
+            this.lv33.Name = "lv33";
+            this.lv33.Size = new System.Drawing.Size(57, 22);
+            this.lv33.TabIndex = 10;
+            this.lv33.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv32
+            // 
+            this.lv32.AutoSize = true;
+            this.lv32.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv32.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv32.Location = new System.Drawing.Point(74, 0);
+            this.lv32.Name = "lv32";
+            this.lv32.Size = new System.Drawing.Size(63, 22);
+            this.lv32.TabIndex = 10;
+            this.lv32.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv31
+            // 
+            this.lv31.AutoSize = true;
+            this.lv31.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv31.Location = new System.Drawing.Point(65, 0);
+            this.lv31.Name = "lv31";
+            this.lv31.Size = new System.Drawing.Size(72, 22);
+            this.lv31.TabIndex = 10;
+            this.lv31.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv30
+            // 
+            this.lv30.AutoSize = true;
+            this.lv30.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv30.Location = new System.Drawing.Point(92, 38);
+            this.lv30.Name = "lv30";
+            this.lv30.Size = new System.Drawing.Size(72, 20);
+            this.lv30.TabIndex = 12;
+            this.lv30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv29
+            // 
+            this.lv29.AutoSize = true;
+            this.lv29.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv29.Location = new System.Drawing.Point(92, 19);
+            this.lv29.Name = "lv29";
+            this.lv29.Size = new System.Drawing.Size(72, 19);
+            this.lv29.TabIndex = 11;
+            this.lv29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv28
+            // 
+            this.lv28.AutoSize = true;
+            this.lv28.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv28.Location = new System.Drawing.Point(92, 0);
+            this.lv28.Name = "lv28";
+            this.lv28.Size = new System.Drawing.Size(72, 19);
+            this.lv28.TabIndex = 10;
+            this.lv28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv27
+            // 
+            this.lv27.AutoSize = true;
+            this.lv27.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv27.Location = new System.Drawing.Point(116, 51);
+            this.lv27.Name = "lv27";
+            this.lv27.Size = new System.Drawing.Size(78, 17);
+            this.lv27.TabIndex = 13;
+            this.lv27.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv26
+            // 
+            this.lv26.AutoSize = true;
+            this.lv26.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv26.Location = new System.Drawing.Point(116, 34);
+            this.lv26.Name = "lv26";
+            this.lv26.Size = new System.Drawing.Size(78, 17);
+            this.lv26.TabIndex = 12;
+            this.lv26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv25
+            // 
+            this.lv25.AutoSize = true;
+            this.lv25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv25.Location = new System.Drawing.Point(116, 17);
+            this.lv25.Name = "lv25";
+            this.lv25.Size = new System.Drawing.Size(78, 17);
+            this.lv25.TabIndex = 11;
+            this.lv25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv24
+            // 
+            this.lv24.AutoSize = true;
+            this.lv24.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv24.Location = new System.Drawing.Point(116, 0);
+            this.lv24.Name = "lv24";
+            this.lv24.Size = new System.Drawing.Size(78, 17);
+            this.lv24.TabIndex = 10;
+            this.lv24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv59
+            // 
+            this.lv59.AutoSize = true;
+            this.lv59.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv59.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv59.Location = new System.Drawing.Point(105, 196);
+            this.lv59.Name = "lv59";
+            this.lv59.Size = new System.Drawing.Size(65, 20);
+            this.lv59.TabIndex = 12;
+            this.lv59.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv58
+            // 
+            this.lv58.AutoSize = true;
+            this.lv58.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv58.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv58.Location = new System.Drawing.Point(105, 176);
+            this.lv58.Name = "lv58";
+            this.lv58.Size = new System.Drawing.Size(65, 20);
+            this.lv58.TabIndex = 12;
+            this.lv58.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv57
+            // 
+            this.lv57.AutoSize = true;
+            this.lv57.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv57.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv57.Location = new System.Drawing.Point(105, 156);
+            this.lv57.Name = "lv57";
+            this.lv57.Size = new System.Drawing.Size(65, 20);
+            this.lv57.TabIndex = 12;
+            this.lv57.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv56
+            // 
+            this.lv56.AutoSize = true;
+            this.lv56.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv56.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv56.Location = new System.Drawing.Point(105, 136);
+            this.lv56.Name = "lv56";
+            this.lv56.Size = new System.Drawing.Size(65, 20);
+            this.lv56.TabIndex = 12;
+            this.lv56.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv55
+            // 
+            this.lv55.AutoSize = true;
+            this.lv55.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv55.Location = new System.Drawing.Point(105, 116);
+            this.lv55.Name = "lv55";
+            this.lv55.Size = new System.Drawing.Size(65, 20);
+            this.lv55.TabIndex = 12;
+            this.lv55.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv54
+            // 
+            this.lv54.AutoSize = true;
+            this.lv54.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv54.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv54.Location = new System.Drawing.Point(105, 96);
+            this.lv54.Name = "lv54";
+            this.lv54.Size = new System.Drawing.Size(65, 20);
+            this.lv54.TabIndex = 12;
+            this.lv54.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv52
+            // 
+            this.lv52.AutoSize = true;
+            this.lv52.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv52.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv52.Location = new System.Drawing.Point(105, 57);
+            this.lv52.Name = "lv52";
+            this.lv52.Size = new System.Drawing.Size(65, 19);
+            this.lv52.TabIndex = 13;
+            this.lv52.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv51
+            // 
+            this.lv51.AutoSize = true;
+            this.lv51.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv51.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv51.Location = new System.Drawing.Point(105, 38);
+            this.lv51.Name = "lv51";
+            this.lv51.Size = new System.Drawing.Size(65, 19);
+            this.lv51.TabIndex = 12;
+            this.lv51.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv50
+            // 
+            this.lv50.AutoSize = true;
+            this.lv50.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv50.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv50.Location = new System.Drawing.Point(105, 19);
+            this.lv50.Name = "lv50";
+            this.lv50.Size = new System.Drawing.Size(65, 19);
+            this.lv50.TabIndex = 11;
+            this.lv50.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv49
+            // 
+            this.lv49.AutoSize = true;
+            this.lv49.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv49.Location = new System.Drawing.Point(105, 0);
+            this.lv49.Name = "lv49";
+            this.lv49.Size = new System.Drawing.Size(65, 19);
+            this.lv49.TabIndex = 10;
+            this.lv49.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv53
+            // 
+            this.lv53.AutoSize = true;
+            this.lv53.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv53.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv53.Location = new System.Drawing.Point(105, 76);
+            this.lv53.Name = "lv53";
+            this.lv53.Size = new System.Drawing.Size(65, 20);
+            this.lv53.TabIndex = 11;
+            this.lv53.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv48
+            // 
+            this.lv48.AutoSize = true;
+            this.lv48.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv48.Location = new System.Drawing.Point(106, 196);
+            this.lv48.Name = "lv48";
+            this.lv48.Size = new System.Drawing.Size(66, 20);
+            this.lv48.TabIndex = 12;
+            this.lv48.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv47
+            // 
+            this.lv47.AutoSize = true;
+            this.lv47.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv47.Location = new System.Drawing.Point(106, 176);
+            this.lv47.Name = "lv47";
+            this.lv47.Size = new System.Drawing.Size(66, 20);
+            this.lv47.TabIndex = 12;
+            this.lv47.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv46
+            // 
+            this.lv46.AutoSize = true;
+            this.lv46.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv46.Location = new System.Drawing.Point(106, 156);
+            this.lv46.Name = "lv46";
+            this.lv46.Size = new System.Drawing.Size(66, 20);
+            this.lv46.TabIndex = 12;
+            this.lv46.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv45
+            // 
+            this.lv45.AutoSize = true;
+            this.lv45.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv45.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv45.Location = new System.Drawing.Point(106, 136);
+            this.lv45.Name = "lv45";
+            this.lv45.Size = new System.Drawing.Size(66, 20);
+            this.lv45.TabIndex = 12;
+            this.lv45.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv44
+            // 
+            this.lv44.AutoSize = true;
+            this.lv44.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv44.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv44.Location = new System.Drawing.Point(106, 116);
+            this.lv44.Name = "lv44";
+            this.lv44.Size = new System.Drawing.Size(66, 20);
+            this.lv44.TabIndex = 12;
+            this.lv44.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv43
+            // 
+            this.lv43.AutoSize = true;
+            this.lv43.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv43.Location = new System.Drawing.Point(106, 96);
+            this.lv43.Name = "lv43";
+            this.lv43.Size = new System.Drawing.Size(66, 20);
+            this.lv43.TabIndex = 12;
+            this.lv43.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv41
+            // 
+            this.lv41.AutoSize = true;
+            this.lv41.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv41.Location = new System.Drawing.Point(106, 57);
+            this.lv41.Name = "lv41";
+            this.lv41.Size = new System.Drawing.Size(66, 19);
+            this.lv41.TabIndex = 13;
+            this.lv41.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv40
+            // 
+            this.lv40.AutoSize = true;
+            this.lv40.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv40.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv40.Location = new System.Drawing.Point(106, 38);
+            this.lv40.Name = "lv40";
+            this.lv40.Size = new System.Drawing.Size(66, 19);
+            this.lv40.TabIndex = 12;
+            this.lv40.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv39
+            // 
+            this.lv39.AutoSize = true;
+            this.lv39.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv39.Location = new System.Drawing.Point(106, 19);
+            this.lv39.Name = "lv39";
+            this.lv39.Size = new System.Drawing.Size(66, 19);
+            this.lv39.TabIndex = 11;
+            this.lv39.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv38
+            // 
+            this.lv38.AutoSize = true;
+            this.lv38.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv38.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv38.Location = new System.Drawing.Point(106, 0);
+            this.lv38.Name = "lv38";
+            this.lv38.Size = new System.Drawing.Size(66, 19);
+            this.lv38.TabIndex = 10;
+            this.lv38.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv42
+            // 
+            this.lv42.AutoSize = true;
+            this.lv42.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv42.Location = new System.Drawing.Point(106, 76);
+            this.lv42.Name = "lv42";
+            this.lv42.Size = new System.Drawing.Size(66, 20);
+            this.lv42.TabIndex = 11;
+            this.lv42.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv67
+            // 
+            this.lv67.AutoSize = true;
+            this.lv67.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv67.Location = new System.Drawing.Point(86, 133);
+            this.lv67.Name = "lv67";
+            this.lv67.Size = new System.Drawing.Size(59, 19);
+            this.lv67.TabIndex = 24;
+            this.lv67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv66
+            // 
+            this.lv66.AutoSize = true;
+            this.lv66.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv66.Location = new System.Drawing.Point(86, 114);
+            this.lv66.Name = "lv66";
+            this.lv66.Size = new System.Drawing.Size(59, 19);
+            this.lv66.TabIndex = 23;
+            this.lv66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv65
+            // 
+            this.lv65.AutoSize = true;
+            this.lv65.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv65.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv65.Location = new System.Drawing.Point(86, 95);
+            this.lv65.Name = "lv65";
+            this.lv65.Size = new System.Drawing.Size(59, 19);
+            this.lv65.TabIndex = 22;
+            this.lv65.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv64
+            // 
+            this.lv64.AutoSize = true;
+            this.lv64.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv64.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv64.Location = new System.Drawing.Point(86, 76);
+            this.lv64.Name = "lv64";
+            this.lv64.Size = new System.Drawing.Size(59, 19);
+            this.lv64.TabIndex = 21;
+            this.lv64.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv63
+            // 
+            this.lv63.AutoSize = true;
+            this.lv63.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv63.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv63.Location = new System.Drawing.Point(86, 57);
+            this.lv63.Name = "lv63";
+            this.lv63.Size = new System.Drawing.Size(59, 19);
+            this.lv63.TabIndex = 20;
+            this.lv63.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv62
+            // 
+            this.lv62.AutoSize = true;
+            this.lv62.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv62.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv62.Location = new System.Drawing.Point(86, 38);
+            this.lv62.Name = "lv62";
+            this.lv62.Size = new System.Drawing.Size(59, 19);
+            this.lv62.TabIndex = 19;
+            this.lv62.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv61
+            // 
+            this.lv61.AutoSize = true;
+            this.lv61.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv61.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv61.Location = new System.Drawing.Point(86, 19);
+            this.lv61.Name = "lv61";
+            this.lv61.Size = new System.Drawing.Size(59, 19);
+            this.lv61.TabIndex = 18;
+            this.lv61.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lv60
             // 
