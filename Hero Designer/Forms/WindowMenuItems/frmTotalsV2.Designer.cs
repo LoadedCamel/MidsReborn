@@ -701,8 +701,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel2.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.91667F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.08333F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.31579F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.68421F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 323F));
             this.tableLayoutPanel2.Controls.Add(this.lv20, 1, 1);
             this.tableLayoutPanel2.Controls.Add(this.bar19, 2, 0);
@@ -748,7 +748,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar19.MaximumBarValue = 1500F;
             this.bar19.MinimumBarValue = 0F;
             this.bar19.Name = "bar19";
-            this.bar19.Size = new System.Drawing.Size(308, 13);
+            this.bar19.Size = new System.Drawing.Size(309, 13);
             this.bar19.TabIndex = 2;
             this.bar19.Tip = "";
             this.bar19.ValueBase = 0F;
@@ -775,7 +775,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar20.MaximumBarValue = 4500F;
             this.bar20.MinimumBarValue = 0F;
             this.bar20.Name = "bar20";
-            this.bar20.Size = new System.Drawing.Size(308, 13);
+            this.bar20.Size = new System.Drawing.Size(309, 13);
             this.bar20.TabIndex = 3;
             this.bar20.Tip = "";
             this.bar20.ValueBase = 0F;
@@ -839,9 +839,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel3.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel3.ColumnCount = 3;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.16754F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.83246F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 324F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.31579F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.68421F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 323F));
             this.tableLayoutPanel3.Controls.Add(this.lv18, 1, 7);
             this.tableLayoutPanel3.Controls.Add(this.lv17, 1, 6);
             this.tableLayoutPanel3.Controls.Add(this.lv16, 1, 5);
@@ -976,7 +976,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar11.MaximumBarValue = 100F;
             this.bar11.MinimumBarValue = 0F;
             this.bar11.Name = "bar11";
-            this.bar11.Size = new System.Drawing.Size(308, 13);
+            this.bar11.Size = new System.Drawing.Size(309, 13);
             this.bar11.TabIndex = 1;
             this.bar11.Tip = "";
             this.bar11.ValueBase = 0F;
@@ -1003,7 +1003,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar18.MaximumBarValue = 100F;
             this.bar18.MinimumBarValue = 0F;
             this.bar18.Name = "bar18";
-            this.bar18.Size = new System.Drawing.Size(308, 13);
+            this.bar18.Size = new System.Drawing.Size(309, 13);
             this.bar18.TabIndex = 8;
             this.bar18.Tip = "";
             this.bar18.ValueBase = 0F;
@@ -1030,7 +1030,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar12.MaximumBarValue = 100F;
             this.bar12.MinimumBarValue = 0F;
             this.bar12.Name = "bar12";
-            this.bar12.Size = new System.Drawing.Size(308, 13);
+            this.bar12.Size = new System.Drawing.Size(309, 13);
             this.bar12.TabIndex = 2;
             this.bar12.Tip = "";
             this.bar12.ValueBase = 0F;
@@ -1057,7 +1057,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar17.MaximumBarValue = 100F;
             this.bar17.MinimumBarValue = 0F;
             this.bar17.Name = "bar17";
-            this.bar17.Size = new System.Drawing.Size(308, 13);
+            this.bar17.Size = new System.Drawing.Size(309, 13);
             this.bar17.TabIndex = 7;
             this.bar17.Tip = "";
             this.bar17.ValueBase = 0F;
@@ -1084,7 +1084,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar13.MaximumBarValue = 100F;
             this.bar13.MinimumBarValue = 0F;
             this.bar13.Name = "bar13";
-            this.bar13.Size = new System.Drawing.Size(308, 13);
+            this.bar13.Size = new System.Drawing.Size(309, 13);
             this.bar13.TabIndex = 3;
             this.bar13.Tip = "";
             this.bar13.ValueBase = 0F;
@@ -1111,7 +1111,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar16.MaximumBarValue = 100F;
             this.bar16.MinimumBarValue = 0F;
             this.bar16.Name = "bar16";
-            this.bar16.Size = new System.Drawing.Size(308, 13);
+            this.bar16.Size = new System.Drawing.Size(309, 13);
             this.bar16.TabIndex = 6;
             this.bar16.Tip = "";
             this.bar16.ValueBase = 0F;
@@ -1138,7 +1138,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar14.MaximumBarValue = 100F;
             this.bar14.MinimumBarValue = 0F;
             this.bar14.Name = "bar14";
-            this.bar14.Size = new System.Drawing.Size(308, 13);
+            this.bar14.Size = new System.Drawing.Size(309, 13);
             this.bar14.TabIndex = 4;
             this.bar14.Tip = "";
             this.bar14.ValueBase = 0F;
@@ -1165,7 +1165,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar15.MaximumBarValue = 100F;
             this.bar15.MinimumBarValue = 0F;
             this.bar15.Name = "bar15";
-            this.bar15.Size = new System.Drawing.Size(308, 13);
+            this.bar15.Size = new System.Drawing.Size(309, 13);
             this.bar15.TabIndex = 5;
             this.bar15.Tip = "";
             this.bar15.ValueBase = 0F;
@@ -1301,9 +1301,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel4.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel4.ColumnCount = 3;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.15026F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.84974F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 326F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.31579F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.68421F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 323F));
             this.tableLayoutPanel4.Controls.Add(this.lv10, 1, 9);
             this.tableLayoutPanel4.Controls.Add(this.bar10, 2, 9);
             this.tableLayoutPanel4.Controls.Add(this.lv9, 1, 8);
@@ -1379,7 +1379,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar10.MaximumBarValue = 100F;
             this.bar10.MinimumBarValue = 0F;
             this.bar10.Name = "bar10";
-            this.bar10.Size = new System.Drawing.Size(307, 13);
+            this.bar10.Size = new System.Drawing.Size(309, 13);
             this.bar10.TabIndex = 9;
             this.bar10.Tip = "";
             this.bar10.ValueBase = 0F;
@@ -1417,7 +1417,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar9.MaximumBarValue = 100F;
             this.bar9.MinimumBarValue = 0F;
             this.bar9.Name = "bar9";
-            this.bar9.Size = new System.Drawing.Size(307, 13);
+            this.bar9.Size = new System.Drawing.Size(309, 13);
             this.bar9.TabIndex = 8;
             this.bar9.Tip = "";
             this.bar9.ValueBase = 0F;
@@ -1455,7 +1455,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar8.MaximumBarValue = 100F;
             this.bar8.MinimumBarValue = 0F;
             this.bar8.Name = "bar8";
-            this.bar8.Size = new System.Drawing.Size(307, 13);
+            this.bar8.Size = new System.Drawing.Size(309, 13);
             this.bar8.TabIndex = 7;
             this.bar8.Tip = "";
             this.bar8.ValueBase = 0F;
@@ -1493,7 +1493,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar7.MaximumBarValue = 100F;
             this.bar7.MinimumBarValue = 0F;
             this.bar7.Name = "bar7";
-            this.bar7.Size = new System.Drawing.Size(307, 13);
+            this.bar7.Size = new System.Drawing.Size(309, 13);
             this.bar7.TabIndex = 6;
             this.bar7.Tip = "";
             this.bar7.ValueBase = 0F;
@@ -1531,7 +1531,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar6.MaximumBarValue = 100F;
             this.bar6.MinimumBarValue = 0F;
             this.bar6.Name = "bar6";
-            this.bar6.Size = new System.Drawing.Size(307, 13);
+            this.bar6.Size = new System.Drawing.Size(309, 13);
             this.bar6.TabIndex = 5;
             this.bar6.Tip = "";
             this.bar6.ValueBase = 0F;
@@ -1569,7 +1569,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar5.MaximumBarValue = 100F;
             this.bar5.MinimumBarValue = 0F;
             this.bar5.Name = "bar5";
-            this.bar5.Size = new System.Drawing.Size(307, 13);
+            this.bar5.Size = new System.Drawing.Size(309, 13);
             this.bar5.TabIndex = 4;
             this.bar5.Tip = "";
             this.bar5.ValueBase = 0F;
@@ -1607,7 +1607,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar4.MaximumBarValue = 100F;
             this.bar4.MinimumBarValue = 0F;
             this.bar4.Name = "bar4";
-            this.bar4.Size = new System.Drawing.Size(307, 13);
+            this.bar4.Size = new System.Drawing.Size(309, 13);
             this.bar4.TabIndex = 3;
             this.bar4.Tip = "";
             this.bar4.ValueBase = 0F;
@@ -1645,7 +1645,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar3.MaximumBarValue = 100F;
             this.bar3.MinimumBarValue = 0F;
             this.bar3.Name = "bar3";
-            this.bar3.Size = new System.Drawing.Size(307, 13);
+            this.bar3.Size = new System.Drawing.Size(309, 13);
             this.bar3.TabIndex = 2;
             this.bar3.Tip = "";
             this.bar3.ValueBase = 0F;
@@ -1683,7 +1683,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar2.MaximumBarValue = 100F;
             this.bar2.MinimumBarValue = 0F;
             this.bar2.Name = "bar2";
-            this.bar2.Size = new System.Drawing.Size(307, 13);
+            this.bar2.Size = new System.Drawing.Size(309, 13);
             this.bar2.TabIndex = 1;
             this.bar2.Tip = "";
             this.bar2.ValueBase = 0F;
@@ -1722,7 +1722,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.bar1.MaximumBarValue = 100F;
             this.bar1.MinimumBarValue = 0F;
             this.bar1.Name = "bar1";
-            this.bar1.Size = new System.Drawing.Size(307, 13);
+            this.bar1.Size = new System.Drawing.Size(309, 13);
             this.bar1.TabIndex = 0;
             this.bar1.Tip = "";
             this.bar1.ValueBase = 0F;

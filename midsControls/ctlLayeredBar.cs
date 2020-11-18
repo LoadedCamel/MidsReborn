@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace midsControls
 {
-    public partial class ctlLayeredBar : UserControl
+    public partial class ctlLayeredBar : clsCustomBorderUC
     {
         private bool _DesignMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
         private bool _CanUpdate = true;
@@ -34,7 +30,7 @@ namespace midsControls
         private Color _Overlay2Color = Color.FromArgb(255, 128, 255);
         private Color[] _NormalColors;
         private Color[] _HighlightColors;
-       
+
         // https://stackoverflow.com/a/34299931
         // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
         protected override Size DefaultSize => new Size(277, 13);
@@ -580,6 +576,13 @@ namespace midsControls
             NormalBarColors();
         }
 
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            ControlPaint.DrawBorder(e.Graphics,
+                new Rectangle(ClientRectangle.X - 1, ClientRectangle.Y - 1, ClientRectangle.Width + 2,
+                    ClientRectangle.Height + 2), Color.LightSkyBlue, ButtonBorderStyle.Solid);
+        }
+
         public void HighlightBarColors()
         {
             SuspendLayout();
@@ -766,6 +769,7 @@ namespace midsControls
     public class BarPanel : Panel
     {
         private IContainer components;
+        public Color BorderColor = clsCustomBorderHandlers.GetDefaultColor();
 
         [field: AccessedThroughProperty("TTip")]
         protected virtual ToolTip Tip
@@ -786,6 +790,18 @@ namespace midsControls
             Tip = new ToolTip(components);
             Name = "BarPanel";
         }
+
+        /*protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            clsCustomBorderHandlers.OnResizeRedrawWindow(Handle);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+            clsCustomBorderHandlers.WndProcDrawBorder(ref m, this, BorderColor);
+        }*/
 
         public void SetTip(string iTip)
         {

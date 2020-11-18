@@ -42,7 +42,7 @@ namespace midsControls
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(0, -1);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(277, 11);
             this.panel1.TabIndex = 1;
@@ -53,7 +53,7 @@ namespace midsControls
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(0)))), ((int)(((byte)(191)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Location = new System.Drawing.Point(0, -1);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(277, 11);
             this.panel2.TabIndex = 2;
@@ -64,7 +64,7 @@ namespace midsControls
             // 
             this.panel3.BackColor = System.Drawing.Color.Magenta;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Location = new System.Drawing.Point(0, -1);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(277, 11);
             this.panel3.TabIndex = 3;
@@ -75,7 +75,7 @@ namespace midsControls
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(64)))), ((int)(((byte)(255)))));
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Location = new System.Drawing.Point(0, -1);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(277, 11);
             this.panel4.TabIndex = 4;
@@ -86,7 +86,7 @@ namespace midsControls
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Location = new System.Drawing.Point(0, -1);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(277, 11);
             this.panel5.TabIndex = 5;
