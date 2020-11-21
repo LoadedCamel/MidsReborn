@@ -14,3 +14,6 @@ dotnet_diagnostic.CA1707.severity = suggestion
 
 # CA1303: Method 'Task Clshook.DiscordExport()' passes a literal string as parameter 'caption' of a call to 'DialogResult MessageBox.Show(string text, string caption)'. Retrieve the following string(s) from a resource table instead: "Discord Export".
 dotnet_diagnostic.CA1303.severity = suggestion
+
+# CA1308: Normalize strings to uppercase
+dotnet_diagnostic.CA1308.severity = suggestion

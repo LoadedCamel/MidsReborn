@@ -1009,6 +1009,133 @@ public static class Enums
         Ancillary = 7
     }
 
+    // clsToonX::GBD_Totals() stat types
+    // for _selfBuff.Effect[n] and _selfEnhance.Effect[n]
+    public enum eStatType
+    {
+        // _selfBuffs.Effect
+        FlySpeed = 11,
+        HPMax = 14,
+        JumpHeight = 16,
+        JumpSpeed = 17,
+        Perception = 23,
+        EndRec = 26,
+        HPRegen = 27,
+        RunSpeed = 32,
+        StealthPvE = 36,
+        StealthPvP = 37,
+        ThreatLevel = 39,
+        ToHit = 40,
+        Elusivity = 44,
+        MaxRunSpeed = 49,
+        MaxJumpSpeed = 50,
+        MaxFlySpeed = 51,
+        Absorb = 66,
+
+        // _selfEnhance.Effect //
+        BuffEndRdx = 8,
+        Haste = 25,
+
+        // Any //
+        BuffAcc = 1
+    }
+
+    public enum eBarGroup
+    {
+        Defense = 0,
+        Resistance = 1,
+        HP = 2,
+        Endurance = 3,
+
+        Movement = 4,
+        Stealth = 5,
+        MiscBuffs = 6,
+
+        StatusProtection = 7,
+        StatusResistance = 8,
+
+        DebuffResistance = 9
+    }
+
+    public enum eBarType
+    {
+        DefenseSmashing = 0,
+        DefenseLethal = 1,
+        DefenseFire = 2,
+        DefenseCold = 3,
+        DefenseEnergy = 4,
+        DefenseNegative = 5,
+        DefensePsionic = 6,
+        DefenseMelee = 7,
+        DefenseRanged = 8,
+        DefenseAoE = 9,
+        
+        ResistanceSmashing = 10,
+        ResistanceLethal = 11,
+        ResistanceFire = 12,
+        ResistanceCold = 13,
+        ResistanceEnergy = 14,
+        ResistanceNegative = 15,
+        ResistanceToxic = 16,
+        ResistancePsionic = 17,
+
+        Regeneration = 18,
+        MaxHPAbsorb = 19,
+        EndRec = 20,
+        EndUse = 21,
+        MaxEnd = 22,
+
+        RunSpeed = 23,
+        JumpSpeed = 24,
+        JumpHeight = 25,
+        FlySpeed = 26,
+
+        StealthPvE = 27,
+        StealthPvP = 28,
+        Perception = 29,
+
+        Haste = 30,
+        ToHit = 31,
+        Accuracy = 32,
+        Damage = 33,
+        EndRdx = 34,
+        ThreatLevel = 35,
+        Elusivity = 36,
+
+        MezProtectionHold = 37,
+        MezProtectionStunned = 38,
+        MezProtectionSleep = 39,
+        MezProtectionImmob = 40,
+        MezProtectionKnockback = 41,
+        MezProtectionRepel = 42,
+        MezProtectionConfuse = 43,
+        MezProtectionFear = 44,
+        MezProtectionTaunt = 45,
+        MezProtectionPlacate = 46,
+        MezProtectionTeleport = 47,
+
+        MezResistanceHold = 48,
+        MezResistanceStunned = 49,
+        MezResistanceSleep = 50,
+        MezResistanceImmob = 51,
+        MezResistanceKnockback = 52,
+        MezResistanceRepel = 53,
+        MezResistanceConfuse = 54,
+        MezResistanceFear = 55,
+        MezResistanceTaunt = 56,
+        MezResistancePlacate = 57,
+        MezResistanceTeleport = 58,
+
+        DebuffResistanceDefense = 59,
+        DebuffResistanceEndurance = 60,
+        DebuffResistanceRecovery = 61,
+        DebuffResistancePerception = 62,
+        DebuffResistanceToHit = 63,
+        DebuffResistanceRechargeTime = 64,
+        DebuffResistanceSpeedRunning = 65,
+        DebuffResistanceRegen = 66
+    }
+
     public static bool MezDurationEnhancable(eMez mezEnum)
     {
         return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized ||

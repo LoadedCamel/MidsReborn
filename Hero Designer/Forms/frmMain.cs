@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using Base.Data_Classes;
@@ -162,6 +163,15 @@ namespace Hero_Designer.Forms
         public int GetPrimaryBottom()
         {
             return cbPrimary.Top + cbPrimary.Height;
+        }
+
+        public string GetBuildFile(bool stripExt = false)
+        {
+            if (MainModule.MidsController.Toon == null) return "";
+            if (!stripExt) return LastFileName;
+            
+            Regex r = new Regex(@"\.(([tT][xX][tT])|([mM][hHxX][dD]))$");
+            return r.Replace(LastFileName, "");
         }
 
         private ComboBoxT<string> GetCbOrigin()
@@ -545,6 +555,7 @@ namespace Hero_Designer.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
+            frmTotalsV2.SetTitle(fTotals);
         }
 
         private void cbAT_DrawItem(object sender, DrawItemEventArgs e)
@@ -588,13 +599,13 @@ namespace Hero_Designer.Forms
 
         private void cbAT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (NoUpdate)
-                return;
+            if (NoUpdate) return;
             NewToon(false);
             SetFormHeight();
             //PerformAutoScale();
             SetAncilPoolHeight();
             GetBestDamageValues();
+            frmTotalsV2.SetTitle(fTotals);
         }
 
         private static void cbDrawItem(
@@ -799,6 +810,7 @@ namespace Hero_Designer.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
+            frmTotalsV2.SetTitle(fTotals);
         }
 
         private void cbSecondary_DrawItem(object sender, DrawItemEventArgs e)
@@ -831,6 +843,7 @@ namespace Hero_Designer.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
+            frmTotalsV2.SetTitle(fTotals);
         }
 
         private void ChangeSets()
@@ -1815,7 +1828,7 @@ namespace Hero_Designer.Forms
                 if (fTotals == null)
                 {
                     var iParent = this;
-                    fTotals = new frmTotals(ref iParent);
+                    fTotals = new frmTotalsV2(ref iParent);
                 }
 
                 DoRedraw();
@@ -1823,6 +1836,7 @@ namespace Hero_Designer.Forms
                 fTotals.Show();
                 fTotals.BringToFront();
                 fTotals.UpdateData();
+                frmTotalsV2.SetTitle(fTotals);
                 fTotals.Activate();
             }
             else
@@ -1917,6 +1931,7 @@ namespace Hero_Designer.Forms
             if (drawing != null)
                 DoRedraw();
             UpdateColors();
+            frmTotalsV2.SetTitle(fTotals);
         }
 
         private void GetBestDamageValues()
@@ -2021,8 +2036,10 @@ namespace Hero_Designer.Forms
                 }
 
                 drawing.ColorSwitch();
+                fTotals?.Refresh();
                 SetTitleBar();
                 UpdateColors();
+                
                 DoRedraw();
             }
             catch (Exception ex)
@@ -2444,6 +2461,7 @@ namespace Hero_Designer.Forms
             {
                 case MouseButtons.Left:
                     PowerPicked(Item.nIDSet, Item.nIDPower);
+                    frmTotalsV2.SetTitle(fTotals);
                     break;
                 case MouseButtons.Right:
                     Info_Power(Item.nIDPower, -1, false, true);
@@ -5586,6 +5604,7 @@ namespace Hero_Designer.Forms
             if (NoUpdate)
                 return;
             MidsContext.Character.Name = txtName.Text;
+            frmTotalsV2.SetTitle(fTotals);
             DisplayName();
         }
 
@@ -6339,7 +6358,7 @@ namespace Hero_Designer.Forms
         private frmSetFind fSetFinder;
         private frmSetViewer fSets;
         private frmTemp fTemp;
-        private frmTotals fTotals;
+        private frmTotalsV2 fTotals = null;
         private bool HasSentBack;
         private bool HasSentForwards;
         private bool LastClickPlacedSlot;
