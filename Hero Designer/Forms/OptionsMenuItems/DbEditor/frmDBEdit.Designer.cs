@@ -503,20 +503,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnGCMIO.Visible = false;
             this.btnGCMIO.Click += new System.EventHandler(this.btnGCMIO_Click);
             // 
-            // btnImportMods
-            // 
-            this.btnImportMods.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnImportMods.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnImportMods.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnImportMods.Location = new System.Drawing.Point(236, 258);
-            this.btnImportMods.Name = "btnImportMods";
-            this.btnImportMods.Size = new System.Drawing.Size(164, 24);
-            this.btnImportMods.TabIndex = 29;
-            this.btnImportMods.Text = "AttribMod Importer";
-            this.btnImportMods.UseVisualStyleBackColor = true;
-            this.btnImportMods.Visible = false;
-            this.btnImportMods.Click += new System.EventHandler(this.btnImportMods_Click);
-            // 
             // btnAttribModEdit
             // 
             this.btnAttribModEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));

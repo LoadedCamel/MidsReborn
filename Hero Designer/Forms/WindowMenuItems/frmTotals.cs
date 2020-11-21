@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
+using Microsoft.VisualBasic;
 using midsControls;
 
 namespace Hero_Designer.Forms.WindowMenuItems

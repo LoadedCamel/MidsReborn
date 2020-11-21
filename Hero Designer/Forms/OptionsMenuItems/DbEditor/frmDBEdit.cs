@@ -202,7 +202,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             btnExportJSON.Visible = MidsContext.Config.MasterMode;
             btnJsonImporter.Visible = MidsContext.Config.MasterMode;
             btnGCMIO.Visible = MidsContext.Config.MasterMode;
-            btnImportMods.Visible = MidsContext.Config.MasterMode;
+            btnAttribModEdit.Visible = MidsContext.Config.MasterMode;
             DisplayInfo();
         }
 
@@ -246,13 +246,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             using frmEditAttribMod f = new frmEditAttribMod();
             f.ShowDialog();
-        }
-
-        private void btnImportMods_Click(object sender, EventArgs e)
-        {
-            var iParent = _frmMain;
-            FrmAttribModImporter attribModImporter = new FrmAttribModImporter(ref iParent);
-            attribModImporter.ShowDialog();
         }
 
         private void btnGCMIO_Click(object sender, EventArgs e)
