@@ -231,3 +231,8 @@ safe/\.fake/
 
 \.ionide/symbolCache\.db
 /Hero Designer/Images
+/Hero Designer/Data_old
+/Hero Designer/Forms/WindowMenuItems/frmTotalsV2a.cs
+/Hero Designer/Forms/WindowMenuItems/frmTotalsV2a.Designer.cs
+/Hero Designer/Forms/WindowMenuItems/frmTotalsV2a.resx
+/Hero Designer/Data/*

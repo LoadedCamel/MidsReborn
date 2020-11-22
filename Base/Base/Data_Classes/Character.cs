@@ -1775,6 +1775,7 @@ namespace Base.Data_Classes
             public float Elusivity { get; set; }
             public float HPRegen { get; set; }
             public float HPMax { get; set; }
+            public float Absorb { get; set; }
             public float EndRec { get; set; }
             public float EndUse { get; set; }
             public float EndMax { get; set; }
@@ -1806,6 +1807,7 @@ namespace Base.Data_Classes
                 Elusivity = 0.0f;
                 HPRegen = 0.0f;
                 HPMax = 0.0f;
+                Absorb = 0.0f;
                 EndRec = 0.0f;
                 EndUse = 0.0f;
                 EndMax = 0.0f;
@@ -1834,6 +1836,7 @@ namespace Base.Data_Classes
                 Elusivity = iSt.Elusivity;
                 HPRegen = iSt.HPRegen;
                 HPMax = iSt.HPMax;
+                Absorb = iSt.Absorb;
                 EndRec = iSt.EndRec;
                 EndUse = iSt.EndUse;
                 EndMax = iSt.EndMax;

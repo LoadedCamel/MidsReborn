@@ -56,10 +56,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             _myParent = iParent;
         }
 
-        private bool A_GT_B(float A, float B)
+        private bool A_GT_B(float a, float b)
         {
-            double num = Math.Abs(A - B);
-            return num >= 1.0000000116861E-07 && num > 0.0;
+            return Math.Abs(a - b) >= float.Epsilon;
+            
+            //double num = Math.Abs(A - B);
+            //return num >= 1.0000000116861E-07 && num > 0.0;
         }
 
         private void FrmTotalsFormClosed(object sender, FormClosedEventArgs e)
@@ -197,9 +199,23 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private string PM(float iValue, string iFormat, string iSuff)
         {
-            return (double) iValue >= 0.0
-                ? (double) iValue <= 0.0 ? "+0" + iSuff : "+" + Strings.Format(iValue, iFormat) + iSuff
-                : Strings.Format(iValue, iFormat) + iSuff;
+            if (iValue > float.Epsilon)
+            {
+                return "+" + string.Format("{0:" + iFormat + "}", iValue);
+                //return "+" + Strings.Format(iValue, iFormat) + iSuff;
+            }
+
+            if (Math.Abs(iValue) < float.Epsilon)
+            {
+                return "+0" + iSuff;
+            }
+
+            return string.Format("{0:" + iFormat + "}", iValue) + iSuff;
+            //return Strings.Format(iValue, iFormat) + iSuff;
+
+            //return (double) iValue >= 0.0
+            //    ? (double) iValue <= 0.0 ? "+0" + iSuff : "+" + Strings.Format(iValue, iFormat) + iSuff
+            //    : Strings.Format(iValue, iFormat) + iSuff;
         }
 
         private void RbSpeedCheckedChanged(object sender, EventArgs e)
@@ -396,11 +412,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
         private void TabPaint(ref PictureBox iTab, PaintEventArgs e, string iString, bool iState)
         {
-            if (_myParent?.Drawing == null)
-                return;
-            var index = 2;
-            if (iState)
-                index = 3;
+            if (_myParent?.Drawing == null) return;
+
+            var index = (iState) ? 3 : 2;
             var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
                 _myParent.Drawing.bxPower[index].Size.Height);
             var destRect = new Rectangle(0, 0, iTab.Width, iTab.Height);
@@ -415,7 +429,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             else
-                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero() ? _myParent.Drawing.bxPower[2].Bitmap : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0,
+                    rectangle.Width, rectangle.Height,
+                    GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             var height = bFont.GetHeight(e.Graphics) + 2f;
             var Bounds = new RectangleF(0.0f, (float) ((tab0.Height - (double) height) / 2.0), tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
@@ -438,15 +454,18 @@ namespace Hero_Designer.Forms.WindowMenuItems
             {
                 if (!((dType != 9) & (dType != 7)))
                     continue;
-                var iTip = Strings.Format(displayStats.Defense(dType), "##0.##") + "% " + names1[dType] + " defense";
-                graphDef.AddItem(names1[dType] + ":|" + Strings.Format(displayStats.Defense(dType), "##0.##") + "%",
+                //var iTip = Strings.Format(displayStats.Defense(dType), "##0.##") + "% " + names1[dType] + " defense";
+                //graphDef.AddItem(names1[dType] + ":|" + Strings.Format(displayStats.Defense(dType), "##0.##") + "%",
+                //    displayStats.Defense(dType), 0.0f, iTip);
+                var iTip = $"{displayStats.Defense(dType):##0.##}" + "%" + names1[dType] + " defense";
+                graphDef.AddItem(names1[dType] + ":|" + $"{displayStats.Defense(dType):##0.##}" + "%",
                     displayStats.Defense(dType), 0.0f, iTip);
             }
 
             graphDef.Max = 100f;
             graphDef.Draw();
             var str1 = MidsContext.Character.Archetype.DisplayName + " resistance cap: " +
-                       Strings.Format((float) (MidsContext.Character.Archetype.ResCap * 100.0), "###0") + "%";
+                       $"{MidsContext.Character.Archetype.ResCap * 100:###0}" + "%";
             graphRes.Clear();
             var dType1 = 1;
             do
@@ -456,19 +475,17 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     string iTip;
                     if (MidsContext.Character.TotalsCapped.Res[dType1] <
                         (double) MidsContext.Character.Totals.Res[dType1])
-                        iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0.##") + "% " +
+                        iTip = $"{displayStats.DamageResistance(dType1, true):##0.##}" + "% " +
                                names1[dType1] +
                                " resistance capped at " +
-                               Strings.Format(displayStats.DamageResistance(dType1, false), "##0.##") + "%";
+                               $"{displayStats.DamageResistance(dType1, false):##0.##}" + "%";
                     else
-                        iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0.##") + "% " +
+                        iTip = $"{displayStats.DamageResistance(dType1, true):##0.##}" + "% " +
                                names1[dType1] +
                                " resistance. (" + str1 + ")";
                     graphRes.AddItem(
-                        names1[dType1] + ":|" + Strings.Format(displayStats.DamageResistance(dType1, false), "##0.##") +
-                        "%",
-                        displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true),
-                        iTip);
+                        names1[dType1] + ":|" + $"{displayStats.DamageResistance(dType1, false):##0.##}" + "%",
+                        displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
                 }
 
                 ++dType1;
@@ -481,12 +498,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
             if (Math.Abs(displayStats.EnduranceRecoveryPercentage(false) -
                          displayStats.EnduranceRecoveryPercentage(true)) > 0.01)
                 str2 = str2 + "\r\nCapped from a total of: " +
-                       Strings.Format(displayStats.EnduranceRecoveryPercentage(true), "###0") + "%.";
+                       $"{displayStats.EnduranceRecoveryPercentage(true):###0}" + "%.";
             var iTip2 = str2 + "\r\nHover the mouse over the End Drain stats for more info.";
             if (displayStats.EnduranceRecoveryNet > 0.0)
             {
-                iTip1 = "Net Endurance Gain (Recovery - Drain): " + Utilities.FixDP(displayStats.EnduranceRecoveryNet) +
-                        "/s.";
+                iTip1 = "Net Endurance Gain (Recovery - Drain): " + Utilities.FixDP(displayStats.EnduranceRecoveryNet) + "/s.";
                 if (Math.Abs(displayStats.EnduranceRecoveryNet - displayStats.EnduranceRecoveryNumeric) > 0.01)
                     iTip1 = iTip1 + "\r\nTime to go from 0-100% end (using net gain): " +
                             Utilities.FixDP(displayStats.EnduranceTimeToFullNet) + "s.";
@@ -511,14 +527,14 @@ namespace Hero_Designer.Forms.WindowMenuItems
             graphMaxEnd.MarkerValue = 100f;
             graphMaxEnd.Draw();
             graphDrain.Clear();
-            graphDrain.AddItem("EndUse:|" + Strings.Format(MidsContext.Character.Totals.EndUse, "##0.##") + "/s",
+            graphDrain.AddItem("EndUse:|" + $"{MidsContext.Character.Totals.EndUse:##0.##}" + "/s",
                 MidsContext.Character.Totals.EndUse, MidsContext.Character.Totals.EndUse, iTip1);
             graphDrain.Max = 4f;
             graphDrain.Draw();
             graphRec.Clear();
             graphRec.AddItem(
-                "EndRec:|" + Strings.Format(displayStats.EnduranceRecoveryPercentage(false), "###0") + "% (" +
-                Strings.Format(displayStats.EnduranceRecoveryNumeric, "##0.##") + "/s)",
+                "EndRec:|" + $"{displayStats.EnduranceRecoveryPercentage(false):###0}" + "% (" +
+                $"{displayStats.EnduranceRecoveryNumeric:##0.##}" + "/s)",
                 displayStats.EnduranceRecoveryPercentage(false),
                 displayStats.EnduranceRecoveryPercentage(true), iTip2);
             graphRec.Max = 400f;
@@ -531,24 +547,40 @@ namespace Hero_Designer.Forms.WindowMenuItems
                         Utilities.FixDP(displayStats.HealthRegenHPPerSec) + " HP";
             if (Math.Abs(displayStats.HealthRegenPercent(false) - displayStats.HealthRegenPercent(true)) > 0.01)
                 iTip4 = iTip4 + "\r\nCapped from a total of: " +
-                        Strings.Format(displayStats.HealthRegenPercent(true), "###0") + "%.";
+                        $"{displayStats.HealthRegenPercent(true):###0}" + "%.";
             graphRegen.Clear();
-            graphRegen.AddItem("Regeneration:|" + Strings.Format(displayStats.HealthRegenPercent(false), "###0") + "%",
+            graphRegen.AddItem("Regeneration:|" + $"{displayStats.HealthRegenPercent(false):###0}" + "%",
                 displayStats.HealthRegenPercent(false), displayStats.HealthRegenPercent(true), iTip4);
             graphRegen.Max = graphRegen.GetMaxValue();
             graphRegen.MarkerValue = 100f;
             graphRegen.Draw();
             graphHP.Clear();
-            var iTip5 = "Base HitPoints: " + Convert.ToString(MidsContext.Character.Archetype.Hitpoints) +
+            var iTip5 = "Base HitPoints: " +
+                        Convert.ToString(MidsContext.Character.Archetype.Hitpoints, CultureInfo.InvariantCulture) +
                         "\r\nCurrent HitPoints: " +
                         Convert.ToString(displayStats.HealthHitpointsNumeric(false), CultureInfo.InvariantCulture);
             if (Math.Abs(displayStats.HealthHitpointsNumeric(false) - displayStats.HealthHitpointsNumeric(true)) > 0.01)
-                iTip5 = iTip5 + "\r\n(Capped from a total of: " +
-                        Strings.Format(displayStats.HealthHitpointsNumeric(true), "###0.##") + ")";
-            graphHP.AddItem("Max HP:|" + Strings.Format(displayStats.HealthHitpointsPercentage, "###0.##") + "%",
+                iTip5 += "\r\n(Capped from a total of: " +
+                        $"{displayStats.HealthHitpointsNumeric(true):###0.##}" + ")";
+            if (displayStats.Absorb > 0)
+            {
+                iTip5 += "\r\nAbsorb: " +
+                      $"{displayStats.Absorb * displayStats.HealthHitpointsNumeric(false):###0.##}" +
+                      (displayStats.Absorb >= 0.01 ? " (" + Convert.ToString(displayStats.Absorb * 100, CultureInfo.InvariantCulture) + "%)" : "");
+            }
+            graphHP.AddItem("Max HP:|" + $"{displayStats.HealthHitpointsPercentage:###0.##} %",
                 displayStats.HealthHitpointsPercentage, displayStats.HealthHitpointsPercentage, iTip5);
-            graphHP.Max = (float) (MidsContext.Character.Archetype.HPCap /
-                (double) MidsContext.Character.Archetype.Hitpoints * 100.0);
+
+            var iTipAbsorb = $"{displayStats.Absorb * displayStats.HealthHitpointsNumeric(false):###0.##}" +
+                ((displayStats.Absorb >= 0.01)
+                ? $" ({displayStats.Absorb * 100:###0.##} % HP)"
+                : "");
+            graphHP.AddItem("Absorb:|" + $"{displayStats.Absorb:###0.##}" + iTipAbsorb, displayStats.Absorb,
+                displayStats.Absorb, iTip5 + "\r\n" + iTipAbsorb);
+
+            //graphRes.AddItem(names1[dType1] + ":|" + $"{displayStats.DamageResistance(dType1, false):##0.##}" + "%",
+            //displayStats.DamageResistance(dType1, false), displayStats.DamageResistance(dType1, true), iTip);
+            graphHP.Max = MidsContext.Character.Archetype.HPCap / MidsContext.Character.Archetype.Hitpoints * 100;
             graphHP.MarkerValue = 100f;
             graphHP.Draw();
             graphMovement.Clear();
@@ -577,12 +609,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             string formatSpeed(float iSpeed)
             {
-                return Strings.Format(displayStats.Speed(iSpeed, speedFormat), "##0.##") + rateDisp + ".";
+                return $"{displayStats.Speed(iSpeed, speedFormat):##0.##}" + rateDisp + ".";
             }
 
             string formatDistance(float iSpeed)
             {
-                return Strings.Format(displayStats.Distance(iSpeed, speedFormat), "##0.##");
+                return $"{displayStats.Distance(iSpeed, speedFormat):##0.##}";
             }
 
             var strCap = "This has been capped at the maximum in-game speed.\r\nUncapped speed: ";
@@ -593,8 +625,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             if (A_GT_B(displayStats.MovementFlySpeed(speedFormat, true),
                 displayStats.MovementFlySpeed(speedFormat, false)))
                 fltTip = fltTip + "\r\n" + strCap +
-                         Strings.Format(displayStats.Speed(MidsContext.Character.Totals.FlySpd, speedFormat),
-                             "##0.##") + rateDisp + ".";
+                         $"{displayStats.Speed(MidsContext.Character.Totals.FlySpd, speedFormat):##0.##}" + rateDisp + ".";
             else if (Math.Abs(displayStats.MovementFlySpeed(speedFormat, false)) < float.Epsilon)
                 fltTip += "\r\nYou have no active flight powers.";
             var jumpTip = "Base Jump Speed: " + formatSpeed(21f);
@@ -611,20 +642,20 @@ namespace Hero_Designer.Forms.WindowMenuItems
 
             void AddGrphMovement(string title, Func<Enums.eSpeedMeasure, bool, float> dispStatsF, string tip)
             {
-                graphMovement.AddItem(title + Strings.Format(dispStatsF(speedFormat, false), "##0.##") + rateDisp,
+                graphMovement.AddItem(title + $"{dispStatsF(speedFormat, false):##0.##}" + rateDisp,
                     dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, false),
                     dispStatsF(Enums.eSpeedMeasure.FeetPerSecond, true), tip);
             }
 
             AddGrphMovement("Run:|", displayStats.MovementRunSpeed, iTip8);
             AddGrphMovement("Jump:|", displayStats.MovementJumpSpeed, jumpTip);
-            //this.graphMovement.AddItem("Run:|" + Strings.Format(displayStats.MovementRunSpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), iTip8);
-            //this.graphMovement.AddItem("Jump:|" + Strings.Format(displayStats.MovementJumpSpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), jumpTip);
+            //this.graphMovement.AddItem("Run:|" + $"{displayStats.MovementRunSpeed(speedFormat, false):##0.##}" + rateDisp, displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), iTip8);
+            //this.graphMovement.AddItem("Jump:|" + $"{displayStats.MovementJumpSpeed(speedFormat, false):##0.##}" + rateDisp, displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true), jumpTip);
             graphMovement.AddItem(
-                "Jump Height:|" + Strings.Format(displayStats.MovementJumpHeight(speedFormat), "##0.##") + lengthDisp,
+                "Jump Height:|" + $"{displayStats.MovementJumpHeight(speedFormat):##0.##}" + lengthDisp,
                 displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
                 displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
-            //this.graphMovement.AddItem("Fly:|" + Strings.Format(displayStats.MovementFlySpeed(speedFormat, false), "##0.##") + rateDisp, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, true), fltTip);
+            //this.graphMovement.AddItem("Fly:|" + $"{displayStats.MovementFlySpeed(speedFormat, false):##0.##}" + rateDisp, displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, false), displayStats.MovementFlySpeed(Enums.eSpeedMeasure.FeetPerSecond, true), fltTip);
 
             //AddGrphMovement("Jump Height:|", (x,_) => displayStats.MovementJumpHeight(x), jmpHtTip);
             AddGrphMovement("Fly:|", displayStats.MovementFlySpeed, fltTip);
@@ -678,13 +709,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
             graphEndRdx.Max = 200f;
             graphEndRdx.Draw();
             graphStealth.Clear();
-            graphStealth.AddItem("PvE:|" + Strings.Format(MidsContext.Character.Totals.StealthPvE, "##0") + " ft",
+            graphStealth.AddItem("PvE:|" + $"{MidsContext.Character.Totals.StealthPvE:##0}" + " ft",
                 MidsContext.Character.Totals.StealthPvE, 0.0f,
                 "This is subtracted from a mob's perception to work out if they can see you.");
             graphStealth.AddItem("PvP:|" + Strings.Format(MidsContext.Character.Totals.StealthPvP, "##0") + " ft",
                 MidsContext.Character.Totals.StealthPvP, 0.0f,
                 "This is subtracted from a player's perception to work out if they can see you.");
-            graphStealth.AddItem("Perception:|" + Strings.Format(displayStats.Perception(false), "###0") + " ft",
+            graphStealth.AddItem("Perception:|" + $"{displayStats.Perception(false):###0}" + " ft",
                 displayStats.Perception(false), 0.0f,
                 "This, minus a player's stealth radius, is the distance you can see it.");
             graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
@@ -692,24 +723,23 @@ namespace Hero_Designer.Forms.WindowMenuItems
             var iTip10 =
                 "This affects how mobs prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe " +
                 MidsContext.Character.Archetype.DisplayName + " base Threat Level of " +
-                Strings.Format((float) (MidsContext.Character.Archetype.BaseThreat * 100.0), "##0") +
+                $"{MidsContext.Character.Archetype.BaseThreat * 100:##0}" +
                 "% is included in this figure.";
             var nBase = displayStats.ThreatLevel + 200f;
             graphThreat.Clear();
-            graphThreat.AddItem("Threat Level:|" + Strings.Format(displayStats.ThreatLevel, "##0") + "%", nBase, 0.0f,
+            graphThreat.AddItem("Threat Level:|" + $"{displayStats.ThreatLevel:##0}" + "%", nBase, 0.0f,
                 iTip10);
-            graphThreat.MarkerValue = (float) (MidsContext.Character.Archetype.BaseThreat * 100.0 + 200.0);
+            graphThreat.MarkerValue = MidsContext.Character.Archetype.BaseThreat * 100 + 200;
             graphThreat.Max = 800f;
             graphThreat.Draw();
             graphElusivity.Clear();
             graphElusivity.AddItem(
-                "Elusivity:|" + Strings.Format((float) (MidsContext.Character.Totals.Elusivity * 100.0), "##0.##") +
-                "%",
-                MidsContext.Character.Totals.Elusivity * 100f, 0.0f,
+                "Elusivity:|" + $"{MidsContext.Character.Totals.Elusivity * 100:##0.##}" + "%",
+                MidsContext.Character.Totals.Elusivity * 100, 0.0f,
                 "This effect resists accuracy buffs of enemies attacking you.");
             graphElusivity.Max = 100f;
             graphElusivity.Draw();
-            if (Math.Abs(graphAcc.Font.Size - (double) MidsContext.Config.RtFont.PairedBase) > float.Epsilon)
+            if (Math.Abs(graphAcc.Font.Size - MidsContext.Config.RtFont.PairedBase) > float.Epsilon)
                 SetFonts();
             var totals = MidsContext.Character.Totals;
             var str9 = "\r\nStatus protection prevents you being affected by a status effect such as" +
@@ -743,13 +773,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     iTip11 = "You have no protection from " + names3[(int) eMezArray[index]] + " effects.\r\n" + str9;
                 else
                     iTip11 = "You have mag " +
-                             Strings.Format((float) -(double) totals.Mez[(int) eMezArray[index]], "##0.##") +
+                             $"{-totals.Mez[(int)eMezArray[index]]:##0.##}" +
                              " protection from " + names3[(int) eMezArray[index]] + " effects.\r\n" + str9;
                 graphSProt.AddItem(
                     names2[(int) eMezArray[index]] + ":|" +
-                    Strings.Format(-totals.Mez[(int) eMezArray[index]], "##0.##"),
+                    $"{-totals.Mez[(int) eMezArray[index]]:##0.##}",
                     -totals.Mez[(int) eMezArray[index]], 0.0f, iTip11);
-                var num5 = (float) (100.0 / (1.0 + totals.MezRes[(int) eMezArray[index]] / 100.0));
+                var num5 = 100 / (1 + totals.MezRes[(int) eMezArray[index]] / 100);
                 string str11;
                 if ((eMezArray[index] != Enums.eMez.Knockback) & (eMezArray[index] != Enums.eMez.Knockup) &
                     (eMezArray[index] != Enums.eMez.Repel) &
@@ -758,7 +788,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                     if (totals.MezRes[(int) eMezArray[index]] > (double) num3)
                         num3 = (int) Math.Round(totals.MezRes[(int) eMezArray[index]]);
                     str11 = "\r\n" + names3[(int) eMezArray[index]] + " effects will last " +
-                            Strings.Format(num5, "##0.##") +
+                            $"{num5:##0.##}" +
                             "% of their full duration.\r\n" + str10;
                 }
                 else if (eMezArray[index] == Enums.eMez.Teleport)
@@ -768,7 +798,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 else
                 {
                     str11 = "\r\n" + names3[(int) eMezArray[index]] + " effects will have " +
-                            Strings.Format(num5, "##0.##") +
+                            $"{num5:##0.##}" +
                             "% of their full effect.\r\n" + str10;
                 }
 
@@ -776,12 +806,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 if (Math.Abs(totals.MezRes[(int) eMezArray[index]]) < float.Epsilon)
                     iTip12 = "You have no resistance to " + names3[(int) eMezArray[index]] + " effects.\r\n" + str10;
                 else
-                    iTip12 = "You have " + Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.##") +
-                             "% resistance to " +
+                    iTip12 = "You have " + $"{totals.MezRes[(int) eMezArray[index]]:##0.##}" + "% resistance to " +
                              names3[(int) eMezArray[index]] + " effects." + str11;
                 graphSRes.AddItem(
                     names2[(int) eMezArray[index]] + ":|" +
-                    Strings.Format(totals.MezRes[(int) eMezArray[index]], "##0.##") + "%",
+                    $"{totals.MezRes[(int) eMezArray[index]]:##0.##}" + "%",
                     totals.MezRes[(int) eMezArray[index]], 0.0f, iTip12);
             }
 
@@ -794,7 +823,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             {
                 Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
                 Enums.eEffectType.PerceptionRadius,
-                Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime, Enums.eEffectType.SpeedRunning
+                Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime, Enums.eEffectType.SpeedRunning,
+                Enums.eEffectType.Regeneration
             };
             var num6 = eEffectTypeArray.Length - 1;
             for (var index = 0; index <= num6; ++index)
@@ -803,12 +833,11 @@ namespace Hero_Designer.Forms.WindowMenuItems
                 if (Math.Abs(totals.DebuffRes[(int) eEffectTypeArray[index]] - 0.0f) < 0.001)
                     iTip11 = "You have no resistance to " + Enums.GetEffectName(eEffectTypeArray[index]) + " debuffs.";
                 else
-                    iTip11 = "You have " + Strings.Format(totals.DebuffRes[(int) eEffectTypeArray[index]], "##0.##") +
-                             "% resistance to " +
+                    iTip11 = "You have " + $"{totals.DebuffRes[(int) eEffectTypeArray[index]]:##0.##}" + "% resistance to " +
                              Enums.GetEffectName(eEffectTypeArray[index]) + " debuffs.";
                 graphSDeb.AddItem(
                     Enums.GetEffectName(eEffectTypeArray[index]) + ":|" +
-                    Strings.Format(totals.DebuffRes[(int) eEffectTypeArray[index]], "##0.##") + "%",
+                    $"{totals.DebuffRes[(int) eEffectTypeArray[index]]:##0.##}" + "%",
                     totals.DebuffRes[(int) eEffectTypeArray[index]], 0.0f, iTip11);
             }
 

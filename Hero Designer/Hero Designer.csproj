@@ -77,9 +77,11 @@
   <PropertyGroup />
   <PropertyGroup />
   <ItemGroup>
+    <Compile Include="AttribModDefParser.cs" />
     <Compile Include="clsOAuth.cs" />
     <Compile Include="clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
+    <Compile Include="FileAssociation.cs" />
     <Compile Include="Forms\Controls\DataView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -94,6 +96,18 @@
     </Compile>
     <Compile Include="Forms\Controls\InputBox.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProgress.Designer.cs">
+      <DependentUpon>frmProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmTotalsV2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmTotalsV2.Designer.cs">
+      <DependentUpon>frmTotalsV2.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmDiscord.cs">
       <SubType>Form</SubType>
@@ -119,11 +133,11 @@
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmGCMEditor.Designer.cs">
       <DependentUpon>frmGCMEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\frmAttribModImporter.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs">
-      <DependentUpon>frmAttribModImporter.cs</DependentUpon>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.Designer.cs">
+      <DependentUpon>frmEditAttribMod.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmPrestige.cs">
       <SubType>Form</SubType>
@@ -131,8 +145,8 @@
     <Compile Include="Forms\WindowMenuItems\frmPrestige.Designer.cs">
       <DependentUpon>frmPrestige.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportTools.cs" />
-    <Compile Include="FileAssocation.cs" />
+    <Compile Include="GenFreebies.cs" />
+    <Compile Include="BuildImportTools.cs" />
     <Compile Include="Forms\frmColorOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -305,9 +319,6 @@
     <Compile Include="Forms\ImportExportItems\frmImport_Power.Designer.cs">
       <DependentUpon>frmImport_Power.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_mod.Designer.cs">
-      <DependentUpon>frmImport_mod.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ImportExportItems\frmImport_Entities.Designer.cs">
       <DependentUpon>frmImport_Entities.cs</DependentUpon>
     </Compile>
@@ -344,6 +355,7 @@
     <Compile Include="Forms\frmBusy.Designer.cs">
       <DependentUpon>frmBusy.cs</DependentUpon>
     </Compile>
+    <Compile Include="clsConvertibleUnitValue.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2136,6 +2148,9 @@
     <None Include="Resources\PictureBox1.Image.png" />
     <None Include="Resources\pbTitle.Image.png" />
     <None Include="Resources\MRB_Concept.png" />
+    <None Include="Resources\optTO.Image.png" />
+    <None Include="Resources\optSO.Image.png" />
+    <None Include="Resources\optDO.Image.png" />
     <Content Include="Web\authorized.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2144,9 +2159,6 @@
     </Content>
     <None Include="Resources\reborn_wicon.ico" />
     <None Include="Resources\mrb_splash.png" />
-    <None Include="Resources\optSO.Image.png" />
-    <None Include="Resources\optTO.Image.png" />
-    <None Include="Resources\optDO.Image.png" />
     <EmbeddedResource Include="Forms\Controls\DataView.resx">
       <DependentUpon>DataView.cs</DependentUpon>
     </EmbeddedResource>
@@ -2155,6 +2167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Controls\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmProgress.resx">
+      <DependentUpon>frmProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmColorOptions.resx">
       <DependentUpon>frmColorOptions.cs</DependentUpon>
@@ -2183,6 +2198,9 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmGCMEditor.resx">
       <DependentUpon>frmGCMEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.resx">
+      <DependentUpon>frmEditAttribMod.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvPNEW.resx">
       <DependentUpon>frmSetEditPvPNEW.cs</DependentUpon>
     </EmbeddedResource>
@@ -2204,9 +2222,15 @@
     <EmbeddedResource Include="Forms\WindowMenuItems\frmTemp.resx">
       <DependentUpon>frmTemp.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WindowMenuItems\frmTotalsV2.resx">
+      <DependentUpon>frmTotalsV2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="reborn.ico" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Syncfusion.Shared.Base, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
+    <Reference Include="Syncfusion.Shared.Windows, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
+    <Reference Include="Syncfusion.Tools.Base, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
+    <Reference Include="Syncfusion.Tools.Windows, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -2302,9 +2326,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ImportExportItems\frmImport_Entities.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_mod.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ImportExportItems\frmImport_Power.cs">
@@ -2453,9 +2474,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Entities.resx">
       <DependentUpon>frmImport_Entities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_mod.resx">
-      <DependentUpon>frmImport_mod.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Power.resx">
       <DependentUpon>frmImport_Power.cs</DependentUpon>
@@ -2626,6 +2644,9 @@
     </PackageReference>
     <PackageReference Include="RestSharp">
       <Version>106.11.7</Version>
+    </PackageReference>
+    <PackageReference Include="Zstandard2.Net">
+      <Version>1.4.4</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

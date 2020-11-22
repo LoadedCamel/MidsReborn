@@ -5,94 +5,21 @@ using System.Linq;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
-public class Modifiers
+public class Modifiers : ICloneable
 {
-    private const string StoreName = "Mids' Hero Designer Attribute Modifier Tables";
+    //private const string StoreName = "Mids' Hero Designer Attribute Modifier Tables";
     public ModifierTable[] Modifier = new ModifierTable[0];
     public int Revision;
     public DateTime RevisionDate = new DateTime(0L);
     public string SourceIndex = string.Empty;
     public string SourceTables = string.Empty;
 
-    public bool ImportModifierTablefromCSV(string baseFn, string tableFn, int iRevision)
+    #region ICloneable implementation
+    public object Clone()
     {
-        StreamReader iStream1;
-        try
-        {
-            iStream1 = new StreamReader(baseFn);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            return false;
-        }
-
-        Modifier = new ModifierTable[0];
-        string iLine1;
-        do
-        {
-            iLine1 = FileIO.ReadLineUnlimited(iStream1, char.MinValue);
-            if (iLine1 == null || iLine1.StartsWith("#"))
-                continue;
-            var array = CSV.ToArray(iLine1);
-            Array.Resize(ref Modifier, Modifier.Length + 1);
-            Modifier[Modifier.Length - 1] = new ModifierTable
-            {
-                BaseIndex = Convert.ToInt32(array[0]),
-                ID = array[1]
-            };
-        } while (iLine1 != null);
-
-        iStream1.Close();
-        StreamReader iStream2;
-        try
-        {
-            iStream2 = new StreamReader(tableFn);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            return false;
-        }
-
-        string iLine2;
-        do
-        {
-            iLine2 = FileIO.ReadLineUnlimited(iStream2, char.MinValue);
-            if (iLine2 == null || iLine2.StartsWith("#"))
-                continue;
-            var array = CSV.ToArray(iLine2);
-            if (array.Length <= 0)
-                continue;
-            var num = int.Parse(array[0]) - 1;
-            for (var index1 = 0; index1 <= Modifier.Length - 1; ++index1)
-            {
-                if (!((num >= Modifier[index1].BaseIndex) & (num <= Modifier[index1].BaseIndex + 55)))
-                    continue;
-                var index2 = num - Modifier[index1].BaseIndex;
-                Modifier[index1].Table[index2] = new float[array.Length - 1];
-                for (var index3 = 0; index3 <= array.Length - 2; ++index3)
-                    Modifier[index1].Table[index2][index3] = float.Parse(array[index3 + 1]);
-                break;
-            }
-        } while (iLine2 != null);
-
-        bool flag;
-        if (Modifier.Length > 0)
-        {
-            SourceIndex = baseFn;
-            SourceTables = tableFn;
-            RevisionDate = DateTime.Now;
-            Revision = iRevision;
-            flag = true;
-        }
-        else
-        {
-            flag = false;
-        }
-
-        return flag;
+        return MemberwiseClone();
     }
+    #endregion
 
     private void StoreRaw(ISerialize serializer, string path, string name)
     {
@@ -161,6 +88,15 @@ public class Modifiers
             for (var index = 0; index < Table.Length; index++)
             {
                 Table[index] = new float[0];
+            }
+        }
+
+        public ModifierTable(int archetypesListLength)
+        {
+            for (int index = 0; index < Table.Length; index++)
+            {
+                Table[index] = new float[archetypesListLength];
+                Table[index] = Enumerable.Repeat(0f, archetypesListLength).ToArray();
             }
         }
 

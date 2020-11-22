@@ -67,8 +67,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnEditIOSetPvP = new System.Windows.Forms.Button();
             this.btnExportJSON = new System.Windows.Forms.Button();
             this.btnJsonImporter = new System.Windows.Forms.Button();
+            this.btnAttribModEdit = new System.Windows.Forms.Button();
             this.btnGCMIO = new System.Windows.Forms.Button();
-            this.btnImportMods = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             this.GroupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -468,7 +468,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnExportJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnExportJSON.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportJSON.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnExportJSON.Location = new System.Drawing.Point(48, 353);
+            this.btnExportJSON.Location = new System.Drawing.Point(48, 388);
             this.btnExportJSON.Name = "btnExportJSON";
             this.btnExportJSON.Size = new System.Drawing.Size(160, 24);
             this.btnExportJSON.TabIndex = 26;
@@ -481,7 +481,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnJsonImporter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnJsonImporter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnJsonImporter.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnJsonImporter.Location = new System.Drawing.Point(48, 383);
+            this.btnJsonImporter.Location = new System.Drawing.Point(48, 418);
             this.btnJsonImporter.Name = "btnJsonImporter";
             this.btnJsonImporter.Size = new System.Drawing.Size(160, 24);
             this.btnJsonImporter.TabIndex = 27;
@@ -503,27 +503,26 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnGCMIO.Visible = false;
             this.btnGCMIO.Click += new System.EventHandler(this.btnGCMIO_Click);
             // 
-            // btnImportMods
+            // btnAttribModEdit
             // 
-            this.btnImportMods.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnImportMods.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnImportMods.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnImportMods.Location = new System.Drawing.Point(236, 258);
-            this.btnImportMods.Name = "btnImportMods";
-            this.btnImportMods.Size = new System.Drawing.Size(164, 24);
-            this.btnImportMods.TabIndex = 29;
-            this.btnImportMods.Text = "AttribMod Importer";
-            this.btnImportMods.UseVisualStyleBackColor = true;
-            this.btnImportMods.Visible = false;
-            this.btnImportMods.Click += new System.EventHandler(this.btnImportMods_Click);
+            this.btnAttribModEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnAttribModEdit.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAttribModEdit.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnAttribModEdit.Location = new System.Drawing.Point(48, 318);
+            this.btnAttribModEdit.Name = "btnAttribModEdit";
+            this.btnAttribModEdit.Size = new System.Drawing.Size(160, 24);
+            this.btnAttribModEdit.TabIndex = 28;
+            this.btnAttribModEdit.Text = "AttribMods Editor";
+            this.btnAttribModEdit.UseVisualStyleBackColor = true;
+            this.btnAttribModEdit.Click += new System.EventHandler(this.btnAttribModEdit_Click);
             // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(416, 422);
+            this.ClientSize = new System.Drawing.Size(416, 462);
+            this.Controls.Add(this.btnAttribModEdit);
             this.Controls.Add(this.btnGCMIO);
-            this.Controls.Add(this.btnImportMods);
             this.Controls.Add(this.btnJsonImporter);
             this.Controls.Add(this.btnExportJSON);
             this.Controls.Add(this.btnFileReport);
@@ -565,6 +564,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private Button btnExportJSON;
         private Button btnJsonImporter;
         private Button btnGCMIO;
-        private Button btnImportMods;
+        private Button btnAttribModEdit;
     }
 }

@@ -26,6 +26,10 @@ namespace midsControls
 
         public delegate void MovedEventHandler(Rectangle oldBounds, Rectangle newBounds);
 
+        // HC I27p1.
+        // Check https://forums.homecomingservers.com/topic/23373-focused-feedback-enhancements/
+        private const bool AllowPlusThreeSpecialO = true;
+
         private const int IOMax = 50;
         private const int Cols = 5;
         private const int DilateVal = 2;
@@ -1744,14 +1748,16 @@ namespace midsControls
                     eEnhRelative++;
                 }
 
+                var specialOLimit = AllowPlusThreeSpecialO ? Enums.eEnhRelative.PlusThree : Enums.eEnhRelative.PlusTwo;
+
                 if (SelectedEnhancement != null && (DatabaseAPI.EnhHasCatalyst(SelectedEnhancement.UID) ||
                                                     DatabaseAPI.EnhIsNaturallyAttuned(SelectedEnhancement.StaticIndex)))
                     eEnhRelative = Enums.eEnhRelative.Even;
                 //if (eEnhRelative > Enums.eEnhRelative.PlusThree & (UI.View.TabID == Enums.eType.Normal | (int) UI.View.TabID == 3))
                 else if ((eEnhRelative > Enums.eEnhRelative.PlusThree) & (UI.View.TabID == Enums.eType.Normal))
                     eEnhRelative = Enums.eEnhRelative.PlusThree;
-                else if ((eEnhRelative > Enums.eEnhRelative.PlusTwo) & (UI.View.TabID == Enums.eType.SpecialO))
-                    eEnhRelative = Enums.eEnhRelative.PlusTwo;
+                else if ((eEnhRelative > specialOLimit) & (UI.View.TabID == Enums.eType.SpecialO))
+                    eEnhRelative = specialOLimit;
                 else if ((eEnhRelative < Enums.eEnhRelative.Even) &
                          ((UI.View.TabID == Enums.eType.InventO) | (UI.View.TabID == Enums.eType.SetO)))
                     eEnhRelative = Enums.eEnhRelative.Even;

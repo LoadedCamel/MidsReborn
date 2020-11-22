@@ -29,8 +29,7 @@ public static class DatabaseAPI
     private const string SalvageName = "Mids' Hero Designer Salvage Database";
 
     private const string EnhancementDbName = "Mids' Hero Designer Enhancement Database";
-
-    private static readonly IDictionary<string, int> AttribMod = new Dictionary<string, int>();
+    private static IDictionary<string, int> AttribMod = new Dictionary<string, int>();
 
     private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
 
@@ -41,6 +40,35 @@ public static class DatabaseAPI
     {
         AttribMod.Clear();
         Classes.Clear();
+    }
+
+    public static void ExportAttribMods()
+    {
+        string path = $"{Application.StartupPath}\\Data\\Export\\attribModTables.json";
+        string path2 = $"{Application.StartupPath}\\Data\\Export\\attribMod.json";
+        string path3 = $"{Application.StartupPath}\\Data\\Export\\attribModOrdered.json";
+        JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.None,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            Formatting = Formatting.Indented
+        };
+        File.WriteAllText(path, JsonConvert.SerializeObject(Database.AttribMods, serializerSettings));
+        File.WriteAllText(path2, JsonConvert.SerializeObject(AttribMod, serializerSettings));
+        Dictionary<string, int> ordered = AttribMod.OrderBy(x => x.Value)
+            .ToDictionary(x => x.Key, x => x.Value);
+        File.WriteAllText(path3, JsonConvert.SerializeObject(ordered, serializerSettings));
+    }
+
+    public static void UpdateModifiersDict(Modifiers.ModifierTable[] mList)
+    {
+        AttribMod.Clear();
+        for (int i = 0; i < mList.Length; i++)
+        {
+            AttribMod.Add(mList[i].ID, i);
+        }
     }
 
     public static int NidFromUidAttribMod(string uID)
@@ -228,33 +256,97 @@ public static class DatabaseAPI
         return powerset2.Concat(powerset1).ToArray();
     }
 
-    public static void SaveJsonDatabase(ISerialize serializer)
+    public static void SaveJsonDatabase(ISerialize serializer, bool msgOnCompletion = true)
     {
-        var jsonSerializer = new JsonSerializer();
+        //var jsonSerializer = new JsonSerializer();
 
         var zipContent = new MemoryStream();
         var archive = new ZipArchive(zipContent, ZipArchiveMode.Create);
         AddZipFileEntry("Database.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database)), archive);
         AddZipFileEntry("Archetypes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Classes)), archive);
         AddZipFileEntry("AttribMods.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.AttribMods)), archive);
-        AddZipFileEntry("Enhancement.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Enhancements)),
-            archive);
-        AddZipFileEntry("EnhancementClasses.json",
-            Encoding.UTF8.GetBytes(serializer.Serialize(Database.EnhancementClasses)), archive);
+        AddZipFileEntry("Enhancement.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Enhancements)), archive);
+        AddZipFileEntry("EnhancementClasses.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.EnhancementClasses)), archive);
         AddZipFileEntry("Entities.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Entities)), archive);
         AddZipFileEntry("Levels.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Levels)), archive);
         AddZipFileEntry("Powers.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Power)), archive);
         AddZipFileEntry("PowerSets.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Powersets)), archive);
-        AddZipFileEntry("PowerSetGroups.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.PowersetGroups)),
-            archive);
+        AddZipFileEntry("PowerSetGroups.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.PowersetGroups)), archive);
         AddZipFileEntry("Recipes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Recipes)), archive);
         AddZipFileEntry("Salvage.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Salvage)), archive);
         archive.Dispose();
         File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Data\Mids.zip"), zipContent.ToArray());
 
-        MessageBox.Show("Export completed.");
+        if (msgOnCompletion)
+        {
+            MessageBox.Show("Export completed.");
+        }
     }
 
+    public static void SaveJsonDatabaseProgress(ISerialize serializer, IntPtr frmProgressHandle, IWin32Window parent, bool msgOnCompletion = false)
+    {
+        //var jsonSerializer = new JsonSerializer();
+
+        Form prg = (Form)Control.FromHandle(frmProgressHandle);
+        if (prg == null)
+        {
+            SaveJsonDatabase(serializer, msgOnCompletion);
+            return;
+        }
+
+        //prg.BeginInvoke(new Action(() => prg.ShowDialog()));
+
+        var zipContent = new MemoryStream();
+        prg.Text = "|0|Creating Zip archive...";
+        var archive = new ZipArchive(zipContent, ZipArchiveMode.Create);
+
+        prg.Text = "|8|Exporting Main database...";
+        AddZipFileEntry("Database.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database)), archive);
+
+        prg.Text = "|15|Exporting Archetypes...";
+        AddZipFileEntry("Archetypes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Classes)), archive);
+
+        prg.Text = "|23|Exporting AttribMods database...";
+        AddZipFileEntry("AttribMods.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.AttribMods)), archive);
+
+        prg.Text = "|31|Exporting Enhancements database...";
+        AddZipFileEntry("Enhancement.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Enhancements)), archive);
+
+        prg.Text = "|38|Exporting Enhancement Classes...";
+        AddZipFileEntry("EnhancementClasses.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.EnhancementClasses)), archive);
+
+        prg.Text = "|46|Exporting Entities database...";
+        AddZipFileEntry("Entities.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Entities)), archive);
+
+        prg.Text = "|54|Exporting Levels database...";
+        AddZipFileEntry("Levels.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Levels)), archive);
+
+        prg.Text = "|62|Exporting Powers...";
+        AddZipFileEntry("Powers.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Power)), archive);
+
+        prg.Text = "|69|Exporting Powersets...";
+        AddZipFileEntry("PowerSets.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Powersets)), archive);
+
+        prg.Text = "|77|Exporting Powersets groups...";
+        AddZipFileEntry("PowerSetGroups.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.PowersetGroups)), archive);
+
+        prg.Text = "|85|Exporting Recipes database...";
+        AddZipFileEntry("Recipes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Recipes)), archive);
+
+        prg.Text = "|92|Exporting Salvage database...";
+        AddZipFileEntry("Salvage.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Salvage)), archive);
+        archive.Dispose();
+
+        prg.Text = "|99|Writing Zip archive to disk...";
+        File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Data\Mids.zip"), zipContent.ToArray());
+
+        prg.Text = "|100|";
+
+        if (msgOnCompletion)
+        {
+            MessageBox.Show("Export completed.");
+        }
+    }
 
     private static void AddZipFileEntry(string fileName, byte[] fileContent, ZipArchive archive)
     {
