@@ -32,8 +32,9 @@ namespace Hero_Designer.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.Label1 = new System.Windows.Forms.Label();
+            this.Label1 = new Hero_Designer.Forms.TransparentLabel();
             this.tmrOp = new System.Windows.Forms.Timer(this.components);
+            this.pictureBox1 = new Hero_Designer.Forms.TransparentPictureBox();
             this.SuspendLayout();
             // 
             // Label1
@@ -56,28 +57,39 @@ namespace Hero_Designer.Forms
             this.tmrOp.Interval = 50;
             this.tmrOp.Tick += new System.EventHandler(this.tmrOp_Tick);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Image = global::Hero_Designer.Resources.MRB_Concept;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(645, 432);
+            this.pictureBox1.TabIndex = 3;
+            this.pictureBox1.TabStop = false;
+            // 
             // frmInitializing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
-            this.BackgroundImage = global::Hero_Designer.Resources.MRB_Concept;
+            this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(645, 363);
+            this.ClientSize = new System.Drawing.Size(645, 432);
             this.Controls.Add(this.Label1);
+            this.Controls.Add(this.pictureBox1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmInitializing";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmInitializing";
-            this.TransparencyKey = System.Drawing.Color.Red;
+            this.TransparencyKey = System.Drawing.Color.Black;
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private Label Label1;
+        private TransparentLabel Label1;
         private Timer tmrOp;
+        private TransparentPictureBox pictureBox1;
     }
 }
