@@ -111,7 +111,21 @@ namespace Hero_Designer.Forms
             {
                 return;
             }
-            myFX.SpecialCase = (Enums.eSpecialCase) cbFXSpecialCase.SelectedIndex;
+
+            if (myFX.ActiveConditionals.Count > 0)
+            {
+                MessageBox.Show(@"You cannot use Special Cases when using Conditionals.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                myFX.SpecialCase = Enums.eSpecialCase.None;
+            }
+            else if (cbFXSpecialCase.SelectedIndex > 0 && myFX.ActiveConditionals.Count == 0)
+            {
+                myFX.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
+                Conditionals(false);
+            }
+            else if (cbFXSpecialCase.SelectedIndex == 0 && myFX.ActiveConditionals.Count == 0)
+            {
+                Conditionals(true);
+            }
             UpdateFXText();
         }
 
@@ -211,7 +225,6 @@ namespace Hero_Designer.Forms
             chkNearGround.Checked = fx.NearGround;
             IgnoreED.Checked = fx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int) fx.SpecialCase;
-            UpdateConditionals();
             cbFXClass.SelectedIndex = (int) fx.EffectClass;
             chkVariable.Checked = fx.VariableModifiedOverride;
             clbSuppression.BeginUpdate();
@@ -243,6 +256,15 @@ namespace Hero_Designer.Forms
 
             lvEffectType.EndUpdate();
             UpdateEffectSubAttribList();
+            if (cbFXSpecialCase.SelectedIndex != 0)
+            {
+                Conditionals(false);
+            }
+            else
+            {
+                Conditionals(true);
+                UpdateConditionals();
+            }
         }
 
         private void FillComboBoxes()
@@ -299,6 +321,46 @@ namespace Hero_Designer.Forms
             for (var index = 0; index <= num3; ++index)
                 cmbEffectId.Items.Add(strArray[index]);*/
             lvSubAttribute.Enabled = true;
+        }
+
+        private void Conditionals(bool isEnabled)
+        {
+            if (isEnabled)
+            {
+                lvConditionalType.Enabled = isEnabled;
+                lvSubConditional.Enabled = isEnabled;
+                lvConditionalBool.Enabled = isEnabled;
+                lvConditionalOp.Enabled = isEnabled;
+                lvActiveConditionals.Enabled = isEnabled;
+                groupBox2.Enabled = isEnabled;
+                lvConditionalType.Refresh();
+                lvSubConditional.Refresh();
+                lvConditionalBool.Refresh();
+                lvConditionalOp.Refresh();
+                lvActiveConditionals.Refresh();
+                UpdateConditionalTypes();
+            }
+            else
+            {
+                lvConditionalType.Enabled = isEnabled;
+                lvConditionalType.Items.Clear();
+                lvSubConditional.Enabled = isEnabled;
+                lvSubConditional.Items.Clear();
+                lvConditionalBool.Enabled = isEnabled;
+                lvConditionalBool.Items.Clear();
+                lvConditionalOp.Enabled = isEnabled;
+                lvConditionalOp.Items.Clear();
+                lvActiveConditionals.Enabled = isEnabled;
+                lvActiveConditionals.Items.Clear();
+                myFX.ActiveConditionals.Clear();
+                groupBox2.Enabled = isEnabled;
+                lvConditionalType.Refresh();
+                lvSubConditional.Refresh();
+                lvConditionalBool.Refresh();
+                lvConditionalOp.Refresh();
+                lvActiveConditionals.Refresh();
+            }
+
         }
 
         private void frmPowerEffect_Load(object sender, EventArgs e)
@@ -789,29 +851,37 @@ namespace Hero_Designer.Forms
         private void ListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             e.DrawDefault = true;
+            e.DrawBackground();
         }
 
         private void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
             var lvControl = (ctlListViewColored)sender;
-            if (e.Item.Selected)
+            if (lvControl.Enabled)
             {
-                if (lvControl.LostFocusItem == e.Item.Index)
+                if (e.Item.Selected)
                 {
-                    e.Item.BackColor = Color.Goldenrod;
-                    e.Item.ForeColor = Color.Black;
-                    lvControl.LostFocusItem = -1;
+                    if (lvControl.LostFocusItem == e.Item.Index)
+                    {
+                        e.Item.BackColor = Color.Goldenrod;
+                        e.Item.ForeColor = Color.Black;
+                        lvControl.LostFocusItem = -1;
+                    }
+                    else if (lvControl.Focused)
+                    {
+                        e.Item.ForeColor = SystemColors.HighlightText;
+                        e.Item.BackColor = SystemColors.Highlight;
+                    }
                 }
-                else if (lvControl.Focused) 
+                else
                 {
-                    e.Item.ForeColor = SystemColors.HighlightText;
-                    e.Item.BackColor = SystemColors.Highlight;
+                    e.Item.BackColor = lvControl.BackColor;
+                    e.Item.ForeColor = lvControl.ForeColor;
                 }
             }
             else
             {
-                e.Item.BackColor = lvControl.BackColor;
-                e.Item.ForeColor = lvControl.ForeColor;
+                e.Item.ForeColor = SystemColors.GrayText;
             }
             e.DrawBackground();
             e.DrawText();
@@ -1180,6 +1250,14 @@ namespace Hero_Designer.Forms
 
             lvConditionalType.View = View.Details;
             lvConditionalType.EndUpdate();
+            if (lvConditionalOp.Items.Count == 0)
+            {
+                var cOps = new List<string> {"Equal To", "Greater Than", "Less Than"};
+                foreach (var op in cOps)
+                {
+                    lvConditionalOp.Items.Add(op);
+                }
+            }
         }
 
         private void UpdateEffectSubAttribList()

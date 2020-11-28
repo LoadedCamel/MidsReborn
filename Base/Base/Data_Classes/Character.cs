@@ -917,8 +917,6 @@ namespace Base.Data_Classes
                 if (!power.Chosen && CurrentBuild.PowerUsed(power.Power))
                 {
                     inherentPowers.Add(power.Power);
-                    Console.WriteLine($"Added {power.Power.DisplayName}");
-                    Console.WriteLine($"Powers Added: {inherentPowers.Count}\r\n");
                     switch (power.Power.InherentType)
                     {
                         case Enums.eGridType.Class:

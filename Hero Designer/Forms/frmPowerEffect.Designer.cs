@@ -62,7 +62,7 @@ namespace Hero_Designer.Forms
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.removeConditional = new System.Windows.Forms.Button();
             this.addConditional = new System.Windows.Forms.Button();
-            this.lvActiveConditionals = new System.Windows.Forms.ListView();
+            this.lvActiveConditionals = new midsControls.ctlListViewColored();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -440,6 +440,7 @@ namespace Hero_Designer.Forms
             this.lvActiveConditionals.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvActiveConditionals.HideSelection = false;
             this.lvActiveConditionals.Location = new System.Drawing.Point(563, 14);
+            this.lvActiveConditionals.LostFocusItem = -1;
             this.lvActiveConditionals.MultiSelect = false;
             this.lvActiveConditionals.Name = "lvActiveConditionals";
             this.lvActiveConditionals.Size = new System.Drawing.Size(219, 259);
@@ -1482,7 +1483,7 @@ namespace Hero_Designer.Forms
         private ColumnHeader columnHeader3;
         private ctlListViewColored lvSubConditional;
         private ColumnHeader columnHeader2;
-        private ListView lvActiveConditionals;
+        private ctlListViewColored lvActiveConditionals;
         private ColumnHeader columnHeader5;
         private ColumnHeader columnHeader6;
         private ColumnHeader columnHeader4;

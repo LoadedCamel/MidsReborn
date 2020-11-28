@@ -156,7 +156,6 @@ public interface IEffect : IComparable, ICloneable
     float AtrModRange { get; set; }
     float AtrModRechargeTime { get; set; }
     float AtrModSecondaryRange { get; set; }
-    Conditionals<KeyValue<string, string>> ActiveConditions { get; set; }
     List<KeyValue<string, string>> ActiveConditionals { get; set; }  
     bool Validated { get; set; }
     IPower GetPower();

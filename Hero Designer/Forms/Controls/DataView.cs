@@ -723,17 +723,22 @@ namespace Hero_Designer.Forms.Controls
                 (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez) &
                 (pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt))
             {
-                /*info_DataList.AddItem(new ctlPairedList.ItemPair("Effect:",
-                    Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
-                    pBase.Effects[durationEffectId].Probability < 1.0,
-                    pBase.Effects[durationEffectId].SpecialCase != Enums.eSpecialCase.None,
-                    durationEffectId));*/
-
-                info_DataList.AddItem(new ctlPairedList.ItemPair("Effect:",
-                    Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
-                    pBase.Effects[durationEffectId].Probability < 1.0,
-                    pBase.Effects[durationEffectId].ActiveConditionals.Count > 0,
-                    durationEffectId));
+                if (pBase.Effects[durationEffectId].SpecialCase != Enums.eSpecialCase.None)
+                {
+                    info_DataList.AddItem(new ctlPairedList.ItemPair("Effect:",
+                        Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
+                        pBase.Effects[durationEffectId].Probability < 1.0,
+                        pBase.Effects[durationEffectId].SpecialCase != Enums.eSpecialCase.None,
+                        durationEffectId));
+                }
+                else
+                {
+                    info_DataList.AddItem(new ctlPairedList.ItemPair("Effect:",
+                        Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
+                        pBase.Effects[durationEffectId].Probability < 1.0,
+                        pBase.Effects[durationEffectId].ActiveConditionals.Count > 0,
+                        durationEffectId));
+                }
 
                 var iAlternate =
                     Math.Abs(pBase.Effects[durationEffectId].Mag - (double)pEnh.Effects[durationEffectId].Mag) > float.Epsilon;
@@ -1488,10 +1493,18 @@ namespace Hero_Designer.Forms.Controls
                 iLabel.Text += "Effects";
                 if (effectMagSum1.Present)
                 {
-                    /*iList.AddItem(FastItem("ToHit", effectMagSum1, effectMagSum2, "%", false, false,
-                        pBase.Effects[effectMagSum1.Index[0]].SpecialCase == Enums.eSpecialCase.Combo, false,
-                        effectMagSum1));*/
-                    iList.AddItem(FastItem("ToHit", effectMagSum1, effectMagSum2, "%", false, false, pBase.Effects[effectMagSum1.Index[0]].ValidateConditional("active", "Combo"), false, effectMagSum1));
+                    if (pBase.Effects[effectMagSum1.Index[0]].SpecialCase != Enums.eSpecialCase.None)
+                    {
+                        iList.AddItem(FastItem("ToHit", effectMagSum1, effectMagSum2, "%", false, false,
+                            pBase.Effects[effectMagSum1.Index[0]].SpecialCase == Enums.eSpecialCase.Combo, false,
+                            effectMagSum1));
+                    }
+                    else
+                    {
+                        iList.AddItem(FastItem("ToHit", effectMagSum1, effectMagSum2, "%", false, false,
+                            pBase.Effects[effectMagSum1.Index[0]].ValidateConditional("active", "Combo"), false,
+                            effectMagSum1));
+                    }
                 }
 
                 if (sFXCheck(effectMagSum1))
