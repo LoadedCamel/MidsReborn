@@ -364,7 +364,7 @@ namespace Hero_Designer
                             {
                                 if (iEffect == Enums.eEffectType.DamageBuff)
                                 {
-                                    if (!((effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)) | effect.ValidateConditional("active", "Defiance")))
+                                    if (!((effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)) | effect.ValidateConditional("active", "Defiance") | effect.SpecialCase == Enums.eSpecialCase.Defiance))
                                         nBuffs.Damage[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
                                 }
                                 else if (!((effect.ETModifies == Enums.eEffectType.Accuracy) & enhancementPass))
