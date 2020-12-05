@@ -4,9 +4,9 @@
   "FullName": "Incarnate.Lore_Pet_Elementals_LT",
   "ImageName": "",
   "Power": [
-    5332,
     5333,
-    5334
+    5334,
+    5335
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Elementals_LT",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5332,
+      "PowerIndex": 5333,
       "PowerSetID": 2837,
       "StaticIndex": 5508,
       "NGroupMembership": [],
@@ -85,8 +85,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 59.2804222,
-          "MagPercent": 59.2804222,
+          "Mag": 86.64071,
+          "MagPercent": 86.64071,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -316,7 +316,7 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 5333,
+      "PowerIndex": 5334,
       "PowerSetID": 2837,
       "PowerSetIndex": 1,
       "StaticIndex": 5510,
@@ -379,8 +379,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 10.84398,
-          "MagPercent": 10.84398,
+          "Mag": 15.84891,
+          "MagPercent": 15.84891,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -435,8 +435,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.506388,
-          "MagPercent": 6.506388,
+          "Mag": 9.509346,
+          "MagPercent": 9.509346,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -614,7 +614,7 @@
     },
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 5334,
+      "PowerIndex": 5335,
       "PowerSetID": 2837,
       "PowerSetIndex": 2,
       "StaticIndex": 5509,
@@ -675,8 +675,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

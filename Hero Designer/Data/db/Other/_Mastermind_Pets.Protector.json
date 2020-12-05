@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Protector",
   "ImageName": "",
   "Power": [
-    5990,
     5991,
     5992,
-    5993
+    5993,
+    5994
   ],
   "SetType": 8,
   "DisplayName": "Protector",
@@ -24,7 +24,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5990,
+      "PowerIndex": 5991,
       "PowerSetID": 2976,
       "StaticIndex": 1265,
       "NGroupMembership": [],
@@ -528,7 +528,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 7.8,
-      "PowerIndex": 5991,
+      "PowerIndex": 5992,
       "PowerSetID": 2976,
       "PowerSetIndex": 1,
       "StaticIndex": 1266,
@@ -653,7 +653,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 5.2,
-      "PowerIndex": 5992,
+      "PowerIndex": 5993,
       "PowerSetID": 2976,
       "PowerSetIndex": 2,
       "StaticIndex": 1267,
@@ -839,7 +839,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5993,
+      "PowerIndex": 5994,
       "PowerSetID": 2976,
       "PowerSetIndex": 3,
       "StaticIndex": 1268,

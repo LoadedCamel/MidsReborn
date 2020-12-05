@@ -4,7 +4,7 @@
   "FullName": "Pets.BounceWorld",
   "ImageName": "",
   "Power": [
-    6226
+    6227
   ],
   "SetType": 8,
   "DisplayName": "Bounce World",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6226,
+      "PowerIndex": 6227,
       "PowerSetID": 3037,
       "StaticIndex": 1552,
       "NGroupMembership": [],

@@ -4,7 +4,7 @@
   "FullName": "Pets.Venomous_Gas",
   "ImageName": "",
   "Power": [
-    6647
+    6648
   ],
   "SetType": 8,
   "DisplayName": "Venomous Gas",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6647,
+      "PowerIndex": 6648,
       "PowerSetID": 3253,
       "StaticIndex": 5631,
       "NGroupMembership": [],

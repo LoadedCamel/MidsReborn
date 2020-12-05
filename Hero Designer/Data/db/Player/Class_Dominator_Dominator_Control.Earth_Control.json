@@ -4,7 +4,6 @@
   "FullName": "Dominator_Control.Earth_Control",
   "ImageName": "EarthControl.png",
   "Power": [
-    4014,
     4015,
     4016,
     4017,
@@ -12,7 +11,8 @@
     4019,
     4020,
     4021,
-    4022
+    4022,
+    4023
   ],
   "SetType": 1,
   "DisplayName": "Earth Control",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 7.8,
-      "PowerIndex": 4014,
+      "PowerIndex": 4015,
       "PowerSetID": 2716,
       "StaticIndex": 793,
       "NGroupMembership": [],
@@ -102,8 +102,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.22932,
-          "MagPercent": 7.22932,
+          "Mag": 10.56594,
+          "MagPercent": 10.56594,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -222,8 +222,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 19.3413219,
-          "MagPercent": 19.3413219,
+          "Mag": 28.2681179,
+          "MagPercent": 28.2681179,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -698,8 +698,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -820,7 +820,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 8.528,
-      "PowerIndex": 4015,
+      "PowerIndex": 4016,
       "PowerSetID": 2716,
       "PowerSetIndex": 1,
       "StaticIndex": 794,
@@ -1011,8 +1011,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 109.762764,
-          "MagPercent": 109.762764,
+          "Mag": 160.422668,
+          "MagPercent": 160.422668,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1193,8 +1193,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 12.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1481,8 +1481,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1545,7 +1545,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 15.6,
-      "PowerIndex": 4016,
+      "PowerIndex": 4017,
       "PowerSetID": 2716,
       "PowerSetIndex": 2,
       "StaticIndex": 795,
@@ -1618,8 +1618,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1738,8 +1738,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 4.67303228,
-          "MagPercent": 4.67303228,
+          "Mag": 6.82982349,
+          "MagPercent": 6.82982349,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -2214,8 +2214,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 12.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2336,7 +2336,7 @@
     {
       "CastTimeReal": 3.1,
       "ToggleCost": 7.8,
-      "PowerIndex": 4017,
+      "PowerIndex": 4018,
       "PowerSetID": 2716,
       "PowerSetIndex": 3,
       "StaticIndex": 796,
@@ -2465,7 +2465,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 15.6,
-      "PowerIndex": 4018,
+      "PowerIndex": 4019,
       "PowerSetID": 2716,
       "PowerSetIndex": 4,
       "StaticIndex": 797,
@@ -2776,8 +2776,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2840,7 +2840,7 @@
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 10.4,
-      "PowerIndex": 4019,
+      "PowerIndex": 4020,
       "PowerSetID": 2716,
       "PowerSetIndex": 5,
       "StaticIndex": 798,
@@ -2973,8 +2973,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 9.03665,
-          "MagPercent": 9.03665,
+          "Mag": 13.2074251,
+          "MagPercent": 13.2074251,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3216,8 +3216,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 12.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -3280,7 +3280,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 10.4,
-      "PowerIndex": 4020,
+      "PowerIndex": 4021,
       "PowerSetID": 2716,
       "PowerSetIndex": 6,
       "StaticIndex": 799,
@@ -3415,7 +3415,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 18.2,
-      "PowerIndex": 4021,
+      "PowerIndex": 4022,
       "PowerSetID": 2716,
       "PowerSetIndex": 7,
       "StaticIndex": 800,
@@ -3898,7 +3898,7 @@
     {
       "CastTimeReal": 3.2,
       "ToggleCost": 20.8,
-      "PowerIndex": 4022,
+      "PowerIndex": 4023,
       "PowerSetID": 2716,
       "PowerSetIndex": 8,
       "StaticIndex": 801,

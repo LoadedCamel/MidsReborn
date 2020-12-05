@@ -4,8 +4,8 @@
   "FullName": "Pets.Corruptor_IceStorm",
   "ImageName": "",
   "Power": [
-    6259,
-    6260
+    6260,
+    6261
   ],
   "SetType": 8,
   "DisplayName": "Ice Storm",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6259,
+      "PowerIndex": 6260,
       "PowerSetID": 3105,
       "StaticIndex": 1563,
       "NGroupMembership": [],
@@ -603,7 +603,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6260,
+      "PowerIndex": 6261,
       "PowerSetID": 3105,
       "PowerSetIndex": 1,
       "StaticIndex": 1564,

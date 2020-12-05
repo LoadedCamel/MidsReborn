@@ -4,7 +4,7 @@
   "FullName": "Pets.ResistAll_NoFly_Fast",
   "ImageName": "",
   "Power": [
-    6495
+    6496
   ],
   "SetType": 8,
   "DisplayName": "ResistAll NoFly Fast",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6495,
+      "PowerIndex": 6496,
       "PowerSetID": 3188,
       "StaticIndex": 6007,
       "NGroupMembership": [],

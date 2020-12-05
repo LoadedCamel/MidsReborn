@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Traps_Acid_Mortar",
   "ImageName": "",
   "Power": [
-    10269,
-    10270
+    10270,
+    10271
   ],
   "SetType": 8,
   "DisplayName": "Acid Mortar",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10269,
+      "PowerIndex": 10270,
       "PowerSetID": 3450,
       "StaticIndex": 3156,
       "NGroupMembership": [],
@@ -85,8 +85,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.361466,
-          "MagPercent": 0.361466,
+          "Mag": 0.528297,
+          "MagPercent": 0.528297,
           "Duration": 20.0,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -144,8 +144,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -201,8 +201,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -258,8 +258,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -315,8 +315,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -372,8 +372,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -429,8 +429,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -486,8 +486,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -543,8 +543,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -600,8 +600,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -660,7 +660,7 @@
       "AoEModifier": 2.2
     },
     {
-      "PowerIndex": 10270,
+      "PowerIndex": 10271,
       "PowerSetID": 3450,
       "PowerSetIndex": 1,
       "StaticIndex": 3157,

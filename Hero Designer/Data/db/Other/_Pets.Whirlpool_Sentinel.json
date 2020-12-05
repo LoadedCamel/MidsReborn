@@ -4,8 +4,8 @@
   "FullName": "Pets.Whirlpool_Sentinel",
   "ImageName": "",
   "Power": [
-    6688,
-    6689
+    6689,
+    6690
   ],
   "SetType": 8,
   "DisplayName": "Whirlpool",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6688,
+      "PowerIndex": 6689,
       "PowerSetID": 3272,
       "StaticIndex": 10651,
       "NGroupMembership": [],
@@ -547,7 +547,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6689,
+      "PowerIndex": 6690,
       "PowerSetID": 3272,
       "PowerSetIndex": 1,
       "StaticIndex": 10652,

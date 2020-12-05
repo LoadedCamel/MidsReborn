@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Lioness_2",
   "ImageName": "",
   "Power": [
-    5964,
-    5965
+    5965,
+    5966
   ],
   "SetType": 8,
   "DisplayName": "Lioness",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 5964,
+      "PowerIndex": 5965,
       "PowerSetID": 2967,
       "StaticIndex": 6204,
       "NGroupMembership": [],
@@ -667,7 +667,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 13.0,
-      "PowerIndex": 5965,
+      "PowerIndex": 5966,
       "PowerSetID": 2967,
       "PowerSetIndex": 1,
       "StaticIndex": 6205,

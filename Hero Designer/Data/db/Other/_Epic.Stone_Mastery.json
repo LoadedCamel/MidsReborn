@@ -4,11 +4,11 @@
   "FullName": "Epic.Stone_Mastery",
   "ImageName": "StoneArmor.png",
   "Power": [
-    4409,
     4410,
     4411,
     4412,
-    4413
+    4413,
+    4414
   ],
   "SetType": 3,
   "DisplayName": "Stone Mastery",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 12.74,
-      "PowerIndex": 4409,
+      "PowerIndex": 4410,
       "PowerSetID": 2793,
       "StaticIndex": 1004,
       "NGroupMembership": [],
@@ -107,8 +107,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 27.5270386,
-          "MagPercent": 27.5270386,
+          "Mag": 52.55163,
+          "MagPercent": 52.55163,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -222,8 +222,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 42.13044,
-          "MagPercent": 42.13044,
+          "Mag": 80.4308548,
+          "MagPercent": 80.4308548,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -339,8 +339,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 27.5270386,
-          "MagPercent": 27.5270386,
+          "Mag": 52.55163,
+          "MagPercent": 52.55163,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -398,8 +398,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 21.06522,
-          "MagPercent": 21.06522,
+          "Mag": 40.2154274,
+          "MagPercent": 40.2154274,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -646,7 +646,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 11.7,
-      "PowerIndex": 4410,
+      "PowerIndex": 4411,
       "PowerSetID": 2793,
       "PowerSetIndex": 1,
       "StaticIndex": 1003,
@@ -722,8 +722,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 50.1603851,
-          "MagPercent": 50.1603851,
+          "Mag": 95.76075,
+          "MagPercent": 95.76075,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -836,8 +836,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 130.769653,
-          "MagPercent": 130.769653,
+          "Mag": 249.651184,
+          "MagPercent": 249.651184,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -952,8 +952,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 50.1603851,
-          "MagPercent": 50.1603851,
+          "Mag": 95.76075,
+          "MagPercent": 95.76075,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1011,8 +1011,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 65.38498,
-          "MagPercent": 65.38498,
+          "Mag": 124.82589,
+          "MagPercent": 124.82589,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1077,7 +1077,7 @@
       "CastTimeReal": 1.5,
       "ToggleCost": 18.512,
       "IsEpic": true,
-      "PowerIndex": 4411,
+      "PowerIndex": 4412,
       "PowerSetID": 2793,
       "PowerSetIndex": 2,
       "StaticIndex": 3321,
@@ -1094,11 +1094,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4410,
+            4411,
             -1
           ],
           [
-            4409,
+            4410,
             -1
           ]
         ],
@@ -1165,8 +1165,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 79.52256,
-          "MagPercent": 79.52256,
+          "Mag": 151.815811,
+          "MagPercent": 151.815811,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1221,8 +1221,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 79.52256,
-          "MagPercent": 79.52256,
+          "Mag": 151.815811,
+          "MagPercent": 151.815811,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1280,8 +1280,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 65.89759,
-          "MagPercent": 65.89759,
+          "Mag": 125.80452,
+          "MagPercent": 125.80452,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1337,8 +1337,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 65.89759,
-          "MagPercent": 65.89759,
+          "Mag": 125.80452,
+          "MagPercent": 125.80452,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1524,7 +1524,7 @@
       "CastTimeReal": 0.73,
       "ToggleCost": 0.325,
       "IsEpic": true,
-      "PowerIndex": 4412,
+      "PowerIndex": 4413,
       "PowerSetID": 2793,
       "PowerSetIndex": 3,
       "StaticIndex": 1005,
@@ -1541,11 +1541,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4410,
+            4411,
             -1
           ],
           [
-            4409,
+            4410,
             -1
           ]
         ],
@@ -1606,8 +1606,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1665,8 +1665,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1725,8 +1725,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1784,8 +1784,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1843,8 +1843,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1902,8 +1902,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1961,8 +1961,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2020,8 +2020,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2079,8 +2079,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.160000011,
-          "MagPercent": 16.0000019,
+          "Mag": 0.136,
+          "MagPercent": 13.6,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2549,8 +2549,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.275,
-          "MagPercent": 27.5,
+          "Mag": 0.23375,
+          "MagPercent": 23.375,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2614,7 +2614,7 @@
       "CastTimeReal": 2.03,
       "ToggleCost": 13.0,
       "IsEpic": true,
-      "PowerIndex": 4413,
+      "PowerIndex": 4414,
       "PowerSetID": 2793,
       "PowerSetIndex": 4,
       "StaticIndex": 1006,
@@ -2631,24 +2631,24 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4410,
-            4409
+            4411,
+            4410
           ],
           [
-            4410,
-            4411
+            4411,
+            4412
+          ],
+          [
+            4411,
+            4413
           ],
           [
             4410,
             4412
           ],
           [
-            4409,
-            4411
-          ],
-          [
-            4409,
-            4412
+            4410,
+            4413
           ]
         ],
         "NPowerIDNot": [],
@@ -2894,8 +2894,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 120.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Soldier_2",
   "ImageName": "",
   "Power": [
-    6019,
-    6020
+    6020,
+    6021
   ],
   "SetType": 8,
   "DisplayName": "Soldier",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 6.864,
-      "PowerIndex": 6019,
+      "PowerIndex": 6020,
       "PowerSetID": 2985,
       "StaticIndex": 1299,
       "NGroupMembership": [],
@@ -273,7 +273,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 8.528,
-      "PowerIndex": 6020,
+      "PowerIndex": 6021,
       "PowerSetID": 2985,
       "PowerSetIndex": 1,
       "StaticIndex": 1300,

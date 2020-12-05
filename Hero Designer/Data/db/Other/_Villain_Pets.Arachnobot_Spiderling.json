@@ -4,11 +4,11 @@
   "FullName": "Villain_Pets.Arachnobot_Spiderling",
   "ImageName": "",
   "Power": [
-    10042,
     10043,
     10044,
     10045,
-    10046
+    10046,
+    10047
   ],
   "SetType": 8,
   "DisplayName": "Arachnobot Spiderling",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 5.46,
-      "PowerIndex": 10042,
+      "PowerIndex": 10043,
       "PowerSetID": 3453,
       "StaticIndex": 3022,
       "NGroupMembership": [],
@@ -91,8 +91,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 10.121048,
-          "MagPercent": 10.121048,
+          "Mag": 14.7923164,
+          "MagPercent": 14.7923164,
           "Duration": 1.0,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -150,8 +150,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.125,
-          "MagPercent": -12.5,
+          "Mag": -0.075,
+          "MagPercent": -7.50000048,
           "Duration": 5.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -214,7 +214,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 4.42,
-      "PowerIndex": 10043,
+      "PowerIndex": 10044,
       "PowerSetID": 3453,
       "PowerSetIndex": 1,
       "StaticIndex": 3023,
@@ -277,8 +277,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 20.7982082,
-          "MagPercent": 20.7982082,
+          "Mag": 39.705677,
+          "MagPercent": 39.705677,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -335,7 +335,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10044,
+      "PowerIndex": 10045,
       "PowerSetID": 3453,
       "PowerSetIndex": 2,
       "StaticIndex": 3024,
@@ -614,7 +614,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10045,
+      "PowerIndex": 10046,
       "PowerSetID": 3453,
       "PowerSetIndex": 3,
       "StaticIndex": 3025,
@@ -890,7 +890,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10046,
+      "PowerIndex": 10047,
       "PowerSetID": 3453,
       "PowerSetIndex": 4,
       "StaticIndex": 3026,

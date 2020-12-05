@@ -4,11 +4,11 @@
   "FullName": "Pool.Manipulation",
   "ImageName": "Presence.png",
   "Power": [
-    6747,
     6748,
     6749,
     6750,
-    6751
+    6751,
+    6752
   ],
   "SetType": 5,
   "DisplayName": "Presence",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 6.5,
-      "PowerIndex": 6747,
+      "PowerIndex": 6748,
       "PowerSetID": 3288,
       "StaticIndex": 1817,
       "NGroupMembership": [],
@@ -213,7 +213,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6748,
+      "PowerIndex": 6749,
       "PowerSetID": 3288,
       "PowerSetIndex": 1,
       "StaticIndex": 1818,
@@ -404,7 +404,7 @@
       "CastTimeReal": 1.67,
       "ToggleCost": 10.0,
       "IsEpic": true,
-      "PowerIndex": 6749,
+      "PowerIndex": 6750,
       "PowerSetID": 3288,
       "PowerSetIndex": 2,
       "StaticIndex": 1819,
@@ -421,11 +421,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6747,
+            6748,
             -1
           ],
           [
-            6748,
+            6749,
             -1
           ]
         ],
@@ -860,7 +860,7 @@
       "CastTimeReal": 1.97,
       "ToggleCost": 18.0,
       "IsEpic": true,
-      "PowerIndex": 6750,
+      "PowerIndex": 6751,
       "PowerSetID": 3288,
       "PowerSetIndex": 3,
       "StaticIndex": 1820,
@@ -877,16 +877,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6747,
-            6748
-          ],
-          [
-            6747,
+            6748,
             6749
           ],
           [
             6748,
-            6749
+            6750
+          ],
+          [
+            6749,
+            6750
           ]
         ],
         "NPowerIDNot": [],
@@ -1262,7 +1262,7 @@
     {
       "CastTimeReal": 1.97,
       "IsEpic": true,
-      "PowerIndex": 6751,
+      "PowerIndex": 6752,
       "PowerSetID": 3288,
       "PowerSetIndex": 4,
       "StaticIndex": 9615,
@@ -1279,28 +1279,28 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6747,
-            6748
-          ],
-          [
-            6747,
-            6749
-          ],
-          [
-            6747,
-            6750
-          ],
-          [
             6748,
             6749
           ],
           [
             6748,
             6750
+          ],
+          [
+            6748,
+            6751
           ],
           [
             6749,
             6750
+          ],
+          [
+            6749,
+            6751
+          ],
+          [
+            6750,
+            6751
           ]
         ],
         "NPowerIDNot": [],
@@ -1552,8 +1552,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1612,8 +1612,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1672,8 +1672,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1732,8 +1732,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1792,8 +1792,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1852,8 +1852,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1912,8 +1912,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1972,8 +1972,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "VariableModified": true,

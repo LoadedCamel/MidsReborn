@@ -4,7 +4,7 @@
   "FullName": "Pets.Phoenix",
   "ImageName": "",
   "Power": [
-    6445
+    6446
   ],
   "SetType": 8,
   "DisplayName": "Phoenix",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6445,
+      "PowerIndex": 6446,
       "PowerSetID": 3157,
       "StaticIndex": 1679,
       "NGroupMembership": [],

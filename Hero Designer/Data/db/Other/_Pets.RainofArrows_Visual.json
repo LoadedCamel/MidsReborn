@@ -4,7 +4,7 @@
   "FullName": "Pets.RainofArrows_Visual",
   "ImageName": "",
   "Power": [
-    6487
+    6488
   ],
   "SetType": 8,
   "DisplayName": "Rain of Arrows",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6487,
+      "PowerIndex": 6488,
       "PowerSetID": 3177,
       "StaticIndex": 1696,
       "NGroupMembership": [],

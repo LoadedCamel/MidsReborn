@@ -4,9 +4,9 @@
   "FullName": "Pets.Traps_Seeker2_Defender",
   "ImageName": "",
   "Power": [
-    6624,
     6625,
-    6626
+    6626,
+    6627
   ],
   "SetType": 8,
   "DisplayName": "Seeker 2",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6624,
+      "PowerIndex": 6625,
       "PowerSetID": 3199,
       "StaticIndex": 3549,
       "NGroupMembership": [],
@@ -906,7 +906,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 6625,
+      "PowerIndex": 6626,
       "PowerSetID": 3199,
       "PowerSetIndex": 1,
       "StaticIndex": 3551,
@@ -1125,7 +1125,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6626,
+      "PowerIndex": 6627,
       "PowerSetID": 3199,
       "PowerSetIndex": 2,
       "StaticIndex": 3550,

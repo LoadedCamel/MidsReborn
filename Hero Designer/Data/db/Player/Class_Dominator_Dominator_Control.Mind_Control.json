@@ -4,7 +4,6 @@
   "FullName": "Dominator_Control.Mind_Control",
   "ImageName": "MindControl.png",
   "Power": [
-    4059,
     4060,
     4061,
     4062,
@@ -12,7 +11,8 @@
     4064,
     4065,
     4066,
-    4067
+    4067,
+    4068
   ],
   "SetType": 1,
   "DisplayName": "Mind Control",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 5.2,
-      "PowerIndex": 4059,
+      "PowerIndex": 4060,
       "PowerSetID": 2721,
       "StaticIndex": 829,
       "NGroupMembership": [],
@@ -162,8 +162,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -220,8 +220,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 91.5448761,
-          "MagPercent": 91.5448761,
+          "Mag": 133.7965,
+          "MagPercent": 133.7965,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -472,7 +472,7 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 6.864,
-      "PowerIndex": 4060,
+      "PowerIndex": 4061,
       "PowerSetID": 2721,
       "PowerSetIndex": 1,
       "StaticIndex": 830,
@@ -658,8 +658,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 98.62961,
-          "MagPercent": 98.62961,
+          "Mag": 144.151123,
+          "MagPercent": 144.151123,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -717,8 +717,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 47.7135124,
-          "MagPercent": 47.7135124,
+          "Mag": 69.73521,
+          "MagPercent": 69.73521,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -841,7 +841,7 @@
     {
       "CastTimeReal": 1.1,
       "ToggleCost": 8.528,
-      "PowerIndex": 4061,
+      "PowerIndex": 4062,
       "PowerSetID": 2721,
       "PowerSetIndex": 2,
       "StaticIndex": 831,
@@ -1032,8 +1032,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 75.4018,
-          "MagPercent": 75.4018,
+          "Mag": 110.202751,
+          "MagPercent": 110.202751,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1214,8 +1214,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1278,7 +1278,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.528,
-      "PowerIndex": 4062,
+      "PowerIndex": 4063,
       "PowerSetID": 2721,
       "PowerSetIndex": 3,
       "StaticIndex": 832,
@@ -1595,7 +1595,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 15.6,
-      "PowerIndex": 4063,
+      "PowerIndex": 4064,
       "PowerSetID": 2721,
       "PowerSetIndex": 4,
       "StaticIndex": 833,
@@ -1915,7 +1915,7 @@
     {
       "CastTimeReal": 1.13,
       "ToggleCost": 3.12,
-      "PowerIndex": 4064,
+      "PowerIndex": 4065,
       "PowerSetID": 2721,
       "PowerSetIndex": 5,
       "StaticIndex": 834,
@@ -2286,7 +2286,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.KillTk",
-          "nSummon": 9658,
+          "nSummon": 9659,
           "UIDClassName": "",
           "nIDClassName": -1,
           "PvMode": 2,
@@ -2338,7 +2338,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 15.6,
-      "PowerIndex": 4065,
+      "PowerIndex": 4066,
       "PowerSetID": 2721,
       "PowerSetIndex": 6,
       "StaticIndex": 835,
@@ -2657,7 +2657,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 20.8,
-      "PowerIndex": 4066,
+      "PowerIndex": 4067,
       "PowerSetID": 2721,
       "PowerSetIndex": 7,
       "StaticIndex": 836,
@@ -2795,8 +2795,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -2853,8 +2853,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 42.6406937,
-          "MagPercent": 42.6406937,
+          "Mag": 62.3210831,
+          "MagPercent": 62.3210831,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3105,7 +3105,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 26.0,
-      "PowerIndex": 4067,
+      "PowerIndex": 4068,
       "PowerSetID": 2721,
       "PowerSetIndex": 8,
       "StaticIndex": 837,

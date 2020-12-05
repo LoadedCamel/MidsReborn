@@ -4,7 +4,6 @@
   "FullName": "Pets.Decoy",
   "ImageName": "",
   "Power": [
-    6276,
     6277,
     6278,
     6279,
@@ -12,7 +11,8 @@
     6281,
     6282,
     6283,
-    6284
+    6284,
+    6285
   ],
   "SetType": 8,
   "DisplayName": "Decoy",
@@ -29,7 +29,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6276,
+      "PowerIndex": 6277,
       "PowerSetID": 3062,
       "StaticIndex": 1575,
       "NGroupMembership": [],
@@ -304,7 +304,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6277,
+      "PowerIndex": 6278,
       "PowerSetID": 3062,
       "PowerSetIndex": 1,
       "StaticIndex": 1576,
@@ -594,7 +594,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6278,
+      "PowerIndex": 6279,
       "PowerSetID": 3062,
       "PowerSetIndex": 2,
       "StaticIndex": 1577,
@@ -883,7 +883,7 @@
     },
     {
       "CastTimeReal": 2.5,
-      "PowerIndex": 6279,
+      "PowerIndex": 6280,
       "PowerSetID": 3062,
       "PowerSetIndex": 3,
       "StaticIndex": 1578,
@@ -1120,7 +1120,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6280,
+      "PowerIndex": 6281,
       "PowerSetID": 3062,
       "PowerSetIndex": 4,
       "StaticIndex": 1579,
@@ -1410,7 +1410,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6281,
+      "PowerIndex": 6282,
       "PowerSetID": 3062,
       "PowerSetIndex": 5,
       "StaticIndex": 1580,
@@ -1699,7 +1699,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6282,
+      "PowerIndex": 6283,
       "PowerSetID": 3062,
       "PowerSetIndex": 6,
       "StaticIndex": 1581,
@@ -1935,7 +1935,7 @@
     },
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6283,
+      "PowerIndex": 6284,
       "PowerSetID": 3062,
       "PowerSetIndex": 7,
       "StaticIndex": 1582,
@@ -2171,7 +2171,7 @@
     },
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 6284,
+      "PowerIndex": 6285,
       "PowerSetID": 3062,
       "PowerSetIndex": 8,
       "StaticIndex": 1583,

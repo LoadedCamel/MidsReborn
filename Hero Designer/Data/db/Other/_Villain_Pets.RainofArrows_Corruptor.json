@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.RainofArrows_Corruptor",
   "ImageName": "",
   "Power": [
-    10218,
-    10219
+    10219,
+    10220
   ],
   "SetType": 8,
   "DisplayName": "Rain of Arrows",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10218,
+      "PowerIndex": 10219,
       "PowerSetID": 3506,
       "StaticIndex": 4102,
       "NGroupMembership": [],
@@ -79,8 +79,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 27.6646748,
-          "MagPercent": 27.6646748,
+          "Mag": 52.81439,
+          "MagPercent": 52.81439,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -135,8 +135,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 13.10807,
-          "MagPercent": 13.10807,
+          "Mag": 25.0245037,
+          "MagPercent": 25.0245037,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -192,8 +192,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 27.6646748,
-          "MagPercent": 27.6646748,
+          "Mag": 52.81439,
+          "MagPercent": 52.81439,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -251,8 +251,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 13.10807,
-          "MagPercent": 13.10807,
+          "Mag": 25.0245037,
+          "MagPercent": 25.0245037,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -312,7 +312,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10219,
+      "PowerIndex": 10220,
       "PowerSetID": 3506,
       "PowerSetIndex": 1,
       "StaticIndex": 4103,

@@ -4,9 +4,9 @@
   "FullName": "Mastermind_Pets.Dire_Wolf_3",
   "ImageName": "",
   "Power": [
-    5873,
     5874,
-    5875
+    5875,
+    5876
   ],
   "SetType": 8,
   "DisplayName": "Dire Wolf",
@@ -25,7 +25,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 16.64,
-      "PowerIndex": 5873,
+      "PowerIndex": 5874,
       "PowerSetID": 2936,
       "StaticIndex": 6181,
       "NGroupMembership": [],
@@ -1329,7 +1329,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 5874,
+      "PowerIndex": 5875,
       "PowerSetID": 2936,
       "PowerSetIndex": 1,
       "StaticIndex": 6182,
@@ -1387,7 +1387,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Pack_Mentality",
-          "nSummon": 9753,
+          "nSummon": 9754,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1437,7 +1437,7 @@
     {
       "CastTimeReal": 1.6,
       "ToggleCost": 13.0,
-      "PowerIndex": 5875,
+      "PowerIndex": 5876,
       "PowerSetID": 2936,
       "PowerSetIndex": 2,
       "StaticIndex": 6183,

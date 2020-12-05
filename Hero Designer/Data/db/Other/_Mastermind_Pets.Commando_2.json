@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Commando_2",
   "ImageName": "",
   "Power": [
-    5847,
-    5848
+    5848,
+    5849
   ],
   "SetType": 8,
   "DisplayName": "Commando",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 10.192,
-      "PowerIndex": 5847,
+      "PowerIndex": 5848,
       "PowerSetID": 2930,
       "StaticIndex": 1180,
       "NGroupMembership": [],
@@ -328,7 +328,7 @@
     {
       "CastTimeReal": 6.0,
       "ToggleCost": 15.6,
-      "PowerIndex": 5848,
+      "PowerIndex": 5849,
       "PowerSetID": 2930,
       "PowerSetIndex": 1,
       "StaticIndex": 1182,

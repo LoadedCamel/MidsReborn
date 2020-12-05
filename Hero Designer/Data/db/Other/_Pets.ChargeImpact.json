@@ -4,7 +4,7 @@
   "FullName": "Pets.ChargeImpact",
   "ImageName": "",
   "Power": [
-    6249
+    6250
   ],
   "SetType": 8,
   "DisplayName": "Charge Impact",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6249,
+      "PowerIndex": 6250,
       "PowerSetID": 3057,
       "StaticIndex": 3334,
       "NGroupMembership": [],

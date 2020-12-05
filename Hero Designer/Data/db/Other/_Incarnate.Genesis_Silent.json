@@ -4,7 +4,6 @@
   "FullName": "Incarnate.Genesis_Silent",
   "ImageName": "",
   "Power": [
-    4755,
     4756,
     4757,
     4758,
@@ -23,7 +22,8 @@
     4771,
     4772,
     4773,
-    4774
+    4774,
+    4775
   ],
   "SetType": 11,
   "DisplayName": "Genesis",
@@ -40,7 +40,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4755,
+      "PowerIndex": 4756,
       "PowerSetID": 2808,
       "StaticIndex": 9423,
       "NGroupMembership": [],
@@ -107,7 +107,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Incarnate.Genesis_Silent.Lore_Data_Boost",
-          "nSummon": 4771,
+          "nSummon": 4772,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -156,7 +156,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4756,
+      "PowerIndex": 4757,
       "PowerSetID": 2808,
       "PowerSetIndex": 1,
       "StaticIndex": 9439,
@@ -1487,7 +1487,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4757,
+      "PowerIndex": 4758,
       "PowerSetID": 2808,
       "PowerSetIndex": 2,
       "StaticIndex": 9440,
@@ -2818,7 +2818,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4758,
+      "PowerIndex": 4759,
       "PowerSetID": 2808,
       "PowerSetIndex": 3,
       "StaticIndex": 9441,
@@ -4149,7 +4149,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4759,
+      "PowerIndex": 4760,
       "PowerSetID": 2808,
       "PowerSetIndex": 4,
       "StaticIndex": 9442,
@@ -5480,7 +5480,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4760,
+      "PowerIndex": 4761,
       "PowerSetID": 2808,
       "PowerSetIndex": 5,
       "StaticIndex": 9435,
@@ -5641,7 +5641,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4761,
+      "PowerIndex": 4762,
       "PowerSetID": 2808,
       "PowerSetIndex": 6,
       "StaticIndex": 9436,
@@ -5802,7 +5802,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4762,
+      "PowerIndex": 4763,
       "PowerSetID": 2808,
       "PowerSetIndex": 7,
       "StaticIndex": 9437,
@@ -5963,7 +5963,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4763,
+      "PowerIndex": 4764,
       "PowerSetID": 2808,
       "PowerSetIndex": 8,
       "StaticIndex": 9438,
@@ -6124,7 +6124,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4764,
+      "PowerIndex": 4765,
       "PowerSetID": 2808,
       "PowerSetIndex": 9,
       "StaticIndex": 9431,
@@ -6638,7 +6638,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4765,
+      "PowerIndex": 4766,
       "PowerSetID": 2808,
       "PowerSetIndex": 10,
       "StaticIndex": 9432,
@@ -7152,7 +7152,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4766,
+      "PowerIndex": 4767,
       "PowerSetID": 2808,
       "PowerSetIndex": 11,
       "StaticIndex": 9433,
@@ -7666,7 +7666,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4767,
+      "PowerIndex": 4768,
       "PowerSetID": 2808,
       "PowerSetIndex": 12,
       "StaticIndex": 9434,
@@ -8180,7 +8180,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4768,
+      "PowerIndex": 4769,
       "PowerSetID": 2808,
       "PowerSetIndex": 13,
       "StaticIndex": 9424,
@@ -8247,7 +8247,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Incarnate.Genesis_Silent.Lore_Data_Boost_2",
-          "nSummon": 4772,
+          "nSummon": 4773,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -8296,7 +8296,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4769,
+      "PowerIndex": 4770,
       "PowerSetID": 2808,
       "PowerSetIndex": 14,
       "StaticIndex": 9425,
@@ -8363,7 +8363,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Incarnate.Genesis_Silent.Lore_Data_Boost_3",
-          "nSummon": 4773,
+          "nSummon": 4774,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -8412,7 +8412,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4770,
+      "PowerIndex": 4771,
       "PowerSetID": 2808,
       "PowerSetIndex": 15,
       "StaticIndex": 9426,
@@ -8479,7 +8479,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Incarnate.Genesis_Silent.Lore_Data_Boost_4",
-          "nSummon": 4774,
+          "nSummon": 4775,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -8528,7 +8528,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4771,
+      "PowerIndex": 4772,
       "PowerSetID": 2808,
       "PowerSetIndex": 16,
       "StaticIndex": 9427,
@@ -9091,7 +9091,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4772,
+      "PowerIndex": 4773,
       "PowerSetID": 2808,
       "PowerSetIndex": 17,
       "StaticIndex": 9428,
@@ -9654,7 +9654,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4773,
+      "PowerIndex": 4774,
       "PowerSetID": 2808,
       "PowerSetIndex": 18,
       "StaticIndex": 9429,
@@ -10217,7 +10217,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4774,
+      "PowerIndex": 4775,
       "PowerSetID": 2808,
       "PowerSetIndex": 19,
       "StaticIndex": 9430,

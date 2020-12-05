@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Revolver",
   "ImageName": "",
   "Power": [
-    6081
+    6082
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.33,
       "ToggleCost": 3.952,
-      "PowerIndex": 6081,
+      "PowerIndex": 6082,
       "PowerSetID": 2998,
       "StaticIndex": 1427,
       "NGroupMembership": [],

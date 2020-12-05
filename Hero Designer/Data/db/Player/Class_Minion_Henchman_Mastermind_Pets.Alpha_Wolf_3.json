@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Alpha_Wolf_3",
   "ImageName": "",
   "Power": [
-    5824,
-    5825
+    5825,
+    5826
   ],
   "SetType": 1,
   "DisplayName": "Alpha Wolf",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 5824,
+      "PowerIndex": 5825,
       "PowerSetID": 2916,
       "StaticIndex": 6166,
       "NGroupMembership": [],
@@ -603,7 +603,7 @@
     {
       "CastTimeReal": 1.6,
       "ToggleCost": 13.0,
-      "PowerIndex": 5825,
+      "PowerIndex": 5826,
       "PowerSetID": 2916,
       "PowerSetIndex": 1,
       "StaticIndex": 6167,

@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Jolt_Controller_Jump1",
   "ImageName": "",
   "Power": [
-    6241
+    6242
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 1",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6241,
+      "PowerIndex": 6242,
       "PowerSetID": 3049,
       "StaticIndex": 4410,
       "NGroupMembership": [],

@@ -4,11 +4,11 @@
   "FullName": "Mastermind_Pets.Alpha_Wolf",
   "ImageName": "",
   "Power": [
-    5815,
     5816,
     5817,
     5818,
-    5819
+    5819,
+    5820
   ],
   "SetType": 1,
   "DisplayName": "Alpha Wolf",
@@ -25,7 +25,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5815,
+      "PowerIndex": 5816,
       "PowerSetID": 2918,
       "StaticIndex": 6156,
       "NGroupMembership": [],
@@ -811,7 +811,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5816,
+      "PowerIndex": 5817,
       "PowerSetID": 2918,
       "PowerSetIndex": 1,
       "StaticIndex": 6158,
@@ -869,7 +869,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Pack_Mentality",
-          "nSummon": 9753,
+          "nSummon": 9754,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -917,7 +917,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 5817,
+      "PowerIndex": 5818,
       "PowerSetID": 2918,
       "PowerSetIndex": 2,
       "StaticIndex": 6159,
@@ -1256,7 +1256,7 @@
     {
       "CastTimeReal": 1.27,
       "ToggleCost": 4.368,
-      "PowerIndex": 5818,
+      "PowerIndex": 5819,
       "PowerSetID": 2918,
       "PowerSetIndex": 3,
       "StaticIndex": 6157,
@@ -2037,7 +2037,7 @@
     {
       "CastTimeReal": 0.6,
       "ToggleCost": 5.2,
-      "PowerIndex": 5819,
+      "PowerIndex": 5820,
       "PowerSetID": 2918,
       "PowerSetIndex": 4,
       "StaticIndex": 6160,

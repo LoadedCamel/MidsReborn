@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Lore_Pet_Rularuu_Support_Attack",
   "ImageName": "",
   "Power": [
-    5411
+    5412
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Rularuu_Support_Attack",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.83,
-      "PowerIndex": 5411,
+      "PowerIndex": 5412,
       "PowerSetID": 2866,
       "StaticIndex": 5564,
       "NGroupMembership": [],
@@ -83,8 +83,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 47.7135124,
-          "MagPercent": 47.7135124,
+          "Mag": 69.73521,
+          "MagPercent": 69.73521,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

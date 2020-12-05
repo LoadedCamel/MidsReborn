@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Rularuu_Support",
   "ImageName": "",
   "Power": [
-    5409,
-    5410
+    5410,
+    5411
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Rularuu_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 3.17,
-      "PowerIndex": 5409,
+      "PowerIndex": 5410,
       "PowerSetID": 2865,
       "StaticIndex": 5562,
       "NGroupMembership": [],
@@ -558,7 +558,7 @@
     },
     {
       "CastTimeReal": 1.83,
-      "PowerIndex": 5410,
+      "PowerIndex": 5411,
       "PowerSetID": 2865,
       "PowerSetIndex": 1,
       "StaticIndex": 5563,
@@ -619,8 +619,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 262.36972,
-          "MagPercent": 262.36972,
+          "Mag": 209.895813,
+          "MagPercent": 209.895813,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",

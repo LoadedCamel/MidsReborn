@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Lioness_3",
   "ImageName": "",
   "Power": [
-    5966,
     5967,
     5968,
-    5969
+    5969,
+    5970
   ],
   "SetType": 8,
   "DisplayName": "Lioness",
@@ -26,7 +26,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 5966,
+      "PowerIndex": 5967,
       "PowerSetID": 2966,
       "StaticIndex": 6207,
       "NGroupMembership": [],
@@ -211,7 +211,7 @@
     {
       "CastTimeReal": 2.13,
       "ToggleCost": 8.528,
-      "PowerIndex": 5967,
+      "PowerIndex": 5968,
       "PowerSetID": 2966,
       "PowerSetIndex": 1,
       "StaticIndex": 6209,
@@ -1923,7 +1923,7 @@
       "AoEModifier": 1.35699379
     },
     {
-      "PowerIndex": 5968,
+      "PowerIndex": 5969,
       "PowerSetID": 2966,
       "PowerSetIndex": 2,
       "StaticIndex": 6210,
@@ -1981,7 +1981,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Pack_Mentality",
-          "nSummon": 9753,
+          "nSummon": 9754,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2029,7 +2029,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 5969,
+      "PowerIndex": 5970,
       "PowerSetID": 2966,
       "PowerSetIndex": 3,
       "StaticIndex": 6208,
@@ -2087,7 +2087,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Pack_Mentality",
-          "nSummon": 9753,
+          "nSummon": 9754,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

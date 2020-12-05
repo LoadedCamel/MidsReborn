@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Droid_3",
   "ImageName": "",
   "Power": [
-    5881
+    5882
   ],
   "SetType": 8,
   "DisplayName": "Droid",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 6.33,
       "ToggleCost": 10.192,
-      "PowerIndex": 5881,
+      "PowerIndex": 5882,
       "PowerSetID": 2939,
       "StaticIndex": 1194,
       "NGroupMembership": [],

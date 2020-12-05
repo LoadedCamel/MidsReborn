@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Oni_3",
   "ImageName": "",
   "Power": [
-    5988,
-    5989
+    5989,
+    5990
   ],
   "SetType": 8,
   "DisplayName": "Oni",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 8.528,
-      "PowerIndex": 5988,
+      "PowerIndex": 5989,
       "PowerSetID": 2975,
       "StaticIndex": 1262,
       "NGroupMembership": [],
@@ -397,7 +397,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 26.0,
-      "PowerIndex": 5989,
+      "PowerIndex": 5990,
       "PowerSetID": 2975,
       "PowerSetIndex": 1,
       "StaticIndex": 1264,

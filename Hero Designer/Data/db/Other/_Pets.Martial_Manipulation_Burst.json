@@ -4,7 +4,7 @@
   "FullName": "Pets.Martial_Manipulation_Burst",
   "ImageName": "",
   "Power": [
-    6410
+    6411
   ],
   "SetType": 8,
   "DisplayName": "Martial Manipulation",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6410,
+      "PowerIndex": 6411,
       "PowerSetID": 3139,
       "StaticIndex": 9592,
       "NGroupMembership": [],

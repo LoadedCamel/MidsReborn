@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Stance",
   "ImageName": "",
   "Power": [
-    5470
+    5471
   ],
   "SetType": 11,
   "DisplayName": "Stance",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 5470,
+      "PowerIndex": 5471,
       "PowerSetID": 2888,
       "StaticIndex": 4680,
       "NGroupMembership": [],

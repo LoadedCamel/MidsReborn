@@ -4,7 +4,6 @@
   "FullName": "Dominator_Control.Fire_Control",
   "ImageName": "FireControl.png",
   "Power": [
-    4032,
     4033,
     4034,
     4035,
@@ -12,7 +11,8 @@
     4037,
     4038,
     4039,
-    4040
+    4040,
+    4041
   ],
   "SetType": 1,
   "DisplayName": "Fire Control",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 7.8,
-      "PowerIndex": 4032,
+      "PowerIndex": 4033,
       "PowerSetID": 2718,
       "StaticIndex": 802,
       "NGroupMembership": [],
@@ -102,8 +102,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.952252,
-          "MagPercent": 7.952252,
+          "Mag": 11.6225338,
+          "MagPercent": 11.6225338,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -222,8 +222,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 13.9569244,
-          "MagPercent": 13.9569244,
+          "Mag": 20.3986034,
+          "MagPercent": 20.3986034,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -762,7 +762,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 8.528,
-      "PowerIndex": 4033,
+      "PowerIndex": 4034,
       "PowerSetID": 2718,
       "PowerSetIndex": 1,
       "StaticIndex": 803,
@@ -953,8 +953,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 14.8678188,
-          "MagPercent": 14.8678188,
+          "Mag": 21.7299118,
+          "MagPercent": 21.7299118,
           "Duration": 4.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1138,8 +1138,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.952252,
-          "MagPercent": 7.952252,
+          "Mag": 11.6225338,
+          "MagPercent": 11.6225338,
           "Duration": 4.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1205,7 +1205,7 @@
     {
       "CastTimeReal": 1.03,
       "ToggleCost": 15.6,
-      "PowerIndex": 4034,
+      "PowerIndex": 4035,
       "PowerSetID": 2718,
       "PowerSetIndex": 2,
       "StaticIndex": 804,
@@ -1278,8 +1278,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.976126,
-          "MagPercent": 3.976126,
+          "Mag": 5.811267,
+          "MagPercent": 5.811267,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1398,8 +1398,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 4.37518454,
-          "MagPercent": 4.37518454,
+          "Mag": 6.394507,
+          "MagPercent": 6.394507,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1938,7 +1938,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 7.8,
-      "PowerIndex": 4035,
+      "PowerIndex": 4036,
       "PowerSetID": 2718,
       "PowerSetIndex": 3,
       "StaticIndex": 805,
@@ -2063,8 +2063,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.0625,
-          "MagPercent": -6.25,
+          "Mag": -0.0375,
+          "MagPercent": -3.75000024,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2122,8 +2122,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.0625,
-          "MagPercent": -6.25,
+          "Mag": -0.0375,
+          "MagPercent": -3.75000024,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2249,7 +2249,7 @@
     {
       "CastTimeReal": 1.47,
       "ToggleCost": 1.04,
-      "PowerIndex": 4036,
+      "PowerIndex": 4037,
       "PowerSetID": 2718,
       "PowerSetIndex": 4,
       "StaticIndex": 806,
@@ -2322,8 +2322,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 9.03665,
-          "MagPercent": 9.03665,
+          "Mag": 13.2074251,
+          "MagPercent": 13.2074251,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -2495,8 +2495,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.875,
-          "MagPercent": -87.5,
+          "Mag": -0.7,
+          "MagPercent": -70.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2553,8 +2553,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.875,
-          "MagPercent": -87.5,
+          "Mag": -0.7,
+          "MagPercent": -70.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2611,8 +2611,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.875,
-          "MagPercent": -87.5,
+          "Mag": -0.7,
+          "MagPercent": -70.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2676,7 +2676,7 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 15.6,
-      "PowerIndex": 4037,
+      "PowerIndex": 4038,
       "PowerSetID": 2718,
       "PowerSetIndex": 5,
       "StaticIndex": 807,
@@ -2750,8 +2750,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 2.16879582,
-          "MagPercent": 2.16879582,
+          "Mag": 3.169782,
+          "MagPercent": 3.169782,
           "Duration": 4.0,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3065,7 +3065,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 15.6,
-      "PowerIndex": 4038,
+      "PowerIndex": 4039,
       "PowerSetID": 2718,
       "PowerSetIndex": 6,
       "StaticIndex": 808,
@@ -3381,7 +3381,7 @@
     {
       "CastTimeReal": 3.07,
       "ToggleCost": 13.0,
-      "PowerIndex": 4039,
+      "PowerIndex": 4040,
       "PowerSetID": 2718,
       "PowerSetIndex": 7,
       "StaticIndex": 809,
@@ -3516,7 +3516,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 26.0,
-      "PowerIndex": 4040,
+      "PowerIndex": 4041,
       "PowerSetID": 2718,
       "PowerSetIndex": 8,
       "StaticIndex": 810,

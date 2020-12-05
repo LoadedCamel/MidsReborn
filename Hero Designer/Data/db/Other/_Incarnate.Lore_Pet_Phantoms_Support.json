@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Phantoms_Support",
   "ImageName": "",
   "Power": [
-    5391,
-    5392
+    5392,
+    5393
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Phantoms_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.27,
-      "PowerIndex": 5391,
+      "PowerIndex": 5392,
       "PowerSetID": 2859,
       "StaticIndex": 5544,
       "NGroupMembership": [],
@@ -77,8 +77,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 262.36972,
-          "MagPercent": 262.36972,
+          "Mag": 209.895813,
+          "MagPercent": 209.895813,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",
@@ -136,7 +136,7 @@
     },
     {
       "CastTimeReal": 2.27,
-      "PowerIndex": 5392,
+      "PowerIndex": 5393,
       "PowerSetID": 2859,
       "PowerSetIndex": 1,
       "StaticIndex": 5545,

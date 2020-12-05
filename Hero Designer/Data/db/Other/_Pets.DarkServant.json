@@ -4,12 +4,12 @@
   "FullName": "Pets.DarkServant",
   "ImageName": "",
   "Power": [
-    6270,
     6271,
     6272,
     6273,
     6274,
-    6275
+    6275,
+    6276
   ],
   "SetType": 8,
   "DisplayName": "Dark Servant",
@@ -27,7 +27,7 @@
   "Powers": [
     {
       "CastTimeReal": 3.17,
-      "PowerIndex": 6270,
+      "PowerIndex": 6271,
       "PowerSetID": 3060,
       "StaticIndex": 1569,
       "NGroupMembership": [],
@@ -203,7 +203,7 @@
     },
     {
       "CastTimeReal": 3.17,
-      "PowerIndex": 6271,
+      "PowerIndex": 6272,
       "PowerSetID": 3060,
       "PowerSetIndex": 1,
       "StaticIndex": 1570,
@@ -1264,7 +1264,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6272,
+      "PowerIndex": 6273,
       "PowerSetID": 3060,
       "PowerSetIndex": 2,
       "StaticIndex": 1571,
@@ -1427,7 +1427,7 @@
     },
     {
       "CastTimeReal": 2.37,
-      "PowerIndex": 6273,
+      "PowerIndex": 6274,
       "PowerSetID": 3060,
       "PowerSetIndex": 3,
       "StaticIndex": 1572,
@@ -2703,7 +2703,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6274,
+      "PowerIndex": 6275,
       "PowerSetID": 3060,
       "PowerSetIndex": 4,
       "StaticIndex": 1573,
@@ -3065,7 +3065,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 6275,
+      "PowerIndex": 6276,
       "PowerSetID": 3060,
       "PowerSetIndex": 5,
       "StaticIndex": 1574,

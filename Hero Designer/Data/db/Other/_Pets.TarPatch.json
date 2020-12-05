@@ -4,7 +4,7 @@
   "FullName": "Pets.TarPatch",
   "ImageName": "",
   "Power": [
-    6545
+    6546
   ],
   "SetType": 8,
   "DisplayName": "TarPatch",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6545,
+      "PowerIndex": 6546,
       "PowerSetID": 3219,
       "StaticIndex": 1726,
       "NGroupMembership": [],

@@ -4,8 +4,8 @@
   "FullName": "Pets.Fungi",
   "ImageName": "",
   "Power": [
-    6332,
-    6333
+    6333,
+    6334
   ],
   "SetType": 8,
   "DisplayName": "Fungi",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6332,
+      "PowerIndex": 6333,
       "PowerSetID": 3092,
       "StaticIndex": 1601,
       "NGroupMembership": [],
@@ -467,7 +467,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6333,
+      "PowerIndex": 6334,
       "PowerSetID": 3092,
       "PowerSetIndex": 1,
       "StaticIndex": 1602,

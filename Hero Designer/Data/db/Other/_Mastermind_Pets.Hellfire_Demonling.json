@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Hellfire_Demonling",
   "ImageName": "",
   "Power": [
-    5912,
     5913,
     5914,
-    5915
+    5915,
+    5916
   ],
   "SetType": 8,
   "DisplayName": "Hellfire Demonling",
@@ -24,7 +24,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5912,
+      "PowerIndex": 5913,
       "PowerSetID": 2952,
       "StaticIndex": 4226,
       "NGroupMembership": [],
@@ -586,7 +586,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 5.2,
-      "PowerIndex": 5913,
+      "PowerIndex": 5914,
       "PowerSetID": 2952,
       "PowerSetIndex": 1,
       "StaticIndex": 4227,
@@ -880,7 +880,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 5914,
+      "PowerIndex": 5915,
       "PowerSetID": 2952,
       "PowerSetIndex": 2,
       "StaticIndex": 4228,
@@ -1650,7 +1650,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5915,
+      "PowerIndex": 5916,
       "PowerSetID": 2952,
       "PowerSetIndex": 3,
       "StaticIndex": 4229,

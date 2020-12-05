@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_IDF_LT",
   "ImageName": "",
   "Power": [
-    5347,
-    5348
+    5348,
+    5349
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_IDF_LT",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.07,
-      "PowerIndex": 5347,
+      "PowerIndex": 5348,
       "PowerSetID": 2841,
       "StaticIndex": 4662,
       "NGroupMembership": [],
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 39.76126,
-          "MagPercent": 39.76126,
+          "Mag": 58.11267,
+          "MagPercent": 58.11267,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -198,8 +198,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -321,7 +321,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5348,
+      "PowerIndex": 5349,
       "PowerSetID": 2841,
       "PowerSetIndex": 1,
       "StaticIndex": 4663,
@@ -382,8 +382,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 59.2804222,
-          "MagPercent": 59.2804222,
+          "Mag": 86.64071,
+          "MagPercent": 86.64071,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

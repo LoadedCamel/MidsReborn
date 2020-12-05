@@ -4,11 +4,11 @@
   "FullName": "Pets.DecoyPhantasm",
   "ImageName": "",
   "Power": [
-    6285,
     6286,
     6287,
     6288,
-    6289
+    6289,
+    6290
   ],
   "SetType": 8,
   "DisplayName": "Decoy Phantasm",
@@ -26,7 +26,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6285,
+      "PowerIndex": 6286,
       "PowerSetID": 3063,
       "StaticIndex": 1584,
       "NGroupMembership": [],
@@ -261,7 +261,7 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 6286,
+      "PowerIndex": 6287,
       "PowerSetID": 3063,
       "PowerSetIndex": 1,
       "StaticIndex": 1585,
@@ -498,7 +498,7 @@
       "AoEModifier": 2.37995839
     },
     {
-      "PowerIndex": 6287,
+      "PowerIndex": 6288,
       "PowerSetID": 3063,
       "PowerSetIndex": 2,
       "StaticIndex": 1586,
@@ -773,7 +773,7 @@
     {
       "CastTimeReal": 1.716,
       "IsEpic": true,
-      "PowerIndex": 6288,
+      "PowerIndex": 6289,
       "PowerSetID": 3063,
       "PowerSetIndex": 3,
       "StaticIndex": 1587,
@@ -790,11 +790,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6285,
+            6286,
             -1
           ],
           [
-            6286,
+            6287,
             -1
           ]
         ],
@@ -841,7 +841,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6289,
+      "PowerIndex": 6290,
       "PowerSetID": 3063,
       "PowerSetIndex": 4,
       "StaticIndex": 1588,

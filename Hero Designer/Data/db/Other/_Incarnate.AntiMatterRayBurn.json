@@ -4,7 +4,7 @@
   "FullName": "Incarnate.AntiMatterRayBurn",
   "ImageName": "",
   "Power": [
-    4642
+    4643
   ],
   "SetType": 11,
   "DisplayName": "AntiMatterRayBurn",
@@ -21,7 +21,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4642,
+      "PowerIndex": 4643,
       "PowerSetID": 2798,
       "StaticIndex": 5359,
       "NGroupMembership": [],
@@ -81,8 +81,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 15.2928,
-          "MagPercent": 15.2928,
+          "Mag": 29.19535,
+          "MagPercent": 29.19535,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -136,8 +136,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",

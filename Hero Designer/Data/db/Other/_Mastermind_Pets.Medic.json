@@ -4,11 +4,11 @@
   "FullName": "Mastermind_Pets.Medic",
   "ImageName": "",
   "Power": [
-    5973,
     5974,
     5975,
     5976,
-    5977
+    5977,
+    5978
   ],
   "SetType": 8,
   "DisplayName": "Medic",
@@ -25,7 +25,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5973,
+      "PowerIndex": 5974,
       "PowerSetID": 2970,
       "StaticIndex": 1244,
       "NGroupMembership": [],
@@ -364,7 +364,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 4.368,
-      "PowerIndex": 5974,
+      "PowerIndex": 5975,
       "PowerSetID": 2970,
       "PowerSetIndex": 1,
       "StaticIndex": 1245,
@@ -545,7 +545,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 5975,
+      "PowerIndex": 5976,
       "PowerSetID": 2970,
       "PowerSetIndex": 2,
       "StaticIndex": 1246,
@@ -666,7 +666,7 @@
     {
       "CastTimeReal": 2.2,
       "ToggleCost": 4.368,
-      "PowerIndex": 5976,
+      "PowerIndex": 5977,
       "PowerSetID": 2970,
       "PowerSetIndex": 3,
       "StaticIndex": 1247,
@@ -913,7 +913,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5977,
+      "PowerIndex": 5978,
       "PowerSetID": 2970,
       "PowerSetIndex": 4,
       "StaticIndex": 1248,

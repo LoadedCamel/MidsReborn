@@ -4,10 +4,10 @@
   "FullName": "Incarnate.Lore_Pet_Clockwork_Boss",
   "ImageName": "",
   "Power": [
-    5314,
     5315,
     5316,
-    5317
+    5317,
+    5318
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Clockwork_Boss",
@@ -25,7 +25,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 5314,
+      "PowerIndex": 5315,
       "PowerSetID": 2831,
       "StaticIndex": 4649,
       "NGroupMembership": [],
@@ -86,8 +86,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 59.2804222,
-          "MagPercent": 59.2804222,
+          "Mag": 86.64071,
+          "MagPercent": 86.64071,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -142,8 +142,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -206,7 +206,7 @@
     },
     {
       "CastTimeReal": 4.2,
-      "PowerIndex": 5315,
+      "PowerIndex": 5316,
       "PowerSetID": 2831,
       "PowerSetIndex": 1,
       "StaticIndex": 4651,
@@ -270,8 +270,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 93.9811554,
-          "MagPercent": 93.9811554,
+          "Mag": 137.357224,
+          "MagPercent": 137.357224,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -326,8 +326,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.15,
+          "MagPercent": -15.000001,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -505,7 +505,7 @@
     },
     {
       "CastTimeReal": 3.93,
-      "PowerIndex": 5316,
+      "PowerIndex": 5317,
       "PowerSetID": 2831,
       "PowerSetIndex": 2,
       "StaticIndex": 5498,
@@ -627,7 +627,7 @@
     {
       "CastTimeReal": 3.83,
       "ToggleCost": 36.12,
-      "PowerIndex": 5317,
+      "PowerIndex": 5318,
       "PowerSetID": 2831,
       "PowerSetIndex": 3,
       "StaticIndex": 4650,

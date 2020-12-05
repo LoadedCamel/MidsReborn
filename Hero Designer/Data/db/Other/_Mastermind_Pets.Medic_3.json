@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Medic_3",
   "ImageName": "",
   "Power": [
-    5979,
-    5980
+    5980,
+    5981
   ],
   "SetType": 8,
   "DisplayName": "Medic",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 10.4,
-      "PowerIndex": 5979,
+      "PowerIndex": 5980,
       "PowerSetID": 2972,
       "StaticIndex": 1251,
       "NGroupMembership": [],
@@ -434,7 +434,7 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 10.4,
-      "PowerIndex": 5980,
+      "PowerIndex": 5981,
       "PowerSetID": 2972,
       "PowerSetIndex": 1,
       "StaticIndex": 1252,

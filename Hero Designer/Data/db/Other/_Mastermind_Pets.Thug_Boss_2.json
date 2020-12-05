@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Thug_Boss_2",
   "ImageName": "",
   "Power": [
-    6048,
-    6049
+    6049,
+    6050
   ],
   "SetType": 8,
   "DisplayName": "Thug Boss",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 8.528,
-      "PowerIndex": 6048,
+      "PowerIndex": 6049,
       "PowerSetID": 2990,
       "StaticIndex": 1350,
       "NGroupMembership": [],
@@ -385,7 +385,7 @@
     {
       "CastTimeReal": 1.23,
       "ToggleCost": 13.0,
-      "PowerIndex": 6049,
+      "PowerIndex": 6050,
       "PowerSetID": 2990,
       "PowerSetIndex": 1,
       "StaticIndex": 1351,

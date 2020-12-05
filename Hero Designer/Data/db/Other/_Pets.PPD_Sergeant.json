@@ -4,11 +4,11 @@
   "FullName": "Pets.PPD_Sergeant",
   "ImageName": "",
   "Power": [
-    6464,
     6465,
     6466,
     6467,
-    6468
+    6468,
+    6469
   ],
   "SetType": 8,
   "DisplayName": "PPD Sergeant",
@@ -25,7 +25,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6464,
+      "PowerIndex": 6465,
       "PowerSetID": 3165,
       "StaticIndex": 4428,
       "NGroupMembership": [],
@@ -246,7 +246,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.58,
-      "PowerIndex": 6465,
+      "PowerIndex": 6466,
       "PowerSetID": 3165,
       "PowerSetIndex": 1,
       "StaticIndex": 4429,
@@ -535,7 +535,7 @@
     {
       "CastTimeReal": 0.57,
       "ToggleCost": 5.46,
-      "PowerIndex": 6466,
+      "PowerIndex": 6467,
       "PowerSetID": 3165,
       "PowerSetIndex": 2,
       "StaticIndex": 4430,
@@ -827,7 +827,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 12.74,
-      "PowerIndex": 6467,
+      "PowerIndex": 6468,
       "PowerSetID": 3165,
       "PowerSetIndex": 3,
       "StaticIndex": 4431,
@@ -1118,7 +1118,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 10.66,
-      "PowerIndex": 6468,
+      "PowerIndex": 6469,
       "PowerSetID": 3165,
       "PowerSetIndex": 4,
       "StaticIndex": 4432,

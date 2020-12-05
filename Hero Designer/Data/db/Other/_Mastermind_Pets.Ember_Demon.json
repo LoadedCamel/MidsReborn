@@ -4,11 +4,11 @@
   "FullName": "Mastermind_Pets.Ember_Demon",
   "ImageName": "",
   "Power": [
-    5882,
     5883,
     5884,
     5885,
-    5886
+    5886,
+    5887
   ],
   "SetType": 8,
   "DisplayName": "Ember Demon",
@@ -25,7 +25,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5882,
+      "PowerIndex": 5883,
       "PowerSetID": 2943,
       "StaticIndex": 4208,
       "NGroupMembership": [],
@@ -468,7 +468,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5883,
+      "PowerIndex": 5884,
       "PowerSetID": 2943,
       "PowerSetIndex": 1,
       "StaticIndex": 4406,
@@ -819,7 +819,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 5.2,
-      "PowerIndex": 5884,
+      "PowerIndex": 5885,
       "PowerSetID": 2943,
       "PowerSetIndex": 2,
       "StaticIndex": 4209,
@@ -1125,7 +1125,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5885,
+      "PowerIndex": 5886,
       "PowerSetID": 2943,
       "PowerSetIndex": 3,
       "StaticIndex": 4210,
@@ -1474,7 +1474,7 @@
       "AoEModifier": 10.0
     },
     {
-      "PowerIndex": 5886,
+      "PowerIndex": 5887,
       "PowerSetID": 2943,
       "PowerSetIndex": 4,
       "StaticIndex": 4211,

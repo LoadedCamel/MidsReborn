@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Lore_Pet_Carnival_Support_Attack",
   "ImageName": "",
   "Power": [
-    5302
+    5303
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Carnival_Support_Attack",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 3.0,
-      "PowerIndex": 5302,
+      "PowerIndex": 5303,
       "PowerSetID": 2827,
       "StaticIndex": 5486,
       "NGroupMembership": [],
@@ -83,8 +83,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

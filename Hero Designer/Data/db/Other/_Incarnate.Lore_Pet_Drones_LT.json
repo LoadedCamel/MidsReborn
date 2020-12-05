@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Drones_LT",
   "ImageName": "",
   "Power": [
-    5326,
-    5327
+    5327,
+    5328
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Drones_LT",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 5326,
+      "PowerIndex": 5327,
       "PowerSetID": 2835,
       "StaticIndex": 5502,
       "NGroupMembership": [],
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 54.2199,
-          "MagPercent": 54.2199,
+          "Mag": 79.24455,
+          "MagPercent": 79.24455,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -201,7 +201,7 @@
     },
     {
       "CastTimeReal": 3.5,
-      "PowerIndex": 5327,
+      "PowerIndex": 5328,
       "PowerSetID": 2835,
       "PowerSetIndex": 1,
       "StaticIndex": 5503,
@@ -265,8 +265,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 38.67686,
-          "MagPercent": 38.67686,
+          "Mag": 56.5277824,
+          "MagPercent": 56.5277824,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

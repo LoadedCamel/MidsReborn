@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Confuse_Controller_Jump1",
   "ImageName": "",
   "Power": [
-    6234
+    6235
   ],
   "SetType": 8,
   "DisplayName": "Chain Confuse Jump 1",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6234,
+      "PowerIndex": 6235,
       "PowerSetID": 3042,
       "StaticIndex": 4407,
       "NGroupMembership": [],

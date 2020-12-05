@@ -4,7 +4,6 @@
   "FullName": "Incarnate.Judgement",
   "ImageName": "",
   "Power": [
-    5040,
     5041,
     5042,
     5043,
@@ -57,7 +56,8 @@
     5090,
     5091,
     5092,
-    5093
+    5093,
+    5094
   ],
   "SetType": 11,
   "DisplayName": "Judgement",
@@ -76,7 +76,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5040,
+      "PowerIndex": 5041,
       "PowerSetID": 2814,
       "StaticIndex": 10599,
       "NGroupMembership": [],
@@ -263,7 +263,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5041,
+      "PowerIndex": 5042,
       "PowerSetID": 2814,
       "PowerSetIndex": 1,
       "StaticIndex": 10593,
@@ -450,7 +450,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5042,
+      "PowerIndex": 5043,
       "PowerSetID": 2814,
       "PowerSetIndex": 2,
       "StaticIndex": 10592,
@@ -580,7 +580,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5043,
+      "PowerIndex": 5044,
       "PowerSetID": 2814,
       "PowerSetIndex": 3,
       "StaticIndex": 10596,
@@ -769,7 +769,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5044,
+      "PowerIndex": 5045,
       "PowerSetID": 2814,
       "PowerSetIndex": 4,
       "StaticIndex": 10598,
@@ -1018,7 +1018,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5045,
+      "PowerIndex": 5046,
       "PowerSetID": 2814,
       "PowerSetIndex": 5,
       "StaticIndex": 10600,
@@ -1265,7 +1265,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5046,
+      "PowerIndex": 5047,
       "PowerSetID": 2814,
       "PowerSetIndex": 6,
       "StaticIndex": 10594,
@@ -1512,7 +1512,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5047,
+      "PowerIndex": 5048,
       "PowerSetID": 2814,
       "PowerSetIndex": 7,
       "StaticIndex": 10595,
@@ -1699,7 +1699,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 20.0,
-      "PowerIndex": 5048,
+      "PowerIndex": 5049,
       "PowerSetID": 2814,
       "PowerSetIndex": 8,
       "StaticIndex": 10597,
@@ -1946,7 +1946,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5049,
+      "PowerIndex": 5050,
       "PowerSetID": 2814,
       "PowerSetIndex": 9,
       "StaticIndex": 5136,
@@ -2137,7 +2137,7 @@
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
       "LocationIndex": 10,
-      "PowerIndex": 5050,
+      "PowerIndex": 5051,
       "PowerSetID": 2814,
       "PowerSetIndex": 10,
       "StaticIndex": 5129,
@@ -2271,7 +2271,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5051,
+      "PowerIndex": 5052,
       "PowerSetID": 2814,
       "PowerSetIndex": 11,
       "StaticIndex": 5130,
@@ -2460,7 +2460,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5052,
+      "PowerIndex": 5053,
       "PowerSetID": 2814,
       "PowerSetIndex": 12,
       "StaticIndex": 5133,
@@ -2941,7 +2941,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5053,
+      "PowerIndex": 5054,
       "PowerSetID": 2814,
       "PowerSetIndex": 13,
       "StaticIndex": 5134,
@@ -3365,7 +3365,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5054,
+      "PowerIndex": 5055,
       "PowerSetID": 2814,
       "PowerSetIndex": 14,
       "StaticIndex": 5137,
@@ -3912,7 +3912,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5055,
+      "PowerIndex": 5056,
       "PowerSetID": 2814,
       "PowerSetIndex": 15,
       "StaticIndex": 5131,
@@ -4336,7 +4336,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5056,
+      "PowerIndex": 5057,
       "PowerSetID": 2814,
       "PowerSetIndex": 16,
       "StaticIndex": 5132,
@@ -4525,7 +4525,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5057,
+      "PowerIndex": 5058,
       "PowerSetID": 2814,
       "PowerSetIndex": 17,
       "StaticIndex": 5135,
@@ -5073,7 +5073,7 @@
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
       "LocationIndex": 10,
-      "PowerIndex": 5058,
+      "PowerIndex": 5059,
       "PowerSetID": 2814,
       "PowerSetIndex": 18,
       "StaticIndex": 5145,
@@ -5436,7 +5436,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5059,
+      "PowerIndex": 5060,
       "PowerSetID": 2814,
       "PowerSetIndex": 19,
       "StaticIndex": 5139,
@@ -5798,7 +5798,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5060,
+      "PowerIndex": 5061,
       "PowerSetID": 2814,
       "PowerSetIndex": 20,
       "StaticIndex": 5138,
@@ -6101,7 +6101,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5061,
+      "PowerIndex": 5062,
       "PowerSetID": 2814,
       "PowerSetIndex": 21,
       "StaticIndex": 5142,
@@ -6642,7 +6642,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5062,
+      "PowerIndex": 5063,
       "PowerSetID": 2814,
       "PowerSetIndex": 22,
       "StaticIndex": 5143,
@@ -7124,7 +7124,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5063,
+      "PowerIndex": 5064,
       "PowerSetID": 2814,
       "PowerSetIndex": 23,
       "StaticIndex": 5146,
@@ -7731,7 +7731,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5064,
+      "PowerIndex": 5065,
       "PowerSetID": 2814,
       "PowerSetIndex": 24,
       "StaticIndex": 5140,
@@ -8213,7 +8213,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5065,
+      "PowerIndex": 5066,
       "PowerSetID": 2814,
       "PowerSetIndex": 25,
       "StaticIndex": 5141,
@@ -8575,7 +8575,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5066,
+      "PowerIndex": 5067,
       "PowerSetID": 2814,
       "PowerSetIndex": 26,
       "StaticIndex": 5144,
@@ -9182,7 +9182,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5067,
+      "PowerIndex": 5068,
       "PowerSetID": 2814,
       "PowerSetIndex": 27,
       "StaticIndex": 5154,
@@ -9375,7 +9375,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5068,
+      "PowerIndex": 5069,
       "PowerSetID": 2814,
       "PowerSetIndex": 28,
       "StaticIndex": 5148,
@@ -9568,7 +9568,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5069,
+      "PowerIndex": 5070,
       "PowerSetID": 2814,
       "PowerSetIndex": 29,
       "StaticIndex": 5147,
@@ -9699,7 +9699,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5070,
+      "PowerIndex": 5071,
       "PowerSetID": 2814,
       "PowerSetIndex": 30,
       "StaticIndex": 5151,
@@ -9892,7 +9892,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5071,
+      "PowerIndex": 5072,
       "PowerSetID": 2814,
       "PowerSetIndex": 31,
       "StaticIndex": 5152,
@@ -10023,7 +10023,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5072,
+      "PowerIndex": 5073,
       "PowerSetID": 2814,
       "PowerSetIndex": 32,
       "StaticIndex": 5155,
@@ -10277,7 +10277,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5073,
+      "PowerIndex": 5074,
       "PowerSetID": 2814,
       "PowerSetIndex": 33,
       "StaticIndex": 5149,
@@ -10408,7 +10408,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5074,
+      "PowerIndex": 5075,
       "PowerSetID": 2814,
       "PowerSetIndex": 34,
       "StaticIndex": 5150,
@@ -10601,7 +10601,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5075,
+      "PowerIndex": 5076,
       "PowerSetID": 2814,
       "PowerSetIndex": 35,
       "StaticIndex": 5153,
@@ -10855,7 +10855,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5076,
+      "PowerIndex": 5077,
       "PowerSetID": 2814,
       "PowerSetIndex": 36,
       "StaticIndex": 5163,
@@ -11042,7 +11042,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5077,
+      "PowerIndex": 5078,
       "PowerSetID": 2814,
       "PowerSetIndex": 37,
       "StaticIndex": 5157,
@@ -11229,7 +11229,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5078,
+      "PowerIndex": 5079,
       "PowerSetID": 2814,
       "PowerSetIndex": 38,
       "StaticIndex": 5156,
@@ -11359,7 +11359,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5079,
+      "PowerIndex": 5080,
       "PowerSetID": 2814,
       "PowerSetIndex": 39,
       "StaticIndex": 5160,
@@ -11665,7 +11665,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5080,
+      "PowerIndex": 5081,
       "PowerSetID": 2814,
       "PowerSetIndex": 40,
       "StaticIndex": 5161,
@@ -12378,7 +12378,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5081,
+      "PowerIndex": 5082,
       "PowerSetID": 2814,
       "PowerSetIndex": 41,
       "StaticIndex": 5164,
@@ -12972,7 +12972,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5082,
+      "PowerIndex": 5083,
       "PowerSetID": 2814,
       "PowerSetIndex": 42,
       "StaticIndex": 5158,
@@ -13566,7 +13566,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5083,
+      "PowerIndex": 5084,
       "PowerSetID": 2814,
       "PowerSetIndex": 43,
       "StaticIndex": 5159,
@@ -13753,7 +13753,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 20.0,
-      "PowerIndex": 5084,
+      "PowerIndex": 5085,
       "PowerSetID": 2814,
       "PowerSetIndex": 44,
       "StaticIndex": 5162,
@@ -14347,7 +14347,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5085,
+      "PowerIndex": 5086,
       "PowerSetID": 2814,
       "PowerSetIndex": 45,
       "StaticIndex": 6002,
@@ -14541,7 +14541,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5086,
+      "PowerIndex": 5087,
       "PowerSetID": 2814,
       "PowerSetIndex": 46,
       "StaticIndex": 5996,
@@ -14735,7 +14735,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5087,
+      "PowerIndex": 5088,
       "PowerSetID": 2814,
       "PowerSetIndex": 47,
       "StaticIndex": 5995,
@@ -14867,7 +14867,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5088,
+      "PowerIndex": 5089,
       "PowerSetID": 2814,
       "PowerSetIndex": 48,
       "StaticIndex": 5999,
@@ -15061,7 +15061,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5089,
+      "PowerIndex": 5090,
       "PowerSetID": 2814,
       "PowerSetIndex": 49,
       "StaticIndex": 6000,
@@ -15193,7 +15193,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5090,
+      "PowerIndex": 5091,
       "PowerSetID": 2814,
       "PowerSetIndex": 50,
       "StaticIndex": 6003,
@@ -15383,7 +15383,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5091,
+      "PowerIndex": 5092,
       "PowerSetID": 2814,
       "PowerSetIndex": 51,
       "StaticIndex": 5997,
@@ -15515,7 +15515,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5092,
+      "PowerIndex": 5093,
       "PowerSetID": 2814,
       "PowerSetIndex": 52,
       "StaticIndex": 5998,
@@ -15709,7 +15709,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 20.0,
-      "PowerIndex": 5093,
+      "PowerIndex": 5094,
       "PowerSetID": 2814,
       "PowerSetIndex": 53,
       "StaticIndex": 6001,

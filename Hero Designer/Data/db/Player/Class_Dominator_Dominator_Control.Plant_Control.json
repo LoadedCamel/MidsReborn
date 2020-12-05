@@ -4,7 +4,6 @@
   "FullName": "Dominator_Control.Plant_Control",
   "ImageName": "PlantControl.png",
   "Power": [
-    4068,
     4069,
     4070,
     4071,
@@ -12,7 +11,8 @@
     4073,
     4074,
     4075,
-    4076
+    4076,
+    4077
   ],
   "SetType": 1,
   "DisplayName": "Plant Control",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 7.8,
-      "PowerIndex": 4068,
+      "PowerIndex": 4069,
       "PowerSetID": 2722,
       "StaticIndex": 838,
       "NGroupMembership": [],
@@ -102,8 +102,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -162,8 +162,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -223,8 +223,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.084733,
-          "MagPercent": 7.084733,
+          "Mag": 10.3546209,
+          "MagPercent": 10.3546209,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -284,8 +284,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.084733,
-          "MagPercent": 7.084733,
+          "Mag": 10.3546209,
+          "MagPercent": 10.3546209,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -884,7 +884,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 8.528,
-      "PowerIndex": 4069,
+      "PowerIndex": 4070,
       "PowerSetID": 2722,
       "PowerSetIndex": 1,
       "StaticIndex": 839,
@@ -1075,8 +1075,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 21.9525528,
-          "MagPercent": 21.9525528,
+          "Mag": 32.0845337,
+          "MagPercent": 32.0845337,
           "Duration": 4.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1260,8 +1260,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.952252,
-          "MagPercent": 7.952252,
+          "Mag": 11.6225338,
+          "MagPercent": 11.6225338,
           "Duration": 4.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1327,7 +1327,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 4070,
+      "PowerIndex": 4071,
       "PowerSetID": 2722,
       "PowerSetIndex": 2,
       "StaticIndex": 840,
@@ -1400,8 +1400,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1460,8 +1460,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1521,8 +1521,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.29295516,
-          "MagPercent": 3.29295516,
+          "Mag": 4.81278563,
+          "MagPercent": 4.81278563,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1582,8 +1582,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.29295516,
-          "MagPercent": 3.29295516,
+          "Mag": 4.81278563,
+          "MagPercent": 4.81278563,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -2182,7 +2182,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 13.0,
-      "PowerIndex": 4071,
+      "PowerIndex": 4072,
       "PowerSetID": 2722,
       "PowerSetIndex": 3,
       "StaticIndex": 841,
@@ -2501,7 +2501,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 15.6,
-      "PowerIndex": 4072,
+      "PowerIndex": 4073,
       "PowerSetID": 2722,
       "PowerSetIndex": 4,
       "StaticIndex": 842,
@@ -2820,7 +2820,7 @@
     {
       "CastTimeReal": 3.2,
       "ToggleCost": 13.0,
-      "PowerIndex": 4073,
+      "PowerIndex": 4074,
       "PowerSetID": 2722,
       "PowerSetIndex": 5,
       "StaticIndex": 843,
@@ -2950,7 +2950,7 @@
     {
       "CastTimeReal": 3.1,
       "ToggleCost": 15.6,
-      "PowerIndex": 4074,
+      "PowerIndex": 4075,
       "PowerSetID": 2722,
       "PowerSetIndex": 6,
       "StaticIndex": 844,
@@ -3269,7 +3269,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 26.0,
-      "PowerIndex": 4075,
+      "PowerIndex": 4076,
       "PowerSetID": 2722,
       "PowerSetIndex": 7,
       "StaticIndex": 845,
@@ -3410,7 +3410,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 26.0,
-      "PowerIndex": 4076,
+      "PowerIndex": 4077,
       "PowerSetID": 2722,
       "PowerSetIndex": 8,
       "StaticIndex": 846,

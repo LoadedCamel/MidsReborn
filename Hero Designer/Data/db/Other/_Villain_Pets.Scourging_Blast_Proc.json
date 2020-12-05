@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Scourging_Blast_Proc",
   "ImageName": "",
   "Power": [
-    10223
+    10224
   ],
   "SetType": 8,
   "DisplayName": "Scourging Blast",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10223,
+      "PowerIndex": 10224,
       "PowerSetID": 3508,
       "StaticIndex": 9027,
       "NGroupMembership": [],
@@ -131,8 +131,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 66.93105,
-          "MagPercent": 66.93105,
+          "Mag": 58.8993,
+          "MagPercent": 58.8993,
           "Duration": 1.0,
           "BaseProbability": 1.0,
           "Reward": "",

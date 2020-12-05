@@ -4,9 +4,9 @@
   "FullName": "Incarnate.Lore_Pet_Seers_Boss",
   "ImageName": "",
   "Power": [
-    5412,
     5413,
-    5414
+    5414,
+    5415
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Seers_Boss",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.57,
-      "PowerIndex": 5412,
+      "PowerIndex": 5413,
       "PowerSetID": 2867,
       "StaticIndex": 4666,
       "NGroupMembership": [],
@@ -201,8 +201,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 47.7135124,
-          "MagPercent": 47.7135124,
+          "Mag": 69.73521,
+          "MagPercent": 69.73521,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -322,7 +322,7 @@
     },
     {
       "CastTimeReal": 0.93,
-      "PowerIndex": 5413,
+      "PowerIndex": 5414,
       "PowerSetID": 2867,
       "PowerSetIndex": 1,
       "StaticIndex": 4668,
@@ -503,8 +503,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.92804241,
-          "MagPercent": 5.92804241,
+          "Mag": 8.664071,
+          "MagPercent": 8.664071,
           "Duration": 5.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -567,7 +567,7 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 5414,
+      "PowerIndex": 5415,
       "PowerSetID": 2867,
       "PowerSetIndex": 2,
       "StaticIndex": 4667,
@@ -628,8 +628,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -684,8 +684,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.375,
-          "MagPercent": -37.5,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 5.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -743,8 +743,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",

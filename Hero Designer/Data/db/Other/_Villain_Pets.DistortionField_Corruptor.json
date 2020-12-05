@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.DistortionField_Corruptor",
   "ImageName": "",
   "Power": [
-    10117
+    10118
   ],
   "SetType": 8,
   "DisplayName": "Time Manipulation",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10117,
+      "PowerIndex": 10118,
       "PowerSetID": 3531,
       "StaticIndex": 5814,
       "NGroupMembership": [],
@@ -79,8 +79,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.875,
-          "MagPercent": -87.5,
+          "Mag": -0.7,
+          "MagPercent": -70.0,
           "Duration": 1.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -136,8 +136,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.625,
-          "MagPercent": -62.5,
+          "Mag": -0.5,
+          "MagPercent": -50.0,
           "Duration": 1.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -251,8 +251,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.75,
-          "MagPercent": -75.0,
+          "Mag": -0.6,
+          "MagPercent": -60.0000038,
           "Duration": 1.3,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -309,8 +309,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.875,
-          "MagPercent": -87.5,
+          "Mag": -0.7,
+          "MagPercent": -70.0,
           "Duration": 1.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -367,8 +367,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.875,
-          "MagPercent": -87.5,
+          "Mag": -0.7,
+          "MagPercent": -70.0,
           "Duration": 1.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

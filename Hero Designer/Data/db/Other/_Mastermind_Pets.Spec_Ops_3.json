@@ -4,9 +4,9 @@
   "FullName": "Mastermind_Pets.Spec_Ops_3",
   "ImageName": "",
   "Power": [
-    6032,
     6033,
-    6034
+    6034,
+    6035
   ],
   "SetType": 8,
   "DisplayName": "Spec Ops",
@@ -25,7 +25,7 @@
     {
       "CastTimeReal": 3.83,
       "ToggleCost": 6.864,
-      "PowerIndex": 6032,
+      "PowerIndex": 6033,
       "PowerSetID": 2986,
       "StaticIndex": 1315,
       "NGroupMembership": [],
@@ -206,7 +206,7 @@
     },
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 6033,
+      "PowerIndex": 6034,
       "PowerSetID": 2986,
       "PowerSetIndex": 1,
       "StaticIndex": 1316,
@@ -1548,7 +1548,7 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 7.8,
-      "PowerIndex": 6034,
+      "PowerIndex": 6035,
       "PowerSetID": 2986,
       "PowerSetIndex": 2,
       "StaticIndex": 1318,

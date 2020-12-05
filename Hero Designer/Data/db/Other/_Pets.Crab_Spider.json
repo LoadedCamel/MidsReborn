@@ -4,11 +4,11 @@
   "FullName": "Pets.Crab_Spider",
   "ImageName": "",
   "Power": [
-    6263,
     6264,
     6265,
     6266,
-    6267
+    6267,
+    6268
   ],
   "SetType": 8,
   "DisplayName": "Crab Spider",
@@ -25,7 +25,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6263,
+      "PowerIndex": 6264,
       "PowerSetID": 3059,
       "StaticIndex": 4257,
       "NGroupMembership": [],
@@ -190,7 +190,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 5.2,
-      "PowerIndex": 6264,
+      "PowerIndex": 6265,
       "PowerSetID": 3059,
       "PowerSetIndex": 1,
       "StaticIndex": 4258,
@@ -367,7 +367,7 @@
     {
       "CastTimeReal": 0.87,
       "ToggleCost": 4.42,
-      "PowerIndex": 6265,
+      "PowerIndex": 6266,
       "PowerSetID": 3059,
       "PowerSetIndex": 2,
       "StaticIndex": 4259,
@@ -542,7 +542,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 7.8,
-      "PowerIndex": 6266,
+      "PowerIndex": 6267,
       "PowerSetID": 3059,
       "PowerSetIndex": 3,
       "StaticIndex": 4260,
@@ -657,7 +657,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 11.7,
-      "PowerIndex": 6267,
+      "PowerIndex": 6268,
       "PowerSetID": 3059,
       "PowerSetIndex": 4,
       "StaticIndex": 4261,

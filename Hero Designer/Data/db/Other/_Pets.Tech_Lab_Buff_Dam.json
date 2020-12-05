@@ -4,7 +4,7 @@
   "FullName": "Pets.Tech_Lab_Buff_Dam",
   "ImageName": "",
   "Power": [
-    6549
+    6550
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6549,
+      "PowerIndex": 6550,
       "PowerSetID": 3228,
       "StaticIndex": 1728,
       "NGroupMembership": [],

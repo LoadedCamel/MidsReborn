@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Zombie_2",
   "ImageName": "Necromancy.png",
   "Power": [
-    6087,
-    6088
+    6088,
+    6089
   ],
   "SetType": 8,
   "DisplayName": "Zombie",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 5.2,
-      "PowerIndex": 6087,
+      "PowerIndex": 6088,
       "PowerSetID": 3009,
       "StaticIndex": 1433,
       "NGroupMembership": [],
@@ -330,7 +330,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 6.864,
-      "PowerIndex": 6088,
+      "PowerIndex": 6089,
       "PowerSetID": 3009,
       "PowerSetIndex": 1,
       "StaticIndex": 1435,

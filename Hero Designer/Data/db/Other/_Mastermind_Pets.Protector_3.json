@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Protector_3",
   "ImageName": "",
   "Power": [
-    5996,
-    5997
+    5997,
+    5998
   ],
   "SetType": 8,
   "DisplayName": "Protector",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 15.184,
-      "PowerIndex": 5996,
+      "PowerIndex": 5997,
       "PowerSetID": 2977,
       "StaticIndex": 1272,
       "NGroupMembership": [],
@@ -432,7 +432,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 5997,
+      "PowerIndex": 5998,
       "PowerSetID": 2977,
       "PowerSetIndex": 1,
       "StaticIndex": 1273,

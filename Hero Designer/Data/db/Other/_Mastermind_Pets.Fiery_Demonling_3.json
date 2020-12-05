@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Fiery_Demonling_3",
   "ImageName": "",
   "Power": [
-    5896
+    5897
   ],
   "SetType": 8,
   "DisplayName": "Fiery Demonling",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 15.184,
-      "PowerIndex": 5896,
+      "PowerIndex": 5897,
       "PowerSetID": 2945,
       "StaticIndex": 4224,
       "NGroupMembership": [],

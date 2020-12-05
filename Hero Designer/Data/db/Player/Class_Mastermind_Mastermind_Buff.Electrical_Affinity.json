@@ -4,7 +4,6 @@
   "FullName": "Mastermind_Buff.Electrical_Affinity",
   "ImageName": "ShockTherapy.png",
   "Power": [
-    5689,
     5690,
     5691,
     5692,
@@ -12,7 +11,8 @@
     5694,
     5695,
     5696,
-    5697
+    5697,
+    5698
   ],
   "SetType": 2,
   "DisplayName": "Electrical Affinity",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 10.0,
-      "PowerIndex": 5689,
+      "PowerIndex": 5690,
       "PowerSetID": 2902,
       "StaticIndex": 10874,
       "NGroupMembership": [],
@@ -805,7 +805,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 16.25,
-      "PowerIndex": 5690,
+      "PowerIndex": 5691,
       "PowerSetID": 2902,
       "PowerSetIndex": 1,
       "StaticIndex": 10875,
@@ -925,7 +925,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 19.5,
-      "PowerIndex": 5691,
+      "PowerIndex": 5692,
       "PowerSetID": 2902,
       "PowerSetIndex": 2,
       "StaticIndex": 10876,
@@ -1703,7 +1703,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 16.25,
-      "PowerIndex": 5692,
+      "PowerIndex": 5693,
       "PowerSetID": 2902,
       "PowerSetIndex": 3,
       "StaticIndex": 10877,
@@ -1879,7 +1879,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 16.25,
-      "PowerIndex": 5693,
+      "PowerIndex": 5694,
       "PowerSetID": 2902,
       "PowerSetIndex": 4,
       "StaticIndex": 10878,
@@ -3202,7 +3202,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 16.25,
-      "PowerIndex": 5694,
+      "PowerIndex": 5695,
       "PowerSetID": 2902,
       "PowerSetIndex": 5,
       "StaticIndex": 10879,
@@ -3796,7 +3796,7 @@
     {
       "CastTimeReal": 3.3,
       "ToggleCost": 32.5,
-      "PowerIndex": 5695,
+      "PowerIndex": 5696,
       "PowerSetID": 2902,
       "PowerSetIndex": 6,
       "StaticIndex": 10880,
@@ -4211,7 +4211,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 16.25,
-      "PowerIndex": 5696,
+      "PowerIndex": 5697,
       "PowerSetID": 2902,
       "PowerSetIndex": 7,
       "StaticIndex": 10881,
@@ -4394,7 +4394,7 @@
     {
       "CastTimeReal": 2.57,
       "ToggleCost": 13.0,
-      "PowerIndex": 5697,
+      "PowerIndex": 5698,
       "PowerSetID": 2902,
       "PowerSetIndex": 8,
       "StaticIndex": 10882,

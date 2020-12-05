@@ -4,7 +4,7 @@
   "FullName": "Pets.FaerieResists",
   "ImageName": "",
   "Power": [
-    6322
+    6323
   ],
   "SetType": 8,
   "DisplayName": "FaerieResists",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6322,
+      "PowerIndex": 6323,
       "PowerSetID": 3082,
       "StaticIndex": 1592,
       "NGroupMembership": [],

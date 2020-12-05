@@ -4,7 +4,6 @@
   "FullName": "Mastermind_Buff.Traps",
   "ImageName": "Traps.png",
   "Power": [
-    5797,
     5798,
     5799,
     5800,
@@ -12,7 +11,8 @@
     5802,
     5803,
     5804,
-    5805
+    5805,
+    5806
   ],
   "SetType": 2,
   "DisplayName": "Traps",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 9.75,
-      "PowerIndex": 5797,
+      "PowerIndex": 5798,
       "PowerSetID": 2914,
       "StaticIndex": 1145,
       "NGroupMembership": [],
@@ -217,8 +217,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.625,
-          "MagPercent": -62.5,
+          "Mag": -0.5,
+          "MagPercent": -50.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -276,8 +276,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.625,
-          "MagPercent": -62.5,
+          "Mag": -0.5,
+          "MagPercent": -50.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -335,8 +335,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.625,
-          "MagPercent": -62.5,
+          "Mag": -0.5,
+          "MagPercent": -50.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -748,7 +748,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 9.75,
-      "PowerIndex": 5798,
+      "PowerIndex": 5799,
       "PowerSetID": 2914,
       "PowerSetIndex": 1,
       "StaticIndex": 1146,
@@ -883,7 +883,7 @@
     {
       "CastTimeReal": 2.77,
       "ToggleCost": 13.0,
-      "PowerIndex": 5799,
+      "PowerIndex": 5800,
       "PowerSetID": 2914,
       "PowerSetIndex": 2,
       "StaticIndex": 1147,
@@ -1010,7 +1010,7 @@
     {
       "CastTimeReal": 2.77,
       "ToggleCost": 16.25,
-      "PowerIndex": 5800,
+      "PowerIndex": 5801,
       "PowerSetID": 2914,
       "PowerSetIndex": 3,
       "StaticIndex": 1148,
@@ -1145,7 +1145,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 16.25,
-      "PowerIndex": 5801,
+      "PowerIndex": 5802,
       "PowerSetID": 2914,
       "PowerSetIndex": 4,
       "StaticIndex": 1149,
@@ -1274,7 +1274,7 @@
     {
       "CastTimeReal": 2.77,
       "ToggleCost": 16.25,
-      "PowerIndex": 5802,
+      "PowerIndex": 5803,
       "PowerSetID": 2914,
       "PowerSetIndex": 5,
       "StaticIndex": 1150,
@@ -1405,7 +1405,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 19.5,
-      "PowerIndex": 5803,
+      "PowerIndex": 5804,
       "PowerSetID": 2914,
       "PowerSetIndex": 6,
       "StaticIndex": 1151,
@@ -1599,7 +1599,7 @@
     {
       "CastTimeReal": 5.0,
       "ToggleCost": 16.25,
-      "PowerIndex": 5804,
+      "PowerIndex": 5805,
       "PowerSetID": 2914,
       "PowerSetIndex": 7,
       "StaticIndex": 1152,
@@ -1734,7 +1734,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 32.5,
-      "PowerIndex": 5805,
+      "PowerIndex": 5806,
       "PowerSetID": 2914,
       "PowerSetIndex": 8,
       "StaticIndex": 1153,
@@ -1815,7 +1815,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Villain_Pets.Traps_Bomb.Bomb",
-          "nSummon": 10271,
+          "nSummon": 10272,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -1868,7 +1868,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Villain_Pets.Traps_Set_TimeBomb.Time_Bomb",
-          "nSummon": 10289,
+          "nSummon": 10290,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,

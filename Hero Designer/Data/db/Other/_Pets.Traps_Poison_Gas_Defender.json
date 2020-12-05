@@ -4,9 +4,9 @@
   "FullName": "Pets.Traps_Poison_Gas_Defender",
   "ImageName": "",
   "Power": [
-    6610,
     6611,
-    6612
+    6612,
+    6613
   ],
   "SetType": 8,
   "DisplayName": "Poison Gas",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6610,
+      "PowerIndex": 6611,
       "PowerSetID": 3158,
       "StaticIndex": 3541,
       "NGroupMembership": [],
@@ -499,7 +499,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6611,
+      "PowerIndex": 6612,
       "PowerSetID": 3158,
       "PowerSetIndex": 1,
       "StaticIndex": 3542,
@@ -678,7 +678,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6612,
+      "PowerIndex": 6613,
       "PowerSetID": 3158,
       "PowerSetIndex": 2,
       "StaticIndex": 3543,

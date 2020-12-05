@@ -4,9 +4,9 @@
   "FullName": "Pets.Traps_Seeker1_Controller",
   "ImageName": "",
   "Power": [
-    6615,
     6616,
-    6617
+    6617,
+    6618
   ],
   "SetType": 8,
   "DisplayName": "Seeker 1",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6615,
+      "PowerIndex": 6616,
       "PowerSetID": 3196,
       "StaticIndex": 10640,
       "NGroupMembership": [],
@@ -905,7 +905,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 6616,
+      "PowerIndex": 6617,
       "PowerSetID": 3196,
       "PowerSetIndex": 1,
       "StaticIndex": 10642,
@@ -1123,7 +1123,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6617,
+      "PowerIndex": 6618,
       "PowerSetID": 3196,
       "PowerSetIndex": 2,
       "StaticIndex": 10641,

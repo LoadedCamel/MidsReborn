@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Howler_Wolf_2",
   "ImageName": "",
   "Power": [
-    5932,
-    5933
+    5933,
+    5934
   ],
   "SetType": 8,
   "DisplayName": "Howler Wolf",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.47,
       "ToggleCost": 6.864,
-      "PowerIndex": 5932,
+      "PowerIndex": 5933,
       "PowerSetID": 2958,
       "StaticIndex": 6190,
       "NGroupMembership": [],
@@ -789,7 +789,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5933,
+      "PowerIndex": 5934,
       "PowerSetID": 2958,
       "PowerSetIndex": 1,
       "StaticIndex": 6191,
@@ -847,7 +847,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Pack_Mentality",
-          "nSummon": 9753,
+          "nSummon": 9754,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

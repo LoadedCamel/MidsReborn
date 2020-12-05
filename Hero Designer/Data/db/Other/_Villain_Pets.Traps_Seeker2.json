@@ -4,9 +4,9 @@
   "FullName": "Villain_Pets.Traps_Seeker2",
   "ImageName": "",
   "Power": [
-    10283,
     10284,
-    10285
+    10285,
+    10286
   ],
   "SetType": 8,
   "DisplayName": "Seeker 2",
@@ -23,7 +23,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10283,
+      "PowerIndex": 10284,
       "PowerSetID": 3510,
       "StaticIndex": 3170,
       "NGroupMembership": [],
@@ -87,8 +87,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.6464,
-          "MagPercent": 7.6464,
+          "Mag": 14.5976753,
+          "MagPercent": 14.5976753,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -382,8 +382,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.0625,
-          "MagPercent": -6.25,
+          "Mag": -0.05,
+          "MagPercent": -5.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -440,8 +440,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -498,8 +498,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -556,8 +556,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -614,8 +614,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -672,8 +672,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -730,8 +730,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -788,8 +788,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -846,8 +846,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 40.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -906,7 +906,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 10284,
+      "PowerIndex": 10285,
       "PowerSetID": 3510,
       "PowerSetIndex": 1,
       "StaticIndex": 3171,
@@ -1125,7 +1125,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10285,
+      "PowerIndex": 10286,
       "PowerSetID": 3510,
       "PowerSetIndex": 2,
       "StaticIndex": 3172,

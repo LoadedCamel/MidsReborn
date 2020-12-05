@@ -4,9 +4,9 @@
   "FullName": "Pets.Blizzard",
   "ImageName": "",
   "Power": [
-    6210,
     6211,
-    6212
+    6212,
+    6213
   ],
   "SetType": 8,
   "DisplayName": "Blizzard",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6210,
+      "PowerIndex": 6211,
       "PowerSetID": 3027,
       "StaticIndex": 1545,
       "NGroupMembership": [],
@@ -831,7 +831,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 6211,
+      "PowerIndex": 6212,
       "PowerSetID": 3027,
       "PowerSetIndex": 1,
       "StaticIndex": 1546,
@@ -941,7 +941,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 6212,
+      "PowerIndex": 6213,
       "PowerSetID": 3027,
       "PowerSetIndex": 2,
       "StaticIndex": 1547,

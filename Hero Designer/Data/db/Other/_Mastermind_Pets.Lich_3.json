@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Lich_3",
   "ImageName": "",
   "Power": [
-    5955,
-    5956
+    5956,
+    5957
   ],
   "SetType": 8,
   "DisplayName": "Lich",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 3.64,
-      "PowerIndex": 5955,
+      "PowerIndex": 5956,
       "PowerSetID": 2965,
       "StaticIndex": 1239,
       "NGroupMembership": [],
@@ -275,7 +275,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 3.64,
-      "PowerIndex": 5956,
+      "PowerIndex": 5957,
       "PowerSetID": 2965,
       "PowerSetIndex": 1,
       "StaticIndex": 1243,

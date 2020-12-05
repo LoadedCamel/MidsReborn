@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Cold_Demonling",
   "ImageName": "",
   "Power": [
-    5836,
     5837,
     5838,
-    5839
+    5839,
+    5840
   ],
   "SetType": 8,
   "DisplayName": "Cold Demonling",
@@ -24,7 +24,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5836,
+      "PowerIndex": 5837,
       "PowerSetID": 2927,
       "StaticIndex": 4189,
       "NGroupMembership": [],
@@ -586,7 +586,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 5.2,
-      "PowerIndex": 5837,
+      "PowerIndex": 5838,
       "PowerSetID": 2927,
       "PowerSetIndex": 1,
       "StaticIndex": 4190,
@@ -880,7 +880,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 5.2,
-      "PowerIndex": 5838,
+      "PowerIndex": 5839,
       "PowerSetID": 2927,
       "PowerSetIndex": 2,
       "StaticIndex": 4191,
@@ -1473,7 +1473,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5839,
+      "PowerIndex": 5840,
       "PowerSetID": 2927,
       "PowerSetIndex": 3,
       "StaticIndex": 4192,

@@ -4,7 +4,7 @@
   "FullName": "Pets.Embraced_IceStorm",
   "ImageName": "",
   "Power": [
-    6307
+    6308
   ],
   "SetType": 8,
   "DisplayName": "Ice Storm",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6307,
+      "PowerIndex": 6308,
       "PowerSetID": 3106,
       "StaticIndex": 4417,
       "NGroupMembership": [],

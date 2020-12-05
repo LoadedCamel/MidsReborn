@@ -4,8 +4,8 @@
   "FullName": "Pets.VoltaicSentinel_Critter",
   "ImageName": "",
   "Power": [
-    6664,
-    6665
+    6665,
+    6666
   ],
   "SetType": 8,
   "DisplayName": "Voltaic Sentinel Critter",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6664,
+      "PowerIndex": 6665,
       "PowerSetID": 3261,
       "StaticIndex": 1781,
       "NGroupMembership": [],
@@ -260,7 +260,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6665,
+      "PowerIndex": 6666,
       "PowerSetID": 3261,
       "PowerSetIndex": 1,
       "StaticIndex": 1782,

@@ -4,9 +4,9 @@
   "FullName": "Pets.Mine",
   "ImageName": "",
   "Power": [
-    6411,
     6412,
-    6413
+    6413,
+    6414
   ],
   "SetType": 8,
   "DisplayName": "Mine",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6411,
+      "PowerIndex": 6412,
       "PowerSetID": 3143,
       "StaticIndex": 1658,
       "NGroupMembership": [],
@@ -417,7 +417,7 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 6412,
+      "PowerIndex": 6413,
       "PowerSetID": 3143,
       "PowerSetIndex": 1,
       "StaticIndex": 1659,
@@ -2317,7 +2317,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6413,
+      "PowerIndex": 6414,
       "PowerSetID": 3143,
       "PowerSetIndex": 2,
       "StaticIndex": 1660,

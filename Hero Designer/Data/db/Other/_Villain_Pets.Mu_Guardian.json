@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Mu_Guardian",
   "ImageName": "",
   "Power": [
-    10171,
     10172,
     10173,
     10174,
     10175,
     10176,
     10177,
-    10178
+    10178,
+    10179
   ],
   "SetType": 8,
   "DisplayName": "Mu Guardian",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10171,
+      "PowerIndex": 10172,
       "PowerSetID": 3495,
       "StaticIndex": 3113,
       "NGroupMembership": [],
@@ -78,8 +78,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 10.5,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -134,8 +134,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.2,
-          "MagPercent": 20.0,
+          "Mag": 0.17,
+          "MagPercent": 17.0,
           "Duration": 10.5,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -195,7 +195,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 14.3,
-      "PowerIndex": 10172,
+      "PowerIndex": 10173,
       "PowerSetID": 3495,
       "PowerSetIndex": 1,
       "StaticIndex": 3114,
@@ -381,8 +381,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -62.5,
-          "MagPercent": -62.5,
+          "Mag": -50.0,
+          "MagPercent": -50.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -438,8 +438,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -20.8375,
-          "MagPercent": -20.8375,
+          "Mag": -16.67,
+          "MagPercent": -16.67,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -552,8 +552,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 59.2804222,
-          "MagPercent": 59.2804222,
+          "Mag": 86.64071,
+          "MagPercent": 86.64071,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -613,7 +613,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10173,
+      "PowerIndex": 10174,
       "PowerSetID": 3495,
       "PowerSetIndex": 2,
       "StaticIndex": 3115,
@@ -893,7 +893,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 10.66,
-      "PowerIndex": 10174,
+      "PowerIndex": 10175,
       "PowerSetID": 3495,
       "PowerSetIndex": 3,
       "StaticIndex": 3116,
@@ -956,8 +956,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 59.2804222,
-          "MagPercent": 59.2804222,
+          "Mag": 86.64071,
+          "MagPercent": 86.64071,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1012,8 +1012,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -10.0,
-          "MagPercent": -10.0,
+          "Mag": -8.0,
+          "MagPercent": -8.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -1069,8 +1069,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -2.5,
-          "MagPercent": -2.5,
+          "Mag": -2.0,
+          "MagPercent": -2.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -1190,7 +1190,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 10175,
+      "PowerIndex": 10176,
       "PowerSetID": 3495,
       "PowerSetIndex": 4,
       "StaticIndex": 3117,
@@ -1253,8 +1253,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1309,8 +1309,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -6.25,
-          "MagPercent": -6.25,
+          "Mag": -5.0,
+          "MagPercent": -5.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -1366,8 +1366,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -1.5625,
-          "MagPercent": -1.5625,
+          "Mag": -1.25,
+          "MagPercent": -1.25,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -1485,7 +1485,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10176,
+      "PowerIndex": 10177,
       "PowerSetID": 3495,
       "PowerSetIndex": 5,
       "StaticIndex": 3118,
@@ -1592,7 +1592,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 13.0,
-      "PowerIndex": 10177,
+      "PowerIndex": 10178,
       "PowerSetID": 3495,
       "PowerSetIndex": 6,
       "StaticIndex": 3119,
@@ -1718,7 +1718,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 7.8,
-      "PowerIndex": 10178,
+      "PowerIndex": 10179,
       "PowerSetID": 3495,
       "PowerSetIndex": 7,
       "StaticIndex": 3120,
@@ -1779,8 +1779,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 267.7242,
-          "MagPercent": 267.7242,
+          "Mag": 214.1794,
+          "MagPercent": 214.1794,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",

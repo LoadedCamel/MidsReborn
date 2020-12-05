@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Soldier",
   "ImageName": "",
   "Power": [
-    6015,
     6016,
     6017,
-    6018
+    6018,
+    6019
   ],
   "SetType": 8,
   "DisplayName": "Soldier",
@@ -24,7 +24,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 6015,
+      "PowerIndex": 6016,
       "PowerSetID": 2983,
       "StaticIndex": 1295,
       "NGroupMembership": [],
@@ -359,7 +359,7 @@
     {
       "CastTimeReal": 2.2,
       "ToggleCost": 4.368,
-      "PowerIndex": 6016,
+      "PowerIndex": 6017,
       "PowerSetID": 2983,
       "PowerSetIndex": 1,
       "StaticIndex": 1296,
@@ -608,7 +608,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 4.368,
-      "PowerIndex": 6017,
+      "PowerIndex": 6018,
       "PowerSetID": 2983,
       "PowerSetIndex": 2,
       "StaticIndex": 1297,
@@ -787,7 +787,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6018,
+      "PowerIndex": 6019,
       "PowerSetID": 2983,
       "PowerSetIndex": 3,
       "StaticIndex": 1298,

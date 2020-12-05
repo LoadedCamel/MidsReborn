@@ -4,9 +4,9 @@
   "FullName": "Incarnate.Lore_Pet_Longbow_Boss",
   "ImageName": "",
   "Power": [
-    5369,
     5370,
-    5371
+    5371,
+    5372
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Longbow_Boss",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.67,
-      "PowerIndex": 5369,
+      "PowerIndex": 5370,
       "PowerSetID": 2850,
       "StaticIndex": 5522,
       "NGroupMembership": [],
@@ -87,8 +87,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 14.45864,
-          "MagPercent": 14.45864,
+          "Mag": 21.13188,
+          "MagPercent": 21.13188,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -143,8 +143,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 28.91728,
-          "MagPercent": 28.91728,
+          "Mag": 42.26376,
+          "MagPercent": 42.26376,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -321,7 +321,7 @@
     },
     {
       "CastTimeReal": 4.0,
-      "PowerIndex": 5370,
+      "PowerIndex": 5371,
       "PowerSetID": 2850,
       "PowerSetIndex": 1,
       "StaticIndex": 5524,
@@ -385,8 +385,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 21.68796,
-          "MagPercent": 21.68796,
+          "Mag": 31.69782,
+          "MagPercent": 31.69782,
           "Duration": 1.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -444,8 +444,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 50.6052361,
-          "MagPercent": 50.6052361,
+          "Mag": 73.96158,
+          "MagPercent": 73.96158,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -623,7 +623,7 @@
     },
     {
       "CastTimeReal": 4.0,
-      "PowerIndex": 5371,
+      "PowerIndex": 5372,
       "PowerSetID": 2850,
       "PowerSetIndex": 2,
       "StaticIndex": 5523,
@@ -684,8 +684,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 79.52252,
-          "MagPercent": 79.52252,
+          "Mag": 116.225342,
+          "MagPercent": 116.225342,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -798,8 +798,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.22932,
-          "MagPercent": 7.22932,
+          "Mag": 10.56594,
+          "MagPercent": 10.56594,
           "Duration": 8.1,
           "BaseProbability": 1.0,
           "Reward": "",

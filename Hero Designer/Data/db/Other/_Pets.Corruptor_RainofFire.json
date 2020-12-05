@@ -4,8 +4,8 @@
   "FullName": "Pets.Corruptor_RainofFire",
   "ImageName": "",
   "Power": [
-    6261,
-    6262
+    6262,
+    6263
   ],
   "SetType": 8,
   "DisplayName": "Rain of Fire",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6261,
+      "PowerIndex": 6262,
       "PowerSetID": 3182,
       "StaticIndex": 1565,
       "NGroupMembership": [],
@@ -483,7 +483,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6262,
+      "PowerIndex": 6263,
       "PowerSetID": 3182,
       "PowerSetIndex": 1,
       "StaticIndex": 1566,

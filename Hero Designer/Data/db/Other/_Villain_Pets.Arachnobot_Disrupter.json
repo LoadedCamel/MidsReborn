@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Arachnobot_Disrupter",
   "ImageName": "",
   "Power": [
-    10034,
     10035,
     10036,
     10037,
     10038,
     10039,
     10040,
-    10041
+    10041,
+    10042
   ],
   "SetType": 8,
   "DisplayName": "Arachnobot Disrupter",
@@ -30,7 +30,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 6.5,
-      "PowerIndex": 10034,
+      "PowerIndex": 10035,
       "PowerSetID": 3452,
       "StaticIndex": 3014,
       "NGroupMembership": [],
@@ -94,8 +94,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 47.7135124,
-          "MagPercent": 47.7135124,
+          "Mag": 69.73521,
+          "MagPercent": 69.73521,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -150,8 +150,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -10.0,
-          "MagPercent": -10.0,
+          "Mag": -8.0,
+          "MagPercent": -8.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -207,8 +207,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -2.5,
-          "MagPercent": -2.5,
+          "Mag": -2.0,
+          "MagPercent": -2.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -328,7 +328,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 2.34,
-      "PowerIndex": 10035,
+      "PowerIndex": 10036,
       "PowerSetID": 3452,
       "PowerSetIndex": 1,
       "StaticIndex": 3015,
@@ -391,8 +391,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 30.5856,
-          "MagPercent": 30.5856,
+          "Mag": 58.3907,
+          "MagPercent": 58.3907,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -451,7 +451,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 12.74,
-      "PowerIndex": 10036,
+      "PowerIndex": 10037,
       "PowerSetID": 3452,
       "PowerSetIndex": 2,
       "StaticIndex": 3016,
@@ -517,8 +517,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 10.84398,
-          "MagPercent": 10.84398,
+          "Mag": 15.84891,
+          "MagPercent": 15.84891,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -573,8 +573,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.22932,
-          "MagPercent": 7.22932,
+          "Mag": 10.56594,
+          "MagPercent": 10.56594,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -633,8 +633,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -6.25,
-          "MagPercent": -6.25,
+          "Mag": -5.0,
+          "MagPercent": -5.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -690,8 +690,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -1.5625,
-          "MagPercent": -1.5625,
+          "Mag": -1.25,
+          "MagPercent": -1.25,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -811,7 +811,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.58,
-      "PowerIndex": 10037,
+      "PowerIndex": 10038,
       "PowerSetID": 3452,
       "PowerSetIndex": 3,
       "StaticIndex": 3017,
@@ -877,8 +877,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.42199,
-          "MagPercent": 5.42199,
+          "Mag": 7.924455,
+          "MagPercent": 7.924455,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1056,8 +1056,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -10.0,
-          "MagPercent": -10.0,
+          "Mag": -8.0,
+          "MagPercent": -8.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -1113,8 +1113,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -2.5,
-          "MagPercent": -2.5,
+          "Mag": -2.0,
+          "MagPercent": -2.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -1232,7 +1232,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10038,
+      "PowerIndex": 10039,
       "PowerSetID": 3452,
       "PowerSetIndex": 4,
       "StaticIndex": 3018,
@@ -1512,7 +1512,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10039,
+      "PowerIndex": 10040,
       "PowerSetID": 3452,
       "PowerSetIndex": 5,
       "StaticIndex": 3019,
@@ -1787,7 +1787,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10040,
+      "PowerIndex": 10041,
       "PowerSetID": 3452,
       "PowerSetIndex": 6,
       "StaticIndex": 3020,
@@ -1894,7 +1894,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 10041,
+      "PowerIndex": 10042,
       "PowerSetID": 3452,
       "PowerSetIndex": 7,
       "StaticIndex": 3021,
@@ -2078,8 +2078,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2137,8 +2137,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2196,8 +2196,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

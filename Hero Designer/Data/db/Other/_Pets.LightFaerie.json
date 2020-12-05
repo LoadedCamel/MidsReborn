@@ -4,8 +4,8 @@
   "FullName": "Pets.LightFaerie",
   "ImageName": "",
   "Power": [
-    6384,
-    6385
+    6385,
+    6386
   ],
   "SetType": 8,
   "DisplayName": "LightFaerie",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6384,
+      "PowerIndex": 6385,
       "PowerSetID": 3127,
       "StaticIndex": 1636,
       "NGroupMembership": [],
@@ -194,7 +194,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 20.8,
-      "PowerIndex": 6385,
+      "PowerIndex": 6386,
       "PowerSetID": 3127,
       "PowerSetIndex": 1,
       "StaticIndex": 1637,

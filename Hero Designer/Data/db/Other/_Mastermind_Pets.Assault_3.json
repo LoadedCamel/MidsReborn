@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Assault_3",
   "ImageName": "",
   "Power": [
-    5834,
-    5835
+    5835,
+    5836
   ],
   "SetType": 8,
   "DisplayName": "Assault",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 10.4,
-      "PowerIndex": 5834,
+      "PowerIndex": 5835,
       "PowerSetID": 2923,
       "StaticIndex": 1172,
       "NGroupMembership": [],
@@ -333,7 +333,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 10.4,
-      "PowerIndex": 5835,
+      "PowerIndex": 5836,
       "PowerSetID": 2923,
       "PowerSetIndex": 1,
       "StaticIndex": 1173,

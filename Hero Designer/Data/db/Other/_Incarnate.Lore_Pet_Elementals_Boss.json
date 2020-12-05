@@ -4,10 +4,10 @@
   "FullName": "Incarnate.Lore_Pet_Elementals_Boss",
   "ImageName": "",
   "Power": [
-    5328,
     5329,
     5330,
-    5331
+    5331,
+    5332
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Elementals_Boss",
@@ -25,7 +25,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5328,
+      "PowerIndex": 5329,
       "PowerSetID": 2836,
       "StaticIndex": 5504,
       "NGroupMembership": [],
@@ -86,8 +86,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 59.2804222,
-          "MagPercent": 59.2804222,
+          "Mag": 86.64071,
+          "MagPercent": 86.64071,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -317,7 +317,7 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 5329,
+      "PowerIndex": 5330,
       "PowerSetID": 2836,
       "PowerSetIndex": 1,
       "StaticIndex": 5506,
@@ -380,8 +380,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 10.84398,
-          "MagPercent": 10.84398,
+          "Mag": 15.84891,
+          "MagPercent": 15.84891,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -436,8 +436,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.506388,
-          "MagPercent": 6.506388,
+          "Mag": 9.509346,
+          "MagPercent": 9.509346,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -615,7 +615,7 @@
     },
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 5330,
+      "PowerIndex": 5331,
       "PowerSetID": 2836,
       "PowerSetIndex": 2,
       "StaticIndex": 5505,
@@ -676,8 +676,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 43.37592,
-          "MagPercent": 43.37592,
+          "Mag": 63.39564,
+          "MagPercent": 63.39564,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -907,7 +907,7 @@
     },
     {
       "CastTimeReal": 3.0,
-      "PowerIndex": 5331,
+      "PowerIndex": 5332,
       "PowerSetID": 2836,
       "PowerSetIndex": 3,
       "StaticIndex": 5507,
@@ -969,8 +969,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.506388,
-          "MagPercent": 6.506388,
+          "Mag": 9.509346,
+          "MagPercent": 9.509346,
           "Duration": 4.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1085,8 +1085,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 18.0733,
-          "MagPercent": 18.0733,
+          "Mag": 26.41485,
+          "MagPercent": 26.41485,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

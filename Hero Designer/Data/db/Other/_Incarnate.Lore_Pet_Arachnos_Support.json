@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Arachnos_Support",
   "ImageName": "",
   "Power": [
-    5280,
-    5281
+    5281,
+    5282
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Arachnos_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 3.67,
-      "PowerIndex": 5280,
+      "PowerIndex": 5281,
       "PowerSetID": 2818,
       "StaticIndex": 5474,
       "NGroupMembership": [],
@@ -87,8 +87,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.05,
-          "MagPercent": 5.0,
+          "Mag": 0.0425,
+          "MagPercent": 4.25,
           "Duration": 3.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -375,7 +375,7 @@
     },
     {
       "CastTimeReal": 2.27,
-      "PowerIndex": 5281,
+      "PowerIndex": 5282,
       "PowerSetID": 2818,
       "PowerSetIndex": 1,
       "StaticIndex": 5475,
@@ -436,8 +436,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 262.36972,
-          "MagPercent": 262.36972,
+          "Mag": 209.895813,
+          "MagPercent": 209.895813,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",

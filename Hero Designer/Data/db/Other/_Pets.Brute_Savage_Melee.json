@@ -4,8 +4,8 @@
   "FullName": "Pets.Brute_Savage_Melee",
   "ImageName": "",
   "Power": [
-    6227,
-    6228
+    6228,
+    6229
   ],
   "SetType": 8,
   "DisplayName": "Savage Melee",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 13.52,
-      "PowerIndex": 6227,
+      "PowerIndex": 6228,
       "PowerSetID": 3192,
       "StaticIndex": 10619,
       "NGroupMembership": [],
@@ -625,7 +625,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 13.52,
-      "PowerIndex": 6228,
+      "PowerIndex": 6229,
       "PowerSetID": 3192,
       "PowerSetIndex": 1,
       "StaticIndex": 10620,
@@ -995,7 +995,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Exhausted",
-          "nSummon": 9865,
+          "nSummon": 9866,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

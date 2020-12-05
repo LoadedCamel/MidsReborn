@@ -4,11 +4,11 @@
   "FullName": "Mastermind_Pets.Howler_Wolf",
   "ImageName": "",
   "Power": [
-    5927,
     5928,
     5929,
     5930,
-    5931
+    5931,
+    5932
   ],
   "SetType": 8,
   "DisplayName": "Howler Wolf",
@@ -25,7 +25,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5927,
+      "PowerIndex": 5928,
       "PowerSetID": 2959,
       "StaticIndex": 6185,
       "NGroupMembership": [],
@@ -811,7 +811,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5928,
+      "PowerIndex": 5929,
       "PowerSetID": 2959,
       "PowerSetIndex": 1,
       "StaticIndex": 6187,
@@ -869,7 +869,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Pack_Mentality",
-          "nSummon": 9753,
+          "nSummon": 9754,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -917,7 +917,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 5929,
+      "PowerIndex": 5930,
       "PowerSetID": 2959,
       "PowerSetIndex": 2,
       "StaticIndex": 6188,
@@ -1256,7 +1256,7 @@
     {
       "CastTimeReal": 1.27,
       "ToggleCost": 4.368,
-      "PowerIndex": 5930,
+      "PowerIndex": 5931,
       "PowerSetID": 2959,
       "PowerSetIndex": 3,
       "StaticIndex": 6186,
@@ -2036,7 +2036,7 @@
     {
       "CastTimeReal": 0.6,
       "ToggleCost": 5.2,
-      "PowerIndex": 5931,
+      "PowerIndex": 5932,
       "PowerSetID": 2959,
       "PowerSetIndex": 4,
       "StaticIndex": 6189,

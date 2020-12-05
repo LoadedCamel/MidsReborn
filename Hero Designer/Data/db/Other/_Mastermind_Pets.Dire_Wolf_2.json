@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Dire_Wolf_2",
   "ImageName": "",
   "Power": [
-    5869,
     5870,
     5871,
-    5872
+    5872,
+    5873
   ],
   "SetType": 8,
   "DisplayName": "Dire Wolf",
@@ -26,7 +26,7 @@
     {
       "CastTimeReal": 2.83,
       "ToggleCost": 13.52,
-      "PowerIndex": 5869,
+      "PowerIndex": 5870,
       "PowerSetID": 2935,
       "StaticIndex": 6176,
       "NGroupMembership": [],
@@ -1237,7 +1237,7 @@
     {
       "CastTimeReal": 2.47,
       "ToggleCost": 6.864,
-      "PowerIndex": 5870,
+      "PowerIndex": 5871,
       "PowerSetID": 2935,
       "PowerSetIndex": 1,
       "StaticIndex": 6178,
@@ -2005,7 +2005,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5871,
+      "PowerIndex": 5872,
       "PowerSetID": 2935,
       "PowerSetIndex": 2,
       "StaticIndex": 6177,
@@ -2063,7 +2063,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Pack_Mentality",
-          "nSummon": 9753,
+          "nSummon": 9754,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2111,7 +2111,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 5872,
+      "PowerIndex": 5873,
       "PowerSetID": 2935,
       "PowerSetIndex": 3,
       "StaticIndex": 6179,
@@ -2169,7 +2169,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Pack_Mentality",
-          "nSummon": 9753,
+          "nSummon": 9754,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,

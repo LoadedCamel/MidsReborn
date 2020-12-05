@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Thug_Pose",
   "ImageName": "",
   "Power": [
-    6073,
-    6074
+    6074,
+    6075
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -22,7 +22,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 6073,
+      "PowerIndex": 6074,
       "PowerSetID": 3005,
       "StaticIndex": 1419,
       "NGroupMembership": [],
@@ -242,7 +242,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6074,
+      "PowerIndex": 6075,
       "PowerSetID": 3005,
       "PowerSetIndex": 1,
       "StaticIndex": 1420,

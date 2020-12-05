@@ -4,7 +4,7 @@
   "FullName": "Pets.Quicksand",
   "ImageName": "",
   "Power": [
-    6471
+    6472
   ],
   "SetType": 8,
   "DisplayName": "Quicksand",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6471,
+      "PowerIndex": 6472,
       "PowerSetID": 3169,
       "StaticIndex": 1687,
       "NGroupMembership": [],

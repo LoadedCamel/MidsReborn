@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Elementals_Support",
   "ImageName": "",
   "Power": [
-    5335,
-    5336
+    5336,
+    5337
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Elementals_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.27,
-      "PowerIndex": 5335,
+      "PowerIndex": 5336,
       "PowerSetID": 2838,
       "StaticIndex": 5511,
       "NGroupMembership": [],
@@ -77,8 +77,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 176.697983,
-          "MagPercent": 176.697983,
+          "Mag": 141.358414,
+          "MagPercent": 141.358414,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",
@@ -132,8 +132,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -8.65,
-          "MagPercent": -8.65,
+          "Mag": -5.19,
+          "MagPercent": -5.19,
           "Duration": 60.0,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -190,8 +190,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -8.65,
-          "MagPercent": -8.65,
+          "Mag": -5.19,
+          "MagPercent": -5.19,
           "Duration": 60.0,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -248,8 +248,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.865,
-          "MagPercent": 86.5,
+          "Mag": 0.519,
+          "MagPercent": 51.8999977,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -306,8 +306,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.865,
-          "MagPercent": 86.5,
+          "Mag": 0.519,
+          "MagPercent": 51.8999977,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -364,8 +364,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.865,
-          "MagPercent": 86.5,
+          "Mag": 0.519,
+          "MagPercent": 51.8999977,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -420,8 +420,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.865,
-          "MagPercent": 86.5,
+          "Mag": 0.519,
+          "MagPercent": 51.8999977,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -476,8 +476,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.73,
-          "MagPercent": 173.0,
+          "Mag": 1.038,
+          "MagPercent": 103.799995,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -533,8 +533,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.08125,
-          "MagPercent": 108.124992,
+          "Mag": 0.64875,
+          "MagPercent": 64.875,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -590,8 +590,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.08125,
-          "MagPercent": 108.124992,
+          "Mag": 0.64875,
+          "MagPercent": 64.875,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -651,7 +651,7 @@
     },
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 5336,
+      "PowerIndex": 5337,
       "PowerSetID": 2838,
       "PowerSetIndex": 1,
       "StaticIndex": 5512,
@@ -773,8 +773,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.375,
-          "MagPercent": -37.5,
+          "Mag": -0.225000009,
+          "MagPercent": -22.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

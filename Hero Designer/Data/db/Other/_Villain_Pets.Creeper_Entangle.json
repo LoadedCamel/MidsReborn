@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Creeper_Entangle",
   "ImageName": "",
   "Power": [
-    10106,
-    10107
+    10107,
+    10108
   ],
   "SetType": 8,
   "DisplayName": "Creeper Patch",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10106,
+      "PowerIndex": 10107,
       "PowerSetID": 3476,
       "StaticIndex": 3071,
       "NGroupMembership": [],
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -144,8 +144,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.61466,
-          "MagPercent": 3.61466,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -622,7 +622,7 @@
       "AoEModifier": 2.2
     },
     {
-      "PowerIndex": 10107,
+      "PowerIndex": 10108,
       "PowerSetID": 3476,
       "PowerSetIndex": 1,
       "StaticIndex": 3072,

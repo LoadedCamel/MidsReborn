@@ -4,9 +4,9 @@
   "FullName": "Pets.Turret",
   "ImageName": "",
   "Power": [
-    6642,
     6643,
-    6644
+    6644,
+    6645
   ],
   "SetType": 8,
   "DisplayName": "Turret",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6642,
+      "PowerIndex": 6643,
       "PowerSetID": 3250,
       "StaticIndex": 1761,
       "NGroupMembership": [],
@@ -144,7 +144,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6643,
+      "PowerIndex": 6644,
       "PowerSetID": 3250,
       "PowerSetIndex": 1,
       "StaticIndex": 1762,
@@ -2381,7 +2381,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6644,
+      "PowerIndex": 6645,
       "PowerSetID": 3250,
       "PowerSetIndex": 2,
       "StaticIndex": 1763,

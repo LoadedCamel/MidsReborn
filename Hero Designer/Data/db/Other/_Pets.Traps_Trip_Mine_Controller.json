@@ -4,9 +4,9 @@
   "FullName": "Pets.Traps_Trip_Mine_Controller",
   "ImageName": "",
   "Power": [
-    6634,
     6635,
-    6636
+    6636,
+    6637
   ],
   "SetType": 8,
   "DisplayName": "Mine",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6634,
+      "PowerIndex": 6635,
       "PowerSetID": 3141,
       "StaticIndex": 10646,
       "NGroupMembership": [],
@@ -308,7 +308,7 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 6635,
+      "PowerIndex": 6636,
       "PowerSetID": 3141,
       "PowerSetIndex": 1,
       "StaticIndex": 10648,
@@ -2208,7 +2208,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6636,
+      "PowerIndex": 6637,
       "PowerSetID": 3141,
       "PowerSetIndex": 2,
       "StaticIndex": 10647,

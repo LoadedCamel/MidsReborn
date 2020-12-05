@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Nemesis_Support",
   "ImageName": "",
   "Power": [
-    5383,
-    5384
+    5384,
+    5385
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Nemesis_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.37,
-      "PowerIndex": 5383,
+      "PowerIndex": 5384,
       "PowerSetID": 2855,
       "StaticIndex": 5536,
       "NGroupMembership": [],
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 262.36972,
-          "MagPercent": 262.36972,
+          "Mag": 230.885254,
+          "MagPercent": 230.885254,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",
@@ -955,7 +955,7 @@
     },
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 5384,
+      "PowerIndex": 5385,
       "PowerSetID": 2855,
       "PowerSetIndex": 1,
       "StaticIndex": 5537,
@@ -1017,8 +1017,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 133.8621,
-          "MagPercent": 133.8621,
+          "Mag": 107.0897,
+          "MagPercent": 107.0897,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",

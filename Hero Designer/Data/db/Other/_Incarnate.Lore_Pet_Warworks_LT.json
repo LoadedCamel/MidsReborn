@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Warworks_LT",
   "ImageName": "",
   "Power": [
-    5455,
-    5456
+    5456,
+    5457
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Warworks_LT",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 3.73,
-      "PowerIndex": 5455,
+      "PowerIndex": 5456,
       "PowerSetID": 2882,
       "StaticIndex": 4676,
       "NGroupMembership": [],
@@ -87,8 +87,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 4.33759165,
-          "MagPercent": 4.33759165,
+          "Mag": 6.339564,
+          "MagPercent": 6.339564,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -207,7 +207,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 5456,
+      "PowerIndex": 5457,
       "PowerSetID": 2882,
       "PowerSetIndex": 1,
       "StaticIndex": 4677,
@@ -268,8 +268,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 18.0733,
-          "MagPercent": 18.0733,
+          "Mag": 26.41485,
+          "MagPercent": 26.41485,
           "Duration": 1.5,
           "BaseProbability": 1.0,
           "Reward": "",

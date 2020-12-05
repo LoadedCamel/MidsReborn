@@ -4,11 +4,11 @@
   "FullName": "Pets.Singularity",
   "ImageName": "",
   "Power": [
-    6513,
     6514,
     6515,
     6516,
-    6517
+    6517,
+    6518
   ],
   "SetType": 8,
   "DisplayName": "Singularity",
@@ -25,7 +25,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6513,
+      "PowerIndex": 6514,
       "PowerSetID": 3202,
       "StaticIndex": 1707,
       "NGroupMembership": [],
@@ -201,7 +201,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6514,
+      "PowerIndex": 6515,
       "PowerSetID": 3202,
       "PowerSetIndex": 1,
       "StaticIndex": 1708,
@@ -800,7 +800,7 @@
     },
     {
       "CastTimeReal": 1.83,
-      "PowerIndex": 6515,
+      "PowerIndex": 6516,
       "PowerSetID": 3202,
       "PowerSetIndex": 2,
       "StaticIndex": 1709,
@@ -1571,7 +1571,7 @@
     },
     {
       "CastTimeReal": 1.03,
-      "PowerIndex": 6516,
+      "PowerIndex": 6517,
       "PowerSetID": 3202,
       "PowerSetIndex": 3,
       "StaticIndex": 1710,
@@ -1809,7 +1809,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6517,
+      "PowerIndex": 6518,
       "PowerSetID": 3202,
       "PowerSetIndex": 4,
       "StaticIndex": 1711,

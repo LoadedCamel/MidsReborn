@@ -4,7 +4,6 @@
   "FullName": "Incarnate.Data",
   "ImageName": "",
   "Power": [
-    4646,
     4647,
     4648,
     4649,
@@ -12,7 +11,8 @@
     4651,
     4652,
     4653,
-    4654
+    4654,
+    4655
   ],
   "SetType": 11,
   "DisplayName": "Data",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4646,
+      "PowerIndex": 4647,
       "PowerSetID": 2799,
       "StaticIndex": 9368,
       "NGroupMembership": [],
@@ -155,7 +155,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4647,
+      "PowerIndex": 4648,
       "PowerSetID": 2799,
       "PowerSetIndex": 1,
       "StaticIndex": 9376,
@@ -336,7 +336,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4648,
+      "PowerIndex": 4649,
       "PowerSetID": 2799,
       "PowerSetIndex": 2,
       "StaticIndex": 9371,
@@ -517,7 +517,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4649,
+      "PowerIndex": 4650,
       "PowerSetID": 2799,
       "PowerSetIndex": 3,
       "StaticIndex": 9373,
@@ -698,7 +698,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4650,
+      "PowerIndex": 4651,
       "PowerSetID": 2799,
       "PowerSetIndex": 4,
       "StaticIndex": 9372,
@@ -879,7 +879,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4651,
+      "PowerIndex": 4652,
       "PowerSetID": 2799,
       "PowerSetIndex": 5,
       "StaticIndex": 9375,
@@ -1060,7 +1060,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4652,
+      "PowerIndex": 4653,
       "PowerSetID": 2799,
       "PowerSetIndex": 6,
       "StaticIndex": 9370,
@@ -1241,7 +1241,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4653,
+      "PowerIndex": 4654,
       "PowerSetID": 2799,
       "PowerSetIndex": 7,
       "StaticIndex": 9369,
@@ -1365,7 +1365,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 4654,
+      "PowerIndex": 4655,
       "PowerSetID": 2799,
       "PowerSetIndex": 8,
       "StaticIndex": 9374,

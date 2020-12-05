@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Vitae",
   "ImageName": "",
   "Power": [
-    5480
+    5481
   ],
   "SetType": 11,
   "DisplayName": "Vitae",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 5480,
+      "PowerIndex": 5481,
       "PowerSetID": 2891,
       "StaticIndex": 4681,
       "NGroupMembership": [],

@@ -4,7 +4,7 @@
   "FullName": "Pets.Tech_Lab_Slow",
   "ImageName": "",
   "Power": [
-    6559
+    6560
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6559,
+      "PowerIndex": 6560,
       "PowerSetID": 3232,
       "StaticIndex": 1738,
       "NGroupMembership": [],

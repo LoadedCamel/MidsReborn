@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Lore_Pet_Banished_Support_Attack",
   "ImageName": "",
   "Power": [
-    5292
+    5293
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Banished_Support_Attack",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5292,
+      "PowerIndex": 5293,
       "PowerSetID": 2823,
       "StaticIndex": 9488,
       "NGroupMembership": [],
@@ -86,8 +86,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -142,8 +142,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 14.45864,
-          "MagPercent": 14.45864,
+          "Mag": 21.13188,
+          "MagPercent": 21.13188,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -199,8 +199,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.125,
-          "MagPercent": -12.5,
+          "Mag": -0.075,
+          "MagPercent": -7.50000048,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -257,8 +257,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.125,
-          "MagPercent": -12.5,
+          "Mag": -0.09375,
+          "MagPercent": -9.375,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -314,8 +314,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.125,
-          "MagPercent": -12.5,
+          "Mag": -0.09375,
+          "MagPercent": -9.375,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

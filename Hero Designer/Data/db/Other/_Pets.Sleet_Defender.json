@@ -4,8 +4,8 @@
   "FullName": "Pets.Sleet_Defender",
   "ImageName": "",
   "Power": [
-    6521,
-    6522
+    6522,
+    6523
   ],
   "SetType": 8,
   "DisplayName": "Sleet",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6521,
+      "PowerIndex": 6522,
       "PowerSetID": 3206,
       "StaticIndex": 1714,
       "NGroupMembership": [],
@@ -2662,7 +2662,7 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 6522,
+      "PowerIndex": 6523,
       "PowerSetID": 3206,
       "PowerSetIndex": 1,
       "StaticIndex": 1715,

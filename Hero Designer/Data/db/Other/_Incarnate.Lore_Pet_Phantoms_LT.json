@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Phantoms_LT",
   "ImageName": "",
   "Power": [
-    5389,
-    5390
+    5390,
+    5391
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Phantoms_LT",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5389,
+      "PowerIndex": 5390,
       "PowerSetID": 2858,
       "StaticIndex": 5542,
       "NGroupMembership": [],
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -141,8 +141,8 @@
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Probability": 0.8,
-          "Mag": 5.42199,
-          "MagPercent": 5.42199,
+          "Mag": 7.924455,
+          "MagPercent": 7.924455,
           "Duration": 3.1,
           "BaseProbability": 0.8,
           "Reward": "",
@@ -206,7 +206,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 5390,
+      "PowerIndex": 5391,
       "PowerSetID": 2858,
       "PowerSetIndex": 1,
       "StaticIndex": 5543,
@@ -267,8 +267,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 15.2928,
-          "MagPercent": 15.2928,
+          "Mag": 29.19535,
+          "MagPercent": 29.19535,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -322,8 +322,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 25.0801926,
-          "MagPercent": 25.0801926,
+          "Mag": 47.8803749,
+          "MagPercent": 47.8803749,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -379,8 +379,8 @@
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Probability": 0.8,
-          "Mag": 3.05856013,
-          "MagPercent": 3.05856013,
+          "Mag": 5.83907032,
+          "MagPercent": 5.83907032,
           "Duration": 3.1,
           "BaseProbability": 0.8,
           "Reward": "",

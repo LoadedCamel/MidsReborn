@@ -4,11 +4,11 @@
   "FullName": "Epic.VEAT_Mu_Mastery",
   "ImageName": "PatronSnipe.png",
   "Power": [
-    4424,
     4425,
     4426,
     4427,
-    4428
+    4428,
+    4429
   ],
   "SetType": 3,
   "DisplayName": "Mu Mastery",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 8.58,
-      "PowerIndex": 4424,
+      "PowerIndex": 4425,
       "PowerSetID": 2770,
       "StaticIndex": 1015,
       "NGroupMembership": [],
@@ -103,8 +103,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 40.3729935,
-          "MagPercent": 40.3729935,
+          "Mag": 77.07573,
+          "MagPercent": 77.07573,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -217,8 +217,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 48.9895668,
-          "MagPercent": 48.9895668,
+          "Mag": 93.52555,
+          "MagPercent": 93.52555,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -274,8 +274,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -2.5,
-          "MagPercent": -2.5,
+          "Mag": -2.2,
+          "MagPercent": -2.2,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -452,7 +452,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 12.74,
-      "PowerIndex": 4425,
+      "PowerIndex": 4426,
       "PowerSetID": 2770,
       "PowerSetIndex": 1,
       "StaticIndex": 1016,
@@ -533,8 +533,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.05856013,
-          "MagPercent": 3.05856013,
+          "Mag": 5.83907032,
+          "MagPercent": 5.83907032,
           "Duration": 7.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -652,8 +652,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.83021927,
-          "MagPercent": 7.83021927,
+          "Mag": 14.9486036,
+          "MagPercent": 14.9486036,
           "Duration": 7.21,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -834,8 +834,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -1.25,
-          "MagPercent": -1.25,
+          "Mag": -1.1,
+          "MagPercent": -1.1,
           "Duration": 6.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1190,7 +1190,7 @@
       "CastTimeReal": 1.07,
       "ToggleCost": 18.98,
       "IsEpic": true,
-      "PowerIndex": 4426,
+      "PowerIndex": 4427,
       "PowerSetID": 2770,
       "PowerSetIndex": 2,
       "StaticIndex": 1017,
@@ -1207,11 +1207,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4424,
+            4425,
             -1
           ],
           [
-            4425,
+            4426,
             -1
           ]
         ],
@@ -1280,8 +1280,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 9.17568,
-          "MagPercent": 9.17568,
+          "Mag": 17.5172119,
+          "MagPercent": 17.5172119,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1336,8 +1336,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.50540829,
-          "MagPercent": 5.50540829,
+          "Mag": 10.5103264,
+          "MagPercent": 10.5103264,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1396,8 +1396,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.956389,
-          "MagPercent": 6.956389,
+          "Mag": 13.2803812,
+          "MagPercent": 13.2803812,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1453,8 +1453,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 4.05779171,
-          "MagPercent": 4.05779171,
+          "Mag": 7.74669456,
+          "MagPercent": 7.74669456,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1571,8 +1571,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -1.5625,
-          "MagPercent": -1.5625,
+          "Mag": -1.375,
+          "MagPercent": -1.375,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -1694,7 +1694,7 @@
       "CastTimeReal": 2.07,
       "ToggleCost": 18.98,
       "IsEpic": true,
-      "PowerIndex": 4427,
+      "PowerIndex": 4428,
       "PowerSetID": 2770,
       "PowerSetIndex": 3,
       "StaticIndex": 3506,
@@ -1711,11 +1711,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4424,
+            4425,
             -1
           ],
           [
-            4425,
+            4426,
             -1
           ]
         ],
@@ -1785,8 +1785,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 34.7007332,
-          "MagPercent": 34.7007332,
+          "Mag": 50.71651,
+          "MagPercent": 50.71651,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1900,8 +1900,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 44.5875549,
-          "MagPercent": 44.5875549,
+          "Mag": 65.1665,
+          "MagPercent": 65.1665,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1958,8 +1958,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -1.5625,
-          "MagPercent": -1.5625,
+          "Mag": -1.25,
+          "MagPercent": -1.25,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -2135,7 +2135,7 @@
       "CastTimeReal": 1.17,
       "ToggleCost": 26.0,
       "IsEpic": true,
-      "PowerIndex": 4428,
+      "PowerIndex": 4429,
       "PowerSetID": 2770,
       "PowerSetIndex": 4,
       "StaticIndex": 1018,
@@ -2152,24 +2152,24 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4424,
-            4425
-          ],
-          [
-            4424,
-            4426
-          ],
-          [
-            4424,
-            4427
-          ],
-          [
             4425,
             4426
           ],
           [
             4425,
             4427
+          ],
+          [
+            4425,
+            4428
+          ],
+          [
+            4426,
+            4427
+          ],
+          [
+            4426,
+            4428
           ]
         ],
         "NPowerIDNot": [],

@@ -4,9 +4,9 @@
   "FullName": "Incarnate.Lore_Pet_Drones_Boss",
   "ImageName": "",
   "Power": [
-    5323,
     5324,
-    5325
+    5325,
+    5326
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Drones_Boss",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 5323,
+      "PowerIndex": 5324,
       "PowerSetID": 2834,
       "StaticIndex": 5499,
       "NGroupMembership": [],
@@ -85,8 +85,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 54.2199,
-          "MagPercent": 54.2199,
+          "Mag": 79.24455,
+          "MagPercent": 79.24455,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -202,7 +202,7 @@
     },
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 5324,
+      "PowerIndex": 5325,
       "PowerSetID": 2834,
       "PowerSetIndex": 1,
       "StaticIndex": 5501,
@@ -263,8 +263,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 29.6402111,
-          "MagPercent": 29.6402111,
+          "Mag": 43.3203545,
+          "MagPercent": 43.3203545,
           "Duration": 0.5,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -383,7 +383,7 @@
     },
     {
       "CastTimeReal": 3.5,
-      "PowerIndex": 5325,
+      "PowerIndex": 5326,
       "PowerSetID": 2834,
       "PowerSetIndex": 2,
       "StaticIndex": 5500,
@@ -447,8 +447,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 38.67686,
-          "MagPercent": 38.67686,
+          "Mag": 56.5277824,
+          "MagPercent": 56.5277824,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

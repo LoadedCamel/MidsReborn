@@ -4,12 +4,12 @@
   "FullName": "Pets.Jack",
   "ImageName": "",
   "Power": [
-    6366,
     6367,
     6368,
     6369,
     6370,
-    6371
+    6371,
+    6372
   ],
   "SetType": 8,
   "DisplayName": "Jack",
@@ -27,7 +27,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.33,
-      "PowerIndex": 6366,
+      "PowerIndex": 6367,
       "PowerSetID": 3113,
       "StaticIndex": 1624,
       "NGroupMembership": [],
@@ -498,7 +498,7 @@
     },
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 6367,
+      "PowerIndex": 6368,
       "PowerSetID": 3113,
       "PowerSetIndex": 1,
       "StaticIndex": 1625,
@@ -906,7 +906,7 @@
     },
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6368,
+      "PowerIndex": 6369,
       "PowerSetID": 3113,
       "PowerSetIndex": 2,
       "StaticIndex": 1626,
@@ -1382,7 +1382,7 @@
     },
     {
       "CastTimeReal": 2.33,
-      "PowerIndex": 6369,
+      "PowerIndex": 6370,
       "PowerSetID": 3113,
       "PowerSetIndex": 3,
       "StaticIndex": 1627,
@@ -1853,7 +1853,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6370,
+      "PowerIndex": 6371,
       "PowerSetID": 3113,
       "PowerSetIndex": 4,
       "StaticIndex": 1628,
@@ -2329,7 +2329,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6371,
+      "PowerIndex": 6372,
       "PowerSetID": 3113,
       "PowerSetIndex": 5,
       "StaticIndex": 1629,

@@ -4,7 +4,7 @@
   "FullName": "Pets.Fallout_Mastermind",
   "ImageName": "",
   "Power": [
-    6325
+    6326
   ],
   "SetType": 8,
   "DisplayName": "Fallout",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6325,
+      "PowerIndex": 6326,
       "PowerSetID": 3085,
       "StaticIndex": 10772,
       "NGroupMembership": [],

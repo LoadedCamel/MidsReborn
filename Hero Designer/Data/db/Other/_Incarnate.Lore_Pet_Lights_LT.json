@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Lights_LT",
   "ImageName": "",
   "Power": [
-    5365,
-    5366
+    5366,
+    5367
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Lights_LT",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 5365,
+      "PowerIndex": 5366,
       "PowerSetID": 2848,
       "StaticIndex": 5518,
       "NGroupMembership": [],
@@ -85,8 +85,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 46.9905777,
-          "MagPercent": 46.9905777,
+          "Mag": 68.67861,
+          "MagPercent": 68.67861,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -142,8 +142,8 @@
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Probability": 1.0,
-          "Mag": -0.125,
-          "MagPercent": -12.5,
+          "Mag": -0.075,
+          "MagPercent": -7.50000048,
           "Duration": 3.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -205,7 +205,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 5366,
+      "PowerIndex": 5367,
       "PowerSetID": 2848,
       "PowerSetIndex": 1,
       "StaticIndex": 5519,
@@ -269,8 +269,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -325,8 +325,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.125,
-          "MagPercent": -12.5,
+          "Mag": -0.075,
+          "MagPercent": -7.50000048,
           "Duration": 8.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

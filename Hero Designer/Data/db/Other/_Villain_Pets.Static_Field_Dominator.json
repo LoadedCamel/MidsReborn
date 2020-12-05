@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Static_Field_Dominator",
   "ImageName": "",
   "Power": [
-    10247
+    10248
   ],
   "SetType": 8,
   "DisplayName": "Static Field Dominator",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10247,
+      "PowerIndex": 10248,
       "PowerSetID": 3523,
       "StaticIndex": 4489,
       "NGroupMembership": [],
@@ -263,8 +263,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 0.5,
-          "Mag": -2.5,
-          "MagPercent": -2.5,
+          "Mag": -2.2,
+          "MagPercent": -2.2,
           "BaseProbability": 0.5,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -380,8 +380,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.5,
-          "MagPercent": -50.0,
+          "Mag": -0.4,
+          "MagPercent": -40.0,
           "Duration": 4.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -438,8 +438,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.5,
-          "MagPercent": -50.0,
+          "Mag": -0.4,
+          "MagPercent": -40.0,
           "Duration": 4.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -496,8 +496,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.5,
-          "MagPercent": -50.0,
+          "Mag": -0.4,
+          "MagPercent": -40.0,
           "Duration": 4.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -554,8 +554,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.5,
-          "MagPercent": -50.0,
+          "Mag": -0.4,
+          "MagPercent": -40.0,
           "Duration": 4.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -612,8 +612,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.375,
-          "MagPercent": -37.5,
+          "Mag": -0.3,
+          "MagPercent": -30.0000019,
           "Duration": 4.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

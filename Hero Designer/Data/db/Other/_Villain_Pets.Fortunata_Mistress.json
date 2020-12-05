@@ -4,13 +4,13 @@
   "FullName": "Villain_Pets.Fortunata_Mistress",
   "ImageName": "",
   "Power": [
-    10135,
     10136,
     10137,
     10138,
     10139,
     10140,
-    10141
+    10141,
+    10142
   ],
   "SetType": 8,
   "DisplayName": "Fortunata Mistress",
@@ -27,7 +27,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10135,
+      "PowerIndex": 10136,
       "PowerSetID": 3487,
       "StaticIndex": 3085,
       "NGroupMembership": [],
@@ -368,8 +368,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.05,
-          "MagPercent": 5.0,
+          "Mag": 0.0425,
+          "MagPercent": 4.25,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -426,8 +426,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.05,
-          "MagPercent": 5.0,
+          "Mag": 0.0425,
+          "MagPercent": 4.25,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -484,8 +484,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.05,
-          "MagPercent": 5.0,
+          "Mag": 0.0425,
+          "MagPercent": 4.25,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -542,8 +542,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.1,
-          "MagPercent": 10.0,
+          "Mag": 0.085,
+          "MagPercent": 8.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -600,8 +600,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.1,
-          "MagPercent": 10.0,
+          "Mag": 0.085,
+          "MagPercent": 8.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -661,7 +661,7 @@
     {
       "CastTimeReal": 1.97,
       "ToggleCost": 26.0,
-      "PowerIndex": 10136,
+      "PowerIndex": 10137,
       "PowerSetID": 3487,
       "PowerSetIndex": 1,
       "StaticIndex": 3086,
@@ -726,8 +726,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 54.2199,
-          "MagPercent": 54.2199,
+          "Mag": 79.24455,
+          "MagPercent": 79.24455,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -782,8 +782,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 0.5,
-          "Mag": 18.0733,
-          "MagPercent": 18.0733,
+          "Mag": 26.41485,
+          "MagPercent": 26.41485,
           "BaseProbability": 0.5,
           "Reward": "",
           "EffectId": "Damage",
@@ -959,8 +959,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.625,
-          "MagPercent": -62.5,
+          "Mag": -0.5,
+          "MagPercent": -50.0,
           "Duration": 20.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1023,7 +1023,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 10137,
+      "PowerIndex": 10138,
       "PowerSetID": 3487,
       "PowerSetIndex": 2,
       "StaticIndex": 3087,
@@ -1087,8 +1087,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 9.03665,
-          "MagPercent": 9.03665,
+          "Mag": 13.2074251,
+          "MagPercent": 13.2074251,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1269,7 +1269,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10138,
+      "PowerIndex": 10139,
       "PowerSetID": 3487,
       "PowerSetIndex": 3,
       "StaticIndex": 3088,
@@ -1376,7 +1376,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 7.8,
-      "PowerIndex": 10139,
+      "PowerIndex": 10140,
       "PowerSetID": 3487,
       "PowerSetIndex": 4,
       "StaticIndex": 3089,
@@ -1440,8 +1440,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1624,7 +1624,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 7.8,
-      "PowerIndex": 10140,
+      "PowerIndex": 10141,
       "PowerSetID": 3487,
       "PowerSetIndex": 5,
       "StaticIndex": 3090,
@@ -1688,8 +1688,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.1466,
-          "MagPercent": 36.1466,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1744,8 +1744,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 23.1338234,
-          "MagPercent": 23.1338234,
+          "Mag": 33.81101,
+          "MagPercent": 33.81101,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1923,7 +1923,7 @@
     {
       "CastTimeReal": 1.1,
       "ToggleCost": 12.74,
-      "PowerIndex": 10141,
+      "PowerIndex": 10142,
       "PowerSetID": 3487,
       "PowerSetIndex": 6,
       "StaticIndex": 3091,
@@ -1987,8 +1987,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 70.8473358,
-          "MagPercent": 70.8473358,
+          "Mag": 103.546211,
+          "MagPercent": 103.546211,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

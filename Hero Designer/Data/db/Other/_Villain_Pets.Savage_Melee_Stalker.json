@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Savage_Melee_Stalker",
   "ImageName": "",
   "Power": [
-    10222
+    10223
   ],
   "SetType": 8,
   "DisplayName": "Savage Melee: Stalker",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 3.52,
-      "PowerIndex": 10222,
+      "PowerIndex": 10223,
       "PowerSetID": 3507,
       "StaticIndex": 10893,
       "NGroupMembership": [],
@@ -92,8 +92,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 23.2450562,
-          "MagPercent": 23.2450562,
+          "Mag": 44.3769341,
+          "MagPercent": 44.3769341,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -148,8 +148,8 @@
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .04 * .33 + @StdResult *",
           "Probability": 1.0,
-          "Mag": 12.5890341,
-          "MagPercent": 12.5890341,
+          "Mag": 24.0336132,
+          "MagPercent": 24.0336132,
           "Duration": 5.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -209,8 +209,8 @@
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .04 * .33 + @StdResult *",
           "Probability": 1.0,
-          "Mag": 5.321894,
-          "MagPercent": 5.321894,
+          "Mag": 10.1599817,
+          "MagPercent": 10.1599817,
           "Duration": 5.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -270,8 +270,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 11.9650879,
-          "MagPercent": 11.9650879,
+          "Mag": 22.8424454,
+          "MagPercent": 22.8424454,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -386,8 +386,8 @@
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .2 * 2.41 + @StdResult *",
           "Probability": 1.0,
-          "Mag": 23.2450562,
-          "MagPercent": 23.2450562,
+          "Mag": 44.3769341,
+          "MagPercent": 44.3769341,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -445,8 +445,8 @@
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .04 * .33 + @StdResult *",
           "Probability": 1.0,
-          "Mag": 11.9650879,
-          "MagPercent": 11.9650879,
+          "Mag": 22.8424454,
+          "MagPercent": 22.8424454,
           "Duration": 4.1,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
@@ -508,8 +508,8 @@
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .04 * .33 + @StdResult *",
           "Probability": 1.0,
-          "Mag": 12.5890341,
-          "MagPercent": 12.5890341,
+          "Mag": 24.0336132,
+          "MagPercent": 24.0336132,
           "Duration": 5.1,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
@@ -571,8 +571,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 29.8179,
-          "MagPercent": 29.8179,
+          "Mag": 56.92509,
+          "MagPercent": 56.92509,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -628,8 +628,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 29.8179,
-          "MagPercent": 29.8179,
+          "Mag": 56.92509,
+          "MagPercent": 56.92509,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -687,8 +687,8 @@
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .2 * 2.2 + @StdResult *",
           "Probability": 0.2,
-          "Mag": 29.8179,
-          "MagPercent": 29.8179,
+          "Mag": 56.92509,
+          "MagPercent": 56.92509,
           "BaseProbability": 0.2,
           "Reward": "",
           "EffectId": "Damage",

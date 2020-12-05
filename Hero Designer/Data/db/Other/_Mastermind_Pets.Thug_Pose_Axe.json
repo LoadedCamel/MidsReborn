@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Axe",
   "ImageName": "",
   "Power": [
-    6075
+    6076
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 8.528,
-      "PowerIndex": 6075,
+      "PowerIndex": 6076,
       "PowerSetID": 3000,
       "StaticIndex": 1421,
       "NGroupMembership": [],

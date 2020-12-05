@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Cold_Demonling_2",
   "ImageName": "",
   "Power": [
-    5840
+    5841
   ],
   "SetType": 8,
   "DisplayName": "Cold Demonling",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 8.528,
-      "PowerIndex": 5840,
+      "PowerIndex": 5841,
       "PowerSetID": 2928,
       "StaticIndex": 4193,
       "NGroupMembership": [],

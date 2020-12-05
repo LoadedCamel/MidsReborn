@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Demon_Prince_3",
   "ImageName": "",
   "Power": [
-    5860,
-    5861
+    5861,
+    5862
   ],
   "SetType": 8,
   "DisplayName": "Demon Prince",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 10.192,
-      "PowerIndex": 5860,
+      "PowerIndex": 5861,
       "PowerSetID": 2934,
       "StaticIndex": 4205,
       "NGroupMembership": [],
@@ -617,7 +617,7 @@
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 18.512,
-      "PowerIndex": 5861,
+      "PowerIndex": 5862,
       "PowerSetID": 2934,
       "PowerSetIndex": 1,
       "StaticIndex": 4207,

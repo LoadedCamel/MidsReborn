@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Genin_3",
   "ImageName": "",
   "Power": [
-    5903,
-    5904
+    5904,
+    5905
   ],
   "SetType": 8,
   "DisplayName": "Genin",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 15.184,
-      "PowerIndex": 5903,
+      "PowerIndex": 5904,
       "PowerSetID": 2947,
       "StaticIndex": 1203,
       "NGroupMembership": [],
@@ -265,7 +265,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.528,
-      "PowerIndex": 5904,
+      "PowerIndex": 5905,
       "PowerSetID": 2947,
       "PowerSetIndex": 1,
       "StaticIndex": 1206,

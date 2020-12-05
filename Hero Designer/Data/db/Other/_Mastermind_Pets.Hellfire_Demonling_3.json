@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Hellfire_Demonling_3",
   "ImageName": "",
   "Power": [
-    5917
+    5918
   ],
   "SetType": 8,
   "DisplayName": "Hellfire Demonling",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 15.184,
-      "PowerIndex": 5917,
+      "PowerIndex": 5918,
       "PowerSetID": 2951,
       "StaticIndex": 4232,
       "NGroupMembership": [],

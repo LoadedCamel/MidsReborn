@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Arachnobot_Blaster",
   "ImageName": "",
   "Power": [
-    10026,
     10027,
     10028,
     10029,
     10030,
     10031,
     10032,
-    10033
+    10033,
+    10034
   ],
   "SetType": 8,
   "DisplayName": "Arachnobot Blaster",
@@ -30,7 +30,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 6.5,
-      "PowerIndex": 10026,
+      "PowerIndex": 10027,
       "PowerSetID": 3451,
       "StaticIndex": 3006,
       "NGroupMembership": [],
@@ -94,8 +94,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 17.711834,
-          "MagPercent": 17.711834,
+          "Mag": 25.8865528,
+          "MagPercent": 25.8865528,
           "Duration": 1.05,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -275,7 +275,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 5.46,
-      "PowerIndex": 10027,
+      "PowerIndex": 10028,
       "PowerSetID": 3451,
       "PowerSetIndex": 1,
       "StaticIndex": 3007,
@@ -338,8 +338,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 25.6919022,
-          "MagPercent": 25.6919022,
+          "Mag": 49.0481873,
+          "MagPercent": 49.0481873,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -398,7 +398,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 8.58,
-      "PowerIndex": 10028,
+      "PowerIndex": 10029,
       "PowerSetID": 3451,
       "PowerSetIndex": 2,
       "StaticIndex": 3008,
@@ -462,8 +462,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 70.8473358,
-          "MagPercent": 70.8473358,
+          "Mag": 103.546211,
+          "MagPercent": 103.546211,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -637,7 +637,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10029,
+      "PowerIndex": 10030,
       "PowerSetID": 3451,
       "PowerSetIndex": 3,
       "StaticIndex": 3009,
@@ -916,7 +916,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10030,
+      "PowerIndex": 10031,
       "PowerSetID": 3451,
       "PowerSetIndex": 4,
       "StaticIndex": 3010,
@@ -1192,7 +1192,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10031,
+      "PowerIndex": 10032,
       "PowerSetID": 3451,
       "PowerSetIndex": 5,
       "StaticIndex": 3011,
@@ -1299,7 +1299,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 12.74,
-      "PowerIndex": 10032,
+      "PowerIndex": 10033,
       "PowerSetID": 3451,
       "PowerSetIndex": 6,
       "StaticIndex": 3012,
@@ -1364,8 +1364,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 17.458807,
-          "MagPercent": 17.458807,
+          "Mag": 25.5167465,
+          "MagPercent": 25.5167465,
           "Duration": 1.05,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1428,7 +1428,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 13.0,
-      "PowerIndex": 10033,
+      "PowerIndex": 10034,
       "PowerSetID": 3451,
       "PowerSetIndex": 7,
       "StaticIndex": 3013,
@@ -1610,8 +1610,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.625,
-          "MagPercent": -62.5,
+          "Mag": -0.5,
+          "MagPercent": -50.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1669,8 +1669,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.625,
-          "MagPercent": -62.5,
+          "Mag": -0.5,
+          "MagPercent": -50.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1728,8 +1728,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.625,
-          "MagPercent": -62.5,
+          "Mag": -0.5,
+          "MagPercent": -50.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

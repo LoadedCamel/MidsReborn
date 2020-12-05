@@ -4,8 +4,8 @@
   "FullName": "Pets.Wind_Control_Vacuum_Dominator",
   "ImageName": "",
   "Power": [
-    6693,
-    6694
+    6694,
+    6695
   ],
   "SetType": 8,
   "DisplayName": "Wind Control",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6693,
+      "PowerIndex": 6694,
       "PowerSetID": 3276,
       "StaticIndex": 9604,
       "NGroupMembership": [],
@@ -604,7 +604,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6694,
+      "PowerIndex": 6695,
       "PowerSetID": 3276,
       "PowerSetIndex": 1,
       "StaticIndex": 9605,

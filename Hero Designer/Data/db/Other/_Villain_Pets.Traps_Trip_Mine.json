@@ -4,9 +4,9 @@
   "FullName": "Villain_Pets.Traps_Trip_Mine",
   "ImageName": "",
   "Power": [
-    10294,
     10295,
-    10296
+    10296,
+    10297
   ],
   "SetType": 8,
   "DisplayName": "Mine",
@@ -23,7 +23,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10294,
+      "PowerIndex": 10295,
       "PowerSetID": 3493,
       "StaticIndex": 3181,
       "NGroupMembership": [],
@@ -83,8 +83,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 61.1712,
-          "MagPercent": 61.1712,
+          "Mag": 116.7814,
+          "MagPercent": 116.7814,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -138,8 +138,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 30.5856,
-          "MagPercent": 30.5856,
+          "Mag": 58.3907,
+          "MagPercent": 58.3907,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -194,8 +194,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 0.5,
-          "Mag": 30.5856,
-          "MagPercent": 30.5856,
+          "Mag": 58.3907,
+          "MagPercent": 58.3907,
           "BaseProbability": 0.5,
           "Reward": "",
           "EffectId": "Damage",
@@ -415,7 +415,7 @@
       "AoEModifier": 2.8
     },
     {
-      "PowerIndex": 10295,
+      "PowerIndex": 10296,
       "PowerSetID": 3493,
       "PowerSetIndex": 1,
       "StaticIndex": 3182,
@@ -2316,7 +2316,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10296,
+      "PowerIndex": 10297,
       "PowerSetID": 3493,
       "PowerSetIndex": 2,
       "StaticIndex": 3183,

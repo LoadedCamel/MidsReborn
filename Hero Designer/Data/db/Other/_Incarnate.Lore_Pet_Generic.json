@@ -4,13 +4,13 @@
   "FullName": "Incarnate.Lore_Pet_Generic",
   "ImageName": "",
   "Power": [
-    5337,
     5338,
     5339,
     5340,
     5341,
     5342,
-    5343
+    5343,
+    5344
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Generic",
@@ -27,7 +27,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 5337,
+      "PowerIndex": 5338,
       "PowerSetID": 2839,
       "StaticIndex": 4656,
       "NGroupMembership": [],
@@ -584,7 +584,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5338,
+      "PowerIndex": 5339,
       "PowerSetID": 2839,
       "PowerSetIndex": 1,
       "StaticIndex": 5513,
@@ -688,7 +688,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5339,
+      "PowerIndex": 5340,
       "PowerSetID": 2839,
       "PowerSetIndex": 2,
       "StaticIndex": 5202,
@@ -966,7 +966,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5340,
+      "PowerIndex": 5341,
       "PowerSetID": 2839,
       "PowerSetIndex": 3,
       "StaticIndex": 8963,
@@ -1473,7 +1473,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5341,
+      "PowerIndex": 5342,
       "PowerSetID": 2839,
       "PowerSetIndex": 4,
       "StaticIndex": 4658,
@@ -1980,7 +1980,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5342,
+      "PowerIndex": 5343,
       "PowerSetID": 2839,
       "PowerSetIndex": 5,
       "StaticIndex": 4657,
@@ -2143,7 +2143,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5343,
+      "PowerIndex": 5344,
       "PowerSetID": 2839,
       "PowerSetIndex": 6,
       "StaticIndex": 5203,

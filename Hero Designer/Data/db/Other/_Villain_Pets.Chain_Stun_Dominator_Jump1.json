@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Chain_Stun_Dominator_Jump1",
   "ImageName": "",
   "Power": [
-    10072
+    10073
   ],
   "SetType": 8,
   "DisplayName": "Chain Stun Jump 1",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10072,
+      "PowerIndex": 10073,
       "PowerSetID": 3468,
       "StaticIndex": 4488,
       "NGroupMembership": [],
@@ -89,8 +89,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 4.281984,
-          "MagPercent": 4.281984,
+          "Mag": 8.174698,
+          "MagPercent": 8.174698,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

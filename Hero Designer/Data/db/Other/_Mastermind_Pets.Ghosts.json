@@ -4,13 +4,13 @@
   "FullName": "Mastermind_Pets.Ghosts",
   "ImageName": "",
   "Power": [
-    5905,
     5906,
     5907,
     5908,
     5909,
     5910,
-    5911
+    5911,
+    5912
   ],
   "SetType": 8,
   "DisplayName": "Ghosts",
@@ -27,7 +27,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5905,
+      "PowerIndex": 5906,
       "PowerSetID": 2950,
       "StaticIndex": 1207,
       "NGroupMembership": [],
@@ -699,7 +699,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5906,
+      "PowerIndex": 5907,
       "PowerSetID": 2950,
       "PowerSetIndex": 1,
       "StaticIndex": 1210,
@@ -979,7 +979,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 2.6,
-      "PowerIndex": 5907,
+      "PowerIndex": 5908,
       "PowerSetID": 2950,
       "PowerSetIndex": 2,
       "StaticIndex": 1211,
@@ -1163,7 +1163,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 7.8,
-      "PowerIndex": 5908,
+      "PowerIndex": 5909,
       "PowerSetID": 2950,
       "PowerSetIndex": 3,
       "StaticIndex": 1212,
@@ -1410,7 +1410,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 6.24,
-      "PowerIndex": 5909,
+      "PowerIndex": 5910,
       "PowerSetID": 2950,
       "PowerSetIndex": 4,
       "StaticIndex": 1213,
@@ -1714,7 +1714,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 3.64,
-      "PowerIndex": 5910,
+      "PowerIndex": 5911,
       "PowerSetID": 2950,
       "PowerSetIndex": 5,
       "StaticIndex": 1214,
@@ -2165,7 +2165,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5911,
+      "PowerIndex": 5912,
       "PowerSetID": 2950,
       "PowerSetIndex": 6,
       "StaticIndex": 1215,

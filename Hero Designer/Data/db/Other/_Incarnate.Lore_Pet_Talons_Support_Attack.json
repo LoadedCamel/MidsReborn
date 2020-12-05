@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Lore_Pet_Talons_Support_Attack",
   "ImageName": "",
   "Power": [
-    5428
+    5429
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Talons_Support_Attack",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5428,
+      "PowerIndex": 5429,
       "PowerSetID": 2873,
       "StaticIndex": 9508,
       "NGroupMembership": [],
@@ -83,8 +83,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 39.76126,
-          "MagPercent": 39.76126,
+          "Mag": 58.11267,
+          "MagPercent": 58.11267,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -139,8 +139,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.42199,
-          "MagPercent": 5.42199,
+          "Mag": 7.924455,
+          "MagPercent": 7.924455,
           "Duration": 3.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -200,8 +200,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 167.327637,
-          "MagPercent": 167.327637,
+          "Mag": 133.862122,
+          "MagPercent": 133.862122,
           "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",

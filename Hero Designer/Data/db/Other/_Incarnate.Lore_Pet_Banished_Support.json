@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Banished_Support",
   "ImageName": "",
   "Power": [
-    5290,
-    5291
+    5291,
+    5292
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Banished_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 5290,
+      "PowerIndex": 5291,
       "PowerSetID": 2822,
       "StaticIndex": 9486,
       "NGroupMembership": [],
@@ -147,7 +147,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5291,
+      "PowerIndex": 5292,
       "PowerSetID": 2822,
       "PowerSetIndex": 1,
       "StaticIndex": 9487,

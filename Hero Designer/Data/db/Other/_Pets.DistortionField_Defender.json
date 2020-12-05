@@ -4,7 +4,7 @@
   "FullName": "Pets.DistortionField_Defender",
   "ImageName": "",
   "Power": [
-    6302
+    6303
   ],
   "SetType": 8,
   "DisplayName": "Time Manipulation",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6302,
+      "PowerIndex": 6303,
       "PowerSetID": 3237,
       "StaticIndex": 5606,
       "NGroupMembership": [],

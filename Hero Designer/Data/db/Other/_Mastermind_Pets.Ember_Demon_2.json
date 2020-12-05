@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Ember_Demon_2",
   "ImageName": "",
   "Power": [
-    5887,
-    5888
+    5888,
+    5889
   ],
   "SetType": 8,
   "DisplayName": "Ember Demon",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 15.184,
-      "PowerIndex": 5887,
+      "PowerIndex": 5888,
       "PowerSetID": 2942,
       "StaticIndex": 4212,
       "NGroupMembership": [],
@@ -217,7 +217,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 13.0,
-      "PowerIndex": 5888,
+      "PowerIndex": 5889,
       "PowerSetID": 2942,
       "PowerSetIndex": 1,
       "StaticIndex": 4213,

@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Fiery_Demonling",
   "ImageName": "",
   "Power": [
-    5891,
     5892,
     5893,
-    5894
+    5894,
+    5895
   ],
   "SetType": 8,
   "DisplayName": "Fiery Demonling",
@@ -24,7 +24,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5891,
+      "PowerIndex": 5892,
       "PowerSetID": 2946,
       "StaticIndex": 4218,
       "NGroupMembership": [],
@@ -586,7 +586,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 5.2,
-      "PowerIndex": 5892,
+      "PowerIndex": 5893,
       "PowerSetID": 2946,
       "PowerSetIndex": 1,
       "StaticIndex": 4219,
@@ -880,7 +880,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 4.368,
-      "PowerIndex": 5893,
+      "PowerIndex": 5894,
       "PowerSetID": 2946,
       "PowerSetIndex": 2,
       "StaticIndex": 4220,
@@ -1178,7 +1178,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5894,
+      "PowerIndex": 5895,
       "PowerSetID": 2946,
       "PowerSetIndex": 3,
       "StaticIndex": 4221,

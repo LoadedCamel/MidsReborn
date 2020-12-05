@@ -4,7 +4,7 @@
   "FullName": "Inherent.Savage_Melee",
   "ImageName": "",
   "Power": [
-    5653
+    5654
   ],
   "SetType": 4,
   "DisplayName": "Blood Frenzy",
@@ -23,7 +23,7 @@
     {
       "IsEpic": true,
       "LocationIndex": 8,
-      "PowerIndex": 5653,
+      "PowerIndex": 5654,
       "PowerSetID": 2892,
       "StaticIndex": 10085,
       "NGroupMembership": [],
@@ -47,11 +47,15 @@
             -1
           ],
           [
-            7037,
+            7038,
             -1
           ],
           [
-            7038,
+            7039,
+            -1
+          ],
+          [
+            8553,
             -1
           ],
           [
@@ -59,15 +63,11 @@
             -1
           ],
           [
-            8551,
+            8816,
             -1
           ],
           [
-            8815,
-            -1
-          ],
-          [
-            3987,
+            3988,
             -1
           ]
         ],

@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Lich",
   "ImageName": "",
   "Power": [
-    5949,
     5950,
     5951,
-    5952
+    5952,
+    5953
   ],
   "SetType": 8,
   "DisplayName": "Lich",
@@ -24,7 +24,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 5949,
+      "PowerIndex": 5950,
       "PowerSetID": 2963,
       "StaticIndex": 1231,
       "NGroupMembership": [],
@@ -359,7 +359,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 2.6,
-      "PowerIndex": 5950,
+      "PowerIndex": 5951,
       "PowerSetID": 2963,
       "PowerSetIndex": 1,
       "StaticIndex": 1232,
@@ -600,7 +600,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5951,
+      "PowerIndex": 5952,
       "PowerSetID": 2963,
       "PowerSetIndex": 2,
       "StaticIndex": 1233,
@@ -939,7 +939,7 @@
     {
       "CastTimeReal": 1.03,
       "ToggleCost": 7.28,
-      "PowerIndex": 5952,
+      "PowerIndex": 5953,
       "PowerSetID": 2963,
       "PowerSetIndex": 3,
       "StaticIndex": 1234,

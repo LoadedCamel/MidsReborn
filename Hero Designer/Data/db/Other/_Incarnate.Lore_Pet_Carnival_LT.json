@@ -4,9 +4,9 @@
   "FullName": "Incarnate.Lore_Pet_Carnival_LT",
   "ImageName": "",
   "Power": [
-    5297,
     5298,
-    5299
+    5299,
+    5300
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Carnival_LT",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.5,
-      "PowerIndex": 5297,
+      "PowerIndex": 5298,
       "PowerSetID": 2825,
       "StaticIndex": 5481,
       "NGroupMembership": [],
@@ -86,8 +86,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 50.1603851,
-          "MagPercent": 50.1603851,
+          "Mag": 95.76075,
+          "MagPercent": 95.76075,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -320,7 +320,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 5298,
+      "PowerIndex": 5299,
       "PowerSetID": 2825,
       "PowerSetIndex": 1,
       "StaticIndex": 5483,
@@ -381,8 +381,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 50.1603851,
-          "MagPercent": 50.1603851,
+          "Mag": 95.76075,
+          "MagPercent": 95.76075,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -557,7 +557,7 @@
     },
     {
       "CastTimeReal": 1.2,
-      "PowerIndex": 5299,
+      "PowerIndex": 5300,
       "PowerSetID": 2825,
       "PowerSetIndex": 2,
       "StaticIndex": 5482,
@@ -618,8 +618,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 33.64416,
-          "MagPercent": 33.64416,
+          "Mag": 64.2297745,
+          "MagPercent": 64.2297745,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

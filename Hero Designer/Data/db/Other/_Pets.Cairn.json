@@ -4,8 +4,8 @@
   "FullName": "Pets.Cairn",
   "ImageName": "",
   "Power": [
-    6231,
-    6232
+    6232,
+    6233
   ],
   "SetType": 8,
   "DisplayName": "Cairn",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6231,
+      "PowerIndex": 6232,
       "PowerSetID": 3040,
       "StaticIndex": 1555,
       "NGroupMembership": [],
@@ -474,7 +474,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6232,
+      "PowerIndex": 6233,
       "PowerSetID": 3040,
       "PowerSetIndex": 1,
       "StaticIndex": 1556,

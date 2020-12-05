@@ -4,11 +4,11 @@
   "FullName": "Epic.Energy_Mastery_Brute",
   "ImageName": "EnergyMastery.png",
   "Power": [
-    4227,
     4228,
     4229,
     4230,
-    4231
+    4231,
+    4232
   ],
   "SetType": 3,
   "DisplayName": "Energy Mastery",
@@ -25,7 +25,7 @@
   "GroupName": "Epic",
   "Powers": [
     {
-      "PowerIndex": 4227,
+      "PowerIndex": 4228,
       "PowerSetID": 2737,
       "StaticIndex": 4361,
       "NGroupMembership": [],
@@ -146,7 +146,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.78,
-      "PowerIndex": 4228,
+      "PowerIndex": 4229,
       "PowerSetID": 2737,
       "PowerSetIndex": 1,
       "StaticIndex": 4362,
@@ -214,8 +214,8 @@
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Probability": 1.0,
-          "Mag": 0.05,
-          "MagPercent": 5.0,
+          "Mag": 0.0425,
+          "MagPercent": 4.25,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -509,7 +509,7 @@
       "CastTimeReal": 1.67,
       "ToggleCost": 6.5,
       "IsEpic": true,
-      "PowerIndex": 4229,
+      "PowerIndex": 4230,
       "PowerSetID": 2737,
       "PowerSetIndex": 2,
       "StaticIndex": 4363,
@@ -526,11 +526,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4227,
+            4228,
             -1
           ],
           [
-            4228,
+            4229,
             -1
           ]
         ],
@@ -598,8 +598,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 30.5856,
-          "MagPercent": 30.5856,
+          "Mag": 58.3907,
+          "MagPercent": 58.3907,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -654,8 +654,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.25,
-          "MagPercent": -25.0,
+          "Mag": -0.2,
+          "MagPercent": -20.0,
           "Duration": 6.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -713,8 +713,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 56.1254921,
-          "MagPercent": 56.1254921,
+          "Mag": 107.148689,
+          "MagPercent": 107.148689,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -952,8 +952,8 @@
         },
         {
           "MagnitudeExpression": "",
-          "Mag": 13.7635193,
-          "MagPercent": 13.7635193,
+          "Mag": 26.2758141,
+          "MagPercent": 26.2758141,
           "Reward": "",
           "EffectId": "FieryEmbrace",
           "Special": "",
@@ -1012,7 +1012,7 @@
     },
     {
       "IsEpic": true,
-      "PowerIndex": 4230,
+      "PowerIndex": 4231,
       "PowerSetID": 2737,
       "PowerSetIndex": 3,
       "StaticIndex": 4364,
@@ -1029,11 +1029,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4227,
+            4228,
             -1
           ],
           [
-            4228,
+            4229,
             -1
           ]
         ],
@@ -1208,7 +1208,7 @@
       "CastTimeReal": 1.07,
       "ToggleCost": 14.82,
       "IsEpic": true,
-      "PowerIndex": 4231,
+      "PowerIndex": 4232,
       "PowerSetID": 2737,
       "PowerSetIndex": 4,
       "StaticIndex": 4365,
@@ -1225,24 +1225,24 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4227,
-            4228
-          ],
-          [
-            4227,
-            4229
-          ],
-          [
-            4227,
-            4230
-          ],
-          [
             4228,
             4229
           ],
           [
             4228,
             4230
+          ],
+          [
+            4228,
+            4231
+          ],
+          [
+            4229,
+            4230
+          ],
+          [
+            4229,
+            4231
           ]
         ],
         "NPowerIDNot": [],
@@ -1323,8 +1323,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 9.17568,
-          "MagPercent": 9.17568,
+          "Mag": 17.5172119,
+          "MagPercent": 17.5172119,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1379,8 +1379,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 20.1864967,
-          "MagPercent": 20.1864967,
+          "Mag": 38.5378647,
+          "MagPercent": 38.5378647,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1436,8 +1436,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 10.6535769,
-          "MagPercent": 10.6535769,
+          "Mag": 20.33865,
+          "MagPercent": 20.33865,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1493,8 +1493,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 23.71271,
-          "MagPercent": 23.71271,
+          "Mag": 45.2697258,
+          "MagPercent": 45.2697258,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1849,8 +1849,8 @@
         },
         {
           "MagnitudeExpression": "",
-          "Mag": 13.2129793,
-          "MagPercent": 13.2129793,
+          "Mag": 25.2247829,
+          "MagPercent": 25.2247829,
           "Reward": "",
           "EffectId": "FieryEmbrace",
           "Special": "",
