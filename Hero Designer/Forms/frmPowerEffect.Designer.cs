@@ -240,6 +240,8 @@ namespace Hero_Designer.Forms
             this.txtFXProb.Name = "txtFXProb";
             this.txtFXProb.Size = new System.Drawing.Size(100, 20);
             this.txtFXProb.TabIndex = 156;
+            this.txtFXProb.TextChanged += new System.EventHandler(this.txtFXProb_TextChanged);
+            this.txtFXProb.MouseLeave += new System.EventHandler(this.txtFXProb_Leave);
             // 
             // Label25
             // 

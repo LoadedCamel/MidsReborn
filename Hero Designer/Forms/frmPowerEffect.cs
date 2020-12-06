@@ -684,6 +684,22 @@ namespace Hero_Designer.Forms
             UpdateFXText();
         }
 
+        void txtFXProb_TextChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            IEffect fx = myFX;
+            float num = (float)Conversion.Val(txtFXProb.Text);
+            if (num >= 0.0 & num <= 2147483904.0)
+            {
+                if (num > 1.0)
+                    num /= 100f;
+                fx.BaseProbability = num;
+                //lblProb.Text = "(" + Strings.Format((float)(fx.BaseProbability * 100.0), "###0") + "%)";
+            }
+            UpdateFXText();
+        }
+
         private void txtFXProb_Leave(object sender, EventArgs e)
         {
             if (Loading)
