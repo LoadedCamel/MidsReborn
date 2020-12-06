@@ -4,9 +4,9 @@
   "FullName": "Incarnate.Destiny_Silent",
   "ImageName": "",
   "Power": [
-    4702,
-    4703,
-    4704
+    4700,
+    4701,
+    4702
   ],
   "SetType": 11,
   "DisplayName": "Destiny_Silent",
@@ -23,7 +23,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4702,
+      "PowerIndex": 4700,
       "PowerSetID": 2803,
       "StaticIndex": 5044,
       "NGroupMembership": [],
@@ -129,7 +129,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4703,
+      "PowerIndex": 4701,
       "PowerSetID": 2803,
       "PowerSetIndex": 1,
       "StaticIndex": 5940,
@@ -241,7 +241,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -300,7 +299,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -359,7 +357,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -414,7 +411,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 4704,
+      "PowerIndex": 4702,
       "PowerSetID": 2803,
       "PowerSetIndex": 2,
       "StaticIndex": 5941,
@@ -526,7 +523,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -585,7 +581,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -644,7 +639,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",

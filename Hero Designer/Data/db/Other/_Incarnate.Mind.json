@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Mind",
   "ImageName": "",
   "Power": [
-    5459
+    5457
   ],
   "SetType": 11,
   "DisplayName": "Mind",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 5459,
+      "PowerIndex": 5457,
       "PowerSetID": 2884,
       "StaticIndex": 4678,
       "NGroupMembership": [],

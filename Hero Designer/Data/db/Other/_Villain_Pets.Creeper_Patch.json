@@ -4,9 +4,9 @@
   "FullName": "Villain_Pets.Creeper_Patch",
   "ImageName": "",
   "Power": [
+    10108,
     10109,
-    10110,
-    10111
+    10110
   ],
   "SetType": 8,
   "DisplayName": "Creeper Patch",
@@ -23,7 +23,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10109,
+      "PowerIndex": 10108,
       "PowerSetID": 3475,
       "StaticIndex": 3073,
       "NGroupMembership": [],
@@ -140,7 +140,7 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 10110,
+      "PowerIndex": 10109,
       "PowerSetID": 3475,
       "PowerSetIndex": 1,
       "StaticIndex": 3074,
@@ -198,8 +198,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.5,
-          "MagPercent": -50.0,
+          "Mag": -0.625,
+          "MagPercent": -62.5,
           "Duration": 0.5,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -263,7 +263,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -318,7 +317,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -376,7 +374,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,
@@ -427,7 +424,7 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 10111,
+      "PowerIndex": 10110,
       "PowerSetID": 3475,
       "PowerSetIndex": 2,
       "StaticIndex": 3075,

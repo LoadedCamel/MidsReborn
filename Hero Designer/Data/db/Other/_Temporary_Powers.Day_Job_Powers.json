@@ -4,6 +4,7 @@
   "FullName": "Temporary_Powers.Day_Job_Powers",
   "ImageName": "",
   "Power": [
+    8927,
     8928,
     8929,
     8930,
@@ -111,8 +112,7 @@
     9032,
     9033,
     9034,
-    9035,
-    9036
+    9035
   ],
   "SetType": 7,
   "DisplayName": "Day Job Powers",
@@ -129,7 +129,7 @@
   "GroupName": "Temporary_Powers",
   "Powers": [
     {
-      "PowerIndex": 8928,
+      "PowerIndex": 8927,
       "PowerSetID": 3424,
       "StaticIndex": 4694,
       "NGroupMembership": [],
@@ -243,7 +243,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -299,7 +298,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -355,7 +353,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -407,7 +404,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 13.0,
-      "PowerIndex": 8929,
+      "PowerIndex": 8928,
       "PowerSetID": 3424,
       "PowerSetIndex": 1,
       "StaticIndex": 4749,
@@ -460,8 +457,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 160.634552,
-          "MagPercent": 160.634552,
+          "Mag": 200.793152,
+          "MagPercent": 200.793152,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",
@@ -520,7 +517,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 8930,
+      "PowerIndex": 8929,
       "PowerSetID": 3424,
       "PowerSetIndex": 2,
       "StaticIndex": 4760,
@@ -631,7 +628,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 14,
           "Summon": "",
@@ -690,7 +686,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,
@@ -747,7 +742,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -804,7 +798,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 21,
           "Summon": "",
           "nSummon": -1,
@@ -861,7 +854,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 22,
           "Summon": "",
           "nSummon": -1,
@@ -913,7 +905,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8931,
+      "PowerIndex": 8930,
       "PowerSetID": 3424,
       "PowerSetIndex": 3,
       "StaticIndex": 6070,
@@ -1017,7 +1009,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8932,
+      "PowerIndex": 8931,
       "PowerSetID": 3424,
       "PowerSetIndex": 4,
       "StaticIndex": 4722,
@@ -1122,7 +1114,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8933,
+      "PowerIndex": 8932,
       "PowerSetID": 3424,
       "PowerSetIndex": 5,
       "StaticIndex": 4721,
@@ -1227,7 +1219,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8934,
+      "PowerIndex": 8933,
       "PowerSetID": 3424,
       "PowerSetIndex": 6,
       "StaticIndex": 6069,
@@ -1333,7 +1325,7 @@
     {
       "CastTimeReal": 3.1,
       "ToggleCost": 18.98,
-      "PowerIndex": 8935,
+      "PowerIndex": 8934,
       "PowerSetID": 3424,
       "PowerSetIndex": 7,
       "StaticIndex": 4754,
@@ -1448,7 +1440,6 @@
           "Reward": "",
           "EffectId": "TempDamage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -1502,7 +1493,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8936,
+      "PowerIndex": 8935,
       "PowerSetID": 3424,
       "PowerSetIndex": 8,
       "StaticIndex": 6073,
@@ -1606,7 +1597,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8937,
+      "PowerIndex": 8936,
       "PowerSetID": 3424,
       "PowerSetIndex": 9,
       "StaticIndex": 4744,
@@ -1711,7 +1702,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8938,
+      "PowerIndex": 8937,
       "PowerSetID": 3424,
       "PowerSetIndex": 10,
       "StaticIndex": 4743,
@@ -1816,7 +1807,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8939,
+      "PowerIndex": 8938,
       "PowerSetID": 3424,
       "PowerSetIndex": 11,
       "StaticIndex": 6057,
@@ -1921,7 +1912,7 @@
     },
     {
       "CastTimeReal": 15.0,
-      "PowerIndex": 8940,
+      "PowerIndex": 8939,
       "PowerSetID": 3424,
       "PowerSetIndex": 12,
       "StaticIndex": 4729,
@@ -2031,7 +2022,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 14,
           "Summon": "",
@@ -2090,7 +2080,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -2142,7 +2131,7 @@
     },
     {
       "CastTimeReal": 15.0,
-      "PowerIndex": 8941,
+      "PowerIndex": 8940,
       "PowerSetID": 3424,
       "PowerSetIndex": 13,
       "StaticIndex": 4728,
@@ -2252,7 +2241,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 14,
           "Summon": "",
@@ -2311,7 +2299,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -2362,7 +2349,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8942,
+      "PowerIndex": 8941,
       "PowerSetID": 3424,
       "PowerSetIndex": 14,
       "StaticIndex": 4714,
@@ -2467,7 +2454,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8943,
+      "PowerIndex": 8942,
       "PowerSetID": 3424,
       "PowerSetIndex": 15,
       "StaticIndex": 4713,
@@ -2572,7 +2559,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8944,
+      "PowerIndex": 8943,
       "PowerSetID": 3424,
       "PowerSetIndex": 16,
       "StaticIndex": 6055,
@@ -2678,7 +2665,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 9.75,
-      "PowerIndex": 8945,
+      "PowerIndex": 8944,
       "PowerSetID": 3424,
       "PowerSetIndex": 17,
       "StaticIndex": 4757,
@@ -2792,15 +2779,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.05,
-          "MagPercent": -5.0,
+          "Mag": -0.0625,
+          "MagPercent": -6.25,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
-          "nID": 1,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -2858,7 +2844,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 23,
           "Summon": "",
           "nSummon": -1,
@@ -2913,7 +2898,7 @@
       "AoEModifier": 6.25
     },
     {
-      "PowerIndex": 8946,
+      "PowerIndex": 8945,
       "PowerSetID": 3424,
       "PowerSetIndex": 18,
       "StaticIndex": 6052,
@@ -3017,7 +3002,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8947,
+      "PowerIndex": 8946,
       "PowerSetID": 3424,
       "PowerSetIndex": 19,
       "StaticIndex": 6063,
@@ -3121,7 +3106,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8948,
+      "PowerIndex": 8947,
       "PowerSetID": 3424,
       "PowerSetIndex": 20,
       "StaticIndex": 4710,
@@ -3226,7 +3211,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8949,
+      "PowerIndex": 8948,
       "PowerSetID": 3424,
       "PowerSetIndex": 21,
       "StaticIndex": 4709,
@@ -3331,7 +3316,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8950,
+      "PowerIndex": 8949,
       "PowerSetID": 3424,
       "PowerSetIndex": 22,
       "StaticIndex": 6046,
@@ -3435,7 +3420,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8951,
+      "PowerIndex": 8950,
       "PowerSetID": 3424,
       "PowerSetIndex": 23,
       "StaticIndex": 4733,
@@ -3487,7 +3472,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8952,
+      "PowerIndex": 8951,
       "PowerSetID": 3424,
       "PowerSetIndex": 24,
       "StaticIndex": 4732,
@@ -3539,7 +3524,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8953,
+      "PowerIndex": 8952,
       "PowerSetID": 3424,
       "PowerSetIndex": 25,
       "StaticIndex": 6062,
@@ -3643,7 +3628,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8954,
+      "PowerIndex": 8953,
       "PowerSetID": 3424,
       "PowerSetIndex": 26,
       "StaticIndex": 6056,
@@ -3749,7 +3734,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.325,
-      "PowerIndex": 8955,
+      "PowerIndex": 8954,
       "PowerSetID": 3424,
       "PowerSetIndex": 27,
       "StaticIndex": 4755,
@@ -3803,8 +3788,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.17,
-          "MagPercent": 17.0,
+          "Mag": 0.2,
+          "MagPercent": 20.0,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -3860,15 +3845,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.17,
-          "MagPercent": 17.0,
+          "Mag": 0.2,
+          "MagPercent": 20.0,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 1,
           "EffectType": 5,
           "DamageType": 2,
           "Summon": "",
@@ -3918,15 +3902,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.17,
-          "MagPercent": 17.0,
+          "Mag": 0.2,
+          "MagPercent": 20.0,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 2,
           "EffectType": 5,
           "DamageType": 5,
           "Summon": "",
@@ -3979,7 +3962,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8956,
+      "PowerIndex": 8955,
       "PowerSetID": 3424,
       "PowerSetIndex": 28,
       "StaticIndex": 6048,
@@ -4083,7 +4066,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8957,
+      "PowerIndex": 8956,
       "PowerSetID": 3424,
       "PowerSetIndex": 29,
       "StaticIndex": 4726,
@@ -4188,7 +4171,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8958,
+      "PowerIndex": 8957,
       "PowerSetID": 3424,
       "PowerSetIndex": 30,
       "StaticIndex": 6067,
@@ -4292,7 +4275,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8959,
+      "PowerIndex": 8958,
       "PowerSetID": 3424,
       "PowerSetIndex": 31,
       "StaticIndex": 6233,
@@ -4396,7 +4379,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8960,
+      "PowerIndex": 8959,
       "PowerSetID": 3424,
       "PowerSetIndex": 32,
       "StaticIndex": 6232,
@@ -4448,8 +4431,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.085,
-          "MagPercent": 8.5,
+          "Mag": 0.1,
+          "MagPercent": 10.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4504,15 +4487,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.085,
-          "MagPercent": 8.5,
+          "Mag": 0.1,
+          "MagPercent": 10.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 1,
           "EffectType": 29,
           "DamageType": 6,
           "Summon": "",
@@ -4561,15 +4543,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 2,
           "EffectType": 5,
           "DamageType": 4,
           "Summon": "",
@@ -4619,15 +4600,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 3,
           "EffectType": 5,
           "DamageType": 6,
           "Summon": "",
@@ -4679,7 +4659,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8961,
+      "PowerIndex": 8960,
       "PowerSetID": 3424,
       "PowerSetIndex": 33,
       "StaticIndex": 6231,
@@ -4731,8 +4711,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0510000028,
-          "MagPercent": 5.10000038,
+          "Mag": 0.0600000024,
+          "MagPercent": 6.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4787,15 +4767,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0510000028,
-          "MagPercent": 5.10000038,
+          "Mag": 0.0600000024,
+          "MagPercent": 6.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 1,
           "EffectType": 29,
           "DamageType": 6,
           "Summon": "",
@@ -4844,15 +4823,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 2,
           "EffectType": 5,
           "DamageType": 4,
           "Summon": "",
@@ -4902,15 +4880,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 3,
           "EffectType": 5,
           "DamageType": 6,
           "Summon": "",
@@ -4962,7 +4939,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8962,
+      "PowerIndex": 8961,
       "PowerSetID": 3424,
       "PowerSetIndex": 34,
       "StaticIndex": 4705,
@@ -5014,8 +4991,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -5070,15 +5047,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 1,
           "EffectType": 29,
           "DamageType": 1,
           "Summon": "",
@@ -5127,15 +5103,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 2,
           "EffectType": 29,
           "DamageType": 3,
           "Summon": "",
@@ -5184,15 +5159,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 3,
           "EffectType": 29,
           "DamageType": 8,
           "Summon": "",
@@ -5241,15 +5215,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 4,
           "EffectType": 29,
           "DamageType": 4,
           "Summon": "",
@@ -5298,15 +5271,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 5,
           "EffectType": 29,
           "DamageType": 5,
           "Summon": "",
@@ -5355,15 +5327,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 6,
           "EffectType": 29,
           "DamageType": 6,
           "Summon": "",
@@ -5412,15 +5383,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 7,
           "EffectType": 29,
           "DamageType": 7,
           "Summon": "",
@@ -5471,7 +5441,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8963,
+      "PowerIndex": 8962,
       "PowerSetID": 3424,
       "PowerSetIndex": 35,
       "StaticIndex": 4704,
@@ -5523,8 +5493,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -5579,15 +5549,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 1,
           "EffectType": 29,
           "DamageType": 1,
           "Summon": "",
@@ -5636,15 +5605,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 2,
           "EffectType": 29,
           "DamageType": 3,
           "Summon": "",
@@ -5693,15 +5661,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 3,
           "EffectType": 29,
           "DamageType": 8,
           "Summon": "",
@@ -5750,15 +5717,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 4,
           "EffectType": 29,
           "DamageType": 4,
           "Summon": "",
@@ -5807,15 +5773,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 5,
           "EffectType": 29,
           "DamageType": 5,
           "Summon": "",
@@ -5864,15 +5829,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 6,
           "EffectType": 29,
           "DamageType": 6,
           "Summon": "",
@@ -5921,15 +5885,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 7,
           "EffectType": 29,
           "DamageType": 7,
           "Summon": "",
@@ -5980,7 +5943,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8964,
+      "PowerIndex": 8963,
       "PowerSetID": 3424,
       "PowerSetIndex": 36,
       "StaticIndex": 5708,
@@ -6032,8 +5995,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.017,
-          "MagPercent": 1.7,
+          "Mag": 0.0200000014,
+          "MagPercent": 2.00000024,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -6096,7 +6059,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 4,
           "DamageType": 1,
           "Summon": "",
@@ -6154,7 +6116,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 4,
           "DamageType": 2,
           "Summon": "",
@@ -6212,7 +6173,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 4,
           "DamageType": 3,
           "Summon": "",
@@ -6270,7 +6230,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 4,
           "DamageType": 8,
           "Summon": "",
@@ -6328,7 +6287,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 4,
           "DamageType": 4,
           "Summon": "",
@@ -6386,7 +6344,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 4,
           "DamageType": 5,
           "Summon": "",
@@ -6444,7 +6401,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 7,
           "EffectType": 4,
           "DamageType": 6,
           "Summon": "",
@@ -6502,7 +6458,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 8,
           "EffectType": 4,
           "DamageType": 7,
           "Summon": "",
@@ -6560,7 +6515,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 9,
           "EffectType": 9,
           "ETModifies": 24,
           "Summon": "",
@@ -6612,7 +6566,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8965,
+      "PowerIndex": 8964,
       "PowerSetID": 3424,
       "PowerSetIndex": 37,
       "StaticIndex": 5707,
@@ -6664,8 +6618,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0085,
-          "MagPercent": 0.85,
+          "Mag": 0.0100000007,
+          "MagPercent": 1.00000012,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -6728,7 +6682,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 4,
           "DamageType": 1,
           "Summon": "",
@@ -6786,7 +6739,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 4,
           "DamageType": 2,
           "Summon": "",
@@ -6844,7 +6796,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 4,
           "DamageType": 3,
           "Summon": "",
@@ -6902,7 +6853,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 4,
           "DamageType": 8,
           "Summon": "",
@@ -6960,7 +6910,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 4,
           "DamageType": 4,
           "Summon": "",
@@ -7018,7 +6967,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 4,
           "DamageType": 5,
           "Summon": "",
@@ -7076,7 +7024,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 7,
           "EffectType": 4,
           "DamageType": 6,
           "Summon": "",
@@ -7134,7 +7081,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 8,
           "EffectType": 4,
           "DamageType": 7,
           "Summon": "",
@@ -7192,7 +7138,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 9,
           "EffectType": 9,
           "ETModifies": 24,
           "Summon": "",
@@ -7244,7 +7189,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8966,
+      "PowerIndex": 8965,
       "PowerSetID": 3424,
       "PowerSetIndex": 38,
       "StaticIndex": 4707,
@@ -7353,7 +7298,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8967,
+      "PowerIndex": 8966,
       "PowerSetID": 3424,
       "PowerSetIndex": 39,
       "StaticIndex": 4706,
@@ -7462,7 +7407,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8968,
+      "PowerIndex": 8967,
       "PowerSetID": 3424,
       "PowerSetIndex": 40,
       "StaticIndex": 4701,
@@ -7569,7 +7514,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8969,
+      "PowerIndex": 8968,
       "PowerSetID": 3424,
       "PowerSetIndex": 41,
       "StaticIndex": 4700,
@@ -7676,7 +7621,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8970,
+      "PowerIndex": 8969,
       "PowerSetID": 3424,
       "PowerSetIndex": 42,
       "StaticIndex": 4703,
@@ -7786,7 +7731,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8971,
+      "PowerIndex": 8970,
       "PowerSetID": 3424,
       "PowerSetIndex": 43,
       "StaticIndex": 4702,
@@ -7896,7 +7841,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8972,
+      "PowerIndex": 8971,
       "PowerSetID": 3424,
       "PowerSetIndex": 44,
       "StaticIndex": 4699,
@@ -8006,7 +7951,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8973,
+      "PowerIndex": 8972,
       "PowerSetID": 3424,
       "PowerSetIndex": 45,
       "StaticIndex": 4698,
@@ -8117,7 +8062,7 @@
     },
     {
       "ToggleCost": 0.195,
-      "PowerIndex": 8974,
+      "PowerIndex": 8973,
       "PowerSetID": 3424,
       "PowerSetIndex": 46,
       "StaticIndex": 4742,
@@ -8236,7 +8181,6 @@
           "Reward": "",
           "EffectId": "SpeedFlying",
           "Special": "",
-          "nID": 1,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -8294,7 +8238,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -8351,7 +8294,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -8407,7 +8349,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -8463,7 +8404,6 @@
           "Reward": "",
           "EffectId": "Control",
           "Special": "",
-          "nID": 5,
           "EffectType": 21,
           "Summon": "",
           "nSummon": -1,
@@ -8520,7 +8460,6 @@
           "Reward": "",
           "EffectId": "Friction",
           "Special": "",
-          "nID": 6,
           "EffectType": 22,
           "Summon": "",
           "nSummon": -1,
@@ -8571,7 +8510,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8975,
+      "PowerIndex": 8974,
       "PowerSetID": 3424,
       "PowerSetIndex": 47,
       "StaticIndex": 4695,
@@ -8685,7 +8624,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -8741,7 +8679,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -8797,7 +8734,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -8847,7 +8783,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8976,
+      "PowerIndex": 8975,
       "PowerSetID": 3424,
       "PowerSetIndex": 48,
       "StaticIndex": 5706,
@@ -8899,8 +8835,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.085,
-          "MagPercent": 8.5,
+          "Mag": 0.1,
+          "MagPercent": 10.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -8955,15 +8891,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 1,
           "EffectType": 5,
           "DamageType": 8,
           "Summon": "",
@@ -9015,7 +8950,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8977,
+      "PowerIndex": 8976,
       "PowerSetID": 3424,
       "PowerSetIndex": 49,
       "StaticIndex": 5705,
@@ -9067,8 +9002,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0510000028,
-          "MagPercent": 5.10000038,
+          "Mag": 0.0600000024,
+          "MagPercent": 6.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -9123,15 +9058,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0255000014,
-          "MagPercent": 2.55000019,
+          "Mag": 0.0300000012,
+          "MagPercent": 3.0,
           "Duration": 10.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 1,
           "EffectType": 5,
           "DamageType": 8,
           "Summon": "",
@@ -9183,7 +9117,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8978,
+      "PowerIndex": 8977,
       "PowerSetID": 3424,
       "PowerSetIndex": 50,
       "StaticIndex": 4712,
@@ -9288,7 +9222,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8979,
+      "PowerIndex": 8978,
       "PowerSetID": 3424,
       "PowerSetIndex": 51,
       "StaticIndex": 4711,
@@ -9393,7 +9327,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8980,
+      "PowerIndex": 8979,
       "PowerSetID": 3424,
       "PowerSetIndex": 52,
       "StaticIndex": 6072,
@@ -9497,7 +9431,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8981,
+      "PowerIndex": 8980,
       "PowerSetID": 3424,
       "PowerSetIndex": 53,
       "StaticIndex": 6050,
@@ -9603,7 +9537,7 @@
     {
       "CastTimeReal": 7.33,
       "ToggleCost": 32.5,
-      "PowerIndex": 8982,
+      "PowerIndex": 8981,
       "PowerSetID": 3424,
       "PowerSetIndex": 54,
       "StaticIndex": 4748,
@@ -9722,7 +9656,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 42,
           "Summon": "",
           "nSummon": -1,
@@ -9773,7 +9706,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8983,
+      "PowerIndex": 8982,
       "PowerSetID": 3424,
       "PowerSetIndex": 55,
       "StaticIndex": 6061,
@@ -9877,7 +9810,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8984,
+      "PowerIndex": 8983,
       "PowerSetID": 3424,
       "PowerSetIndex": 56,
       "StaticIndex": 6075,
@@ -9981,7 +9914,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8985,
+      "PowerIndex": 8984,
       "PowerSetID": 3424,
       "PowerSetIndex": 57,
       "StaticIndex": 4758,
@@ -10033,7 +9966,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8986,
+      "PowerIndex": 8985,
       "PowerSetID": 3424,
       "PowerSetIndex": 58,
       "StaticIndex": 6066,
@@ -10137,7 +10070,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8987,
+      "PowerIndex": 8986,
       "PowerSetID": 3424,
       "PowerSetIndex": 59,
       "StaticIndex": 4739,
@@ -10245,7 +10178,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8988,
+      "PowerIndex": 8987,
       "PowerSetID": 3424,
       "PowerSetIndex": 60,
       "StaticIndex": 4738,
@@ -10353,7 +10286,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8989,
+      "PowerIndex": 8988,
       "PowerSetID": 3424,
       "PowerSetIndex": 61,
       "StaticIndex": 4741,
@@ -10461,7 +10394,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8990,
+      "PowerIndex": 8989,
       "PowerSetID": 3424,
       "PowerSetIndex": 62,
       "StaticIndex": 4740,
@@ -10569,7 +10502,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8991,
+      "PowerIndex": 8990,
       "PowerSetID": 3424,
       "PowerSetIndex": 63,
       "StaticIndex": 6064,
@@ -10673,7 +10606,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8992,
+      "PowerIndex": 8991,
       "PowerSetID": 3424,
       "PowerSetIndex": 64,
       "StaticIndex": 4725,
@@ -10778,7 +10711,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8993,
+      "PowerIndex": 8992,
       "PowerSetID": 3424,
       "PowerSetIndex": 65,
       "StaticIndex": 6051,
@@ -10882,7 +10815,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8994,
+      "PowerIndex": 8993,
       "PowerSetID": 3424,
       "PowerSetIndex": 66,
       "StaticIndex": 6047,
@@ -10986,7 +10919,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8995,
+      "PowerIndex": 8994,
       "PowerSetID": 3424,
       "PowerSetIndex": 67,
       "StaticIndex": 4720,
@@ -11091,7 +11024,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8996,
+      "PowerIndex": 8995,
       "PowerSetID": 3424,
       "PowerSetIndex": 68,
       "StaticIndex": 4719,
@@ -11197,7 +11130,7 @@
     },
     {
       "CastTimeReal": 15.0,
-      "PowerIndex": 8997,
+      "PowerIndex": 8996,
       "PowerSetID": 3424,
       "PowerSetIndex": 69,
       "StaticIndex": 4731,
@@ -11307,7 +11240,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 14,
           "Summon": "",
@@ -11366,7 +11298,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -11418,7 +11349,7 @@
     },
     {
       "CastTimeReal": 15.0,
-      "PowerIndex": 8998,
+      "PowerIndex": 8997,
       "PowerSetID": 3424,
       "PowerSetIndex": 70,
       "StaticIndex": 4730,
@@ -11528,7 +11459,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 14,
           "Summon": "",
@@ -11587,7 +11517,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -11639,7 +11568,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 8999,
+      "PowerIndex": 8998,
       "PowerSetID": 3424,
       "PowerSetIndex": 71,
       "StaticIndex": 4759,
@@ -11755,7 +11684,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 13,
           "Summon": "",
@@ -11812,7 +11740,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -11869,7 +11796,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 42,
           "Summon": "",
           "nSummon": -1,
@@ -11920,7 +11846,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9000,
+      "PowerIndex": 8999,
       "PowerSetID": 3424,
       "PowerSetIndex": 72,
       "StaticIndex": 6059,
@@ -12024,7 +11950,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9001,
+      "PowerIndex": 9000,
       "PowerSetID": 3424,
       "PowerSetIndex": 73,
       "StaticIndex": 4736,
@@ -12129,7 +12055,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9002,
+      "PowerIndex": 9001,
       "PowerSetID": 3424,
       "PowerSetIndex": 74,
       "StaticIndex": 4737,
@@ -12234,7 +12160,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9003,
+      "PowerIndex": 9002,
       "PowerSetID": 3424,
       "PowerSetIndex": 75,
       "StaticIndex": 6060,
@@ -12338,7 +12264,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9004,
+      "PowerIndex": 9003,
       "PowerSetID": 3424,
       "PowerSetIndex": 76,
       "StaticIndex": 6065,
@@ -12442,7 +12368,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9005,
+      "PowerIndex": 9004,
       "PowerSetID": 3424,
       "PowerSetIndex": 77,
       "StaticIndex": 4718,
@@ -12547,7 +12473,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9006,
+      "PowerIndex": 9005,
       "PowerSetID": 3424,
       "PowerSetIndex": 78,
       "StaticIndex": 4717,
@@ -12652,7 +12578,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9007,
+      "PowerIndex": 9006,
       "PowerSetID": 3424,
       "PowerSetIndex": 79,
       "StaticIndex": 4708,
@@ -12703,7 +12629,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9008,
+      "PowerIndex": 9007,
       "PowerSetID": 3424,
       "PowerSetIndex": 80,
       "StaticIndex": 6054,
@@ -12806,7 +12732,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9009,
+      "PowerIndex": 9008,
       "PowerSetID": 3424,
       "PowerSetIndex": 81,
       "StaticIndex": 4697,
@@ -12920,7 +12846,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -12976,7 +12901,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -13032,7 +12956,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -13082,7 +13005,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9010,
+      "PowerIndex": 9009,
       "PowerSetID": 3424,
       "PowerSetIndex": 82,
       "StaticIndex": 4696,
@@ -13196,7 +13119,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -13252,7 +13174,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -13308,7 +13229,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -13358,7 +13278,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9011,
+      "PowerIndex": 9010,
       "PowerSetID": 3424,
       "PowerSetIndex": 83,
       "StaticIndex": 6068,
@@ -13462,7 +13382,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9012,
+      "PowerIndex": 9011,
       "PowerSetID": 3424,
       "PowerSetIndex": 84,
       "StaticIndex": 6074,
@@ -13566,7 +13486,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9013,
+      "PowerIndex": 9012,
       "PowerSetID": 3424,
       "PowerSetIndex": 85,
       "StaticIndex": 6077,
@@ -13672,7 +13592,7 @@
     {
       "CastTimeReal": 17.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 9014,
+      "PowerIndex": 9013,
       "PowerSetID": 3424,
       "PowerSetIndex": 86,
       "StaticIndex": 4751,
@@ -13785,7 +13705,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 14,
           "Summon": "",
@@ -13839,7 +13758,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9015,
+      "PowerIndex": 9014,
       "PowerSetID": 3424,
       "PowerSetIndex": 87,
       "StaticIndex": 5709,
@@ -13944,7 +13863,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9016,
+      "PowerIndex": 9015,
       "PowerSetID": 3424,
       "PowerSetIndex": 88,
       "StaticIndex": 6076,
@@ -14048,7 +13967,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9017,
+      "PowerIndex": 9016,
       "PowerSetID": 3424,
       "PowerSetIndex": 89,
       "StaticIndex": 6053,
@@ -14152,7 +14071,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9018,
+      "PowerIndex": 9017,
       "PowerSetID": 3424,
       "PowerSetIndex": 90,
       "StaticIndex": 4727,
@@ -14259,7 +14178,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 18.98,
-      "PowerIndex": 9019,
+      "PowerIndex": 9018,
       "PowerSetID": 3424,
       "PowerSetIndex": 91,
       "StaticIndex": 4747,
@@ -14380,7 +14299,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 9,
           "Summon": "",
@@ -14439,7 +14357,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 18.98,
-      "PowerIndex": 9020,
+      "PowerIndex": 9019,
       "PowerSetID": 3424,
       "PowerSetIndex": 92,
       "StaticIndex": 4746,
@@ -14560,7 +14478,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -14617,7 +14534,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 9021,
+      "PowerIndex": 9020,
       "PowerSetID": 3424,
       "PowerSetIndex": 93,
       "StaticIndex": 4723,
@@ -14722,7 +14639,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9022,
+      "PowerIndex": 9021,
       "PowerSetID": 3424,
       "PowerSetIndex": 94,
       "StaticIndex": 6049,
@@ -14826,7 +14743,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9023,
+      "PowerIndex": 9022,
       "PowerSetID": 3424,
       "PowerSetIndex": 95,
       "StaticIndex": 4724,
@@ -14931,7 +14848,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9024,
+      "PowerIndex": 9023,
       "PowerSetID": 3424,
       "PowerSetIndex": 96,
       "StaticIndex": 6071,
@@ -15037,7 +14954,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 15.184,
-      "PowerIndex": 9025,
+      "PowerIndex": 9024,
       "PowerSetID": 3424,
       "PowerSetIndex": 97,
       "StaticIndex": 4750,
@@ -15154,7 +15071,6 @@
           "Reward": "",
           "EffectId": "TempDamage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -15211,7 +15127,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -15269,7 +15184,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -15325,7 +15239,7 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 9026,
+      "PowerIndex": 9025,
       "PowerSetID": 3424,
       "PowerSetIndex": 98,
       "StaticIndex": 6078,
@@ -15429,7 +15343,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9027,
+      "PowerIndex": 9026,
       "PowerSetID": 3424,
       "PowerSetIndex": 99,
       "StaticIndex": 5710,
@@ -15534,7 +15448,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9028,
+      "PowerIndex": 9027,
       "PowerSetID": 3424,
       "PowerSetIndex": 100,
       "StaticIndex": 4716,
@@ -15639,7 +15553,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9029,
+      "PowerIndex": 9028,
       "PowerSetID": 3424,
       "PowerSetIndex": 101,
       "StaticIndex": 4715,
@@ -15744,7 +15658,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9030,
+      "PowerIndex": 9029,
       "PowerSetID": 3424,
       "PowerSetIndex": 102,
       "StaticIndex": 4753,
@@ -15859,7 +15773,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 28,
           "ETModifies": 32,
           "Summon": "",
@@ -15915,7 +15828,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 28,
           "ETModifies": 25,
           "Summon": "",
@@ -15971,7 +15883,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 28,
           "ETModifies": 11,
           "Summon": "",
@@ -16027,7 +15938,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 20,
           "MezType": 14,
           "Summon": "",
@@ -16080,7 +15990,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 3.25,
-      "PowerIndex": 9031,
+      "PowerIndex": 9030,
       "PowerSetID": 3424,
       "PowerSetIndex": 103,
       "StaticIndex": 4752,
@@ -16199,7 +16109,6 @@
           "Reward": "",
           "EffectId": "Taunt",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 7,
           "Summon": "",
@@ -16255,7 +16164,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9032,
+      "PowerIndex": 9031,
       "PowerSetID": 3424,
       "PowerSetIndex": 104,
       "StaticIndex": 4735,
@@ -16360,7 +16269,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9033,
+      "PowerIndex": 9032,
       "PowerSetID": 3424,
       "PowerSetIndex": 105,
       "StaticIndex": 4734,
@@ -16465,7 +16374,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 9034,
+      "PowerIndex": 9033,
       "PowerSetID": 3424,
       "PowerSetIndex": 106,
       "StaticIndex": 6058,
@@ -16571,7 +16480,7 @@
     {
       "CastTimeReal": 2.87,
       "ToggleCost": 7.15,
-      "PowerIndex": 9035,
+      "PowerIndex": 9034,
       "PowerSetID": 3424,
       "PowerSetIndex": 107,
       "StaticIndex": 4745,
@@ -16687,7 +16596,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -16747,7 +16655,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -16806,7 +16713,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 9.75,
-      "PowerIndex": 9036,
+      "PowerIndex": 9035,
       "PowerSetID": 3424,
       "PowerSetIndex": 108,
       "StaticIndex": 4756,
@@ -16925,7 +16832,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -16979,15 +16885,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.5,
-          "MagPercent": -50.0,
+          "Mag": -0.625,
+          "MagPercent": -62.5,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 2,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",
@@ -17038,15 +16943,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.5,
-          "MagPercent": -50.0,
+          "Mag": -0.625,
+          "MagPercent": -62.5,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -17097,15 +17001,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.5,
-          "MagPercent": -50.0,
+          "Mag": -0.625,
+          "MagPercent": -62.5,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 4,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -17164,7 +17067,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 20,
           "MezType": 4,
           "Summon": "",
@@ -17222,7 +17124,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 20,
           "MezType": 5,
           "Summon": "",
@@ -17279,7 +17180,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 7,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -17337,7 +17237,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 8,
           "EffectType": 19,
           "MezType": 5,
           "Summon": "",
@@ -17396,7 +17295,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 9,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -17454,7 +17352,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 10,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,

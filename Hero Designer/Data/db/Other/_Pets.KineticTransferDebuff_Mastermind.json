@@ -4,7 +4,7 @@
   "FullName": "Pets.KineticTransferDebuff_Mastermind",
   "ImageName": "",
   "Power": [
-    6380
+    6379
   ],
   "SetType": 8,
   "DisplayName": "Kinetic Transfer",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6380,
+      "PowerIndex": 6379,
       "PowerSetID": 3121,
       "StaticIndex": 10771,
       "NGroupMembership": [],
@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Debuff_Dam",
           "Special": "",
-          "nID": 1,
           "EffectType": 4,
           "DamageType": 2,
           "Summon": "",
@@ -203,7 +202,6 @@
           "Reward": "",
           "EffectId": "Debuff_Dam",
           "Special": "",
-          "nID": 2,
           "EffectType": 4,
           "DamageType": 3,
           "Summon": "",
@@ -263,7 +261,6 @@
           "Reward": "",
           "EffectId": "Debuff_Dam",
           "Special": "",
-          "nID": 3,
           "EffectType": 4,
           "DamageType": 4,
           "Summon": "",
@@ -323,7 +320,6 @@
           "Reward": "",
           "EffectId": "Debuff_Dam",
           "Special": "",
-          "nID": 4,
           "EffectType": 4,
           "DamageType": 5,
           "Summon": "",
@@ -383,7 +379,6 @@
           "Reward": "",
           "EffectId": "Debuff_Dam",
           "Special": "",
-          "nID": 5,
           "EffectType": 4,
           "DamageType": 6,
           "Summon": "",
@@ -443,7 +438,6 @@
           "Reward": "",
           "EffectId": "Debuff_Dam",
           "Special": "",
-          "nID": 6,
           "EffectType": 4,
           "DamageType": 7,
           "Summon": "",
@@ -503,7 +497,6 @@
           "Reward": "",
           "EffectId": "Debuff_Dam",
           "Special": "",
-          "nID": 7,
           "EffectType": 4,
           "DamageType": 8,
           "Summon": "",

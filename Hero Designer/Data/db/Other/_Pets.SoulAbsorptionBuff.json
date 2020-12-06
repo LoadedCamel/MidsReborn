@@ -4,7 +4,7 @@
   "FullName": "Pets.SoulAbsorptionBuff",
   "ImageName": "",
   "Power": [
-    6527
+    6526
   ],
   "SetType": 8,
   "DisplayName": "Soul Absorption",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6527,
+      "PowerIndex": 6526,
       "PowerSetID": 3208,
       "StaticIndex": 6228,
       "NGroupMembership": [],
@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 26,
           "Summon": "",
           "nSummon": -1,
@@ -200,7 +199,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 27,
           "Summon": "",
           "nSummon": -1,
@@ -258,7 +256,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 26,
           "Summon": "",
           "nSummon": -1,

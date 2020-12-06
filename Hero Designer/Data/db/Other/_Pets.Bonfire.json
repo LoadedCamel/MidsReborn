@@ -4,7 +4,7 @@
   "FullName": "Pets.Bonfire",
   "ImageName": "",
   "Power": [
-    6226
+    6225
   ],
   "SetType": 8,
   "DisplayName": "Bonfire",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6226,
+      "PowerIndex": 6225,
       "PowerSetID": 3036,
       "StaticIndex": 1551,
       "NGroupMembership": [],
@@ -140,7 +140,6 @@
           "Reward": "",
           "EffectId": "SummerIO",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -199,7 +198,6 @@
           "Reward": "",
           "EffectId": "SummerIO",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",

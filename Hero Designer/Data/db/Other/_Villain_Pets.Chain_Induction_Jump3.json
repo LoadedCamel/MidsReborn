@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Chain_Induction_Jump3",
   "ImageName": "",
   "Power": [
-    10064
+    10063
   ],
   "SetType": 8,
   "DisplayName": "Chain Induction Jump 3",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10064,
+      "PowerIndex": 10063,
       "PowerSetID": 3462,
       "StaticIndex": 3264,
       "NGroupMembership": [],
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 40.87349,
-          "MagPercent": 40.87349,
+          "Mag": 21.40992,
+          "MagPercent": 21.40992,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -148,7 +148,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 38,
           "Summon": "Pets_Chain_Induction_Jump4",
           "nSummon": 220,
@@ -208,7 +207,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -265,7 +263,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

@@ -4,7 +4,7 @@
   "FullName": "Pets.ChargeCone",
   "ImageName": "",
   "Power": [
-    6249
+    6248
   ],
   "SetType": 8,
   "DisplayName": "Charge Cone",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6249,
+      "PowerIndex": 6248,
       "PowerSetID": 3056,
       "StaticIndex": 3333,
       "NGroupMembership": [],
@@ -146,7 +146,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -204,7 +203,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",

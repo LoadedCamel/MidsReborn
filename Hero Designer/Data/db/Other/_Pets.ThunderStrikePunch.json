@@ -4,7 +4,7 @@
   "FullName": "Pets.ThunderStrikePunch",
   "ImageName": "",
   "Power": [
-    6567
+    6566
   ],
   "SetType": 8,
   "DisplayName": "Thunder Strike",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6567,
+      "PowerIndex": 6566,
       "PowerSetID": 3235,
       "StaticIndex": 1745,
       "NGroupMembership": [],
@@ -144,7 +144,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",

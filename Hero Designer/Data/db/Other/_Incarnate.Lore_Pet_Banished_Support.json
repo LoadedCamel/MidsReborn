@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Banished_Support",
   "ImageName": "",
   "Power": [
-    5291,
-    5292
+    5289,
+    5290
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Banished_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 5291,
+      "PowerIndex": 5289,
       "PowerSetID": 2822,
       "StaticIndex": 9486,
       "NGroupMembership": [],
@@ -147,7 +147,7 @@
     },
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5292,
+      "PowerIndex": 5290,
       "PowerSetID": 2822,
       "PowerSetIndex": 1,
       "StaticIndex": 9487,
@@ -274,7 +274,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 26,
           "Summon": "",
           "nSummon": -1,
@@ -331,7 +330,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,
@@ -390,7 +388,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",

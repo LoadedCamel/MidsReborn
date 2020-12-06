@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Protector_2",
   "ImageName": "",
   "Power": [
-    5995,
-    5996
+    5994,
+    5995
   ],
   "SetType": 8,
   "DisplayName": "Protector",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.528,
-      "PowerIndex": 5995,
+      "PowerIndex": 5994,
       "PowerSetID": 2978,
       "StaticIndex": 1269,
       "NGroupMembership": [],
@@ -154,7 +154,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -213,7 +212,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -271,7 +269,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -332,7 +329,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 4,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -394,7 +390,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 5,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -453,7 +448,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 5996,
+      "PowerIndex": 5995,
       "PowerSetID": 2978,
       "PowerSetIndex": 1,
       "StaticIndex": 1271,

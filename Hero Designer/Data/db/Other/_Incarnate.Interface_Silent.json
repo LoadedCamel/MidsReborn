@@ -4,6 +4,8 @@
   "FullName": "Incarnate.Interface_Silent",
   "ImageName": "",
   "Power": [
+    4944,
+    4945,
     4946,
     4947,
     4948,
@@ -66,9 +68,7 @@
     5005,
     5006,
     5007,
-    5008,
-    5009,
-    5010
+    5008
   ],
   "SetType": 11,
   "DisplayName": "Interface",
@@ -85,7 +85,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4946,
+      "PowerIndex": 4944,
       "PowerSetID": 2811,
       "StaticIndex": 5081,
       "NGroupMembership": [],
@@ -203,7 +203,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4947,
+      "PowerIndex": 4945,
       "PowerSetID": 2811,
       "PowerSetIndex": 1,
       "StaticIndex": 5979,
@@ -329,7 +329,6 @@
           "Reward": "",
           "EffectId": "InterfaceStatus",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 1,
           "Summon": "",
@@ -384,7 +383,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4948,
+      "PowerIndex": 4946,
       "PowerSetID": 2811,
       "PowerSetIndex": 2,
       "StaticIndex": 5090,
@@ -502,7 +501,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4949,
+      "PowerIndex": 4947,
       "PowerSetID": 2811,
       "PowerSetIndex": 3,
       "StaticIndex": 5089,
@@ -620,7 +619,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4950,
+      "PowerIndex": 4948,
       "PowerSetID": 2811,
       "PowerSetIndex": 4,
       "StaticIndex": 5993,
@@ -680,7 +679,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4951,
+      "PowerIndex": 4949,
       "PowerSetID": 2811,
       "PowerSetIndex": 5,
       "StaticIndex": 5987,
@@ -740,7 +739,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4952,
+      "PowerIndex": 4950,
       "PowerSetID": 2811,
       "PowerSetIndex": 6,
       "StaticIndex": 5986,
@@ -800,7 +799,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4953,
+      "PowerIndex": 4951,
       "PowerSetID": 2811,
       "PowerSetIndex": 7,
       "StaticIndex": 5990,
@@ -860,7 +859,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4954,
+      "PowerIndex": 4952,
       "PowerSetID": 2811,
       "PowerSetIndex": 8,
       "StaticIndex": 5991,
@@ -920,7 +919,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4955,
+      "PowerIndex": 4953,
       "PowerSetID": 2811,
       "PowerSetIndex": 9,
       "StaticIndex": 5994,
@@ -980,7 +979,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4956,
+      "PowerIndex": 4954,
       "PowerSetID": 2811,
       "PowerSetIndex": 10,
       "StaticIndex": 5988,
@@ -1040,7 +1039,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4957,
+      "PowerIndex": 4955,
       "PowerSetID": 2811,
       "PowerSetIndex": 11,
       "StaticIndex": 5989,
@@ -1100,7 +1099,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4958,
+      "PowerIndex": 4956,
       "PowerSetID": 2811,
       "PowerSetIndex": 12,
       "StaticIndex": 5992,
@@ -1160,7 +1159,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4959,
+      "PowerIndex": 4957,
       "PowerSetID": 2811,
       "PowerSetIndex": 13,
       "StaticIndex": 5100,
@@ -1220,7 +1219,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4960,
+      "PowerIndex": 4958,
       "PowerSetID": 2811,
       "PowerSetIndex": 14,
       "StaticIndex": 5094,
@@ -1280,7 +1279,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4961,
+      "PowerIndex": 4959,
       "PowerSetID": 2811,
       "PowerSetIndex": 15,
       "StaticIndex": 5093,
@@ -1340,7 +1339,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4962,
+      "PowerIndex": 4960,
       "PowerSetID": 2811,
       "PowerSetIndex": 16,
       "StaticIndex": 5097,
@@ -1400,7 +1399,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4963,
+      "PowerIndex": 4961,
       "PowerSetID": 2811,
       "PowerSetIndex": 17,
       "StaticIndex": 5098,
@@ -1460,7 +1459,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4964,
+      "PowerIndex": 4962,
       "PowerSetID": 2811,
       "PowerSetIndex": 18,
       "StaticIndex": 5101,
@@ -1520,7 +1519,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4965,
+      "PowerIndex": 4963,
       "PowerSetID": 2811,
       "PowerSetIndex": 19,
       "StaticIndex": 5095,
@@ -1580,7 +1579,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4966,
+      "PowerIndex": 4964,
       "PowerSetID": 2811,
       "PowerSetIndex": 20,
       "StaticIndex": 5096,
@@ -1640,7 +1639,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4967,
+      "PowerIndex": 4965,
       "PowerSetID": 2811,
       "PowerSetIndex": 21,
       "StaticIndex": 5099,
@@ -1700,7 +1699,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4968,
+      "PowerIndex": 4966,
       "PowerSetID": 2811,
       "PowerSetIndex": 22,
       "StaticIndex": 5092,
@@ -1818,7 +1817,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4969,
+      "PowerIndex": 4967,
       "PowerSetID": 2811,
       "PowerSetIndex": 23,
       "StaticIndex": 5984,
@@ -1936,7 +1935,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4970,
+      "PowerIndex": 4968,
       "PowerSetID": 2811,
       "PowerSetIndex": 24,
       "StaticIndex": 5985,
@@ -2054,7 +2053,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4971,
+      "PowerIndex": 4969,
       "PowerSetID": 2811,
       "PowerSetIndex": 25,
       "StaticIndex": 5982,
@@ -2172,7 +2171,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4972,
+      "PowerIndex": 4970,
       "PowerSetID": 2811,
       "PowerSetIndex": 26,
       "StaticIndex": 5983,
@@ -2290,7 +2289,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4973,
+      "PowerIndex": 4971,
       "PowerSetID": 2811,
       "PowerSetIndex": 27,
       "StaticIndex": 5981,
@@ -2414,7 +2413,6 @@
           "Reward": "",
           "EffectId": "InterfaceStatus",
           "Special": "",
-          "nID": 1,
           "EffectType": 26,
           "Summon": "",
           "nSummon": -1,
@@ -2470,7 +2468,6 @@
           "Reward": "",
           "EffectId": "InterfaceStatus",
           "Special": "",
-          "nID": 2,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,
@@ -2524,7 +2521,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4974,
+      "PowerIndex": 4972,
       "PowerSetID": 2811,
       "PowerSetIndex": 28,
       "StaticIndex": 5109,
@@ -2584,7 +2581,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4975,
+      "PowerIndex": 4973,
       "PowerSetID": 2811,
       "PowerSetIndex": 29,
       "StaticIndex": 5103,
@@ -2644,7 +2641,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4976,
+      "PowerIndex": 4974,
       "PowerSetID": 2811,
       "PowerSetIndex": 30,
       "StaticIndex": 5102,
@@ -2704,7 +2701,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4977,
+      "PowerIndex": 4975,
       "PowerSetID": 2811,
       "PowerSetIndex": 31,
       "StaticIndex": 5106,
@@ -2764,7 +2761,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4978,
+      "PowerIndex": 4976,
       "PowerSetID": 2811,
       "PowerSetIndex": 32,
       "StaticIndex": 5107,
@@ -2824,7 +2821,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4979,
+      "PowerIndex": 4977,
       "PowerSetID": 2811,
       "PowerSetIndex": 33,
       "StaticIndex": 5110,
@@ -2884,7 +2881,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4980,
+      "PowerIndex": 4978,
       "PowerSetID": 2811,
       "PowerSetIndex": 34,
       "StaticIndex": 5104,
@@ -2944,7 +2941,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4981,
+      "PowerIndex": 4979,
       "PowerSetID": 2811,
       "PowerSetIndex": 35,
       "StaticIndex": 5105,
@@ -3004,7 +3001,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4982,
+      "PowerIndex": 4980,
       "PowerSetID": 2811,
       "PowerSetIndex": 36,
       "StaticIndex": 5108,
@@ -3064,7 +3061,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4983,
+      "PowerIndex": 4981,
       "PowerSetID": 2811,
       "PowerSetIndex": 37,
       "StaticIndex": 5980,
@@ -3190,7 +3187,6 @@
           "Reward": "",
           "EffectId": "InterfaceStatus",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -3245,7 +3241,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4984,
+      "PowerIndex": 4982,
       "PowerSetID": 2811,
       "PowerSetIndex": 38,
       "StaticIndex": 5978,
@@ -3363,7 +3359,6 @@
           "Reward": "",
           "EffectId": "InterfaceMaxHp",
           "Special": "",
-          "nID": 1,
           "EffectType": 14,
           "Summon": "",
           "nSummon": -1,
@@ -3417,7 +3412,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4985,
+      "PowerIndex": 4983,
       "PowerSetID": 2811,
       "PowerSetIndex": 39,
       "StaticIndex": 5085,
@@ -3542,7 +3537,6 @@
           "Reward": "",
           "EffectId": "InterfaceMovement",
           "Special": "",
-          "nID": 1,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -3600,7 +3594,6 @@
           "Reward": "",
           "EffectId": "InterfaceMovement",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -3658,7 +3651,6 @@
           "Reward": "",
           "EffectId": "InterfaceMovement",
           "Special": "",
-          "nID": 3,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -3710,7 +3702,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4986,
+      "PowerIndex": 4984,
       "PowerSetID": 2811,
       "PowerSetIndex": 40,
       "StaticIndex": 5118,
@@ -3770,7 +3762,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4987,
+      "PowerIndex": 4985,
       "PowerSetID": 2811,
       "PowerSetIndex": 41,
       "StaticIndex": 5112,
@@ -3830,7 +3822,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4988,
+      "PowerIndex": 4986,
       "PowerSetID": 2811,
       "PowerSetIndex": 42,
       "StaticIndex": 5111,
@@ -3890,7 +3882,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4989,
+      "PowerIndex": 4987,
       "PowerSetID": 2811,
       "PowerSetIndex": 43,
       "StaticIndex": 5115,
@@ -3950,7 +3942,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4990,
+      "PowerIndex": 4988,
       "PowerSetID": 2811,
       "PowerSetIndex": 44,
       "StaticIndex": 5116,
@@ -4010,7 +4002,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4991,
+      "PowerIndex": 4989,
       "PowerSetID": 2811,
       "PowerSetIndex": 45,
       "StaticIndex": 5119,
@@ -4070,7 +4062,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4992,
+      "PowerIndex": 4990,
       "PowerSetID": 2811,
       "PowerSetIndex": 46,
       "StaticIndex": 5113,
@@ -4130,7 +4122,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4993,
+      "PowerIndex": 4991,
       "PowerSetID": 2811,
       "PowerSetIndex": 47,
       "StaticIndex": 5114,
@@ -4190,7 +4182,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4994,
+      "PowerIndex": 4992,
       "PowerSetID": 2811,
       "PowerSetIndex": 48,
       "StaticIndex": 5117,
@@ -4250,7 +4242,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4995,
+      "PowerIndex": 4993,
       "PowerSetID": 2811,
       "PowerSetIndex": 49,
       "StaticIndex": 5127,
@@ -4310,7 +4302,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4996,
+      "PowerIndex": 4994,
       "PowerSetID": 2811,
       "PowerSetIndex": 50,
       "StaticIndex": 5121,
@@ -4370,7 +4362,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4997,
+      "PowerIndex": 4995,
       "PowerSetID": 2811,
       "PowerSetIndex": 51,
       "StaticIndex": 5120,
@@ -4430,7 +4422,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4998,
+      "PowerIndex": 4996,
       "PowerSetID": 2811,
       "PowerSetIndex": 52,
       "StaticIndex": 5124,
@@ -4490,7 +4482,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4999,
+      "PowerIndex": 4997,
       "PowerSetID": 2811,
       "PowerSetIndex": 53,
       "StaticIndex": 5125,
@@ -4550,7 +4542,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5000,
+      "PowerIndex": 4998,
       "PowerSetID": 2811,
       "PowerSetIndex": 54,
       "StaticIndex": 5128,
@@ -4610,7 +4602,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5001,
+      "PowerIndex": 4999,
       "PowerSetID": 2811,
       "PowerSetIndex": 55,
       "StaticIndex": 5122,
@@ -4670,7 +4662,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5002,
+      "PowerIndex": 5000,
       "PowerSetID": 2811,
       "PowerSetIndex": 56,
       "StaticIndex": 5123,
@@ -4730,7 +4722,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5003,
+      "PowerIndex": 5001,
       "PowerSetID": 2811,
       "PowerSetIndex": 57,
       "StaticIndex": 5126,
@@ -4790,7 +4782,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5004,
+      "PowerIndex": 5002,
       "PowerSetID": 2811,
       "PowerSetIndex": 58,
       "StaticIndex": 5086,
@@ -4909,7 +4901,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5005,
+      "PowerIndex": 5003,
       "PowerSetID": 2811,
       "PowerSetIndex": 59,
       "StaticIndex": 5088,
@@ -5027,7 +5019,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5006,
+      "PowerIndex": 5004,
       "PowerSetID": 2811,
       "PowerSetIndex": 60,
       "StaticIndex": 5083,
@@ -5145,7 +5137,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5007,
+      "PowerIndex": 5005,
       "PowerSetID": 2811,
       "PowerSetIndex": 61,
       "StaticIndex": 5084,
@@ -5198,7 +5190,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5008,
+      "PowerIndex": 5006,
       "PowerSetID": 2811,
       "PowerSetIndex": 62,
       "StaticIndex": 5091,
@@ -5315,7 +5307,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5009,
+      "PowerIndex": 5007,
       "PowerSetID": 2811,
       "PowerSetIndex": 63,
       "StaticIndex": 5087,
@@ -5441,7 +5433,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "MezType": 9,
           "ETModifies": 19,
@@ -5501,7 +5492,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 2,
           "EffectType": 9,
           "MezType": 1,
           "ETModifies": 19,
@@ -5561,7 +5551,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 3,
           "EffectType": 9,
           "MezType": 12,
           "ETModifies": 19,
@@ -5621,7 +5610,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 4,
           "EffectType": 9,
           "MezType": 3,
           "ETModifies": 19,
@@ -5681,7 +5669,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 5,
           "EffectType": 9,
           "MezType": 2,
           "ETModifies": 19,
@@ -5741,7 +5728,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 6,
           "EffectType": 9,
           "MezType": 4,
           "ETModifies": 19,
@@ -5801,7 +5787,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 7,
           "EffectType": 9,
           "MezType": 5,
           "ETModifies": 19,
@@ -5861,7 +5846,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 8,
           "EffectType": 9,
           "MezType": 8,
           "ETModifies": 19,
@@ -5921,7 +5905,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 9,
           "EffectType": 9,
           "ETModifies": 32,
           "Summon": "",
@@ -5980,7 +5963,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 10,
           "EffectType": 9,
           "ETModifies": 11,
           "Summon": "",
@@ -6039,7 +6021,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 11,
           "EffectType": 9,
           "ETModifies": 5,
           "Summon": "",
@@ -6098,7 +6079,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 12,
           "EffectType": 9,
           "DamageType": 10,
           "ETModifies": 5,
@@ -6158,7 +6138,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 13,
           "EffectType": 9,
           "DamageType": 11,
           "ETModifies": 5,
@@ -6218,7 +6197,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 14,
           "EffectType": 9,
           "DamageType": 12,
           "ETModifies": 5,
@@ -6278,7 +6256,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 15,
           "EffectType": 9,
           "DamageType": 1,
           "ETModifies": 5,
@@ -6338,7 +6315,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 16,
           "EffectType": 9,
           "DamageType": 2,
           "ETModifies": 5,
@@ -6398,7 +6374,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 17,
           "EffectType": 9,
           "DamageType": 3,
           "ETModifies": 5,
@@ -6458,7 +6433,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 18,
           "EffectType": 9,
           "DamageType": 4,
           "ETModifies": 5,
@@ -6518,7 +6492,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 19,
           "EffectType": 9,
           "DamageType": 5,
           "ETModifies": 5,
@@ -6578,7 +6551,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 20,
           "EffectType": 9,
           "DamageType": 6,
           "ETModifies": 5,
@@ -6638,7 +6610,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 21,
           "EffectType": 9,
           "DamageType": 8,
           "ETModifies": 5,
@@ -6698,7 +6669,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 22,
           "EffectType": 9,
           "ETModifies": 13,
           "Summon": "",
@@ -6757,7 +6727,6 @@
           "Reward": "",
           "EffectId": "InterfaceSpecial",
           "Special": "",
-          "nID": 23,
           "EffectType": 9,
           "ETModifies": 40,
           "Summon": "",
@@ -6810,7 +6779,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 5010,
+      "PowerIndex": 5008,
       "PowerSetID": 2811,
       "PowerSetIndex": 64,
       "StaticIndex": 5082,

@@ -4,7 +4,7 @@
   "FullName": "Pets.Raid_Disruptor_Pylon_Kill",
   "ImageName": "",
   "Power": [
-    6478
+    6477
   ],
   "SetType": 8,
   "DisplayName": "Raid_Disruptor_Pylon_Kill",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6478,
+      "PowerIndex": 6477,
       "PowerSetID": 3174,
       "StaticIndex": 1690,
       "NGroupMembership": [],
@@ -128,7 +128,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 43,
           "Summon": "",
           "nSummon": -1,

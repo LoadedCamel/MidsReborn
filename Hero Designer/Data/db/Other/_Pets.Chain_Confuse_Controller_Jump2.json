@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Confuse_Controller_Jump2",
   "ImageName": "",
   "Power": [
-    6236
+    6235
   ],
   "SetType": 8,
   "DisplayName": "Chain Confuse Jump 2",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6236,
+      "PowerIndex": 6235,
       "PowerSetID": 3043,
       "StaticIndex": 4408,
       "NGroupMembership": [],
@@ -156,7 +156,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 1,
           "Summon": "",
@@ -217,7 +216,6 @@
           "Reward": "",
           "EffectId": "Immobilize",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 1,
           "Summon": "",
@@ -279,7 +277,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 38,
           "Summon": "Pets_Chain_Confuse_Controller_Jump3",
           "nSummon": 263,
@@ -340,7 +337,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 38,
           "Summon": "Pets_Chain_Confuse_Controller_Jump3",
           "nSummon": 263,
@@ -400,7 +396,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -457,7 +452,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

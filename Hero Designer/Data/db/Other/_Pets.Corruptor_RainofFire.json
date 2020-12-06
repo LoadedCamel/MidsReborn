@@ -4,8 +4,8 @@
   "FullName": "Pets.Corruptor_RainofFire",
   "ImageName": "",
   "Power": [
-    6262,
-    6263
+    6261,
+    6262
   ],
   "SetType": 8,
   "DisplayName": "Rain of Fire",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6262,
+      "PowerIndex": 6261,
       "PowerSetID": 3182,
       "StaticIndex": 1565,
       "NGroupMembership": [],
@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 16,
           "Summon": "",
@@ -201,7 +200,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 2,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -258,7 +256,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -315,7 +312,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 4,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -372,7 +368,6 @@
           "Reward": "",
           "EffectId": "ScourgeProc",
           "Special": "",
-          "nID": 5,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -432,7 +427,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 6,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -483,7 +477,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6263,
+      "PowerIndex": 6262,
       "PowerSetID": 3182,
       "PowerSetIndex": 1,
       "StaticIndex": 1566,

@@ -4,7 +4,7 @@
   "FullName": "Pets.ChargeImpact",
   "ImageName": "",
   "Power": [
-    6250
+    6249
   ],
   "SetType": 8,
   "DisplayName": "Charge Impact",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6250,
+      "PowerIndex": 6249,
       "PowerSetID": 3057,
       "StaticIndex": 3334,
       "NGroupMembership": [],
@@ -144,7 +144,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -202,7 +201,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",

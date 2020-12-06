@@ -4,7 +4,7 @@
   "FullName": "Pets.Howling",
   "ImageName": "",
   "Power": [
-    6354
+    6353
   ],
   "SetType": 8,
   "DisplayName": "Howling",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6354,
+      "PowerIndex": 6353,
       "PowerSetID": 3102,
       "StaticIndex": 1615,
       "NGroupMembership": [],
@@ -139,7 +139,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,
@@ -198,7 +197,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 42,
           "Summon": "",
           "nSummon": -1,

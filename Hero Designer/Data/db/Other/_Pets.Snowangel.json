@@ -4,7 +4,7 @@
   "FullName": "Pets.Snowangel",
   "ImageName": "",
   "Power": [
-    6524
+    6523
   ],
   "SetType": 8,
   "DisplayName": "Snowangel",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6524,
+      "PowerIndex": 6523,
       "PowerSetID": 3207,
       "StaticIndex": 1716,
       "NGroupMembership": [],
@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -203,7 +202,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -263,7 +261,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 3,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -323,7 +320,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 4,
           "EffectType": 9,
           "ETModifies": 16,
           "Summon": "",
@@ -383,7 +379,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 5,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -443,7 +438,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 6,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",

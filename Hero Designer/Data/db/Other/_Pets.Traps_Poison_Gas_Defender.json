@@ -4,9 +4,9 @@
   "FullName": "Pets.Traps_Poison_Gas_Defender",
   "ImageName": "",
   "Power": [
+    6610,
     6611,
-    6612,
-    6613
+    6612
   ],
   "SetType": 8,
   "DisplayName": "Poison Gas",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6611,
+      "PowerIndex": 6610,
       "PowerSetID": 3158,
       "StaticIndex": 3541,
       "NGroupMembership": [],
@@ -146,7 +146,6 @@
           "Reward": "",
           "EffectId": "Res_Boolean",
           "Special": "",
-          "nID": 1,
           "EffectType": 27,
           "Summon": "",
           "nSummon": -1,
@@ -204,7 +203,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 2,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",
@@ -261,7 +259,6 @@
           "Reward": "",
           "EffectId": "Sleep",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -323,7 +320,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -387,7 +383,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 79,
           "Summon": "",
           "nSummon": -1,
@@ -446,7 +441,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 79,
           "Summon": "",
           "nSummon": -1,
@@ -499,7 +493,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6612,
+      "PowerIndex": 6611,
       "PowerSetID": 3158,
       "PowerSetIndex": 1,
       "StaticIndex": 3542,
@@ -621,7 +615,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -678,7 +671,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6613,
+      "PowerIndex": 6612,
       "PowerSetID": 3158,
       "PowerSetIndex": 2,
       "StaticIndex": 3543,

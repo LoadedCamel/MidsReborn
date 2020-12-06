@@ -4,8 +4,8 @@
   "FullName": "Pets.FlameThrower",
   "ImageName": "",
   "Power": [
-    6327,
-    6328
+    6326,
+    6327
   ],
   "SetType": 8,
   "DisplayName": "Flame Thrower",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6327,
+      "PowerIndex": 6326,
       "PowerSetID": 3087,
       "StaticIndex": 1595,
       "NGroupMembership": [],
@@ -137,7 +137,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -193,7 +192,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -245,7 +243,7 @@
       "AoEModifier": 1.6
     },
     {
-      "PowerIndex": 6328,
+      "PowerIndex": 6327,
       "PowerSetID": 3087,
       "PowerSetIndex": 1,
       "StaticIndex": 1596,

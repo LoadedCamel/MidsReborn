@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Thug_Pose",
   "ImageName": "",
   "Power": [
-    6074,
-    6075
+    6073,
+    6074
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -22,7 +22,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 6074,
+      "PowerIndex": 6073,
       "PowerSetID": 3005,
       "StaticIndex": 1419,
       "NGroupMembership": [],
@@ -136,7 +136,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 4,
           "DamageType": 2,
           "Summon": "",
@@ -192,7 +191,6 @@
           "Reward": "",
           "EffectId": "HealSelf",
           "Special": "",
-          "nID": 2,
           "EffectType": 14,
           "Summon": "",
           "nSummon": -1,
@@ -242,7 +240,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6075,
+      "PowerIndex": 6074,
       "PowerSetID": 3005,
       "PowerSetIndex": 1,
       "StaticIndex": 1420,

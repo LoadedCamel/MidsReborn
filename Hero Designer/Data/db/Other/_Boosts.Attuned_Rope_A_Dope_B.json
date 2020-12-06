@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "MezType": 10,
           "ETModifies": 19,

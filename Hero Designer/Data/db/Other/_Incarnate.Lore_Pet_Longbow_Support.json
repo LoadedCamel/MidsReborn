@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Longbow_Support",
   "ImageName": "",
   "Power": [
-    5376,
-    5377
+    5374,
+    5375
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Longbow_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.27,
-      "PowerIndex": 5376,
+      "PowerIndex": 5374,
       "PowerSetID": 2852,
       "StaticIndex": 5528,
       "NGroupMembership": [],
@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 209.895813,
-          "MagPercent": 209.895813,
+          "Mag": 262.36972,
+          "MagPercent": 262.36972,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",
@@ -143,7 +143,7 @@
     },
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 5377,
+      "PowerIndex": 5375,
       "PowerSetID": 2852,
       "PowerSetIndex": 1,
       "StaticIndex": 5529,
@@ -205,8 +205,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 107.0897,
-          "MagPercent": 107.0897,
+          "Mag": 133.8621,
+          "MagPercent": 133.8621,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",

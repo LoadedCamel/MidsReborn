@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Oni_3",
   "ImageName": "",
   "Power": [
-    5989,
-    5990
+    5988,
+    5989
   ],
   "SetType": 8,
   "DisplayName": "Oni",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 8.528,
-      "PowerIndex": 5989,
+      "PowerIndex": 5988,
       "PowerSetID": 2975,
       "StaticIndex": 1262,
       "NGroupMembership": [],
@@ -154,7 +154,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -215,7 +214,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -276,7 +274,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -338,7 +335,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 4,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -397,7 +393,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 26.0,
-      "PowerIndex": 5990,
+      "PowerIndex": 5989,
       "PowerSetID": 2975,
       "PowerSetIndex": 1,
       "StaticIndex": 1264,

@@ -4,8 +4,8 @@
   "FullName": "Pets.Corruptor_FlameThrower",
   "ImageName": "",
   "Power": [
-    6258,
-    6259
+    6257,
+    6258
   ],
   "SetType": 8,
   "DisplayName": "Flame Thrower",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6258,
+      "PowerIndex": 6257,
       "PowerSetID": 3086,
       "StaticIndex": 1561,
       "NGroupMembership": [],
@@ -139,7 +139,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -198,7 +197,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -252,7 +250,7 @@
       "AoEModifier": 1.6
     },
     {
-      "PowerIndex": 6259,
+      "PowerIndex": 6258,
       "PowerSetID": 3086,
       "PowerSetIndex": 1,
       "StaticIndex": 1562,

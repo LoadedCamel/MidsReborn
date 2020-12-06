@@ -4,7 +4,7 @@
   "FullName": "Pets.Earthquake",
   "ImageName": "",
   "Power": [
-    6307
+    6306
   ],
   "SetType": 8,
   "DisplayName": "Earthquake",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6307,
+      "PowerIndex": 6306,
       "PowerSetID": 3069,
       "StaticIndex": 1589,
       "NGroupMembership": [],
@@ -147,7 +147,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 1,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -202,7 +201,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -264,7 +262,6 @@
           "Reward": "",
           "EffectId": "Debuff_ToHit",
           "Special": "",
-          "nID": 3,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -322,7 +319,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -376,7 +372,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

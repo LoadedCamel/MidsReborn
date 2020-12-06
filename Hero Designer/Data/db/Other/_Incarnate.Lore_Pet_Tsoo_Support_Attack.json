@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Lore_Pet_Tsoo_Support_Attack",
   "ImageName": "",
   "Power": [
-    5440
+    5438
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Tsoo_Support_Attack",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5440,
+      "PowerIndex": 5438,
       "PowerSetID": 2877,
       "StaticIndex": 9519,
       "NGroupMembership": [],
@@ -143,13 +143,12 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 105.6594,
-          "MagPercent": 105.6594,
+          "Mag": 72.2932,
+          "MagPercent": 72.2932,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",

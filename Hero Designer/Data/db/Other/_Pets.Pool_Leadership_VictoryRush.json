@@ -4,12 +4,12 @@
   "FullName": "Pets.Pool_Leadership_VictoryRush",
   "ImageName": "",
   "Power": [
+    6451,
     6452,
     6453,
     6454,
     6455,
-    6456,
-    6457
+    6456
   ],
   "SetType": 8,
   "DisplayName": "Leadership",
@@ -26,7 +26,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6452,
+      "PowerIndex": 6451,
       "PowerSetID": 3122,
       "StaticIndex": 9593,
       "NGroupMembership": [],
@@ -147,7 +147,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 8,
           "Summon": "",
@@ -198,7 +197,7 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6453,
+      "PowerIndex": 6452,
       "PowerSetID": 3122,
       "PowerSetIndex": 1,
       "StaticIndex": 9598,
@@ -319,7 +318,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 8,
           "Summon": "",
@@ -370,7 +368,7 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6454,
+      "PowerIndex": 6453,
       "PowerSetID": 3122,
       "PowerSetIndex": 2,
       "StaticIndex": 9596,
@@ -491,7 +489,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 8,
           "Summon": "",
@@ -542,7 +539,7 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6455,
+      "PowerIndex": 6454,
       "PowerSetID": 3122,
       "PowerSetIndex": 3,
       "StaticIndex": 9597,
@@ -663,7 +660,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 8,
           "Summon": "",
@@ -714,7 +710,7 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6456,
+      "PowerIndex": 6455,
       "PowerSetID": 3122,
       "PowerSetIndex": 4,
       "StaticIndex": 9595,
@@ -835,7 +831,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 8,
           "Summon": "",
@@ -886,7 +881,7 @@
       "AoEModifier": 23.5
     },
     {
-      "PowerIndex": 6457,
+      "PowerIndex": 6456,
       "PowerSetID": 3122,
       "PowerSetIndex": 5,
       "StaticIndex": 9594,
@@ -1007,7 +1002,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 8,
           "Summon": "",

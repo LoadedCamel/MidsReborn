@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Sledgehammer",
   "ImageName": "",
   "Power": [
-    6084
+    6083
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 10.192,
-      "PowerIndex": 6084,
+      "PowerIndex": 6083,
       "PowerSetID": 3007,
       "StaticIndex": 1429,
       "NGroupMembership": [],
@@ -144,7 +144,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -202,7 +201,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -262,7 +260,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",

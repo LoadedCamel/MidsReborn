@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Jolt_Gremlin_Jump2",
   "ImageName": "",
   "Power": [
-    6246
+    6245
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 2",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6246,
+      "PowerIndex": 6245,
       "PowerSetID": 3052,
       "StaticIndex": 4414,
       "NGroupMembership": [],
@@ -153,7 +153,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 38,
           "Summon": "Pets_Chain_Jolt_Gremlin_Jump3",
           "nSummon": 269,
@@ -214,7 +213,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 38,
           "Summon": "Pets_Chain_Jolt_Gremlin_Jump3",
           "nSummon": 269,
@@ -272,7 +270,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -331,7 +328,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -388,7 +384,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

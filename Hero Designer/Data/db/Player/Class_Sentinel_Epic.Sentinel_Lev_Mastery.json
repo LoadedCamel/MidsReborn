@@ -4,11 +4,11 @@
   "FullName": "Epic.Sentinel_Lev_Mastery",
   "ImageName": "PatronDMGBuff.png",
   "Power": [
+    4358,
     4359,
     4360,
     4361,
-    4362,
-    4363
+    4362
   ],
   "SetType": 3,
   "DisplayName": "Leviathan Mastery",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 12.74,
-      "PowerIndex": 4359,
+      "PowerIndex": 4358,
       "PowerSetID": 2757,
       "StaticIndex": 10728,
       "NGroupMembership": [],
@@ -105,8 +105,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.13201,
-          "MagPercent": 7.13201,
+          "Mag": 4.87979126,
+          "MagPercent": 4.87979126,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -163,14 +163,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.28297,
-          "MagPercent": 5.28297,
+          "Mag": 3.61466,
+          "MagPercent": 3.61466,
           "Duration": 7.1,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -226,14 +225,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 11.3430653,
-          "MagPercent": 11.3430653,
+          "Mag": 7.761036,
+          "MagPercent": 7.761036,
           "Duration": 7.1,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -288,13 +286,12 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 14.772769,
-          "MagPercent": 14.772769,
+          "Mag": 10.1076736,
+          "MagPercent": 10.1076736,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -353,7 +350,6 @@
           "Reward": "",
           "EffectId": "Immobilize",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -413,7 +409,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -474,7 +469,7 @@
     {
       "CastTimeReal": 2.23,
       "ToggleCost": 23.14,
-      "PowerIndex": 4360,
+      "PowerIndex": 4359,
       "PowerSetID": 2757,
       "PowerSetIndex": 1,
       "StaticIndex": 10729,
@@ -549,8 +544,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 218.965134,
-          "MagPercent": 218.965134,
+          "Mag": 114.696,
+          "MagPercent": 114.696,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -612,7 +607,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -671,7 +665,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 5,
           "Summon": "",
@@ -730,7 +723,7 @@
       "CastTimeReal": 2.67,
       "ToggleCost": 18.98,
       "IsEpic": true,
-      "PowerIndex": 4361,
+      "PowerIndex": 4360,
       "PowerSetID": 2757,
       "PowerSetIndex": 2,
       "StaticIndex": 10731,
@@ -751,11 +744,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4359,
+            4358,
             -1
           ],
           [
-            4360,
+            4359,
             -1
           ]
         ],
@@ -826,8 +819,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 36.98079,
-          "MagPercent": 36.98079,
+          "Mag": 25.302618,
+          "MagPercent": 25.302618,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -883,14 +876,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.28297,
-          "MagPercent": 5.28297,
+          "Mag": 3.61466,
+          "MagPercent": 3.61466,
           "Duration": 4.25,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 4,
           "Summon": "",
@@ -952,7 +944,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -1009,7 +1000,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -1067,7 +1057,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -1125,7 +1114,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -1183,7 +1171,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 25,
           "Summon": "",
           "nSummon": -1,
@@ -1240,7 +1227,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 7,
           "EffectType": 5,
           "DamageType": 1,
           "Summon": "",
@@ -1299,7 +1285,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 8,
           "EffectType": 5,
           "DamageType": 2,
           "Summon": "",
@@ -1358,7 +1343,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 9,
           "EffectType": 5,
           "DamageType": 3,
           "Summon": "",
@@ -1417,7 +1401,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 10,
           "EffectType": 5,
           "DamageType": 4,
           "Summon": "",
@@ -1476,7 +1459,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 11,
           "EffectType": 5,
           "DamageType": 5,
           "Summon": "",
@@ -1535,7 +1517,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 12,
           "EffectType": 5,
           "DamageType": 6,
           "Summon": "",
@@ -1594,7 +1575,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 13,
           "EffectType": 5,
           "DamageType": 8,
           "Summon": "",
@@ -1652,7 +1632,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 14,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -1709,7 +1688,7 @@
       "CastTimeReal": 1.87,
       "ToggleCost": 10.66,
       "IsEpic": true,
-      "PowerIndex": 4362,
+      "PowerIndex": 4361,
       "PowerSetID": 2757,
       "PowerSetIndex": 3,
       "StaticIndex": 10730,
@@ -1730,11 +1709,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            4359,
+            4358,
             -1
           ],
           [
-            4360,
+            4359,
             -1
           ]
         ],
@@ -1867,7 +1846,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -1921,13 +1899,12 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.882745,
-          "MagPercent": 7.882745,
+          "Mag": 4.129056,
+          "MagPercent": 4.129056,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -1978,14 +1955,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.83907032,
-          "MagPercent": 5.83907032,
+          "Mag": 3.05856013,
+          "MagPercent": 3.05856013,
           "Duration": 7.1,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2047,7 +2023,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,
@@ -2104,7 +2079,7 @@
       "CastTimeReal": 3.2,
       "ToggleCost": 26.0,
       "IsEpic": true,
-      "PowerIndex": 4363,
+      "PowerIndex": 4362,
       "PowerSetID": 2757,
       "PowerSetIndex": 4,
       "StaticIndex": 10732,
@@ -2125,24 +2100,24 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
+            4358,
+            4359
+          ],
+          [
+            4358,
+            4360
+          ],
+          [
+            4358,
+            4361
+          ],
+          [
             4359,
             4360
           ],
           [
             4359,
             4361
-          ],
-          [
-            4359,
-            4362
-          ],
-          [
-            4360,
-            4361
-          ],
-          [
-            4360,
-            4362
           ]
         ],
         "NPowerIDNot": [],

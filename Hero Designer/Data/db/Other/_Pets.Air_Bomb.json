@@ -4,7 +4,7 @@
   "FullName": "Pets.Air_Bomb",
   "ImageName": "",
   "Power": [
-    6209
+    6208
   ],
   "SetType": 8,
   "DisplayName": "Air_Bomb",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6209,
+      "PowerIndex": 6208,
       "PowerSetID": 3023,
       "StaticIndex": 1543,
       "NGroupMembership": [],
@@ -134,7 +134,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -193,7 +192,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -253,7 +251,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",

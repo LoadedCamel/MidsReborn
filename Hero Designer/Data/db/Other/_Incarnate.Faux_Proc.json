@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Faux_Proc",
   "ImageName": "",
   "Power": [
-    4715,
-    4716
+    4713,
+    4714
   ],
   "SetType": 11,
   "DisplayName": "Overthruster",
@@ -22,7 +22,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4715,
+      "PowerIndex": 4713,
       "PowerSetID": 2886,
       "StaticIndex": 4610,
       "NGroupMembership": [],
@@ -81,7 +81,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 4716,
+      "PowerIndex": 4714,
       "PowerSetID": 2886,
       "PowerSetIndex": 1,
       "StaticIndex": 4611,

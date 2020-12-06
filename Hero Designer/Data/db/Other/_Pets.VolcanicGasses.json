@@ -4,8 +4,8 @@
   "FullName": "Pets.VolcanicGasses",
   "ImageName": "",
   "Power": [
-    6657,
-    6658
+    6656,
+    6657
   ],
   "SetType": 8,
   "DisplayName": "Volcanic Gasses",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6657,
+      "PowerIndex": 6656,
       "PowerSetID": 3255,
       "StaticIndex": 1773,
       "NGroupMembership": [],
@@ -134,7 +134,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -185,7 +184,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6658,
+      "PowerIndex": 6657,
       "PowerSetID": 3255,
       "PowerSetIndex": 1,
       "StaticIndex": 1774,
@@ -304,7 +303,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,
@@ -358,7 +356,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 16,
           "Summon": "",

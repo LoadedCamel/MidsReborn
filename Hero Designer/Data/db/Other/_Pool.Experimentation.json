@@ -4,12 +4,12 @@
   "FullName": "Pool.Experimentation",
   "ImageName": "Experimentation.png",
   "Power": [
+    6705,
     6706,
     6707,
     6708,
     6709,
-    6710,
-    6711
+    6710
   ],
   "SetType": 5,
   "DisplayName": "Experimentation",
@@ -36,7 +36,7 @@
       "ToggleCost": 13.0,
       "IsEpic": true,
       "LocationIndex": 26,
-      "PowerIndex": 6706,
+      "PowerIndex": 6705,
       "PowerSetID": 3281,
       "StaticIndex": 10833,
       "NGroupMembership": [],
@@ -52,7 +52,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6709,
+            6708,
             -1
           ]
         ],
@@ -157,7 +157,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 14,
           "Summon": "",
@@ -214,7 +213,7 @@
     {
       "CastTimeReal": 1.36,
       "ToggleCost": 10.4,
-      "PowerIndex": 6707,
+      "PowerIndex": 6706,
       "PowerSetID": 3281,
       "PowerSetIndex": 1,
       "StaticIndex": 10830,
@@ -232,6 +231,10 @@
         "NPowerID": [],
         "NPowerIDNot": [
           [
+            6758,
+            -1
+          ],
+          [
             6759,
             -1
           ],
@@ -240,7 +243,7 @@
             -1
           ],
           [
-            6761,
+            6722,
             -1
           ],
           [
@@ -249,10 +252,6 @@
           ],
           [
             6724,
-            -1
-          ],
-          [
-            6725,
             -1
           ]
         ],
@@ -322,8 +321,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -5.19,
-          "MagPercent": -5.19,
+          "Mag": -8.65,
+          "MagPercent": -8.65,
           "Duration": 60.0,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -379,14 +378,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -5.19,
-          "MagPercent": -5.19,
+          "Mag": -8.65,
+          "MagPercent": -8.65,
           "Duration": 60.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "DisplayPercentageOverride": 2,
           "MezType": 12,
@@ -437,14 +435,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -5.19,
-          "MagPercent": -5.19,
+          "Mag": -8.65,
+          "MagPercent": -8.65,
           "Duration": 60.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "DisplayPercentageOverride": 2,
           "MezType": 2,
@@ -495,14 +492,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -5.19,
-          "MagPercent": -5.19,
+          "Mag": -8.65,
+          "MagPercent": -8.65,
           "Duration": 60.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "DisplayPercentageOverride": 2,
           "MezType": 3,
@@ -553,14 +549,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -5.19,
-          "MagPercent": -5.19,
+          "Mag": -8.65,
+          "MagPercent": -8.65,
           "Duration": 60.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "DisplayPercentageOverride": 2,
           "MezType": 10,
@@ -611,14 +606,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -5.19,
-          "MagPercent": -5.19,
+          "Mag": -8.65,
+          "MagPercent": -8.65,
           "Duration": 60.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 19,
           "DisplayPercentageOverride": 2,
           "MezType": 9,
@@ -677,7 +671,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 27,
           "DisplayPercentageOverride": 1,
           "Summon": "",
@@ -735,7 +728,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 7,
           "EffectType": 26,
           "DisplayPercentageOverride": 1,
           "Summon": "",
@@ -785,15 +777,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.519,
-          "MagPercent": 51.8999977,
+          "Mag": 0.865,
+          "MagPercent": 86.5,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 8,
           "EffectType": 20,
           "MezType": 1,
           "Summon": "",
@@ -843,15 +834,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.519,
-          "MagPercent": 51.8999977,
+          "Mag": 0.865,
+          "MagPercent": 86.5,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 9,
           "EffectType": 20,
           "MezType": 12,
           "Summon": "",
@@ -901,15 +891,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.519,
-          "MagPercent": 51.8999977,
+          "Mag": 0.865,
+          "MagPercent": 86.5,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 10,
           "EffectType": 20,
           "MezType": 2,
           "Summon": "",
@@ -959,15 +948,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.519,
-          "MagPercent": 51.8999977,
+          "Mag": 0.865,
+          "MagPercent": 86.5,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 11,
           "EffectType": 20,
           "MezType": 3,
           "Summon": "",
@@ -1017,15 +1005,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.519,
-          "MagPercent": 51.8999977,
+          "Mag": 0.865,
+          "MagPercent": 86.5,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 12,
           "EffectType": 20,
           "MezType": 10,
           "Summon": "",
@@ -1075,15 +1062,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.519,
-          "MagPercent": 51.8999977,
+          "Mag": 0.865,
+          "MagPercent": 86.5,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 13,
           "EffectType": 20,
           "MezType": 9,
           "Summon": "",
@@ -1139,7 +1125,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 8.58,
-      "PowerIndex": 6708,
+      "PowerIndex": 6707,
       "PowerSetID": 3281,
       "PowerSetIndex": 2,
       "StaticIndex": 10831,
@@ -1157,6 +1143,10 @@
         "NPowerID": [],
         "NPowerIDNot": [
           [
+            6722,
+            -1
+          ],
+          [
             6723,
             -1
           ],
@@ -1165,7 +1155,7 @@
             -1
           ],
           [
-            6725,
+            6758,
             -1
           ],
           [
@@ -1174,10 +1164,6 @@
           ],
           [
             6760,
-            -1
-          ],
-          [
-            6761,
             -1
           ]
         ],
@@ -1247,8 +1233,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.28297,
-          "MagPercent": 5.28297,
+          "Mag": 3.61466,
+          "MagPercent": 3.61466,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -1303,14 +1289,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.339564,
-          "MagPercent": 6.339564,
+          "Mag": 4.33759165,
+          "MagPercent": 4.33759165,
           "Duration": 4.6,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DisplayPercentageOverride": 2,
           "DamageType": 7,
@@ -1365,14 +1350,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 8.196793,
-          "MagPercent": 8.196793,
+          "Mag": 5.60832548,
+          "MagPercent": 5.60832548,
           "Duration": 4.6,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DisplayPercentageOverride": 2,
           "DamageType": 7,
@@ -1432,7 +1416,7 @@
     },
     {
       "ToggleCost": 0.455,
-      "PowerIndex": 6709,
+      "PowerIndex": 6708,
       "PowerSetID": 3281,
       "PowerSetIndex": 3,
       "StaticIndex": 10832,
@@ -1453,6 +1437,10 @@
         "NPowerID": [],
         "NPowerIDNot": [
           [
+            6722,
+            -1
+          ],
+          [
             6723,
             -1
           ],
@@ -1461,7 +1449,7 @@
             -1
           ],
           [
-            6725,
+            6758,
             -1
           ],
           [
@@ -1470,10 +1458,6 @@
           ],
           [
             6760,
-            -1
-          ],
-          [
-            6761,
             -1
           ]
         ],
@@ -1615,7 +1599,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 1,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -1672,7 +1655,7 @@
       "CastTimeReal": 1.53,
       "ToggleCost": 20.8,
       "IsEpic": true,
-      "PowerIndex": 6710,
+      "PowerIndex": 6709,
       "PowerSetID": 3281,
       "PowerSetIndex": 4,
       "StaticIndex": 10834,
@@ -1689,16 +1672,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6707,
+            6706,
+            6707
+          ],
+          [
+            6706,
             6708
           ],
           [
             6707,
-            6709
-          ],
-          [
-            6708,
-            6709
+            6708
           ]
         ],
         "NPowerIDNot": [],
@@ -1819,7 +1802,7 @@
       "CastTimeReal": 1.3,
       "ToggleCost": 2.6,
       "IsEpic": true,
-      "PowerIndex": 6711,
+      "PowerIndex": 6710,
       "PowerSetID": 3281,
       "PowerSetIndex": 5,
       "StaticIndex": 10835,
@@ -1836,24 +1819,24 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
+            6706,
+            6707
+          ],
+          [
+            6706,
+            6708
+          ],
+          [
+            6706,
+            6709
+          ],
+          [
             6707,
             6708
           ],
           [
             6707,
             6709
-          ],
-          [
-            6707,
-            6710
-          ],
-          [
-            6708,
-            6709
-          ],
-          [
-            6708,
-            6710
           ]
         ],
         "NPowerIDNot": [],
@@ -1984,7 +1967,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 4,
           "DisplayPercentageOverride": 1,
           "DamageType": 1,
@@ -2044,7 +2026,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 4,
           "DisplayPercentageOverride": 1,
           "DamageType": 2,
@@ -2104,7 +2085,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 4,
           "DisplayPercentageOverride": 1,
           "DamageType": 3,
@@ -2164,7 +2144,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 4,
           "DisplayPercentageOverride": 1,
           "DamageType": 4,
@@ -2224,7 +2203,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 4,
           "DisplayPercentageOverride": 1,
           "DamageType": 5,
@@ -2284,7 +2262,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 4,
           "DisplayPercentageOverride": 1,
           "DamageType": 6,
@@ -2344,7 +2321,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 7,
           "EffectType": 4,
           "DisplayPercentageOverride": 1,
           "DamageType": 7,
@@ -2404,7 +2380,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 8,
           "EffectType": 4,
           "DisplayPercentageOverride": 1,
           "DamageType": 8,
@@ -2464,7 +2439,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 9,
           "EffectType": 9,
           "DisplayPercentageOverride": 1,
           "ETModifies": 40,
@@ -2523,7 +2497,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 10,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 1,
@@ -2581,7 +2554,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 11,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 2,
@@ -2639,7 +2611,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 12,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 3,
@@ -2697,7 +2668,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 13,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 4,
@@ -2755,7 +2725,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 14,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 5,
@@ -2813,7 +2782,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 15,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 6,
@@ -2871,7 +2839,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 16,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 8,
@@ -2929,7 +2896,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 17,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 10,
@@ -2987,7 +2953,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 18,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 11,
@@ -3045,7 +3010,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 19,
           "EffectType": 5,
           "DisplayPercentageOverride": 1,
           "DamageType": 12,
@@ -3104,7 +3068,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 20,
           "EffectType": 9,
           "ETModifies": 32,
           "Summon": "",
@@ -3162,7 +3125,6 @@
           "Reward": "",
           "EffectId": "SpeedFlying",
           "Special": "",
-          "nID": 21,
           "EffectType": 9,
           "ETModifies": 11,
           "Summon": "",
@@ -3220,7 +3182,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 22,
           "EffectType": 9,
           "MezType": 1,
           "ETModifies": 19,
@@ -3279,7 +3240,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 23,
           "EffectType": 9,
           "MezType": 12,
           "ETModifies": 19,
@@ -3338,7 +3298,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 24,
           "EffectType": 9,
           "MezType": 2,
           "ETModifies": 19,
@@ -3397,7 +3356,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 25,
           "EffectType": 9,
           "MezType": 3,
           "ETModifies": 19,
@@ -3456,7 +3414,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 26,
           "EffectType": 9,
           "MezType": 10,
           "ETModifies": 19,
@@ -3515,7 +3472,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 27,
           "EffectType": 9,
           "MezType": 9,
           "ETModifies": 19,
@@ -3574,7 +3530,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 28,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",

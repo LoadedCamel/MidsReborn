@@ -4,7 +4,7 @@
   "FullName": "Pets.Caltrops",
   "ImageName": "",
   "Power": [
-    6234
+    6233
   ],
   "SetType": 8,
   "DisplayName": "Caltrops",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6234,
+      "PowerIndex": 6233,
       "PowerSetID": 3041,
       "StaticIndex": 1557,
       "NGroupMembership": [],
@@ -130,7 +130,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -187,7 +186,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -245,7 +243,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 3,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -299,7 +296,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,
@@ -353,7 +349,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 19,
           "MezType": 16,
           "Summon": "",

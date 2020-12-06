@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Induction_Jump2_Scrapper",
   "ImageName": "",
   "Power": [
-    6239
+    6238
   ],
   "SetType": 8,
   "DisplayName": "Chain Induction Jump 2",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6239,
+      "PowerIndex": 6238,
       "PowerSetID": 3046,
       "StaticIndex": 3527,
       "NGroupMembership": [],
@@ -148,7 +148,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 38,
           "Summon": "Pets_Chain_Induction_Jump3_Scrapper",
           "nSummon": 209,
@@ -208,7 +207,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -265,7 +263,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

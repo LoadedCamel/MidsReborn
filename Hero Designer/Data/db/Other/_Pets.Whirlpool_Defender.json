@@ -4,8 +4,8 @@
   "FullName": "Pets.Whirlpool_Defender",
   "ImageName": "",
   "Power": [
-    6687,
-    6688
+    6686,
+    6687
   ],
   "SetType": 8,
   "DisplayName": "Whirlpool",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6687,
+      "PowerIndex": 6686,
       "PowerSetID": 3271,
       "StaticIndex": 9129,
       "NGroupMembership": [],
@@ -147,7 +147,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 4,
           "Summon": "",
@@ -206,7 +205,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 2,
           "EffectType": 9,
           "ETModifies": 16,
           "Summon": "",
@@ -264,7 +262,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 3,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -322,7 +319,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 4,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -379,7 +375,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 5,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -437,7 +432,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 6,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -495,7 +489,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 7,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -548,7 +541,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6688,
+      "PowerIndex": 6687,
       "PowerSetID": 3271,
       "PowerSetIndex": 1,
       "StaticIndex": 9130,

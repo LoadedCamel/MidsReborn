@@ -4,7 +4,7 @@
   "FullName": "Pets.Superior_Defenders_Bastion_Proc",
   "ImageName": "",
   "Power": [
-    6541
+    6540
   ],
   "SetType": 8,
   "DisplayName": "Superior Defender's Bastion",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6541,
+      "PowerIndex": 6540,
       "PowerSetID": 3215,
       "StaticIndex": 5610,
       "NGroupMembership": [],

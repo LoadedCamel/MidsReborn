@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Pipe",
   "ImageName": "",
   "Power": [
-    6080
+    6079
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.87,
       "ToggleCost": 6.864,
-      "PowerIndex": 6080,
+      "PowerIndex": 6079,
       "PowerSetID": 2999,
       "StaticIndex": 1425,
       "NGroupMembership": [],
@@ -145,7 +145,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",

@@ -4,12 +4,12 @@
   "FullName": "Pets.Phantasm",
   "ImageName": "",
   "Power": [
+    6439,
     6440,
     6441,
     6442,
     6443,
-    6444,
-    6445
+    6444
   ],
   "SetType": 8,
   "DisplayName": "Phantasm",
@@ -27,7 +27,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6440,
+      "PowerIndex": 6439,
       "PowerSetID": 3156,
       "StaticIndex": 1673,
       "NGroupMembership": [],
@@ -149,7 +149,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -206,7 +205,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -261,7 +259,7 @@
     },
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 6441,
+      "PowerIndex": 6440,
       "PowerSetID": 3156,
       "PowerSetIndex": 1,
       "StaticIndex": 1674,
@@ -376,7 +374,7 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 6442,
+      "PowerIndex": 6441,
       "PowerSetID": 3156,
       "PowerSetIndex": 2,
       "StaticIndex": 1675,
@@ -501,7 +499,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -558,7 +555,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -612,7 +608,7 @@
       "AoEModifier": 2.37995839
     },
     {
-      "PowerIndex": 6443,
+      "PowerIndex": 6442,
       "PowerSetID": 3156,
       "PowerSetIndex": 3,
       "StaticIndex": 1676,
@@ -725,7 +721,6 @@
           "Reward": "",
           "EffectId": "Control",
           "Special": "",
-          "nID": 1,
           "EffectType": 21,
           "Summon": "",
           "nSummon": -1,
@@ -780,7 +775,6 @@
           "Reward": "",
           "EffectId": "SpeedFlying",
           "Special": "",
-          "nID": 2,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -835,7 +829,6 @@
           "Reward": "",
           "EffectId": "Friction",
           "Special": "",
-          "nID": 3,
           "EffectType": 22,
           "Summon": "",
           "nSummon": -1,
@@ -886,7 +879,7 @@
     },
     {
       "CastTimeReal": 1.716,
-      "PowerIndex": 6444,
+      "PowerIndex": 6443,
       "PowerSetID": 3156,
       "PowerSetIndex": 4,
       "StaticIndex": 1677,
@@ -936,7 +929,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6445,
+      "PowerIndex": 6444,
       "PowerSetID": 3156,
       "PowerSetIndex": 5,
       "StaticIndex": 1678,
@@ -1049,7 +1042,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 1,
           "EffectType": 29,
           "DamageType": 5,
           "Summon": "",
@@ -1105,7 +1097,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 2,
           "EffectType": 29,
           "DamageType": 2,
           "Summon": "",
@@ -1161,7 +1152,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 29,
           "DamageType": 6,
           "Summon": "",

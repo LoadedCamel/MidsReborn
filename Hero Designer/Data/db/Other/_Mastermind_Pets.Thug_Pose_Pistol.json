@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Pistol",
   "ImageName": "",
   "Power": [
-    6081
+    6080
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.33,
       "ToggleCost": 3.952,
-      "PowerIndex": 6081,
+      "PowerIndex": 6080,
       "PowerSetID": 3001,
       "StaticIndex": 1426,
       "NGroupMembership": [],
@@ -145,7 +145,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",

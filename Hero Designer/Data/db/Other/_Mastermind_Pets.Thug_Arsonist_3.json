@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Arsonist_3",
   "ImageName": "",
   "Power": [
-    6041
+    6040
   ],
   "SetType": 8,
   "DisplayName": "Arsonist",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 7.8,
-      "PowerIndex": 6041,
+      "PowerIndex": 6040,
       "PowerSetID": 2920,
       "StaticIndex": 1330,
       "NGroupMembership": [],
@@ -150,7 +150,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -212,7 +211,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 38,
           "Summon": "Pets_MM_Thug_Arsonist_Burn",
           "nSummon": -1,
@@ -271,7 +269,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -331,7 +328,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 4,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",

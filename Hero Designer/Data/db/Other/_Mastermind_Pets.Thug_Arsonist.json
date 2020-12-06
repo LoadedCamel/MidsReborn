@@ -4,10 +4,10 @@
   "FullName": "Mastermind_Pets.Thug_Arsonist",
   "ImageName": "",
   "Power": [
+    6035,
     6036,
     6037,
-    6038,
-    6039
+    6038
   ],
   "SetType": 8,
   "DisplayName": "Arsonist",
@@ -24,7 +24,7 @@
   "GroupName": "Mastermind_Pets",
   "Powers": [
     {
-      "PowerIndex": 6036,
+      "PowerIndex": 6035,
       "PowerSetID": 2922,
       "StaticIndex": 1319,
       "NGroupMembership": [],
@@ -134,7 +134,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 4.368,
-      "PowerIndex": 6037,
+      "PowerIndex": 6036,
       "PowerSetID": 2922,
       "PowerSetIndex": 1,
       "StaticIndex": 1320,
@@ -258,7 +258,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -314,7 +313,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 10.4,
-      "PowerIndex": 6038,
+      "PowerIndex": 6037,
       "PowerSetID": 2922,
       "PowerSetIndex": 2,
       "StaticIndex": 1321,
@@ -444,7 +443,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -501,7 +499,7 @@
       "AoEModifier": 1.75
     },
     {
-      "PowerIndex": 6039,
+      "PowerIndex": 6038,
       "PowerSetID": 2922,
       "PowerSetIndex": 3,
       "StaticIndex": 1322,
@@ -616,7 +614,6 @@
           "Reward": "",
           "EffectId": "SpeedJumping",
           "Special": "",
-          "nID": 1,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -673,7 +670,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -730,7 +726,6 @@
           "Reward": "",
           "EffectId": "Control",
           "Special": "",
-          "nID": 3,
           "EffectType": 21,
           "Summon": "",
           "nSummon": -1,
@@ -787,7 +782,6 @@
           "Reward": "",
           "EffectId": "Friction",
           "Special": "",
-          "nID": 4,
           "EffectType": 22,
           "Summon": "",
           "nSummon": -1,

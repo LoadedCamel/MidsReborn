@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.MMTwilight",
   "ImageName": "",
   "Power": [
-    10163
+    10162
   ],
   "SetType": 8,
   "DisplayName": "Twilight",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10163,
+      "PowerIndex": 10162,
       "PowerSetID": 3538,
       "StaticIndex": 3104,
       "NGroupMembership": [],
@@ -76,8 +76,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 230.885254,
-          "MagPercent": 230.885254,
+          "Mag": 262.36972,
+          "MagPercent": 262.36972,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",

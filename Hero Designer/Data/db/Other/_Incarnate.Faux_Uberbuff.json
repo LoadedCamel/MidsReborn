@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Faux_Uberbuff",
   "ImageName": "",
   "Power": [
-    4717
+    4715
   ],
   "SetType": 11,
   "DisplayName": "Freem",
@@ -21,7 +21,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4717,
+      "PowerIndex": 4715,
       "PowerSetID": 2806,
       "StaticIndex": 4612,
       "NGroupMembership": [],

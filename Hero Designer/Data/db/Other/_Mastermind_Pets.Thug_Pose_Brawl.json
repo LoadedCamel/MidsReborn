@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Brawl",
   "ImageName": "",
   "Power": [
-    6078
+    6077
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 3.536,
-      "PowerIndex": 6078,
+      "PowerIndex": 6077,
       "PowerSetID": 3006,
       "StaticIndex": 1423,
       "NGroupMembership": [],
@@ -145,7 +145,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",

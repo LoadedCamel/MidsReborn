@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Thug_Minion_2",
   "ImageName": "",
   "Power": [
-    6071,
-    6072
+    6070,
+    6071
   ],
   "SetType": 8,
   "DisplayName": "Thug Minion",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 5.2,
-      "PowerIndex": 6071,
+      "PowerIndex": 6070,
       "PowerSetID": 2997,
       "StaticIndex": 1396,
       "NGroupMembership": [],
@@ -149,7 +149,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -206,7 +205,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 6.864,
-      "PowerIndex": 6072,
+      "PowerIndex": 6071,
       "PowerSetID": 2997,
       "PowerSetIndex": 1,
       "StaticIndex": 1397,
@@ -335,7 +334,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -393,7 +391,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -453,7 +450,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",

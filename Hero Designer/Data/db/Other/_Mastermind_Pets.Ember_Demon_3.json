@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Ember_Demon_3",
   "ImageName": "",
   "Power": [
-    5890,
-    5891
+    5889,
+    5890
   ],
   "SetType": 8,
   "DisplayName": "Ember Demon",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 15.184,
-      "PowerIndex": 5890,
+      "PowerIndex": 5889,
       "PowerSetID": 2941,
       "StaticIndex": 4215,
       "NGroupMembership": [],
@@ -150,7 +150,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -209,7 +208,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -270,7 +268,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -329,7 +326,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 4,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -390,7 +386,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 5,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -450,7 +445,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 13.0,
-      "PowerIndex": 5891,
+      "PowerIndex": 5890,
       "PowerSetID": 2941,
       "PowerSetIndex": 1,
       "StaticIndex": 4217,

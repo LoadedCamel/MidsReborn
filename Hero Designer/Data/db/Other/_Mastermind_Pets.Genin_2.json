@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Genin_2",
   "ImageName": "",
   "Power": [
-    5902,
-    5903
+    5901,
+    5902
   ],
   "SetType": 8,
   "DisplayName": "Genin",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 6.864,
-      "PowerIndex": 5902,
+      "PowerIndex": 5901,
       "PowerSetID": 2948,
       "StaticIndex": 1200,
       "NGroupMembership": [],
@@ -149,7 +149,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -208,7 +207,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -265,7 +263,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.864,
-      "PowerIndex": 5903,
+      "PowerIndex": 5902,
       "PowerSetID": 2948,
       "PowerSetIndex": 1,
       "StaticIndex": 1201,
@@ -390,7 +388,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -448,7 +445,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",

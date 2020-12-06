@@ -4,7 +4,7 @@
   "FullName": "Pets.Epic_Quicksand",
   "ImageName": "",
   "Power": [
-    6320
+    6319
   ],
   "SetType": 8,
   "DisplayName": "Quicksand",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6320,
+      "PowerIndex": 6319,
       "PowerSetID": 3167,
       "StaticIndex": 3337,
       "NGroupMembership": [],
@@ -142,7 +142,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 1,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -197,7 +196,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -255,7 +253,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,
@@ -313,7 +310,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 4,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -369,7 +365,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

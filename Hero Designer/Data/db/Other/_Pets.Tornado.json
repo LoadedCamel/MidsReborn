@@ -4,10 +4,10 @@
   "FullName": "Pets.Tornado",
   "ImageName": "",
   "Power": [
+    6587,
     6588,
     6589,
-    6590,
-    6591
+    6590
   ],
   "SetType": 8,
   "DisplayName": "Tornado",
@@ -24,7 +24,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6588,
+      "PowerIndex": 6587,
       "PowerSetID": 3241,
       "StaticIndex": 1746,
       "NGroupMembership": [],
@@ -149,7 +149,6 @@
           "Reward": "",
           "EffectId": "SummerIO",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -207,7 +206,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -266,7 +264,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -325,7 +322,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -385,7 +381,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -448,7 +443,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 6,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -500,7 +494,7 @@
       "AoEModifier": 2.05
     },
     {
-      "PowerIndex": 6589,
+      "PowerIndex": 6588,
       "PowerSetID": 3241,
       "PowerSetIndex": 1,
       "StaticIndex": 1747,
@@ -613,7 +607,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -669,7 +662,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 28,
           "ETModifies": 13,
           "Summon": "",
@@ -725,7 +717,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 23,
           "Summon": "",
           "nSummon": -1,
@@ -775,7 +766,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6590,
+      "PowerIndex": 6589,
       "PowerSetID": 3241,
       "PowerSetIndex": 2,
       "StaticIndex": 1748,
@@ -882,7 +873,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6591,
+      "PowerIndex": 6590,
       "PowerSetID": 3241,
       "PowerSetIndex": 3,
       "StaticIndex": 1749,

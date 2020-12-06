@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Lore_Pet_Arachnos_Support_Attack",
   "ImageName": "",
   "Power": [
-    5283
+    5281
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Arachnos_Support_Attack",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.67,
-      "PowerIndex": 5283,
+      "PowerIndex": 5281,
       "PowerSetID": 2819,
       "StaticIndex": 5476,
       "NGroupMembership": [],
@@ -83,8 +83,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 52.8297,
-          "MagPercent": 52.8297,
+          "Mag": 36.1466,
+          "MagPercent": 36.1466,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -139,15 +139,14 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.3,
-          "MagPercent": -30.0000019,
+          "Mag": -0.375,
+          "MagPercent": -37.5,
           "Duration": 6.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",

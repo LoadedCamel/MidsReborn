@@ -4,8 +4,8 @@
   "FullName": "Pets.StickyArrow",
   "ImageName": "",
   "Power": [
-    6531,
-    6532
+    6530,
+    6531
   ],
   "SetType": 8,
   "DisplayName": "Sticky Arrow",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6531,
+      "PowerIndex": 6530,
       "PowerSetID": 3212,
       "StaticIndex": 1719,
       "NGroupMembership": [],
@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 1,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -198,7 +197,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -254,7 +252,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,
@@ -309,7 +306,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",
@@ -367,7 +363,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,
@@ -418,7 +413,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6532,
+      "PowerIndex": 6531,
       "PowerSetID": 3212,
       "PowerSetIndex": 1,
       "StaticIndex": 1720,
@@ -524,7 +519,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 43,
           "Summon": "",
           "nSummon": -1,

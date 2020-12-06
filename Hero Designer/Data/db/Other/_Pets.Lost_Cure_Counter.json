@@ -4,8 +4,8 @@
   "FullName": "Pets.Lost_Cure_Counter",
   "ImageName": "",
   "Power": [
-    6409,
-    6410
+    6408,
+    6409
   ],
   "SetType": 8,
   "DisplayName": "Lost_Cure_Counter",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6409,
+      "PowerIndex": 6408,
       "PowerSetID": 3138,
       "StaticIndex": 1656,
       "NGroupMembership": [],
@@ -89,7 +89,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Cured_Counter",
-          "nSummon": 9468,
+          "nSummon": 9467,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -136,7 +136,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6410,
+      "PowerIndex": 6409,
       "PowerSetID": 3138,
       "PowerSetIndex": 1,
       "StaticIndex": 1657,
@@ -244,7 +244,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 43,
           "Summon": "",
           "nSummon": -1,

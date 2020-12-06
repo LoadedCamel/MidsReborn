@@ -4,7 +4,7 @@
   "FullName": "Pets.ShockCont",
   "ImageName": "",
   "Power": [
-    6511
+    6510
   ],
   "SetType": 8,
   "DisplayName": "Liquefy",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6511,
+      "PowerIndex": 6510,
       "PowerSetID": 3131,
       "StaticIndex": 1705,
       "NGroupMembership": [],
@@ -147,7 +147,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -207,7 +206,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -263,7 +261,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -321,7 +318,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,

@@ -4,7 +4,7 @@
   "FullName": "Pets.MonkeyGas",
   "ImageName": "",
   "Power": [
-    6415
+    6414
   ],
   "SetType": 8,
   "DisplayName": "Monkey Gas",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6415,
+      "PowerIndex": 6414,
       "PowerSetID": 3145,
       "StaticIndex": 1661,
       "NGroupMembership": [],
@@ -138,7 +138,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 16,
           "Summon": "",

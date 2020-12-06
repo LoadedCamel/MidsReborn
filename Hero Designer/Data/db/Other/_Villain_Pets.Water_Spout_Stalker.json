@@ -4,11 +4,11 @@
   "FullName": "Villain_Pets.Water_Spout_Stalker",
   "ImageName": "",
   "Power": [
+    10312,
     10313,
     10314,
     10315,
-    10316,
-    10317
+    10316
   ],
   "SetType": 8,
   "DisplayName": "Water Spout",
@@ -25,7 +25,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10313,
+      "PowerIndex": 10312,
       "PowerSetID": 3541,
       "StaticIndex": 3412,
       "NGroupMembership": [],
@@ -148,13 +148,12 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.28297,
-          "MagPercent": 5.28297,
+          "Mag": 3.61466,
+          "MagPercent": 3.61466,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -213,7 +212,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -273,7 +271,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -328,15 +325,14 @@
           "MagnitudeExpression": "",
           "CancelOnMiss": true,
           "Probability": 1.0,
-          "Mag": -0.112500004,
-          "MagPercent": -11.25,
+          "Mag": -0.1875,
+          "MagPercent": -18.75,
           "Duration": 8.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 4,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -388,7 +384,7 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 10314,
+      "PowerIndex": 10313,
       "PowerSetID": 3541,
       "PowerSetIndex": 1,
       "StaticIndex": 3416,
@@ -501,7 +497,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -557,7 +552,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 28,
           "ETModifies": 13,
           "Summon": "",
@@ -613,7 +607,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 23,
           "Summon": "",
           "nSummon": -1,
@@ -663,7 +656,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10315,
+      "PowerIndex": 10314,
       "PowerSetID": 3541,
       "PowerSetIndex": 2,
       "StaticIndex": 3415,
@@ -768,7 +761,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10316,
+      "PowerIndex": 10315,
       "PowerSetID": 3541,
       "PowerSetIndex": 3,
       "StaticIndex": 3413,
@@ -876,7 +869,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10317,
+      "PowerIndex": 10316,
       "PowerSetID": 3541,
       "PowerSetIndex": 4,
       "StaticIndex": 3414,

@@ -4,8 +4,8 @@
   "FullName": "Pets.Defender_RainofFire",
   "ImageName": "",
   "Power": [
-    6295,
-    6296
+    6294,
+    6295
   ],
   "SetType": 8,
   "DisplayName": "Rain of Fire",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6295,
+      "PowerIndex": 6294,
       "PowerSetID": 3183,
       "StaticIndex": 5601,
       "NGroupMembership": [],
@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 16,
           "Summon": "",
@@ -201,7 +200,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 2,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -258,7 +256,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -314,7 +311,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 4,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -371,7 +367,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 5,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -430,7 +425,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 6,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -481,7 +475,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6296,
+      "PowerIndex": 6295,
       "PowerSetID": 3183,
       "PowerSetIndex": 1,
       "StaticIndex": 5602,

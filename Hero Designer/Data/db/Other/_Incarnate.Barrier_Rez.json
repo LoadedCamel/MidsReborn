@@ -4,9 +4,9 @@
   "FullName": "Incarnate.Barrier_Rez",
   "ImageName": "",
   "Power": [
-    4644,
-    4645,
-    4646
+    4642,
+    4643,
+    4644
   ],
   "SetType": 11,
   "DisplayName": "Destiny",
@@ -23,7 +23,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4644,
+      "PowerIndex": 4642,
       "PowerSetID": 2801,
       "StaticIndex": 5005,
       "NGroupMembership": [],
@@ -141,7 +141,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,
@@ -200,7 +199,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 42,
           "Summon": "",
           "nSummon": -1,
@@ -250,7 +248,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 4645,
+      "PowerIndex": 4643,
       "PowerSetID": 2801,
       "PowerSetIndex": 1,
       "StaticIndex": 5006,
@@ -368,7 +366,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,
@@ -427,7 +424,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 42,
           "Summon": "",
           "nSummon": -1,
@@ -477,7 +473,7 @@
       "AoEModifier": 5.5
     },
     {
-      "PowerIndex": 4646,
+      "PowerIndex": 4644,
       "PowerSetID": 2801,
       "PowerSetIndex": 2,
       "StaticIndex": 5007,
@@ -595,7 +591,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,
@@ -654,7 +649,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 42,
           "Summon": "",
           "nSummon": -1,

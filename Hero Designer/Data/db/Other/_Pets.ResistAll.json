@@ -4,7 +4,7 @@
   "FullName": "Pets.ResistAll",
   "ImageName": "",
   "Power": [
-    6493
+    6492
   ],
   "SetType": 8,
   "DisplayName": "ResistAll",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6493,
+      "PowerIndex": 6492,
       "PowerSetID": 3185,
       "StaticIndex": 1699,
       "NGroupMembership": [],
@@ -133,7 +133,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,

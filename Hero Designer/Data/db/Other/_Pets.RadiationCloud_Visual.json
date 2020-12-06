@@ -4,7 +4,7 @@
   "FullName": "Pets.RadiationCloud_Visual",
   "ImageName": "",
   "Power": [
-    6473
+    6472
   ],
   "SetType": 8,
   "DisplayName": "Radiation Control",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6473,
+      "PowerIndex": 6472,
       "PowerSetID": 3170,
       "StaticIndex": 10625,
       "NGroupMembership": [],
@@ -150,7 +150,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",

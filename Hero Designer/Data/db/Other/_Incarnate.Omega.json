@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Omega",
   "ImageName": "",
   "Power": [
-    5460
+    5458
   ],
   "SetType": 11,
   "DisplayName": "Omega",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 20.0,
-      "PowerIndex": 5460,
+      "PowerIndex": 5458,
       "PowerSetID": 2885,
       "StaticIndex": 4679,
       "NGroupMembership": [],

@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Jolt_Controller_Jump3",
   "ImageName": "",
   "Power": [
-    6244
+    6243
   ],
   "SetType": 8,
   "DisplayName": "Chain Jolt Jump 3",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6244,
+      "PowerIndex": 6243,
       "PowerSetID": 3053,
       "StaticIndex": 4412,
       "NGroupMembership": [],
@@ -151,7 +151,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -208,7 +207,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -266,7 +264,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -326,7 +323,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,
@@ -381,7 +377,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -440,7 +435,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,

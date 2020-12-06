@@ -4,7 +4,7 @@
   "FullName": "Pets.Lightning_Rod_Scrapper",
   "ImageName": "",
   "Power": [
-    6397
+    6396
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6397,
+      "PowerIndex": 6396,
       "PowerSetID": 3079,
       "StaticIndex": 3533,
       "NGroupMembership": [],
@@ -144,7 +144,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -200,7 +199,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -258,7 +256,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",

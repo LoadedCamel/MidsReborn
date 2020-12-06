@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Shadow_Field",
   "ImageName": "",
   "Power": [
-    10229,
-    10230
+    10228,
+    10229
   ],
   "SetType": 8,
   "DisplayName": "Shadow Field",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10229,
+      "PowerIndex": 10228,
       "PowerSetID": 3515,
       "StaticIndex": 6342,
       "NGroupMembership": [],
@@ -80,8 +80,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.15,
-          "MagPercent": -15.000001,
+          "Mag": -0.1875,
+          "MagPercent": -18.75,
           "Duration": 15.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -144,7 +144,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -205,7 +204,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -262,7 +260,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10230,
+      "PowerIndex": 10229,
       "PowerSetID": 3515,
       "PowerSetIndex": 1,
       "StaticIndex": 6343,
@@ -384,7 +382,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -444,7 +441,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",

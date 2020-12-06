@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Axe",
   "ImageName": "",
   "Power": [
-    6076
+    6075
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 8.528,
-      "PowerIndex": 6076,
+      "PowerIndex": 6075,
       "PowerSetID": 3000,
       "StaticIndex": 1421,
       "NGroupMembership": [],
@@ -146,7 +146,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 1,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,

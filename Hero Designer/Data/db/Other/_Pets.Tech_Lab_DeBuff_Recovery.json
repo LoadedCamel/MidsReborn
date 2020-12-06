@@ -4,7 +4,7 @@
   "FullName": "Pets.Tech_Lab_DeBuff_Recovery",
   "ImageName": "",
   "Power": [
-    6556
+    6555
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6556,
+      "PowerIndex": 6555,
       "PowerSetID": 3223,
       "StaticIndex": 1734,
       "NGroupMembership": [],

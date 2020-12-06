@@ -4,10 +4,10 @@
   "FullName": "Villain_Pets.OilSlickBurn_Corruptor",
   "ImageName": "",
   "Power": [
+    10199,
     10200,
     10201,
-    10202,
-    10203
+    10202
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick Fire",
@@ -24,7 +24,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10200,
+      "PowerIndex": 10199,
       "PowerSetID": 3501,
       "StaticIndex": 4093,
       "NGroupMembership": [],
@@ -79,8 +79,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.503442,
-          "MagPercent": 3.503442,
+          "Mag": 1.83513594,
+          "MagPercent": 1.83513594,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -134,14 +134,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.503442,
-          "MagPercent": 3.503442,
+          "Mag": 1.83513594,
+          "MagPercent": 1.83513594,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -193,14 +192,13 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.503442,
-          "MagPercent": 3.503442,
+          "Mag": 1.83513594,
+          "MagPercent": 1.83513594,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -254,7 +252,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10201,
+      "PowerIndex": 10200,
       "PowerSetID": 3501,
       "PowerSetIndex": 1,
       "StaticIndex": 4094,
@@ -364,7 +362,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10202,
+      "PowerIndex": 10201,
       "PowerSetID": 3501,
       "PowerSetIndex": 2,
       "StaticIndex": 4096,
@@ -470,7 +468,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10203,
+      "PowerIndex": 10202,
       "PowerSetID": 3501,
       "PowerSetIndex": 3,
       "StaticIndex": 4095,

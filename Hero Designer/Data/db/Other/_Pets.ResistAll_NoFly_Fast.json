@@ -4,7 +4,7 @@
   "FullName": "Pets.ResistAll_NoFly_Fast",
   "ImageName": "",
   "Power": [
-    6496
+    6495
   ],
   "SetType": 8,
   "DisplayName": "ResistAll NoFly Fast",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6496,
+      "PowerIndex": 6495,
       "PowerSetID": 3188,
       "StaticIndex": 6007,
       "NGroupMembership": [],
@@ -133,7 +133,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 1,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,

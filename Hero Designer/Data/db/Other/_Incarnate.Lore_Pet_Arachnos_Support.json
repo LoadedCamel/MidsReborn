@@ -4,8 +4,8 @@
   "FullName": "Incarnate.Lore_Pet_Arachnos_Support",
   "ImageName": "",
   "Power": [
-    5281,
-    5282
+    5279,
+    5280
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Arachnos_Support",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 3.67,
-      "PowerIndex": 5281,
+      "PowerIndex": 5279,
       "PowerSetID": 2818,
       "StaticIndex": 5474,
       "NGroupMembership": [],
@@ -87,8 +87,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0425,
-          "MagPercent": 4.25,
+          "Mag": 0.05,
+          "MagPercent": 5.0,
           "Duration": 3.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -151,7 +151,6 @@
           "Reward": "",
           "EffectId": "Res_Boolean",
           "Special": "",
-          "nID": 1,
           "EffectType": 28,
           "ETModifies": 23,
           "Summon": "",
@@ -208,7 +207,6 @@
           "Reward": "",
           "EffectId": "Res_Boolean",
           "Special": "",
-          "nID": 2,
           "EffectType": 23,
           "Summon": "",
           "nSummon": -1,
@@ -265,7 +263,6 @@
           "Reward": "",
           "EffectId": "Res_Boolean",
           "Special": "",
-          "nID": 3,
           "EffectType": 20,
           "MezType": 1,
           "Summon": "",
@@ -321,7 +318,6 @@
           "Reward": "",
           "EffectId": "Res_Boolean",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 1,
           "Summon": "",
@@ -375,7 +371,7 @@
     },
     {
       "CastTimeReal": 2.27,
-      "PowerIndex": 5282,
+      "PowerIndex": 5280,
       "PowerSetID": 2818,
       "PowerSetIndex": 1,
       "StaticIndex": 5475,
@@ -436,8 +432,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 209.895813,
-          "MagPercent": 209.895813,
+          "Mag": 262.36972,
+          "MagPercent": 262.36972,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",

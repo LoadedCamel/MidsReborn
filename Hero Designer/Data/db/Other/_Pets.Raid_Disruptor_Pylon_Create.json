@@ -4,7 +4,7 @@
   "FullName": "Pets.Raid_Disruptor_Pylon_Create",
   "ImageName": "",
   "Power": [
-    6477
+    6476
   ],
   "SetType": 8,
   "DisplayName": "Raid_Disruptor_Pylon_Create",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6477,
+      "PowerIndex": 6476,
       "PowerSetID": 3173,
       "StaticIndex": 1689,
       "NGroupMembership": [],
@@ -132,7 +132,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 43,
           "Summon": "",
           "nSummon": -1,

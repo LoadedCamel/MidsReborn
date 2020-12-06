@@ -4,8 +4,8 @@
   "FullName": "Pets.Radiation_Melee",
   "ImageName": "",
   "Power": [
-    6474,
-    6475
+    6473,
+    6474
   ],
   "SetType": 8,
   "DisplayName": "Radiation Melee",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6474,
+      "PowerIndex": 6473,
       "PowerSetID": 3171,
       "StaticIndex": 10623,
       "NGroupMembership": [],
@@ -141,7 +141,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -197,7 +196,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -253,7 +251,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -312,7 +309,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 4,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -368,10 +364,9 @@
           "Reward": "Temporary_Powers.Temporary_Powers.Radiation_Melee_Contaminated",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Radiation_Melee_Contaminated",
-          "nSummon": 9842,
+          "nSummon": 9841,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -418,7 +413,7 @@
       "AoEModifier": 2.2
     },
     {
-      "PowerIndex": 6475,
+      "PowerIndex": 6474,
       "PowerSetID": 3171,
       "PowerSetIndex": 1,
       "StaticIndex": 10624,

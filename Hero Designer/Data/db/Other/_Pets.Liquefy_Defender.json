@@ -4,7 +4,7 @@
   "FullName": "Pets.Liquefy_Defender",
   "ImageName": "",
   "Power": [
-    6400
+    6399
   ],
   "SetType": 8,
   "DisplayName": "Liquefy",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6400,
+      "PowerIndex": 6399,
       "PowerSetID": 3135,
       "StaticIndex": 1648,
       "NGroupMembership": [],
@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 1,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -201,7 +200,6 @@
           "Reward": "",
           "EffectId": "Debuff_ToHit",
           "Special": "",
-          "nID": 2,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -259,7 +257,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",
@@ -317,7 +314,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -374,7 +370,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,
@@ -429,7 +424,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

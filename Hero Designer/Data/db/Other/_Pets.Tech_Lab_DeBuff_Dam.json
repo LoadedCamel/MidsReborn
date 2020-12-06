@@ -4,7 +4,7 @@
   "FullName": "Pets.Tech_Lab_DeBuff_Dam",
   "ImageName": "",
   "Power": [
-    6555
+    6554
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6555,
+      "PowerIndex": 6554,
       "PowerSetID": 3229,
       "StaticIndex": 1733,
       "NGroupMembership": [],
@@ -141,7 +141,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 4,
           "DamageType": 2,
           "Summon": "",
@@ -201,7 +200,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 4,
           "DamageType": 3,
           "Summon": "",
@@ -261,7 +259,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 4,
           "DamageType": 4,
           "Summon": "",
@@ -321,7 +318,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 4,
           "DamageType": 5,
           "Summon": "",
@@ -381,7 +377,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 4,
           "DamageType": 6,
           "Summon": "",
@@ -441,7 +436,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 4,
           "DamageType": 7,
           "Summon": "",
@@ -501,7 +495,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 7,
           "EffectType": 4,
           "DamageType": 8,
           "Summon": "",

@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Shield_Charge_AoE2",
   "ImageName": "",
   "Power": [
-    10237,
-    10238
+    10236,
+    10237
   ],
   "SetType": 8,
   "DisplayName": "Shield Defense",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.716,
-      "PowerIndex": 10237,
+      "PowerIndex": 10236,
       "PowerSetID": 3516,
       "StaticIndex": 3411,
       "NGroupMembership": [],
@@ -87,7 +87,7 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 10238,
+      "PowerIndex": 10237,
       "PowerSetID": 3516,
       "PowerSetIndex": 1,
       "StaticIndex": 4115,
@@ -149,8 +149,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 34.74247,
-          "MagPercent": 34.74247,
+          "Mag": 18.1984329,
+          "MagPercent": 18.1984329,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -204,13 +204,12 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 84.3745651,
-          "MagPercent": 84.3745651,
+          "Mag": 44.1961937,
+          "MagPercent": 44.1961937,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -268,7 +267,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -330,7 +328,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -389,7 +386,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -447,7 +443,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",

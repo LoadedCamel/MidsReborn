@@ -4,7 +4,7 @@
   "FullName": "Pets.Traps_Set_TimeBomb_Defender",
   "ImageName": "",
   "Power": [
-    6631
+    6630
   ],
   "SetType": 8,
   "DisplayName": "Time Bomb",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.17,
-      "PowerIndex": 6631,
+      "PowerIndex": 6630,
       "PowerSetID": 3236,
       "StaticIndex": 3555,
       "NGroupMembership": [],
@@ -144,7 +144,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 16,
           "Summon": "",
@@ -201,7 +200,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -258,7 +256,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 43,
           "Summon": "",
           "nSummon": -1,

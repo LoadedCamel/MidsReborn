@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Droid_2",
   "ImageName": "",
   "Power": [
-    5881
+    5880
   ],
   "SetType": 8,
   "DisplayName": "Droid",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 3.33,
       "ToggleCost": 8.528,
-      "PowerIndex": 5881,
+      "PowerIndex": 5880,
       "PowerSetID": 2938,
       "StaticIndex": 1192,
       "NGroupMembership": [],
@@ -149,7 +149,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -206,7 +205,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -264,7 +262,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -324,7 +321,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 4,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -383,7 +379,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 5,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",

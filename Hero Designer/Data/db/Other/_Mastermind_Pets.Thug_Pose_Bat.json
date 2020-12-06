@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Thug_Pose_Bat",
   "ImageName": "",
   "Power": [
-    6077
+    6076
   ],
   "SetType": 8,
   "DisplayName": "Thug Posse",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.5,
       "ToggleCost": 6.864,
-      "PowerIndex": 6077,
+      "PowerIndex": 6076,
       "PowerSetID": 3003,
       "StaticIndex": 1422,
       "NGroupMembership": [],
@@ -145,7 +145,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",

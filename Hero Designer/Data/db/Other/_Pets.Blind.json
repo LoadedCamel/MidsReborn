@@ -4,7 +4,7 @@
   "FullName": "Pets.Blind",
   "ImageName": "",
   "Power": [
-    6210
+    6209
   ],
   "SetType": 8,
   "DisplayName": "Blind",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6210,
+      "PowerIndex": 6209,
       "PowerSetID": 3025,
       "StaticIndex": 1544,
       "NGroupMembership": [],
@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 9,
           "Summon": "",

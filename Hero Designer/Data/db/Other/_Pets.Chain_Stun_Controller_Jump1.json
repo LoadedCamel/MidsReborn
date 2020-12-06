@@ -4,7 +4,7 @@
   "FullName": "Pets.Chain_Stun_Controller_Jump1",
   "ImageName": "",
   "Power": [
-    6248
+    6247
   ],
   "SetType": 8,
   "DisplayName": "Chain Stun Jump 1",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6248,
+      "PowerIndex": 6247,
       "PowerSetID": 3055,
       "StaticIndex": 4416,
       "NGroupMembership": [],
@@ -150,7 +150,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -208,7 +207,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -267,7 +265,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -328,7 +325,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 34,
           "Summon": "",
           "nSummon": -1,
@@ -385,7 +381,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

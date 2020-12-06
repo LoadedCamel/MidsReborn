@@ -4,7 +4,7 @@
   "FullName": "Pets.Phoenix",
   "ImageName": "",
   "Power": [
-    6446
+    6445
   ],
   "SetType": 8,
   "DisplayName": "Phoenix",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6446,
+      "PowerIndex": 6445,
       "PowerSetID": 3157,
       "StaticIndex": 1679,
       "NGroupMembership": [],
@@ -142,7 +142,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -200,7 +199,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -260,7 +258,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -320,7 +317,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",

@@ -143,7 +143,6 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "MezType": 4,
           "ETModifies": 19,

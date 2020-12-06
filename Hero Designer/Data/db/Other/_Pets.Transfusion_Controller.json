@@ -4,7 +4,7 @@
   "FullName": "Pets.Transfusion_Controller",
   "ImageName": "",
   "Power": [
-    6597
+    6596
   ],
   "SetType": 8,
   "DisplayName": "Transfusion",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6597,
+      "PowerIndex": 6596,
       "PowerSetID": 3246,
       "StaticIndex": 1754,
       "NGroupMembership": [],

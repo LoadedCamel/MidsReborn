@@ -4,9 +4,9 @@
   "FullName": "Pets.OilSlickOil",
   "ImageName": "",
   "Power": [
+    6429,
     6430,
-    6431,
-    6432
+    6431
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6430,
+      "PowerIndex": 6429,
       "PowerSetID": 3152,
       "StaticIndex": 1668,
       "NGroupMembership": [],
@@ -144,7 +144,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -205,7 +204,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -262,7 +260,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -320,7 +317,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 4,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -378,7 +374,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -432,7 +427,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,
@@ -481,7 +475,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6431,
+      "PowerIndex": 6430,
       "PowerSetID": 3152,
       "PowerSetIndex": 1,
       "StaticIndex": 4426,
@@ -592,7 +586,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6432,
+      "PowerIndex": 6431,
       "PowerSetID": 3152,
       "PowerSetIndex": 2,
       "StaticIndex": 4427,
@@ -709,7 +703,6 @@
           "Reward": "Pets.OilSlickOil.Res_Target",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 30,
           "Summon": "",
           "nSummon": -1,

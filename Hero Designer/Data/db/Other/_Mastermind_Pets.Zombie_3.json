@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Zombie_3",
   "ImageName": "Necromancy.png",
   "Power": [
-    6090
+    6089
   ],
   "SetType": 8,
   "DisplayName": "Zombie",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 7.8,
-      "PowerIndex": 6090,
+      "PowerIndex": 6089,
       "PowerSetID": 3008,
       "StaticIndex": 1436,
       "NGroupMembership": [],
@@ -152,7 +152,6 @@
           "Reward": "",
           "EffectId": "HealSelf",
           "Special": "",
-          "nID": 1,
           "EffectType": 13,
           "Summon": "",
           "nSummon": -1,
@@ -211,7 +210,6 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
-          "nID": 2,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -269,7 +267,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",

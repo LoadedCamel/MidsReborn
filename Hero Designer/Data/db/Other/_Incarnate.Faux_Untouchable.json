@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Faux_Untouchable",
   "ImageName": "",
   "Power": [
-    4718
+    4716
   ],
   "SetType": 11,
   "DisplayName": "Temporal",
@@ -21,7 +21,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4718,
+      "PowerIndex": 4716,
       "PowerSetID": 2889,
       "StaticIndex": 4613,
       "NGroupMembership": [],

@@ -4,7 +4,7 @@
   "FullName": "Pets.Savage_Assault_Feral_Charge",
   "ImageName": "",
   "Power": [
-    6505
+    6504
   ],
   "SetType": 8,
   "DisplayName": "Savage Assault",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6505,
+      "PowerIndex": 6504,
       "PowerSetID": 3190,
       "StaticIndex": 10773,
       "NGroupMembership": [],
@@ -144,7 +144,6 @@
           "Reward": "Doublehit",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "Pets_Savage_Assault_Feral_Charge",

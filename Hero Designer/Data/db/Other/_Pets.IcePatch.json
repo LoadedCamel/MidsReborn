@@ -4,7 +4,7 @@
   "FullName": "Pets.IcePatch",
   "ImageName": "",
   "Power": [
-    6356
+    6355
   ],
   "SetType": 8,
   "DisplayName": "Ice Patch",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6356,
+      "PowerIndex": 6355,
       "PowerSetID": 3103,
       "StaticIndex": 1617,
       "NGroupMembership": [],
@@ -138,7 +138,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 1,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -195,7 +194,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 2,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -251,7 +249,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -312,7 +309,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 16,
           "Summon": "",
           "nSummon": -1,
@@ -366,7 +362,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 5,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

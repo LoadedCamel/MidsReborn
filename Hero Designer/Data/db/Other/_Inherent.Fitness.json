@@ -4,10 +4,10 @@
   "FullName": "Inherent.Fitness",
   "ImageName": "",
   "Power": [
+    5480,
+    5481,
     5482,
-    5483,
-    5484,
-    5485
+    5483
   ],
   "SetType": 4,
   "DisplayName": "Inherent Fitness",
@@ -25,7 +25,7 @@
   "Powers": [
     {
       "LocationIndex": 4,
-      "PowerIndex": 5482,
+      "PowerIndex": 5480,
       "PowerSetID": 2894,
       "StaticIndex": 2797,
       "NGroupMembership": [],
@@ -182,7 +182,6 @@
           "Reward": "",
           "EffectId": "SpeedFlying",
           "Special": "",
-          "nID": 1,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -238,7 +237,7 @@
     },
     {
       "LocationIndex": 6,
-      "PowerIndex": 5483,
+      "PowerIndex": 5481,
       "PowerSetID": 2894,
       "PowerSetIndex": 1,
       "StaticIndex": 2799,
@@ -395,7 +394,6 @@
           "Reward": "",
           "EffectId": "Res_Boolean",
           "Special": "",
-          "nID": 1,
           "EffectType": 20,
           "MezType": 9,
           "Summon": "",
@@ -451,7 +449,7 @@
     },
     {
       "LocationIndex": 5,
-      "PowerIndex": 5484,
+      "PowerIndex": 5482,
       "PowerSetID": 2894,
       "PowerSetIndex": 2,
       "StaticIndex": 2798,
@@ -606,7 +604,6 @@
           "Reward": "",
           "EffectId": "SpeedJumping",
           "Special": "",
-          "nID": 1,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -662,7 +659,7 @@
     },
     {
       "LocationIndex": 7,
-      "PowerIndex": 5485,
+      "PowerIndex": 5483,
       "PowerSetID": 2894,
       "PowerSetIndex": 3,
       "StaticIndex": 2800,

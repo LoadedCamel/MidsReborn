@@ -4,9 +4,9 @@
   "FullName": "Incarnate.Lore_Pet_Rularuu_LT",
   "ImageName": "",
   "Power": [
-    5407,
-    5408,
-    5409
+    5405,
+    5406,
+    5407
   ],
   "SetType": 11,
   "DisplayName": "Lore_Pet_Rularuu_LT",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 5407,
+      "PowerIndex": 5405,
       "PowerSetID": 2864,
       "StaticIndex": 5559,
       "NGroupMembership": [],
@@ -85,8 +85,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 70.06885,
-          "MagPercent": 70.06885,
+          "Mag": 36.70272,
+          "MagPercent": 36.70272,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -144,7 +144,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 5408,
+      "PowerIndex": 5406,
       "PowerSetID": 2864,
       "PowerSetIndex": 1,
       "StaticIndex": 5560,
@@ -205,8 +205,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 63.39564,
-          "MagPercent": 63.39564,
+          "Mag": 43.37592,
+          "MagPercent": 43.37592,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -265,7 +265,7 @@
     },
     {
       "CastTimeReal": 1.07,
-      "PowerIndex": 5409,
+      "PowerIndex": 5407,
       "PowerSetID": 2864,
       "PowerSetIndex": 2,
       "StaticIndex": 5561,
@@ -392,7 +392,6 @@
           "Reward": "",
           "EffectId": "Immobilize",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",

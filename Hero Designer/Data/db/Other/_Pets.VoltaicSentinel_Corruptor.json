@@ -4,8 +4,8 @@
   "FullName": "Pets.VoltaicSentinel_Corruptor",
   "ImageName": "",
   "Power": [
-    6663,
-    6664
+    6662,
+    6663
   ],
   "SetType": 8,
   "DisplayName": "Voltaic Sentinel Critter",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.0,
-      "PowerIndex": 6663,
+      "PowerIndex": 6662,
       "PowerSetID": 3262,
       "StaticIndex": 1779,
       "NGroupMembership": [],
@@ -145,7 +145,6 @@
           "Reward": "",
           "EffectId": "ScourgeProc",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -203,7 +202,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,
@@ -261,7 +259,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 26,
           "Summon": "",
           "nSummon": -1,
@@ -315,7 +312,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6664,
+      "PowerIndex": 6663,
       "PowerSetID": 3262,
       "PowerSetIndex": 1,
       "StaticIndex": 1780,
@@ -428,7 +425,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 10,
           "Summon": "",
           "nSummon": -1,
@@ -484,7 +480,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -541,7 +536,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 28,
           "ETModifies": 13,
           "Summon": "",

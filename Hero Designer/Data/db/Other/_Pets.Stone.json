@@ -4,11 +4,11 @@
   "FullName": "Pets.Stone",
   "ImageName": "",
   "Power": [
+    6535,
     6536,
     6537,
     6538,
-    6539,
-    6540
+    6539
   ],
   "SetType": 8,
   "DisplayName": "Stone",
@@ -26,7 +26,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.57,
-      "PowerIndex": 6536,
+      "PowerIndex": 6535,
       "PowerSetID": 3214,
       "StaticIndex": 1721,
       "NGroupMembership": [],
@@ -149,7 +149,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -209,7 +208,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -270,7 +268,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -328,7 +325,7 @@
     {
       "CastTimeReal": 3.83,
       "ToggleCost": 9.36,
-      "PowerIndex": 6537,
+      "PowerIndex": 6536,
       "PowerSetID": 3214,
       "PowerSetIndex": 1,
       "StaticIndex": 1722,
@@ -455,7 +452,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -513,7 +509,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -570,7 +565,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 6538,
+      "PowerIndex": 6537,
       "PowerSetID": 3214,
       "PowerSetIndex": 2,
       "StaticIndex": 1723,
@@ -682,7 +677,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 1,
           "EffectType": 29,
           "DamageType": 2,
           "Summon": "",
@@ -738,7 +732,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 2,
           "EffectType": 29,
           "DamageType": 3,
           "Summon": "",
@@ -794,7 +787,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 3,
           "EffectType": 29,
           "DamageType": 4,
           "Summon": "",
@@ -850,7 +842,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 4,
           "EffectType": 29,
           "DamageType": 5,
           "Summon": "",
@@ -906,7 +897,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 5,
           "EffectType": 29,
           "DamageType": 6,
           "Summon": "",
@@ -962,7 +952,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 6,
           "EffectType": 29,
           "DamageType": 7,
           "Summon": "",
@@ -1018,7 +1007,6 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
-          "nID": 7,
           "EffectType": 29,
           "DamageType": 8,
           "Summon": "",
@@ -1073,7 +1061,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 8,
           "EffectType": 19,
           "MezType": 9,
           "Summon": "",
@@ -1129,7 +1116,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 9,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -1185,7 +1171,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 10,
           "EffectType": 19,
           "MezType": 5,
           "Summon": "",
@@ -1241,7 +1226,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 11,
           "EffectType": 19,
           "MezType": 8,
           "Summon": "",
@@ -1297,7 +1281,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 12,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -1353,7 +1336,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 13,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -1409,7 +1391,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 14,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -1466,7 +1447,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 15,
           "EffectType": 9,
           "ETModifies": 40,
           "Summon": "",
@@ -1521,7 +1501,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 16,
           "EffectType": 41,
           "Summon": "",
           "nSummon": -1,
@@ -1573,7 +1552,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 23.14,
-      "PowerIndex": 6539,
+      "PowerIndex": 6538,
       "PowerSetID": 3214,
       "PowerSetIndex": 3,
       "StaticIndex": 3270,
@@ -1697,7 +1676,6 @@
           "Reward": "",
           "EffectId": "Immobilize",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -1757,7 +1735,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",
@@ -1818,7 +1795,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -1876,7 +1852,7 @@
     {
       "CastTimeReal": 2.904,
       "IsEpic": true,
-      "PowerIndex": 6540,
+      "PowerIndex": 6539,
       "PowerSetID": 3214,
       "PowerSetIndex": 4,
       "StaticIndex": 1724,
@@ -1893,6 +1869,18 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
+            6535,
+            6536
+          ],
+          [
+            6535,
+            6537
+          ],
+          [
+            6535,
+            6538
+          ],
+          [
             6536,
             6537
           ],
@@ -1901,20 +1889,8 @@
             6538
           ],
           [
-            6536,
-            6539
-          ],
-          [
             6537,
             6538
-          ],
-          [
-            6537,
-            6539
-          ],
-          [
-            6538,
-            6539
           ]
         ],
         "NPowerIDNot": [],

@@ -4,7 +4,7 @@
   "FullName": "Pets.Transference_Controller",
   "ImageName": "",
   "Power": [
-    6594
+    6593
   ],
   "SetType": 8,
   "DisplayName": "Transference",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6594,
+      "PowerIndex": 6593,
       "PowerSetID": 3243,
       "StaticIndex": 1752,
       "NGroupMembership": [],

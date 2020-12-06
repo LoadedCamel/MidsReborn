@@ -4,7 +4,7 @@
   "FullName": "Pets.Warburg_Nuclear",
   "ImageName": "",
   "Power": [
-    6676
+    6675
   ],
   "SetType": 8,
   "DisplayName": "Warburg_Nuclear",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6676,
+      "PowerIndex": 6675,
       "PowerSetID": 3266,
       "StaticIndex": 1788,
       "NGroupMembership": [],
@@ -138,7 +138,6 @@
           "Reward": "",
           "EffectId": "TempDamage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -198,7 +197,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,
@@ -254,7 +252,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -312,7 +309,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -371,7 +367,6 @@
           "Reward": "",
           "EffectId": "TempDamage",
           "Special": "",
-          "nID": 5,
           "EffectType": 3,
           "DamageType": 5,
           "Summon": "",
@@ -431,7 +426,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 6,
           "EffectType": 26,
           "Summon": "",
           "nSummon": -1,

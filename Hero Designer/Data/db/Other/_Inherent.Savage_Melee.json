@@ -4,7 +4,7 @@
   "FullName": "Inherent.Savage_Melee",
   "ImageName": "",
   "Power": [
-    5654
+    5653
   ],
   "SetType": 4,
   "DisplayName": "Blood Frenzy",
@@ -23,7 +23,7 @@
     {
       "IsEpic": true,
       "LocationIndex": 8,
-      "PowerIndex": 5654,
+      "PowerIndex": 5653,
       "PowerSetID": 2892,
       "StaticIndex": 10085,
       "NGroupMembership": [],
@@ -47,15 +47,11 @@
             -1
           ],
           [
+            7037,
+            -1
+          ],
+          [
             7038,
-            -1
-          ],
-          [
-            7039,
-            -1
-          ],
-          [
-            8553,
             -1
           ],
           [
@@ -63,7 +59,11 @@
             -1
           ],
           [
-            8816,
+            8551,
+            -1
+          ],
+          [
+            8815,
             -1
           ],
           [
@@ -210,7 +210,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 25,
           "Summon": "",
@@ -259,10 +258,7 @@
       ],
       "FullSetName": "Inherent.Savage_Melee",
       "AoEModifier": 1.0,
-      "DisplayLocation": 8,
-      "Active": true,
-      "Taken": true,
-      "Stacks": 1
+      "DisplayLocation": 8
     }
   ]
 }

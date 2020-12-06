@@ -4,8 +4,8 @@
   "FullName": "Pets.RainofFire_Sentinel",
   "ImageName": "",
   "Power": [
-    6491,
-    6492
+    6490,
+    6491
   ],
   "SetType": 8,
   "DisplayName": "Rain of Fire",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6491,
+      "PowerIndex": 6490,
       "PowerSetID": 3181,
       "StaticIndex": 10628,
       "NGroupMembership": [],
@@ -142,7 +142,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 1,
           "EffectType": 9,
           "ETModifies": 16,
           "Summon": "",
@@ -200,7 +199,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 2,
           "EffectType": 17,
           "Summon": "",
           "nSummon": -1,
@@ -257,7 +255,6 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
-          "nID": 3,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,
@@ -313,7 +310,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 4,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -370,7 +366,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 5,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -427,7 +422,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 6,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -486,7 +480,6 @@
           "Reward": "",
           "EffectId": "Slow",
           "Special": "",
-          "nID": 7,
           "EffectType": 11,
           "Summon": "",
           "nSummon": -1,
@@ -537,7 +530,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6492,
+      "PowerIndex": 6491,
       "PowerSetID": 3181,
       "PowerSetIndex": 1,
       "StaticIndex": 10629,

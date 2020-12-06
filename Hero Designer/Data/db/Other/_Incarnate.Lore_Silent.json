@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Lore_Silent",
   "ImageName": "",
   "Power": [
-    5458
+    5456
   ],
   "SetType": 11,
   "DisplayName": "Lore_Silent",
@@ -21,7 +21,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 5458,
+      "PowerIndex": 5456,
       "PowerSetID": 2883,
       "StaticIndex": 5207,
       "NGroupMembership": [],

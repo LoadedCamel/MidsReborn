@@ -4,7 +4,7 @@
   "FullName": "Mastermind_Pets.Fiery_Demonling_2",
   "ImageName": "",
   "Power": [
-    5896
+    5895
   ],
   "SetType": 8,
   "DisplayName": "Fiery Demonling",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 5.2,
-      "PowerIndex": 5896,
+      "PowerIndex": 5895,
       "PowerSetID": 2944,
       "StaticIndex": 4222,
       "NGroupMembership": [],
@@ -149,7 +149,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -210,7 +209,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -271,7 +269,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",

@@ -4,7 +4,7 @@
   "FullName": "Temporary_Powers.Savage_Melee",
   "ImageName": "",
   "Power": [
-    9168
+    9167
   ],
   "SetType": 7,
   "DisplayName": "Blood Frenzy",
@@ -21,7 +21,7 @@
   "GroupName": "Temporary_Powers",
   "Powers": [
     {
-      "PowerIndex": 9168,
+      "PowerIndex": 9167,
       "PowerSetID": 3423,
       "StaticIndex": 10418,
       "NGroupMembership": [],
@@ -136,7 +136,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 25,
           "DamageType": 1,
           "Summon": "",
@@ -193,7 +192,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 2,
           "EffectType": 8,
           "Summon": "",
           "nSummon": -1,

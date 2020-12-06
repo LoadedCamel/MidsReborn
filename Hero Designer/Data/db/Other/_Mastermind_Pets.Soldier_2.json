@@ -4,8 +4,8 @@
   "FullName": "Mastermind_Pets.Soldier_2",
   "ImageName": "",
   "Power": [
-    6020,
-    6021
+    6019,
+    6020
   ],
   "SetType": 8,
   "DisplayName": "Soldier",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 6.864,
-      "PowerIndex": 6020,
+      "PowerIndex": 6019,
       "PowerSetID": 2985,
       "StaticIndex": 1299,
       "NGroupMembership": [],
@@ -155,7 +155,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 1,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -214,7 +213,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -273,7 +271,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 8.528,
-      "PowerIndex": 6021,
+      "PowerIndex": 6020,
       "PowerSetID": 2985,
       "PowerSetIndex": 1,
       "StaticIndex": 1300,
@@ -404,7 +402,6 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
-          "nID": 1,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -463,7 +460,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 2,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",

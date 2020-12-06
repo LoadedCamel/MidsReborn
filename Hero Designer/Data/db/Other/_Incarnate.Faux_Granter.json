@@ -4,7 +4,7 @@
   "FullName": "Incarnate.Faux_Granter",
   "ImageName": "",
   "Power": [
-    4714
+    4712
   ],
   "SetType": 11,
   "DisplayName": "Faux_Granter",
@@ -21,7 +21,7 @@
   "GroupName": "Incarnate",
   "Powers": [
     {
-      "PowerIndex": 4714,
+      "PowerIndex": 4712,
       "PowerSetID": 2805,
       "StaticIndex": 4609,
       "NGroupMembership": [],
