@@ -79,7 +79,9 @@ namespace Hero_Designer.Forms
             this.tsExport = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExportLong = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExportDataLink = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsGenFreebies = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.tsExportDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsConfig = new System.Windows.Forms.ToolStripMenuItem();
@@ -682,6 +684,8 @@ namespace Hero_Designer.Forms
             this.tsExportLong,
             this.tsExportDataLink,
             this.ToolStripSeparator25,
+            this.tsGenFreebies,
+            this.ToolStripSeparator27,
             this.tsExportDiscord});
             this.ImportExportToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ImportExportToolStripMenuItem.Name = "ImportExportToolStripMenuItem";
@@ -726,6 +730,18 @@ namespace Hero_Designer.Forms
             // 
             this.ToolStripSeparator25.Name = "ToolStripSeparator25";
             this.ToolStripSeparator25.Size = new System.Drawing.Size(237, 6);
+            //
+            // tsGenFreebies
+            //
+            this.tsGenFreebies.Name = "tsGenFreebies";
+            this.tsGenFreebies.Size = new System.Drawing.Size(240, 22);
+            this.tsGenFreebies.Text = "Export Build to Beta Server";
+            this.tsGenFreebies.Click += new System.EventHandler(tsGenFreebies_Click);
+            //
+            // ToolStripSeparator27
+            // 
+            this.ToolStripSeparator27.Name = "ToolStripSeparator27";
+            this.ToolStripSeparator27.Size = new System.Drawing.Size(237, 6);
             // 
             // tsExportDiscord
             //
@@ -2064,7 +2080,9 @@ namespace Hero_Designer.Forms
         ToolStripMenuItem tsEnhToTO;
         ToolStripMenuItem tsExport;
         ToolStripMenuItem tsExportDataLink;
+        ToolStripMenuItem tsGenFreebies;
         ToolStripSeparator ToolStripSeparator25;
+        ToolStripSeparator ToolStripSeparator27;
         ToolStripMenuItem tsExportDiscord;
         ToolStripMenuItem tsExportLong;
         ToolStripMenuItem tsFileNew;
