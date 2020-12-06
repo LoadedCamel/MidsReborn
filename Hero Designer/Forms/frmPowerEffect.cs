@@ -111,7 +111,6 @@ namespace Hero_Designer.Forms
             {
                 return;
             }
-
             if (myFX.ActiveConditionals.Count > 0)
             {
                 MessageBox.Show(@"You cannot use Special Cases when using Conditionals.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -124,6 +123,7 @@ namespace Hero_Designer.Forms
             }
             else if (cbFXSpecialCase.SelectedIndex == 0 && myFX.ActiveConditionals.Count == 0)
             {
+                myFX.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
                 Conditionals(true);
             }
             UpdateFXText();
@@ -225,6 +225,15 @@ namespace Hero_Designer.Forms
             chkNearGround.Checked = fx.NearGround;
             IgnoreED.Checked = fx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int) fx.SpecialCase;
+            if (fx.SpecialCase != Enums.eSpecialCase.None)
+            {
+                Conditionals(false);
+            }
+            else
+            {
+                Conditionals(true);
+                UpdateConditionals();
+            }
             cbFXClass.SelectedIndex = (int) fx.EffectClass;
             chkVariable.Checked = fx.VariableModifiedOverride;
             clbSuppression.BeginUpdate();
@@ -256,15 +265,6 @@ namespace Hero_Designer.Forms
 
             lvEffectType.EndUpdate();
             UpdateEffectSubAttribList();
-            if (cbFXSpecialCase.SelectedIndex != 0)
-            {
-                Conditionals(false);
-            }
-            else
-            {
-                Conditionals(true);
-                UpdateConditionals();
-            }
         }
 
         private void FillComboBoxes()

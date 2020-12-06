@@ -1,11 +1,11 @@
 {
   "name": "Mids' Hero Designer Database MK II",
   "Version": 20.1205,
-  "Date": "2020-12-05T11:03:42.905062-08:00",
+  "Date": "2020-12-05T13:03:42.905062-06:00",
   "Issue": 27,
   "ArchetypeVersion": {
     "Revision": 1,
-    "RevisionDate": "2014-05-01T01:01:23.5767113-07:00",
+    "RevisionDate": "2014-05-01T03:01:23.5767113-05:00",
     "SourceFile": "classes.csv"
   },
   "Archetypes": [
@@ -4040,28 +4040,28 @@
   ],
   "PowersetVersion": {
     "Revision": 1,
-    "RevisionDate": "2014-08-18T04:10:09.269-07:00",
+    "RevisionDate": "2014-08-18T06:10:09.269-05:00",
     "SourceFile": "powersets.csv"
   },
   "Powers": {
     "PowerVersion": {
       "Revision": 1,
-      "RevisionDate": "2014-08-18T03:41:34.623-07:00",
+      "RevisionDate": "2014-08-18T05:41:34.623-05:00",
       "SourceFile": "powers.csv"
     },
     "PowerLevelVersion": {
       "Revision": 1,
-      "RevisionDate": "2013-05-10T05:03:20.6124566-07:00",
+      "RevisionDate": "2013-05-10T07:03:20.6124566-05:00",
       "SourceFile": "powersets2.csv"
     },
     "PowerEffectVersion": {
       "Revision": 2,
-      "RevisionDate": "2014-12-21T12:01:20.1582104-08:00",
+      "RevisionDate": "2014-12-21T14:01:20.1582104-06:00",
       "SourceFile": "effects.csv"
     },
     "IOAssignmentVersion": {
       "Revision": 1,
-      "RevisionDate": "2014-05-05T04:40:38.9213542-07:00",
+      "RevisionDate": "2014-05-05T06:40:38.9213542-05:00",
       "SourceFile": "boostsets2.csv"
     },
     "Powers": []
