@@ -5285,6 +5285,39 @@ namespace Hero_Designer.Forms
             doSaveAs();
         }
 
+        void tsGenFreebies_Click(object sender, EventArgs e)
+        {
+            if (MainModule.MidsController.Toon == null) return;
+            FloatTop(false);
+            // Zed:
+            // Rev. 2: use a folder picker instead of a file picker so the data folder
+            // and sub directories can be automatically created.
+            var dirSelector = new FolderBrowserDialog
+            {
+                Description = "Select your base CoH directory:",
+                ShowNewFolderButton = false
+            };
+            var dsr = dirSelector.ShowDialog();
+            if (dsr == DialogResult.Cancel) return;
+            Directory.CreateDirectory(dirSelector.SelectedPath + @"\data\texts\English\Menus");
+            var mnuFileName = dirSelector.SelectedPath + @"\data\texts\English\Menus\" + clsGenFreebies.MenuName + "." + clsGenFreebies.MenuExt;
+            var saveOp = clsGenFreebies.SaveTo(mnuFileName);
+            if (!saveOp)
+            {
+                MessageBox.Show("Couldn't save popmenu to file: " + mnuFileName, "Welp", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show("Popmenu saved.\r\nIf necessary, restart your client for it to be updated.\r\nUse /popmenu " + clsGenFreebies.MenuName  + " to open it.",
+                    "Woop",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+
+            dirSelector.Dispose();
+            FloatTop(true);
+        }
+
         private void tsFlipAllEnh_Click(object sender, EventArgs e)
         {
             MainModule.MidsController.Toon.FlipAllSlots();

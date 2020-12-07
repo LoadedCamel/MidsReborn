@@ -78,6 +78,7 @@
   <PropertyGroup />
   <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
+    <Compile Include="clsGenFreebies.cs" />
     <Compile Include="clsOAuth.cs" />
     <Compile Include="clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
