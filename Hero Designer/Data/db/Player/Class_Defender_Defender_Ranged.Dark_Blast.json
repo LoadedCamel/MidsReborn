@@ -168,6 +168,7 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
+          "nID": 1,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -224,6 +225,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -422,6 +424,7 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
+          "nID": 1,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -479,6 +482,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -538,7 +542,6 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 14.352,
-      "IsModified": true,
       "PowerIndex": 3816,
       "PowerSetID": 2694,
       "PowerSetIndex": 2,
@@ -561,7 +564,7 @@
       },
       "ModesDisallowed": 2,
       "Accuracy": 1.0,
-      "AccuracyMult": 1.2,
+      "AccuracyMult": 1.0,
       "AttackTypes": 258,
       "GroupMembership": [],
       "EntitiesAffected": 2048,
@@ -663,8 +666,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -679,6 +681,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -720,8 +723,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -735,6 +737,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -775,8 +778,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -792,6 +794,7 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
+          "nID": 3,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -848,6 +851,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 4,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -902,6 +906,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 5,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -957,6 +962,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 6,
           "EffectType": 84,
           "PowerAttribs": 1,
           "Summon": "",
@@ -993,8 +999,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -1009,6 +1014,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 7,
           "EffectType": 84,
           "PowerAttribs": 4,
           "Summon": "",
@@ -1060,6 +1066,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 8,
           "EffectType": 84,
           "PowerAttribs": 7,
           "Summon": "",
@@ -1101,7 +1108,6 @@
           "nOverride": -1
         }
       ],
-      "HasPowerOverrideEffect": true,
       "FullSetName": "Defender_Ranged.Dark_Blast",
       "CastTime": 1.33,
       "Slottable": true,
@@ -1244,6 +1250,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 1,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -1448,6 +1455,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -1506,6 +1514,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -1566,6 +1575,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 3,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -1625,6 +1635,7 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
+          "nID": 4,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -1682,6 +1693,7 @@
           "Reward": "",
           "EffectId": "Immobilize",
           "Special": "",
+          "nID": 5,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -1740,6 +1752,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 6,
           "EffectType": 19,
           "MezType": 3,
           "Summon": "",
@@ -1941,6 +1954,7 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
+          "nID": 1,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -1998,6 +2012,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -2198,6 +2213,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -2255,6 +2271,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -2312,6 +2329,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -2372,6 +2390,7 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
+          "nID": 4,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -2569,6 +2588,7 @@
           "Reward": "",
           "EffectId": "HealSelf",
           "Special": "",
+          "nID": 1,
           "EffectType": 13,
           "Summon": "",
           "nSummon": -1,
@@ -2625,6 +2645,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -2684,6 +2705,7 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
+          "nID": 3,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -2874,6 +2896,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -2931,6 +2954,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -2988,6 +3012,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 3,
           "EffectType": 3,
           "DamageType": 6,
           "Summon": "",
@@ -3047,6 +3072,7 @@
           "Reward": "",
           "EffectId": "DeBuff_ToHit",
           "Special": "",
+          "nID": 4,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,

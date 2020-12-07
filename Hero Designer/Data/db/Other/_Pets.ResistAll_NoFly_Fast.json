@@ -133,6 +133,7 @@
           "Reward": "",
           "EffectId": "SpeedRunning",
           "Special": "",
+          "nID": 1,
           "EffectType": 32,
           "Summon": "",
           "nSummon": -1,

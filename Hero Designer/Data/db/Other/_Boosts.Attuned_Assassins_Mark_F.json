@@ -142,6 +142,7 @@
           "Reward": "Set_Bonus.Set_Bonus.Assassins_Mark",
           "EffectId": "Boost",
           "Special": "",
+          "nID": 1,
           "EffectType": 12,
           "Summon": "Set_Bonus.Set_Bonus.Assassins_Mark",
           "nSummon": 7786,

@@ -392,6 +392,7 @@
           "Reward": "",
           "EffectId": "Immobilize",
           "Special": "",
+          "nID": 1,
           "EffectType": 19,
           "MezType": 2,
           "Summon": "",

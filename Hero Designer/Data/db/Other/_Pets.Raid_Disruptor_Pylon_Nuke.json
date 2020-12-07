@@ -131,6 +131,7 @@
           "Reward": "Pets.Raid_Disruptor_Pylon_Create.Create",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 1,
           "EffectType": 12,
           "Summon": "Pets.Raid_Disruptor_Pylon_Create.Create",
           "nSummon": 6476,

@@ -140,6 +140,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 1,
           "EffectType": 9,
           "MezType": 12,
           "ETModifies": 19,

@@ -143,6 +143,7 @@
           "Reward": "",
           "EffectId": "Sleep",
           "Special": "",
+          "nID": 1,
           "EffectType": 9,
           "MezType": 9,
           "ETModifies": 19,

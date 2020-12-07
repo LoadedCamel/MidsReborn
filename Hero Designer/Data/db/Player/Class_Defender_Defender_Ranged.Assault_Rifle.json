@@ -171,6 +171,7 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
+          "nID": 1,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,
@@ -228,6 +229,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -421,6 +423,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -478,6 +481,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -535,6 +539,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -730,6 +735,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 1,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -787,6 +793,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -844,6 +851,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 3,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -1038,6 +1046,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -1095,6 +1104,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -1152,6 +1162,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 3,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -1209,6 +1220,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 4,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -1266,6 +1278,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 5,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -1459,6 +1472,7 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
+          "nID": 1,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -1518,6 +1532,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -1577,6 +1592,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 14.352,
+      "IsModified": true,
       "PowerIndex": 3801,
       "PowerSetID": 2692,
       "PowerSetIndex": 5,
@@ -1641,7 +1657,10 @@
         44
       ],
       "Level": 20,
-      "VariableName": "",
+      "VariableEnabled": true,
+      "VariableOverride": true,
+      "VariableName": "To-Hit Buff",
+      "VariableMax": 22,
       "NIDSubPower": [],
       "UIDSubPower": [],
       "IgnoreEnh": [],
@@ -1813,7 +1832,8 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "False"
+              "Value": "False",
+              "Validated": true
             }
           ],
           "nOverride": -1
@@ -1867,7 +1887,8 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "False"
+              "Value": "False",
+              "Validated": true
             }
           ],
           "nOverride": -1
@@ -2335,6 +2356,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -2389,7 +2411,8 @@
       "FullSetName": "Defender_Ranged.Assault_Rifle",
       "CastTime": 2.33,
       "Slottable": true,
-      "AoEModifier": 2.37995839
+      "AoEModifier": 2.37995839,
+      "Taken": true
     },
     {
       "CastTimeReal": 4.0,
@@ -2667,6 +2690,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2724,6 +2748,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",

@@ -143,6 +143,7 @@
           "Reward": "",
           "EffectId": "Confused",
           "Special": "",
+          "nID": 1,
           "EffectType": 9,
           "MezType": 1,
           "ETModifies": 19,

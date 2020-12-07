@@ -144,6 +144,7 @@
           "Reward": "Set_Bonus.Set_Bonus.Unrelenting_Fury",
           "EffectId": "Boost",
           "Special": "",
+          "nID": 1,
           "EffectType": 12,
           "Summon": "Set_Bonus.Set_Bonus.Unrelenting_Fury",
           "nSummon": 8302,

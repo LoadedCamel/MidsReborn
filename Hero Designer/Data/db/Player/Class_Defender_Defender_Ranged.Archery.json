@@ -162,6 +162,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -350,6 +351,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -541,6 +543,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -730,6 +733,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -789,6 +793,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -975,6 +980,7 @@
           "Reward": "",
           "EffectId": "Buff_Dmg",
           "Special": "",
+          "nID": 1,
           "EffectType": 4,
           "DamageType": 1,
           "Summon": "",
@@ -1033,6 +1039,7 @@
           "Reward": "",
           "EffectId": "Buff_Dmg",
           "Special": "",
+          "nID": 2,
           "EffectType": 4,
           "DamageType": 2,
           "Summon": "",
@@ -1091,6 +1098,7 @@
           "Reward": "",
           "EffectId": "Buff_Dmg",
           "Special": "",
+          "nID": 3,
           "EffectType": 4,
           "DamageType": 3,
           "Summon": "",
@@ -1149,6 +1157,7 @@
           "Reward": "",
           "EffectId": "Buff_Dmg",
           "Special": "",
+          "nID": 4,
           "EffectType": 4,
           "DamageType": 4,
           "Summon": "",
@@ -1207,6 +1216,7 @@
           "Reward": "",
           "EffectId": "Buff_Dmg",
           "Special": "",
+          "nID": 5,
           "EffectType": 4,
           "DamageType": 5,
           "Summon": "",
@@ -1265,6 +1275,7 @@
           "Reward": "",
           "EffectId": "Buff_Dmg",
           "Special": "",
+          "nID": 6,
           "EffectType": 4,
           "DamageType": 6,
           "Summon": "",
@@ -1323,6 +1334,7 @@
           "Reward": "",
           "EffectId": "Buff_Dmg",
           "Special": "",
+          "nID": 7,
           "EffectType": 4,
           "DamageType": 7,
           "Summon": "",
@@ -1381,6 +1393,7 @@
           "Reward": "",
           "EffectId": "Buff_Dmg",
           "Special": "",
+          "nID": 8,
           "EffectType": 4,
           "DamageType": 8,
           "Summon": "",
@@ -1572,6 +1585,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -1629,6 +1643,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 2,
           "EffectType": 3,
           "DamageType": 1,
           "Summon": "",
@@ -1686,6 +1701,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 3,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -1743,6 +1759,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 4,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -1800,6 +1817,7 @@
           "Reward": "",
           "EffectId": "Knockback",
           "Special": "",
+          "nID": 5,
           "EffectType": 19,
           "MezType": 4,
           "Summon": "",
@@ -1983,7 +2001,6 @@
               "Validated": true
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -1995,6 +2012,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2039,7 +2057,6 @@
               "Validated": true
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -2052,6 +2069,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 2,
           "EffectType": 84,
           "PowerAttribs": 1,
           "Summon": "",
@@ -2103,6 +2121,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 3,
           "EffectType": 84,
           "PowerAttribs": 4,
           "Summon": "",
@@ -2154,6 +2173,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 4,
           "EffectType": 84,
           "PowerAttribs": 7,
           "Summon": "",
@@ -2203,6 +2223,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 5,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2246,6 +2267,7 @@
               "Value": "True"
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -2258,6 +2280,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 6,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2302,6 +2325,7 @@
               "Value": "True"
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -2313,6 +2337,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 7,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2356,13 +2381,15 @@
               "Value": "True"
             }
           ],
+          "Validated": true,
           "nOverride": -1
         }
       ],
       "FullSetName": "Defender_Ranged.Archery",
       "CastTime": 3.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.0,
@@ -2501,6 +2528,7 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
+          "nID": 1,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -2560,6 +2588,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -2755,6 +2784,7 @@
           "Reward": "",
           "EffectId": "Level",
           "Special": "",
+          "nID": 1,
           "EffectType": 38,
           "Summon": "Pets_RainofArrows_Defender",
           "nSummon": 96,

@@ -143,6 +143,7 @@
           "Reward": "",
           "EffectId": "EndDrain",
           "Special": "",
+          "nID": 1,
           "EffectType": 7,
           "Summon": "",
           "nSummon": -1,

@@ -146,6 +146,7 @@
           "Reward": "",
           "EffectId": "Debuff_Def",
           "Special": "",
+          "nID": 1,
           "EffectType": 5,
           "Summon": "",
           "nSummon": -1,

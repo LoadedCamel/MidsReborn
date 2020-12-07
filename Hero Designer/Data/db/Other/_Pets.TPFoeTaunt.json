@@ -135,6 +135,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 1,
           "EffectType": 77,
           "Summon": "",
           "nSummon": -1,

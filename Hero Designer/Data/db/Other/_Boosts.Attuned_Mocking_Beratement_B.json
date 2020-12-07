@@ -143,6 +143,7 @@
           "Reward": "",
           "EffectId": "Taunt",
           "Special": "",
+          "nID": 1,
           "EffectType": 9,
           "MezType": 11,
           "ETModifies": 19,

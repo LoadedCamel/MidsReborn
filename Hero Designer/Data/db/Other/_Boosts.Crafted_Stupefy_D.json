@@ -144,6 +144,7 @@
           "Reward": "",
           "EffectId": "Range",
           "Special": "",
+          "nID": 1,
           "EffectType": 9,
           "ETModifies": 24,
           "Summon": "",

@@ -144,6 +144,7 @@
           "Reward": "Doublehit",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "Pets_Savage_Assault_Feral_Charge",

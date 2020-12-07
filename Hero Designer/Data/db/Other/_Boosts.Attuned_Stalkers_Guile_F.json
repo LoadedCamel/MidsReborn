@@ -143,6 +143,7 @@
           "Reward": "Set_Bonus.Set_Bonus.Stalkers_Guile",
           "EffectId": "Boost",
           "Special": "",
+          "nID": 1,
           "EffectType": 12,
           "Summon": "Set_Bonus.Set_Bonus.Stalkers_Guile",
           "nSummon": 8262,

@@ -143,6 +143,7 @@
           "Reward": "",
           "EffectId": "Interrupt",
           "Special": "",
+          "nID": 1,
           "EffectType": 9,
           "ETModifies": 15,
           "Summon": "",
