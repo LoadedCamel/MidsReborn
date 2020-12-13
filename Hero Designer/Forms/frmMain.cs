@@ -2086,8 +2086,7 @@ namespace Hero_Designer.Forms
                     {
                         if (!hasProc && power.HasProc() &&
                             (Math.Abs(DatabaseAPI.Database.Enhancements[e.Enh].Probability) < float.Epsilon ||
-                             Math.Abs(DatabaseAPI.Database.Enhancements[e.Enh].Probability - 1.0) <
-                             float.Epsilon))
+                             Math.Abs(DatabaseAPI.Database.Enhancements[e.Enh].Probability - 1.0) < float.Epsilon))
                             power.StatInclude = true;
                         else if (!power.CanIncludeForStats())
                             power.StatInclude = false;
@@ -2096,6 +2095,8 @@ namespace Hero_Designer.Forms
                     {
                         power.StatInclude = false;
                     }
+
+                    fRecipe?.RecalcSalvage();
                 }
 
                 I9Picker.Visible = false;

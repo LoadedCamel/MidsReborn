@@ -11,6 +11,7 @@ public class I9Slot : ICloneable
     public Enums.eEnhGrade Grade;
     public int IOLevel;
     public Enums.eEnhRelative RelativeLevel;
+    public bool Obtained;
 
     public I9Slot()
     {
@@ -18,6 +19,7 @@ public class I9Slot : ICloneable
         RelativeLevel = Enums.eEnhRelative.Even;
         Grade = Enums.eEnhGrade.None;
         IOLevel = 1;
+        Obtained = false;
     }
 
     public object Clone()
@@ -27,7 +29,8 @@ public class I9Slot : ICloneable
             Enh = Enh,
             Grade = Grade,
             IOLevel = IOLevel,
-            RelativeLevel = RelativeLevel
+            RelativeLevel = RelativeLevel,
+            Obtained = Obtained
         };
     }
 

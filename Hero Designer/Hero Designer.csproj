@@ -78,6 +78,7 @@
   <PropertyGroup />
   <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
+    <Compile Include="clsShoppingCheckList.cs" />
     <Compile Include="clsGenFreebies.cs" />
     <Compile Include="clsOAuth.cs" />
     <Compile Include="clsZip.cs" />
@@ -2152,6 +2153,9 @@
     <None Include="Resources\optTO.Image.png" />
     <None Include="Resources\optSO.Image.png" />
     <None Include="Resources\optDO.Image.png" />
+    <None Include="Resources\AncientScroll.png" />
+    <None Include="Resources\EnhancementBooster.png" />
+    <None Include="Resources\EnhancementCatalyst.png" />
     <Content Include="Web\authorized.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

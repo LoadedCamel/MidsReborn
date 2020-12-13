@@ -9,8 +9,6 @@ using System.Windows.Forms;
 using Base.Display;
 using Base.Master_Classes;
 using System.Diagnostics;
-//using Microsoft.VisualBasic;
-//using Microsoft.VisualBasic.CompilerServices;
 
 namespace midsControls
 {
@@ -650,7 +648,8 @@ namespace midsControls
                         I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect2), enhancement.ImageIdx, I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
                         if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
                             (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
-                            (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
+                            (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) |
+                            (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
                         {
                             solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                             RectangleF iValue3 = rectangleF;

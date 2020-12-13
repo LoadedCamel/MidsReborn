@@ -63,9 +63,39 @@ namespace Hero_Designer {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AncientScroll {
+            get {
+                object obj = ResourceManager.GetObject("AncientScroll", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap defaultAvatar {
             get {
                 object obj = ResourceManager.GetObject("defaultAvatar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap EnhancementBooster {
+            get {
+                object obj = ResourceManager.GetObject("EnhancementBooster", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap EnhancementCatalyst {
+            get {
+                object obj = ResourceManager.GetObject("EnhancementCatalyst", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

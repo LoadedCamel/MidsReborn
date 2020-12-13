@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using Base.Data_Classes;
 using Base.Display;
 using Base.Master_Classes;
-using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using midsControls;
 
@@ -15,6 +14,126 @@ namespace Hero_Designer.Forms
 {
     public partial class frmRecipeViewer : Form
     {
+        private static class BuildSalvageSummary
+        {
+            public static int EnhObtained { get; set; }
+            public static int EnhCatalysts { get; set; }
+            public static int EnhBoosters { get; set; }
+            public static int TotalEnhancements { get; set; }
+
+            public static void CalcAll()
+            {
+                TotalEnhancements = 0;
+                EnhObtained = 0;
+                EnhCatalysts = 0;
+                EnhBoosters = 0;
+
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                {
+                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    {
+                        var enhIdx = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh;
+
+                        if (enhIdx > -1) TotalEnhancements++;
+                        if (MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained & enhIdx > -1) EnhObtained++;
+                        if (enhIdx == -1) continue;
+
+                        var enhName = Database.Instance.Enhancements[enhIdx].UID;
+                        if (DatabaseAPI.EnhHasCatalyst(enhName) && DatabaseAPI.EnhIsSuperior(enhIdx)) EnhCatalysts++;
+
+                        var relativeLevel = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.RelativeLevel;
+                        if (DatabaseAPI.EnhIsIO(enhIdx))
+                        {
+                            EnhBoosters += relativeLevel switch
+                            {
+                                Enums.eEnhRelative.PlusOne => 1,
+                                Enums.eEnhRelative.PlusTwo => 2,
+                                Enums.eEnhRelative.PlusThree => 3,
+                                Enums.eEnhRelative.PlusFour => 4,
+                                Enums.eEnhRelative.PlusFive => 5,
+                                _ => 0
+                            };
+                        }
+                    }
+                }
+            }
+
+            public static void CalcTotalEnhancements()
+            {
+                TotalEnhancements = 0;
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                {
+                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh > -1)
+                            TotalEnhancements++;
+                    }
+                }
+            }
+
+            public static void CalcEnhObtained()
+            {
+                EnhObtained = 0;
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                {
+                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained &
+                            MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh > -1)
+                        {
+                            EnhObtained++;
+                        }
+
+                    }
+                }
+            }
+
+            public static void CalcEnhCatalysts()
+            {
+                EnhCatalysts = 0;
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                {
+                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    {
+                        var enhIdx = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh;
+                        if (enhIdx == -1) continue;
+                        var enhName = Database.Instance.Enhancements[enhIdx].UID;
+
+                        if (DatabaseAPI.EnhHasCatalyst(enhName) && DatabaseAPI.EnhIsSuperior(enhIdx)) EnhCatalysts++;
+                    }
+                }
+            }
+
+            public static void CalcEnhBoosters()
+            {
+                EnhBoosters = 0;
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                {
+                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    {
+                        var enhIdx = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh;
+                        if (enhIdx == -1) continue;
+
+                        var relativeLevel = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.RelativeLevel;
+                        if (DatabaseAPI.EnhIsIO(enhIdx) &
+                            relativeLevel != Enums.eEnhRelative.Even &
+                            relativeLevel != Enums.eEnhRelative.None)
+                        {
+                            EnhBoosters += relativeLevel switch
+                            {
+                                Enums.eEnhRelative.PlusOne => 1,
+                                Enums.eEnhRelative.PlusTwo => 2,
+                                Enums.eEnhRelative.PlusThree => 3,
+                                Enums.eEnhRelative.PlusFour => 4,
+                                Enums.eEnhRelative.PlusFive => 5,
+                                _ => 0
+                            };
+                        }
+                    }
+                }
+            }
+        }
+
         private readonly ExtendedBitmap bxRecipe;
         private readonly frmMain myParent;
 
@@ -49,12 +168,26 @@ namespace Hero_Designer.Forms
             ibClose.ButtonClicked += ibClose_ButtonClicked;
             ibMiniList.ButtonClicked += ibMiniList_ButtonClicked;
             ibTopmost.ButtonClicked += ibTopmost_ButtonClicked;
+            ibEnhCheckMode.ButtonClicked += ibEnhCheckMode_ButtonClicked;
             myParent = iParent;
             bxRecipe = new ExtendedBitmap(I9Gfx.GetRecipeName());
         }
 
-        private void AddToImageList(int eIDX)
+        public void RecalcSalvage()
+        {
+            BuildSalvageSummary.CalcAll();
+            lblEnhObtained.Text = $"Obtained: {BuildSalvageSummary.EnhObtained}/{BuildSalvageSummary.TotalEnhancements}";
+            lblCatalysts.Text = $"x{BuildSalvageSummary.EnhCatalysts}";
+            lblBoosters.Text = $"x{BuildSalvageSummary.EnhBoosters}";
+        }
 
+        public void UpdateEnhObtained()
+        {
+            BuildSalvageSummary.CalcEnhObtained();
+            lblEnhObtained.Text = $"Obtained: {BuildSalvageSummary.EnhObtained}/{BuildSalvageSummary.TotalEnhancements}";
+        }
+
+        private void AddToImageList(int eIDX)
         {
             var imageSize = ilSets.ImageSize;
             var width = imageSize.Width;
@@ -76,7 +209,6 @@ namespace Hero_Designer.Forms
         }
 
         private PopUp.PopupData BuildList(bool Mini)
-
         {
             var iIndent = 1;
             var popupData = new PopUp.PopupData();
@@ -166,7 +298,7 @@ namespace Hero_Designer.Forms
                 {
                     var str = "Buy:";
                     if (num2 > 0)
-                        popupData.Sections[index3].Add(str + " " + Strings.Format(num2, "###,###,##0"),
+                        popupData.Sections[index3].Add($"{str} {num2:###,###,##0}",
                             PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
                 }
                 else
@@ -174,14 +306,14 @@ namespace Hero_Designer.Forms
                     var iText = "Buy Cost:";
                     if (num2 > 0)
                         popupData.Sections[index3].Add(iText, PopUp.Colors.Invention,
-                            Strings.Format(num2, "###,###,##0"), PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
+                            $"{num2:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
                 }
 
                 if (Mini)
                 {
                     var str = "Craft:";
                     if (num1 > 0)
-                        popupData.Sections[index3].Add(str + " " + Strings.Format(num1, "###,###,##0"),
+                        popupData.Sections[index3].Add(str + " " + $"{num1:###,###,##0}",
                             PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
                 }
                 else
@@ -189,21 +321,21 @@ namespace Hero_Designer.Forms
                     var iText = "Craft Cost:";
                     if (num1 > 0)
                         popupData.Sections[index3].Add(iText, PopUp.Colors.Invention,
-                            Strings.Format(num1, "###,###,##0"), PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
+                            $"{num1:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
                 }
 
                 if (Mini)
                 {
                     var str = "Craft (Mem'd):";
                     if ((num3 > 0) & (num3 != num1))
-                        popupData.Sections[index3].Add(str + " " + Strings.Format(num3, "###,###,##0"),
+                        popupData.Sections[index3].Add($"{str} {num3:###,###,##0}",
                             PopUp.Colors.Effect, 0.9f, FontStyle.Bold, iIndent);
                 }
                 else
                 {
                     var iText = "Craft Cost (Memorized Common):";
                     if ((num3 > 0) & (num3 != num1))
-                        popupData.Sections[index3].Add(iText, PopUp.Colors.Effect, Strings.Format(num3, "###,###,##0"),
+                        popupData.Sections[index3].Add(iText, PopUp.Colors.Effect, $"{num3:###,###,##0}",
                             PopUp.Colors.Effect, 0.9f, FontStyle.Bold, iIndent);
                 }
 
@@ -333,7 +465,6 @@ namespace Hero_Designer.Forms
         }
 
         private void ChangedRecipeInfoElements()
-
         {
             VScrollBar1.Value = 0;
             VScrollBar1.Maximum =
@@ -341,20 +472,17 @@ namespace Hero_Designer.Forms
         }
 
         private void chkRecipe_CheckedChanged(object sender, EventArgs e)
-
         {
             lvDPA_SelectedIndexChanged(this, new EventArgs());
             MidsContext.Config.ShoppingListIncludesRecipes = chkRecipe.Checked;
         }
 
         private void chkSortByLevel_CheckedChanged(object sender, EventArgs e)
-
         {
             UpdatePowerList();
         }
 
         private static int colorRarityCompare(Color t1, Color t2)
-
         {
             int num;
             if (t1.Equals(t2))
@@ -396,7 +524,6 @@ namespace Hero_Designer.Forms
         }
 
         private static int colorRarityCompareB(Color t1, Color t2)
-
         {
             int num;
             if (t1.Equals(t2))
@@ -433,7 +560,6 @@ namespace Hero_Designer.Forms
         }
 
         private void DrawIcon(int Index)
-
         {
             var extendedBitmap = new ExtendedBitmap(bxRecipe.Size);
             extendedBitmap.Graphics.Clear(Color.Black);
@@ -444,7 +570,6 @@ namespace Hero_Designer.Forms
         }
 
         private void FillEnhList()
-
         {
             if (lvPower.CheckedIndices.Count < 1)
             {
@@ -536,7 +661,6 @@ namespace Hero_Designer.Forms
         }
 
         private void FillPowerList()
-
         {
             lvPower.BeginUpdate();
             lvPower.Items.Clear();
@@ -544,17 +668,16 @@ namespace Hero_Designer.Forms
             lvPower.Items.Add(" - All Powers - ");
             lvPower.Items[lvPower.Items.Count - 1].Tag = -1;
             var num = MidsContext.Character.CurrentBuild.Powers.Count - 1;
-            for (var hIDX = 0; hIDX <= num; ++hIDX)
+            for (var hIdx = 0; hIdx <= num; ++hIdx)
             {
-                if (!((MidsContext.Character.CurrentBuild.Powers[hIDX].NIDPower > -1) & HasIOs(hIDX)))
+                if (!((MidsContext.Character.CurrentBuild.Powers[hIdx].NIDPower > -1) & HasIOs(hIdx)))
                     continue;
-                var text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDX].NIDPower]
+                var text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIdx].NIDPower]
                     .DisplayName;
                 if (chkSortByLevel.Checked)
-                    text = Strings.Format(MidsContext.Character.CurrentBuild.Powers[hIDX].Level + 1, "00") + " - " +
-                           text;
+                    text = $"{MidsContext.Character.CurrentBuild.Powers[hIdx].Level + 1:00} - {text}";
                 lvPower.Items.Add(text);
-                lvPower.Items[lvPower.Items.Count - 1].Tag = hIDX;
+                lvPower.Items[lvPower.Items.Count - 1].Tag = hIdx;
             }
 
             lvPower.Sorting = SortOrder.Ascending;
@@ -569,7 +692,6 @@ namespace Hero_Designer.Forms
         }
 
         private static int FindItemID(int rIDX, int iLevel)
-
         {
             var num1 = -1;
             var num2 = 52;
@@ -604,14 +726,15 @@ namespace Hero_Designer.Forms
         }
 
         private void frmRecipeViewer_FormClosed(object sender, FormClosedEventArgs e)
-
         {
+            ibEnhCheckMode.Checked = false;
+            pSalvageSummary.Visible = false;
+            MidsContext.EnhCheckMode = false;
             StoreLocation();
             myParent.FloatRecipe(false);
         }
 
         private void frmRecipeViewer_Load(object sender, EventArgs e)
-
         {
             ibClose.IA = myParent.Drawing.pImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero()
@@ -630,7 +753,6 @@ namespace Hero_Designer.Forms
         }
 
         private bool HasIOs(int hIDX)
-
         {
             if (hIDX < 0)
                 return false;
@@ -679,19 +801,16 @@ namespace Hero_Designer.Forms
         }
 
         private void ibClose_ButtonClicked()
-
         {
             Close();
         }
 
         private void ibMiniList_ButtonClicked()
-
         {
             myParent.SetMiniList(BuildList(true), "Shopping List");
         }
 
         private void ibTopmost_ButtonClicked()
-
         {
             TopMost = ibTopmost.Checked;
             if (!TopMost)
@@ -699,9 +818,14 @@ namespace Hero_Designer.Forms
             BringToFront();
         }
 
+        private void ibEnhCheckMode_ButtonClicked()
+        {
+            MidsContext.EnhCheckMode = ibEnhCheckMode.Checked;
+            pSalvageSummary.Visible = MidsContext.EnhCheckMode;
+        }
+
         [DebuggerStepThrough]
         private void lvPower_ItemChecked(object sender, ItemCheckedEventArgs e)
-
         {
             if (e.Item.Index == 0)
             {
@@ -721,19 +845,16 @@ namespace Hero_Designer.Forms
         }
 
         private void lvPower_MouseEnter(object sender, EventArgs e)
-
         {
             lvPower.Focus();
         }
 
         private void lvDPA_MouseEnter(object sender, EventArgs e)
-
         {
             lvDPA.Focus();
         }
 
         private void lvDPA_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             RecipeInfo.ScrollY = 0.0f;
             RecipeInfo.SetPopup(BuildList(false));
@@ -741,7 +862,6 @@ namespace Hero_Designer.Forms
         }
 
         private static void putInList(ref CountingList[] tl, string item)
-
         {
             var num = tl.Length - 1;
             for (var index = 0; index <= num; ++index)
@@ -758,16 +878,14 @@ namespace Hero_Designer.Forms
         }
 
         private void RecipeInfo_MouseEnter(object sender, EventArgs e)
-
         {
             VScrollBar1.Focus();
         }
 
         private void RecipeInfo_MouseWheel(object sender, MouseEventArgs e)
-
         {
             VScrollBar1.Value =
-                Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, Interaction.IIf(e.Delta > 0, -1, 1)));
+                Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, e.Delta > 0 ? -1 : 1)); // Interaction.IIf(e.Delta > 0, -1, 1)
             if (VScrollBar1.Value > VScrollBar1.Maximum - 9)
                 VScrollBar1.Value = VScrollBar1.Maximum - 9;
             VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender),
@@ -824,9 +942,8 @@ namespace Hero_Designer.Forms
                     };
 
                     if ((num1 != 0 || string.CompareOrdinal(
-                        Convert.ToString(Interaction.IIf(Mini, inStrs[index1].TextColumn, inStrs[index1].Text)),
-                        Convert.ToString(Interaction.IIf(Mini, inStrs[numArray[index2]].TextColumn,
-                            inStrs[numArray[index2]].Text))) >= 0) && num1 <= 0)
+                        Convert.ToString(Mini ? inStrs[index1].TextColumn : inStrs[index1].Text), // Interaction.IIf(Mini, inStrs[index1].TextColumn, inStrs[index1].Text)
+                        Convert.ToString(Mini ? inStrs[numArray[index2]].TextColumn : inStrs[numArray[index2]].Text)) >= 0) && num1 <= 0) // Interaction.IIf(Mini, inStrs[numArray[index2]].TextColumn, inStrs[numArray[index2]].Text)
                         continue;
                     var num4 = index2;
                     for (var index3 = index1 - 1; index3 >= num4; index3 += -1)
@@ -848,7 +965,6 @@ namespace Hero_Designer.Forms
         }
 
         private void StoreLocation()
-
         {
             if (!MainModule.MidsController.IsAppInitialized)
                 return;
@@ -885,7 +1001,6 @@ namespace Hero_Designer.Forms
         }
 
         private void UpdatePowerList()
-
         {
             if (Loading)
                 return;
@@ -893,14 +1008,12 @@ namespace Hero_Designer.Forms
         }
 
         private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
-
         {
-            RecipeInfo.ScrollY = (float) (VScrollBar1.Value / (double) (VScrollBar1.Maximum - VScrollBar1.LargeChange) *
-                                          (RecipeInfo.lHeight - (double) Panel1.Height));
+            RecipeInfo.ScrollY = VScrollBar1.Value / (float) (VScrollBar1.Maximum - VScrollBar1.LargeChange) *
+                                 (RecipeInfo.lHeight - Panel1.Height);
         }
 
         private struct CountingList
-
         {
             public string Text;
             public int Count;
