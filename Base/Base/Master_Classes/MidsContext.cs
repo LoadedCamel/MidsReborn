@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Base.Data_Classes;
 
 namespace Base.Master_Classes
@@ -18,6 +17,8 @@ namespace Base.Master_Classes
         public const string AssemblyName = "Hero Designer.exe";
         public static int MathLevelBase = 49;
         public static int MathLevelExemp = -1;
+
+        public static bool EnhCheckMode = false;
 
         public static readonly Version AppVersion =
             new Version(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
