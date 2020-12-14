@@ -1280,7 +1280,7 @@ namespace Hero_Designer.Forms
             return true;
         }
 
-        private void DoRedraw()
+        public void DoRedraw()
         {
             if (drawing == null)
             {

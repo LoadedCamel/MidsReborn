@@ -14,12 +14,13 @@ namespace Hero_Designer.Forms
 {
     public partial class frmRecipeViewer : Form
     {
+        #region BuildSavageSummary sub-class
         private static class BuildSalvageSummary
         {
-            public static int EnhObtained { get; set; }
-            public static int EnhCatalysts { get; set; }
-            public static int EnhBoosters { get; set; }
-            public static int TotalEnhancements { get; set; }
+            public static int EnhObtained { get; private set; }
+            public static int EnhCatalysts { get; private set; }
+            public static int EnhBoosters { get; private set; }
+            public static int TotalEnhancements { get; private set; }
 
             public static void CalcAll()
             {
@@ -28,20 +29,20 @@ namespace Hero_Designer.Forms
                 EnhCatalysts = 0;
                 EnhBoosters = 0;
 
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    for (var j = 0; j < p.Slots.Length; j++)
                     {
-                        var enhIdx = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh;
+                        var enhIdx = p.Slots[j].Enhancement.Enh;
 
                         if (enhIdx > -1) TotalEnhancements++;
-                        if (MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained & enhIdx > -1) EnhObtained++;
+                        if (p.Slots[j].Enhancement.Obtained & enhIdx > -1) EnhObtained++;
                         if (enhIdx == -1) continue;
 
                         var enhName = Database.Instance.Enhancements[enhIdx].UID;
                         if (DatabaseAPI.EnhHasCatalyst(enhName) && DatabaseAPI.EnhIsSuperior(enhIdx)) EnhCatalysts++;
 
-                        var relativeLevel = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.RelativeLevel;
+                        var relativeLevel = p.Slots[j].Enhancement.RelativeLevel;
                         if (DatabaseAPI.EnhIsIO(enhIdx))
                         {
                             EnhBoosters += relativeLevel switch
@@ -133,6 +134,7 @@ namespace Hero_Designer.Forms
                 }
             }
         }
+        #endregion
 
         private readonly ExtendedBitmap bxRecipe;
         private readonly frmMain myParent;
@@ -731,6 +733,7 @@ namespace Hero_Designer.Forms
             pSalvageSummary.Visible = false;
             MidsContext.EnhCheckMode = false;
             StoreLocation();
+            myParent.DoRedraw();
             myParent.FloatRecipe(false);
         }
 
@@ -740,15 +743,28 @@ namespace Hero_Designer.Forms
             ibClose.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            ibClose.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
             ibTopmost.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            ibTopmost.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
             RecipeInfo.SetPopup(new PopUp.PopupData());
             ChangedRecipeInfoElements();
             chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
+            RecalcSalvage();
+            ibEnhCheckMode.IA = myParent.Drawing.pImageAttributes;
+            ibEnhCheckMode.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
+            ibEnhCheckMode.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            MidsContext.EnhCheckMode = false;
+            ibEnhCheckMode.Checked = false;
+            pSalvageSummary.Visible = false;
             Loading = false;
         }
 
@@ -820,8 +836,12 @@ namespace Hero_Designer.Forms
 
         private void ibEnhCheckMode_ButtonClicked()
         {
+            Debug.WriteLine($"Check mode (before): {ibEnhCheckMode.Checked}");
+            ibEnhCheckMode.Checked = !ibEnhCheckMode.Checked;
             MidsContext.EnhCheckMode = ibEnhCheckMode.Checked;
+            Debug.WriteLine($"Check mode (after): {ibEnhCheckMode.Checked}");
             pSalvageSummary.Visible = MidsContext.EnhCheckMode;
+            myParent.DoRedraw();
         }
 
         [DebuggerStepThrough]
