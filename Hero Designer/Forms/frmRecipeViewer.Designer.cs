@@ -49,8 +49,9 @@ namespace Hero_Designer.Forms
             this.chkRecipe = new System.Windows.Forms.CheckBox();
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.ibMiniList = new midsControls.ImageButton();
             this.ibClipboard = new midsControls.ImageButton();
             this.ibTopmost = new midsControls.ImageButton();
@@ -58,15 +59,30 @@ namespace Hero_Designer.Forms
             this.ibEnhCheckMode = new midsControls.ImageButton();
             this.pSalvageSummary = new System.Windows.Forms.Panel();
             this.lblBoosters = new System.Windows.Forms.Label();
-            this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblEnhObtained = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
+            this.ctlPopUp1 = new midsControls.ctlPopUp();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lblRewardMerits = new System.Windows.Forms.Label();
+            this.imageButton1 = new midsControls.ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecipe)).BeginInit();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.pSalvageSummary.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // pbRecipe
@@ -74,6 +90,7 @@ namespace Hero_Designer.Forms
             this.pbRecipe.Location = new System.Drawing.Point(0, 0);
             this.pbRecipe.Name = "pbRecipe";
             this.pbRecipe.Size = new System.Drawing.Size(60, 30);
+            this.pbRecipe.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbRecipe.TabIndex = 0;
             this.pbRecipe.TabStop = false;
             // 
@@ -118,7 +135,7 @@ namespace Hero_Designer.Forms
             // ColumnHeader3
             // 
             this.ColumnHeader3.Text = "Enhancement";
-            this.ColumnHeader3.Width = 241;
+            this.ColumnHeader3.Width = 295;
             // 
             // ColumnHeader4
             // 
@@ -128,7 +145,7 @@ namespace Hero_Designer.Forms
             // ColumnHeader5
             // 
             this.ColumnHeader5.Text = "Power";
-            this.ColumnHeader5.Width = 114;
+            this.ColumnHeader5.Width = 135;
             // 
             // ilSets
             // 
@@ -224,27 +241,38 @@ namespace Hero_Designer.Forms
             this.pictureBox1.TabStop = false;
             this.ToolTip1.SetToolTip(this.pictureBox1, "Enhancements obtained so far");
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::Hero_Designer.Resources.EnhancementCatalyst;
-            this.pictureBox2.Location = new System.Drawing.Point(222, 0);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(32, 32);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 2;
-            this.pictureBox2.TabStop = false;
-            this.ToolTip1.SetToolTip(this.pictureBox2, "Enhancements Catalysts");
-            // 
             // pictureBox3
             // 
             this.pictureBox3.Image = global::Hero_Designer.Resources.EnhancementBooster;
-            this.pictureBox3.Location = new System.Drawing.Point(370, 0);
+            this.pictureBox3.Location = new System.Drawing.Point(222, 0);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(32, 32);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 4;
             this.pictureBox3.TabStop = false;
             this.ToolTip1.SetToolTip(this.pictureBox3, "Enhancements Catalysts");
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = global::Hero_Designer.Resources.RewardMerit;
+            this.pictureBox5.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox5.TabIndex = 4;
+            this.pictureBox5.TabStop = false;
+            this.ToolTip1.SetToolTip(this.pictureBox5, "Reward Merits");
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Image = global::Hero_Designer.Resources.EnhancementCatalyst;
+            this.pictureBox6.Location = new System.Drawing.Point(222, 0);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox6.TabIndex = 2;
+            this.pictureBox6.TabStop = false;
+            this.ToolTip1.SetToolTip(this.pictureBox6, "Enhancements Catalysts");
             // 
             // ibMiniList
             // 
@@ -277,7 +305,7 @@ namespace Hero_Designer.Forms
             this.ibTopmost.Checked = true;
             this.ibTopmost.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibTopmost.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibTopmost.Location = new System.Drawing.Point(383, 470);
+            this.ibTopmost.Location = new System.Drawing.Point(485, 583);
             this.ibTopmost.Name = "ibTopmost";
             this.ibTopmost.Size = new System.Drawing.Size(105, 22);
             this.ibTopmost.TabIndex = 7;
@@ -290,7 +318,7 @@ namespace Hero_Designer.Forms
             this.ibClose.Checked = false;
             this.ibClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibClose.Location = new System.Drawing.Point(605, 470);
+            this.ibClose.Location = new System.Drawing.Point(605, 583);
             this.ibClose.Name = "ibClose";
             this.ibClose.Size = new System.Drawing.Size(105, 22);
             this.ibClose.TabIndex = 6;
@@ -303,26 +331,24 @@ namespace Hero_Designer.Forms
             this.ibEnhCheckMode.Checked = false;
             this.ibEnhCheckMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibEnhCheckMode.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibEnhCheckMode.Location = new System.Drawing.Point(494, 470);
+            this.ibEnhCheckMode.Location = new System.Drawing.Point(333, 583);
             this.ibEnhCheckMode.Name = "ibEnhCheckMode";
             this.ibEnhCheckMode.Size = new System.Drawing.Size(105, 22);
             this.ibEnhCheckMode.TabIndex = 16;
             this.ibEnhCheckMode.TextOff = "Enh. check mode";
             this.ibEnhCheckMode.TextOn = "Enh. check mode";
-            this.ibEnhCheckMode.Toggle = false;
+            this.ibEnhCheckMode.Toggle = true;
             // 
             // pSalvageSummary
             // 
             this.pSalvageSummary.BackColor = System.Drawing.Color.Transparent;
             this.pSalvageSummary.Controls.Add(this.lblBoosters);
             this.pSalvageSummary.Controls.Add(this.pictureBox3);
-            this.pSalvageSummary.Controls.Add(this.lblCatalysts);
-            this.pSalvageSummary.Controls.Add(this.pictureBox2);
             this.pSalvageSummary.Controls.Add(this.lblEnhObtained);
             this.pSalvageSummary.Controls.Add(this.pictureBox1);
-            this.pSalvageSummary.Location = new System.Drawing.Point(194, 210);
+            this.pSalvageSummary.Location = new System.Drawing.Point(194, 504);
             this.pSalvageSummary.Name = "pSalvageSummary";
-            this.pSalvageSummary.Size = new System.Drawing.Size(516, 32);
+            this.pSalvageSummary.Size = new System.Drawing.Size(372, 32);
             this.pSalvageSummary.TabIndex = 17;
             // 
             // lblBoosters
@@ -330,22 +356,11 @@ namespace Hero_Designer.Forms
             this.lblBoosters.AutoSize = true;
             this.lblBoosters.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblBoosters.ForeColor = System.Drawing.Color.White;
-            this.lblBoosters.Location = new System.Drawing.Point(407, 8);
+            this.lblBoosters.Location = new System.Drawing.Point(259, 8);
             this.lblBoosters.Name = "lblBoosters";
             this.lblBoosters.Size = new System.Drawing.Size(26, 15);
             this.lblBoosters.TabIndex = 5;
             this.lblBoosters.Text = "x50";
-            // 
-            // lblCatalysts
-            // 
-            this.lblCatalysts.AutoSize = true;
-            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.lblCatalysts.ForeColor = System.Drawing.Color.White;
-            this.lblCatalysts.Location = new System.Drawing.Point(259, 8);
-            this.lblCatalysts.Name = "lblCatalysts";
-            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
-            this.lblCatalysts.TabIndex = 3;
-            this.lblCatalysts.Text = "x50";
             // 
             // lblEnhObtained
             // 
@@ -358,21 +373,147 @@ namespace Hero_Designer.Forms
             this.lblEnhObtained.TabIndex = 1;
             this.lblEnhObtained.Text = "Obtained: 100/100";
             // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Black;
+            this.panel3.Controls.Add(this.panel4);
+            this.panel3.Controls.Add(this.pictureBox4);
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Location = new System.Drawing.Point(12, 244);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(698, 213);
+            this.panel3.TabIndex = 12;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.vScrollBar2);
+            this.panel4.Controls.Add(this.ctlPopUp1);
+            this.panel4.Location = new System.Drawing.Point(0, 38);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(698, 175);
+            this.panel4.TabIndex = 11;
+            // 
+            // vScrollBar2
+            // 
+            this.vScrollBar2.Location = new System.Drawing.Point(679, 0);
+            this.vScrollBar2.Maximum = 20;
+            this.vScrollBar2.Name = "vScrollBar2";
+            this.vScrollBar2.Size = new System.Drawing.Size(17, 175);
+            this.vScrollBar2.TabIndex = 3;
+            // 
+            // ctlPopUp1
+            // 
+            this.ctlPopUp1.BXHeight = 2048;
+            this.ctlPopUp1.ColumnPosition = 0.5F;
+            this.ctlPopUp1.ColumnRight = false;
+            this.ctlPopUp1.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ctlPopUp1.ForeColor = System.Drawing.Color.Black;
+            this.ctlPopUp1.InternalPadding = 3;
+            this.ctlPopUp1.Location = new System.Drawing.Point(3, -17);
+            this.ctlPopUp1.Name = "ctlPopUp1";
+            this.ctlPopUp1.ScrollY = 0F;
+            this.ctlPopUp1.SectionPadding = 8;
+            this.ctlPopUp1.Size = new System.Drawing.Size(692, 175);
+            this.ctlPopUp1.TabIndex = 2;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(60, 30);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 0;
+            this.pictureBox4.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Arial", 17.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label1.Location = new System.Drawing.Point(66, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(632, 30);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Select A Power / Recipe";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.ForeColor = System.Drawing.Color.White;
+            this.checkBox1.Location = new System.Drawing.Point(12, 217);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(176, 16);
+            this.checkBox1.TabIndex = 9;
+            this.checkBox1.Text = "Sort By Level";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Transparent;
+            this.panel5.Controls.Add(this.label2);
+            this.panel5.Controls.Add(this.pictureBox5);
+            this.panel5.Controls.Add(this.lblRewardMerits);
+            this.panel5.Controls.Add(this.pictureBox6);
+            this.panel5.Location = new System.Drawing.Point(194, 538);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(372, 32);
+            this.panel5.TabIndex = 18;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(259, 8);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(26, 15);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "x50";
+            // 
+            // lblRewardMerits
+            // 
+            this.lblRewardMerits.AutoSize = true;
+            this.lblRewardMerits.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblRewardMerits.ForeColor = System.Drawing.Color.White;
+            this.lblRewardMerits.Location = new System.Drawing.Point(37, 8);
+            this.lblRewardMerits.Name = "lblRewardMerits";
+            this.lblRewardMerits.Size = new System.Drawing.Size(26, 15);
+            this.lblRewardMerits.TabIndex = 3;
+            this.lblRewardMerits.Text = "x50";
+            // 
+            // imageButton1
+            // 
+            this.imageButton1.Checked = false;
+            this.imageButton1.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.imageButton1.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.imageButton1.Location = new System.Drawing.Point(374, 470);
+            this.imageButton1.Name = "imageButton1";
+            this.imageButton1.Size = new System.Drawing.Size(105, 22);
+            this.imageButton1.TabIndex = 19;
+            this.imageButton1.TextOff = "Shopping List >>";
+            this.imageButton1.TextOn = "<< Shopping List";
+            this.imageButton1.Toggle = true;
+            // 
             // frmRecipeViewer
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(722, 504);
+            this.ClientSize = new System.Drawing.Size(724, 619);
+            this.Controls.Add(this.imageButton1);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.pSalvageSummary);
             this.Controls.Add(this.ibEnhCheckMode);
             this.Controls.Add(this.chkRecipe);
             this.Controls.Add(this.ibMiniList);
             this.Controls.Add(this.ibClipboard);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.chkSortByLevel);
             this.Controls.Add(this.lvDPA);
             this.Controls.Add(this.ibTopmost);
             this.Controls.Add(this.ibClose);
             this.Controls.Add(this.lvPower);
+            this.Controls.Add(this.panel3);
             this.Controls.Add(this.Panel2);
             this.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -384,10 +525,16 @@ namespace Hero_Designer.Forms
             this.Panel1.ResumeLayout(false);
             this.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.pSalvageSummary.ResumeLayout(false);
             this.pSalvageSummary.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -414,7 +561,18 @@ namespace Hero_Designer.Forms
         private Label lblEnhObtained;
         private Label lblBoosters;
         private PictureBox pictureBox3;
-        private Label lblCatalysts;
-        private PictureBox pictureBox2;
+        private Panel panel3;
+        private Panel panel4;
+        private VScrollBar vScrollBar2;
+        private midsControls.ctlPopUp ctlPopUp1;
+        private PictureBox pictureBox4;
+        private Label label1;
+        private CheckBox checkBox1;
+        private Panel panel5;
+        private Label label2;
+        private PictureBox pictureBox5;
+        private Label lblRewardMerits;
+        private PictureBox pictureBox6;
+        private midsControls.ImageButton imageButton1;
     }
 }

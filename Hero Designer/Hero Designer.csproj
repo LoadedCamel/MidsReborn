@@ -2156,6 +2156,7 @@
     <None Include="Resources\AncientScroll.png" />
     <None Include="Resources\EnhancementBooster.png" />
     <None Include="Resources\EnhancementCatalyst.png" />
+    <None Include="Resources\RewardMerit.png" />
     <Content Include="Web\authorized.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
