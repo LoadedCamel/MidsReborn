@@ -564,7 +564,8 @@
       "FullSetName": "Corruptor_Buff.Cold_Domination",
       "CastTime": 1.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.17,

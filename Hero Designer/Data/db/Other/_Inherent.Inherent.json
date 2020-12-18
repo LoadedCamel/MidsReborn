@@ -25444,6 +25444,7 @@
       "FullSetName": "Inherent.Inherent",
       "AoEModifier": 1.0,
       "DisplayLocation": 8,
+      "Active": true,
       "Taken": true
     },
     {
@@ -39543,7 +39544,9 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.716,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.67,

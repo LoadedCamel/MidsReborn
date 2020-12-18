@@ -20,26 +20,26 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": 1948619334,
-    "Length": 207944
+    "Hash": -956708641,
+    "Length": 199363
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Assault_Rifle",
-    "Hash": -133662051,
-    "Length": 227275
+    "Hash": -322132754,
+    "Length": 216490
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Beam_Rifle",
-    "Hash": 310057420,
-    "Length": 285241
+    "Hash": 1857441596,
+    "Length": 284454
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Dark_Blast",
-    "Hash": -334171109,
-    "Length": 237064
+    "Hash": -1487272701,
+    "Length": 228395
   },
   {
     "Archetype": "Class_Blaster",
@@ -50,20 +50,20 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Electrical_Blast",
-    "Hash": 219762995,
-    "Length": 265347
+    "Hash": 1369806762,
+    "Length": 256424
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Energy_Blast",
-    "Hash": -1040512801,
-    "Length": 250669
+    "Hash": -1228614345,
+    "Length": 246798
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Fire_Blast",
-    "Hash": 942394051,
-    "Length": 213616
+    "Hash": 1126705920,
+    "Length": 204640
   },
   {
     "Archetype": "Class_Blaster",
@@ -74,14 +74,14 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Psychic_Blast",
-    "Hash": 598246927,
-    "Length": 231520
+    "Hash": -1757914729,
+    "Length": 222505
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Radiation_Blast",
-    "Hash": -2075547402,
-    "Length": 231343
+    "Hash": -1781231979,
+    "Length": 222132
   },
   {
     "Archetype": "Class_Blaster",
@@ -15878,8 +15878,8 @@
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Buff.Cold_Domination",
-    "Hash": 1599354276,
-    "Length": 188630
+    "Hash": -345697174,
+    "Length": 188652
   },
   {
     "Archetype": "Class_Corruptor",
@@ -15974,26 +15974,26 @@
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Archery",
-    "Hash": -1668813226,
-    "Length": 121733
+    "Hash": 1263740719,
+    "Length": 122075
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Assault_Rifle",
-    "Hash": -1428710973,
-    "Length": 126070
+    "Hash": 1562182879,
+    "Length": 126342
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Beam_Rifle",
-    "Hash": -1263479795,
-    "Length": 208518
+    "Hash": 1851420486,
+    "Length": 208944
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Dark_Blast",
-    "Hash": 798420089,
-    "Length": 134667
+    "Hash": -2090707180,
+    "Length": 134917
   },
   {
     "Archetype": "Class_Corruptor",
@@ -16004,20 +16004,20 @@
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Electrical_Blast",
-    "Hash": -932634521,
-    "Length": 170371
+    "Hash": -914977514,
+    "Length": 170687
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Energy_Blast",
-    "Hash": 1314196966,
-    "Length": 175515
+    "Hash": 39732772,
+    "Length": 175897
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Fire_Blast",
-    "Hash": -231409854,
-    "Length": 122635
+    "Hash": 1906607029,
+    "Length": 122885
   },
   {
     "Archetype": "Class_Corruptor",
@@ -16028,14 +16028,14 @@
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Psychic_Blast",
-    "Hash": -985267747,
-    "Length": 137095
+    "Hash": 1064398632,
+    "Length": 137389
   },
   {
     "Archetype": "Class_Corruptor",
     "Fullname": "Corruptor_Ranged.Radiation_Blast",
-    "Hash": -806038380,
-    "Length": 142359
+    "Hash": 41650279,
+    "Length": 142609
   },
   {
     "Archetype": "Class_Corruptor",
@@ -17360,8 +17360,8 @@
   {
     "Archetype": "",
     "Fullname": "Inherent.Inherent",
-    "Hash": 494435840,
-    "Length": 1784150
+    "Hash": 83640740,
+    "Length": 1784218
   },
   {
     "Archetype": "",
@@ -20084,7 +20084,7 @@
   {
     "Archetype": "Class_Sentinel",
     "Fullname": "Sentinel_Ranged.Psychic_Blast",
-    "Hash": -580458193,
+    "Hash": -1608506553,
     "Length": 151358
   },
   {

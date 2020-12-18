@@ -215,6 +215,7 @@
           "MagnitudeExpression": "",
           "Mag": 41.72852,
           "MagPercent": 41.72852,
+          "InherentSpecial2": true,
           "Reward": "",
           "EffectId": "ScourgeProc",
           "Special": "",
@@ -257,9 +258,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Scourge",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -322,7 +325,8 @@
       "FullSetName": "Corruptor_Ranged.Archery",
       "CastTime": 1.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.0,
@@ -2429,9 +2433,8 @@
       "AoEModifier": 3.25
     },
     {
-      "CastTimeReal": 3.67,
+      "CastTimeReal": 1.67,
       "ToggleCost": 14.352,
-      "IsModified": true,
       "PowerIndex": 3529,
       "PowerSetID": 2662,
       "PowerSetIndex": 6,
@@ -2453,8 +2456,8 @@
         "PowerIDNot": []
       },
       "ModesDisallowed": 2,
-      "Accuracy": 1.386,
-      "AccuracyMult": 1.386,
+      "Accuracy": 1.16,
+      "AccuracyMult": 1.16,
       "AttackTypes": 18,
       "GroupMembership": [],
       "EntitiesAffected": 2048,
@@ -2462,7 +2465,6 @@
       "TargetLoS": true,
       "Range": 150.0,
       "EndCost": 14.352,
-      "InterruptTime": 2.0,
       "RechargeTime": 12.0,
       "BaseRechargeTime": 12.0,
       "EffectArea": 1,
@@ -2567,6 +2569,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 1,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2622,6 +2625,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 2,
           "EffectType": 84,
           "PowerAttribs": 1,
           "Summon": "",
@@ -2673,6 +2677,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 3,
           "EffectType": 84,
           "PowerAttribs": 4,
           "Summon": "",
@@ -2724,6 +2729,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 4,
           "EffectType": 84,
           "PowerAttribs": 7,
           "Summon": "",
@@ -2773,6 +2779,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 5,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2828,6 +2835,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 6,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2883,6 +2891,7 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
+          "nID": 7,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2935,6 +2944,7 @@
           "Reward": "",
           "EffectId": "ScourgeProc",
           "Special": "",
+          "nID": 8,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -2987,6 +2997,7 @@
           "Reward": "",
           "EffectId": "ScourgeProc",
           "Special": "",
+          "nID": 9,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -3039,6 +3050,7 @@
           "Reward": "",
           "EffectId": "ScourgeProc",
           "Special": "",
+          "nID": 10,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -3092,6 +3104,7 @@
           "Reward": "",
           "EffectId": "ScourgeProc",
           "Special": "",
+          "nID": 11,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -3145,6 +3158,7 @@
           "Reward": "",
           "EffectId": "ScourgeProc",
           "Special": "",
+          "nID": 12,
           "EffectType": 3,
           "DamageType": 2,
           "Summon": "",
@@ -3192,9 +3206,10 @@
         }
       ],
       "FullSetName": "Corruptor_Ranged.Archery",
-      "CastTime": 3.67,
+      "CastTime": 1.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.0,
