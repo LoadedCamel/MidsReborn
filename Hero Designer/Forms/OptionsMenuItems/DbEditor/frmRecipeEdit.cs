@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -61,6 +62,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 }).ToArray();
                 ShowRecipeInfo(RecipeID());
                 UpdateListItem(RecipeID());
+                lstItems.SelectedIndex = lstItems.Items.Count - 1;
             });
         }
 
@@ -123,7 +125,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             this.EventHandlerWithCatch(() =>
             {
-                if (MessageBox.Show("Really erase all stored recipes and attempt import?", "Careful...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                if (MessageBox.Show("Really erase all stored recipes and attempt import?", "Careful...",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
                 char[] delimiter = {'\r'};
                 var strArray1 = Clipboard.GetDataObject()?.GetData("System.String", true).ToString().Split(delimiter);
@@ -454,6 +457,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             {
                 AddListItem(index);
             }
+
             lvDPA.EndUpdate();
             if (lvDPA.SelectedItems.Count <= 0) return;
             lvDPA.Items[0].Selected = true;
@@ -473,6 +477,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             {
                 cbEnh.Items.Add(enh.UID != "" ? enh.UID : "X - " + enh.Name);
             }
+
             cbEnh.EndUpdate();
             cbSal0.BeginUpdate();
             cbSal1.BeginUpdate();
@@ -585,7 +590,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             if (decimal.Compare(new decimal(iValue), iControl.Maximum) > 0)
                 iValue = Convert.ToInt32(iControl.Maximum);
             */
-            return (int)Math.Max(iControl.Minimum, Math.Min(iControl.Maximum, iValue));
+            return (int) Math.Max(iControl.Minimum, Math.Min(iControl.Maximum, iValue));
         }
 
         private int RecipeID()
@@ -712,7 +717,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     return;
                 var recipeItem = DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()];
                 recipeItem.Level =
-                    MinMax((int) Math.Round(Conversion.Val(udLevel.Text.Replace(",", "").Replace(".", ""))), udLevel) - 1;
+                    MinMax((int) Math.Round(Conversion.Val(udLevel.Text.Replace(",", "").Replace(".", ""))), udLevel) -
+                    1;
                 recipeItem.BuyCost =
                     MinMax((int) Math.Round(Conversion.Val(udBuy.Text.Replace(",", "").Replace(".", ""))), udBuy);
                 recipeItem.BuyCostM =
@@ -728,14 +734,16 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             this.EventHandlerWithCatch(() =>
             {
-                if (NoUpdate || RecipeID() < 0 || EntryID() < 0)
-                    return;
+                if (NoUpdate || RecipeID() < 0 || EntryID() < 0) return;
                 var recipeItem = DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()];
-                recipeItem.Level = Convert.ToInt32(udLevel.Value - 1);
+                var level = Convert.ToInt32(udLevel.Value);
+                recipeItem.Level = level - 1;
                 recipeItem.BuyCost = Convert.ToInt32(udBuy.Value);
                 recipeItem.BuyCostM = Convert.ToInt32(udBuyM.Value);
                 recipeItem.CraftCost = Convert.ToInt32(udCraft.Value);
                 recipeItem.CraftCostM = Convert.ToInt32(udCraftM.Value);
+
+                lstItems.SelectedItem = $"Level: {level}";
             });
         }
 
@@ -779,6 +787,68 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 DatabaseAPI.Database.Recipes[index].Rarity);
             lvDPA.Items[index].SubItems[3].Text = Convert.ToString(DatabaseAPI.Database.Recipes[index].Item.Length,
                 CultureInfo.InvariantCulture);
+        }
+
+        private void cbIsRecipe_CheckedChanged(object sender, EventArgs e)
+        {
+            var target = sender as CheckBox;
+            var state = target.Checked;
+
+            Debug.WriteLine($"{target.Name}: {state}");
+            switch (target.Name)
+            {
+                case "cbIsRecipe0":
+                    PopulateComboBoxList(ref cbSal0, !state);
+                    cbSal0.SelectedIndex = 0;
+                    udSal0.Visible = !state;
+                    break;
+
+                case "cbIsRecipe1":
+                    PopulateComboBoxList(ref cbSal1, !state);
+                    cbSal1.SelectedIndex = 0;
+                    udSal1.Visible = !state;
+                    break;
+
+                case "cbIsRecipe2":
+                    PopulateComboBoxList(ref cbSal2, !state);
+                    cbSal2.SelectedIndex = 0;
+                    udSal2.Visible = !state;
+                    break;
+
+                case "cbIsRecipe3":
+                    PopulateComboBoxList(ref cbSal3, !state);
+                    cbSal3.SelectedIndex = 0;
+                    udSal3.Visible = !state;
+                    break;
+
+                case "cbIsRecipe4":
+                    PopulateComboBoxList(ref cbSal4, !state);
+                    cbSal4.SelectedIndex = 0;
+                    udSal4.Visible = !state;
+                    break;
+            }
+        }
+
+        private void PopulateComboBoxList(ref ComboBox ctl, bool withSalvage = true)
+        {
+            ctl.BeginUpdate();
+            ctl.Items.Clear();
+            ctl.Items.Add("None");
+            if (withSalvage)
+            {
+                foreach (var slv in DatabaseAPI.Database.Salvage)
+                {
+                    ctl.Items.Add(slv.ExternalName);
+                }
+            }
+            else
+            {
+                foreach (var re in DatabaseAPI.Database.Recipes)
+                {
+                    ctl.Items.Add(re.ExternalName.Trim() == "Nothing" ? re.InternalName : $"{re.ExternalName.Trim()} [{re.InternalName}]");
+                }
+            }
+            ctl.EndUpdate();
         }
     }
 }

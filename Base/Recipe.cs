@@ -16,6 +16,8 @@ public class Recipe
     public string InternalName = string.Empty;
     public RecipeEntry[] Item = new RecipeEntry[0];
     public RecipeRarity Rarity;
+    public bool IsVirtual;
+    public bool IsGeneric;
 
     public Recipe()
     {
@@ -59,6 +61,8 @@ public class Recipe
         Enhancement = iRecipe.Enhancement;
         EnhIdx = iRecipe.EnhIdx;
         Item = new RecipeEntry[iRecipe.Item.Length];
+        IsVirtual = iRecipe.IsVirtual;
+        IsGeneric = iRecipe.IsGeneric;
         for (var index1 = 0; index1 < iRecipe.Item.Length; ++index1)
         {
             Item[index1] = new RecipeEntry
@@ -96,11 +100,12 @@ public class Recipe
             writer.Write(Item[index1].BuyCostM);
             writer.Write(Item[index1].CraftCostM);
             writer.Write(Item[index1].Salvage.Length - 1);
-            for (var index2 = 0; index2 <= Item[index1].Salvage.Length - 1; ++index2)
+            for (var index2 = 0; index2 < Item[index1].Salvage.Length; index2++)
             {
                 writer.Write(Item[index1].Salvage[index2]);
                 writer.Write(Item[index1].Count[index2]);
                 writer.Write(Item[index1].SalvageIdx[index2]);
+                writer.Write(Item[index1].RecipeIdx[index2]);
             }
         }
     }
@@ -115,6 +120,8 @@ public class Recipe
         public int Level;
         public string[] Salvage = new string[7];
         public int[] SalvageIdx = new int[7];
+        public string[] Recipe = new string[7];
+        public int[] RecipeIdx = new int[7];
 
         public RecipeEntry()
         {
@@ -123,6 +130,8 @@ public class Recipe
                 Salvage[index] = string.Empty;
                 SalvageIdx[index] = -1;
                 Count[index] = 0;
+                Recipe[index] = "";
+                RecipeIdx[index] = -1;
             }
         }
 
@@ -141,6 +150,8 @@ public class Recipe
                 Salvage[index] = iRe.Salvage[index];
                 SalvageIdx[index] = iRe.SalvageIdx[index];
                 Count[index] = iRe.Count[index];
+                Recipe[index] = "";
+                RecipeIdx[index] = -1;
             }
         }
     }
