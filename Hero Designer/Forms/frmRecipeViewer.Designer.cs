@@ -68,7 +68,7 @@ namespace Hero_Designer.Forms
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblRewardMerits = new System.Windows.Forms.Label();
             this.imageButton1 = new midsControls.ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecipe)).BeginInit();
@@ -451,7 +451,7 @@ namespace Hero_Designer.Forms
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.Transparent;
-            this.panel5.Controls.Add(this.label2);
+            this.panel5.Controls.Add(this.lblCatalysts);
             this.panel5.Controls.Add(this.pictureBox5);
             this.panel5.Controls.Add(this.lblRewardMerits);
             this.panel5.Controls.Add(this.pictureBox6);
@@ -460,16 +460,16 @@ namespace Hero_Designer.Forms
             this.panel5.Size = new System.Drawing.Size(372, 32);
             this.panel5.TabIndex = 18;
             // 
-            // label2
+            // lblCatalysts
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(259, 8);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(26, 15);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "x50";
+            this.lblCatalysts.AutoSize = true;
+            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblCatalysts.ForeColor = System.Drawing.Color.White;
+            this.lblCatalysts.Location = new System.Drawing.Point(259, 8);
+            this.lblCatalysts.Name = "lblCatalysts";
+            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
+            this.lblCatalysts.TabIndex = 5;
+            this.lblCatalysts.Text = "x50";
             // 
             // lblRewardMerits
             // 
@@ -569,7 +569,7 @@ namespace Hero_Designer.Forms
         private Label label1;
         private CheckBox checkBox1;
         private Panel panel5;
-        private Label label2;
+        private Label lblCatalysts;
         private PictureBox pictureBox5;
         private Label lblRewardMerits;
         private PictureBox pictureBox6;

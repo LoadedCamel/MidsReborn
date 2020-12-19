@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
@@ -26,8 +25,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private void AddListItem(int Index)
         {
             var items = new string[4];
-            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0))
-                return;
+            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0)) return;
             items[0] = DatabaseAPI.Database.Salvage[Index].ExternalName;
             items[1] = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Origin.GetType(),
                 DatabaseAPI.Database.Salvage[Index].Origin);
@@ -95,8 +93,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             for (var index = 0; index <= num; ++index)
             {
                 var strArray2 = strArray1[index].Split(chArray);
-                if (strArray2.Length <= 7)
-                    continue;
+                if (strArray2.Length <= 7) continue;
                 var database = DatabaseAPI.Database;
                 var salvageArray = (Salvage[]) Utils.CopyArray(database.Salvage,
                     new Salvage[DatabaseAPI.Database.Salvage.Length + 1]);
@@ -140,8 +137,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void cbLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvSalvage.SelectedItems.Count < 1 || Updating)
-                return;
+            if (lvSalvage.SelectedItems.Count < 1 || Updating) return;
             var selectedIndex = lvSalvage.SelectedIndices[0];
             switch (cbLevel.SelectedIndex)
             {
@@ -164,8 +160,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void cbOrigin_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvSalvage.SelectedItems.Count < 1 || Updating)
-                return;
+            if (lvSalvage.SelectedItems.Count < 1 || Updating) return;
             var selectedIndex = lvSalvage.SelectedIndices[0];
             DatabaseAPI.Database.Salvage[selectedIndex].Origin = (Salvage.SalvageOrigin) cbOrigin.SelectedIndex;
             UpdateListItem(selectedIndex);
@@ -173,8 +168,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void cbRarity_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvSalvage.SelectedItems.Count < 1 || Updating)
-                return;
+            if (lvSalvage.SelectedItems.Count < 1 || Updating) return;
             var selectedIndex = lvSalvage.SelectedIndices[0];
             DatabaseAPI.Database.Salvage[selectedIndex].Rarity = (Recipe.RecipeRarity) cbRarity.SelectedIndex;
             UpdateListItem(selectedIndex);
@@ -182,8 +176,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void DisplayItem(int Index)
         {
-            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0))
-                return;
+            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0)) return;
             Updating = true;
             cbRarity.SelectedIndex = (int) DatabaseAPI.Database.Salvage[Index].Rarity;
             cbOrigin.SelectedIndex = (int) DatabaseAPI.Database.Salvage[Index].Origin;
@@ -220,23 +213,20 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             cbLevel.Items.Add("26 - 40");
             cbLevel.Items.Add("41 - 53");
             Updating = false;
-            if (lvSalvage.Items.Count <= 0)
-                return;
+            if (lvSalvage.Items.Count <= 0) return;
             lvSalvage.Items[0].Selected = true;
         }
 
         [DebuggerStepThrough]
         private void lvSalvage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvSalvage.SelectedIndices.Count <= 0)
-                return;
+            if (lvSalvage.SelectedIndices.Count <= 0) return;
             DisplayItem(lvSalvage.SelectedIndices[0]);
         }
 
         private void txtExternal_TextChanged(object sender, EventArgs e)
         {
-            if (lvSalvage.SelectedItems.Count < 1 || Updating)
-                return;
+            if (lvSalvage.SelectedItems.Count < 1 || Updating) return;
             var selectedIndex = lvSalvage.SelectedIndices[0];
             DatabaseAPI.Database.Salvage[selectedIndex].ExternalName = txtExternal.Text;
             UpdateListItem(selectedIndex);
@@ -244,17 +234,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void txtInternal_TextChanged(object sender, EventArgs e)
         {
-            if (lvSalvage.SelectedItems.Count < 1 || Updating)
-                return;
+            if (lvSalvage.SelectedItems.Count < 1 || Updating) return;
             var selectedIndex = lvSalvage.SelectedIndices[0];
-            DatabaseAPI.Database.Salvage[selectedIndex].ExternalName = txtInternal.Text;
+            DatabaseAPI.Database.Salvage[selectedIndex].InternalName = txtInternal.Text;
             UpdateListItem(selectedIndex);
         }
 
         private void UpdateListItem(int Index)
         {
-            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0))
-                return;
+            if ((Index > DatabaseAPI.Database.Salvage.Length - 1) | (Index < 0)) return;
             lvSalvage.Items[Index].SubItems[0].Text = DatabaseAPI.Database.Salvage[Index].ExternalName;
             lvSalvage.Items[Index].SubItems[1].Text = Enum.GetName(DatabaseAPI.Database.Salvage[Index].Origin.GetType(),
                 DatabaseAPI.Database.Salvage[Index].Origin);
