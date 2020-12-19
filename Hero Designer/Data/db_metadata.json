@@ -20,26 +20,26 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": -956708641,
-    "Length": 199363
+    "Hash": 804488994,
+    "Length": 199637
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Assault_Rifle",
-    "Hash": -322132754,
-    "Length": 216490
+    "Hash": -1536707735,
+    "Length": 216718
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Beam_Rifle",
-    "Hash": 1857441596,
-    "Length": 284454
+    "Hash": -830609646,
+    "Length": 284836
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Dark_Blast",
-    "Hash": -1487272701,
-    "Length": 228395
+    "Hash": 1093817441,
+    "Length": 228601
   },
   {
     "Archetype": "Class_Blaster",
@@ -50,20 +50,20 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Electrical_Blast",
-    "Hash": 1369806762,
-    "Length": 256424
+    "Hash": 1882855278,
+    "Length": 256696
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Energy_Blast",
-    "Hash": -1228614345,
-    "Length": 246798
+    "Hash": 32810636,
+    "Length": 247136
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Fire_Blast",
-    "Hash": 1126705920,
-    "Length": 204640
+    "Hash": -309863546,
+    "Length": 204846
   },
   {
     "Archetype": "Class_Blaster",
@@ -74,14 +74,14 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Psychic_Blast",
-    "Hash": -1757914729,
-    "Length": 222505
+    "Hash": -1887070267,
+    "Length": 222711
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Radiation_Blast",
-    "Hash": -1781231979,
-    "Length": 222132
+    "Hash": 563140763,
+    "Length": 222338
   },
   {
     "Archetype": "Class_Blaster",
@@ -19694,8 +19694,8 @@
   {
     "Archetype": "",
     "Fullname": "Pool.Fighting",
-    "Hash": -1878269694,
-    "Length": 348766
+    "Hash": 907630174,
+    "Length": 288289
   },
   {
     "Archetype": "",
