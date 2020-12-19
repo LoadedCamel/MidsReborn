@@ -49,6 +49,7 @@ public class Recipe
                 Item[index1].Salvage[index2] = reader.ReadString();
                 Item[index1].Count[index2] = reader.ReadInt32();
                 Item[index1].SalvageIdx[index2] = reader.ReadInt32();
+                Item[index1].RecipeIdx[index2] = reader.ReadInt32();
             }
         }
     }
