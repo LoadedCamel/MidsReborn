@@ -668,8 +668,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 cbEnh.SelectedIndex = DatabaseAPI.Database.Recipes[index].EnhIdx + 1;
                 try
                 {
-                    MessageBox.Show($"{index}");
-                    lblEnh.Text = DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.Recipes[index].EnhIdx].LongName;
+                    lblEnh.Text = DatabaseAPI.Database.Enhancements[cbEnh.SelectedIndex].LongName;
                 }
                 catch (Exception ex)
                 {
