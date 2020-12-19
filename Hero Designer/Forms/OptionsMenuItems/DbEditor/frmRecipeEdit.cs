@@ -566,9 +566,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.EventHandlerWithCatch(() =>
             {
                 if (lvDPA.SelectedIndices.Count > 0)
-                    ShowEntryInfo(lvDPA.SelectedIndices[0], lstItems.SelectedIndex);
+                {
+                    var recipeItem = lvDPA.SelectedItems[0].Text;
+                    var rIndex = Array.FindIndex(DatabaseAPI.Database.Recipes, 0, x => x.InternalName == recipeItem);
+                    ShowEntryInfo(rIndex, lstItems.SelectedIndex);
+                }
                 else
+                {
                     ClearEntryInfo();
+                }
             });
         }
 
@@ -595,19 +601,30 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private int RecipeID()
         {
-            return lvDPA.SelectedIndices.Count <= 0 ? -1 : lvDPA.SelectedIndices[0];
+            if (lvDPA.SelectedIndices.Count <= 0)
+            {
+                return -1;
+            }
+
+            var recipeItem = lvDPA.SelectedItems[0].Text;
+            var rIndex = Array.FindIndex(DatabaseAPI.Database.Recipes, 0, x => x.InternalName == recipeItem);
+            return lvDPA.SelectedIndices[0];
         }
 
         private void SetSalvageStringFromIDX(int iRecipe, int iItem, int iIndex)
         {
-            if (DatabaseAPI.Database.Recipes[iRecipe].Item[iItem].SalvageIdx[iIndex] > -1)
-                DatabaseAPI.Database.Recipes[iRecipe].Item[iItem].Salvage[iIndex] = DatabaseAPI.Database
-                    .Salvage[DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].SalvageIdx[iIndex]].InternalName;
-            else
+            if (DatabaseAPI.Database.Recipes[iRecipe].Item[iItem].SalvageIdx[iIndex] <= -1)
+            {
                 DatabaseAPI.Database.Recipes[iRecipe].Item[iItem].Salvage[iIndex] = "";
+            }
+            else
+            {
+                DatabaseAPI.Database.Recipes[iRecipe].Item[iItem].Salvage[iIndex] = DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].SalvageIdx[iIndex]].InternalName;
+                Console.WriteLine(DatabaseAPI.Database.Salvage[DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].SalvageIdx[iIndex]].InternalName);
+            }
         }
 
-        private void ShowEntryInfo(int rIDX, int iIDX)
+        private void ShowEntryInfo(int rIDX, int iIDX) // edit this
         {
             if ((rIDX < 0) | (rIDX > DatabaseAPI.Database.Recipes.Length - 1))
             {
@@ -657,29 +674,34 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void ShowRecipeInfo(int index)
         {
-            if ((index < 0) | (index > DatabaseAPI.Database.Recipes.Length - 1))
+            var recipeItem = lvDPA.SelectedItems[0].Text;
+            var rIndex = Array.FindIndex(DatabaseAPI.Database.Recipes, 0, x => x.InternalName == recipeItem);
+            if ((rIndex < 0) | (rIndex > DatabaseAPI.Database.Recipes.Length - 1))
             {
                 ClearInfo();
             }
             else
             {
                 NoUpdate = true;
-                txtRecipeName.Text = DatabaseAPI.Database.Recipes[index].InternalName;
-                cbEnh.SelectedIndex = DatabaseAPI.Database.Recipes[index].EnhIdx + 1;
-                try
+                txtRecipeName.Text = DatabaseAPI.Database.Recipes[rIndex].InternalName;
+                var enhIdx = Array.FindIndex(DatabaseAPI.Database.Enhancements, 0, e => e.RecipeName == DatabaseAPI.Database.Recipes[rIndex].InternalName);
+                if (enhIdx > -1)
                 {
-                    lblEnh.Text = DatabaseAPI.Database.Enhancements[cbEnh.SelectedIndex].LongName;
+                    var recipeEnhIdx = cbEnh.Items.IndexOf(DatabaseAPI.Database.Enhancements[enhIdx].UID);
+                    cbEnh.SelectedIndex = recipeEnhIdx;
+                    lblEnh.Text = DatabaseAPI.Database.Enhancements[enhIdx].LongName;
+                    Console.WriteLine(lblEnh.Text);
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show($"{index}\r\n{ex.Message}\r\n\r\n{ex.StackTrace}");
+                    cbEnh.SelectedIndex = -1;
                     lblEnh.Text = string.Empty;
                 }
 
-                cbRarity.SelectedIndex = (int) DatabaseAPI.Database.Recipes[index].Rarity;
-                txtExtern.Text = DatabaseAPI.Database.Recipes[index].ExternalName;
+                cbRarity.SelectedIndex = (int) DatabaseAPI.Database.Recipes[rIndex].Rarity;
+                txtExtern.Text = DatabaseAPI.Database.Recipes[rIndex].ExternalName;
                 lstItems.Items.Clear();
-                foreach (var r in DatabaseAPI.Database.Recipes[index].Item)
+                foreach (var r in DatabaseAPI.Database.Recipes[rIndex].Item)
                 {
                     lstItems.Items.Add($"Level: {r.Level + 1}");
                 }

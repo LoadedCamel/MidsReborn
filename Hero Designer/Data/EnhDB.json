@@ -23,8 +23,8 @@
       ],
       "EffectChance": 1.0,
       "LevelMax": 52,
-      "RecipeName": "Ticket_Magic",
-      "RecipeIDX": 2030,
+      "RecipeName": "",
+      "RecipeIDX": -1,
       "UID": "Magic_Accuracy",
       "HasEnhEffect": true,
       "LongName": "Accuracy"
@@ -28913,6 +28913,7 @@
       "Schedule": 1
     },
     {
+      "IsModified": true,
       "StaticIndex": 665,
       "Name": "To Hit Buff/Recharge",
       "ShortName": "ToHit/Rchg",
