@@ -379,7 +379,7 @@
         },
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .07 * 1.41 + @StdResult *",
-          "Probability": 0.05,
+          "Probability": 1.0,
           "BaseProbability": 0.05,
           "Reward": "",
           "EffectId": "PlayerCrit",
@@ -1075,7 +1075,7 @@
         },
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .07 * 1.41 + @StdResult *",
-          "Probability": 0.05,
+          "Probability": 1.0,
           "Mag": 98.86248,
           "MagPercent": 98.86248,
           "BaseProbability": 0.05,
