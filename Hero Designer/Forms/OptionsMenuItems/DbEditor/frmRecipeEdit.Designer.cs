@@ -136,6 +136,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.lvDPA.TabIndex = 0;
             this.lvDPA.UseCompatibleStateImageBehavior = false;
             this.lvDPA.View = System.Windows.Forms.View.Details;
+            this.lvDPA.Sorting = SortOrder.Ascending;
             this.lvDPA.SelectedIndexChanged += new System.EventHandler(this.lvDPA_SelectedIndexChanged);
             // 
             // ColumnHeader1
@@ -713,6 +714,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbEnh.Name = "cbEnh";
             this.cbEnh.Size = new System.Drawing.Size(202, 22);
             this.cbEnh.TabIndex = 14;
+            this.cbEnh.Sorted = true;
             this.cbEnh.SelectedIndexChanged += new System.EventHandler(this.cbEnh_SelectedIndexChanged);
             // 
             // GroupBox2
