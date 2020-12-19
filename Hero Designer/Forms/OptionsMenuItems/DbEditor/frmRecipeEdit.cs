@@ -24,8 +24,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private void AddListItem(int Index)
         {
-            if (!((Index > -1) & (Index < DatabaseAPI.Database.Recipes.Length)))
-                return;
+            if (!((Index > -1) & (Index < DatabaseAPI.Database.Recipes.Length))) return;
             var recipe = DatabaseAPI.Database.Recipes[Index];
             lvDPA.Items.Add(new ListViewItem(new[]
             {
@@ -38,7 +37,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         private static void AssignNewRecipes()
         {
-            for (var index = 0; index <= DatabaseAPI.Database.Recipes.Length - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.Recipes.Length; index++)
             {
                 var recipe = DatabaseAPI.Database.Recipes[index];
                 if (!((recipe.EnhIdx > -1) & (recipe.EnhIdx <= DatabaseAPI.Database.Enhancements.Length - 1)) ||
@@ -93,8 +92,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             this.EventHandlerWithCatch(() =>
             {
-                if (NoUpdate || RecipeID() < 0 || EntryID() < 0)
-                    return;
+                if (NoUpdate || RecipeID() < 0 || EntryID() < 0) return;
                 DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].CraftCost =
                     GetCostByLevel(DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].Level);
                 udCraft.Value = new decimal(DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].CraftCost);
@@ -131,8 +129,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 var strArray1 = Clipboard.GetDataObject()?.GetData("System.String", true).ToString().Split(delimiter);
                 delimiter[0] = '\t';
                 DatabaseAPI.Database.Recipes = new Recipe[0];
-                var num1 = strArray1.Length - 1;
-                for (var index1 = 0; index1 <= num1; ++index1)
+                for (var index1 = 0; index1 < strArray1.Length; index1++)
                 {
                     var strArray2 = strArray1[index1].Split(delimiter);
                     if (strArray2.Length <= 7)
@@ -157,8 +154,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     }
 
                     var index2 = -1;
-                    var num2 = recipe1.Item.Length - 1;
-                    for (var index3 = 0; index3 <= num2; ++index3)
+                    for (var index3 = 0; index3 < recipe1.Item.Length; index3++)
                         if (Math.Abs(recipe1.Item[index3].Level - (Conversion.Val(strArray2[16]) - 1.0)) <
                             float.Epsilon)
                             index2 = index3;
@@ -270,7 +266,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 var recipeId = RecipeID();
                 var recipeArray = new Recipe[DatabaseAPI.Database.Recipes.Length - 1];
                 var recipeCount = -1;
-                for (var recipeIdx = 0; recipeIdx <= DatabaseAPI.Database.Recipes.Length - 1; ++recipeIdx)
+                for (var recipeIdx = 0; recipeIdx < DatabaseAPI.Database.Recipes.Length; recipeIdx++)
                 {
                     if (recipeIdx == recipeId)
                         continue;
@@ -279,7 +275,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                 }
 
                 DatabaseAPI.Database.Recipes = new Recipe[recipeArray.Length - 1 + 1];
-                for (var recipeIdx = 0; recipeIdx <= DatabaseAPI.Database.Recipes.Length - 1; ++recipeIdx)
+                for (var recipeIdx = 0; recipeIdx < DatabaseAPI.Database.Recipes.Length; recipeIdx++)
                     DatabaseAPI.Database.Recipes[recipeIdx] = new Recipe(ref recipeArray[recipeIdx]);
                 FillList();
                 if (lvDPA.Items.Count > recipeId)
@@ -296,7 +292,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.EventHandlerWithCatch(() =>
             {
                 var enhIdx = DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Recipes.Length - 1].EnhIdx;
-                for (var index = enhIdx + 1; index <= DatabaseAPI.Database.Enhancements.Length - 1; ++index)
+                for (var index = enhIdx + 1; index < DatabaseAPI.Database.Enhancements.Length; index++)
                 {
                     if (DatabaseAPI.Database.Enhancements[index].TypeID != Enums.eType.SetO)
                         continue;
@@ -454,8 +450,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             lvDPA.BeginUpdate();
             lvDPA.Items.Clear();
-            var num = DatabaseAPI.Database.Recipes.Length - 1;
-            for (var index = 0; index < num; index++)
+            for (var index = 0; index < DatabaseAPI.Database.Recipes.Length; index++)
             {
                 AddListItem(index);
             }
