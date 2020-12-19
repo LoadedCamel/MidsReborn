@@ -5,7 +5,8 @@ public class Salvage
     public enum SalvageOrigin
     {
         Tech,
-        Magic
+        Magic,
+        Special
     }
 
     public string ExternalName = string.Empty;
