@@ -41,6 +41,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnOK = new System.Windows.Forms.Button();
             this.btnReGuess = new System.Windows.Forms.Button();
             this.GroupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbIsRecipe4 = new System.Windows.Forms.CheckBox();
+            this.cbIsRecipe3 = new System.Windows.Forms.CheckBox();
+            this.cbIsRecipe2 = new System.Windows.Forms.CheckBox();
+            this.cbIsRecipe1 = new System.Windows.Forms.CheckBox();
+            this.cbIsRecipe0 = new System.Windows.Forms.CheckBox();
             this.btnGuessCost = new System.Windows.Forms.Button();
             this.udSal4 = new System.Windows.Forms.NumericUpDown();
             this.Label14 = new System.Windows.Forms.Label();
@@ -75,6 +80,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.cbEnh = new System.Windows.Forms.ComboBox();
             this.GroupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.lblEnh = new System.Windows.Forms.Label();
+            this.txtExtern = new System.Windows.Forms.TextBox();
+            this.Label15 = new System.Windows.Forms.Label();
             this.btnI50 = new System.Windows.Forms.Button();
             this.btnI40 = new System.Windows.Forms.Button();
             this.btnI25 = new System.Windows.Forms.Button();
@@ -84,16 +94,16 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnUp = new System.Windows.Forms.Button();
             this.btnDel = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.lblEnh = new System.Windows.Forms.Label();
-            this.txtExtern = new System.Windows.Forms.TextBox();
-            this.Label15 = new System.Windows.Forms.Label();
-            this.Label4 = new System.Windows.Forms.Label();
             this.btnRAdd = new System.Windows.Forms.Button();
             this.btnRDel = new System.Windows.Forms.Button();
             this.btnRUp = new System.Windows.Forms.Button();
             this.btnRDown = new System.Windows.Forms.Button();
             this.btnImportUpdate = new System.Windows.Forms.Button();
             this.btnRunSeq = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lstSubRecipeComponents = new System.Windows.Forms.ListBox();
             this.GroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udSal4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal3)).BeginInit();
@@ -106,6 +116,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             ((System.ComponentModel.ISupportInitialize)(this.udBuy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udLevel)).BeginInit();
             this.GroupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // lvDPA
@@ -189,6 +201,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             // GroupBox1
             // 
+            this.GroupBox1.Controls.Add(this.cbIsRecipe4);
+            this.GroupBox1.Controls.Add(this.cbIsRecipe3);
+            this.GroupBox1.Controls.Add(this.cbIsRecipe2);
+            this.GroupBox1.Controls.Add(this.cbIsRecipe1);
+            this.GroupBox1.Controls.Add(this.cbIsRecipe0);
             this.GroupBox1.Controls.Add(this.btnGuessCost);
             this.GroupBox1.Controls.Add(this.udSal4);
             this.GroupBox1.Controls.Add(this.Label14);
@@ -217,10 +234,65 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.GroupBox1.Controls.Add(this.udLevel);
             this.GroupBox1.Location = new System.Drawing.Point(12, 321);
             this.GroupBox1.Name = "GroupBox1";
-            this.GroupBox1.Size = new System.Drawing.Size(599, 164);
+            this.GroupBox1.Size = new System.Drawing.Size(688, 164);
             this.GroupBox1.TabIndex = 8;
             this.GroupBox1.TabStop = false;
             this.GroupBox1.Text = "Recipe Entry:";
+            // 
+            // cbIsRecipe4
+            // 
+            this.cbIsRecipe4.AutoSize = true;
+            this.cbIsRecipe4.Location = new System.Drawing.Point(606, 135);
+            this.cbIsRecipe4.Name = "cbIsRecipe4";
+            this.cbIsRecipe4.Size = new System.Drawing.Size(76, 18);
+            this.cbIsRecipe4.TabIndex = 355;
+            this.cbIsRecipe4.Text = "Is a recipe";
+            this.cbIsRecipe4.UseVisualStyleBackColor = true;
+            this.cbIsRecipe4.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
+            // 
+            // cbIsRecipe3
+            // 
+            this.cbIsRecipe3.AutoSize = true;
+            this.cbIsRecipe3.Location = new System.Drawing.Point(606, 107);
+            this.cbIsRecipe3.Name = "cbIsRecipe3";
+            this.cbIsRecipe3.Size = new System.Drawing.Size(76, 18);
+            this.cbIsRecipe3.TabIndex = 354;
+            this.cbIsRecipe3.Text = "Is a recipe";
+            this.cbIsRecipe3.UseVisualStyleBackColor = true;
+            this.cbIsRecipe3.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
+            // 
+            // cbIsRecipe2
+            // 
+            this.cbIsRecipe2.AutoSize = true;
+            this.cbIsRecipe2.Location = new System.Drawing.Point(606, 78);
+            this.cbIsRecipe2.Name = "cbIsRecipe2";
+            this.cbIsRecipe2.Size = new System.Drawing.Size(76, 18);
+            this.cbIsRecipe2.TabIndex = 353;
+            this.cbIsRecipe2.Text = "Is a recipe";
+            this.cbIsRecipe2.UseVisualStyleBackColor = true;
+            this.cbIsRecipe2.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
+            // 
+            // cbIsRecipe1
+            // 
+            this.cbIsRecipe1.AutoSize = true;
+            this.cbIsRecipe1.Location = new System.Drawing.Point(606, 49);
+            this.cbIsRecipe1.Name = "cbIsRecipe1";
+            this.cbIsRecipe1.Size = new System.Drawing.Size(76, 18);
+            this.cbIsRecipe1.TabIndex = 352;
+            this.cbIsRecipe1.Text = "Is a recipe";
+            this.cbIsRecipe1.UseVisualStyleBackColor = true;
+            this.cbIsRecipe1.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
+            // 
+            // cbIsRecipe0
+            // 
+            this.cbIsRecipe0.AutoSize = true;
+            this.cbIsRecipe0.Location = new System.Drawing.Point(606, 23);
+            this.cbIsRecipe0.Name = "cbIsRecipe0";
+            this.cbIsRecipe0.Size = new System.Drawing.Size(76, 18);
+            this.cbIsRecipe0.TabIndex = 351;
+            this.cbIsRecipe0.Text = "Is a recipe";
+            this.cbIsRecipe0.UseVisualStyleBackColor = true;
+            this.cbIsRecipe0.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
             // 
             // btnGuessCost
             // 
@@ -580,7 +652,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             this.lstItems.FormattingEnabled = true;
             this.lstItems.ItemHeight = 14;
-            this.lstItems.Location = new System.Drawing.Point(6, 251);
+            this.lstItems.Location = new System.Drawing.Point(6, 22);
             this.lstItems.Name = "lstItems";
             this.lstItems.Size = new System.Drawing.Size(202, 172);
             this.lstItems.TabIndex = 0;
@@ -645,126 +717,49 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             // GroupBox2
             // 
-            this.GroupBox2.Controls.Add(this.btnI50);
-            this.GroupBox2.Controls.Add(this.btnI40);
-            this.GroupBox2.Controls.Add(this.btnI25);
-            this.GroupBox2.Controls.Add(this.btnI20);
-            this.GroupBox2.Controls.Add(this.btnIncrement);
-            this.GroupBox2.Controls.Add(this.btnDown);
-            this.GroupBox2.Controls.Add(this.btnUp);
-            this.GroupBox2.Controls.Add(this.btnDel);
-            this.GroupBox2.Controls.Add(this.btnAdd);
+            this.GroupBox2.Controls.Add(this.checkBox2);
+            this.GroupBox2.Controls.Add(this.checkBox1);
             this.GroupBox2.Controls.Add(this.lblEnh);
             this.GroupBox2.Controls.Add(this.txtExtern);
             this.GroupBox2.Controls.Add(this.Label15);
-            this.GroupBox2.Controls.Add(this.Label4);
-            this.GroupBox2.Controls.Add(this.lstItems);
             this.GroupBox2.Controls.Add(this.Label2);
             this.GroupBox2.Controls.Add(this.txtRecipeName);
             this.GroupBox2.Controls.Add(this.cbEnh);
             this.GroupBox2.Controls.Add(this.cbRarity);
             this.GroupBox2.Controls.Add(this.Label1);
             this.GroupBox2.Controls.Add(this.Label3);
-            this.GroupBox2.Location = new System.Drawing.Point(617, 12);
+            this.GroupBox2.Location = new System.Drawing.Point(619, 12);
             this.GroupBox2.Name = "GroupBox2";
-            this.GroupBox2.Size = new System.Drawing.Size(214, 523);
+            this.GroupBox2.Size = new System.Drawing.Size(214, 303);
             this.GroupBox2.TabIndex = 9;
             this.GroupBox2.TabStop = false;
             this.GroupBox2.Text = "Recipe:";
             // 
-            // btnI50
+            // checkBox2
             // 
-            this.btnI50.Location = new System.Drawing.Point(117, 489);
-            this.btnI50.Name = "btnI50";
-            this.btnI50.Size = new System.Drawing.Size(31, 24);
-            this.btnI50.TabIndex = 28;
-            this.btnI50.Text = "50";
-            this.btnI50.UseVisualStyleBackColor = true;
-            this.btnI50.Click += new System.EventHandler(this.btnI50_Click);
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(16, 258);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(57, 18);
+            this.checkBox2.TabIndex = 353;
+            this.checkBox2.Text = "Virtual";
+            this.checkBox2.UseVisualStyleBackColor = true;
             // 
-            // btnI40
+            // checkBox1
             // 
-            this.btnI40.Location = new System.Drawing.Point(80, 489);
-            this.btnI40.Name = "btnI40";
-            this.btnI40.Size = new System.Drawing.Size(31, 24);
-            this.btnI40.TabIndex = 27;
-            this.btnI40.Text = "40";
-            this.btnI40.UseVisualStyleBackColor = true;
-            this.btnI40.Click += new System.EventHandler(this.btnI40_Click);
-            // 
-            // btnI25
-            // 
-            this.btnI25.Location = new System.Drawing.Point(43, 489);
-            this.btnI25.Name = "btnI25";
-            this.btnI25.Size = new System.Drawing.Size(31, 24);
-            this.btnI25.TabIndex = 26;
-            this.btnI25.Text = "25";
-            this.btnI25.UseVisualStyleBackColor = true;
-            this.btnI25.Click += new System.EventHandler(this.btnI25_Click);
-            // 
-            // btnI20
-            // 
-            this.btnI20.Location = new System.Drawing.Point(6, 489);
-            this.btnI20.Name = "btnI20";
-            this.btnI20.Size = new System.Drawing.Size(31, 24);
-            this.btnI20.TabIndex = 25;
-            this.btnI20.Text = "20";
-            this.btnI20.UseVisualStyleBackColor = true;
-            this.btnI20.Click += new System.EventHandler(this.btnI20_Click);
-            // 
-            // btnIncrement
-            // 
-            this.btnIncrement.Location = new System.Drawing.Point(154, 489);
-            this.btnIncrement.Name = "btnIncrement";
-            this.btnIncrement.Size = new System.Drawing.Size(54, 24);
-            this.btnIncrement.TabIndex = 24;
-            this.btnIncrement.Text = "+ 1";
-            this.btnIncrement.UseVisualStyleBackColor = true;
-            this.btnIncrement.Click += new System.EventHandler(this.btnIncrement_Click);
-            // 
-            // btnDown
-            // 
-            this.btnDown.Location = new System.Drawing.Point(108, 459);
-            this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(100, 24);
-            this.btnDown.TabIndex = 23;
-            this.btnDown.Text = "Down";
-            this.btnDown.UseVisualStyleBackColor = true;
-            // 
-            // btnUp
-            // 
-            this.btnUp.Location = new System.Drawing.Point(108, 429);
-            this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(100, 24);
-            this.btnUp.TabIndex = 22;
-            this.btnUp.Text = "Up";
-            this.btnUp.UseVisualStyleBackColor = true;
-            // 
-            // btnDel
-            // 
-            this.btnDel.Location = new System.Drawing.Point(6, 459);
-            this.btnDel.Name = "btnDel";
-            this.btnDel.Size = new System.Drawing.Size(100, 24);
-            this.btnDel.TabIndex = 21;
-            this.btnDel.Text = "Delete";
-            this.btnDel.UseVisualStyleBackColor = true;
-            this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Location = new System.Drawing.Point(6, 429);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(100, 24);
-            this.btnAdd.TabIndex = 20;
-            this.btnAdd.Text = "Add";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(16, 234);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(64, 18);
+            this.checkBox1.TabIndex = 352;
+            this.checkBox1.Text = "Generic";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // lblEnh
             // 
-            this.lblEnh.Location = new System.Drawing.Point(6, 196);
+            this.lblEnh.Location = new System.Drawing.Point(6, 200);
             this.lblEnh.Name = "lblEnh";
-            this.lblEnh.Size = new System.Drawing.Size(202, 40);
+            this.lblEnh.Size = new System.Drawing.Size(202, 28);
             this.lblEnh.TabIndex = 17;
             this.lblEnh.Text = "EnhancementName";
             this.lblEnh.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -786,14 +781,93 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Label15.Text = "External Name:";
             this.Label15.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // Label4
+            // btnI50
             // 
-            this.Label4.Location = new System.Drawing.Point(6, 226);
-            this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(86, 22);
-            this.Label4.TabIndex = 16;
-            this.Label4.Text = "Recipe Entries:";
-            this.Label4.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnI50.Location = new System.Drawing.Point(117, 260);
+            this.btnI50.Name = "btnI50";
+            this.btnI50.Size = new System.Drawing.Size(31, 24);
+            this.btnI50.TabIndex = 28;
+            this.btnI50.Text = "50";
+            this.btnI50.UseVisualStyleBackColor = true;
+            this.btnI50.Click += new System.EventHandler(this.btnI50_Click);
+            // 
+            // btnI40
+            // 
+            this.btnI40.Location = new System.Drawing.Point(80, 260);
+            this.btnI40.Name = "btnI40";
+            this.btnI40.Size = new System.Drawing.Size(31, 24);
+            this.btnI40.TabIndex = 27;
+            this.btnI40.Text = "40";
+            this.btnI40.UseVisualStyleBackColor = true;
+            this.btnI40.Click += new System.EventHandler(this.btnI40_Click);
+            // 
+            // btnI25
+            // 
+            this.btnI25.Location = new System.Drawing.Point(43, 260);
+            this.btnI25.Name = "btnI25";
+            this.btnI25.Size = new System.Drawing.Size(31, 24);
+            this.btnI25.TabIndex = 26;
+            this.btnI25.Text = "25";
+            this.btnI25.UseVisualStyleBackColor = true;
+            this.btnI25.Click += new System.EventHandler(this.btnI25_Click);
+            // 
+            // btnI20
+            // 
+            this.btnI20.Location = new System.Drawing.Point(6, 260);
+            this.btnI20.Name = "btnI20";
+            this.btnI20.Size = new System.Drawing.Size(31, 24);
+            this.btnI20.TabIndex = 25;
+            this.btnI20.Text = "20";
+            this.btnI20.UseVisualStyleBackColor = true;
+            this.btnI20.Click += new System.EventHandler(this.btnI20_Click);
+            // 
+            // btnIncrement
+            // 
+            this.btnIncrement.Location = new System.Drawing.Point(154, 260);
+            this.btnIncrement.Name = "btnIncrement";
+            this.btnIncrement.Size = new System.Drawing.Size(54, 24);
+            this.btnIncrement.TabIndex = 24;
+            this.btnIncrement.Text = "+ 1";
+            this.btnIncrement.UseVisualStyleBackColor = true;
+            this.btnIncrement.Click += new System.EventHandler(this.btnIncrement_Click);
+            // 
+            // btnDown
+            // 
+            this.btnDown.Location = new System.Drawing.Point(108, 230);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(100, 24);
+            this.btnDown.TabIndex = 23;
+            this.btnDown.Text = "Down";
+            this.btnDown.UseVisualStyleBackColor = true;
+            // 
+            // btnUp
+            // 
+            this.btnUp.Location = new System.Drawing.Point(108, 200);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(100, 24);
+            this.btnUp.TabIndex = 22;
+            this.btnUp.Text = "Up";
+            this.btnUp.UseVisualStyleBackColor = true;
+            // 
+            // btnDel
+            // 
+            this.btnDel.Location = new System.Drawing.Point(6, 230);
+            this.btnDel.Name = "btnDel";
+            this.btnDel.Size = new System.Drawing.Size(100, 24);
+            this.btnDel.TabIndex = 21;
+            this.btnDel.Text = "Delete";
+            this.btnDel.UseVisualStyleBackColor = true;
+            this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Location = new System.Drawing.Point(6, 200);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(100, 24);
+            this.btnAdd.TabIndex = 20;
+            this.btnAdd.Text = "Add";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnRAdd
             // 
@@ -853,10 +927,61 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnRunSeq.UseVisualStyleBackColor = true;
             this.btnRunSeq.Click += new System.EventHandler(this.btnRunSeq_Click);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.btnI50);
+            this.groupBox3.Controls.Add(this.lstItems);
+            this.groupBox3.Controls.Add(this.btnI40);
+            this.groupBox3.Controls.Add(this.btnAdd);
+            this.groupBox3.Controls.Add(this.btnI25);
+            this.groupBox3.Controls.Add(this.btnDel);
+            this.groupBox3.Controls.Add(this.btnI20);
+            this.groupBox3.Controls.Add(this.btnUp);
+            this.groupBox3.Controls.Add(this.btnIncrement);
+            this.groupBox3.Controls.Add(this.btnDown);
+            this.groupBox3.Location = new System.Drawing.Point(839, 12);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(214, 303);
+            this.groupBox3.TabIndex = 27;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Recipe entries:";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label4);
+            this.groupBox4.Controls.Add(this.lstSubRecipeComponents);
+            this.groupBox4.Location = new System.Drawing.Point(706, 321);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(347, 164);
+            this.groupBox4.TabIndex = 28;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Recipe entries:";
+            this.groupBox4.Visible = false;
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(6, 16);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(202, 18);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "Sub-recipe components (Ingredient #1):";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // lstSubRecipeComponents
+            // 
+            this.lstSubRecipeComponents.FormattingEnabled = true;
+            this.lstSubRecipeComponents.ItemHeight = 14;
+            this.lstSubRecipeComponents.Location = new System.Drawing.Point(6, 39);
+            this.lstSubRecipeComponents.Name = "lstSubRecipeComponents";
+            this.lstSubRecipeComponents.Size = new System.Drawing.Size(335, 116);
+            this.lstSubRecipeComponents.TabIndex = 0;
+            // 
             // frmRecipeEdit
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(843, 537);
+            this.ClientSize = new System.Drawing.Size(1060, 526);
+            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnRunSeq);
             this.Controls.Add(this.btnImportUpdate);
             this.Controls.Add(this.btnRDown);
@@ -878,6 +1003,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.ShowInTaskbar = false;
             this.Text = "Recipe Editor";
             this.GroupBox1.ResumeLayout(false);
+            this.GroupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udSal4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal2)).EndInit();
@@ -890,6 +1016,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             ((System.ComponentModel.ISupportInitialize)(this.udLevel)).EndInit();
             this.GroupBox2.ResumeLayout(false);
             this.GroupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -937,7 +1065,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         Label Label15;
         Label Label2;
         Label Label3;
-        Label Label4;
         Label Label5;
         Label Label6;
         Label Label7;
@@ -958,5 +1085,16 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         NumericUpDown udSal2;
         NumericUpDown udSal3;
         NumericUpDown udSal4;
+        private CheckBox cbIsRecipe4;
+        private CheckBox cbIsRecipe3;
+        private CheckBox cbIsRecipe2;
+        private CheckBox cbIsRecipe1;
+        private CheckBox cbIsRecipe0;
+        private GroupBox groupBox3;
+        private GroupBox groupBox4;
+        private Label label4;
+        private ListBox lstSubRecipeComponents;
+        private CheckBox checkBox2;
+        private CheckBox checkBox1;
     }
 }
