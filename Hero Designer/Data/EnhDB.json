@@ -2917,7 +2917,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -3301,7 +3301,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -3771,7 +3771,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -4291,7 +4291,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -4934,7 +4934,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -5472,7 +5472,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -5855,7 +5855,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -6325,7 +6325,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -6384,7 +6384,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -6905,7 +6905,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -7556,7 +7556,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -8195,7 +8195,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -8734,7 +8734,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -10219,7 +10219,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -11438,7 +11438,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -11923,7 +11923,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -12408,7 +12408,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -12465,7 +12465,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -12975,7 +12975,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -13614,7 +13614,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -14252,7 +14252,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -14309,7 +14309,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -14770,7 +14770,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -15266,7 +15266,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -15726,7 +15726,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -16222,7 +16222,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -16682,7 +16682,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -17176,7 +17176,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -17828,7 +17828,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -18519,7 +18519,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -18978,7 +18978,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -19473,7 +19473,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -19934,7 +19934,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -20430,7 +20430,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -20890,7 +20890,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -21386,7 +21386,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -21619,7 +21619,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -21677,7 +21677,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -21933,7 +21933,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -21991,7 +21991,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -22226,7 +22226,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -22284,7 +22284,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -22525,7 +22525,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -22583,7 +22583,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -24049,7 +24049,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -24321,7 +24321,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -24595,7 +24595,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -24869,7 +24869,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -25141,7 +25141,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -25415,7 +25415,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -25688,7 +25688,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -25962,7 +25962,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -26236,7 +26236,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -26509,7 +26509,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -26768,7 +26768,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -27247,7 +27247,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -27519,7 +27519,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -28035,7 +28035,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -28325,7 +28325,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -28865,7 +28865,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -29134,7 +29134,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -29629,7 +29629,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -29687,7 +29687,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -29957,7 +29957,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -30451,7 +30451,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -30717,7 +30717,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -31196,7 +31196,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -31466,7 +31466,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -31747,7 +31747,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -32385,7 +32385,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -32659,7 +32659,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -33156,7 +33156,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -33430,7 +33430,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -33700,7 +33700,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -33976,7 +33976,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -34327,7 +34327,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -34678,7 +34678,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -35166,7 +35166,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -35223,7 +35223,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -35306,7 +35306,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -35594,7 +35594,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -35798,7 +35798,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -36599,7 +36599,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -36883,7 +36883,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -37156,7 +37156,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -37458,7 +37458,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -37753,7 +37753,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -37811,7 +37811,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -38114,7 +38114,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -38544,7 +38544,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -38602,7 +38602,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -38899,7 +38899,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -38957,7 +38957,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -39260,7 +39260,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -39697,7 +39697,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -40000,7 +40000,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -40303,7 +40303,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -40606,7 +40606,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -40909,7 +40909,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -40967,7 +40967,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -41270,7 +41270,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -41578,7 +41578,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -41888,7 +41888,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -42196,7 +42196,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -42639,7 +42639,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -42949,7 +42949,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -43258,7 +43258,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -43700,7 +43700,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -44005,7 +44005,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -44063,7 +44063,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -44372,7 +44372,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -44673,7 +44673,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -44731,7 +44731,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -45040,7 +45040,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -45349,7 +45349,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -45655,7 +45655,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -45961,7 +45961,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -46311,7 +46311,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -46796,7 +46796,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -47093,7 +47093,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -47395,7 +47395,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -47698,7 +47698,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -48012,7 +48012,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -48076,7 +48076,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -48507,7 +48507,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -48942,7 +48942,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -49239,7 +49239,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -49540,7 +49540,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -49837,7 +49837,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -50138,7 +50138,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -50568,7 +50568,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -51002,7 +51002,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -51300,7 +51300,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -51601,7 +51601,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -51870,7 +51870,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -52143,7 +52143,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -52440,7 +52440,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -52734,7 +52734,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         },
@@ -53038,7 +53038,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -53339,7 +53339,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -53636,7 +53636,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -53937,7 +53937,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -54234,7 +54234,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -54535,7 +54535,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -58735,7 +58735,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -59026,7 +59026,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -59580,7 +59580,7 @@
             "AtrModRange": -1.0,
             "AtrModRechargeTime": -1.0,
             "AtrModSecondaryRange": -1.0,
-            "ActiveConditionals": {},
+            "ActiveConditionals": [],
             "nOverride": -1
           }
         }
@@ -59829,7 +59829,7 @@
       "LevelMin": 29,
       "LevelMax": 49,
       "RecipeName": "Artillery_F",
-      "RecipeIDX": 2338,
+      "RecipeIDX": 2343,
       "UID": "Crafted_Shrapnel_F",
       "HasEnhEffect": true,
       "LongName": "Artillery: Endurance/Recharge/Range",
