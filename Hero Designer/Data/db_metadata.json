@@ -15626,8 +15626,8 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Energy_Melee",
-    "Hash": 1794173511,
-    "Length": 174447
+    "Hash": 801458705,
+    "Length": 174255
   },
   {
     "Archetype": "Class_Brute",
@@ -20402,8 +20402,8 @@
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Energy_Melee",
-    "Hash": 917987903,
-    "Length": 174557
+    "Hash": 1211456064,
+    "Length": 174245
   },
   {
     "Archetype": "Class_Tanker",
