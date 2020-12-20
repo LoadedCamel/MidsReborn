@@ -181,7 +181,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             // btnReGuess
             // 
-            this.btnReGuess.Location = new System.Drawing.Point(250, 491);
+            this.btnReGuess.Location = new System.Drawing.Point(269, 491);
             this.btnReGuess.Name = "btnReGuess";
             this.btnReGuess.Size = new System.Drawing.Size(147, 24);
             this.btnReGuess.TabIndex = 7;
@@ -493,6 +493,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbSal0.Size = new System.Drawing.Size(202, 22);
             this.cbSal0.TabIndex = 21;
             this.cbSal0.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal0.Enter += new System.EventHandler(this.cbSal0_Enter);
+            this.cbSal0.Leave += new System.EventHandler(this.cbSal0_Leave);
             // 
             // Label9
             // 
@@ -736,7 +738,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbIsHidden.TabIndex = 354;
             this.cbIsHidden.Text = "Hidden";
             this.cbIsHidden.UseVisualStyleBackColor = true;
-            this.cbIsHidden.Click += new System.EventHandler(this.cbIsHidden_CheckedChanged);
+            this.cbIsHidden.Click += new System.EventHandler(this.cbIsHidden_Click);
             // 
             // cbIsVirtual
             // 
@@ -747,7 +749,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbIsVirtual.TabIndex = 353;
             this.cbIsVirtual.Text = "Virtual";
             this.cbIsVirtual.UseVisualStyleBackColor = true;
-            this.cbIsVirtual.Click += new System.EventHandler(this.cbIsVirtual_CheckedChanged);
+            this.cbIsVirtual.Click += new System.EventHandler(this.cbIsVirtual_Click);
             // 
             // cbIsGeneric
             // 
@@ -758,7 +760,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbIsGeneric.TabIndex = 352;
             this.cbIsGeneric.Text = "Generic";
             this.cbIsGeneric.UseVisualStyleBackColor = true;
-            this.cbIsGeneric.Click += new System.EventHandler(this.cbIsGeneric_CheckedChanged);
+            this.cbIsGeneric.Click += new System.EventHandler(this.cbIsGeneric_Click);
             // 
             // lblEnh
             // 
