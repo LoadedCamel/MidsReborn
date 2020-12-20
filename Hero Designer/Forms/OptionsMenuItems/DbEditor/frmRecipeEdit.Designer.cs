@@ -36,7 +36,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.ColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnImport = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnReGuess = new System.Windows.Forms.Button();
@@ -80,8 +79,9 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.cbEnh = new System.Windows.Forms.ComboBox();
             this.GroupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.cbIsHidden = new System.Windows.Forms.CheckBox();
+            this.cbIsVirtual = new System.Windows.Forms.CheckBox();
+            this.cbIsGeneric = new System.Windows.Forms.CheckBox();
             this.lblEnh = new System.Windows.Forms.Label();
             this.txtExtern = new System.Windows.Forms.TextBox();
             this.Label15 = new System.Windows.Forms.Label();
@@ -98,7 +98,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnRDel = new System.Windows.Forms.Button();
             this.btnRUp = new System.Windows.Forms.Button();
             this.btnRDown = new System.Windows.Forms.Button();
-            this.btnImportUpdate = new System.Windows.Forms.Button();
             this.btnRunSeq = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -133,10 +132,10 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.lvDPA.MultiSelect = false;
             this.lvDPA.Name = "lvDPA";
             this.lvDPA.Size = new System.Drawing.Size(599, 273);
+            this.lvDPA.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvDPA.TabIndex = 0;
             this.lvDPA.UseCompatibleStateImageBehavior = false;
             this.lvDPA.View = System.Windows.Forms.View.Details;
-            this.lvDPA.Sorting = SortOrder.Ascending;
             this.lvDPA.SelectedIndexChanged += new System.EventHandler(this.lvDPA_SelectedIndexChanged);
             // 
             // ColumnHeader1
@@ -157,16 +156,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader4
             // 
             this.ColumnHeader4.Text = "Entries";
-            // 
-            // btnImport
-            // 
-            this.btnImport.Location = new System.Drawing.Point(356, 491);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(102, 24);
-            this.btnImport.TabIndex = 6;
-            this.btnImport.Text = "Import w/Clear";
-            this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // btnCancel
             // 
@@ -192,7 +181,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             // 
             // btnReGuess
             // 
-            this.btnReGuess.Location = new System.Drawing.Point(464, 491);
+            this.btnReGuess.Location = new System.Drawing.Point(250, 491);
             this.btnReGuess.Name = "btnReGuess";
             this.btnReGuess.Size = new System.Drawing.Size(147, 24);
             this.btnReGuess.TabIndex = 7;
@@ -713,14 +702,15 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbEnh.Location = new System.Drawing.Point(6, 172);
             this.cbEnh.Name = "cbEnh";
             this.cbEnh.Size = new System.Drawing.Size(202, 22);
-            this.cbEnh.TabIndex = 14;
             this.cbEnh.Sorted = true;
+            this.cbEnh.TabIndex = 14;
             this.cbEnh.SelectedIndexChanged += new System.EventHandler(this.cbEnh_SelectedIndexChanged);
             // 
             // GroupBox2
             // 
-            this.GroupBox2.Controls.Add(this.checkBox2);
-            this.GroupBox2.Controls.Add(this.checkBox1);
+            this.GroupBox2.Controls.Add(this.cbIsHidden);
+            this.GroupBox2.Controls.Add(this.cbIsVirtual);
+            this.GroupBox2.Controls.Add(this.cbIsGeneric);
             this.GroupBox2.Controls.Add(this.lblEnh);
             this.GroupBox2.Controls.Add(this.txtExtern);
             this.GroupBox2.Controls.Add(this.Label15);
@@ -737,25 +727,38 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.GroupBox2.TabStop = false;
             this.GroupBox2.Text = "Recipe:";
             // 
-            // checkBox2
+            // cbIsHidden
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(16, 258);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(57, 18);
-            this.checkBox2.TabIndex = 353;
-            this.checkBox2.Text = "Virtual";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.cbIsHidden.AutoSize = true;
+            this.cbIsHidden.Location = new System.Drawing.Point(16, 279);
+            this.cbIsHidden.Name = "cbIsHidden";
+            this.cbIsHidden.Size = new System.Drawing.Size(59, 18);
+            this.cbIsHidden.TabIndex = 354;
+            this.cbIsHidden.Text = "Hidden";
+            this.cbIsHidden.UseVisualStyleBackColor = true;
+            this.cbIsHidden.CheckedChanged += new System.EventHandler(this.cbIsHidden_CheckedChanged);
             // 
-            // checkBox1
+            // cbIsVirtual
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(16, 234);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(64, 18);
-            this.checkBox1.TabIndex = 352;
-            this.checkBox1.Text = "Generic";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.cbIsVirtual.AutoSize = true;
+            this.cbIsVirtual.Location = new System.Drawing.Point(16, 255);
+            this.cbIsVirtual.Name = "cbIsVirtual";
+            this.cbIsVirtual.Size = new System.Drawing.Size(57, 18);
+            this.cbIsVirtual.TabIndex = 353;
+            this.cbIsVirtual.Text = "Virtual";
+            this.cbIsVirtual.UseVisualStyleBackColor = true;
+            this.cbIsVirtual.CheckedChanged += new System.EventHandler(this.cbIsVirtual_CheckedChanged);
+            // 
+            // cbIsGeneric
+            // 
+            this.cbIsGeneric.AutoSize = true;
+            this.cbIsGeneric.Location = new System.Drawing.Point(16, 231);
+            this.cbIsGeneric.Name = "cbIsGeneric";
+            this.cbIsGeneric.Size = new System.Drawing.Size(64, 18);
+            this.cbIsGeneric.TabIndex = 352;
+            this.cbIsGeneric.Text = "Generic";
+            this.cbIsGeneric.UseVisualStyleBackColor = true;
+            this.cbIsGeneric.CheckedChanged += new System.EventHandler(this.cbIsGeneric_CheckedChanged);
             // 
             // lblEnh
             // 
@@ -909,15 +912,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.btnRDown.Text = "Down";
             this.btnRDown.UseVisualStyleBackColor = true;
             // 
-            // btnImportUpdate
-            // 
-            this.btnImportUpdate.Location = new System.Drawing.Point(250, 491);
-            this.btnImportUpdate.Name = "btnImportUpdate";
-            this.btnImportUpdate.Size = new System.Drawing.Size(100, 24);
-            this.btnImportUpdate.TabIndex = 25;
-            this.btnImportUpdate.Text = "Import Update";
-            this.btnImportUpdate.UseVisualStyleBackColor = true;
-            // 
             // btnRunSeq
             // 
             this.btnRunSeq.Enabled = false;
@@ -985,7 +979,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnRunSeq);
-            this.Controls.Add(this.btnImportUpdate);
             this.Controls.Add(this.btnRDown);
             this.Controls.Add(this.btnRUp);
             this.Controls.Add(this.btnRDel);
@@ -993,7 +986,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.GroupBox2);
             this.Controls.Add(this.GroupBox1);
             this.Controls.Add(this.btnReGuess);
-            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lvDPA);
@@ -1034,8 +1026,6 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         Button btnI25;
         Button btnI40;
         Button btnI50;
-        Button btnImport;
-        Button btnImportUpdate;
         Button btnIncrement;
         Button btnOK;
         Button btnRAdd;
@@ -1096,7 +1086,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private GroupBox groupBox4;
         private Label label4;
         private ListBox lstSubRecipeComponents;
-        private CheckBox checkBox2;
-        private CheckBox checkBox1;
+        private CheckBox cbIsVirtual;
+        private CheckBox cbIsGeneric;
+        private CheckBox cbIsHidden;
     }
 }
