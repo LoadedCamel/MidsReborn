@@ -18,6 +18,7 @@ public class Recipe
     public RecipeRarity Rarity;
     public bool IsVirtual;
     public bool IsGeneric;
+    public bool IsHidden;
 
     public Recipe()
     {
@@ -30,7 +31,7 @@ public class Recipe
         ExternalName = reader.ReadString();
         Enhancement = reader.ReadString();
         Item = new RecipeEntry[reader.ReadInt32() + 1];
-        for (var index1 = 0; index1 < Item.Length; ++index1)
+        for (var index1 = 0; index1 < Item.Length; index1++)
         {
             Item[index1] = new RecipeEntry
             {
@@ -52,6 +53,38 @@ public class Recipe
                 Item[index1].RecipeIdx[index2] = reader.ReadInt32();
             }
         }
+        //IsGeneric = reader.ReadBoolean();
+        //IsVirtual = reader.ReadBoolean();
+        //IsHidden = reader.ReadBoolean();
+
+    }
+
+    public void StoreTo(BinaryWriter writer)
+    {
+        writer.Write((int) Rarity);
+        writer.Write(InternalName);
+        writer.Write(ExternalName);
+        writer.Write(Enhancement);
+        writer.Write(Item.Length - 1);
+        foreach (var r in Item)
+        {
+            writer.Write(r.Level);
+            writer.Write(r.BuyCost);
+            writer.Write(r.CraftCost);
+            writer.Write(r.BuyCostM);
+            writer.Write(r.CraftCostM);
+            writer.Write(r.Salvage.Length - 1);
+            for (var index2 = 0; index2 < r.Salvage.Length; index2++)
+            {
+                writer.Write(r.Salvage[index2]);
+                writer.Write(r.Count[index2]);
+                writer.Write(r.SalvageIdx[index2]);
+                writer.Write(r.RecipeIdx[index2]);
+            }
+        }
+        writer.Write(IsGeneric);
+        writer.Write(IsVirtual);
+        writer.Write(IsHidden);
     }
 
     public Recipe(ref Recipe iRecipe)
@@ -64,7 +97,8 @@ public class Recipe
         Item = new RecipeEntry[iRecipe.Item.Length];
         IsVirtual = iRecipe.IsVirtual;
         IsGeneric = iRecipe.IsGeneric;
-        for (var index1 = 0; index1 < iRecipe.Item.Length; ++index1)
+        IsHidden = iRecipe.IsHidden;
+        for (var index1 = 0; index1 < iRecipe.Item.Length; index1++)
         {
             Item[index1] = new RecipeEntry
             {
@@ -82,31 +116,6 @@ public class Recipe
                 Item[index1].Salvage[index2] = iRecipe.Item[index1].Salvage[index2];
                 Item[index1].SalvageIdx[index2] = iRecipe.Item[index1].SalvageIdx[index2];
                 Item[index1].Count[index2] = iRecipe.Item[index1].Count[index2];
-            }
-        }
-    }
-
-    public void StoreTo(BinaryWriter writer)
-    {
-        writer.Write((int) Rarity);
-        writer.Write(InternalName);
-        writer.Write(ExternalName);
-        writer.Write(Enhancement);
-        writer.Write(Item.Length - 1);
-        for (var index1 = 0; index1 <= Item.Length - 1; ++index1)
-        {
-            writer.Write(Item[index1].Level);
-            writer.Write(Item[index1].BuyCost);
-            writer.Write(Item[index1].CraftCost);
-            writer.Write(Item[index1].BuyCostM);
-            writer.Write(Item[index1].CraftCostM);
-            writer.Write(Item[index1].Salvage.Length - 1);
-            for (var index2 = 0; index2 < Item[index1].Salvage.Length; index2++)
-            {
-                writer.Write(Item[index1].Salvage[index2]);
-                writer.Write(Item[index1].Count[index2]);
-                writer.Write(Item[index1].SalvageIdx[index2]);
-                writer.Write(Item[index1].RecipeIdx[index2]);
             }
         }
     }
