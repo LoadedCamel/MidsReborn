@@ -89,8 +89,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 133.8621,
-          "MagPercent": 133.8621,
+          "Mag": 120.4759,
+          "MagPercent": 120.4759,
           "Duration": 10.25,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -143,8 +143,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 133.8621,
-          "MagPercent": 133.8621,
+          "Mag": 120.4759,
+          "MagPercent": 120.4759,
           "Duration": 10.25,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3715,8 +3715,8 @@
         },
         {
           "MagnitudeExpression": "",
-          "Mag": 2.81526756,
-          "MagPercent": 2.81526756,
+          "Mag": 2.502459,
+          "MagPercent": 2.502459,
           "Reward": "",
           "EffectId": "FieryEmbrace",
           "Special": "",

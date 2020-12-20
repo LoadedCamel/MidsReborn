@@ -276,7 +276,7 @@
           "Probability": 1.0,
           "Mag": 4.0,
           "MagPercent": 4.0,
-          "Duration": 12.32,
+          "Duration": 16.4,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Taunt",
@@ -335,7 +335,7 @@
           "Probability": 1.0,
           "Mag": 4.0,
           "MagPercent": 4.0,
-          "Duration": 7.7,
+          "Duration": 10.25,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Taunt",
@@ -667,8 +667,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 234.258682,
-          "MagPercent": 234.258682,
+          "Mag": 210.832825,
+          "MagPercent": 210.832825,
           "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1652,8 +1652,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.15625,
-          "MagPercent": 15.625,
+          "Mag": 0.125,
+          "MagPercent": 12.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1711,8 +1711,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.15625,
-          "MagPercent": 15.625,
+          "Mag": 0.125,
+          "MagPercent": 12.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -9941,7 +9941,7 @@
           "Probability": 1.0,
           "Mag": 4.0,
           "MagPercent": 4.0,
-          "Duration": 30.8,
+          "Duration": 41.0,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Taunt",
@@ -10000,7 +10000,7 @@
           "Probability": 1.0,
           "Mag": 4.0,
           "MagPercent": 4.0,
-          "Duration": 7.7,
+          "Duration": 10.25,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Taunt",
@@ -12562,8 +12562,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 585.6467,
-          "MagPercent": 585.6467,
+          "Mag": 527.082031,
+          "MagPercent": 527.082031,
           "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -13626,7 +13626,7 @@
     },
     {
       "IsEpic": true,
-      "LocationIndex": 12,
+      "LocationIndex": 8,
       "PowerIndex": 5513,
       "PowerSetID": 2893,
       "PowerSetIndex": 29,
@@ -13800,7 +13800,8 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "AoEModifier": 1.0,
-      "DisplayLocation": 12
+      "DisplayLocation": 8,
+      "Taken": true
     },
     {
       "IsEpic": true,
@@ -14131,56 +14132,355 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.0,
-          "MagPercent": 100.0,
-          "Duration": 0.75,
+          "Mag": 0.03,
+          "MagPercent": 3.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
-          "Reward": "",
+          "Reward": "ASTeamCrit",
           "EffectId": "Ones",
           "Special": "",
-          "EffectType": 77,
-          "Summon": "",
-          "nSummon": -1,
+          "EffectType": 45,
+          "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
+          "Buffable": true,
+          "Resistible": true,
           "UIDClassName": "",
           "nIDClassName": -1,
-          "ToWho": 3,
-          "Scale": 1.0,
+          "ToWho": 2,
+          "Scale": 0.03,
           "nMagnitude": 1.0,
-          "nDuration": 0.75,
-          "Aspect": 4,
-          "ModifierTable": "Ranged_Ones",
-          "nModifierTable": 42,
-          "PowerFullName": "Inherent.Inherent.Assassination",
+          "Aspect": 3,
+          "ModifierTable": "Melee_Ones",
+          "nModifierTable": 41,
+          "PowerFullName": "",
           "Absorbed_PowerType": 1,
           "Absorbed_Power_nID": -1,
           "Absorbed_Class_nID": -1,
           "Absorbed_EffectID": -1,
-          "UniqueID": 1,
           "Override": "",
-          "AtrOrigAccuracy": -1.0,
-          "AtrOrigActivatePeriod": -1.0,
-          "AtrOrigArc": -1,
-          "AtrOrigCastTime": -1.0,
-          "AtrOrigEnduranceCost": -1.0,
-          "AtrOrigInterruptTime": -1.0,
-          "AtrOrigMaxTargets": -1,
-          "AtrOrigRadius": -1.0,
-          "AtrOrigRange": -1.0,
-          "AtrOrigRechargeTime": -1.0,
-          "AtrOrigSecondaryRange": -1.0,
-          "AtrModAccuracy": -1.0,
-          "AtrModActivatePeriod": -1.0,
-          "AtrModArc": -1,
-          "AtrModCastTime": -1.0,
-          "AtrModEnduranceCost": -1.0,
-          "AtrModInterruptTime": -1.0,
-          "AtrModMaxTargets": -1,
-          "AtrModRadius": -1.0,
-          "AtrModRange": -1.0,
-          "AtrModRechargeTime": -1.0,
-          "AtrModSecondaryRange": -1.0,
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
           "ActiveConditionals": [],
+          "nOverride": -1
+        },
+        {
+          "MagnitudeExpression": "",
+          "Probability": 1.0,
+          "Mag": 0.03,
+          "MagPercent": 3.0,
+          "DisplayPercentage": true,
+          "BaseProbability": 1.0,
+          "Reward": "ASTeamCrit",
+          "EffectId": "Ones",
+          "Special": "",
+          "nID": 1,
+          "EffectType": 45,
+          "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
+          "Buffable": true,
+          "Resistible": true,
+          "UIDClassName": "",
+          "nIDClassName": -1,
+          "ToWho": 2,
+          "Scale": 0.03,
+          "nMagnitude": 1.0,
+          "Aspect": 3,
+          "ModifierTable": "Melee_Ones",
+          "nModifierTable": 41,
+          "PowerFullName": "",
+          "Absorbed_PowerType": 1,
+          "Absorbed_Power_nID": -1,
+          "Absorbed_Class_nID": -1,
+          "Absorbed_EffectID": -1,
+          "Override": "",
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
+          "ActiveConditionals": [
+            {
+              "Key": "Team:Any",
+              "Value": "= 1"
+            }
+          ],
+          "nOverride": -1
+        },
+        {
+          "MagnitudeExpression": "",
+          "Probability": 1.0,
+          "Mag": 0.06,
+          "MagPercent": 6.0,
+          "DisplayPercentage": true,
+          "BaseProbability": 1.0,
+          "Reward": "ASTeamCrit",
+          "EffectId": "Ones",
+          "Special": "",
+          "nID": 2,
+          "EffectType": 45,
+          "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
+          "Buffable": true,
+          "Resistible": true,
+          "UIDClassName": "",
+          "nIDClassName": -1,
+          "ToWho": 2,
+          "Scale": 0.06,
+          "nMagnitude": 1.0,
+          "Aspect": 3,
+          "ModifierTable": "Melee_Ones",
+          "nModifierTable": 41,
+          "PowerFullName": "",
+          "Absorbed_PowerType": 1,
+          "Absorbed_Power_nID": -1,
+          "Absorbed_Class_nID": -1,
+          "Absorbed_EffectID": -1,
+          "Override": "",
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
+          "ActiveConditionals": [
+            {
+              "Key": "Team:Any",
+              "Value": "= 2"
+            }
+          ],
+          "nOverride": -1
+        },
+        {
+          "MagnitudeExpression": "",
+          "Probability": 1.0,
+          "Mag": 0.09,
+          "MagPercent": 9.0,
+          "DisplayPercentage": true,
+          "BaseProbability": 1.0,
+          "Reward": "ASTeamCrit",
+          "EffectId": "Ones",
+          "Special": "",
+          "nID": 3,
+          "EffectType": 45,
+          "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
+          "Buffable": true,
+          "Resistible": true,
+          "UIDClassName": "",
+          "nIDClassName": -1,
+          "ToWho": 2,
+          "Scale": 0.09,
+          "nMagnitude": 1.0,
+          "Aspect": 3,
+          "ModifierTable": "Melee_Ones",
+          "nModifierTable": 41,
+          "PowerFullName": "",
+          "Absorbed_PowerType": 1,
+          "Absorbed_Power_nID": -1,
+          "Absorbed_Class_nID": -1,
+          "Absorbed_EffectID": -1,
+          "Override": "",
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
+          "ActiveConditionals": [
+            {
+              "Key": "Team:Any",
+              "Value": "= 3"
+            }
+          ],
+          "nOverride": -1
+        },
+        {
+          "MagnitudeExpression": "",
+          "Probability": 1.0,
+          "Mag": 0.12,
+          "MagPercent": 12.0,
+          "DisplayPercentage": true,
+          "BaseProbability": 1.0,
+          "Reward": "ASTeamCrit",
+          "EffectId": "Ones",
+          "Special": "",
+          "nID": 4,
+          "EffectType": 45,
+          "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
+          "Buffable": true,
+          "Resistible": true,
+          "UIDClassName": "",
+          "nIDClassName": -1,
+          "ToWho": 2,
+          "Scale": 0.12,
+          "nMagnitude": 1.0,
+          "Aspect": 3,
+          "ModifierTable": "Melee_Ones",
+          "nModifierTable": 41,
+          "PowerFullName": "",
+          "Absorbed_PowerType": 1,
+          "Absorbed_Power_nID": -1,
+          "Absorbed_Class_nID": -1,
+          "Absorbed_EffectID": -1,
+          "Override": "",
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
+          "ActiveConditionals": [
+            {
+              "Key": "Team:Any",
+              "Value": "= 4"
+            }
+          ],
+          "nOverride": -1
+        },
+        {
+          "MagnitudeExpression": "",
+          "Probability": 1.0,
+          "Mag": 0.15,
+          "MagPercent": 15.000001,
+          "DisplayPercentage": true,
+          "BaseProbability": 1.0,
+          "Reward": "ASTeamCrit",
+          "EffectId": "Ones",
+          "Special": "",
+          "nID": 5,
+          "EffectType": 45,
+          "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
+          "Buffable": true,
+          "Resistible": true,
+          "UIDClassName": "",
+          "nIDClassName": -1,
+          "ToWho": 2,
+          "Scale": 0.15,
+          "nMagnitude": 1.0,
+          "Aspect": 3,
+          "ModifierTable": "Melee_Ones",
+          "nModifierTable": 41,
+          "PowerFullName": "",
+          "Absorbed_PowerType": 1,
+          "Absorbed_Power_nID": -1,
+          "Absorbed_Class_nID": -1,
+          "Absorbed_EffectID": -1,
+          "Override": "",
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
+          "ActiveConditionals": [
+            {
+              "Key": "Team:Any",
+              "Value": "= 5"
+            }
+          ],
+          "nOverride": -1
+        },
+        {
+          "MagnitudeExpression": "",
+          "Probability": 1.0,
+          "Mag": 0.18,
+          "MagPercent": 18.0,
+          "DisplayPercentage": true,
+          "BaseProbability": 1.0,
+          "Reward": "ASTeamCrit",
+          "EffectId": "Ones",
+          "Special": "",
+          "nID": 6,
+          "EffectType": 45,
+          "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
+          "Buffable": true,
+          "Resistible": true,
+          "UIDClassName": "",
+          "nIDClassName": -1,
+          "ToWho": 2,
+          "Scale": 0.18,
+          "nMagnitude": 1.0,
+          "Aspect": 3,
+          "ModifierTable": "Melee_Ones",
+          "nModifierTable": 41,
+          "PowerFullName": "",
+          "Absorbed_PowerType": 1,
+          "Absorbed_Power_nID": -1,
+          "Absorbed_Class_nID": -1,
+          "Absorbed_EffectID": -1,
+          "Override": "",
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
+          "ActiveConditionals": [
+            {
+              "Key": "Team:Any",
+              "Value": "= 6"
+            }
+          ],
+          "nOverride": -1
+        },
+        {
+          "MagnitudeExpression": "",
+          "Probability": 1.0,
+          "Mag": 0.21,
+          "MagPercent": 21.0,
+          "DisplayPercentage": true,
+          "BaseProbability": 1.0,
+          "Reward": "ASTeamCrit",
+          "EffectId": "Ones",
+          "Special": "",
+          "nID": 7,
+          "EffectType": 45,
+          "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
+          "Buffable": true,
+          "Resistible": true,
+          "UIDClassName": "",
+          "nIDClassName": -1,
+          "ToWho": 2,
+          "Scale": 0.21,
+          "nMagnitude": 1.0,
+          "Aspect": 3,
+          "ModifierTable": "Melee_Ones",
+          "nModifierTable": 41,
+          "PowerFullName": "",
+          "Absorbed_PowerType": 1,
+          "Absorbed_Power_nID": -1,
+          "Absorbed_Class_nID": -1,
+          "Absorbed_EffectID": -1,
+          "Override": "",
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
+          "ActiveConditionals": [
+            {
+              "Key": "Team:Any",
+              "Value": "= 7"
+            }
+          ],
           "nOverride": -1
         },
         {
@@ -14193,7 +14493,7 @@
           "Reward": "CritActive",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
+          "nID": 8,
           "EffectType": 45,
           "Summon": "Arachnos_Soldiers.Arachnos_Soldier.Single_Shot",
           "Buffable": true,
@@ -14212,28 +14512,14 @@
           "Absorbed_Class_nID": -1,
           "Absorbed_EffectID": -1,
           "Override": "",
-          "AtrOrigAccuracy": -1.0,
-          "AtrOrigActivatePeriod": -1.0,
-          "AtrOrigArc": -1,
-          "AtrOrigCastTime": -1.0,
-          "AtrOrigEnduranceCost": -1.0,
-          "AtrOrigInterruptTime": -1.0,
-          "AtrOrigMaxTargets": -1,
-          "AtrOrigRadius": -1.0,
-          "AtrOrigRange": -1.0,
-          "AtrOrigRechargeTime": -1.0,
-          "AtrOrigSecondaryRange": -1.0,
-          "AtrModAccuracy": -1.0,
-          "AtrModActivatePeriod": -1.0,
-          "AtrModArc": -1,
-          "AtrModCastTime": -1.0,
-          "AtrModEnduranceCost": -1.0,
-          "AtrModInterruptTime": -1.0,
-          "AtrModMaxTargets": -1,
-          "AtrModRadius": -1.0,
-          "AtrModRange": -1.0,
-          "AtrModRechargeTime": -1.0,
-          "AtrModSecondaryRange": -1.0,
+          "AtrOrigAccuracy": 1.0,
+          "AtrOrigActivatePeriod": 100.0,
+          "AtrOrigCastTime": 1.716,
+          "AtrOrigEffectArea": 1,
+          "AtrModAccuracy": 1.0,
+          "AtrModActivatePeriod": 100.0,
+          "AtrModCastTime": 1.716,
+          "AtrModEffectArea": 1,
           "ActiveConditionals": [],
           "nOverride": -1
         }
@@ -14241,8 +14527,7 @@
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.716,
       "AoEModifier": 1.0,
-      "Taken": true,
-      "Stacks": 1
+      "Taken": true
     },
     {
       "PowerIndex": 5518,
@@ -15607,8 +15892,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 22.52214,
-          "MagPercent": 22.52214,
+          "Mag": 20.0196724,
+          "MagPercent": 20.0196724,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -15650,8 +15935,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 22.52214,
-          "MagPercent": 22.52214,
+          "Mag": 20.0196724,
+          "MagPercent": 20.0196724,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -17649,8 +17934,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -17699,8 +17983,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -17749,8 +18032,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -17799,8 +18081,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -17849,8 +18130,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -17899,8 +18179,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -17949,8 +18228,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -17999,8 +18277,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -18049,8 +18326,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -25907,8 +26183,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 669.310547,
-          "MagPercent": 669.310547,
+          "Mag": 602.3795,
+          "MagPercent": 602.3795,
           "Duration": 0.5,
           "VariableModified": true,
           "BaseProbability": 1.0,
@@ -32043,8 +32319,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 133.8621,
-          "MagPercent": 133.8621,
+          "Mag": 120.4759,
+          "MagPercent": 120.4759,
           "Duration": 10.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -36473,8 +36749,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 669.310547,
-          "MagPercent": 669.310547,
+          "Mag": 602.3795,
+          "MagPercent": 602.3795,
           "Duration": 0.5,
           "VariableModified": true,
           "BaseProbability": 1.0,
@@ -39286,8 +39562,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 669.310547,
-          "MagPercent": 669.310547,
+          "Mag": 602.3795,
+          "MagPercent": 602.3795,
           "Duration": 0.5,
           "VariableModified": true,
           "BaseProbability": 1.0,
@@ -40847,8 +41123,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0009638072,
-          "MagPercent": 0.0963807255,
+          "Mag": 0.0008674265,
+          "MagPercent": 0.0867426544,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "IgnoreED": true,
@@ -40901,8 +41177,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.00214179372,
-          "MagPercent": 0.214179367,
+          "Mag": 0.00192761433,
+          "MagPercent": 0.192761436,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -46308,8 +46584,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.00103073823,
-          "MagPercent": 0.10307382,
+          "Mag": 0.000927664456,
+          "MagPercent": 0.09276645,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "IgnoreED": true,
@@ -46362,8 +46638,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.002141794,
-          "MagPercent": 0.2141794,
+          "Mag": 0.00192761456,
+          "MagPercent": 0.192761451,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
           "Reward": "",

@@ -2385,8 +2385,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 334.655273,
-          "MagPercent": 334.655273,
+          "Mag": 301.189758,
+          "MagPercent": 301.189758,
           "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -4826,8 +4826,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 200.793152,
-          "MagPercent": 200.793152,
+          "Mag": 180.713852,
+          "MagPercent": 180.713852,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -4878,8 +4878,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 200.793152,
-          "MagPercent": 200.793152,
+          "Mag": 180.713852,
+          "MagPercent": 180.713852,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -7012,8 +7012,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 535.4484,
-          "MagPercent": 535.4484,
+          "Mag": 481.9036,
+          "MagPercent": 481.9036,
           "Duration": 180.0,
           "BaseProbability": 1.0,
           "Reward": "",
