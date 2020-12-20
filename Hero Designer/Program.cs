@@ -23,42 +23,33 @@ namespace Hero_Designer
                 using frmMain f = new frmMain();
                 Application.Run(f);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                try
+                var exTarget = ex;
+                while (exTarget?.InnerException != null)
                 {
-                    MidsContext.AssertVersioning();
-                    using frmMain f = new frmMain();
-                    Application.Run(f);
+                    exTarget = ex.InnerException;
                 }
-                catch (Exception ex)
+
+                if (exTarget != null)
                 {
-                    var exTarget = ex;
-                    while (exTarget?.InnerException != null)
+                    // Zed: add extra info here.
+                    string[] args = Environment.GetCommandLineArgs();
+                    if (args.Skip(1).Contains("-debug"))
                     {
-                        exTarget = ex.InnerException;
+                        MessageBox.Show(
+                            "Error: " + exTarget.Message + "\n" +
+                            "Stack Trace: " + exTarget.StackTrace + "\n" +
+                            "Exception type: " + exTarget.GetType().Name,
+                            "Error [Debug mode enabled]", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error (Program.cs): {exTarget.Message}\r\n{exTarget.StackTrace}", exTarget.GetType().Name, MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                     }
 
-                    if (exTarget != null)
-                    {
-                        // Zed: add extra info here.
-                        string[] args = Environment.GetCommandLineArgs();
-                        if (args.Skip(1).Contains("-debug"))
-                        {
-                            MessageBox.Show(
-                                "Error: " + exTarget.Message + "\n" +
-                                "Stack Trace: " + exTarget.StackTrace + "\n" +
-                                "Exception type: " + exTarget.GetType().Name,
-                                "Error [Debug mode enabled]", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else
-                        {
-                            MessageBox.Show(exTarget.Message, exTarget.GetType().Name, MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                        }
-
-                        throw;
-                    }
+                    throw;
                 }
             }
         }

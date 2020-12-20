@@ -736,7 +736,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbIsHidden.TabIndex = 354;
             this.cbIsHidden.Text = "Hidden";
             this.cbIsHidden.UseVisualStyleBackColor = true;
-            this.cbIsHidden.CheckedChanged += new System.EventHandler(this.cbIsHidden_CheckedChanged);
+            this.cbIsHidden.Click += new System.EventHandler(this.cbIsHidden_CheckedChanged);
             // 
             // cbIsVirtual
             // 
@@ -747,7 +747,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbIsVirtual.TabIndex = 353;
             this.cbIsVirtual.Text = "Virtual";
             this.cbIsVirtual.UseVisualStyleBackColor = true;
-            this.cbIsVirtual.CheckedChanged += new System.EventHandler(this.cbIsVirtual_CheckedChanged);
+            this.cbIsVirtual.Click += new System.EventHandler(this.cbIsVirtual_CheckedChanged);
             // 
             // cbIsGeneric
             // 
@@ -758,7 +758,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbIsGeneric.TabIndex = 352;
             this.cbIsGeneric.Text = "Generic";
             this.cbIsGeneric.UseVisualStyleBackColor = true;
-            this.cbIsGeneric.CheckedChanged += new System.EventHandler(this.cbIsGeneric_CheckedChanged);
+            this.cbIsGeneric.Click += new System.EventHandler(this.cbIsGeneric_CheckedChanged);
             // 
             // lblEnh
             // 
