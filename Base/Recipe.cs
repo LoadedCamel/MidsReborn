@@ -79,12 +79,12 @@ public class Recipe
                 writer.Write(r.Salvage[index2]);
                 writer.Write(r.Count[index2]);
                 writer.Write(r.SalvageIdx[index2]);
-                writer.Write(r.RecipeIdx[index2]);
+                //writer.Write(r.RecipeIdx[index2]);
             }
         }
-        writer.Write(IsGeneric);
-        writer.Write(IsVirtual);
-        writer.Write(IsHidden);
+        //writer.Write(IsGeneric);
+        //writer.Write(IsVirtual);
+        //writer.Write(IsHidden);
     }
 
     public Recipe(ref Recipe iRecipe)

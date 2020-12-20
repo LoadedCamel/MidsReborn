@@ -150,8 +150,13 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             //database.Recipes = recipeArray;
             //DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Recipes.Length - 1] = new Recipe();
             AddListItem(DatabaseAPI.Database.Recipes.Length - 1);
-            lvDPA.Items[lvDPA.Items.Count - 1].Selected = true;
-            lvDPA.Items[lvDPA.Items.Count - 1].EnsureVisible();
+            //lvDPA.Items[lvDPA.Items.Count - 1].Selected = true;
+            //lvDPA.Items[lvDPA.Items.Count - 1].EnsureVisible();
+            lvDPA.Items[0].Selected = true;
+            lvDPA.Items[0].EnsureVisible();
+            cbRarity.SelectedIndex = 0;
+            cbEnh.SelectedText = "None";
+            lblEnh.Visible = false;
             cbEnh.Select();
             cbEnh.SelectAll();
         }
@@ -727,16 +732,18 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         {
             var target = sender as CheckBox;
             var state = target != null && target.Checked;
-
+            if (target == null) return;
             switch (target.Name)
             {
                 case "cbIsRecipe0":
                     PopulateComboBoxList(ref cbSal0, !state);
                     cbSal0.SelectedIndex = 0;
                     udSal0.Visible = !state;
-                    if (state)
+                    if (!state)
                     {
                         DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].SalvageIdx[0] = 0;
+                        Label2.Text = "Sub-recipe components (Ingredient #1):";
+                        lstSubRecipeComponents.Items.Clear();
                     }
                     else
                     {
@@ -749,9 +756,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     PopulateComboBoxList(ref cbSal1, !state);
                     cbSal1.SelectedIndex = 0;
                     udSal1.Visible = !state;
-                    if (state)
+                    if (!state)
                     {
                         DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].SalvageIdx[1] = 0;
+                        Label2.Text = "Sub-recipe components (Ingredient #2):";
+                        lstSubRecipeComponents.Items.Clear();
                     }
                     else
                     {
@@ -764,9 +773,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     PopulateComboBoxList(ref cbSal2, !state);
                     cbSal2.SelectedIndex = 0;
                     udSal2.Visible = !state;
-                    if (state)
+                    if (!state)
                     {
                         DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].SalvageIdx[2] = 0;
+                        Label2.Text = "Sub-recipe components (Ingredient #3):";
+                        lstSubRecipeComponents.Items.Clear();
                     }
                     else
                     {
@@ -779,9 +790,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     PopulateComboBoxList(ref cbSal3, !state);
                     cbSal3.SelectedIndex = 0;
                     udSal3.Visible = !state;
-                    if (state)
+                    if (!state)
                     {
                         DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].SalvageIdx[3] = 0;
+                        Label2.Text = "Sub-recipe components (Ingredient #4):";
+                        lstSubRecipeComponents.Items.Clear();
                     }
                     else
                     {
@@ -794,9 +807,11 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
                     PopulateComboBoxList(ref cbSal4, !state);
                     cbSal4.SelectedIndex = 0;
                     udSal4.Visible = !state;
-                    if (state)
+                    if (!state)
                     {
                         DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].SalvageIdx[4] = 0;
+                        Label2.Text = "Sub-recipe components (Ingredient #5):";
+                        lstSubRecipeComponents.Items.Clear();
                     }
                     else
                     {
@@ -805,6 +820,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
                     break;
             }
+            groupBox4.Visible = !state;
         }
 
         private void PopulateComboBoxList(ref ComboBox ctl, bool withSalvage = true)
@@ -829,7 +845,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             ctl.EndUpdate();
         }
 
-        private void cbIsGeneric_CheckedChanged(object sender, EventArgs e)
+        private void cbIsGeneric_Click(object sender, EventArgs e)
         {
             var control = (CheckBox) sender;
             var state = control.Checked;
@@ -840,18 +856,28 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             Label2.Visible = !state;
         }
 
-        private void cbIsVirtual_CheckedChanged(object sender, EventArgs e)
+        private void cbIsVirtual_Click(object sender, EventArgs e)
         {
             var control = (CheckBox) sender;
             var state = control.Checked;
             DatabaseAPI.Database.Recipes[RecipeID()].IsVirtual = state;
         }
 
-        private void cbIsHidden_CheckedChanged(object sender, EventArgs e)
+        private void cbIsHidden_Click(object sender, EventArgs e)
         {
             var control = (CheckBox) sender;
             var state = control.Checked;
             DatabaseAPI.Database.Recipes[RecipeID()].IsHidden = state;
+        }
+
+        private void cbSal0_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbSal0_Leave(object sender, EventArgs e)
+        {
+
         }
     }
 }
