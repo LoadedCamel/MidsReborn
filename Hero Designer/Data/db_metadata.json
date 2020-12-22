@@ -122,8 +122,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Energy_Manipulation",
-    "Hash": -1503852872,
-    "Length": 225598
+    "Hash": -1463664392,
+    "Length": 225642
   },
   {
     "Archetype": "Class_Blaster",
@@ -17360,8 +17360,8 @@
   {
     "Archetype": "",
     "Fullname": "Inherent.Inherent",
-    "Hash": 95054017,
-    "Length": 1800919
+    "Hash": 1625988614,
+    "Length": 1827223
   },
   {
     "Archetype": "",
@@ -19748,8 +19748,8 @@
   {
     "Archetype": "",
     "Fullname": "Pool.Teleportation",
-    "Hash": -2103821536,
-    "Length": 69629
+    "Hash": 1673704034,
+    "Length": 69628
   },
   {
     "Archetype": "",
@@ -21302,14 +21302,14 @@
   {
     "Archetype": "Class_Warshade",
     "Fullname": "Warshade_Defensive.Umbral_Aura",
-    "Hash": 1597996138,
-    "Length": 312668
+    "Hash": -198325626,
+    "Length": 308550
   },
   {
     "Archetype": "Class_Warshade",
     "Fullname": "Warshade_Offensive.Umbral_Blast",
-    "Hash": -1287368833,
-    "Length": 285106
+    "Hash": 1788537315,
+    "Length": 269096
   },
   {
     "Archetype": "Class_Arachnos_Widow",

@@ -870,7 +870,8 @@
       "FullSetName": "Blaster_Support.Energy_Manipulation",
       "CastTime": 1.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.83,
@@ -6044,7 +6045,8 @@
       "FullSetName": "Blaster_Support.Energy_Manipulation",
       "CastTime": 1.17,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.3,

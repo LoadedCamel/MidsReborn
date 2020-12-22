@@ -1415,7 +1415,6 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 5.57,
-      "IsModified": true,
       "PowerIndex": 6770,
       "PowerSetID": 3291,
       "PowerSetIndex": 2,
@@ -1467,6 +1466,7 @@
         18,
         25
       ],
+      "IgnoreStrength": true,
       "DescShort": "Ranged (Location), Self Teleport, ToHit",
       "DescLong": "You can Teleport moderate distances extremely quickly. These quick teleports surprise foes, giving your next attack a small ToHit advantage. This power can be used up to 3 times in a row before it starts recharging. Note that Combat Teleport is unaffected by Range changes. Recharge: Fast",
       "SortOverride": true,
@@ -1480,9 +1480,7 @@
       "NIDSubPower": [],
       "UIDSubPower": [],
       "IgnoreEnh": [],
-      "Ignore_Buff": [
-        13
-      ],
+      "Ignore_Buff": [],
       "MutexAuto": true,
       "NeverAutoUpdate": true,
       "ForcedClass": "",
@@ -1544,6 +1542,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 1,
           "EffectType": 40,
           "MezType": 14,
           "Summon": "",
@@ -1591,7 +1590,6 @@
       "CastTimeReal": 1.67,
       "ToggleCost": 13.52,
       "IsEpic": true,
-      "IsModified": true,
       "PowerIndex": 6771,
       "PowerSetID": 3291,
       "PowerSetIndex": 3,
@@ -1738,6 +1736,7 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
+          "nID": 1,
           "EffectType": 20,
           "MezType": 14,
           "Summon": "",
