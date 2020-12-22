@@ -7308,7 +7308,8 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
           "nOverride": -1
@@ -7366,7 +7367,8 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             },
             {
               "Key": "Taken:Pool.Fighting.Boxing",
@@ -7428,7 +7430,8 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             },
             {
               "Key": "Taken:Pool.Fighting.Kick",
@@ -7988,7 +7991,8 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
           "nOverride": -1
@@ -8047,7 +8051,8 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             },
             {
               "Key": "Taken:Pool.Fighting.Boxing",
@@ -8110,7 +8115,8 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             },
             {
               "Key": "Taken:Pool.Fighting.Kick",
