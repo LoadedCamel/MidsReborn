@@ -110,8 +110,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Gadgets",
-    "Hash": 1411242084,
-    "Length": 241690
+    "Hash": -1629847439,
+    "Length": 241860
   },
   {
     "Archetype": "Class_Blaster",
@@ -128,8 +128,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Fire_Manipulation",
-    "Hash": -906383944,
-    "Length": 211714
+    "Hash": 923548272,
+    "Length": 211100
   },
   {
     "Archetype": "Class_Blaster",
@@ -19502,8 +19502,8 @@
   {
     "Archetype": "",
     "Fullname": "Pets.Turret",
-    "Hash": -2114545138,
-    "Length": 79988
+    "Hash": 1075712338,
+    "Length": 79188
   },
   {
     "Archetype": "",
