@@ -20,8 +20,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": 577878200,
-    "Length": 199417
+    "Hash": -1901622024,
+    "Length": 199545
   },
   {
     "Archetype": "Class_Blaster",
@@ -15512,80 +15512,80 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Bio_Organic_Armor",
-    "Hash": -1045546869,
-    "Length": 451502
+    "Hash": -1071408795,
+    "Length": 453300
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Dark_Armor",
-    "Hash": -2000462137,
-    "Length": 174011
+    "Hash": 1414044728,
+    "Length": 174056
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Electric_Armor",
-    "Hash": 936669140,
-    "Length": 199748
+    "Hash": -1410910390,
+    "Length": 199805
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Energy_Aura",
-    "Hash": 1745926260,
-    "Length": 261084
+    "Hash": 326534185,
+    "Length": 261774
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Fiery_Aura",
-    "Hash": 1029670519,
-    "Length": 142787
+    "Hash": -1475370651,
+    "Length": 142823
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Ice_Armor",
-    "Hash": -1309652171,
-    "Length": 268191
+    "Hash": 1014190525,
+    "Length": 268521
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Invulnerability",
-    "Hash": -161522380,
-    "Length": 261182
+    "Hash": -1347430513,
+    "Length": 261718
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Radiation_Armor",
-    "Hash": 1934066062,
-    "Length": 210678
+    "Hash": 1465227261,
+    "Length": 210756
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Regeneration",
-    "Hash": 297646126,
-    "Length": 182197
+    "Hash": -835686642,
+    "Length": 182777
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Shield_Defense",
-    "Hash": -568327746,
-    "Length": 260832
+    "Hash": 948140079,
+    "Length": 261346
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Stone_Armor",
-    "Hash": -1715294742,
-    "Length": 272380
+    "Hash": -993532284,
+    "Length": 272521
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Super_Reflexes",
-    "Hash": -499422562,
-    "Length": 177368
+    "Hash": 350175775,
+    "Length": 177446
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Willpower",
-    "Hash": -526732625,
-    "Length": 264394
+    "Hash": -1170711988,
+    "Length": 264493
   },
   {
     "Archetype": "Class_Brute",
@@ -15608,8 +15608,8 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Dark_Melee",
-    "Hash": -623533009,
-    "Length": 181910
+    "Hash": -1230201401,
+    "Length": 182171
   },
   {
     "Archetype": "Class_Brute",
@@ -15710,8 +15710,8 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Melee.Titan_Weapons",
-    "Hash": 1166675589,
-    "Length": 214316
+    "Hash": 1118569713,
+    "Length": 229096
   },
   {
     "Archetype": "Class_Brute",
@@ -17360,8 +17360,8 @@
   {
     "Archetype": "",
     "Fullname": "Inherent.Inherent",
-    "Hash": 248410868,
-    "Length": 1828303
+    "Hash": -281166929,
+    "Length": 1828348
   },
   {
     "Archetype": "",
@@ -19694,8 +19694,8 @@
   {
     "Archetype": "",
     "Fullname": "Pool.Fighting",
-    "Hash": -1208008220,
-    "Length": 273555
+    "Hash": -365060028,
+    "Length": 273351
   },
   {
     "Archetype": "",
@@ -19748,8 +19748,8 @@
   {
     "Archetype": "",
     "Fullname": "Pool.Teleportation",
-    "Hash": 981102253,
-    "Length": 69550
+    "Hash": 633091658,
+    "Length": 69628
   },
   {
     "Archetype": "",
@@ -19760,8 +19760,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Bio_Organic_Armor",
-    "Hash": -897968116,
-    "Length": 436200
+    "Hash": 610707350,
+    "Length": 437638
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19778,8 +19778,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Energy_Aura",
-    "Hash": 826142112,
-    "Length": 277141
+    "Hash": -1852409719,
+    "Length": 277831
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19796,8 +19796,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Invulnerability",
-    "Hash": 931899847,
-    "Length": 261929
+    "Hash": -994454652,
+    "Length": 262465
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19808,8 +19808,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Radiation_Armor",
-    "Hash": 1341496960,
-    "Length": 204832
+    "Hash": 1030227145,
+    "Length": 204910
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19820,8 +19820,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Shield_Defense",
-    "Hash": -929081123,
-    "Length": 261449
+    "Hash": -71094838,
+    "Length": 261963
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19832,8 +19832,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Willpower",
-    "Hash": 145138351,
-    "Length": 265053
+    "Hash": 2119637036,
+    "Length": 265152
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19856,8 +19856,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Melee.Dark_Melee",
-    "Hash": 70399044,
-    "Length": 183475
+    "Hash": 130158004,
+    "Length": 183757
   },
   {
     "Archetype": "Class_Scrapper",
@@ -20210,8 +20210,8 @@
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Dark_Melee",
-    "Hash": 1679163905,
-    "Length": 181454
+    "Hash": -1800019433,
+    "Length": 181778
   },
   {
     "Archetype": "Class_Stalker",
@@ -20228,8 +20228,8 @@
   {
     "Archetype": "Class_Stalker",
     "Fullname": "Stalker_Melee.Energy_Melee",
-    "Hash": -1036992282,
-    "Length": 262384
+    "Hash": -1374337440,
+    "Length": 262406
   },
   {
     "Archetype": "Class_Stalker",
@@ -20300,68 +20300,68 @@
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Bio_Organic_Armor",
-    "Hash": -1473226621,
-    "Length": 451737
+    "Hash": -941163467,
+    "Length": 453535
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Dark_Armor",
-    "Hash": 1205736300,
-    "Length": 187841
+    "Hash": 1506246480,
+    "Length": 187991
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Electric_Armor",
-    "Hash": -1009969781,
-    "Length": 197630
+    "Hash": 1073157340,
+    "Length": 197708
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Fiery_Aura",
-    "Hash": -6710264,
-    "Length": 148941
+    "Hash": 1296244800,
+    "Length": 148977
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Ice_Armor",
-    "Hash": -1793924412,
-    "Length": 268375
+    "Hash": 1010030158,
+    "Length": 268705
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Invulnerability",
-    "Hash": 245725893,
-    "Length": 263331
+    "Hash": -334231093,
+    "Length": 263889
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Radiation_Armor",
-    "Hash": -1675451250,
-    "Length": 210824
+    "Hash": -1605927853,
+    "Length": 210902
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Shield_Defense",
-    "Hash": 172064476,
-    "Length": 262561
+    "Hash": 188347749,
+    "Length": 263097
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Stone_Armor",
-    "Hash": -782216872,
-    "Length": 278370
+    "Hash": -714321037,
+    "Length": 278532
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Super_Reflexes",
-    "Hash": 646244070,
-    "Length": 177062
+    "Hash": -22376431,
+    "Length": 177140
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Willpower",
-    "Hash": 391384182,
-    "Length": 266502
+    "Hash": -701751510,
+    "Length": 266622
   },
   {
     "Archetype": "Class_Tanker",
@@ -20384,8 +20384,8 @@
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Melee.Dark_Melee",
-    "Hash": 1244417490,
-    "Length": 186099
+    "Hash": -1754563939,
+    "Length": 186402
   },
   {
     "Archetype": "Class_Tanker",

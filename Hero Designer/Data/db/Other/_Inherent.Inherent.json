@@ -39166,7 +39166,9 @@
         }
       ],
       "FullSetName": "Inherent.Inherent",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "PowerIndex": 5617,
