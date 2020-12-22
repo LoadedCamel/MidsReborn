@@ -31,6 +31,7 @@
     {
       "CastTimeReal": 3.47,
       "ToggleCost": 0.52,
+      "IsModified": true,
       "PowerIndex": 8590,
       "PowerSetID": 3384,
       "StaticIndex": 2487,
@@ -87,6 +88,7 @@
       "SortOverride": true,
       "SetTypes": [
         4,
+        24,
         43,
         44
       ],
@@ -165,7 +167,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -227,7 +228,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -284,7 +284,6 @@
           "Reward": "",
           "EffectId": "FieryEmbrace",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -4503,6 +4502,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.52,
+      "IsModified": true,
       "PowerIndex": 8596,
       "PowerSetID": 3384,
       "PowerSetIndex": 6,
@@ -4560,6 +4560,7 @@
       "DescLong": "You can wrap yourself in a nightmarish Cloak of Fear. Foes close to you are treated to visions most horrific, forcing them to tremble in terror, only attacking if attacked, and even then, with a reduced chance to hit. Recharge: Fast",
       "SetTypes": [
         15,
+        24,
         26,
         31
       ],
@@ -4643,7 +4644,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 1,
           "EffectType": 40,
           "Summon": "",
           "nSummon": -1,
@@ -4700,7 +4700,6 @@
           "Reward": "",
           "EffectId": "Fear",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 12,
           "Summon": "",
@@ -4761,7 +4760,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -4823,7 +4821,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -4882,6 +4879,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.078,
+      "IsModified": true,
       "PowerIndex": 8597,
       "PowerSetID": 3384,
       "PowerSetIndex": 7,
@@ -4936,7 +4934,8 @@
       "DescShort": "Toggle: PBAoE, Foe Disorient, Self -HP",
       "DescLong": "The Netherworld has many mutable properties, such as the Oppressive Gloom. This power allows you to use your own Hit Points to keep enemies near you Disoriented and unable to use any powers. Endurance cost for this is minimal, but the power can be dangerous to use. Recharge: Moderate",
       "SetTypes": [
-        11
+        11,
+        24
       ],
       "Level": 26,
       "VariableName": "",
@@ -5018,7 +5017,6 @@
           "Reward": "",
           "EffectId": "Damage",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 9,
           "Summon": "",
@@ -5074,7 +5072,6 @@
           "Reward": "",
           "EffectId": "Stun",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 10,
           "Summon": "",
@@ -5135,7 +5132,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -5197,7 +5193,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",

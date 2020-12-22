@@ -3205,6 +3205,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 0.26,
+      "IsModified": true,
       "PowerIndex": 8667,
       "PowerSetID": 3392,
       "PowerSetIndex": 5,
@@ -3258,7 +3259,8 @@
       "DescShort": "Toggle: Self +DEF(vs. AoE), Res(DeBuff DEF)",
       "DescLong": "You are Evasive against area effect and cone shaped attacks. This power increases your Defense versus such attacks as long as it is active. Evasion also helps you resist Defense DeBuffs. Recharge: Fast",
       "SetTypes": [
-        7
+        7,
+        24
       ],
       "Level": 12,
       "VariableName": "",
@@ -3339,7 +3341,6 @@
           "Reward": "",
           "EffectId": "Res_Boolean",
           "Special": "",
-          "nID": 1,
           "EffectType": 28,
           "ETModifies": 5,
           "Summon": "",
@@ -3397,7 +3398,6 @@
           "Reward": "",
           "EffectId": "Buff_Def",
           "Special": "",
-          "nID": 2,
           "EffectType": 5,
           "DamageType": 12,
           "Summon": "",
@@ -3456,7 +3456,6 @@
           "Reward": "",
           "EffectId": "Ones",
           "Special": "",
-          "nID": 3,
           "EffectType": 44,
           "DamageType": 12,
           "Summon": "",
@@ -3514,7 +3513,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 4,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -3576,7 +3574,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 5,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",

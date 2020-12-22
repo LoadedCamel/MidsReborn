@@ -20,8 +20,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": 2063837762,
-    "Length": 199573
+    "Hash": 1758501890,
+    "Length": 199445
   },
   {
     "Archetype": "Class_Blaster",
@@ -15512,80 +15512,80 @@
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Bio_Organic_Armor",
-    "Hash": 1218005705,
-    "Length": 452903
+    "Hash": 2110117883,
+    "Length": 451131
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Dark_Armor",
-    "Hash": -2103755538,
-    "Length": 173752
+    "Hash": 1922580490,
+    "Length": 173746
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Electric_Armor",
-    "Hash": -280751885,
-    "Length": 199513
+    "Hash": 1720204846,
+    "Length": 199469
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Energy_Aura",
-    "Hash": -1268429750,
-    "Length": 261638
+    "Hash": 857748137,
+    "Length": 260968
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Fiery_Aura",
-    "Hash": 339093262,
-    "Length": 142755
+    "Hash": -480953957,
+    "Length": 142732
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Ice_Armor",
-    "Hash": -746718541,
-    "Length": 268267
+    "Hash": 1001771907,
+    "Length": 267963
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Invulnerability",
-    "Hash": 1162693957,
-    "Length": 261264
+    "Hash": -130128315,
+    "Length": 260741
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Radiation_Armor",
-    "Hash": 1252191597,
-    "Length": 210532
+    "Hash": 1694472667,
+    "Length": 210467
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Regeneration",
-    "Hash": -1835492958,
-    "Length": 182582
+    "Hash": 519306113,
+    "Length": 182015
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Shield_Defense",
-    "Hash": -1881588339,
-    "Length": 261115
+    "Hash": -2057034268,
+    "Length": 260621
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Stone_Armor",
-    "Hash": -974940660,
-    "Length": 272394
+    "Hash": 717369317,
+    "Length": 272266
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Super_Reflexes",
-    "Hash": 1988906976,
-    "Length": 177387
+    "Hash": -1284223634,
+    "Length": 177322
   },
   {
     "Archetype": "Class_Brute",
     "Fullname": "Brute_Defense.Willpower",
-    "Hash": 1020053080,
-    "Length": 264313
+    "Hash": 1267147208,
+    "Length": 264227
   },
   {
     "Archetype": "Class_Brute",
@@ -17360,8 +17360,8 @@
   {
     "Archetype": "",
     "Fullname": "Inherent.Inherent",
-    "Hash": 1625988614,
-    "Length": 1827223
+    "Hash": 1454327251,
+    "Length": 1827539
   },
   {
     "Archetype": "",
@@ -19760,8 +19760,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Bio_Organic_Armor",
-    "Hash": -119130599,
-    "Length": 437254
+    "Hash": -421409606,
+    "Length": 435829
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19778,8 +19778,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Energy_Aura",
-    "Hash": -1263630028,
-    "Length": 277473
+    "Hash": -1567859854,
+    "Length": 276816
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19796,8 +19796,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Invulnerability",
-    "Hash": 188596292,
-    "Length": 262011
+    "Hash": 2105684606,
+    "Length": 261488
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19808,8 +19808,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Radiation_Armor",
-    "Hash": -1759223111,
-    "Length": 204686
+    "Hash": -1423474509,
+    "Length": 204621
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19820,8 +19820,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Shield_Defense",
-    "Hash": 1746612052,
-    "Length": 261732
+    "Hash": -1916915659,
+    "Length": 261238
   },
   {
     "Archetype": "Class_Scrapper",
@@ -19832,8 +19832,8 @@
   {
     "Archetype": "Class_Scrapper",
     "Fullname": "Scrapper_Defense.Willpower",
-    "Hash": -207355690,
-    "Length": 264972
+    "Hash": -1845376172,
+    "Length": 264886
   },
   {
     "Archetype": "Class_Scrapper",
@@ -20300,68 +20300,68 @@
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Bio_Organic_Armor",
-    "Hash": -50569603,
-    "Length": 453138
+    "Hash": 362939887,
+    "Length": 451366
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Dark_Armor",
-    "Hash": -1893345749,
-    "Length": 187687
+    "Hash": -893981334,
+    "Length": 187576
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Electric_Armor",
-    "Hash": 817104107,
-    "Length": 197416
+    "Hash": -74323751,
+    "Length": 197351
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Fiery_Aura",
-    "Hash": 522056706,
-    "Length": 148889
+    "Hash": -464633583,
+    "Length": 148866
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Ice_Armor",
-    "Hash": -1060795574,
-    "Length": 268451
+    "Hash": -794321120,
+    "Length": 268147
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Invulnerability",
-    "Hash": -1900046987,
-    "Length": 263431
+    "Hash": 2059329852,
+    "Length": 262886
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Radiation_Armor",
-    "Hash": 872390193,
-    "Length": 210681
+    "Hash": 299050911,
+    "Length": 210616
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Shield_Defense",
-    "Hash": -1688513205,
-    "Length": 262862
+    "Hash": 251989636,
+    "Length": 262346
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Stone_Armor",
-    "Hash": 1685707621,
-    "Length": 278403
+    "Hash": 1630409231,
+    "Length": 278254
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Super_Reflexes",
-    "Hash": -1757889036,
-    "Length": 177082
+    "Hash": 1082194242,
+    "Length": 177017
   },
   {
     "Archetype": "Class_Tanker",
     "Fullname": "Tanker_Defense.Willpower",
-    "Hash": -1667108824,
-    "Length": 266438
+    "Hash": -1235757187,
+    "Length": 266331
   },
   {
     "Archetype": "Class_Tanker",

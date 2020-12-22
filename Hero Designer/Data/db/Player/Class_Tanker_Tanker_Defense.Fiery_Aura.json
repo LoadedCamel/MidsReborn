@@ -31,6 +31,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 0.52,
+      "IsModified": true,
       "PowerIndex": 8608,
       "PowerSetID": 3386,
       "StaticIndex": 2496,
@@ -87,6 +88,7 @@
       "SortOverride": true,
       "SetTypes": [
         4,
+        24,
         43,
         44
       ],
@@ -165,7 +167,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 1,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -227,7 +228,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -284,7 +284,6 @@
           "Reward": "",
           "EffectId": "FieryEmbrace",
           "Special": "",
-          "nID": 3,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",

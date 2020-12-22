@@ -448,6 +448,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 0.52,
+      "IsModified": true,
       "PowerIndex": 2870,
       "PowerSetID": 2589,
       "PowerSetIndex": 1,
@@ -504,6 +505,7 @@
       "DescLong": "While active, you are surrounded by flames that burn all foes that attempt to enter melee range. Damage: Minor(DoT), Recharge: Fast",
       "SetTypes": [
         4,
+        24,
         34,
         44
       ],
@@ -578,7 +580,6 @@
           "Reward": "",
           "EffectId": "FieryEmbrace",
           "Special": "",
-          "nID": 1,
           "EffectType": 3,
           "DamageType": 3,
           "Summon": "",
@@ -636,7 +637,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 2,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
@@ -698,7 +698,6 @@
           "Reward": "",
           "EffectId": "InherentTaunt",
           "Special": "",
-          "nID": 3,
           "EffectType": 19,
           "MezType": 11,
           "Summon": "",
