@@ -1533,8 +1533,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.1,
-          "MagPercent": 10.0,
+          "Mag": 0.07,
+          "MagPercent": 7.0,
           "Duration": 5.0,
           "DisplayPercentage": true,
           "VariableModified": true,

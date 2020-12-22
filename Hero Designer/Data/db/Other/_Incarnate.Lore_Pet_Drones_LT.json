@@ -84,8 +84,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 93.8422546,
-          "MagPercent": 93.8422546,
+          "Mag": 62.5615463,
+          "MagPercent": 62.5615463,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -265,8 +265,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 66.94081,
-          "MagPercent": 66.94081,
+          "Mag": 44.62724,
+          "MagPercent": 44.62724,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
