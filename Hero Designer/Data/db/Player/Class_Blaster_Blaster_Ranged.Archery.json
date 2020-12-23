@@ -4306,11 +4306,9 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "False",
-              "Validated": true
+              "Value": "False"
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -4363,11 +4361,9 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "False",
-              "Validated": true
+              "Value": "False"
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {

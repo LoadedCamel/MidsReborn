@@ -20,8 +20,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": 2063837762,
-    "Length": 199573
+    "Hash": 1758501890,
+    "Length": 199445
   },
   {
     "Archetype": "Class_Blaster",
@@ -116,14 +116,14 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Electricity_Manipulation",
-    "Hash": -551626613,
-    "Length": 277252
+    "Hash": 103931853,
+    "Length": 277458
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Energy_Manipulation",
-    "Hash": 417909303,
-    "Length": 233738
+    "Hash": -1577823918,
+    "Length": 218437
   },
   {
     "Archetype": "Class_Blaster",
@@ -140,8 +140,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Martial_Manipulation",
-    "Hash": -100030390,
-    "Length": 246303
+    "Hash": 1266141356,
+    "Length": 245482
   },
   {
     "Archetype": "Class_Blaster",
