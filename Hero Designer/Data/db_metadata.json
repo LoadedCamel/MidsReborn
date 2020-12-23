@@ -20,8 +20,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": 1758501890,
-    "Length": 199445
+    "Hash": 2063837762,
+    "Length": 199573
   },
   {
     "Archetype": "Class_Blaster",
@@ -104,14 +104,14 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Darkness_Manipulation",
-    "Hash": 2048664961,
-    "Length": 252317
+    "Hash": -133799525,
+    "Length": 253111
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Gadgets",
-    "Hash": -1629847439,
-    "Length": 241860
+    "Hash": 1466045457,
+    "Length": 242611
   },
   {
     "Archetype": "Class_Blaster",
@@ -122,14 +122,14 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Energy_Manipulation",
-    "Hash": -1463664392,
-    "Length": 225642
+    "Hash": 1755297594,
+    "Length": 233422
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Fire_Manipulation",
-    "Hash": 923548272,
-    "Length": 211100
+    "Hash": 925022655,
+    "Length": 211452
   },
   {
     "Archetype": "Class_Blaster",
@@ -19502,8 +19502,8 @@
   {
     "Archetype": "",
     "Fullname": "Pets.Turret",
-    "Hash": 1075712338,
-    "Length": 79188
+    "Hash": -2114545138,
+    "Length": 79988
   },
   {
     "Archetype": "",
@@ -19694,8 +19694,8 @@
   {
     "Archetype": "",
     "Fullname": "Pool.Fighting",
-    "Hash": 1976037660,
-    "Length": 273685
+    "Hash": 1018991915,
+    "Length": 273651
   },
   {
     "Archetype": "",
