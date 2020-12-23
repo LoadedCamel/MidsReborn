@@ -20,8 +20,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": 1758501890,
-    "Length": 199445
+    "Hash": 2063837762,
+    "Length": 199573
   },
   {
     "Archetype": "Class_Blaster",
@@ -134,20 +134,20 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Ice_Manipulation",
-    "Hash": -1160526759,
-    "Length": 274373
+    "Hash": 928786467,
+    "Length": 282734
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Martial_Manipulation",
-    "Hash": 1266141356,
-    "Length": 245482
+    "Hash": -637801927,
+    "Length": 246482
   },
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Mental_Manipulation",
-    "Hash": -944516946,
-    "Length": 206606
+    "Hash": -2092652667,
+    "Length": 207240
   },
   {
     "Archetype": "Class_Blaster",
