@@ -20,8 +20,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Archery",
-    "Hash": -577795714,
-    "Length": 199508
+    "Hash": -1759961922,
+    "Length": 199636
   },
   {
     "Archetype": "Class_Blaster",
@@ -17492,8 +17492,8 @@
   {
     "Archetype": "Class_Mastermind",
     "Fullname": "Mastermind_Buff.Trick_Arrow",
-    "Hash": -480379679,
-    "Length": 184299
+    "Hash": -750004241,
+    "Length": 198857
   },
   {
     "Archetype": "Class_Minion_Henchman",
@@ -18410,8 +18410,8 @@
   {
     "Archetype": "",
     "Fullname": "Pets.SonicDebuffArrow",
-    "Hash": 569886949,
-    "Length": 32546
+    "Hash": -1675086374,
+    "Length": 4892
   },
   {
     "Archetype": "",
@@ -18962,8 +18962,8 @@
   {
     "Archetype": "",
     "Fullname": "Pets.PoisonGasArrow",
-    "Hash": 2081998263,
-    "Length": 57616
+    "Hash": 23912990,
+    "Length": 11711
   },
   {
     "Archetype": "",
@@ -19274,8 +19274,8 @@
   {
     "Archetype": "",
     "Fullname": "Pets.StickyArrow",
-    "Hash": -1253003650,
-    "Length": 15433
+    "Hash": 1555613083,
+    "Length": 15511
   },
   {
     "Archetype": "",
