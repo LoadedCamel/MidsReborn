@@ -203,8 +203,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 58.11267,
-          "MagPercent": 58.11267,
+          "Mag": 61.17122,
+          "MagPercent": 61.17122,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -326,8 +326,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 52.8297,
-          "MagPercent": 52.8297,
+          "Mag": 55.6102,
+          "MagPercent": 55.6102,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -381,8 +381,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 0.3,
-          "Mag": 2.5964,
-          "MagPercent": 2.5964,
+          "Mag": 2.0771,
+          "MagPercent": 2.0771,
           "BaseProbability": 0.3,
           "Reward": "",
           "EffectId": "Knockback",
@@ -503,8 +503,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 37.3700867,
-          "MagPercent": 37.3700867,
+          "Mag": 52.55166,
+          "MagPercent": 52.55166,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

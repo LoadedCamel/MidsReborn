@@ -77,8 +77,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.4,
-          "MagPercent": -40.0,
+          "Mag": -0.28,
+          "MagPercent": -28.0,
           "Duration": 1.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
