@@ -82,6 +82,8 @@ public class ConfigData
                 MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             }
         TeamMembers = new Dictionary<string, int>();
+        Registered = 0;
+        DiscordAuthorized = false;
         IntializeComponent();
     }
 
@@ -122,6 +124,7 @@ public class ConfigData
     public Enums.CompOverride[] CompOverride { get; set; }
 
     public bool DiscordAuthorized { get; set; }
+    public int Registered { get; set; } = 0;
     public bool DisableDesaturateInherent { get; set; }
     public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Dynamic;
     public Enums.dmItem BuildOption { get; set; } = Enums.dmItem.Slot;

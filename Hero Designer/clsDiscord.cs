@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using Base.Master_Classes;
 using Hero_Designer.Forms.Controls;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RandomString4Net;
 using RestSharp;
 
 namespace Hero_Designer
 {
     public class Toon
     {
+        public string MemberId { get; set; }
+        public string MemberName { get; set; }
+        public string Server { get; set; }
+        public string ServerChannel { get; set; }
+        public string AppName { get; set; }
+        public string AppVersion { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
         public string Archetype { get; set; }
@@ -26,15 +36,21 @@ namespace Hero_Designer
 
     }
 
-    public static class clsDiscord
+    public class clsDiscord
     {
 
         private const string BOT_API_ENDPOINT = "https://api.midsreborn.com:3001";
 
-        public static void GatherData(Dictionary<string, List<string>> selectedStats)
+        public static void GatherData(Dictionary<string, List<string>> selectedStats, string server, string channel)
         {
             var data = new Toon
             {
+                MemberId = MidsContext.GetCryptedValue("User", "id"),
+                MemberName = MidsContext.GetCryptedValue("User", "username"),
+                Server = server,
+                ServerChannel = channel,
+                AppName = MidsContext.AppName,
+                AppVersion = $"{MidsContext.AppVersion}",
                 Name = MidsContext.Character.Name,
                 Level = ToonLevel(),
                 Archetype = MidsContext.Character.Archetype.DisplayName,
@@ -50,7 +66,7 @@ namespace Hero_Designer
             var statDictionary = new Dictionary<string, string>();
             var damTypes = Enum.GetNames(Enums.eDamage.None.GetType());
 
-            
+
 
             #region DefenseStats
             for (var index = 0; index < totalStat.Def.Length; index++)
@@ -77,7 +93,7 @@ namespace Hero_Designer
             #endregion
 
             var acc = $"{Convert.ToDecimal(totalStat.BuffAcc * 100f):0.##}%";
-            statDictionary = new Dictionary<string, string> {{"Accuracy", acc}};
+            statDictionary = new Dictionary<string, string> { { "Accuracy", acc } };
             gatherData.Add("Accuracy", statDictionary);
 
             var dmg = $"{Convert.ToDecimal(totalStat.BuffDam * 100f):0.##}%";
@@ -176,9 +192,9 @@ namespace Hero_Designer
         public static string ShrinkTheDatalink(string strUrl)
         {
             var url = "http://tinyurl.com/api-create.php?url=" + strUrl;
-            var objWebRequest = (HttpWebRequest) WebRequest.Create(url);
+            var objWebRequest = (HttpWebRequest)WebRequest.Create(url);
             objWebRequest.Method = "GET";
-            using var objWebResponse = (HttpWebResponse) objWebRequest.GetResponse();
+            using var objWebResponse = (HttpWebResponse)objWebRequest.GetResponse();
             var srReader = new StreamReader(objWebResponse.GetResponseStream() ?? throw new InvalidOperationException());
             var strHtml = srReader.ReadToEnd();
             srReader.Close();
@@ -201,41 +217,165 @@ namespace Hero_Designer
             if (msgResult == DialogResult.Yes)
             {
                 InputBoxResult result = InputBox.Show("Enter a description for your build.", "Build Description", "Enter your description here", InputBox.InputBoxIcon.Info, inputBox_Validating);
-                if (result.OK) { dataToon.Description = result.Text; }
-
-                //dataToon.SubmittedBy = $"{clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
+                dataToon.Description = result.OK ? result.Text : "None";
+                dataToon.SubmittedBy = MidsContext.GetCryptedValue("BotUser", "username");
                 dataToon.SubmittedOn = DateTime.Now.ToShortDateString();
-                var jsonExport = JsonConvert.SerializeObject(dataToon, Formatting.Indented);
-                Console.WriteLine(jsonExport);
+                MbLogin();
+                BuildSubmit(dataToon);
             }
             else
             {
-                //dataToon.SubmittedBy = $"{clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
+                dataToon.Description = "None";
+                dataToon.SubmittedBy = MidsContext.GetCryptedValue("BotUser", "username");
                 dataToon.SubmittedOn = $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}";
-                var jsonExport = JsonConvert.SerializeObject(dataToon, Formatting.Indented);
-                Console.WriteLine(jsonExport);
-                Form.ActiveForm?.Close();
+                MbLogin();
+                BuildSubmit(dataToon);
             }
         }
 
-        private static void ValidateServers()
+        private static void BuildSubmit(Toon dataToon)
         {
             var client = new RestClient(BOT_API_ENDPOINT);
-            var request = new RestRequest("v2/servers/validate", Method.POST);
-            request.AddParameter("server_list", MidsContext.ConfigSp.ServerList);
+            var request = new RestRequest("v2/builds/submit", Method.POST); //
+            request.AddHeader("Content-type", "application/json");
+            request.AddHeader("access_token", MidsContext.GetCryptedValue("BotUser", "access_token"));
+            request.AddJsonBody(new
+            {
+                MemberId = dataToon.MemberId,
+                MemberName = dataToon.MemberName,
+                Server = dataToon.Server,
+                ServerChannel = dataToon.ServerChannel,
+                AppName = dataToon.AppName,
+                AppVersion = dataToon.AppVersion,
+                Name = dataToon.Name,
+                Level = dataToon.Level,
+                Archetype = dataToon.Archetype,
+                Primary = dataToon.Primary,
+                Secondary = dataToon.Secondary,
+                Stats = dataToon.Stats,
+                DataLink = dataToon.DataLink,
+                Description = dataToon.Description,
+                SubmittedBy = dataToon.SubmittedBy,
+                SubmittedOn = dataToon.SubmittedOn
+            });
             var response = client.Execute(request);
-            var jValidatedServers = JsonConvert.DeserializeObject<ValidatedServers>(response.Content);
-            var serversDict = new Dictionary<string, object>();
-            var properties = typeof(ValidatedServers).GetProperties();
-            foreach (var property in properties) serversDict.Add(property.Name, property.GetValue(jValidatedServers, null));
-            MidsContext.ConfigSp.ValidatedServers = serversDict;
+            if (response.Content == "Build submitted successfully")
+            {
+                Form.ActiveForm?.Close();
+            }
+            else
+            {
+                Console.WriteLine(response.ErrorMessage);
+            }
+        }
+
+        public static void MbRegister()
+        {
+            try
+            {
+                var client = new RestClient(BOT_API_ENDPOINT);
+                var request = new RestRequest("v2/users/register", Method.POST);
+                var regName = $"{MidsContext.GetCryptedValue("User", "username")}#{MidsContext.GetCryptedValue("User", "discriminator")}";
+                var pass = RandomString.GetString(Types.ALPHABET_LOWERCASE_WITH_SYMBOLS, 25, false);
+                request.AddParameter("username", regName);
+                request.AddParameter("pass_token", pass);
+                var response = client.Execute(request);
+                if (response.Content == "Bad Request" && response.Content == "User already exists")
+                {
+                    return;
+                }
+
+                var MBObject = new MidsBotUser { username = regName, pass_token = pass };
+                var MBObjectSerialized = JsonConvert.SerializeObject(MBObject);
+                var jMBObject = JsonConvert.DeserializeObject<MidsBotUser>(MBObjectSerialized);
+                var mbDict = new Dictionary<string, object>();
+                var properties = typeof(MidsBotUser).GetProperties();
+                foreach (var property in properties)
+                {
+                    mbDict.Add(property.Name, property.GetValue(jMBObject, null));
+                }
+
+                MidsContext.ConfigSp.BotUser = mbDict;
+                MidsContext.Config.Registered = 1;
+                MbLogin();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
+
+        }
+
+        public static void MbLogin()
+        {
+            try
+            {
+                var client = new RestClient(BOT_API_ENDPOINT);
+                var request = new RestRequest("v2/users/login", Method.POST);
+                request.AddParameter("username", MidsContext.GetCryptedValue("BotUser", "username"));
+                request.AddParameter("pass_token", MidsContext.GetCryptedValue("BotUser", "pass_token"));
+                var response = client.Execute(request);
+                if (response.Content == "User or Pass is incorrect" || response.Content == "Bad Request")
+                {
+                    return;
+                }
+
+                var jMBObject = JsonConvert.DeserializeObject<MidsBotUser>(response.Content);
+                var mbDict = new Dictionary<string, object>();
+                var properties = typeof(MidsBotUser).GetProperties();
+                foreach (var property in properties)
+                {
+                    mbDict.Add(property.Name, property.GetValue(jMBObject, null));
+                }
+
+                MidsContext.ConfigSp.BotUser = mbDict;
+                ValidateServers();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
+        }
+
+        public static void ValidateServers()
+        {
+            try
+            {
+                var client = new RestClient(BOT_API_ENDPOINT);
+                var request = new RestRequest("v2/users/sc", Method.POST); //
+                request.AddHeader("Content-type", "application/json");
+                request.AddHeader("access_token", MidsContext.GetCryptedValue("BotUser", "access_token"));
+                request.AddJsonBody(new
+                {
+                    Id = MidsContext.GetCryptedValue("User", "id"),
+                    MidsContext.ConfigSp.ServerList
+                });
+                var response = client.Execute(request);
+
+                var jValidatedServers = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(response.Content);
+
+                MidsContext.ConfigSp.ValidatedServers = jValidatedServers;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
         }
     }
 
+
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-    public class ValidatedServers
+    public class MidsBotUser
     {
-        public string name { get; set; }
-        public List<string> channels { get; set; }
+        [JsonProperty(PropertyName = "username")] public string username { get; set; }
+        [JsonProperty(PropertyName = "pass_token")] public string pass_token { get; set; }
+        [JsonProperty(PropertyName = "access_token")] public string access_token { get; set; }
+        [JsonProperty(PropertyName = "expires_in")] public string expires_in { get; set; }
+    }
+
+    public class ValidServer
+    {
+        public string Name { get; set; }
+        public List<string> Channels { get; set; }
     }
 }
