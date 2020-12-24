@@ -14034,6 +14034,7 @@
       "AoEModifier": 1.0
     },
     {
+      "LocationIndex": 16,
       "PowerIndex": 4913,
       "PowerSetID": 2812,
       "PowerSetIndex": 41,
@@ -14308,7 +14309,10 @@
       ],
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Interface",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 16,
+      "Active": true,
+      "Taken": true
     },
     {
       "PowerIndex": 4914,

@@ -91,8 +91,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 40.15865,
-          "MagPercent": 40.15865,
+          "Mag": 93.70345,
+          "MagPercent": 93.70345,
           "Duration": 10.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -435,8 +435,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.3,
-          "MagPercent": -30.0000019,
+          "Mag": -0.24000001,
+          "MagPercent": -24.0,
           "Duration": 18.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -494,8 +494,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.3,
-          "MagPercent": -30.0000019,
+          "Mag": -0.24000001,
+          "MagPercent": -24.0,
           "Duration": 18.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -553,8 +553,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.160000011,
+          "MagPercent": -16.0000019,
           "Duration": 18.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2771,6 +2771,7 @@
       "AoEModifier": 1.0
     },
     {
+      "LocationIndex": 21,
       "PowerIndex": 8906,
       "PowerSetID": 3421,
       "PowerSetIndex": 5,
@@ -2823,8 +2824,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 80.3173,
-          "MagPercent": 80.3173,
+          "Mag": 187.4069,
+          "MagPercent": 187.4069,
           "Duration": 10.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -2876,7 +2877,9 @@
         }
       ],
       "FullSetName": "Temporary_Powers.Accolades",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 21,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.73,
@@ -3214,8 +3217,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 80.3173,
-          "MagPercent": 80.3173,
+          "Mag": 187.4069,
+          "MagPercent": 187.4069,
           "Duration": 10.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3322,8 +3325,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 40.15865,
-          "MagPercent": 40.15865,
+          "Mag": 93.70345,
+          "MagPercent": 93.70345,
           "Duration": 10.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3429,8 +3432,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 80.3173,
-          "MagPercent": 80.3173,
+          "Mag": 187.4069,
+          "MagPercent": 187.4069,
           "Duration": 10.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -4166,6 +4169,7 @@
       "AoEModifier": 1.0
     },
     {
+      "LocationIndex": 18,
       "PowerIndex": 8914,
       "PowerSetID": 3421,
       "PowerSetIndex": 13,
@@ -4215,8 +4219,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 40.15865,
-          "MagPercent": 40.15865,
+          "Mag": 93.70345,
+          "MagPercent": 93.70345,
           "Duration": 10.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -4323,7 +4327,9 @@
         }
       ],
       "FullSetName": "Temporary_Powers.Accolades",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 18,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.73,
@@ -4727,8 +4733,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.3,
-          "MagPercent": -30.0000019,
+          "Mag": -0.24000001,
+          "MagPercent": -24.0,
           "Duration": 18.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4786,8 +4792,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.3,
-          "MagPercent": -30.0000019,
+          "Mag": -0.24000001,
+          "MagPercent": -24.0,
           "Duration": 18.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4845,8 +4851,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.160000011,
+          "MagPercent": -16.0000019,
           "Duration": 18.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -5306,6 +5312,7 @@
       "AoEModifier": 1.0
     },
     {
+      "LocationIndex": 19,
       "PowerIndex": 8918,
       "PowerSetID": 3421,
       "PowerSetIndex": 17,
@@ -5358,8 +5365,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 40.15865,
-          "MagPercent": 40.15865,
+          "Mag": 93.70345,
+          "MagPercent": 93.70345,
           "Duration": 10.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -5411,9 +5418,12 @@
         }
       ],
       "FullSetName": "Temporary_Powers.Accolades",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 19,
+      "Taken": true
     },
     {
+      "LocationIndex": 20,
       "PowerIndex": 8919,
       "PowerSetID": 3421,
       "PowerSetIndex": 18,
@@ -5519,7 +5529,9 @@
         }
       ],
       "FullSetName": "Temporary_Powers.Accolades",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 20,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.17,

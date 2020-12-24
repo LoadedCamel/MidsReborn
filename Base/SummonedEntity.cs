@@ -53,8 +53,8 @@ public class SummonedEntity
 
     public string UID { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
-    public string[] PowersetFullName { get; private set; } = Array.Empty<string>();
-    public string[] UpgradePowerFullName { get; private set; } = Array.Empty<string>();
+    public string[] PowersetFullName { get; set; } = Array.Empty<string>();
+    public string[] UpgradePowerFullName { get; set; } = Array.Empty<string>();
     public string ClassName { get; set; } = string.Empty;
     public Enums.eSummonEntity EntityType { get; set; }
 

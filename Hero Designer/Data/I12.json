@@ -1,11 +1,11 @@
 {
   "name": "Mids' Hero Designer Database MK II",
   "Version": 20.1224,
-  "Date": "2020-12-24T01:31:25.4015136-08:00",
+  "Date": "2020-12-24T03:31:25.4015136-06:00",
   "Issue": 27,
   "ArchetypeVersion": {
     "Revision": 1,
-    "RevisionDate": "2014-05-01T01:01:23.5767113-07:00",
+    "RevisionDate": "2014-05-01T03:01:23.5767113-05:00",
     "SourceFile": "classes.csv"
   },
   "Archetypes": [
@@ -4040,28 +4040,28 @@
   ],
   "PowersetVersion": {
     "Revision": 1,
-    "RevisionDate": "2014-08-18T04:10:09.269-07:00",
+    "RevisionDate": "2014-08-18T06:10:09.269-05:00",
     "SourceFile": "powersets.csv"
   },
   "Powers": {
     "PowerVersion": {
       "Revision": 1,
-      "RevisionDate": "2014-08-18T03:41:34.623-07:00",
+      "RevisionDate": "2014-08-18T05:41:34.623-05:00",
       "SourceFile": "powers.csv"
     },
     "PowerLevelVersion": {
       "Revision": 1,
-      "RevisionDate": "2013-05-10T05:03:20.6124566-07:00",
+      "RevisionDate": "2013-05-10T07:03:20.6124566-05:00",
       "SourceFile": "powersets2.csv"
     },
     "PowerEffectVersion": {
       "Revision": 2,
-      "RevisionDate": "2014-12-21T12:01:20.1582104-08:00",
+      "RevisionDate": "2014-12-21T14:01:20.1582104-06:00",
       "SourceFile": "effects.csv"
     },
     "IOAssignmentVersion": {
       "Revision": 1,
-      "RevisionDate": "2014-05-05T04:40:38.9213542-07:00",
+      "RevisionDate": "2014-05-05T06:40:38.9213542-05:00",
       "SourceFile": "boostsets2.csv"
     },
     "Powers": []
@@ -4070,2982 +4070,3834 @@
     {
       "UID": "Pets_ResistAll",
       "DisplayName": "ResistAll",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ResistAll"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ResistAll_NoFly",
       "DisplayName": "ResistAll NoFly",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ResistAll_NoFly"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_TarPatch",
       "DisplayName": "TarPatch",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.TarPatch"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Bonfire",
       "DisplayName": "Bonfire",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Bonfire"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_FireImp",
       "DisplayName": "Fire Imp",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Imp"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_FreezingRain",
       "DisplayName": "Freezing Rain",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.FreezingRain"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_FreezingRain_Controller",
       "DisplayName": "Freezing Rain",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.FreezingRain_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_IceStorm",
       "DisplayName": "Ice Storm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.IceStorm"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_IceStorm",
       "DisplayName": "Ice Storm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Corruptor_IceStorm"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Epic_IceStorm",
       "DisplayName": "Ice Storm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Epic_IceStorm"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blizzard",
       "DisplayName": "Blizzard",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blizzard"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_Blizzard",
       "DisplayName": "Blizzard",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Corruptor_Blizzard"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RainofFire",
       "DisplayName": "Rain of Fire",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RainofFire"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_RainofFire",
       "DisplayName": "Rain of Fire",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Corruptor_RainofFire"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_IcePatch",
       "DisplayName": "Ice Patch",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.IcePatch"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_IceSlick",
       "DisplayName": "Ice Slick",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.IceSlick"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Hibernate",
       "DisplayName": "Hibernate",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Hibernate"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VoltaicSentinel",
       "DisplayName": "Voltaic Sentinel",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VoltaicSentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VoltaicSentinel_Defender",
       "DisplayName": "Voltaic Sentinel",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VoltaicSentinel_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VoltaicSentinel_Critter",
       "DisplayName": "Voltaic Sentinel Critter",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VoltaicSentinel_Critter"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VoltaicSentinel_Corruptor",
       "DisplayName": "Voltaic Sentinel Critter",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VoltaicSentinel_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_JackFrost",
       "DisplayName": "Jack Frost",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Jack"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_FlameThrower",
       "DisplayName": "Flame Thrower",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.FlameThrower"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_FlameThrower",
       "DisplayName": "Flame Thrower",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Corruptor_FlameThrower"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_LightningStorm",
       "DisplayName": "Lightning Storm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.LightningStorm"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_LightningStorm_Controller",
       "DisplayName": "LightningStorm_Controller",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.LightningStorm_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_LightningStorm_NPC",
       "DisplayName": "LightningStorm_NPC",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.LightningStorm_NPC"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tornado",
       "DisplayName": "Tornado",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tornado"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Decoy",
       "DisplayName": "Decoy",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Decoy"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Terror",
       "DisplayName": "Terror",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Terror"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Phantasm",
       "DisplayName": "Phantasm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Phantasm"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DecoyPhantasm",
       "DisplayName": "Decoy Phantasm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.DecoyPhantasm"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Phoenix",
       "DisplayName": "Phoenix",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Phoenix"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Burn",
       "DisplayName": "Burn",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Burn"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_TestBurn",
       "DisplayName": "Burn",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.TestBurn"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Earthquake",
       "DisplayName": "Earthquake",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Earthquake"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Quicksand",
       "DisplayName": "Quicksand",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Quicksand"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VolcanicGas",
       "DisplayName": "Volcanic Gasses",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VolcanicGasses"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VolcanicGeyser",
       "DisplayName": "Volcanic Geyser",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VolcanicGeyser"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Stone",
       "DisplayName": "Stone",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Stone"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Transfusion",
       "DisplayName": "Transfusion",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Transfusion"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Transference",
       "DisplayName": "Transference",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Transference"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_SiphonPower",
       "DisplayName": "Siphon Power",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.SiphonPower"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_KineticTransferDebuff",
       "DisplayName": "Kinetic Transfer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.KineticTransferDebuff"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_KineticTransferBuff",
       "DisplayName": "Kinetic Transfer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.KineticTransferBuff"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_KineticTransferBuffSelf",
       "DisplayName": "Kinetic Transfer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.KineticTransferBuffSelf"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Transfusion_Controller",
       "DisplayName": "Transfusion",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Transfusion_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Transference_Controller",
       "DisplayName": "Transference",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Transference_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_SiphonPower_Controller",
       "DisplayName": "Siphon Power",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.SiphonPower_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_KineticTransferDebuff_Controller",
       "DisplayName": "Kinetic Transfer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.KineticTransferDebuff_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_KineticTransferBuff_Controller",
       "DisplayName": "Kinetic Transfer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.KineticTransferBuff_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_KineticTransferBuffSelf_Controller",
       "DisplayName": "Kinetic Transfer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.KineticTransferBuffSelf_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Twilight",
       "DisplayName": "Twilight",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Twilight"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Howling",
       "DisplayName": "Howling",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Howling"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_HowlingVillain",
       "DisplayName": "Howling",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.HowlingVillain"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Target",
       "DisplayName": "Target",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Target"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Vahzilok_Explode",
       "DisplayName": "Vahzilok Explosion",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Vahzilok_Explode"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_NemesisBang",
       "DisplayName": "Nemesis",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.NemesisBang"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tree",
       "DisplayName": "Tree",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tree"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Fungi",
       "DisplayName": "Fungi",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Fungi"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Cairn",
       "DisplayName": "Cairn",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Cairn"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Quartz",
       "DisplayName": "Quartz",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Quartz"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Caltrops",
       "DisplayName": "Caltrops",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Caltrops"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Mine",
       "DisplayName": "Mine",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Mine"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Mine",
       "DisplayName": "Mine",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Villain_Mine"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Bomb",
       "DisplayName": "Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Bomb"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VillainBomb",
       "DisplayName": "Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VillainBomb"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Turret",
       "DisplayName": "Turret",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Turret"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ThunderStrikePunch",
       "DisplayName": "Thunder Strike",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ThunderStrikePunch"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_MonkeyGas",
       "DisplayName": "Monkey Gas",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.MonkeyGas"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Transponder",
       "DisplayName": "Transponder",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Transponder"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RiktiPortal",
       "DisplayName": "Portal",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RiktiPortal"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Guard",
       "DisplayName": "Guard",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Guard"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_NemesisGas",
       "DisplayName": "Nemesis Gas",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.NemesisGas"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blind",
       "DisplayName": "Blind",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_BounceWorld",
       "DisplayName": "Bounce World",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.BounceWorld"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DarkServant",
       "DisplayName": "Dark Servant",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.DarkServant"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_TPFoeTaunt",
       "DisplayName": "Teleport Foe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.TPFoeTaunt"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Fallout",
       "DisplayName": "Fallout",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Fallout"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Fallout_Controller",
       "DisplayName": "Fallout",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Fallout_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Singularity",
       "DisplayName": "Singularity",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Singularity"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_Inherent",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_Inherent"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_Damage",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_Damage"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_DeBuff_Dam",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_DeBuff_Dam"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_Buff_Dam",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_Buff_Dam"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_DeBuff_Acc",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_DeBuff_Acc"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_Buff_Acc",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_Buff_Acc"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_Slow",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_Slow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_Haste",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_Haste"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_DeBuff_Regeneration",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_DeBuff_Regeneration"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_Buff_Regeneration",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_Buff_Regeneration"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_DeBuff_Recovery",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_DeBuff_Recovery"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tech_Lab_Buff_Recovery",
       "DisplayName": "Tech Lab",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tech_Lab_Buff_Recovery"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_TempPower_Warwolf_Wistel_Pet",
       "DisplayName": "Warwolf",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.TempPower_Warwolf_Wistel_Pet"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RainofArrows_Visual",
       "DisplayName": "Rain of Arrows",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RainofArrows_Visual"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RainofArrows",
       "DisplayName": "Rain of Arrows",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RainofArrows"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RainofArrows_Defender",
       "DisplayName": "Rain of Arrows",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RainofArrows_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Liquefy",
       "DisplayName": "Liquefy",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Liquefy"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ShockCont",
       "DisplayName": "Liquefy",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ShockCont"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Liquefy_Defender",
       "DisplayName": "Liquefy",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Liquefy_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ShockDef",
       "DisplayName": "Liquefy",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ShockDef"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_StickyArrow",
       "DisplayName": "Sticky Arrow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.StickyArrow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_PoisonGasArrow",
       "DisplayName": "Poison Gas Arrow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.PoisonGasArrow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_PoisonGasArrow_Controller",
       "DisplayName": "Poison Gas Arrow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.PoisonGasArrow_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_SonicDebuffArrow",
       "DisplayName": "Disruption Arrow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.SonicDebuffArrow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_SonicDebuffArrow_Controller",
       "DisplayName": "Disruption Arrow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.SonicDebuffArrow_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_OilSlickOil",
       "DisplayName": "Oil Slick",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.OilSlickOil"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_OilSlickTarget",
       "DisplayName": "Oil Slick",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.OilSlickTarget"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_OilSlickBurn",
       "DisplayName": "Oil Slick Fire",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.OilSlickBurn"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_TempPower_Amy_Jonsson_Pet",
       "DisplayName": "Amy Jonsson",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.TempPower_Amy_Jonsson_Pet"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_PoisonGasGrenade",
       "DisplayName": "PoisonGasGrenade",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.PoisonGasGrenade"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shivan_Summon_FX",
       "DisplayName": "Shivan Summon fx",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Shivan_Summon_FX"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_High_Explosives",
       "DisplayName": "High Explosives",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.High_Explosives"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_High_Explosives_Tech",
       "DisplayName": "High Explosives Tech",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.High_Explosives_Tech"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Raid_Disruptor_Pylon_Nuke",
       "DisplayName": "Raid_Disruptor_Pylon_Nuke",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Raid_Disruptor_Pylon_Nuke"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Raid_Disruptor_Pylon",
       "DisplayName": "Raid_Disruptor_Pylon",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Raid_Disruptor_Pylon"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Raid_Disruptor_Pylon_Create",
       "DisplayName": "Raid_Disruptor_Pylon_Create",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Raid_Disruptor_Pylon_Create"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Raid_Disruptor_Pylon_Kill",
       "DisplayName": "Raid_Disruptor_Pylon_Kill",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Raid_Disruptor_Pylon_Kill"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Warburg_Nuclear",
       "DisplayName": "Warburg_Nuclear",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Warburg_Nuclear"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Warburg_Biological",
       "DisplayName": "Warburg_Biological",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Warburg_Biological"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Warburg_Chemical",
       "DisplayName": "Warburg_Chemical",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Warburg_Chemical"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Warburg_Afterglow",
       "DisplayName": "Warburg_Afterglow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Warburg_Afterglow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Infected_Explosion",
       "DisplayName": "Infected Explosion",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Infected_Explosion"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Longbow_Heavy",
       "DisplayName": "Longbow Heavy",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Longbow_Heavy"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Air_Bomb",
       "DisplayName": "Air_Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Air_Bomb"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Snowangel",
       "DisplayName": "Snowangel",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Snowangel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_LightFaerie",
       "DisplayName": "LightFaerie",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.LightFaerie"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DarkFaerie",
       "DisplayName": "DarkFaerie",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.DarkFaerie"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_FaerieResists",
       "DisplayName": "FaerieResists",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.FaerieResists"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lost_Cure_Counter",
       "DisplayName": "Lost_Cure_Counter",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Lost_Cure_Counter"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Sleet_Defender",
       "DisplayName": "Sleet",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Sleet_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_HeatLossDebuff_Defender",
       "DisplayName": "Heat Loss",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.HeatLossDebuff_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_HeatLossBuff_Defender",
       "DisplayName": "Heat Loss",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.HeatLossBuff_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_MMTwilight",
       "DisplayName": "Twilight",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.MMTwilight"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_HeatLossDebuff",
       "DisplayName": "Heat Loss",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.HeatLossDebuff"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_HeatLossBuff",
       "DisplayName": "Heat Loss",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.HeatLossBuff"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Thorntrops",
       "DisplayName": "Thorntrops",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Thorntrops"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Sleet",
       "DisplayName": "Sleet",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Sleet"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Spirit_Tree",
       "DisplayName": "Spirit Tree",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Spirit_Tree"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Fly_Trap",
       "DisplayName": "Fly Trap",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Fly_Trap"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Creeper_Patch",
       "DisplayName": "Creeper Patch",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Creeper_Patch"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Creeper_Entangle",
       "DisplayName": "Creeper Patch",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Creeper_Entangle"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Creeper_Vine",
       "DisplayName": "Creeper Vine",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Creeper_Vine"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Poison_Trap",
       "DisplayName": "Poison Trap",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Poison_Trap"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Poison_Poison_Gas",
       "DisplayName": "Poison Trap",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Poison_Poison_Gas"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Villain_Pets_Noxious_Gas",
       "DisplayName": "Noxious Gas",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Noxious_Gas"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Villain_Pets_Kuji_Kiri",
       "DisplayName": "Kuji Kiri",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Kuji_Kiri"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_FF_Generator",
       "DisplayName": "Force Field Generator",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_FF_Generator"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Seeker1",
       "DisplayName": "Seeker 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Seeker1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Seeker2",
       "DisplayName": "Seeker 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Seeker2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Seeker3",
       "DisplayName": "Seeker 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Seeker3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Triage_Beacon",
       "DisplayName": "Triage Beacon",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Triage_Beacon"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Bomb",
       "DisplayName": "Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Bomb"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Villain_Pets_Traps_Set_TimeBomb",
       "DisplayName": "Time Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Set_TimeBomb"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_TimeBomb",
       "DisplayName": "Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_TimeBomb"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Poison_Trap",
       "DisplayName": "Poison Trap",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Poison_Trap"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Poison_Gas",
       "DisplayName": "Poison Gas",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Poison_Gas"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Acid_Mortar",
       "DisplayName": "Acid Mortar",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Acid_Mortar"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Trip_Mine",
       "DisplayName": "Mine",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Trip_Mine"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lightning_Rod",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Lightning_Rod"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Power_Surge",
       "DisplayName": "Electric Armor",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Power_Surge"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Villain_Pets_Chain_Lightning",
       "DisplayName": "Chain Lightning",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Lightning"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Fortunata_Seer",
       "DisplayName": "Fortunata Seer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Fortunata_Seer"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Fortunata_Mistress",
       "DisplayName": "Fortunata Mistress",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Fortunata_Mistress"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Blood_Widow",
       "DisplayName": "Blood Widow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Blood_Widow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Night_Widow",
       "DisplayName": "Night Widow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Night_Widow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Arachnobot_Blaster",
       "DisplayName": "Arachnobot Blaster",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Arachnobot_Blaster"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Arachnobot_Spiderling",
       "DisplayName": "Arachnobot Spiderling",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Arachnobot_Spiderling"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Arachnobot_Disrupter",
       "DisplayName": "Arachnobot Disrupter",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Arachnobot_Disrupter"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Toxic_Tarantula",
       "DisplayName": "Toxic Tarantula",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Toxic_Tarantula"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Water_Spout",
       "DisplayName": "Water Spout",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Water_Spout"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Blue_Corolax",
       "DisplayName": "Coralax Blue Hybrid",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corolax_Blue_Hybrid"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Red_Corolax",
       "DisplayName": "Coralax Red Hybrid",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corolax_Red_Hybrid"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Coral_Guardian_Warder",
       "DisplayName": "Coral Guardian Warder",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Coral_Guardian_Warder"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Coral_Guardian_Sentinel",
       "DisplayName": "Coral Guardian Sentinel",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Coral_Guardian_Sentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Mu_Adept",
       "DisplayName": "Mu Adept",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Mu_Adept"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Mu_Guardian",
       "DisplayName": "Mu Guardian",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Mu_Guardian"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Mu_Striker",
       "DisplayName": "Mu Striker",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Mu_Striker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_LightDrone1",
       "DisplayName": "Photon Seeker",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Kheldian_Pets.Energy_Drone1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_LightDrone2",
       "DisplayName": "Photon Seeker",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Kheldian_Pets.Energy_Drone2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_LightDrone3",
       "DisplayName": "Photon Seeker",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Kheldian_Pets.Energy_Drone3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Warshade_Extraction",
       "DisplayName": "Extracted Essence",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Kheldian_Pets.Warshade_Extraction"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Omega_Bomb",
       "DisplayName": "Omega Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Kheldian_Pets.Omega_Bomb"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shield_Charge",
       "DisplayName": "Shield Charge",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shield_Charge_AoE"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shield_Charge_Scrapper",
       "DisplayName": "Shield Charge (Scrapper)",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shield_Charge_AoE2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Epic_Quicksand",
       "DisplayName": "Quicksand",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Epic_Quicksand"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Patron_Powers_Water_Spout_Stalker",
       "DisplayName": "Water Spout (Stalker)",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Water_Spout_Stalker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Imp",
       "DisplayName": "Imp",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Imp"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Epic_FreezingRain",
       "DisplayName": "Freezing Rain",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Epic_FreezingRain"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VoltaicSentinel_Dominator",
       "DisplayName": "Voltaic Sentinel Critter",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VoltaicSentinel_Dominator"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Jack",
       "DisplayName": "Jack",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Jack"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VolcanicGasses",
       "DisplayName": "Volcanic Gasses",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VolcanicGasses"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Villain_Mine",
       "DisplayName": "Mine",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Villain_Mine"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Bomb_Defender",
       "DisplayName": "Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Bomb_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ChargeCone",
       "DisplayName": "Charge Cone",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ChargeCone"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ChargeImpact",
       "DisplayName": "Charge Impact",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ChargeImpact"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dust_Devil",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Dust_Devil"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_FF_Generator_Defender",
       "DisplayName": "Force Field Generator",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_FF_Generator_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Seeker1_Defender",
       "DisplayName": "Seeker 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Seeker1_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Seeker2_Defender",
       "DisplayName": "Seeker 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Seeker2_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Seeker3_Defender",
       "DisplayName": "Seeker 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Seeker3_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Set_TimeBomb_Defender",
       "DisplayName": "Time Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Set_TimeBomb_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_TimeBomb_Defender",
       "DisplayName": "Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_TimeBomb_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Poison_Trap_Defender",
       "DisplayName": "Poison Trap",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Poison_Trap_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Poison_Gas_Defender",
       "DisplayName": "Poison Gas",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Poison_Gas_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Acid_Mortar_Defender",
       "DisplayName": "Acid Mortar",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Acid_Mortar_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Trip_Mine_Defender",
       "DisplayName": "Mine",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Trip_Mine_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Induction_Jump1_Scrapper",
       "DisplayName": "Chain Induction Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Induction_Jump1_Scrapper"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Induction_Jump2_Scrapper",
       "DisplayName": "Chain Induction Jump 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Induction_Jump2_Scrapper"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Induction_Jump3_Scrapper",
       "DisplayName": "Chain Induction Jump 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Induction_Jump3_Scrapper"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Induction_Jump4_Scrapper",
       "DisplayName": "Chain Induction Jump 4",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Induction_Jump4_Scrapper"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lightning_Rod_Scrapper",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Lightning_Rod_Scrapper"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lightning_Rod_Tanker",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Lightning_Rod_Tanker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Noxious_Gas",
       "DisplayName": "Noxious Gas",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Noxious_Gas"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Kuji_Kiri",
       "DisplayName": "Kuji Kiri",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Kuji_Kiri"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Set_TimeBomb",
       "DisplayName": "Time Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Traps_Set_TimeBomb"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Lightning",
       "DisplayName": "Chain Lightning",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Lightning"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Induction_Jump1",
       "DisplayName": "Chain Induction Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Induction_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Induction_Jump2",
       "DisplayName": "Chain Induction Jump 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Induction_Jump2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Induction_Jump3",
       "DisplayName": "Chain Induction Jump 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Induction_Jump3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Induction_Jump4",
       "DisplayName": "Chain Induction Jump 4",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Induction_Jump4"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shield_Charge_Brute",
       "DisplayName": "Shield Defense",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shield_Charge_AoE"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shield_Charge_Tanker",
       "DisplayName": "Shield Defense",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shield_Charge_AoE2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Fortunata_Seer",
       "DisplayName": "Fortunata Seer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Fortunata_Seer"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Fortunata_Mistress",
       "DisplayName": "Fortunata Mistress",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Fortunata_Mistress"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blood_Widow",
       "DisplayName": "Blood Widow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Blood_Widow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Night_Widow",
       "DisplayName": "Night Widow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Night_Widow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Arachnobot_Blaster",
       "DisplayName": "Arachnobot Blaster",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Arachnobot_Blaster"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Arachnobot_Spiderling",
       "DisplayName": "Arachnobot Spiderling",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Arachnobot_Spiderling"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Arachnobot_Disrupter",
       "DisplayName": "Arachnobot Disrupter",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Arachnobot_Disrupter"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Toxic_Tarantula",
       "DisplayName": "Toxic Tarantula",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Toxic_Tarantula"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Water_Spout",
       "DisplayName": "Water Spout",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Water_Spout"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Water_Spout_Stalker",
       "DisplayName": "Water Spout",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Water_Spout_Stalker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corolax_Blue_Hybrid",
       "DisplayName": "Coralax Blue Hybrid",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corolax_Blue_Hybrid"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corolax_Red_Hybrid",
       "DisplayName": "Coralax Red Hybrid",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corolax_Red_Hybrid"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Coral_Guardian_Warder",
       "DisplayName": "Coral Guardian Warder",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Coral_Guardian_Warder"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Coral_Guardian_Sentinel",
       "DisplayName": "Coral Guardian Sentinel",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Coral_Guardian_Sentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Mu_Adept",
       "DisplayName": "Mu Adept",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Mu_Adept"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Mu_Guardian",
       "DisplayName": "Mu Guardian",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Mu_Guardian"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Mu_Striker",
       "DisplayName": "Mu Striker",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Mu_Striker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RainofArrows_Corruptor",
       "DisplayName": "Rain of Arrows",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.RainofArrows_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_OilSlickOil_Corruptor",
       "DisplayName": "Oil Slick",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.OilSlickOil_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_OilSlickTarget_Corruptor",
       "DisplayName": "Oil Slick",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.OilSlickTarget_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_OilSlickBurn_Corruptor",
       "DisplayName": "Oil Slick Fire",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.OilSlickBurn_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lightning_Rod_Brute",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Lightning_Rod_Brute"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lightning_Rod_Stalker",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Lightning_Rod_Stalker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shield_Charge_AoE3",
       "DisplayName": "Shield Defense",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shield_Charge_AoE3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RainofArrows_Critter",
       "DisplayName": "Rain of Arrows",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RainofArrows_Critter"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_PPD_Hard_Suit",
       "DisplayName": "PPD Hard Suit",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.PPD_Hard_Suit"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Crab_Spider",
       "DisplayName": "Crab Spider",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Crab_Spider"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Embraced_IceStorm",
       "DisplayName": "Ice Storm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Embraced_IceStorm"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Embraced_Quicksand",
       "DisplayName": "Quicksand",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Embraced_Quicksand"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Embraced_Lightning_Rod_Tanker",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Embraced_Lightning_Rod_Tanker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Embraced_Lightning_Rod_Brute",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Embraced_Lightning_Rod_Brute"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Embraced_Lightning_Rod_Scrapper",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Embraced_Lightning_Rod_Scrapper"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_PPD_Sergeant",
       "DisplayName": "PPD Sergeant",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.PPD_Sergeant"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Resistance_Rifle",
       "DisplayName": "Resistance_Rifle",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Resistance_Rifle"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Controller_Jump1",
       "DisplayName": "Chain Jolt Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Jolt_Controller_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Controller_Jump2",
       "DisplayName": "Chain Jolt Jump 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Jolt_Controller_Jump2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Controller_Jump3",
       "DisplayName": "Chain Jolt Jump 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Jolt_Controller_Jump3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Stun_Controller_Jump1",
       "DisplayName": "Chain Stun Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Stun_Controller_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Confuse_Controller_Jump1",
       "DisplayName": "Chain Confuse Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Confuse_Controller_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Confuse_Controller_Jump2",
       "DisplayName": "Chain Confuse Jump 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Confuse_Controller_Jump2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Confuse_Controller_Jump3",
       "DisplayName": "Chain Confuse Jump 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Confuse_Controller_Jump3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Static_Field_Controller",
       "DisplayName": "Static Field Controller",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Static_Field_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Static_Field_End_Recovery_Controller",
       "DisplayName": "Static Field Endurance Recovery Controller",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Static_Field_End_Recovery_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Gremlin",
       "DisplayName": "Gremlin",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Gremlin"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Gremlin_Jump1",
       "DisplayName": "Chain Jolt Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Jolt_Gremlin_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Gremlin_Jump2",
       "DisplayName": "Chain Jolt Jump 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Jolt_Gremlin_Jump2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Gremlin_Jump3",
       "DisplayName": "Chain Jolt Jump 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Chain_Jolt_Gremlin_Jump3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Dominator_Jump1",
       "DisplayName": "Chain Jolt Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Jolt_Dominator_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Dominator_Jump2",
       "DisplayName": "Chain Jolt Jump 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Jolt_Dominator_Jump2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Jolt_Dominator_Jump3",
       "DisplayName": "Chain Jolt Jump 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Jolt_Dominator_Jump3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Stun_Dominator_Jump1",
       "DisplayName": "Chain Stun Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Stun_Dominator_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Confuse_Dominator_Jump1",
       "DisplayName": "Chain Confuse Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Confuse_Dominator_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Confuse_Dominator_Jump2",
       "DisplayName": "Chain Confuse Jump 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Confuse_Dominator_Jump2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Chain_Confuse_Dominator_Jump3",
       "DisplayName": "Chain Confuse Jump 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Chain_Confuse_Dominator_Jump3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Static_Field_Dominator",
       "DisplayName": "Static Field Dominator",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Static_Field_Dominator"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Static_Field_End_Recovery_Dominator",
       "DisplayName": "Static Field Endurance Recovery Dominator",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Static_Field_End_Recovery_Dominator"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shield_Charge_AoE",
       "DisplayName": "Shield Defense",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shield_Charge_AoE"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shield_Charge_AoE2",
       "DisplayName": "Shield Defense",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shield_Charge_AoE2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_RainofFire",
       "DisplayName": "Rain of Fire",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_RainofFire"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Liquefy_MM",
       "DisplayName": "Liquefy",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Liquefy_MM"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ShockMM",
       "DisplayName": "Liquefy",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ShockMM"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Spring_Attack",
       "DisplayName": "Spring Attack",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Spring_Attack"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DistortionField_Defender",
       "DisplayName": "Time Manipulation",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.DistortionField_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DistortionField_Controller",
       "DisplayName": "Time Manipulation",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.DistortionField_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defenders_Bastion_Proc",
       "DisplayName": "Defender's Bastion",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defenders_Bastion_Proc"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Superior_Defenders_Bastion_Proc",
       "DisplayName": "Superior Defender's Bastion",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Superior_Defenders_Bastion_Proc"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Venomous_Gas",
       "DisplayName": "Venomous Gas",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Venomous_Gas"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DisintegrateSpread",
       "DisplayName": "Disintegrate Spread",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.DisintegrateSpread"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DistortionField_Corruptor",
       "DisplayName": "Time Manipulation",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.DistortionField_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DistortionField_Mastermind",
       "DisplayName": "Time Manipulation",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.DistortionField_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ResistAll_NoFly_Fast",
       "DisplayName": "ResistAll NoFly Fast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ResistAll_NoFly_Fast"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_DimensionShift",
       "DisplayName": "DimensionShift",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.DimensionShift"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Contaminated_Lightning_Rod_Tanker",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Contaminated_Lightning_Rod_Tanker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Contaminated_Lightning_Rod_Brute",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Contaminated_Lightning_Rod_Brute"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Contaminated_Lightning_Rod_Scrapper",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Contaminated_Lightning_Rod_Scrapper"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Contaminated_Lightning_Rod_Stalker",
       "DisplayName": "Electric Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Contaminated_Lightning_Rod_Stalker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Titan_Weapons",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Titan_Weapons"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Titan_Weapons_Tanker",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Titan_Weapons_Tanker"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_SoulAbsorptionBuff",
       "DisplayName": "Soul Absorption",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.SoulAbsorptionBuff"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Team_Transport",
       "DisplayName": "Team Transport",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Team_Transport"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Titan_Weapons_Brute",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Titan_Weapons_Brute"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shade",
       "DisplayName": "Shade",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shade"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shadow_Field",
       "DisplayName": "Shadow Field",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shadow_Field"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shadow_Field_Dominator",
       "DisplayName": "Shadow Field",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shadow_Field_Dominator"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shadow_Field_Dominator_Domination",
       "DisplayName": "Shadow Field",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shadow_Field_Dominator_Domination"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Umbra_Beast",
       "DisplayName": "Umbra Beast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Umbra_Beast"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Broad_Sword_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Broad_Sword_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Claws_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Claws_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dark_Melee_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dark_Melee_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dual_Blades_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dual_Blades_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Electric_Melee_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Electric_Melee_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Energy_Melee_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Energy_Melee_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Kinetic_Melee_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Kinetic_Melee_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Martial_Arts_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Martial_Arts_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Ninja_Blade_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Ninja_Blade_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Spines_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Spines_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Street_Justice_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Street_Justice_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Staff_Fighting_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Staff_Fighting_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_ResistAllFast",
       "DisplayName": "ResistAll",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.ResistAllFast"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Whirlpool_Defender",
       "DisplayName": "Whirlpool",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Whirlpool_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Whirlpool_Blaster",
       "DisplayName": "Whirlpool",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Whirlpool_Blaster"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Whirlpool_Corruptor",
       "DisplayName": "Whirlpool",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Whirlpool_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Water_Blast_Defender",
       "DisplayName": "Water Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Water_Blast_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Water_Blast_Blaster",
       "DisplayName": "Water Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Water_Blast_Blaster"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Water_Blast_Corruptor",
       "DisplayName": "Water Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Water_Blast_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lifegiving_Spores_Defender",
       "DisplayName": "Lifegiving Spores",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Lifegiving_Spores_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lifegiving_Spores_Controller",
       "DisplayName": "Lifegiving Spores",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Lifegiving_Spores_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lifegiving_Spores_Corruptor",
       "DisplayName": "Lifegiving Spores",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Lifegiving_Spores_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lifegiving_Spores_Mastermind",
       "DisplayName": "Lifegiving Spores",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Lifegiving_Spores_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Nature_Affinity_Defender",
       "DisplayName": "Nature Affinity",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Nature_Affinity_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Nature_Affinity_Controller",
       "DisplayName": "Nature Affinity",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Nature_Affinity_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Nature_Affinity_Corruptor",
       "DisplayName": "Nature Affinity",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Nature_Affinity_Corruptor"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Nature_Affinity_Mastermind",
       "DisplayName": "Nature Affinity",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Nature_Affinity_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Overpowering_Presence",
       "DisplayName": "Overpowering Presence",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Overpowering_Presence"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Vigilant_Assault_Proc",
       "DisplayName": "Vigilant Assault",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Vigilant_Assault_Proc"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Superior_Vigilant_Assault_Proc",
       "DisplayName": "Superior Vigilant Assault",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Superior_Vigilant_Assault_Proc"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Enflame",
       "DisplayName": "Enflame",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Enflame"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Psionic_Melee_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Psionic_Melee_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Scourging_Blast_Proc",
       "DisplayName": "Scourging Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Scourging_Blast_Proc"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Superior_Scourging_Blast_Proc",
       "DisplayName": "Superior Scourging Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Superior_Scourging_Blast_Proc"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominating_Grasp",
       "DisplayName": "Dominating Grasp",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominating_Grasp"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_IceStorm_Defender",
       "DisplayName": "Ice Storm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.IceStorm_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_Blizzard",
       "DisplayName": "Blizzard",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_Blizzard"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_Archery_Snipe",
       "DisplayName": "Archery",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_Archery_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_AR_Snipe",
       "DisplayName": "Assault Rifle",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_AR_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_BR_Snipe",
       "DisplayName": "Beam Rifle",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_BR_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_Dark_Snipe",
       "DisplayName": "Dark Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_Dark_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_Electric_Snipe",
       "DisplayName": "Electric Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_Electric_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_Energy_Snipe",
       "DisplayName": "Energy Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_Energy_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_Fire_Snipe",
       "DisplayName": "Fire Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_Fire_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_Psychic_Snipe",
       "DisplayName": "Psychic Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_Psychic_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blaster_Radiation_Snipe",
       "DisplayName": "Radiation Blast",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blaster_Radiation_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_Archery_Snipe",
       "DisplayName": "Archery",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_Archery_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_AR_Snipe",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_AR_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_BR_Snipe",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_BR_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_Dark_Snipe",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_Dark_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_Electric_Snipe",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_Electric_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_Energy_Snipe",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_Energy_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_Fire_Snipe",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_Fire_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_Psychic_Snipe",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_Psychic_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Defender_Radiation_Snipe",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Defender_Radiation_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Pool_Medicine_AidOther",
       "DisplayName": "Medicine",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Pool_Medicine_AidOther"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Pool_Leadership_VictoryRush",
       "DisplayName": "Leadership",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Pool_Leadership_VictoryRush"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Wind_Control_Vacuum_Controller",
       "DisplayName": "Wind Control",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Wind_Control_Vacuum_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Wind_Control_Vacuum_Dominator",
       "DisplayName": "Wind Control",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Wind_Control_Vacuum_Dominator"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Wind_Control_Vortex",
       "DisplayName": "Wind Control",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Wind_Control_Vortex"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Wind_Control_HailOfDebris",
       "DisplayName": "Wind Control",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Wind_Control_HailOfDebris"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Savage_Melee_Savage_Leap",
       "DisplayName": "Savage Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Savage_Melee_Savage_Leap"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Martial_Manipulation_Burst",
       "DisplayName": "Martial Manipulation",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Martial_Manipulation_Burst"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Experimentation_Corrosive_Vial",
       "DisplayName": "Experimentation",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Experimentation_Corrosive_Vial"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Radiation_Melee",
       "DisplayName": "Radiation Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Radiation_Melee"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Scrapper_Savage_Melee",
       "DisplayName": "Savage Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Scrapper_Savage_Melee"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Brute_Savage_Melee",
       "DisplayName": "Savage Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Brute_Savage_Melee"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Tanker_Savage_Melee",
       "DisplayName": "Savage Melee",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Tanker_Savage_Melee"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Trick_Shot_Jump1",
       "DisplayName": "Trick Shot Jump 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Trick_Shot_Jump1"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Trick_Shot_Jump2",
       "DisplayName": "Trick Shot Jump 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Trick_Shot_Jump2"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Trick_Shot_Jump3",
       "DisplayName": "Trick Shot Jump 3",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Trick_Shot_Jump3"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Trick_Shot_Jump4",
       "DisplayName": "Trick Shot Jump 4",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Trick_Shot_Jump4"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Savage_Melee_Assassins_Strike",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Savage_Melee_Assassins_Strike"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Radiation_Melee_Assassins_Corruption",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Radiation_Melee_Assassins_Corruption"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominator_DarkAssault_Snipe",
       "DisplayName": "Dominator_DarkAssault_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominator_DarkAssault_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominator_ElectricityAssault_Snipe",
       "DisplayName": "Dominator_ElectricityAssault_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominator_ElectricityAssault_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominator_EnergyAssault_Snipe",
       "DisplayName": "Dominator_EnergyAssault_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominator_EnergyAssault_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominator_FieryAssault_Snipe",
       "DisplayName": "Dominator_FieryAssault_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominator_FieryAssault_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominator_KineticAssault_Snipe",
       "DisplayName": "Dominator_KineticAssault_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominator_KineticAssault_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominator_MartialAssault_Snipe",
       "DisplayName": "Dominator_MartialAssault_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominator_MartialAssault_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominator_PsionicAssault_Snipe",
       "DisplayName": "Dominator_PsionicAssault_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominator_PsionicAssault_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_Archery_Snipe",
       "DisplayName": "Corruptor_Archery_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_Archery_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_AssaultRifle_Snipe",
       "DisplayName": "Corruptor_AssaultRifle_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_AssaultRifle_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_BeamRifle_Snipe",
       "DisplayName": "Corruptor_BeamRifle_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_BeamRifle_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_DarkBlast_Snipe",
       "DisplayName": "Corruptor_DarkBlast_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_DarkBlast_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_ElectricalBlast_Snipe",
       "DisplayName": "Corruptor_ElectricalBlast_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_ElectricalBlast_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_EnergyBlast_Snipe",
       "DisplayName": "Corruptor_EnergyBlast_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_EnergyBlast_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_FireBlast_Snipe",
       "DisplayName": "Corruptor_FireBlast_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_FireBlast_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_PsychicBlast_Snipe",
       "DisplayName": "Corruptor_PsychicBlast_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_PsychicBlast_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Corruptor_RadiationBlast_Snipe",
       "DisplayName": "Corruptor_RadiationBlast_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Corruptor_RadiationBlast_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Stalker_EpicSoulMastery_Snipe",
       "DisplayName": "Stalker_EpicSoulMastery_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Stalker_EpicSoulMastery_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Stalker_EpicMaceMastery_Snipe",
       "DisplayName": "Stalker_EpicMaceMastery_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Stalker_EpicMaceMastery_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Stalker_EpicMuMastery_Snipe",
       "DisplayName": "Stalker_EpicMuMastery_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Stalker_EpicMuMastery_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_IceStorm_Sentinel",
       "DisplayName": "Ice Storm",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.IceStorm_Sentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Blizzard_Sentinel",
       "DisplayName": "Blizzard",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Blizzard_Sentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RainofFire_Sentinel",
       "DisplayName": "Rain of Fire",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RainofFire_Sentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_VoltaicSentinel_Sentinel",
       "DisplayName": "Voltaic Sentinel",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.VoltaicSentinel_Sentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Bomb_Controller",
       "DisplayName": "Bomb",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Bomb_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RainofArrows_Sentinel",
       "DisplayName": "Rain of Arrows",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RainofArrows_Sentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_StickyArrow_Blaster",
       "DisplayName": "Sticky Arrow",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.StickyArrow_Blaster"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Seeker1_Controller",
       "DisplayName": "Seeker 1",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Seeker1_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Seeker2_Controller",
       "DisplayName": "Seeker 2",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Seeker2_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Acid_Mortar_Controller",
       "DisplayName": "Acid Mortar",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Acid_Mortar_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Traps_Trip_Mine_Controller",
       "DisplayName": "Mine",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Traps_Trip_Mine_Controller"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Whirlpool_Sentinel",
       "DisplayName": "Whirlpool",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Whirlpool_Sentinel"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_RadiationCloud_Visual",
       "DisplayName": "Radiation Control",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.RadiationCloud_Visual"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Shield_Charge_AoE4",
       "DisplayName": "Shield Defense",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Shield_Charge_AoE4"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Ice_Melee_Assassins_Frost",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Ice_Melee_Assassins_Frost"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Fiery_Melee_Assassins_Blaze",
       "DisplayName": "",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Fiery_Melee_Assassins_Blaze"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Dominator_RadioactiveAssault_Snipe",
       "DisplayName": "Dominator_RadioactiveAssault_Snipe",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Dominator_RadioactiveAssault_Snipe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_",
       "DisplayName": "You are able to harness the power of Radiation to crush your foes in close quarters. Radiation Melee attacks have a chance to inflict the Contaminated state on a target for a moderate amount of time. Powers that deal greater damage, have a longer recharge time and animation time have a greater chance to inflict Contaminated. Hitting Contaminated targets with Contaminated Strike, Radioactive Smash, Radiation Siphon and Devastating Blow cause a portion of that power's damage to also hit nearby foes. Radiation Melee attacks primarily deal smashing and energy damage, but this set is also capable of dealing some toxic damage.",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Villain_Pets.Radiation_Melee_Assassins_Corruption,Radiation_Melee_Assassins_Corruption"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Transfusion_Mastermind",
       "DisplayName": "Transfusion",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Transfusion_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Transference_Mastermind",
       "DisplayName": "Transference",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Transference_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_SiphonPower_Mastermind",
       "DisplayName": "Siphon Power",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.SiphonPower_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_KineticTransferDebuff_Mastermind",
       "DisplayName": "Kinetic Transfer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.KineticTransferDebuff_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_KineticTransferBuff_Mastermind",
       "DisplayName": "Kinetic Transfer",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.KineticTransferBuff_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Fallout_Mastermind",
       "DisplayName": "Fallout",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Fallout_Mastermind"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
@@ -7059,258 +7911,468 @@
     {
       "UID": "Pets_Ember_Demon",
       "DisplayName": "Ember Demon",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Ember_Demon",
+        "Mastermind_Pets.Ember_Demon_2",
+        "Mastermind_Pets.Ember_Demon_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Demon_Summoning.Enchant_Demon",
+        "Mastermind_Summon.Demon_Summoning.Abyssal_Empowerment"
+      ],
       "ClassName": "Class_Lt_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Hellfire_Gargoyle",
       "DisplayName": "Hellfire Gargoyle",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Hellfire_Gargoyle",
+        "Mastermind_Pets.Hellfire_Gargoyle_2",
+        "Mastermind_Pets.Hellfire_Gargoyle_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Demon_Summoning.Enchant_Demon",
+        "Mastermind_Summon.Demon_Summoning.Abyssal_Empowerment"
+      ],
       "ClassName": "Class_Lt_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Demon_Prince",
       "DisplayName": "Demon Prince",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Demon_Prince",
+        "Mastermind_Pets.Demon_Prince_2",
+        "Mastermind_Pets.Demon_Prince_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Demon_Summoning.Enchant_Demon",
+        "Mastermind_Summon.Demon_Summoning.Abyssal_Empowerment"
+      ],
       "ClassName": "Class_Boss_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Cold_Demonling",
       "DisplayName": "Cold Demonling",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Cold_Demonling",
+        "Mastermind_Pets.Cold_Demonling_2",
+        "Mastermind_Pets.Cold_Demonling_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Demon_Summoning.Enchant_Demon",
+        "Mastermind_Summon.Demon_Summoning.Abyssal_Empowerment"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Fiery_Demonling",
       "DisplayName": "Fiery Demonling",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Fiery_Demonling",
+        "Mastermind_Pets.Fiery_Demonling_2",
+        "Mastermind_Pets.Fiery_Demonling_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Demon_Summoning.Enchant_Demon",
+        "Mastermind_Summon.Demon_Summoning.Abyssal_Empowerment"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Hellfire_Demonling",
       "DisplayName": "Hellfire Demonling",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Hellfire_Demonling",
+        "Mastermind_Pets.Hellfire_Demonling_2",
+        "Mastermind_Pets.Hellfire_Demonling_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Demon_Summoning.Enchant_Demon",
+        "Mastermind_Summon.Demon_Summoning.Abyssal_Empowerment"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Living_Hellfire",
       "DisplayName": "Living Hellfire",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Living_Hellfire"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Howler_Wolf",
       "DisplayName": "Howler Wolf",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Howler_Wolf",
+        "Mastermind_Pets.Howler_Wolf_2",
+        "Mastermind_Pets.Howler_Wolf_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Beast_Mastery.Train_Beasts",
+        "Mastermind_Summon.Beast_Mastery.Tame_Beasts"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Alpha_Wolf",
       "DisplayName": "Alpha Wolf",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Alpha_Wolf",
+        "Mastermind_Pets.Alpha_Wolf_2",
+        "Mastermind_Pets.Alpha_Wolf_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Beast_Mastery.Train_Beasts",
+        "Mastermind_Summon.Beast_Mastery.Tame_Beasts"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Lioness",
       "DisplayName": "Lioness",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Lioness",
+        "Mastermind_Pets.Lioness_2",
+        "Mastermind_Pets.Lioness_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Beast_Mastery.Train_Beasts",
+        "Mastermind_Summon.Beast_Mastery.Tame_Beasts"
+      ],
       "ClassName": "Class_Lt_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Dire_Wolf",
       "DisplayName": "Dire Wolf",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Dire_Wolf",
+        "Mastermind_Pets.Dire_Wolf_2",
+        "Mastermind_Pets.Dire_Wolf_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Beast_Mastery.Train_Beasts",
+        "Mastermind_Summon.Beast_Mastery.Tame_Beasts"
+      ],
       "ClassName": "Class_Boss_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Soldier",
       "DisplayName": "Soldier",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Soldier",
+        "Mastermind_Pets.Soldier_2",
+        "Mastermind_Pets.Soldier_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Mercenaries.Equip_Mercenary",
+        "Mastermind_Summon.Mercenaries.Tactical_Upgrade"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Medic",
       "DisplayName": "Medic",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Medic",
+        "Mastermind_Pets.Medic_2",
+        "Mastermind_Pets.Medic_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Mercenaries.Equip_Mercenary",
+        "Mastermind_Summon.Mercenaries.Tactical_Upgrade"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Spec_Ops",
       "DisplayName": "Spec Ops",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Spec_Ops",
+        "Mastermind_Pets.Spec_Ops_2",
+        "Mastermind_Pets.Spec_Ops_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Mercenaries.Equip_Mercenary",
+        "Mastermind_Summon.Mercenaries.Tactical_Upgrade"
+      ],
       "ClassName": "Class_Lt_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Commando",
       "DisplayName": "Commando",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Commando",
+        "Mastermind_Pets.Commando_2",
+        "Mastermind_Pets.Commando_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Mercenaries.Equip_Mercenary",
+        "Mastermind_Summon.Mercenaries.Tactical_Upgrade"
+      ],
       "ClassName": "Class_Boss_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Zombie",
       "DisplayName": "Zombie",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Zombie",
+        "Mastermind_Pets.Zombie_2",
+        "Mastermind_Pets.Zombie_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Necromancy.Enchant_Undead",
+        "Mastermind_Summon.Necromancy.Dark_Empowerment"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Skeletal_Warrior",
       "DisplayName": "Skeletal Warrior",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Skeleton",
+        "Mastermind_Pets.Skeleton_2",
+        "Mastermind_Pets.Skeleton_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Necromancy.Enchant_Undead",
+        "Mastermind_Summon.Necromancy.Dark_Empowerment"
+      ],
       "ClassName": "Class_Lt_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Ghost",
       "DisplayName": "Ghost",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Ghosts"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Lich",
       "DisplayName": "Lich",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Lich",
+        "Mastermind_Pets.Lich_2",
+        "Mastermind_Pets.Lich_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Necromancy.Enchant_Undead",
+        "Mastermind_Summon.Necromancy.Dark_Empowerment"
+      ],
       "ClassName": "Class_Boss_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Genin",
       "DisplayName": "Genin",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Genin",
+        "Mastermind_Pets.Genin_2",
+        "Mastermind_Pets.Genin_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Ninjas.Train_Ninjas",
+        "Mastermind_Summon.Ninjas.Kuji_In_Zen"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Jounin",
       "DisplayName": "Jounin",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Jonin",
+        "Mastermind_Pets.Jonin_2",
+        "Mastermind_Pets.Jonin_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Ninjas.Train_Ninjas",
+        "Mastermind_Summon.Ninjas.Kuji_In_Zen"
+      ],
       "ClassName": "Class_Lt_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Oni",
       "DisplayName": "Oni",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Oni",
+        "Mastermind_Pets.Oni_2",
+        "Mastermind_Pets.Oni_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Ninjas.Train_Ninjas",
+        "Mastermind_Summon.Ninjas.Kuji_In_Zen"
+      ],
       "ClassName": "Class_Boss_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Droid",
       "DisplayName": "Droid",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Droid",
+        "Mastermind_Pets.Droid_2",
+        "Mastermind_Pets.Droid_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Robotics.Equip_Robot",
+        "Mastermind_Summon.Robotics.Upgrade_Robot"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Protector_Bot",
       "DisplayName": "Protector Bot",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Protector",
+        "Mastermind_Pets.Protector_2",
+        "Mastermind_Pets.Protector_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Robotics.Equip_Robot",
+        "Mastermind_Summon.Robotics.Upgrade_Robot"
+      ],
       "ClassName": "Class_Lt_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Assault_Bot",
       "DisplayName": "Assault Bot",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Assault",
+        "Mastermind_Pets.Assault_2",
+        "Mastermind_Pets.Assault_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Robotics.Equip_Robot",
+        "Mastermind_Summon.Robotics.Upgrade_Robot"
+      ],
       "ClassName": "Class_Boss_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Thug",
       "DisplayName": "Thug",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Thug_Minion",
+        "Mastermind_Pets.Thug_Minion_2",
+        "Mastermind_Pets.Thug_Minion_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Thugs.Equip_Thugs",
+        "Mastermind_Summon.Thugs.Upgrade_Equipment"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Arsonist",
       "DisplayName": "Arsonist",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Thug_Arsonist",
+        "Mastermind_Pets.Thug_Arsonist_2",
+        "Mastermind_Pets.Thug_Arsonist_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Thugs.Equip_Thugs",
+        "Mastermind_Summon.Thugs.Upgrade_Equipment"
+      ],
       "ClassName": "Class_Minion_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Thug_Lt",
       "DisplayName": "Thug_Lt",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Thug_Lt",
+        "Mastermind_Pets.Thug_Lt_2",
+        "Mastermind_Pets.Thug_Lt_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Thugs.Equip_Thugs",
+        "Mastermind_Summon.Thugs.Upgrade_Equipment"
+      ],
       "ClassName": "Class_Lt_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Thug_Posse",
       "DisplayName": "Thug Posse",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Thug_Pose",
+        "Mastermind_Pets.Thug_Pose_Brawl",
+        "Mastermind_Pets.Thug_Pose_Rock",
+        "Mastermind_Pets.Thug_Pose_Pipe",
+        "Mastermind_Pets.Thug_Pose_Knife",
+        "Mastermind_Pets.Thug_Pose_Revolver",
+        "Mastermind_Pets.Thug_Pose_Pistol",
+        "Mastermind_Pets.Thug_Pose_Sledgehammer",
+        "Mastermind_Pets.Thug_Pose_Bat",
+        "Mastermind_Pets.Thug_Pose_Axe"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Thug_Boss",
       "DisplayName": "Thug Boss",
-      "PowersetFullName": [],
-      "UpgradePowerFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Thug_Boss",
+        "Mastermind_Pets.Thug_Boss_2",
+        "Mastermind_Pets.Thug_Boss_3"
+      ],
+      "UpgradePowerFullName": [
+        "Mastermind_Summon.Thugs.Equip_Thugs",
+        "Mastermind_Summon.Thugs.Upgrade_Equipment"
+      ],
       "ClassName": "Class_Boss_Henchman",
       "EntityType": 1
     },
     {
       "UID": "Pets_Seeker_Drone",
       "DisplayName": "Seeker Drone",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Mastermind_Pets.Seeker_Drone"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },
     {
       "UID": "Pets_Galvanic_Sentinel_Defender",
       "DisplayName": "Galvanic Sentinel",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Galvanic_Sentinel_Defender"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Defender"
     },
     {
       "UID": "Pets_CorrosiveVial",
       "DisplayName": "Corrosive Vial",
-      "PowersetFullName": [],
+      "PowersetFullName": [
+        "Pets.Experiment_Corrosive_Vial"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     },

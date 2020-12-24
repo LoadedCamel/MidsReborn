@@ -26705,7 +26705,7 @@
       "DisplayLocation": 28
     },
     {
-      "LocationIndex": 9,
+      "LocationIndex": 14,
       "PowerIndex": 4499,
       "PowerSetID": 2796,
       "PowerSetIndex": 56,
@@ -27202,7 +27202,9 @@
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Alpha",
       "AoEModifier": 1.0,
-      "DisplayLocation": 9
+      "DisplayLocation": 14,
+      "Active": true,
+      "Taken": true
     },
     {
       "LocationIndex": 31,

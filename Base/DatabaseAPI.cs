@@ -1199,6 +1199,11 @@ public static class DatabaseAPI
         }
     }
 
+    private static void saveEnts()
+    {
+        var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
+        File.WriteAllText($@"{Application.StartupPath}\\data\\Ents.json", serialized);
+    }
     public static bool LoadMainDatabase()
     {
         ClearLookups();

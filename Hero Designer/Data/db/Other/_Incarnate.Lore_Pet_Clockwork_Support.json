@@ -77,8 +77,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 107.0897,
-          "MagPercent": 107.0897,
+          "Mag": 96.3807,
+          "MagPercent": 96.3807,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Heal",
@@ -132,8 +132,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 17.88398,
-          "MagPercent": 17.88398,
+          "Mag": 16.0955772,
+          "MagPercent": 16.0955772,
           "Duration": 10.1,
           "BaseProbability": 1.0,
           "Reward": "",

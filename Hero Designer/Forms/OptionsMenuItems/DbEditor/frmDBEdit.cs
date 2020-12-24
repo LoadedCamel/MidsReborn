@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,6 +12,7 @@ using Base.Master_Classes;
 using Hero_Designer.Forms.JsonImport;
 using Hero_Designer.My;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 
 namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 {
@@ -256,5 +260,12 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         }
 
         private readonly frmMain _frmMain;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var entJson = JsonConvert.DeserializeObject<List<SummonedEntity>>(File.ReadAllText($@"{Application.StartupPath}\\Data\\Ents.json"));
+            DatabaseAPI.Database.Entities = entJson.ToArray();
+            MessageBox.Show(@"Entities should now be restored. Verify via Entity editor then open and save Main DB.");
+        }
     }
 }

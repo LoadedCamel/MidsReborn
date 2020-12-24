@@ -447,7 +447,8 @@
       "FullSetName": "Tanker_Defense.Radiation_Armor",
       "CastTime": 0.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "PowerIndex": 8638,
@@ -564,8 +565,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.1384,
-          "MagPercent": 13.84,
+          "Mag": 0.21625,
+          "MagPercent": 21.625,
           "Duration": 1.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -675,8 +676,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5536,
-          "MagPercent": 55.36,
+          "Mag": 0.865,
+          "MagPercent": 86.5,
           "Duration": 1.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -731,8 +732,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5536,
-          "MagPercent": 55.36,
+          "Mag": 0.865,
+          "MagPercent": 86.5,
           "Duration": 1.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -787,7 +788,9 @@
       ],
       "FullSetName": "Tanker_Defense.Radiation_Armor",
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.67,
@@ -1325,7 +1328,8 @@
       "FullSetName": "Tanker_Defense.Radiation_Armor",
       "CastTime": 0.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.73,
@@ -1395,8 +1399,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -8.304,
-          "MagPercent": -8.304,
+          "Mag": -12.975,
+          "MagPercent": -12.975,
           "Duration": 0.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1451,8 +1455,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -8.304,
-          "MagPercent": -8.304,
+          "Mag": -12.975,
+          "MagPercent": -12.975,
           "Duration": 0.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1508,8 +1512,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -8.304,
-          "MagPercent": -8.304,
+          "Mag": -12.975,
+          "MagPercent": -12.975,
           "Duration": 0.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1565,8 +1569,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -8.304,
-          "MagPercent": -8.304,
+          "Mag": -12.975,
+          "MagPercent": -12.975,
           "Duration": 0.75,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1857,8 +1861,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.29064,
-          "MagPercent": 29.064,
+          "Mag": 0.454125,
+          "MagPercent": 45.4125,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1913,8 +1917,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.29064,
-          "MagPercent": 29.064,
+          "Mag": 0.454125,
+          "MagPercent": 45.4125,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1969,8 +1973,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.29064,
-          "MagPercent": 29.064,
+          "Mag": 0.454125,
+          "MagPercent": 45.4125,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2025,8 +2029,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.29064,
-          "MagPercent": 29.064,
+          "Mag": 0.454125,
+          "MagPercent": 45.4125,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2081,8 +2085,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.29064,
-          "MagPercent": 29.064,
+          "Mag": 0.454125,
+          "MagPercent": 45.4125,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2432,8 +2436,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.8304,
-          "MagPercent": 83.04,
+          "Mag": 1.2975,
+          "MagPercent": 129.75,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2489,8 +2493,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.8304,
-          "MagPercent": 83.04,
+          "Mag": 1.2975,
+          "MagPercent": 129.75,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2546,8 +2550,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.8304,
-          "MagPercent": 83.04,
+          "Mag": 1.2975,
+          "MagPercent": 129.75,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2603,8 +2607,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.8304,
-          "MagPercent": 83.04,
+          "Mag": 1.2975,
+          "MagPercent": 129.75,
           "Duration": 0.75,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -3239,7 +3243,8 @@
       "FullSetName": "Tanker_Defense.Radiation_Armor",
       "CastTime": 0.73,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.03,
@@ -3327,8 +3332,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.11712027,
-          "MagPercent": 6.11712027,
+          "Mag": 10.56594,
+          "MagPercent": 10.56594,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3382,8 +3387,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.52928007,
-          "MagPercent": 1.52928007,
+          "Mag": 2.641485,
+          "MagPercent": 2.641485,
           "Duration": 4.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3441,8 +3446,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 88.34903,
-          "MagPercent": 88.34903,
+          "Mag": 206.1476,
+          "MagPercent": 206.1476,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "HealSelf",
@@ -3496,8 +3501,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 17.6698055,
-          "MagPercent": 17.6698055,
+          "Mag": 41.22952,
+          "MagPercent": 41.22952,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "HealSelf",
@@ -3717,8 +3722,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -1.038,
-          "MagPercent": -103.799995,
+          "Mag": -1.621875,
+          "MagPercent": -162.1875,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -3898,8 +3903,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.9599424,
-          "MagPercent": -95.99424,
+          "Mag": -1.49991,
+          "MagPercent": -149.991,
           "Duration": 30.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -3956,7 +3961,8 @@
       "FullSetName": "Tanker_Defense.Radiation_Armor",
       "CastTime": 1.03,
       "Slottable": true,
-      "AoEModifier": 4.0
+      "AoEModifier": 4.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.67,
@@ -4157,8 +4163,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.075,
-          "MagPercent": -7.50000048,
+          "Mag": -0.0525000021,
+          "MagPercent": -5.25,
           "Duration": 1.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4215,8 +4221,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.15,
-          "MagPercent": -15.000001,
+          "Mag": -0.105000004,
+          "MagPercent": -10.5,
           "Duration": 1.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4390,7 +4396,9 @@
       "FullSetName": "Tanker_Defense.Radiation_Armor",
       "CastTime": 0.67,
       "Slottable": true,
-      "AoEModifier": 2.2
+      "AoEModifier": 2.2,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.73,
@@ -4459,8 +4467,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 2.409519,
-          "MagPercent": 2.409519,
+          "Mag": 5.622207,
+          "MagPercent": 5.622207,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -4625,7 +4633,8 @@
       "FullSetName": "Tanker_Defense.Radiation_Armor",
       "CastTime": 0.73,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.0,
@@ -4712,8 +4721,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 30.5856,
-          "MagPercent": 30.5856,
+          "Mag": 52.8297,
+          "MagPercent": 52.8297,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -4767,8 +4776,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.05856013,
-          "MagPercent": 3.05856013,
+          "Mag": 5.28297,
+          "MagPercent": 5.28297,
           "Duration": 9.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -4827,8 +4836,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": -0.2,
-          "MagPercent": -20.0,
+          "Mag": -0.14,
+          "MagPercent": -14.0,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4886,8 +4895,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 80.3173,
-          "MagPercent": 80.3173,
+          "Mag": 187.4069,
+          "MagPercent": 187.4069,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "HealSelf",
@@ -4941,8 +4950,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 4.015865,
-          "MagPercent": 4.015865,
+          "Mag": 9.370345,
+          "MagPercent": 9.370345,
           "Duration": 9.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -5124,7 +5133,8 @@
       "FullSetName": "Tanker_Defense.Radiation_Armor",
       "CastTime": 3.0,
       "Slottable": true,
-      "AoEModifier": 3.25
+      "AoEModifier": 3.25,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.93,
@@ -5706,8 +5716,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.264,
-          "MagPercent": 26.4,
+          "Mag": 0.33,
+          "MagPercent": 33.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -5763,8 +5773,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.264,
-          "MagPercent": 26.4,
+          "Mag": 0.33,
+          "MagPercent": 33.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -5820,8 +5830,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.264,
-          "MagPercent": 26.4,
+          "Mag": 0.33,
+          "MagPercent": 33.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -5877,8 +5887,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.264,
-          "MagPercent": 26.4,
+          "Mag": 0.33,
+          "MagPercent": 33.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -5934,8 +5944,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.264,
-          "MagPercent": 26.4,
+          "Mag": 0.33,
+          "MagPercent": 33.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -5991,8 +6001,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.264,
-          "MagPercent": 26.4,
+          "Mag": 0.33,
+          "MagPercent": 33.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -6048,8 +6058,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.264,
-          "MagPercent": 26.4,
+          "Mag": 0.33,
+          "MagPercent": 33.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -6105,8 +6115,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.264,
-          "MagPercent": 26.4,
+          "Mag": 0.33,
+          "MagPercent": 33.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,

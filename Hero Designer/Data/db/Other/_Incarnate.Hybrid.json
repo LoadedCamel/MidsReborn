@@ -18853,6 +18853,7 @@
       "AoEModifier": 2.2
     },
     {
+      "LocationIndex": 17,
       "PowerIndex": 4799,
       "PowerSetID": 2810,
       "PowerSetIndex": 25,
@@ -20942,7 +20943,9 @@
       ],
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Hybrid",
-      "AoEModifier": 2.5
+      "AoEModifier": 2.5,
+      "DisplayLocation": 17,
+      "Taken": true
     },
     {
       "PowerIndex": 4800,
