@@ -2534,7 +2534,8 @@
       "FullSetName": "Defender_Buff.Shock_Therapy",
       "CastTime": 1.07,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.0,

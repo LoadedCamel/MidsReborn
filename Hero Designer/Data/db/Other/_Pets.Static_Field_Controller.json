@@ -4,7 +4,7 @@
   "FullName": "Pets.Static_Field_Controller",
   "ImageName": "",
   "Power": [
-    6528
+    6530
   ],
   "SetType": 8,
   "DisplayName": "Static Field Controller",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6528,
+      "PowerIndex": 6530,
       "PowerSetID": 3210,
       "StaticIndex": 4438,
       "NGroupMembership": [],

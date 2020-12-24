@@ -4,8 +4,6 @@
   "FullName": "Warshade_Offensive.Umbral_Blast",
   "ImageName": "UmbralBlast.png",
   "Power": [
-    10330,
-    10331,
     10332,
     10333,
     10334,
@@ -17,7 +15,9 @@
     10340,
     10341,
     10342,
-    10343
+    10343,
+    10344,
+    10345
   ],
   "SetType": 1,
   "DisplayName": "Umbral Blast",
@@ -36,7 +36,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 3.12,
-      "PowerIndex": 10330,
+      "PowerIndex": 10332,
       "PowerSetID": 3551,
       "StaticIndex": 3201,
       "NGroupMembership": [],
@@ -405,7 +405,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 5.2,
-      "PowerIndex": 10331,
+      "PowerIndex": 10333,
       "PowerSetID": 3551,
       "PowerSetIndex": 1,
       "StaticIndex": 3202,
@@ -892,7 +892,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 7.8,
-      "PowerIndex": 10332,
+      "PowerIndex": 10334,
       "PowerSetID": 3551,
       "PowerSetIndex": 2,
       "StaticIndex": 3203,
@@ -1628,7 +1628,7 @@
     },
     {
       "ToggleCost": 0.26,
-      "PowerIndex": 10333,
+      "PowerIndex": 10335,
       "PowerSetID": 3551,
       "PowerSetIndex": 3,
       "StaticIndex": 3204,
@@ -2509,7 +2509,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 8.528,
-      "PowerIndex": 10334,
+      "PowerIndex": 10336,
       "PowerSetID": 3551,
       "PowerSetIndex": 4,
       "StaticIndex": 3205,
@@ -3116,7 +3116,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 5.57,
-      "PowerIndex": 10335,
+      "PowerIndex": 10337,
       "PowerSetID": 3551,
       "PowerSetIndex": 5,
       "StaticIndex": 3206,
@@ -3290,7 +3290,7 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 15.6,
-      "PowerIndex": 10336,
+      "PowerIndex": 10338,
       "PowerSetID": 3551,
       "PowerSetIndex": 6,
       "StaticIndex": 3208,
@@ -4313,7 +4313,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 15.184,
-      "PowerIndex": 10337,
+      "PowerIndex": 10339,
       "PowerSetID": 3551,
       "PowerSetIndex": 7,
       "StaticIndex": 3207,
@@ -4922,7 +4922,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 18.512,
-      "PowerIndex": 10338,
+      "PowerIndex": 10340,
       "PowerSetID": 3551,
       "PowerSetIndex": 8,
       "StaticIndex": 3210,
@@ -5652,7 +5652,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 15.6,
-      "PowerIndex": 10339,
+      "PowerIndex": 10341,
       "PowerSetID": 3551,
       "PowerSetIndex": 9,
       "StaticIndex": 3209,
@@ -6139,7 +6139,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 10340,
+      "PowerIndex": 10342,
       "PowerSetID": 3551,
       "PowerSetIndex": 10,
       "StaticIndex": 3211,
@@ -6873,7 +6873,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 26.0,
-      "PowerIndex": 10341,
+      "PowerIndex": 10343,
       "PowerSetID": 3551,
       "PowerSetIndex": 11,
       "StaticIndex": 3212,
@@ -7547,7 +7547,7 @@
     {
       "CastTimeReal": 3.2,
       "ToggleCost": 26.0,
-      "PowerIndex": 10342,
+      "PowerIndex": 10344,
       "PowerSetID": 3551,
       "PowerSetIndex": 12,
       "StaticIndex": 3213,
@@ -7737,7 +7737,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 27.716,
-      "PowerIndex": 10343,
+      "PowerIndex": 10345,
       "PowerSetID": 3551,
       "PowerSetIndex": 13,
       "StaticIndex": 3214,

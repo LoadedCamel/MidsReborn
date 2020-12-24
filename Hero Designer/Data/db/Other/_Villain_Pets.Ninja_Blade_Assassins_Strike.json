@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Ninja_Blade_Assassins_Strike",
   "ImageName": "",
   "Power": [
-    10196,
-    10197
+    10198,
+    10199
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 10196,
+      "PowerIndex": 10198,
       "PowerSetID": 3440,
       "StaticIndex": 6336,
       "NGroupMembership": [],
@@ -332,7 +332,7 @@
           "nID": 4,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9287,
+          "nSummon": 9289,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -498,7 +498,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 10197,
+      "PowerIndex": 10199,
       "PowerSetID": 3440,
       "PowerSetIndex": 1,
       "StaticIndex": 6337,

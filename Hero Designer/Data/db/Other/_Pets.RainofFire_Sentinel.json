@@ -4,8 +4,8 @@
   "FullName": "Pets.RainofFire_Sentinel",
   "ImageName": "",
   "Power": [
-    6490,
-    6491
+    6492,
+    6493
   ],
   "SetType": 8,
   "DisplayName": "Rain of Fire",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6490,
+      "PowerIndex": 6492,
       "PowerSetID": 3181,
       "StaticIndex": 10628,
       "NGroupMembership": [],
@@ -537,7 +537,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6491,
+      "PowerIndex": 6493,
       "PowerSetID": 3181,
       "PowerSetIndex": 1,
       "StaticIndex": 10629,

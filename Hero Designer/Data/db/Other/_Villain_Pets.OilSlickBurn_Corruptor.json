@@ -4,10 +4,10 @@
   "FullName": "Villain_Pets.OilSlickBurn_Corruptor",
   "ImageName": "",
   "Power": [
-    10199,
-    10200,
     10201,
-    10202
+    10202,
+    10203,
+    10204
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick Fire",
@@ -24,7 +24,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10199,
+      "PowerIndex": 10201,
       "PowerSetID": 3501,
       "StaticIndex": 4093,
       "NGroupMembership": [],
@@ -254,7 +254,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10200,
+      "PowerIndex": 10202,
       "PowerSetID": 3501,
       "PowerSetIndex": 1,
       "StaticIndex": 4094,
@@ -364,7 +364,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10201,
+      "PowerIndex": 10203,
       "PowerSetID": 3501,
       "PowerSetIndex": 2,
       "StaticIndex": 4096,
@@ -470,7 +470,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10202,
+      "PowerIndex": 10204,
       "PowerSetID": 3501,
       "PowerSetIndex": 3,
       "StaticIndex": 4095,

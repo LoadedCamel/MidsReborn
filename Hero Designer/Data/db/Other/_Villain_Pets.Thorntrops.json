@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Thorntrops",
   "ImageName": "",
   "Power": [
-    10251
+    10253
   ],
   "SetType": 8,
   "DisplayName": "Thorntrops",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10251,
+      "PowerIndex": 10253,
       "PowerSetID": 3528,
       "StaticIndex": 3148,
       "NGroupMembership": [],

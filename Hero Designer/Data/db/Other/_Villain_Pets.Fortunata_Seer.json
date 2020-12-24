@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Fortunata_Seer",
   "ImageName": "",
   "Power": [
-    10142,
-    10143,
     10144,
     10145,
     10146,
     10147,
     10148,
-    10149
+    10149,
+    10150,
+    10151
   ],
   "SetType": 8,
   "DisplayName": "Fortunata Seer",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10142,
+      "PowerIndex": 10144,
       "PowerSetID": 3488,
       "StaticIndex": 3092,
       "NGroupMembership": [],
@@ -662,7 +662,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 5.2,
-      "PowerIndex": 10143,
+      "PowerIndex": 10145,
       "PowerSetID": 3488,
       "PowerSetIndex": 1,
       "StaticIndex": 3093,
@@ -842,7 +842,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10144,
+      "PowerIndex": 10146,
       "PowerSetID": 3488,
       "PowerSetIndex": 2,
       "StaticIndex": 3094,
@@ -1068,7 +1068,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 5.2,
-      "PowerIndex": 10145,
+      "PowerIndex": 10147,
       "PowerSetID": 3488,
       "PowerSetIndex": 3,
       "StaticIndex": 3095,
@@ -1250,7 +1250,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 7.8,
-      "PowerIndex": 10146,
+      "PowerIndex": 10148,
       "PowerSetID": 3488,
       "PowerSetIndex": 4,
       "StaticIndex": 3096,
@@ -1430,7 +1430,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10147,
+      "PowerIndex": 10149,
       "PowerSetID": 3488,
       "PowerSetIndex": 5,
       "StaticIndex": 3097,
@@ -1537,7 +1537,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 7.8,
-      "PowerIndex": 10148,
+      "PowerIndex": 10150,
       "PowerSetID": 3488,
       "PowerSetIndex": 6,
       "StaticIndex": 3098,
@@ -1785,7 +1785,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 8.528,
-      "PowerIndex": 10149,
+      "PowerIndex": 10151,
       "PowerSetID": 3488,
       "PowerSetIndex": 7,
       "StaticIndex": 3099,

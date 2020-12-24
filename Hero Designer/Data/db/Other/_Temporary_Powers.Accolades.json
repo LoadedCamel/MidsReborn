@@ -4,8 +4,6 @@
   "FullName": "Temporary_Powers.Accolades",
   "ImageName": "",
   "Power": [
-    8899,
-    8900,
     8901,
     8902,
     8903,
@@ -23,7 +21,9 @@
     8915,
     8916,
     8917,
-    8918
+    8918,
+    8919,
+    8920
   ],
   "SetType": 6,
   "DisplayName": "Accolades",
@@ -40,7 +40,7 @@
   "GroupName": "Temporary_Powers",
   "Powers": [
     {
-      "PowerIndex": 8899,
+      "PowerIndex": 8901,
       "PowerSetID": 3421,
       "StaticIndex": 2641,
       "NGroupMembership": [],
@@ -203,7 +203,7 @@
     },
     {
       "CastTimeReal": 2.33,
-      "PowerIndex": 8900,
+      "PowerIndex": 8902,
       "PowerSetID": 3421,
       "PowerSetIndex": 1,
       "StaticIndex": 2642,
@@ -907,7 +907,7 @@
     },
     {
       "CastTimeReal": 3.0,
-      "PowerIndex": 8901,
+      "PowerIndex": 8903,
       "PowerSetID": 3421,
       "PowerSetIndex": 2,
       "StaticIndex": 2643,
@@ -1698,7 +1698,7 @@
     },
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 8902,
+      "PowerIndex": 8904,
       "PowerSetID": 3421,
       "PowerSetIndex": 3,
       "StaticIndex": 2644,
@@ -2489,7 +2489,7 @@
     },
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 8903,
+      "PowerIndex": 8905,
       "PowerSetID": 3421,
       "PowerSetIndex": 4,
       "StaticIndex": 2645,
@@ -2771,7 +2771,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8904,
+      "PowerIndex": 8906,
       "PowerSetID": 3421,
       "PowerSetIndex": 5,
       "StaticIndex": 2640,
@@ -2880,7 +2880,7 @@
     },
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 8905,
+      "PowerIndex": 8907,
       "PowerSetID": 3421,
       "PowerSetIndex": 6,
       "StaticIndex": 2646,
@@ -3162,7 +3162,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8906,
+      "PowerIndex": 8908,
       "PowerSetID": 3421,
       "PowerSetIndex": 7,
       "StaticIndex": 2647,
@@ -3270,7 +3270,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8907,
+      "PowerIndex": 8909,
       "PowerSetID": 3421,
       "PowerSetIndex": 8,
       "StaticIndex": 2648,
@@ -3378,7 +3378,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8908,
+      "PowerIndex": 8910,
       "PowerSetID": 3421,
       "PowerSetIndex": 9,
       "StaticIndex": 2649,
@@ -3540,7 +3540,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8909,
+      "PowerIndex": 8911,
       "PowerSetID": 3421,
       "PowerSetIndex": 10,
       "StaticIndex": 2650,
@@ -3649,7 +3649,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 8910,
+      "PowerIndex": 8912,
       "PowerSetID": 3421,
       "PowerSetIndex": 11,
       "StaticIndex": 2651,
@@ -4053,7 +4053,7 @@
     },
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 8911,
+      "PowerIndex": 8913,
       "PowerSetID": 3421,
       "PowerSetIndex": 12,
       "StaticIndex": 2652,
@@ -4166,7 +4166,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8912,
+      "PowerIndex": 8914,
       "PowerSetID": 3421,
       "PowerSetIndex": 13,
       "StaticIndex": 2653,
@@ -4327,7 +4327,7 @@
     },
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 8913,
+      "PowerIndex": 8915,
       "PowerSetID": 3421,
       "PowerSetIndex": 14,
       "StaticIndex": 2654,
@@ -4496,7 +4496,7 @@
     },
     {
       "CastTimeReal": 1.87,
-      "PowerIndex": 8914,
+      "PowerIndex": 8916,
       "PowerSetID": 3421,
       "PowerSetIndex": 15,
       "StaticIndex": 2655,
@@ -5198,7 +5198,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8915,
+      "PowerIndex": 8917,
       "PowerSetID": 3421,
       "PowerSetIndex": 16,
       "StaticIndex": 2656,
@@ -5306,7 +5306,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8916,
+      "PowerIndex": 8918,
       "PowerSetID": 3421,
       "PowerSetIndex": 17,
       "StaticIndex": 2657,
@@ -5414,7 +5414,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8917,
+      "PowerIndex": 8919,
       "PowerSetID": 3421,
       "PowerSetIndex": 18,
       "StaticIndex": 2658,
@@ -5523,7 +5523,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 8918,
+      "PowerIndex": 8920,
       "PowerSetID": 3421,
       "PowerSetIndex": 19,
       "StaticIndex": 2659,

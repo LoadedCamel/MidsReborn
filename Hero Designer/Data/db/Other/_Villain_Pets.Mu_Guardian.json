@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Mu_Guardian",
   "ImageName": "",
   "Power": [
-    10171,
-    10172,
     10173,
     10174,
     10175,
     10176,
     10177,
-    10178
+    10178,
+    10179,
+    10180
   ],
   "SetType": 8,
   "DisplayName": "Mu Guardian",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10171,
+      "PowerIndex": 10173,
       "PowerSetID": 3495,
       "StaticIndex": 3113,
       "NGroupMembership": [],
@@ -195,7 +195,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 14.3,
-      "PowerIndex": 10172,
+      "PowerIndex": 10174,
       "PowerSetID": 3495,
       "PowerSetIndex": 1,
       "StaticIndex": 3114,
@@ -613,7 +613,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10173,
+      "PowerIndex": 10175,
       "PowerSetID": 3495,
       "PowerSetIndex": 2,
       "StaticIndex": 3115,
@@ -893,7 +893,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 10.66,
-      "PowerIndex": 10174,
+      "PowerIndex": 10176,
       "PowerSetID": 3495,
       "PowerSetIndex": 3,
       "StaticIndex": 3116,
@@ -1190,7 +1190,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 10175,
+      "PowerIndex": 10177,
       "PowerSetID": 3495,
       "PowerSetIndex": 4,
       "StaticIndex": 3117,
@@ -1485,7 +1485,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10176,
+      "PowerIndex": 10178,
       "PowerSetID": 3495,
       "PowerSetIndex": 5,
       "StaticIndex": 3118,
@@ -1592,7 +1592,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 13.0,
-      "PowerIndex": 10177,
+      "PowerIndex": 10179,
       "PowerSetID": 3495,
       "PowerSetIndex": 6,
       "StaticIndex": 3119,
@@ -1718,7 +1718,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 7.8,
-      "PowerIndex": 10178,
+      "PowerIndex": 10180,
       "PowerSetID": 3495,
       "PowerSetIndex": 7,
       "StaticIndex": 3120,

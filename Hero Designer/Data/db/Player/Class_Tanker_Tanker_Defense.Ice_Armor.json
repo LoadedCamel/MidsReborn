@@ -4,15 +4,15 @@
   "FullName": "Tanker_Defense.Ice_Armor",
   "ImageName": "IceArmor.png",
   "Power": [
-    8617,
-    8618,
     8619,
     8620,
     8621,
     8622,
     8623,
     8624,
-    8625
+    8625,
+    8626,
+    8627
   ],
   "SetType": 1,
   "DisplayName": "Ice Armor",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.26,
-      "PowerIndex": 8617,
+      "PowerIndex": 8619,
       "PowerSetID": 3387,
       "StaticIndex": 2505,
       "NGroupMembership": [],
@@ -746,7 +746,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 14.56,
-      "PowerIndex": 8618,
+      "PowerIndex": 8620,
       "PowerSetID": 3387,
       "PowerSetIndex": 1,
       "StaticIndex": 2506,
@@ -1045,7 +1045,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.26,
-      "PowerIndex": 8619,
+      "PowerIndex": 8621,
       "PowerSetID": 3387,
       "PowerSetIndex": 2,
       "StaticIndex": 2507,
@@ -2070,7 +2070,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.26,
-      "PowerIndex": 8620,
+      "PowerIndex": 8622,
       "PowerSetID": 3387,
       "PowerSetIndex": 3,
       "StaticIndex": 2508,
@@ -4632,7 +4632,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8621,
+      "PowerIndex": 8623,
       "PowerSetID": 3387,
       "PowerSetIndex": 4,
       "StaticIndex": 2509,
@@ -5087,7 +5087,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 0.52,
-      "PowerIndex": 8622,
+      "PowerIndex": 8624,
       "PowerSetID": 3387,
       "PowerSetIndex": 5,
       "StaticIndex": 2510,
@@ -5397,7 +5397,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 0.26,
-      "PowerIndex": 8623,
+      "PowerIndex": 8625,
       "PowerSetID": 3387,
       "PowerSetIndex": 6,
       "StaticIndex": 2511,
@@ -6225,7 +6225,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 13.0,
-      "PowerIndex": 8624,
+      "PowerIndex": 8626,
       "PowerSetID": 3387,
       "PowerSetIndex": 7,
       "StaticIndex": 2512,
@@ -7586,7 +7586,7 @@
     {
       "CastTimeReal": 0.07,
       "ToggleCost": 0.26,
-      "PowerIndex": 8625,
+      "PowerIndex": 8627,
       "PowerSetID": 3387,
       "PowerSetIndex": 8,
       "StaticIndex": 2513,
@@ -8179,7 +8179,7 @@
           "nID": 9,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.NoPhase",
-          "nSummon": 9739,
+          "nSummon": 9741,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

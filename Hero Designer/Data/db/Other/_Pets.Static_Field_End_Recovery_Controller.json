@@ -4,7 +4,7 @@
   "FullName": "Pets.Static_Field_End_Recovery_Controller",
   "ImageName": "",
   "Power": [
-    6529
+    6531
   ],
   "SetType": 8,
   "DisplayName": "Static Field Endurance Recovery Controller",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6529,
+      "PowerIndex": 6531,
       "PowerSetID": 3211,
       "StaticIndex": 4439,
       "NGroupMembership": [],

@@ -4,9 +4,9 @@
   "FullName": "Pets.StickyArrow_Blaster",
   "ImageName": "",
   "Power": [
-    6532,
-    6533,
-    6534
+    6534,
+    6535,
+    6536
   ],
   "SetType": 8,
   "DisplayName": "Sticky Arrow",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6532,
+      "PowerIndex": 6534,
       "PowerSetID": 3213,
       "StaticIndex": 10633,
       "NGroupMembership": [],
@@ -418,7 +418,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 6533,
+      "PowerIndex": 6535,
       "PowerSetID": 3213,
       "PowerSetIndex": 1,
       "StaticIndex": 10635,
@@ -575,7 +575,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6534,
+      "PowerIndex": 6536,
       "PowerSetID": 3213,
       "PowerSetIndex": 2,
       "StaticIndex": 10634,

@@ -4,8 +4,8 @@
   "FullName": "Pets.IceStorm_Defender",
   "ImageName": "",
   "Power": [
-    6359,
-    6360
+    6361,
+    6362
   ],
   "SetType": 8,
   "DisplayName": "Ice Storm",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6359,
+      "PowerIndex": 6361,
       "PowerSetID": 3110,
       "StaticIndex": 9590,
       "NGroupMembership": [],
@@ -655,7 +655,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6360,
+      "PowerIndex": 6362,
       "PowerSetID": 3110,
       "PowerSetIndex": 1,
       "StaticIndex": 9591,

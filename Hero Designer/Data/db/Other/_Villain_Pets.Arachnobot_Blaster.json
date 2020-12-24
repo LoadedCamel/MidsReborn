@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Arachnobot_Blaster",
   "ImageName": "",
   "Power": [
-    10026,
-    10027,
     10028,
     10029,
     10030,
     10031,
     10032,
-    10033
+    10033,
+    10034,
+    10035
   ],
   "SetType": 8,
   "DisplayName": "Arachnobot Blaster",
@@ -30,7 +30,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 6.5,
-      "PowerIndex": 10026,
+      "PowerIndex": 10028,
       "PowerSetID": 3451,
       "StaticIndex": 3006,
       "NGroupMembership": [],
@@ -275,7 +275,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 5.46,
-      "PowerIndex": 10027,
+      "PowerIndex": 10029,
       "PowerSetID": 3451,
       "PowerSetIndex": 1,
       "StaticIndex": 3007,
@@ -398,7 +398,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 8.58,
-      "PowerIndex": 10028,
+      "PowerIndex": 10030,
       "PowerSetID": 3451,
       "PowerSetIndex": 2,
       "StaticIndex": 3008,
@@ -637,7 +637,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10029,
+      "PowerIndex": 10031,
       "PowerSetID": 3451,
       "PowerSetIndex": 3,
       "StaticIndex": 3009,
@@ -916,7 +916,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10030,
+      "PowerIndex": 10032,
       "PowerSetID": 3451,
       "PowerSetIndex": 4,
       "StaticIndex": 3010,
@@ -1192,7 +1192,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10031,
+      "PowerIndex": 10033,
       "PowerSetID": 3451,
       "PowerSetIndex": 5,
       "StaticIndex": 3011,
@@ -1299,7 +1299,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 12.74,
-      "PowerIndex": 10032,
+      "PowerIndex": 10034,
       "PowerSetID": 3451,
       "PowerSetIndex": 6,
       "StaticIndex": 3012,
@@ -1428,7 +1428,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 13.0,
-      "PowerIndex": 10033,
+      "PowerIndex": 10035,
       "PowerSetID": 3451,
       "PowerSetIndex": 7,
       "StaticIndex": 3013,

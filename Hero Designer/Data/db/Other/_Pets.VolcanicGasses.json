@@ -4,8 +4,8 @@
   "FullName": "Pets.VolcanicGasses",
   "ImageName": "",
   "Power": [
-    6656,
-    6657
+    6658,
+    6659
   ],
   "SetType": 8,
   "DisplayName": "Volcanic Gasses",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6656,
+      "PowerIndex": 6658,
       "PowerSetID": 3255,
       "StaticIndex": 1773,
       "NGroupMembership": [],
@@ -185,7 +185,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6657,
+      "PowerIndex": 6659,
       "PowerSetID": 3255,
       "PowerSetIndex": 1,
       "StaticIndex": 1774,

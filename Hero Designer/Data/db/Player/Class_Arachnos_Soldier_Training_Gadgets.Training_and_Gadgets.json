@@ -4,14 +4,14 @@
   "FullName": "Training_Gadgets.Training_and_Gadgets",
   "ImageName": "i12_Sec_Soldier.png",
   "Power": [
-    10018,
-    10019,
     10020,
     10021,
     10022,
     10023,
     10024,
-    10025
+    10025,
+    10026,
+    10027
   ],
   "SetType": 2,
   "DisplayName": "Training and Gadgets",
@@ -28,7 +28,7 @@
   "GroupName": "Training_Gadgets",
   "Powers": [
     {
-      "PowerIndex": 10018,
+      "PowerIndex": 10020,
       "PowerSetID": 3430,
       "StaticIndex": 2998,
       "NGroupMembership": [],
@@ -1890,7 +1890,7 @@
     },
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 10019,
+      "PowerIndex": 10021,
       "PowerSetID": 3430,
       "PowerSetIndex": 1,
       "StaticIndex": 2999,
@@ -2009,7 +2009,7 @@
     },
     {
       "CastTimeReal": 0.67,
-      "PowerIndex": 10020,
+      "PowerIndex": 10022,
       "PowerSetID": 3430,
       "PowerSetIndex": 2,
       "StaticIndex": 3000,
@@ -2183,7 +2183,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 10021,
+      "PowerIndex": 10023,
       "PowerSetID": 3430,
       "PowerSetIndex": 3,
       "StaticIndex": 3001,
@@ -3444,7 +3444,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 10022,
+      "PowerIndex": 10024,
       "PowerSetID": 3430,
       "PowerSetIndex": 4,
       "StaticIndex": 3002,
@@ -4093,7 +4093,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.208,
-      "PowerIndex": 10023,
+      "PowerIndex": 10025,
       "PowerSetID": 3430,
       "PowerSetIndex": 5,
       "StaticIndex": 3003,
@@ -4688,7 +4688,7 @@
       "AoEModifier": 10.0
     },
     {
-      "PowerIndex": 10024,
+      "PowerIndex": 10026,
       "PowerSetID": 3430,
       "PowerSetIndex": 6,
       "StaticIndex": 3004,
@@ -5087,7 +5087,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 26.0,
-      "PowerIndex": 10025,
+      "PowerIndex": 10027,
       "PowerSetID": 3430,
       "PowerSetIndex": 7,
       "StaticIndex": 3005,

@@ -4,13 +4,13 @@
   "FullName": "Pets.Longbow_Heavy",
   "ImageName": "",
   "Power": [
-    6401,
-    6402,
     6403,
     6404,
     6405,
     6406,
-    6407
+    6407,
+    6408,
+    6409
   ],
   "SetType": 8,
   "DisplayName": "Longbow Heavy",
@@ -29,7 +29,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 9.1,
-      "PowerIndex": 6401,
+      "PowerIndex": 6403,
       "PowerSetID": 3137,
       "StaticIndex": 1649,
       "NGroupMembership": [],
@@ -204,7 +204,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 19.5,
-      "PowerIndex": 6402,
+      "PowerIndex": 6404,
       "PowerSetID": 3137,
       "PowerSetIndex": 1,
       "StaticIndex": 1650,
@@ -319,7 +319,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 19.5,
-      "PowerIndex": 6403,
+      "PowerIndex": 6405,
       "PowerSetID": 3137,
       "PowerSetIndex": 2,
       "StaticIndex": 1651,
@@ -554,7 +554,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 5.2,
-      "PowerIndex": 6404,
+      "PowerIndex": 6406,
       "PowerSetID": 3137,
       "PowerSetIndex": 3,
       "StaticIndex": 1652,
@@ -784,7 +784,7 @@
     {
       "CastTimeReal": 4.0,
       "ToggleCost": 5.2,
-      "PowerIndex": 6405,
+      "PowerIndex": 6407,
       "PowerSetID": 3137,
       "PowerSetIndex": 4,
       "StaticIndex": 1653,
@@ -1011,7 +1011,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6406,
+      "PowerIndex": 6408,
       "PowerSetID": 3137,
       "PowerSetIndex": 5,
       "StaticIndex": 1654,
@@ -1287,7 +1287,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 12.35,
-      "PowerIndex": 6407,
+      "PowerIndex": 6409,
       "PowerSetID": 3137,
       "PowerSetIndex": 6,
       "StaticIndex": 1655,

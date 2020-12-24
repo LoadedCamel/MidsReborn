@@ -4,12 +4,12 @@
   "FullName": "Widow_Training.Night_Widow_Training",
   "ImageName": "i12_Pri_Nightwidow.png",
   "Power": [
-    10354,
-    10355,
     10356,
     10357,
     10358,
-    10359
+    10359,
+    10360,
+    10361
   ],
   "SetType": 1,
   "DisplayName": "Night Widow Training",
@@ -28,7 +28,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 5.46,
-      "PowerIndex": 10354,
+      "PowerIndex": 10356,
       "PowerSetID": 3553,
       "StaticIndex": 3225,
       "NGroupMembership": [],
@@ -276,7 +276,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 5.2,
-      "PowerIndex": 10355,
+      "PowerIndex": 10357,
       "PowerSetID": 3553,
       "PowerSetIndex": 1,
       "StaticIndex": 3226,
@@ -294,7 +294,7 @@
         "NPowerID": [],
         "NPowerIDNot": [
           [
-            10364,
+            10366,
             -1
           ]
         ],
@@ -885,7 +885,7 @@
     {
       "CastTimeReal": 1.37,
       "ToggleCost": 7.8,
-      "PowerIndex": 10356,
+      "PowerIndex": 10358,
       "PowerSetID": 3553,
       "PowerSetIndex": 2,
       "StaticIndex": 3227,
@@ -1072,7 +1072,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 14.248,
-      "PowerIndex": 10357,
+      "PowerIndex": 10359,
       "PowerSetID": 3553,
       "PowerSetIndex": 3,
       "StaticIndex": 3228,
@@ -1739,7 +1739,7 @@
     {
       "CastTimeReal": 2.33,
       "ToggleCost": 13.52,
-      "PowerIndex": 10358,
+      "PowerIndex": 10360,
       "PowerSetID": 3553,
       "PowerSetIndex": 4,
       "StaticIndex": 3229,
@@ -2403,7 +2403,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 17.316,
-      "PowerIndex": 10359,
+      "PowerIndex": 10361,
       "PowerSetID": 3553,
       "PowerSetIndex": 5,
       "StaticIndex": 3230,

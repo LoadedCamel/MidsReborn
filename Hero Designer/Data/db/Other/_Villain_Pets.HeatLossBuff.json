@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.HeatLossBuff",
   "ImageName": "",
   "Power": [
-    10150
+    10152
   ],
   "SetType": 8,
   "DisplayName": "Heat Loss",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10150,
+      "PowerIndex": 10152,
       "PowerSetID": 3489,
       "StaticIndex": 3100,
       "NGroupMembership": [],

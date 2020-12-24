@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Electric_Melee_Assassins_Strike",
   "ImageName": "",
   "Power": [
-    10124,
-    10125
+    10126,
+    10127
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 10124,
+      "PowerIndex": 10126,
       "PowerSetID": 3432,
       "StaticIndex": 6328,
       "NGroupMembership": [],
@@ -388,7 +388,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9287,
+          "nSummon": 9289,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -554,7 +554,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 10125,
+      "PowerIndex": 10127,
       "PowerSetID": 3432,
       "PowerSetIndex": 1,
       "StaticIndex": 6329,

@@ -4,7 +4,7 @@
   "FullName": "Pets.SiphonPower",
   "ImageName": "",
   "Power": [
-    6518
+    6520
   ],
   "SetType": 8,
   "DisplayName": "Siphon Power",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6518,
+      "PowerIndex": 6520,
       "PowerSetID": 3204,
       "StaticIndex": 1712,
       "NGroupMembership": [],

@@ -4,7 +4,7 @@
   "FullName": "Pets.KineticTransferBuff_Mastermind",
   "ImageName": "",
   "Power": [
-    6376
+    6378
   ],
   "SetType": 8,
   "DisplayName": "Kinetic Transfer",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6376,
+      "PowerIndex": 6378,
       "PowerSetID": 3114,
       "StaticIndex": 10770,
       "NGroupMembership": [],

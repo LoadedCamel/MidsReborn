@@ -4,12 +4,12 @@
   "FullName": "Teamwork.Widow_Teamwork",
   "ImageName": "i12_Sec_Nightwidow.png",
   "Power": [
-    8893,
-    8894,
     8895,
     8896,
     8897,
-    8898
+    8898,
+    8899,
+    8900
   ],
   "SetType": 2,
   "DisplayName": "Widow Teamwork",
@@ -28,7 +28,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.208,
-      "PowerIndex": 8893,
+      "PowerIndex": 8895,
       "PowerSetID": 3418,
       "StaticIndex": 2634,
       "NGroupMembership": [
@@ -2473,7 +2473,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8894,
+      "PowerIndex": 8896,
       "PowerSetID": 3418,
       "PowerSetIndex": 1,
       "StaticIndex": 2635,
@@ -2872,7 +2872,7 @@
     {
       "CastTimeReal": 3.67,
       "ToggleCost": 10.192,
-      "PowerIndex": 8895,
+      "PowerIndex": 8897,
       "PowerSetID": 3418,
       "PowerSetIndex": 2,
       "StaticIndex": 2636,
@@ -3637,7 +3637,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 2.6,
-      "PowerIndex": 8896,
+      "PowerIndex": 8898,
       "PowerSetID": 3418,
       "PowerSetIndex": 3,
       "StaticIndex": 2637,
@@ -4054,7 +4054,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 8897,
+      "PowerIndex": 8899,
       "PowerSetID": 3418,
       "PowerSetIndex": 4,
       "StaticIndex": 2638,
@@ -6072,7 +6072,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 2.6,
-      "PowerIndex": 8898,
+      "PowerIndex": 8900,
       "PowerSetID": 3418,
       "PowerSetIndex": 5,
       "StaticIndex": 2639,

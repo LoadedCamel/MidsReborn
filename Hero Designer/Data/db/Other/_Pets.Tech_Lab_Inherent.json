@@ -4,7 +4,7 @@
   "FullName": "Pets.Tech_Lab_Inherent",
   "ImageName": "",
   "Power": [
-    6558
+    6560
   ],
   "SetType": 8,
   "DisplayName": "Tech Lab",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6558,
+      "PowerIndex": 6560,
       "PowerSetID": 3222,
       "StaticIndex": 1737,
       "NGroupMembership": [],

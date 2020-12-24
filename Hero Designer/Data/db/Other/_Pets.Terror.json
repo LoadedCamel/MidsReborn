@@ -4,9 +4,9 @@
   "FullName": "Pets.Terror",
   "ImageName": "",
   "Power": [
-    6562,
-    6563,
-    6564
+    6564,
+    6565,
+    6566
   ],
   "SetType": 8,
   "DisplayName": "Terror",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6562,
+      "PowerIndex": 6564,
       "PowerSetID": 3234,
       "StaticIndex": 1741,
       "NGroupMembership": [],
@@ -351,7 +351,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6563,
+      "PowerIndex": 6565,
       "PowerSetID": 3234,
       "PowerSetIndex": 1,
       "StaticIndex": 1742,
@@ -584,7 +584,7 @@
     },
     {
       "CastTimeReal": 2.03,
-      "PowerIndex": 6564,
+      "PowerIndex": 6566,
       "PowerSetID": 3234,
       "PowerSetIndex": 2,
       "StaticIndex": 1743,

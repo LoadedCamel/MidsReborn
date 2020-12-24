@@ -4,7 +4,7 @@
   "FullName": "Pets.SonicDebuffArrow",
   "ImageName": "",
   "Power": [
-    6524
+    6526
   ],
   "SetType": 8,
   "DisplayName": "Disruption Arrow",
@@ -21,8 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "IsModified": true,
-      "PowerIndex": 6524,
+      "PowerIndex": 6526,
       "PowerSetID": 3068,
       "StaticIndex": 1717,
       "NGroupMembership": [],
@@ -128,6 +127,7 @@
           "Reward": "",
           "EffectId": "Res_Dmg",
           "Special": "",
+          "nID": 1,
           "EffectType": 7,
           "DamageType": 7,
           "Summon": "",

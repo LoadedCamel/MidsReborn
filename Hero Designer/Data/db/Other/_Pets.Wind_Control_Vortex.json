@@ -4,12 +4,12 @@
   "FullName": "Pets.Wind_Control_Vortex",
   "ImageName": "",
   "Power": [
-    6695,
-    6696,
     6697,
     6698,
     6699,
-    6700
+    6700,
+    6701,
+    6702
   ],
   "SetType": 8,
   "DisplayName": "Wind Control",
@@ -28,7 +28,7 @@
     {
       "CastTimeReal": 1.63,
       "ToggleCost": 5.2,
-      "PowerIndex": 6695,
+      "PowerIndex": 6697,
       "PowerSetID": 3275,
       "StaticIndex": 9606,
       "NGroupMembership": [],
@@ -676,7 +676,7 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 10.2,
-      "PowerIndex": 6696,
+      "PowerIndex": 6698,
       "PowerSetID": 3275,
       "PowerSetIndex": 1,
       "StaticIndex": 9609,
@@ -1096,7 +1096,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 26.8,
-      "PowerIndex": 6697,
+      "PowerIndex": 6699,
       "PowerSetID": 3275,
       "PowerSetIndex": 2,
       "StaticIndex": 9608,
@@ -1220,7 +1220,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6698,
+      "PowerIndex": 6700,
       "PowerSetID": 3275,
       "PowerSetIndex": 3,
       "StaticIndex": 9610,
@@ -1380,7 +1380,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6699,
+      "PowerIndex": 6701,
       "PowerSetID": 3275,
       "PowerSetIndex": 4,
       "StaticIndex": 9611,
@@ -2774,7 +2774,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6700,
+      "PowerIndex": 6702,
       "PowerSetID": 3275,
       "PowerSetIndex": 5,
       "StaticIndex": 9607,

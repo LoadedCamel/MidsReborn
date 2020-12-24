@@ -4,7 +4,7 @@
   "FullName": "Pets.SoulAbsorptionBuff",
   "ImageName": "",
   "Power": [
-    6526
+    6528
   ],
   "SetType": 8,
   "DisplayName": "Soul Absorption",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6526,
+      "PowerIndex": 6528,
       "PowerSetID": 3208,
       "StaticIndex": 6228,
       "NGroupMembership": [],

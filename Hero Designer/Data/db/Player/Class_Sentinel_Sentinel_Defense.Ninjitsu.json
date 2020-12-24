@@ -4,15 +4,15 @@
   "FullName": "Sentinel_Defense.Ninjitsu",
   "ImageName": "Ninjitsu.png",
   "Power": [
-    7142,
-    7143,
     7144,
     7145,
     7146,
     7147,
     7148,
     7149,
-    7150
+    7150,
+    7151,
+    7152
   ],
   "SetType": 2,
   "DisplayName": "Ninjitsu",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 0.26,
-      "PowerIndex": 7142,
+      "PowerIndex": 7144,
       "PowerSetID": 3333,
       "StaticIndex": 10313,
       "NGroupMembership": [],
@@ -335,7 +335,7 @@
     {
       "CastTimeReal": 0.83,
       "ToggleCost": 0.26,
-      "PowerIndex": 7143,
+      "PowerIndex": 7145,
       "PowerSetID": 3333,
       "PowerSetIndex": 1,
       "StaticIndex": 10314,
@@ -930,7 +930,7 @@
     },
     {
       "ToggleCost": 0.26,
-      "PowerIndex": 7144,
+      "PowerIndex": 7146,
       "PowerSetID": 3333,
       "PowerSetIndex": 2,
       "StaticIndex": 10315,
@@ -2580,7 +2580,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 10.4,
-      "PowerIndex": 7145,
+      "PowerIndex": 7147,
       "PowerSetID": 3333,
       "PowerSetIndex": 3,
       "StaticIndex": 10316,
@@ -3823,7 +3823,7 @@
     },
     {
       "CastTimeReal": 1.83,
-      "PowerIndex": 7146,
+      "PowerIndex": 7148,
       "PowerSetID": 3333,
       "PowerSetIndex": 4,
       "StaticIndex": 10317,
@@ -3943,7 +3943,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 10.4,
-      "PowerIndex": 7147,
+      "PowerIndex": 7149,
       "PowerSetID": 3333,
       "PowerSetIndex": 5,
       "StaticIndex": 10318,
@@ -4127,7 +4127,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7148,
+      "PowerIndex": 7150,
       "PowerSetID": 3333,
       "PowerSetIndex": 6,
       "StaticIndex": 10319,
@@ -4988,7 +4988,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 7.8,
-      "PowerIndex": 7149,
+      "PowerIndex": 7151,
       "PowerSetID": 3333,
       "PowerSetIndex": 7,
       "StaticIndex": 10320,
@@ -5484,7 +5484,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 2.6,
-      "PowerIndex": 7150,
+      "PowerIndex": 7152,
       "PowerSetID": 3333,
       "PowerSetIndex": 8,
       "StaticIndex": 10321,

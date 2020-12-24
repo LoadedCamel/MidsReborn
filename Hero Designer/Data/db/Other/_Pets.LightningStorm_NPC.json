@@ -4,9 +4,9 @@
   "FullName": "Pets.LightningStorm_NPC",
   "ImageName": "",
   "Power": [
-    6392,
-    6393,
-    6394
+    6394,
+    6395,
+    6396
   ],
   "SetType": 8,
   "DisplayName": "LightningStorm_NPC",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6392,
+      "PowerIndex": 6394,
       "PowerSetID": 3130,
       "StaticIndex": 1644,
       "NGroupMembership": [],
@@ -380,7 +380,7 @@
       "AoEModifier": 1.75
     },
     {
-      "PowerIndex": 6393,
+      "PowerIndex": 6395,
       "PowerSetID": 3130,
       "PowerSetIndex": 1,
       "StaticIndex": 1645,
@@ -487,7 +487,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6394,
+      "PowerIndex": 6396,
       "PowerSetID": 3130,
       "PowerSetIndex": 2,
       "StaticIndex": 1646,

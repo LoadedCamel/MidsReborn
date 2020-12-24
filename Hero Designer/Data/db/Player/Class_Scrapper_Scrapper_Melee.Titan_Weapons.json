@@ -4,15 +4,15 @@
   "FullName": "Scrapper_Melee.Titan_Weapons",
   "ImageName": "TitanWeapons.png",
   "Power": [
-    7058,
-    7059,
     7060,
     7061,
     7062,
     7063,
     7064,
     7065,
-    7066
+    7066,
+    7067,
+    7068
   ],
   "SetType": 1,
   "DisplayName": "Titan Weapons",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 2.2,
       "ToggleCost": 5.356,
-      "PowerIndex": 7058,
+      "PowerIndex": 7060,
       "PowerSetID": 3324,
       "StaticIndex": 6028,
       "NGroupMembership": [],
@@ -129,7 +129,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6567,
+          "nSummon": 6569,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -170,7 +170,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6567
+          "nOverride": 6569
         },
         {
           "MagnitudeExpression": "",
@@ -186,7 +186,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6568,
+          "nSummon": 6570,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -226,7 +226,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6568
+          "nOverride": 6570
         },
         {
           "MagnitudeExpression": "",
@@ -811,7 +811,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.78384,
-      "PowerIndex": 7059,
+      "PowerIndex": 7061,
       "PowerSetID": 3324,
       "PowerSetIndex": 1,
       "StaticIndex": 6029,
@@ -903,7 +903,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6569,
+          "nSummon": 6571,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -944,7 +944,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6569
+          "nOverride": 6571
         },
         {
           "MagnitudeExpression": "",
@@ -960,7 +960,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6570,
+          "nSummon": 6572,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1000,7 +1000,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6570
+          "nOverride": 6572
         },
         {
           "MagnitudeExpression": "",
@@ -1524,7 +1524,7 @@
     {
       "CastTimeReal": 2.43,
       "ToggleCost": 10.49818,
-      "PowerIndex": 7060,
+      "PowerIndex": 7062,
       "PowerSetID": 3324,
       "PowerSetIndex": 2,
       "StaticIndex": 6030,
@@ -1608,7 +1608,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6571,
+          "nSummon": 6573,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -1649,7 +1649,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6571
+          "nOverride": 6573
         },
         {
           "MagnitudeExpression": "",
@@ -1665,7 +1665,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6572,
+          "nSummon": 6574,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1705,7 +1705,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6572
+          "nOverride": 6574
         },
         {
           "MagnitudeExpression": "",
@@ -2287,7 +2287,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 10.49776,
-      "PowerIndex": 7061,
+      "PowerIndex": 7063,
       "PowerSetID": 3324,
       "PowerSetIndex": 3,
       "StaticIndex": 6031,
@@ -3007,7 +3007,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 7062,
+      "PowerIndex": 7064,
       "PowerSetID": 3324,
       "PowerSetIndex": 4,
       "StaticIndex": 6032,
@@ -3715,7 +3715,7 @@
     },
     {
       "CastTimeReal": 1.93,
-      "PowerIndex": 7063,
+      "PowerIndex": 7065,
       "PowerSetID": 3324,
       "PowerSetIndex": 5,
       "StaticIndex": 6033,
@@ -4023,7 +4023,7 @@
     {
       "CastTimeReal": 2.3,
       "ToggleCost": 15.63952,
-      "PowerIndex": 7064,
+      "PowerIndex": 7066,
       "PowerSetID": 3324,
       "PowerSetIndex": 6,
       "StaticIndex": 6034,
@@ -4105,7 +4105,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6573,
+          "nSummon": 6575,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -4146,7 +4146,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6573
+          "nOverride": 6575
         },
         {
           "MagnitudeExpression": "",
@@ -4162,7 +4162,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6574,
+          "nSummon": 6576,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4202,7 +4202,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6574
+          "nOverride": 6576
         },
         {
           "MagnitudeExpression": "",
@@ -5183,7 +5183,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 13.9256,
-      "PowerIndex": 7065,
+      "PowerIndex": 7067,
       "PowerSetID": 3324,
       "PowerSetIndex": 7,
       "StaticIndex": 6035,
@@ -5780,7 +5780,7 @@
     {
       "CastTimeReal": 2.7,
       "ToggleCost": 19.06736,
-      "PowerIndex": 7066,
+      "PowerIndex": 7068,
       "PowerSetID": 3324,
       "PowerSetIndex": 8,
       "StaticIndex": 6036,
@@ -5865,7 +5865,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6575,
+          "nSummon": 6577,
           "Stacking": 1,
           "SpecialCase": 25,
           "UIDClassName": "",
@@ -5906,7 +5906,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6575
+          "nOverride": 6577
         },
         {
           "MagnitudeExpression": "",
@@ -5922,7 +5922,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6576,
+          "nSummon": 6578,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -5962,7 +5962,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6576
+          "nOverride": 6578
         },
         {
           "MagnitudeExpression": "",

@@ -4,8 +4,8 @@
   "FullName": "Pets.VoltaicSentinel_Defender",
   "ImageName": "",
   "Power": [
-    6666,
-    6667
+    6668,
+    6669
   ],
   "SetType": 8,
   "DisplayName": "Voltaic Sentinel",
@@ -23,7 +23,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6666,
+      "PowerIndex": 6668,
       "PowerSetID": 3259,
       "StaticIndex": 1783,
       "NGroupMembership": [],
@@ -260,7 +260,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6667,
+      "PowerIndex": 6669,
       "PowerSetID": 3259,
       "PowerSetIndex": 1,
       "StaticIndex": 1784,

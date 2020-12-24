@@ -4,8 +4,6 @@
   "FullName": "Pets.Titan_Weapons_Tanker",
   "ImageName": "",
   "Power": [
-    6577,
-    6578,
     6579,
     6580,
     6581,
@@ -13,7 +11,9 @@
     6583,
     6584,
     6585,
-    6586
+    6586,
+    6587,
+    6588
   ],
   "SetType": 8,
   "DisplayName": "Titan Weapons: Tanker",
@@ -32,7 +32,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 5.356,
-      "PowerIndex": 6577,
+      "PowerIndex": 6579,
       "PowerSetID": 3240,
       "StaticIndex": 6019,
       "NGroupMembership": [],
@@ -1020,7 +1020,7 @@
     {
       "CastTimeReal": 2.2,
       "ToggleCost": 5.356,
-      "PowerIndex": 6578,
+      "PowerIndex": 6580,
       "PowerSetID": 3240,
       "PowerSetIndex": 1,
       "StaticIndex": 6018,
@@ -2121,7 +2121,7 @@
     {
       "CastTimeReal": 1.2,
       "ToggleCost": 8.78384,
-      "PowerIndex": 6579,
+      "PowerIndex": 6581,
       "PowerSetID": 3240,
       "PowerSetIndex": 2,
       "StaticIndex": 6021,
@@ -2612,7 +2612,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.78384,
-      "PowerIndex": 6580,
+      "PowerIndex": 6582,
       "PowerSetID": 3240,
       "PowerSetIndex": 3,
       "StaticIndex": 6020,
@@ -3215,7 +3215,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 10.49776,
-      "PowerIndex": 6581,
+      "PowerIndex": 6583,
       "PowerSetID": 3240,
       "PowerSetIndex": 4,
       "StaticIndex": 6023,
@@ -3764,7 +3764,7 @@
     {
       "CastTimeReal": 2.43,
       "ToggleCost": 10.49776,
-      "PowerIndex": 6582,
+      "PowerIndex": 6584,
       "PowerSetID": 3240,
       "PowerSetIndex": 5,
       "StaticIndex": 6022,
@@ -4425,7 +4425,7 @@
     {
       "CastTimeReal": 1.3,
       "ToggleCost": 15.63952,
-      "PowerIndex": 6583,
+      "PowerIndex": 6585,
       "PowerSetID": 3240,
       "PowerSetIndex": 6,
       "StaticIndex": 6025,
@@ -5373,7 +5373,7 @@
     {
       "CastTimeReal": 2.3,
       "ToggleCost": 15.63952,
-      "PowerIndex": 6584,
+      "PowerIndex": 6586,
       "PowerSetID": 3240,
       "PowerSetIndex": 7,
       "StaticIndex": 6024,
@@ -6433,7 +6433,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 19.06736,
-      "PowerIndex": 6585,
+      "PowerIndex": 6587,
       "PowerSetID": 3240,
       "PowerSetIndex": 8,
       "StaticIndex": 6027,
@@ -6983,7 +6983,7 @@
     {
       "CastTimeReal": 2.7,
       "ToggleCost": 19.06736,
-      "PowerIndex": 6586,
+      "PowerIndex": 6588,
       "PowerSetID": 3240,
       "PowerSetIndex": 9,
       "StaticIndex": 6026,

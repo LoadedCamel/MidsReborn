@@ -4,10 +4,10 @@
   "FullName": "Pets.OilSlickBurn",
   "ImageName": "",
   "Power": [
-    6425,
-    6426,
     6427,
-    6428
+    6428,
+    6429,
+    6430
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick Fire",
@@ -24,7 +24,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6425,
+      "PowerIndex": 6427,
       "PowerSetID": 3154,
       "StaticIndex": 1664,
       "NGroupMembership": [],
@@ -136,7 +136,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 6426,
+      "PowerIndex": 6428,
       "PowerSetID": 3154,
       "PowerSetIndex": 1,
       "StaticIndex": 1665,
@@ -243,7 +243,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6427,
+      "PowerIndex": 6429,
       "PowerSetID": 3154,
       "PowerSetIndex": 2,
       "StaticIndex": 1666,
@@ -349,7 +349,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6428,
+      "PowerIndex": 6430,
       "PowerSetID": 3154,
       "PowerSetIndex": 3,
       "StaticIndex": 1667,

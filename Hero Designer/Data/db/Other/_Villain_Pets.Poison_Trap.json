@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Poison_Trap",
   "ImageName": "",
   "Power": [
-    10211,
-    10212
+    10213,
+    10214
   ],
   "SetType": 8,
   "DisplayName": "Poison Trap",
@@ -22,7 +22,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10211,
+      "PowerIndex": 10213,
       "PowerSetID": 3505,
       "StaticIndex": 3142,
       "NGroupMembership": [],
@@ -250,7 +250,7 @@
       "AoEModifier": 3.4
     },
     {
-      "PowerIndex": 10212,
+      "PowerIndex": 10214,
       "PowerSetID": 3505,
       "PowerSetIndex": 1,
       "StaticIndex": 3143,

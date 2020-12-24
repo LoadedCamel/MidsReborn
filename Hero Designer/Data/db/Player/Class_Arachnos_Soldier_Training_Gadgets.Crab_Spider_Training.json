@@ -4,10 +4,10 @@
   "FullName": "Training_Gadgets.Crab_Spider_Training",
   "ImageName": "i12_Sec_Crab.png",
   "Power": [
-    10014,
-    10015,
     10016,
-    10017
+    10017,
+    10018,
+    10019
   ],
   "SetType": 2,
   "DisplayName": "Crab Spider Training",
@@ -24,7 +24,7 @@
   "GroupName": "Training_Gadgets",
   "Powers": [
     {
-      "PowerIndex": 10014,
+      "PowerIndex": 10016,
       "PowerSetID": 3429,
       "StaticIndex": 2994,
       "NGroupMembership": [],
@@ -1483,7 +1483,7 @@
     {
       "CastTimeReal": 2.33,
       "ToggleCost": 0.208,
-      "PowerIndex": 10015,
+      "PowerIndex": 10017,
       "PowerSetID": 3429,
       "PowerSetIndex": 1,
       "StaticIndex": 2995,
@@ -2890,7 +2890,7 @@
     {
       "CastTimeReal": 1.3,
       "ToggleCost": 10.4,
-      "PowerIndex": 10016,
+      "PowerIndex": 10018,
       "PowerSetID": 3429,
       "PowerSetIndex": 2,
       "StaticIndex": 2996,
@@ -3128,7 +3128,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 26.0,
-      "PowerIndex": 10017,
+      "PowerIndex": 10019,
       "PowerSetID": 3429,
       "PowerSetIndex": 3,
       "StaticIndex": 2997,

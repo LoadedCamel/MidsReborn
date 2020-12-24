@@ -4,15 +4,15 @@
   "FullName": "Tanker_Defense.Super_Reflexes",
   "ImageName": "SuperReflexes.png",
   "Power": [
-    8662,
-    8663,
     8664,
     8665,
     8666,
     8667,
     8668,
     8669,
-    8670
+    8670,
+    8671,
+    8672
   ],
   "SetType": 1,
   "DisplayName": "Super Reflexes",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 8662,
+      "PowerIndex": 8664,
       "PowerSetID": 3392,
       "StaticIndex": 5687,
       "NGroupMembership": [],
@@ -451,7 +451,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 0.26,
-      "PowerIndex": 8663,
+      "PowerIndex": 8665,
       "PowerSetID": 3392,
       "PowerSetIndex": 1,
       "StaticIndex": 5688,
@@ -985,7 +985,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8664,
+      "PowerIndex": 8666,
       "PowerSetID": 3392,
       "PowerSetIndex": 2,
       "StaticIndex": 5689,
@@ -1510,7 +1510,7 @@
     {
       "CastTimeReal": 1.53,
       "ToggleCost": 10.4,
-      "PowerIndex": 8665,
+      "PowerIndex": 8667,
       "PowerSetID": 3392,
       "PowerSetIndex": 3,
       "StaticIndex": 5690,
@@ -2680,7 +2680,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8666,
+      "PowerIndex": 8668,
       "PowerSetID": 3392,
       "PowerSetIndex": 4,
       "StaticIndex": 5691,
@@ -3205,7 +3205,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 0.26,
-      "PowerIndex": 8667,
+      "PowerIndex": 8669,
       "PowerSetID": 3392,
       "PowerSetIndex": 5,
       "StaticIndex": 5692,
@@ -3634,7 +3634,7 @@
       "AoEModifier": 2.2
     },
     {
-      "PowerIndex": 8668,
+      "PowerIndex": 8670,
       "PowerSetID": 3392,
       "PowerSetIndex": 6,
       "StaticIndex": 5693,
@@ -4157,7 +4157,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 8669,
+      "PowerIndex": 8671,
       "PowerSetID": 3392,
       "PowerSetIndex": 7,
       "StaticIndex": 5694,
@@ -4556,7 +4556,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 2.6,
-      "PowerIndex": 8670,
+      "PowerIndex": 8672,
       "PowerSetID": 3392,
       "PowerSetIndex": 8,
       "StaticIndex": 5695,

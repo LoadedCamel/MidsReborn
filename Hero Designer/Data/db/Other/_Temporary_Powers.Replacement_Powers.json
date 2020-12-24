@@ -4,9 +4,9 @@
   "FullName": "Temporary_Powers.Replacement_Powers",
   "ImageName": "",
   "Power": [
-    9164,
-    9165,
-    9166
+    9166,
+    9167,
+    9168
   ],
   "SetType": 7,
   "DisplayName": "",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 9164,
+      "PowerIndex": 9166,
       "PowerSetID": 3420,
       "StaticIndex": 6259,
       "NGroupMembership": [],
@@ -307,7 +307,7 @@
     {
       "CastTimeReal": 2.1,
       "ToggleCost": 11.7,
-      "PowerIndex": 9165,
+      "PowerIndex": 9167,
       "PowerSetID": 3420,
       "PowerSetIndex": 1,
       "StaticIndex": 8987,
@@ -365,7 +365,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 13.0,
-      "PowerIndex": 9166,
+      "PowerIndex": 9168,
       "PowerSetID": 3420,
       "PowerSetIndex": 2,
       "StaticIndex": 8986,

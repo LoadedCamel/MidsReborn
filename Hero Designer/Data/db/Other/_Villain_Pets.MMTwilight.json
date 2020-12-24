@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.MMTwilight",
   "ImageName": "",
   "Power": [
-    10162
+    10164
   ],
   "SetType": 8,
   "DisplayName": "Twilight",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10162,
+      "PowerIndex": 10164,
       "PowerSetID": 3538,
       "StaticIndex": 3104,
       "NGroupMembership": [],

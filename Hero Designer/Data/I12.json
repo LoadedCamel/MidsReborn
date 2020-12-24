@@ -1,7 +1,7 @@
 {
   "name": "Mids' Hero Designer Database MK II",
-  "Version": 20.1223,
-  "Date": "2020-12-23T00:16:51.6373209-08:00",
+  "Version": 20.1224,
+  "Date": "2020-12-24T01:31:25.4015136-08:00",
   "Issue": 27,
   "ArchetypeVersion": {
     "Revision": 1,
@@ -7311,6 +7311,15 @@
       "UID": "Pets_CorrosiveVial",
       "DisplayName": "Corrosive Vial",
       "PowersetFullName": [],
+      "UpgradePowerFullName": [],
+      "ClassName": "Class_Minion_Pets"
+    },
+    {
+      "UID": "Pets_EMP_Arrow",
+      "DisplayName": "EMP Arrow",
+      "PowersetFullName": [
+        "Pets.EMP_Arrow"
+      ],
       "UpgradePowerFullName": [],
       "ClassName": "Class_Minion_Pets"
     }

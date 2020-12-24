@@ -4,15 +4,15 @@
   "FullName": "Stalker_Defense.Energy_Aura",
   "ImageName": "EnergyAura.png",
   "Power": [
-    8335,
-    8336,
     8337,
     8338,
     8339,
     8340,
     8341,
     8342,
-    8343
+    8343,
+    8344,
+    8345
   ],
   "SetType": 2,
   "DisplayName": "Energy Aura",
@@ -30,7 +30,7 @@
   "Powers": [
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 8335,
+      "PowerIndex": 8337,
       "PowerSetID": 3356,
       "StaticIndex": 2370,
       "NGroupMembership": [
@@ -2488,7 +2488,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.26,
-      "PowerIndex": 8336,
+      "PowerIndex": 8338,
       "PowerSetID": 3356,
       "PowerSetIndex": 1,
       "StaticIndex": 2371,
@@ -3148,7 +3148,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 8337,
+      "PowerIndex": 8339,
       "PowerSetID": 3356,
       "PowerSetIndex": 2,
       "StaticIndex": 2372,
@@ -3984,7 +3984,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.26,
-      "PowerIndex": 8338,
+      "PowerIndex": 8340,
       "PowerSetID": 3356,
       "PowerSetIndex": 3,
       "StaticIndex": 2373,
@@ -5892,7 +5892,7 @@
     },
     {
       "CastTimeReal": 0.5,
-      "PowerIndex": 8339,
+      "PowerIndex": 8341,
       "PowerSetID": 3356,
       "PowerSetIndex": 4,
       "StaticIndex": 2374,
@@ -6519,7 +6519,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 0.195,
-      "PowerIndex": 8340,
+      "PowerIndex": 8342,
       "PowerSetID": 3356,
       "PowerSetIndex": 5,
       "StaticIndex": 2375,
@@ -6767,7 +6767,7 @@
     {
       "CastTimeReal": 2.37,
       "ToggleCost": 13.0,
-      "PowerIndex": 8341,
+      "PowerIndex": 8343,
       "PowerSetID": 3356,
       "PowerSetIndex": 6,
       "StaticIndex": 2376,
@@ -7782,7 +7782,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 10.4,
-      "PowerIndex": 8342,
+      "PowerIndex": 8344,
       "PowerSetID": 3356,
       "PowerSetIndex": 7,
       "StaticIndex": 2377,
@@ -8019,7 +8019,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 2.6,
-      "PowerIndex": 8343,
+      "PowerIndex": 8345,
       "PowerSetID": 3356,
       "PowerSetIndex": 8,
       "StaticIndex": 2378,

@@ -4,7 +4,7 @@
   "FullName": "Pets.IcePatch",
   "ImageName": "",
   "Power": [
-    6355
+    6357
   ],
   "SetType": 8,
   "DisplayName": "Ice Patch",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6355,
+      "PowerIndex": 6357,
       "PowerSetID": 3103,
       "StaticIndex": 1617,
       "NGroupMembership": [],

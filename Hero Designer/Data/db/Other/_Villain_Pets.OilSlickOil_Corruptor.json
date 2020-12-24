@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.OilSlickOil_Corruptor",
   "ImageName": "",
   "Power": [
-    10203
+    10205
   ],
   "SetType": 8,
   "DisplayName": "Oil Slick",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10203,
+      "PowerIndex": 10205,
       "PowerSetID": 3500,
       "StaticIndex": 4097,
       "NGroupMembership": [],

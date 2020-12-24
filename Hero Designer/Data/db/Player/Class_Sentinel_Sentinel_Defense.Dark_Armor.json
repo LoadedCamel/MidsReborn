@@ -4,15 +4,15 @@
   "FullName": "Sentinel_Defense.Dark_Armor",
   "ImageName": "DarkArmor.png",
   "Power": [
-    7088,
-    7089,
     7090,
     7091,
     7092,
     7093,
     7094,
     7095,
-    7096
+    7096,
+    7097,
+    7098
   ],
   "SetType": 2,
   "DisplayName": "Dark Armor",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.208,
-      "PowerIndex": 7088,
+      "PowerIndex": 7090,
       "PowerSetID": 3327,
       "StaticIndex": 10277,
       "NGroupMembership": [],
@@ -567,7 +567,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7089,
+      "PowerIndex": 7091,
       "PowerSetID": 3327,
       "PowerSetIndex": 1,
       "StaticIndex": 10666,
@@ -685,7 +685,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.208,
-      "PowerIndex": 7090,
+      "PowerIndex": 7092,
       "PowerSetID": 3327,
       "PowerSetIndex": 2,
       "StaticIndex": 10279,
@@ -1337,7 +1337,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.208,
-      "PowerIndex": 7091,
+      "PowerIndex": 7093,
       "PowerSetID": 3327,
       "PowerSetIndex": 3,
       "StaticIndex": 10280,
@@ -2383,7 +2383,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 10.4,
-      "PowerIndex": 7092,
+      "PowerIndex": 7094,
       "PowerSetID": 3327,
       "PowerSetIndex": 4,
       "StaticIndex": 10667,
@@ -2912,7 +2912,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.26,
-      "PowerIndex": 7093,
+      "PowerIndex": 7095,
       "PowerSetID": 3327,
       "PowerSetIndex": 5,
       "StaticIndex": 10717,
@@ -4520,7 +4520,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.52,
-      "PowerIndex": 7094,
+      "PowerIndex": 7096,
       "PowerSetID": 3327,
       "PowerSetIndex": 6,
       "StaticIndex": 10283,
@@ -4773,7 +4773,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.078,
-      "PowerIndex": 7095,
+      "PowerIndex": 7097,
       "PowerSetID": 3327,
       "PowerSetIndex": 7,
       "StaticIndex": 10284,
@@ -5020,7 +5020,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 7096,
+      "PowerIndex": 7098,
       "PowerSetID": 3327,
       "PowerSetIndex": 8,
       "StaticIndex": 10285,

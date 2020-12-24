@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Corolax_Blue_Hybrid",
   "ImageName": "",
   "Power": [
-    10091,
-    10092,
     10093,
     10094,
     10095,
     10096,
     10097,
-    10098
+    10098,
+    10099,
+    10100
   ],
   "SetType": 8,
   "DisplayName": "Coralax Blue Hybrid",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10091,
+      "PowerIndex": 10093,
       "PowerSetID": 3473,
       "StaticIndex": 3056,
       "NGroupMembership": [],
@@ -192,7 +192,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 2.34,
-      "PowerIndex": 10092,
+      "PowerIndex": 10094,
       "PowerSetID": 3473,
       "PowerSetIndex": 1,
       "StaticIndex": 3057,
@@ -315,7 +315,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 6.5,
-      "PowerIndex": 10093,
+      "PowerIndex": 10095,
       "PowerSetID": 3473,
       "PowerSetIndex": 2,
       "StaticIndex": 3058,
@@ -494,7 +494,7 @@
     {
       "CastTimeReal": 2.27,
       "ToggleCost": 10.66,
-      "PowerIndex": 10094,
+      "PowerIndex": 10096,
       "PowerSetID": 3473,
       "PowerSetIndex": 3,
       "StaticIndex": 3059,
@@ -674,7 +674,7 @@
       "AoEModifier": 1.45966136
     },
     {
-      "PowerIndex": 10095,
+      "PowerIndex": 10097,
       "PowerSetID": 3473,
       "PowerSetIndex": 4,
       "StaticIndex": 3060,
@@ -781,7 +781,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 7.54,
-      "PowerIndex": 10096,
+      "PowerIndex": 10098,
       "PowerSetID": 3473,
       "PowerSetIndex": 5,
       "StaticIndex": 3061,
@@ -904,7 +904,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 10.66,
-      "PowerIndex": 10097,
+      "PowerIndex": 10099,
       "PowerSetID": 3473,
       "PowerSetIndex": 6,
       "StaticIndex": 3062,
@@ -1030,7 +1030,7 @@
     {
       "CastTimeReal": 0.9,
       "ToggleCost": 10.66,
-      "PowerIndex": 10098,
+      "PowerIndex": 10100,
       "PowerSetID": 3473,
       "PowerSetIndex": 7,
       "StaticIndex": 3063,

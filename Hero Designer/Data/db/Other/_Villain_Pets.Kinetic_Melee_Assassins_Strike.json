@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Kinetic_Melee_Assassins_Strike",
   "ImageName": "",
   "Power": [
-    10154,
-    10155
+    10156,
+    10157
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 10154,
+      "PowerIndex": 10156,
       "PowerSetID": 3437,
       "StaticIndex": 6332,
       "NGroupMembership": [],
@@ -388,7 +388,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9287,
+          "nSummon": 9289,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -554,7 +554,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 14.352,
-      "PowerIndex": 10155,
+      "PowerIndex": 10157,
       "PowerSetID": 3437,
       "PowerSetIndex": 1,
       "StaticIndex": 6333,

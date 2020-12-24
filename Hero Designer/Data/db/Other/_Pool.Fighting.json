@@ -4,11 +4,11 @@
   "FullName": "Pool.Fighting",
   "ImageName": "Fighting.png",
   "Power": [
-    6711,
-    6712,
     6713,
     6714,
-    6715
+    6715,
+    6716,
+    6717
   ],
   "SetType": 5,
   "DisplayName": "Fighting",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 4.42,
-      "PowerIndex": 6711,
+      "PowerIndex": 6713,
       "PowerSetID": 3282,
       "StaticIndex": 1793,
       "NGroupMembership": [],
@@ -302,8 +302,7 @@
           "ActiveConditionals": [
             {
               "Key": "Taken:Pool.Fighting.Kick",
-              "Value": "False",
-              "Validated": true
+              "Value": "False"
             }
           ],
           "nOverride": -1
@@ -828,8 +827,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -881,8 +879,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             },
             {
               "Key": "Taken:Pool.Fighting.Kick",
@@ -938,8 +935,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             },
             {
               "Key": "Taken:Pool.Fighting.Cross_Punch",
@@ -1469,8 +1465,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
@@ -1523,8 +1518,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             },
             {
               "Key": "Taken:Pool.Fighting.Kick",
@@ -1581,8 +1575,7 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Critical_Hit",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             },
             {
               "Key": "Taken:Pool.Fighting.Cross_Punch",
@@ -2083,7 +2076,7 @@
     {
       "CastTimeReal": 1.83,
       "ToggleCost": 4.94,
-      "PowerIndex": 6712,
+      "PowerIndex": 6714,
       "PowerSetID": 3282,
       "PowerSetIndex": 1,
       "StaticIndex": 1794,
@@ -4176,7 +4169,7 @@
       "CastTimeReal": 3.1,
       "ToggleCost": 0.325,
       "IsEpic": true,
-      "PowerIndex": 6713,
+      "PowerIndex": 6715,
       "PowerSetID": 3282,
       "PowerSetIndex": 2,
       "StaticIndex": 1795,
@@ -4193,11 +4186,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6711,
+            6713,
             -1
           ],
           [
-            6712,
+            6714,
             -1
           ]
         ],
@@ -4848,7 +4841,7 @@
       "CastTimeReal": 0.67,
       "ToggleCost": 0.325,
       "IsEpic": true,
-      "PowerIndex": 6714,
+      "PowerIndex": 6716,
       "PowerSetID": 3282,
       "PowerSetIndex": 3,
       "StaticIndex": 1796,
@@ -4865,16 +4858,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6711,
-            6712
+            6713,
+            6714
           ],
           [
-            6711,
-            6713
+            6713,
+            6715
           ],
           [
-            6712,
-            6713
+            6714,
+            6715
           ]
         ],
         "NPowerIDNot": [],
@@ -6193,7 +6186,7 @@
       "CastTimeReal": 1.67,
       "ToggleCost": 10.66,
       "IsEpic": true,
-      "PowerIndex": 6715,
+      "PowerIndex": 6717,
       "PowerSetID": 3282,
       "PowerSetIndex": 4,
       "StaticIndex": 9612,
@@ -6210,28 +6203,28 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6711,
-            6712
-          ],
-          [
-            6711,
-            6713
-          ],
-          [
-            6711,
-            6714
-          ],
-          [
-            6712,
-            6713
-          ],
-          [
-            6712,
+            6713,
             6714
           ],
           [
             6713,
-            6714
+            6715
+          ],
+          [
+            6713,
+            6716
+          ],
+          [
+            6714,
+            6715
+          ],
+          [
+            6714,
+            6716
+          ],
+          [
+            6715,
+            6716
           ]
         ],
         "NPowerIDNot": [],

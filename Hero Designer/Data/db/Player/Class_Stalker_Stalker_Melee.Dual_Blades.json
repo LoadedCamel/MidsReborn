@@ -4,15 +4,15 @@
   "FullName": "Stalker_Melee.Dual_Blades",
   "ImageName": "DualBladesStalker.png",
   "Power": [
-    8461,
-    8462,
     8463,
     8464,
     8465,
     8466,
     8467,
     8468,
-    8469
+    8469,
+    8470,
+    8471
   ],
   "SetType": 1,
   "DisplayName": "Dual Blades",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 1.03,
       "ToggleCost": 4.368,
-      "PowerIndex": 8461,
+      "PowerIndex": 8463,
       "PowerSetID": 3369,
       "StaticIndex": 2433,
       "NGroupMembership": [],
@@ -927,7 +927,7 @@
           "nID": 14,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -978,7 +978,7 @@
     {
       "CastTimeReal": 1.4,
       "ToggleCost": 6.032,
-      "PowerIndex": 8462,
+      "PowerIndex": 8464,
       "PowerSetID": 3369,
       "PowerSetIndex": 1,
       "StaticIndex": 2434,
@@ -1860,7 +1860,7 @@
           "nID": 14,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -1911,7 +1911,7 @@
     {
       "CastTimeReal": 1.03,
       "ToggleCost": 6.864,
-      "PowerIndex": 8463,
+      "PowerIndex": 8465,
       "PowerSetID": 3369,
       "PowerSetIndex": 2,
       "StaticIndex": 2435,
@@ -2984,7 +2984,7 @@
           "nID": 17,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -3035,7 +3035,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 8464,
+      "PowerIndex": 8466,
       "PowerSetID": 3369,
       "PowerSetIndex": 3,
       "StaticIndex": 2436,
@@ -3115,7 +3115,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10123,
+          "nSummon": 10125,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3155,7 +3155,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 10123
+          "nOverride": 10125
         },
         {
           "MagnitudeExpression": "",
@@ -3171,7 +3171,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10122,
+          "nSummon": 10124,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -3211,7 +3211,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 10122
+          "nOverride": 10124
         },
         {
           "MagnitudeExpression": "",
@@ -3456,7 +3456,7 @@
           "nID": 6,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9287,
+          "nSummon": 9289,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4078,7 +4078,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 5.2,
-      "PowerIndex": 8465,
+      "PowerIndex": 8467,
       "PowerSetID": 3369,
       "PowerSetIndex": 4,
       "StaticIndex": 2437,
@@ -5125,7 +5125,7 @@
     },
     {
       "CastTimeReal": 1.43,
-      "PowerIndex": 8466,
+      "PowerIndex": 8468,
       "PowerSetID": 3369,
       "PowerSetIndex": 5,
       "StaticIndex": 2438,
@@ -6538,7 +6538,7 @@
     {
       "CastTimeReal": 2.43,
       "ToggleCost": 6.8224,
-      "PowerIndex": 8467,
+      "PowerIndex": 8469,
       "PowerSetID": 3369,
       "PowerSetIndex": 6,
       "StaticIndex": 2439,
@@ -7942,7 +7942,7 @@
           "nID": 23,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -7993,7 +7993,7 @@
     {
       "CastTimeReal": 1.23,
       "ToggleCost": 11.024,
-      "PowerIndex": 8468,
+      "PowerIndex": 8470,
       "PowerSetID": 3369,
       "PowerSetIndex": 7,
       "StaticIndex": 2440,
@@ -8868,7 +8868,7 @@
           "nID": 14,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -8919,7 +8919,7 @@
     {
       "CastTimeReal": 3.3,
       "ToggleCost": 14.352,
-      "PowerIndex": 8469,
+      "PowerIndex": 8471,
       "PowerSetID": 3369,
       "PowerSetIndex": 8,
       "StaticIndex": 2441,
@@ -10162,7 +10162,7 @@
           "nID": 20,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

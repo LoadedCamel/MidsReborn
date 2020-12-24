@@ -4,8 +4,6 @@
   "FullName": "Scrapper_Defense.Bio_Organic_Armor",
   "ImageName": "BioArmor.png",
   "Power": [
-    6773,
-    6774,
     6775,
     6776,
     6777,
@@ -15,7 +13,9 @@
     6781,
     6782,
     6783,
-    6784
+    6784,
+    6785,
+    6786
   ],
   "SetType": 2,
   "DisplayName": "Bio Armor",
@@ -35,7 +35,7 @@
       "CastTimeReal": 1.0,
       "IsEpic": true,
       "LocationIndex": 27,
-      "PowerIndex": 6773,
+      "PowerIndex": 6775,
       "PowerSetID": 3293,
       "StaticIndex": 9137,
       "NGroupMembership": [
@@ -53,7 +53,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6779,
+            6781,
             -1
           ]
         ],
@@ -728,7 +728,7 @@
       "CastTimeReal": 0.67,
       "IsEpic": true,
       "LocationIndex": 31,
-      "PowerIndex": 6774,
+      "PowerIndex": 6776,
       "PowerSetID": 3293,
       "PowerSetIndex": 1,
       "StaticIndex": 9184,
@@ -747,7 +747,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6779,
+            6781,
             -1
           ]
         ],
@@ -912,7 +912,7 @@
       "CastTimeReal": 0.67,
       "IsEpic": true,
       "LocationIndex": 35,
-      "PowerIndex": 6775,
+      "PowerIndex": 6777,
       "PowerSetID": 3293,
       "PowerSetIndex": 2,
       "StaticIndex": 9138,
@@ -931,7 +931,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6779,
+            6781,
             -1
           ]
         ],
@@ -1605,7 +1605,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 6776,
+      "PowerIndex": 6778,
       "PowerSetID": 3293,
       "PowerSetIndex": 3,
       "StaticIndex": 9180,
@@ -2749,7 +2749,7 @@
       "Taken": true
     },
     {
-      "PowerIndex": 6777,
+      "PowerIndex": 6779,
       "PowerSetID": 3293,
       "PowerSetIndex": 4,
       "StaticIndex": 9181,
@@ -3543,7 +3543,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.26,
-      "PowerIndex": 6778,
+      "PowerIndex": 6780,
       "PowerSetID": 3293,
       "PowerSetIndex": 5,
       "StaticIndex": 9182,
@@ -5097,7 +5097,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6779,
+      "PowerIndex": 6781,
       "PowerSetID": 3293,
       "PowerSetIndex": 6,
       "StaticIndex": 9183,
@@ -5208,7 +5208,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 10.4,
-      "PowerIndex": 6780,
+      "PowerIndex": 6782,
       "PowerSetID": 3293,
       "PowerSetIndex": 7,
       "StaticIndex": 9185,
@@ -5612,7 +5612,7 @@
     {
       "CastTimeReal": 2.93,
       "ToggleCost": 0.26,
-      "PowerIndex": 6781,
+      "PowerIndex": 6783,
       "PowerSetID": 3293,
       "PowerSetIndex": 8,
       "StaticIndex": 9186,
@@ -9719,7 +9719,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 6782,
+      "PowerIndex": 6784,
       "PowerSetID": 3293,
       "PowerSetIndex": 9,
       "StaticIndex": 9187,
@@ -10546,7 +10546,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 0.52,
-      "PowerIndex": 6783,
+      "PowerIndex": 6785,
       "PowerSetID": 3293,
       "PowerSetIndex": 10,
       "StaticIndex": 9188,
@@ -11596,7 +11596,7 @@
     {
       "CastTimeReal": 1.87,
       "ToggleCost": 18.2,
-      "PowerIndex": 6784,
+      "PowerIndex": 6786,
       "PowerSetID": 3293,
       "PowerSetIndex": 11,
       "StaticIndex": 9189,

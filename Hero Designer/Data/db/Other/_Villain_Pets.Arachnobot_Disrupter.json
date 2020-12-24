@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Arachnobot_Disrupter",
   "ImageName": "",
   "Power": [
-    10034,
-    10035,
     10036,
     10037,
     10038,
     10039,
     10040,
-    10041
+    10041,
+    10042,
+    10043
   ],
   "SetType": 8,
   "DisplayName": "Arachnobot Disrupter",
@@ -30,7 +30,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 6.5,
-      "PowerIndex": 10034,
+      "PowerIndex": 10036,
       "PowerSetID": 3452,
       "StaticIndex": 3014,
       "NGroupMembership": [],
@@ -328,7 +328,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 2.34,
-      "PowerIndex": 10035,
+      "PowerIndex": 10037,
       "PowerSetID": 3452,
       "PowerSetIndex": 1,
       "StaticIndex": 3015,
@@ -451,7 +451,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 12.74,
-      "PowerIndex": 10036,
+      "PowerIndex": 10038,
       "PowerSetID": 3452,
       "PowerSetIndex": 2,
       "StaticIndex": 3016,
@@ -811,7 +811,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 8.58,
-      "PowerIndex": 10037,
+      "PowerIndex": 10039,
       "PowerSetID": 3452,
       "PowerSetIndex": 3,
       "StaticIndex": 3017,
@@ -1232,7 +1232,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10038,
+      "PowerIndex": 10040,
       "PowerSetID": 3452,
       "PowerSetIndex": 4,
       "StaticIndex": 3018,
@@ -1512,7 +1512,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10039,
+      "PowerIndex": 10041,
       "PowerSetID": 3452,
       "PowerSetIndex": 5,
       "StaticIndex": 3019,
@@ -1787,7 +1787,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10040,
+      "PowerIndex": 10042,
       "PowerSetID": 3452,
       "PowerSetIndex": 6,
       "StaticIndex": 3020,
@@ -1894,7 +1894,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 13.0,
-      "PowerIndex": 10041,
+      "PowerIndex": 10043,
       "PowerSetID": 3452,
       "PowerSetIndex": 7,
       "StaticIndex": 3021,

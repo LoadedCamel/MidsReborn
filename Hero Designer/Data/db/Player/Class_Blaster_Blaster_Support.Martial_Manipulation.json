@@ -109,7 +109,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Reach_For_The_Limit",
-          "nSummon": 9844,
+          "nSummon": 9846,
           "Stacking": 1,
           "Buffable": true,
           "UIDClassName": "",

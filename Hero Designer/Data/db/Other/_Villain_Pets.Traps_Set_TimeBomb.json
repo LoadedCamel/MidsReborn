@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Traps_Set_TimeBomb",
   "ImageName": "",
   "Power": [
-    10289
+    10291
   ],
   "SetType": 8,
   "DisplayName": "Time Bomb",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.17,
-      "PowerIndex": 10289,
+      "PowerIndex": 10291,
       "PowerSetID": 3529,
       "StaticIndex": 3176,
       "NGroupMembership": [],

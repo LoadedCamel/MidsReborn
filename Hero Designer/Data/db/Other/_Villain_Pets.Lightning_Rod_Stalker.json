@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Lightning_Rod_Stalker",
   "ImageName": "",
   "Power": [
-    10159
+    10161
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10159,
+      "PowerIndex": 10161,
       "PowerSetID": 3481,
       "StaticIndex": 4113,
       "NGroupMembership": [],

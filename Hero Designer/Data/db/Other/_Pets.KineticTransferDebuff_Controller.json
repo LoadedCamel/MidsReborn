@@ -4,7 +4,7 @@
   "FullName": "Pets.KineticTransferDebuff_Controller",
   "ImageName": "",
   "Power": [
-    6378
+    6380
   ],
   "SetType": 8,
   "DisplayName": "Kinetic Transfer",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6378,
+      "PowerIndex": 6380,
       "PowerSetID": 3117,
       "StaticIndex": 1635,
       "NGroupMembership": [],

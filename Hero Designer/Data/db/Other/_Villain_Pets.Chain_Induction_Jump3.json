@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Chain_Induction_Jump3",
   "ImageName": "",
   "Power": [
-    10063
+    10065
   ],
   "SetType": 8,
   "DisplayName": "Chain Induction Jump 3",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10063,
+      "PowerIndex": 10065,
       "PowerSetID": 3462,
       "StaticIndex": 3264,
       "NGroupMembership": [],

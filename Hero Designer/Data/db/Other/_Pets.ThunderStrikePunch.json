@@ -4,7 +4,7 @@
   "FullName": "Pets.ThunderStrikePunch",
   "ImageName": "",
   "Power": [
-    6566
+    6568
   ],
   "SetType": 8,
   "DisplayName": "Thunder Strike",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6566,
+      "PowerIndex": 6568,
       "PowerSetID": 3235,
       "StaticIndex": 1745,
       "NGroupMembership": [],

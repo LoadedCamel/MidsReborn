@@ -4,9 +4,9 @@
   "FullName": "Pets.Enflame",
   "ImageName": "",
   "Power": [
-    6312,
-    6313,
-    6314
+    6314,
+    6315,
+    6316
   ],
   "SetType": 8,
   "DisplayName": "Enflame",
@@ -23,7 +23,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6312,
+      "PowerIndex": 6314,
       "PowerSetID": 3080,
       "StaticIndex": 9586,
       "NGroupMembership": [],
@@ -584,7 +584,7 @@
       "AoEModifier": 2.05
     },
     {
-      "PowerIndex": 6313,
+      "PowerIndex": 6315,
       "PowerSetID": 3080,
       "PowerSetIndex": 1,
       "StaticIndex": 9587,
@@ -695,7 +695,7 @@
       "AoEModifier": 1.6
     },
     {
-      "PowerIndex": 6314,
+      "PowerIndex": 6316,
       "PowerSetID": 3080,
       "PowerSetIndex": 2,
       "StaticIndex": 9588,

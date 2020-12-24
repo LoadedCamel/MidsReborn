@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Martial_Arts_Assassins_Strike",
   "ImageName": "",
   "Power": [
-    10160,
-    10161
+    10162,
+    10163
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 10160,
+      "PowerIndex": 10162,
       "PowerSetID": 3442,
       "StaticIndex": 6334,
       "NGroupMembership": [],
@@ -438,7 +438,7 @@
           "nID": 6,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9287,
+          "nSummon": 9289,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -604,7 +604,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 10161,
+      "PowerIndex": 10163,
       "PowerSetID": 3442,
       "PowerSetIndex": 1,
       "StaticIndex": 6335,

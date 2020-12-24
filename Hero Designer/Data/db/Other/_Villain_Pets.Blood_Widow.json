@@ -4,15 +4,15 @@
   "FullName": "Villain_Pets.Blood_Widow",
   "ImageName": "",
   "Power": [
-    10047,
-    10048,
     10049,
     10050,
     10051,
     10052,
     10053,
     10054,
-    10055
+    10055,
+    10056,
+    10057
   ],
   "SetType": 8,
   "DisplayName": "Blood Widow",
@@ -29,7 +29,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10047,
+      "PowerIndex": 10049,
       "PowerSetID": 3454,
       "StaticIndex": 3027,
       "NGroupMembership": [],
@@ -663,7 +663,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 12.74,
-      "PowerIndex": 10048,
+      "PowerIndex": 10050,
       "PowerSetID": 3454,
       "PowerSetIndex": 1,
       "StaticIndex": 3028,
@@ -1145,7 +1145,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 6.5,
-      "PowerIndex": 10049,
+      "PowerIndex": 10051,
       "PowerSetID": 3454,
       "PowerSetIndex": 2,
       "StaticIndex": 3029,
@@ -1624,7 +1624,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 6.5,
-      "PowerIndex": 10050,
+      "PowerIndex": 10052,
       "PowerSetID": 3454,
       "PowerSetIndex": 3,
       "StaticIndex": 3030,
@@ -1864,7 +1864,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10051,
+      "PowerIndex": 10053,
       "PowerSetID": 3454,
       "PowerSetIndex": 4,
       "StaticIndex": 3031,
@@ -1971,7 +1971,7 @@
     {
       "CastTimeReal": 2.43,
       "ToggleCost": 7.332,
-      "PowerIndex": 10052,
+      "PowerIndex": 10054,
       "PowerSetID": 3454,
       "PowerSetIndex": 5,
       "StaticIndex": 3032,
@@ -2450,7 +2450,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 13.0,
-      "PowerIndex": 10053,
+      "PowerIndex": 10055,
       "PowerSetID": 3454,
       "PowerSetIndex": 6,
       "StaticIndex": 3033,
@@ -2930,7 +2930,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 5.668,
-      "PowerIndex": 10054,
+      "PowerIndex": 10056,
       "PowerSetID": 3454,
       "PowerSetIndex": 7,
       "StaticIndex": 3034,
@@ -3409,7 +3409,7 @@
     {
       "CastTimeReal": 1.33,
       "ToggleCost": 4.42,
-      "PowerIndex": 10055,
+      "PowerIndex": 10057,
       "PowerSetID": 3454,
       "PowerSetIndex": 8,
       "StaticIndex": 3035,

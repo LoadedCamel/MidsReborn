@@ -4,7 +4,7 @@
   "FullName": "Pets.Savage_Melee_Savage_Leap",
   "ImageName": "",
   "Power": [
-    6506
+    6508
   ],
   "SetType": 8,
   "DisplayName": "Savage Melee",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6506,
+      "PowerIndex": 6508,
       "PowerSetID": 3194,
       "StaticIndex": 10630,
       "NGroupMembership": [],

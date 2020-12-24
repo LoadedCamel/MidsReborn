@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Savage_Melee_Stalker",
   "ImageName": "",
   "Power": [
-    10222
+    10224
   ],
   "SetType": 8,
   "DisplayName": "Savage Melee: Stalker",
@@ -23,7 +23,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 3.52,
-      "PowerIndex": 10222,
+      "PowerIndex": 10224,
       "PowerSetID": 3507,
       "StaticIndex": 10893,
       "NGroupMembership": [],

@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Coral_Guardian_Warder",
   "ImageName": "",
   "Power": [
-    10083,
-    10084,
     10085,
     10086,
     10087,
     10088,
     10089,
-    10090
+    10090,
+    10091,
+    10092
   ],
   "SetType": 8,
   "DisplayName": "Coral Guardian Warder",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10083,
+      "PowerIndex": 10085,
       "PowerSetID": 3472,
       "StaticIndex": 3048,
       "NGroupMembership": [],
@@ -192,7 +192,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 7.54,
-      "PowerIndex": 10084,
+      "PowerIndex": 10086,
       "PowerSetID": 3472,
       "PowerSetIndex": 1,
       "StaticIndex": 3049,
@@ -315,7 +315,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 6.5,
-      "PowerIndex": 10085,
+      "PowerIndex": 10087,
       "PowerSetID": 3472,
       "PowerSetIndex": 2,
       "StaticIndex": 3050,
@@ -557,7 +557,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 6.5,
-      "PowerIndex": 10086,
+      "PowerIndex": 10088,
       "PowerSetID": 3472,
       "PowerSetIndex": 3,
       "StaticIndex": 3051,
@@ -683,7 +683,7 @@
     {
       "CastTimeReal": 2.07,
       "ToggleCost": 10.66,
-      "PowerIndex": 10087,
+      "PowerIndex": 10089,
       "PowerSetID": 3472,
       "PowerSetIndex": 4,
       "StaticIndex": 3052,
@@ -1223,7 +1223,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10088,
+      "PowerIndex": 10090,
       "PowerSetID": 3472,
       "PowerSetIndex": 5,
       "StaticIndex": 3053,
@@ -1330,7 +1330,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 8.58,
-      "PowerIndex": 10089,
+      "PowerIndex": 10091,
       "PowerSetID": 3472,
       "PowerSetIndex": 6,
       "StaticIndex": 3054,
@@ -1576,7 +1576,7 @@
     {
       "CastTimeReal": 0.9,
       "ToggleCost": 10.66,
-      "PowerIndex": 10090,
+      "PowerIndex": 10092,
       "PowerSetID": 3472,
       "PowerSetIndex": 7,
       "StaticIndex": 3055,

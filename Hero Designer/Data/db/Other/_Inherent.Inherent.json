@@ -212,7 +212,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10323,
+            10325,
             -1
           ]
         ],
@@ -542,7 +542,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10323,
+            10325,
             -1
           ]
         ],
@@ -1172,7 +1172,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10323,
+            10325,
             -1
           ]
         ],
@@ -1800,7 +1800,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10323,
+            10325,
             -1
           ]
         ],
@@ -2781,7 +2781,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10323,
+            10325,
             -1
           ]
         ],
@@ -3211,7 +3211,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10323,
+            10325,
             -1
           ]
         ],
@@ -5545,7 +5545,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10333,
+            10335,
             -1
           ]
         ],
@@ -6108,7 +6108,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10333,
+            10335,
             -1
           ]
         ],
@@ -6611,7 +6611,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10333,
+            10335,
             -1
           ]
         ],
@@ -7176,7 +7176,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            10333,
+            10335,
             -1
           ]
         ],
@@ -12657,11 +12657,11 @@
             -1
           ],
           [
-            7206,
+            7208,
             -1
           ],
           [
-            7207,
+            7209,
             -1
           ],
           [
@@ -12793,23 +12793,23 @@
             -1
           ],
           [
-            6902,
+            6904,
             -1
           ],
           [
-            6903,
+            6905,
             -1
           ],
           [
-            8425,
+            8427,
             -1
           ],
           [
-            8426,
+            8428,
             -1
           ],
           [
-            8689,
+            8691,
             -1
           ],
           [
@@ -12821,23 +12821,23 @@
             -1
           ],
           [
-            7049,
+            7051,
             -1
           ],
           [
-            7050,
+            7052,
             -1
           ],
           [
-            8569,
+            8571,
             -1
           ],
           [
-            8570,
+            8572,
             -1
           ],
           [
-            8836,
+            8838,
             -1
           ],
           [
@@ -13001,23 +13001,23 @@
             -1
           ],
           [
-            6902,
+            6904,
             -1
           ],
           [
-            6903,
+            6905,
             -1
           ],
           [
-            8425,
+            8427,
             -1
           ],
           [
-            8426,
+            8428,
             -1
           ],
           [
-            8689,
+            8691,
             -1
           ],
           [
@@ -13029,23 +13029,23 @@
             -1
           ],
           [
-            7049,
+            7051,
             -1
           ],
           [
-            7050,
+            7052,
             -1
           ],
           [
-            8569,
+            8571,
             -1
           ],
           [
-            8570,
+            8572,
             -1
           ],
           [
-            8836,
+            8838,
             -1
           ],
           [
@@ -13209,23 +13209,23 @@
             -1
           ],
           [
-            6902,
+            6904,
             -1
           ],
           [
-            6903,
+            6905,
             -1
           ],
           [
-            8425,
+            8427,
             -1
           ],
           [
-            8426,
+            8428,
             -1
           ],
           [
-            8689,
+            8691,
             -1
           ],
           [
@@ -13237,23 +13237,23 @@
             -1
           ],
           [
-            7049,
+            7051,
             -1
           ],
           [
-            7050,
+            7052,
             -1
           ],
           [
-            8569,
+            8571,
             -1
           ],
           [
-            8570,
+            8572,
             -1
           ],
           [
-            8836,
+            8838,
             -1
           ],
           [
@@ -13652,27 +13652,27 @@
             -1
           ],
           [
-            6957,
+            6959,
             -1
           ],
           [
-            6956,
+            6958,
             -1
           ],
           [
-            8480,
+            8482,
             -1
           ],
           [
-            8479,
+            8481,
             -1
           ],
           [
-            8744,
+            8746,
             -1
           ],
           [
-            8743,
+            8745,
             -1
           ],
           [
@@ -13831,15 +13831,15 @@
             -1
           ],
           [
-            7058,
+            7060,
             -1
           ],
           [
-            7059,
+            7061,
             -1
           ],
           [
-            8863,
+            8865,
             -1
           ],
           [
@@ -14025,7 +14025,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Alt_Granted_Frisbee",
-          "nSummon": 9323,
+          "nSummon": 9325,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 1,
@@ -27131,16 +27131,16 @@
       "Level": 1,
       "VariableName": "",
       "NIDSubPower": [
-        8900,
         8902,
         8904,
-        8905,
-        8911,
-        8912,
+        8906,
+        8907,
         8913,
-        8916,
-        8917,
-        8918
+        8914,
+        8915,
+        8918,
+        8919,
+        8920
       ],
       "UIDSubPower": [
         "Temporary_Powers.Accolades.Crey_CBX-9_Pistol",
@@ -27214,16 +27214,16 @@
       "Level": 1,
       "VariableName": "",
       "NIDSubPower": [
-        8899,
         8901,
         8903,
-        8906,
-        8907,
+        8905,
+        8908,
         8909,
-        8910,
         8911,
+        8912,
         8913,
-        8914
+        8915,
+        8916
       ],
       "UIDSubPower": [
         "Temporary_Powers.Accolades.Born_In_Battle",
@@ -27281,22 +27281,22 @@
       "Level": 1,
       "VariableName": "",
       "NIDSubPower": [
-        8954,
-        9406,
-        9455,
-        9559,
-        9560,
+        8956,
+        9408,
+        9457,
         9561,
         9562,
-        9695,
+        9563,
+        9564,
         9697,
-        9698,
         9699,
         9700,
-        9703,
-        9710,
-        9988,
-        9996
+        9701,
+        9702,
+        9705,
+        9712,
+        9990,
+        9998
       ],
       "UIDSubPower": [
         "Temporary_Powers.Day_Job_Powers.Combat_Shield",
@@ -27400,7 +27400,7 @@
           "Special": "",
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Mystic_Fortune",
-          "nSummon": 9725,
+          "nSummon": 9727,
           "DelayedTime": 1.0,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -32222,7 +32222,7 @@
           "nID": 1,
           "EffectType": 12,
           "Summon": "Temporary_Powers.SilentPowers.Inner_Inspiration_Lock",
-          "nSummon": 9227,
+          "nSummon": 9229,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -37043,7 +37043,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Phenomenal_Luck",
-          "nSummon": 9777,
+          "nSummon": 9779,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -37096,7 +37096,7 @@
           "nID": 6,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Robust",
-          "nSummon": 9858,
+          "nSummon": 9860,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -37149,7 +37149,7 @@
           "nID": 7,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Uncanny_Insight",
-          "nSummon": 9961,
+          "nSummon": 9963,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -37202,7 +37202,7 @@
           "nID": 8,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Righteous_Rage",
-          "nSummon": 9852,
+          "nSummon": 9854,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -37255,7 +37255,7 @@
           "nID": 9,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Escape",
-          "nSummon": 9521,
+          "nSummon": 9523,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -53688,7 +53688,7 @@
           "nID": 12,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Replacement_Powers.Panther_Stealth",
-          "nSummon": 9164,
+          "nSummon": 9166,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

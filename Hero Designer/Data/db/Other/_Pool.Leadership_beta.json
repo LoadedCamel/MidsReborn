@@ -4,11 +4,11 @@
   "FullName": "Pool.Leadership_beta",
   "ImageName": "Leadership.png",
   "Power": [
-    6737,
-    6738,
     6739,
     6740,
-    6741
+    6741,
+    6742,
+    6743
   ],
   "SetType": 5,
   "DisplayName": "zc_Leadership",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.39,
-      "PowerIndex": 6737,
+      "PowerIndex": 6739,
       "PowerSetID": 3292,
       "StaticIndex": 10849,
       "NGroupMembership": [],
@@ -1288,7 +1288,7 @@
     {
       "CastTimeReal": 1.5,
       "ToggleCost": 0.39,
-      "PowerIndex": 6738,
+      "PowerIndex": 6740,
       "PowerSetID": 3292,
       "PowerSetIndex": 1,
       "StaticIndex": 10850,
@@ -1936,7 +1936,7 @@
       "CastTimeReal": 1.5,
       "ToggleCost": 0.39,
       "IsEpic": true,
-      "PowerIndex": 6739,
+      "PowerIndex": 6741,
       "PowerSetID": 3292,
       "PowerSetIndex": 2,
       "StaticIndex": 10851,
@@ -1953,11 +1953,11 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6737,
+            6739,
             -1
           ],
           [
-            6738,
+            6740,
             -1
           ]
         ],
@@ -2433,7 +2433,7 @@
     {
       "CastTimeReal": 1.17,
       "IsEpic": true,
-      "PowerIndex": 6740,
+      "PowerIndex": 6742,
       "PowerSetID": 3292,
       "PowerSetIndex": 3,
       "StaticIndex": 10852,
@@ -2450,16 +2450,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6737,
-            6738
+            6739,
+            6740
           ],
           [
-            6737,
-            6739
+            6739,
+            6741
           ],
           [
-            6738,
-            6739
+            6740,
+            6741
           ]
         ],
         "NPowerIDNot": [],
@@ -4421,7 +4421,7 @@
       "CastTimeReal": 1.17,
       "ToggleCost": 9.75,
       "IsEpic": true,
-      "PowerIndex": 6741,
+      "PowerIndex": 6743,
       "PowerSetID": 3292,
       "PowerSetIndex": 4,
       "StaticIndex": 10853,
@@ -4438,28 +4438,28 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6737,
-            6738
-          ],
-          [
-            6737,
-            6739
-          ],
-          [
-            6737,
-            6740
-          ],
-          [
-            6738,
-            6739
-          ],
-          [
-            6738,
+            6739,
             6740
           ],
           [
             6739,
-            6740
+            6741
+          ],
+          [
+            6739,
+            6742
+          ],
+          [
+            6740,
+            6741
+          ],
+          [
+            6740,
+            6742
+          ],
+          [
+            6741,
+            6742
           ]
         ],
         "NPowerIDNot": [],

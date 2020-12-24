@@ -4,7 +4,7 @@
   "FullName": "Pets.Lightning_Rod",
   "ImageName": "",
   "Power": [
-    6395
+    6397
   ],
   "SetType": 8,
   "DisplayName": "Electric Melee",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6395,
+      "PowerIndex": 6397,
       "PowerSetID": 3074,
       "StaticIndex": 4262,
       "NGroupMembership": [],

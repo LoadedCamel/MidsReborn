@@ -4,15 +4,15 @@
   "FullName": "Stalker_Melee.Savage_Melee",
   "ImageName": "SavageMelee.png",
   "Power": [
-    8551,
-    8552,
     8553,
     8554,
     8555,
     8556,
     8557,
     8558,
-    8559
+    8559,
+    8560,
+    8561
   ],
   "SetType": 1,
   "DisplayName": "Savage Melee",
@@ -31,7 +31,7 @@
     {
       "CastTimeReal": 0.8,
       "ToggleCost": 3.95,
-      "PowerIndex": 8551,
+      "PowerIndex": 8553,
       "PowerSetID": 3379,
       "StaticIndex": 10429,
       "NGroupMembership": [],
@@ -582,7 +582,7 @@
           "nID": 8,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy_Stalker",
-          "nSummon": 9864,
+          "nSummon": 9866,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -636,7 +636,7 @@
           "nID": 9,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -687,7 +687,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 6.032,
-      "PowerIndex": 8552,
+      "PowerIndex": 8554,
       "PowerSetID": 3379,
       "PowerSetIndex": 1,
       "StaticIndex": 10428,
@@ -1238,7 +1238,7 @@
           "nID": 8,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy_Stalker",
-          "nSummon": 9864,
+          "nSummon": 9866,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -1466,7 +1466,7 @@
           "nID": 12,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -1517,7 +1517,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 8.112,
-      "PowerIndex": 8553,
+      "PowerIndex": 8555,
       "PowerSetID": 3379,
       "PowerSetIndex": 2,
       "StaticIndex": 10430,
@@ -2242,7 +2242,7 @@
           "nID": 11,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Exhausted",
-          "nSummon": 9865,
+          "nSummon": 9867,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -2295,7 +2295,7 @@
           "nID": 12,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -2346,7 +2346,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 8554,
+      "PowerIndex": 8556,
       "PowerSetID": 3379,
       "PowerSetIndex": 3,
       "StaticIndex": 10453,
@@ -2426,7 +2426,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10221,
+          "nSummon": 10223,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2466,7 +2466,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 10221
+          "nOverride": 10223
         },
         {
           "MagnitudeExpression": "",
@@ -2482,7 +2482,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10220,
+          "nSummon": 10222,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2522,7 +2522,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 10220
+          "nOverride": 10222
         },
         {
           "MagnitudeExpression": "",
@@ -2767,7 +2767,7 @@
           "nID": 6,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9287,
+          "nSummon": 9289,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -2935,7 +2935,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 5.2,
-      "PowerIndex": 8555,
+      "PowerIndex": 8557,
       "PowerSetID": 3379,
       "PowerSetIndex": 4,
       "StaticIndex": 10454,
@@ -3532,7 +3532,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 8556,
+      "PowerIndex": 8558,
       "PowerSetID": 3379,
       "PowerSetIndex": 5,
       "StaticIndex": 10455,
@@ -3947,7 +3947,7 @@
     {
       "CastTimeReal": 2.17,
       "ToggleCost": 13.52,
-      "PowerIndex": 8557,
+      "PowerIndex": 8559,
       "PowerSetID": 3379,
       "PowerSetIndex": 6,
       "StaticIndex": 10432,
@@ -4027,7 +4027,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6508,
+          "nSummon": 6510,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4067,7 +4067,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6508
+          "nOverride": 6510
         },
         {
           "MagnitudeExpression": "",
@@ -4083,7 +4083,7 @@
           "nID": 1,
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 6507,
+          "nSummon": 6509,
           "Stacking": 1,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4123,7 +4123,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 6507
+          "nOverride": 6509
         },
         {
           "MagnitudeExpression": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy source.ownPowerNum? .06 * 1.18 + @StdResult *",
@@ -4595,7 +4595,7 @@
     {
       "CastTimeReal": 2.0,
       "ToggleCost": 3.52,
-      "PowerIndex": 8558,
+      "PowerIndex": 8560,
       "PowerSetID": 3379,
       "PowerSetIndex": 7,
       "StaticIndex": 10433,
@@ -4675,7 +4675,7 @@
           "Special": "",
           "EffectType": 53,
           "Summon": "",
-          "nSummon": 10222,
+          "nSummon": 10224,
           "SpecialCase": 57,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -4715,7 +4715,7 @@
           "AtrModRechargeTime": -1.0,
           "AtrModSecondaryRange": -1.0,
           "ActiveConditionals": [],
-          "nOverride": 10222
+          "nOverride": 10224
         },
         {
           "MagnitudeExpression": "",
@@ -5755,7 +5755,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 17.58,
-      "PowerIndex": 8559,
+      "PowerIndex": 8561,
       "PowerSetID": 3379,
       "PowerSetIndex": 8,
       "StaticIndex": 10434,
@@ -5948,7 +5948,7 @@
           "nID": 2,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Savage_Melee_Blood_Frenzy_Stalker",
-          "nSummon": 9864,
+          "nSummon": 9866,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -6001,7 +6001,7 @@
           "nID": 3,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Assassins_Focus",
-          "nSummon": 9409,
+          "nSummon": 9411,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,

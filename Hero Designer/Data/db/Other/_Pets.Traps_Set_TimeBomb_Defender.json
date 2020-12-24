@@ -4,7 +4,7 @@
   "FullName": "Pets.Traps_Set_TimeBomb_Defender",
   "ImageName": "",
   "Power": [
-    6630
+    6632
   ],
   "SetType": 8,
   "DisplayName": "Time Bomb",
@@ -22,7 +22,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.17,
-      "PowerIndex": 6630,
+      "PowerIndex": 6632,
       "PowerSetID": 3236,
       "StaticIndex": 3555,
       "NGroupMembership": [],

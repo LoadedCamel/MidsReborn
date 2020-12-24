@@ -4,7 +4,7 @@
   "FullName": "Pets.IceSlick",
   "ImageName": "",
   "Power": [
-    6356
+    6358
   ],
   "SetType": 8,
   "DisplayName": "Ice Slick",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6356,
+      "PowerIndex": 6358,
       "PowerSetID": 3104,
       "StaticIndex": 1618,
       "NGroupMembership": [],

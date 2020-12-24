@@ -4,14 +4,14 @@
   "FullName": "Villain_Pets.Coral_Guardian_Sentinel",
   "ImageName": "",
   "Power": [
-    10075,
-    10076,
     10077,
     10078,
     10079,
     10080,
     10081,
-    10082
+    10082,
+    10083,
+    10084
   ],
   "SetType": 8,
   "DisplayName": "Coral Guardian Sentinel",
@@ -28,7 +28,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10075,
+      "PowerIndex": 10077,
       "PowerSetID": 3471,
       "StaticIndex": 3040,
       "NGroupMembership": [],
@@ -192,7 +192,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 7.54,
-      "PowerIndex": 10076,
+      "PowerIndex": 10078,
       "PowerSetID": 3471,
       "PowerSetIndex": 1,
       "StaticIndex": 3041,
@@ -315,7 +315,7 @@
     {
       "CastTimeReal": 1.7,
       "ToggleCost": 6.5,
-      "PowerIndex": 10077,
+      "PowerIndex": 10079,
       "PowerSetID": 3471,
       "PowerSetIndex": 2,
       "StaticIndex": 3042,
@@ -441,7 +441,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 8.58,
-      "PowerIndex": 10078,
+      "PowerIndex": 10080,
       "PowerSetID": 3471,
       "PowerSetIndex": 3,
       "StaticIndex": 3043,
@@ -683,7 +683,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 10.66,
-      "PowerIndex": 10079,
+      "PowerIndex": 10081,
       "PowerSetID": 3471,
       "PowerSetIndex": 4,
       "StaticIndex": 3044,
@@ -927,7 +927,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10080,
+      "PowerIndex": 10082,
       "PowerSetID": 3471,
       "PowerSetIndex": 5,
       "StaticIndex": 3045,
@@ -1034,7 +1034,7 @@
     {
       "CastTimeReal": 1.93,
       "ToggleCost": 9.75,
-      "PowerIndex": 10081,
+      "PowerIndex": 10083,
       "PowerSetID": 3471,
       "PowerSetIndex": 6,
       "StaticIndex": 3046,
@@ -1522,7 +1522,7 @@
     {
       "CastTimeReal": 2.67,
       "ToggleCost": 10.66,
-      "PowerIndex": 10082,
+      "PowerIndex": 10084,
       "PowerSetID": 3471,
       "PowerSetIndex": 7,
       "StaticIndex": 3047,

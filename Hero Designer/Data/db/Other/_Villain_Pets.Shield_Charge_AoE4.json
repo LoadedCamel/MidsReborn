@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Shield_Charge_AoE4",
   "ImageName": "",
   "Power": [
-    10239
+    10241
   ],
   "SetType": 8,
   "DisplayName": "Shield Defense",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10239,
+      "PowerIndex": 10241,
       "PowerSetID": 3517,
       "StaticIndex": 10706,
       "NGroupMembership": [],

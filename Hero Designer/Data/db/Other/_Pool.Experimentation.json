@@ -4,12 +4,12 @@
   "FullName": "Pool.Experimentation",
   "ImageName": "Experimentation.png",
   "Power": [
-    6705,
-    6706,
     6707,
     6708,
     6709,
-    6710
+    6710,
+    6711,
+    6712
   ],
   "SetType": 5,
   "DisplayName": "Experimentation",
@@ -36,7 +36,7 @@
       "ToggleCost": 13.0,
       "IsEpic": true,
       "LocationIndex": 26,
-      "PowerIndex": 6705,
+      "PowerIndex": 6707,
       "PowerSetID": 3281,
       "StaticIndex": 10833,
       "NGroupMembership": [],
@@ -52,7 +52,7 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6708,
+            6710,
             -1
           ]
         ],
@@ -214,7 +214,7 @@
     {
       "CastTimeReal": 1.36,
       "ToggleCost": 10.4,
-      "PowerIndex": 6706,
+      "PowerIndex": 6708,
       "PowerSetID": 3281,
       "PowerSetIndex": 1,
       "StaticIndex": 10830,
@@ -232,27 +232,27 @@
         "NPowerID": [],
         "NPowerIDNot": [
           [
-            6758,
-            -1
-          ],
-          [
-            6759,
-            -1
-          ],
-          [
             6760,
             -1
           ],
           [
-            6722,
+            6761,
             -1
           ],
           [
-            6723,
+            6762,
             -1
           ],
           [
             6724,
+            -1
+          ],
+          [
+            6725,
+            -1
+          ],
+          [
+            6726,
             -1
           ]
         ],
@@ -1139,7 +1139,7 @@
     {
       "CastTimeReal": 1.07,
       "ToggleCost": 8.58,
-      "PowerIndex": 6707,
+      "PowerIndex": 6709,
       "PowerSetID": 3281,
       "PowerSetIndex": 2,
       "StaticIndex": 10831,
@@ -1157,27 +1157,27 @@
         "NPowerID": [],
         "NPowerIDNot": [
           [
-            6722,
-            -1
-          ],
-          [
-            6723,
-            -1
-          ],
-          [
             6724,
             -1
           ],
           [
-            6758,
+            6725,
             -1
           ],
           [
-            6759,
+            6726,
             -1
           ],
           [
             6760,
+            -1
+          ],
+          [
+            6761,
+            -1
+          ],
+          [
+            6762,
             -1
           ]
         ],
@@ -1432,7 +1432,7 @@
     },
     {
       "ToggleCost": 0.455,
-      "PowerIndex": 6708,
+      "PowerIndex": 6710,
       "PowerSetID": 3281,
       "PowerSetIndex": 3,
       "StaticIndex": 10832,
@@ -1453,27 +1453,27 @@
         "NPowerID": [],
         "NPowerIDNot": [
           [
-            6722,
-            -1
-          ],
-          [
-            6723,
-            -1
-          ],
-          [
             6724,
             -1
           ],
           [
-            6758,
+            6725,
             -1
           ],
           [
-            6759,
+            6726,
             -1
           ],
           [
             6760,
+            -1
+          ],
+          [
+            6761,
+            -1
+          ],
+          [
+            6762,
             -1
           ]
         ],
@@ -1672,7 +1672,7 @@
       "CastTimeReal": 1.53,
       "ToggleCost": 20.8,
       "IsEpic": true,
-      "PowerIndex": 6709,
+      "PowerIndex": 6711,
       "PowerSetID": 3281,
       "PowerSetIndex": 4,
       "StaticIndex": 10834,
@@ -1689,16 +1689,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6706,
-            6707
+            6708,
+            6709
           ],
           [
-            6706,
-            6708
+            6708,
+            6710
           ],
           [
-            6707,
-            6708
+            6709,
+            6710
           ]
         ],
         "NPowerIDNot": [],
@@ -1819,7 +1819,7 @@
       "CastTimeReal": 1.3,
       "ToggleCost": 2.6,
       "IsEpic": true,
-      "PowerIndex": 6710,
+      "PowerIndex": 6712,
       "PowerSetID": 3281,
       "PowerSetIndex": 5,
       "StaticIndex": 10835,
@@ -1836,24 +1836,24 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6706,
-            6707
-          ],
-          [
-            6706,
-            6708
-          ],
-          [
-            6706,
+            6708,
             6709
           ],
           [
-            6707,
-            6708
+            6708,
+            6710
           ],
           [
-            6707,
-            6709
+            6708,
+            6711
+          ],
+          [
+            6709,
+            6710
+          ],
+          [
+            6709,
+            6711
           ]
         ],
         "NPowerIDNot": [],

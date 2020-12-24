@@ -4,11 +4,11 @@
   "FullName": "Pool.Speed",
   "ImageName": "SuperSpeed.png",
   "Power": [
-    6763,
-    6764,
     6765,
     6766,
-    6767
+    6767,
+    6768,
+    6769
   ],
   "SetType": 5,
   "DisplayName": "Speed",
@@ -27,7 +27,7 @@
     {
       "CastTimeReal": 3.07,
       "ToggleCost": 5.46,
-      "PowerIndex": 6763,
+      "PowerIndex": 6765,
       "PowerSetID": 3290,
       "StaticIndex": 1825,
       "NGroupMembership": [],
@@ -1905,7 +1905,7 @@
     },
     {
       "CastTimeReal": 0.73,
-      "PowerIndex": 6764,
+      "PowerIndex": 6766,
       "PowerSetID": 3290,
       "PowerSetIndex": 1,
       "StaticIndex": 1826,
@@ -2191,7 +2191,7 @@
     },
     {
       "ToggleCost": 0.455,
-      "PowerIndex": 6765,
+      "PowerIndex": 6767,
       "PowerSetID": 3290,
       "PowerSetIndex": 2,
       "StaticIndex": 1827,
@@ -2495,7 +2495,7 @@
       "CastTimeReal": 1.0,
       "ToggleCost": 48.75,
       "IsEpic": true,
-      "PowerIndex": 6766,
+      "PowerIndex": 6768,
       "PowerSetID": 3290,
       "PowerSetIndex": 3,
       "StaticIndex": 5634,
@@ -2512,16 +2512,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6763,
-            6764
+            6765,
+            6766
           ],
           [
-            6763,
-            6765
+            6765,
+            6767
           ],
           [
-            6764,
-            6765
+            6766,
+            6767
           ]
         ],
         "NPowerIDNot": [],
@@ -5104,7 +5104,7 @@
       "CastTimeReal": 1.0,
       "ToggleCost": 0.975,
       "IsEpic": true,
-      "PowerIndex": 6767,
+      "PowerIndex": 6769,
       "PowerSetID": 3290,
       "PowerSetIndex": 4,
       "StaticIndex": 1828,
@@ -5121,16 +5121,16 @@
         "NClassNameNot": [],
         "NPowerID": [
           [
-            6763,
-            6764
+            6765,
+            6766
           ],
           [
-            6763,
-            6765
+            6765,
+            6767
           ],
           [
-            6764,
-            6765
+            6766,
+            6767
           ]
         ],
         "NPowerIDNot": [],

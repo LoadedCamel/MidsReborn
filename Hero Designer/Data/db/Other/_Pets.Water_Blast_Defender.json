@@ -4,8 +4,8 @@
   "FullName": "Pets.Water_Blast_Defender",
   "ImageName": "",
   "Power": [
-    6680,
-    6681
+    6682,
+    6683
   ],
   "SetType": 8,
   "DisplayName": "Water Blast",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 1.43,
       "ToggleCost": 10.192,
-      "PowerIndex": 6680,
+      "PowerIndex": 6682,
       "PowerSetID": 3270,
       "StaticIndex": 9123,
       "NGroupMembership": [],
@@ -571,7 +571,7 @@
           "nID": 8,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Tidal_Power",
-          "nSummon": 9952,
+          "nSummon": 9954,
           "SpecialCase": 42,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -622,7 +622,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 5.096,
-      "PowerIndex": 6681,
+      "PowerIndex": 6683,
       "PowerSetID": 3270,
       "PowerSetIndex": 1,
       "StaticIndex": 9124,

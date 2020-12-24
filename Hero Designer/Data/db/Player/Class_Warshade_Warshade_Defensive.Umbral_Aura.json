@@ -4,8 +4,6 @@
   "FullName": "Warshade_Defensive.Umbral_Aura",
   "ImageName": "UmbralAura.png",
   "Power": [
-    10317,
-    10318,
     10319,
     10320,
     10321,
@@ -16,7 +14,9 @@
     10326,
     10327,
     10328,
-    10329
+    10329,
+    10330,
+    10331
   ],
   "SetType": 2,
   "DisplayName": "Umbral Aura",
@@ -33,7 +33,7 @@
   "GroupName": "Warshade_Defensive",
   "Powers": [
     {
-      "PowerIndex": 10317,
+      "PowerIndex": 10319,
       "PowerSetID": 3550,
       "StaticIndex": 3189,
       "NGroupMembership": [],
@@ -208,7 +208,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 10318,
+      "PowerIndex": 10320,
       "PowerSetID": 3550,
       "PowerSetIndex": 1,
       "StaticIndex": 3190,
@@ -512,7 +512,7 @@
     {
       "CastTimeReal": 2.03,
       "ToggleCost": 0.78,
-      "PowerIndex": 10319,
+      "PowerIndex": 10321,
       "PowerSetID": 3550,
       "PowerSetIndex": 2,
       "StaticIndex": 3191,
@@ -706,7 +706,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.26,
-      "PowerIndex": 10320,
+      "PowerIndex": 10322,
       "PowerSetID": 3550,
       "PowerSetIndex": 3,
       "StaticIndex": 3192,
@@ -1185,7 +1185,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.26,
-      "PowerIndex": 10321,
+      "PowerIndex": 10323,
       "PowerSetID": 3550,
       "PowerSetIndex": 4,
       "StaticIndex": 3193,
@@ -2249,7 +2249,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.26,
-      "PowerIndex": 10322,
+      "PowerIndex": 10324,
       "PowerSetID": 3550,
       "PowerSetIndex": 5,
       "StaticIndex": 3194,
@@ -2552,7 +2552,7 @@
     },
     {
       "ToggleCost": 0.26,
-      "PowerIndex": 10323,
+      "PowerIndex": 10325,
       "PowerSetID": 3550,
       "PowerSetIndex": 6,
       "StaticIndex": 3195,
@@ -6718,7 +6718,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 15.6,
-      "PowerIndex": 10324,
+      "PowerIndex": 10326,
       "PowerSetID": 3550,
       "PowerSetIndex": 7,
       "StaticIndex": 3196,
@@ -7142,7 +7142,7 @@
     },
     {
       "ToggleCost": 2.6,
-      "PowerIndex": 10325,
+      "PowerIndex": 10327,
       "PowerSetID": 3550,
       "PowerSetIndex": 8,
       "StaticIndex": 3197,
@@ -7796,7 +7796,7 @@
           "nID": 10,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.NoPhase",
-          "nSummon": 9739,
+          "nSummon": 9741,
           "UIDClassName": "",
           "nIDClassName": -1,
           "ToWho": 2,
@@ -7903,7 +7903,7 @@
     {
       "CastTimeReal": 1.67,
       "ToggleCost": 10.52,
-      "PowerIndex": 10326,
+      "PowerIndex": 10328,
       "PowerSetID": 3550,
       "PowerSetIndex": 9,
       "StaticIndex": 5826,
@@ -8076,7 +8076,7 @@
     {
       "CastTimeReal": 1.17,
       "ToggleCost": 0.078,
-      "PowerIndex": 10327,
+      "PowerIndex": 10329,
       "PowerSetID": 3550,
       "PowerSetIndex": 10,
       "StaticIndex": 3198,
@@ -8325,7 +8325,7 @@
     },
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 10328,
+      "PowerIndex": 10330,
       "PowerSetID": 3550,
       "PowerSetIndex": 11,
       "StaticIndex": 3199,
@@ -8740,7 +8740,7 @@
     {
       "CastTimeReal": 1.03,
       "ToggleCost": 0.52,
-      "PowerIndex": 10329,
+      "PowerIndex": 10331,
       "PowerSetID": 3550,
       "PowerSetIndex": 12,
       "StaticIndex": 3200,

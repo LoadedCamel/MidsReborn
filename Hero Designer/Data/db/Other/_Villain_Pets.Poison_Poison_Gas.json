@@ -4,9 +4,9 @@
   "FullName": "Villain_Pets.Poison_Poison_Gas",
   "ImageName": "",
   "Power": [
-    10208,
-    10209,
-    10210
+    10210,
+    10211,
+    10212
   ],
   "SetType": 8,
   "DisplayName": "Poison Trap",
@@ -23,7 +23,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10208,
+      "PowerIndex": 10210,
       "PowerSetID": 3503,
       "StaticIndex": 3139,
       "NGroupMembership": [],
@@ -609,7 +609,7 @@
       "AoEModifier": 3.25
     },
     {
-      "PowerIndex": 10209,
+      "PowerIndex": 10211,
       "PowerSetID": 3503,
       "PowerSetIndex": 1,
       "StaticIndex": 3140,
@@ -796,7 +796,7 @@
       "AoEModifier": 4.75
     },
     {
-      "PowerIndex": 10210,
+      "PowerIndex": 10212,
       "PowerSetID": 3503,
       "PowerSetIndex": 2,
       "StaticIndex": 3141,

@@ -4,9 +4,9 @@
   "FullName": "Pets.LightningStorm",
   "ImageName": "",
   "Power": [
-    6386,
-    6387,
-    6388
+    6388,
+    6389,
+    6390
   ],
   "SetType": 8,
   "DisplayName": "Lightning Storm",
@@ -24,7 +24,7 @@
   "Powers": [
     {
       "CastTimeReal": 1.17,
-      "PowerIndex": 6386,
+      "PowerIndex": 6388,
       "PowerSetID": 3128,
       "StaticIndex": 1638,
       "NGroupMembership": [],
@@ -656,7 +656,7 @@
       "AoEModifier": 1.75
     },
     {
-      "PowerIndex": 6387,
+      "PowerIndex": 6389,
       "PowerSetID": 3128,
       "PowerSetIndex": 1,
       "StaticIndex": 1639,
@@ -763,7 +763,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 6388,
+      "PowerIndex": 6390,
       "PowerSetID": 3128,
       "PowerSetIndex": 2,
       "StaticIndex": 1640,

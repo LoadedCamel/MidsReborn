@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Chain_Confuse_Dominator_Jump2",
   "ImageName": "",
   "Power": [
-    10059
+    10061
   ],
   "SetType": 8,
   "DisplayName": "Chain Confuse Jump 2",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10059,
+      "PowerIndex": 10061,
       "PowerSetID": 3458,
       "StaticIndex": 4483,
       "NGroupMembership": [],

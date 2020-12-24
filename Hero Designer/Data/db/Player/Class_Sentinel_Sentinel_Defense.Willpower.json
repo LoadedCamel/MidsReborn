@@ -4,15 +4,15 @@
   "FullName": "Sentinel_Defense.Willpower",
   "ImageName": "Willpower.png",
   "Power": [
-    7179,
-    7180,
     7181,
     7182,
     7183,
     7184,
     7185,
     7186,
-    7187
+    7187,
+    7188,
+    7189
   ],
   "SetType": 2,
   "DisplayName": "Willpower",
@@ -29,7 +29,7 @@
   "GroupName": "Sentinel_Defense",
   "Powers": [
     {
-      "PowerIndex": 7179,
+      "PowerIndex": 7181,
       "PowerSetID": 3337,
       "StaticIndex": 10341,
       "NGroupMembership": [],
@@ -660,7 +660,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.208,
-      "PowerIndex": 7180,
+      "PowerIndex": 7182,
       "PowerSetID": 3337,
       "PowerSetIndex": 1,
       "StaticIndex": 10342,
@@ -1079,7 +1079,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7181,
+      "PowerIndex": 7183,
       "PowerSetID": 3337,
       "PowerSetIndex": 2,
       "StaticIndex": 10343,
@@ -1252,7 +1252,7 @@
     {
       "CastTimeReal": 0.73,
       "ToggleCost": 0.208,
-      "PowerIndex": 7182,
+      "PowerIndex": 7184,
       "PowerSetID": 3337,
       "PowerSetIndex": 3,
       "StaticIndex": 10344,
@@ -3224,7 +3224,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 0.208,
-      "PowerIndex": 7183,
+      "PowerIndex": 7185,
       "PowerSetID": 3337,
       "PowerSetIndex": 4,
       "StaticIndex": 10677,
@@ -3408,7 +3408,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 7184,
+      "PowerIndex": 7186,
       "PowerSetID": 3337,
       "PowerSetIndex": 5,
       "StaticIndex": 10346,
@@ -3525,7 +3525,7 @@
     {
       "CastTimeReal": 0.67,
       "ToggleCost": 0.208,
-      "PowerIndex": 7185,
+      "PowerIndex": 7187,
       "PowerSetID": 3337,
       "PowerSetIndex": 6,
       "StaticIndex": 10347,
@@ -4480,7 +4480,7 @@
     },
     {
       "CastTimeReal": 1.5,
-      "PowerIndex": 7186,
+      "PowerIndex": 7188,
       "PowerSetID": 3337,
       "PowerSetIndex": 7,
       "StaticIndex": 10348,
@@ -6235,7 +6235,7 @@
     {
       "CastTimeReal": 3.1,
       "ToggleCost": 2.6,
-      "PowerIndex": 7187,
+      "PowerIndex": 7189,
       "PowerSetID": 3337,
       "PowerSetIndex": 8,
       "StaticIndex": 10349,

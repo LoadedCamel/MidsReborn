@@ -4,8 +4,8 @@
   "FullName": "Villain_Pets.Dark_Melee_Assassins_Strike",
   "ImageName": "",
   "Power": [
-    10115,
-    10116
+    10117,
+    10118
   ],
   "SetType": 8,
   "DisplayName": "",
@@ -24,7 +24,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 10115,
+      "PowerIndex": 10117,
       "PowerSetID": 3439,
       "StaticIndex": 6324,
       "NGroupMembership": [],
@@ -388,7 +388,7 @@
           "nID": 5,
           "EffectType": 12,
           "Summon": "Temporary_Powers.Temporary_Powers.Demoralized",
-          "nSummon": 9287,
+          "nSummon": 9289,
           "SpecialCase": 9,
           "UIDClassName": "",
           "nIDClassName": -1,
@@ -554,7 +554,7 @@
     {
       "CastTimeReal": 1.0,
       "ToggleCost": 14.352,
-      "PowerIndex": 10116,
+      "PowerIndex": 10118,
       "PowerSetID": 3439,
       "PowerSetIndex": 1,
       "StaticIndex": 6325,

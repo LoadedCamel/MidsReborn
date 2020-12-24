@@ -215,7 +215,8 @@
       "FullSetName": "Defender_Ranged.Archery",
       "CastTime": 1.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.0,

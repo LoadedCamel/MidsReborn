@@ -4,11 +4,11 @@
   "FullName": "Villain_Pets.Water_Spout_Stalker",
   "ImageName": "",
   "Power": [
-    10312,
-    10313,
     10314,
     10315,
-    10316
+    10316,
+    10317,
+    10318
   ],
   "SetType": 8,
   "DisplayName": "Water Spout",
@@ -25,7 +25,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10312,
+      "PowerIndex": 10314,
       "PowerSetID": 3541,
       "StaticIndex": 3412,
       "NGroupMembership": [],
@@ -388,7 +388,7 @@
       "AoEModifier": 2.5
     },
     {
-      "PowerIndex": 10313,
+      "PowerIndex": 10315,
       "PowerSetID": 3541,
       "PowerSetIndex": 1,
       "StaticIndex": 3416,
@@ -663,7 +663,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10314,
+      "PowerIndex": 10316,
       "PowerSetID": 3541,
       "PowerSetIndex": 2,
       "StaticIndex": 3415,
@@ -768,7 +768,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10315,
+      "PowerIndex": 10317,
       "PowerSetID": 3541,
       "PowerSetIndex": 3,
       "StaticIndex": 3413,
@@ -876,7 +876,7 @@
       "AoEModifier": 1.0
     },
     {
-      "PowerIndex": 10316,
+      "PowerIndex": 10318,
       "PowerSetID": 3541,
       "PowerSetIndex": 4,
       "StaticIndex": 3414,

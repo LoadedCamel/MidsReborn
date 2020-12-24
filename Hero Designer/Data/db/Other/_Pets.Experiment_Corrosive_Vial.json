@@ -4,7 +4,7 @@
   "FullName": "Pets.Experiment_Corrosive_Vial",
   "ImageName": "",
   "Power": [
-    6321
+    6323
   ],
   "SetType": 8,
   "DisplayName": "Corrosive Vial",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6321,
+      "PowerIndex": 6323,
       "PowerSetID": 3058,
       "StaticIndex": 10854,
       "NGroupMembership": [],

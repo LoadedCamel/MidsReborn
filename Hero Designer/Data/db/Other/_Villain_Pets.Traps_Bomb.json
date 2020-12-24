@@ -4,7 +4,7 @@
   "FullName": "Villain_Pets.Traps_Bomb",
   "ImageName": "",
   "Power": [
-    10271
+    10273
   ],
   "SetType": 8,
   "DisplayName": "Bomb",
@@ -21,7 +21,7 @@
   "GroupName": "Villain_Pets",
   "Powers": [
     {
-      "PowerIndex": 10271,
+      "PowerIndex": 10273,
       "PowerSetID": 3455,
       "StaticIndex": 3158,
       "NGroupMembership": [],

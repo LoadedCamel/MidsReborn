@@ -4,8 +4,8 @@
   "FullName": "Pets.FreezingRain",
   "ImageName": "",
   "Power": [
-    6328,
-    6329
+    6330,
+    6331
   ],
   "SetType": 8,
   "DisplayName": "Freezing Rain",
@@ -22,7 +22,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6328,
+      "PowerIndex": 6330,
       "PowerSetID": 3090,
       "StaticIndex": 1597,
       "NGroupMembership": [],
@@ -1938,7 +1938,7 @@
       "AoEModifier": 4.0
     },
     {
-      "PowerIndex": 6329,
+      "PowerIndex": 6331,
       "PowerSetID": 3090,
       "PowerSetIndex": 1,
       "StaticIndex": 1598,

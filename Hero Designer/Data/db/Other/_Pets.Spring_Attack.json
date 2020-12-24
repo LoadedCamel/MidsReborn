@@ -4,7 +4,7 @@
   "FullName": "Pets.Spring_Attack",
   "ImageName": "",
   "Power": [
-    6527
+    6529
   ],
   "SetType": 8,
   "DisplayName": "Spring Attack",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6527,
+      "PowerIndex": 6529,
       "PowerSetID": 3209,
       "StaticIndex": 5609,
       "NGroupMembership": [],

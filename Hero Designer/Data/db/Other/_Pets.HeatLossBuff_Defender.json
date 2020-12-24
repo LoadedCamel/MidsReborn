@@ -4,7 +4,7 @@
   "FullName": "Pets.HeatLossBuff_Defender",
   "ImageName": "",
   "Power": [
-    6344
+    6346
   ],
   "SetType": 8,
   "DisplayName": "Heat Loss",
@@ -21,7 +21,7 @@
   "GroupName": "Pets",
   "Powers": [
     {
-      "PowerIndex": 6344,
+      "PowerIndex": 6346,
       "PowerSetID": 3096,
       "StaticIndex": 1606,
       "NGroupMembership": [],
