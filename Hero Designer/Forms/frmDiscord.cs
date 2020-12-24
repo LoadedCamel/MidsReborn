@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Base.Master_Classes;
@@ -19,6 +21,7 @@ namespace Hero_Designer.Forms
         private List<string> defList { get; set; }
         private List<string> resList { get; set; }
         private List<string> misList { get; set; }
+        public List<ValidServer> ValidServers { get; set; }
 
         private int GetCheckedCount()
         {
@@ -83,6 +86,8 @@ namespace Hero_Designer.Forms
                         var isRefreshed = clsOAuth.RefreshToken(refreshToken?.ToString());
                         if (isRefreshed)
                         {
+                            clsDiscord.MbLogin();
+                            clsDiscord.ValidateServers();
                             Size = new Size(818, 320);
                             Text = @"Export to Discord - Enabled";
                             label1.Visible = true;
@@ -123,9 +128,15 @@ namespace Hero_Designer.Forms
                 MidsContext.ConfigSp.Auth.TryGetValue("access_token", out var token);
                 clsOAuth.RequestUser(token?.ToString());
                 clsOAuth.RequestServers(token?.ToString());
+                if (MidsContext.Config.Registered == 0 && MidsContext.Config.DiscordAuthorized)
+                {
+                    clsDiscord.MbRegister();
+                    //clsDiscord.ValidateServers();
+                }
                 //clsOAuth.RequestServerChannels(token?.ToString(), MidsContext.Config.DServerCount);
                 //add servers to list
                 PopulateUserData();
+                PopulateServerData();
                 StatInitializer();
             }
 
@@ -146,23 +157,44 @@ namespace Hero_Designer.Forms
             misList = new List<string>();
             submitButton.ImageIndex = MidsContext.Character.IsHero() ? 0 : 2;
             SetCheckedCount(0);
-            if (GetCheckedCount() == 0)
+            /*if (GetCheckedCount() == 0)
             {
                 submitButton.Text = @"Cancel";
-            }
+            }*/
         }
 
         private void PopulateUserData()
         {
-            var userId = clsOAuth.GetCryptedValue("User", "id");
-            var userAvatar = clsOAuth.GetCryptedValue("User", "avatar");
+            var userId = MidsContext.GetCryptedValue("User", "id");
+            var userAvatar = MidsContext.GetCryptedValue("User", "avatar");
             using var webClient = new WebClient();
             var bytes = webClient.DownloadData($"https://cdn.discordapp.com/avatars/{userId}/{userAvatar}.png");
             using var memoryStream = new MemoryStream(bytes);
             ctlAvatar1.Image = Image.FromStream(memoryStream);
-            lblUsername.Text = clsOAuth.GetCryptedValue("User", "username");
-            lblDiscriminator.Text = $@"# {clsOAuth.GetCryptedValue("User", "discriminator")}";
-            //Text = $@"Export as {clsOAuth.GetCryptedValue("User", "username")}#{clsOAuth.GetCryptedValue("User", "discriminator")}";
+            lblUsername.Text = MidsContext.GetCryptedValue("User", "username");
+            lblDiscriminator.Text = $@"# {MidsContext.GetCryptedValue("User", "discriminator")}";
+            //Text = $@"Export as {MidsContext.GetCryptedValue("User", "username")}#{MidsContext.GetCryptedValue("User", "discriminator")}";
+        }
+
+        private void PopulateServerData()
+        {
+            ValidServers = new List<ValidServer>();
+            foreach (var kvp in MidsContext.ConfigSp.ValidatedServers)
+            {
+                ValidServers.Add(new ValidServer { Name = kvp.Key, Channels = kvp.Value });
+            }
+
+            serverCombo.DisplayMember = "Name";
+            serverCombo.ValueMember = "Channels";
+            serverCombo.DataSource = new BindingList<ValidServer>(ValidServers);
+        }
+
+        private void serverCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (serverCombo.SelectedItem != null)
+            {
+                channelCombo.DataSource = serverCombo.SelectedValue;
+            }
         }
 
         private void authButton_Click(object sender, EventArgs e)
@@ -206,19 +238,19 @@ namespace Hero_Designer.Forms
                             }
                             break;
                         case "miscCheckedList":
-                        {
-                            var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
-                            misList.Add(selectedItem);
-                            if (SelectedStats.ContainsKey("Misc"))
                             {
-                                SelectedStats["Misc"] = misList;
+                                var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
+                                misList.Add(selectedItem);
+                                if (SelectedStats.ContainsKey("Misc"))
+                                {
+                                    SelectedStats["Misc"] = misList;
+                                }
+                                else
+                                {
+                                    SelectedStats.Add("Misc", misList);
+                                }
+                                break;
                             }
-                            else
-                            {
-                                SelectedStats.Add("Misc", misList);
-                            }
-                            break;
-                        }
                     }
                     break;
                 case CheckState.Unchecked:
@@ -240,15 +272,15 @@ namespace Hero_Designer.Forms
                             }
                             break;
                         case "miscCheckedList":
-                        {
-                            var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
-                            misList.Remove(selectedItem);
-                            foreach (var list in from kvp in SelectedStats from list in SelectedStats.Values where kvp.Key == "Misc" select list)
                             {
-                                list.Remove(obj.Items[e.Index].ToString());
+                                var selectedItem = Regex.Replace(obj.Items[e.Index].ToString(), "[()]", "");
+                                misList.Remove(selectedItem);
+                                foreach (var list in from kvp in SelectedStats from list in SelectedStats.Values where kvp.Key == "Misc" select list)
+                                {
+                                    list.Remove(obj.Items[e.Index].ToString());
+                                }
+                                break;
                             }
-                            break;
-                        }
                     }
                     break;
                 case CheckState.Indeterminate:
@@ -275,17 +307,13 @@ namespace Hero_Designer.Forms
 
         private void submitButton_Click(object sender, EventArgs e)
         {
-            if (GetCheckedCount() == 0)
+            if (GetCheckedCount() > 9)
             {
-                Close();
+                MessageBox.Show("You have selected too many stats.\r\nNo more than 9 stats can be selected when submitting a build.", @"Unable to Submit", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            if (GetCheckedCount() > 6)
+            else if (GetCheckedCount() > -1 && GetCheckedCount() < 10)
             {
-                MessageBox.Show("You have selected too many stats.\r\nNo more than 6 stats can be selected when submitting a build.", @"Unable to Submit", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            else if (GetCheckedCount() > 0 && GetCheckedCount() < 7)
-            {
-                clsDiscord.GatherData(SelectedStats);
+                clsDiscord.GatherData(SelectedStats, serverCombo.GetItemText(serverCombo.SelectedItem), channelCombo.GetItemText(channelCombo.SelectedItem));
             }
         }
     }

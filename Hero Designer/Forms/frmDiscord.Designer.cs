@@ -37,7 +37,6 @@ namespace Hero_Designer.Forms
             this.lblUsername = new System.Windows.Forms.Label();
             this.lblDiscriminator = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.ctlAvatar1 = new midsControls.ctlAvatar();
             this.authNotice = new System.Windows.Forms.RichTextBox();
             this.authButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -54,9 +53,10 @@ namespace Hero_Designer.Forms
             this.submitButton = new System.Windows.Forms.Button();
             this.btnImages = new System.Windows.Forms.ImageList(this.components);
             this.label6 = new System.Windows.Forms.Label();
+            this.ctlAvatar1 = new midsControls.ctlAvatar();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblUsername
@@ -91,17 +91,6 @@ namespace Hero_Designer.Forms
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(174, 71);
             this.panel1.TabIndex = 9;
-            // 
-            // ctlAvatar1
-            // 
-            this.ctlAvatar1.BackColor = System.Drawing.Color.White;
-            this.ctlAvatar1.Image = global::Hero_Designer.Resources.defaultAvatar;
-            this.ctlAvatar1.Location = new System.Drawing.Point(6, 3);
-            this.ctlAvatar1.Name = "ctlAvatar1";
-            this.ctlAvatar1.Size = new System.Drawing.Size(64, 64);
-            this.ctlAvatar1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.ctlAvatar1.TabIndex = 6;
-            this.ctlAvatar1.TabStop = false;
             // 
             // authNotice
             // 
@@ -166,6 +155,7 @@ namespace Hero_Designer.Forms
             this.serverCombo.Name = "serverCombo";
             this.serverCombo.Size = new System.Drawing.Size(218, 21);
             this.serverCombo.TabIndex = 18;
+            this.serverCombo.SelectedIndexChanged += new System.EventHandler(this.serverCombo_SelectedIndexChanged);
             // 
             // channelCombo
             // 
@@ -182,7 +172,7 @@ namespace Hero_Designer.Forms
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.42548F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.57452F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 204F));
             this.tableLayoutPanel1.Controls.Add(this.label3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label4, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label5, 2, 0);
@@ -206,7 +196,7 @@ namespace Hero_Designer.Forms
             this.label3.Location = new System.Drawing.Point(4, 4);
             this.label3.Margin = new System.Windows.Forms.Padding(3);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(160, 21);
+            this.label3.Size = new System.Drawing.Size(159, 21);
             this.label3.TabIndex = 0;
             this.label3.Text = "Defense";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -217,10 +207,10 @@ namespace Hero_Designer.Forms
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.SystemColors.Control;
-            this.label4.Location = new System.Drawing.Point(171, 4);
+            this.label4.Location = new System.Drawing.Point(170, 4);
             this.label4.Margin = new System.Windows.Forms.Padding(3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(179, 21);
+            this.label4.Size = new System.Drawing.Size(176, 21);
             this.label4.TabIndex = 1;
             this.label4.Text = "Resistance";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -231,10 +221,10 @@ namespace Hero_Designer.Forms
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label5.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.Control;
-            this.label5.Location = new System.Drawing.Point(357, 4);
+            this.label5.Location = new System.Drawing.Point(353, 4);
             this.label5.Margin = new System.Windows.Forms.Padding(3);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(195, 21);
+            this.label5.Size = new System.Drawing.Size(199, 21);
             this.label5.TabIndex = 2;
             this.label5.Text = "Misc";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -257,7 +247,7 @@ namespace Hero_Designer.Forms
             "AOE"});
             this.defenseCheckedList.Location = new System.Drawing.Point(4, 32);
             this.defenseCheckedList.Name = "defenseCheckedList";
-            this.defenseCheckedList.Size = new System.Drawing.Size(160, 191);
+            this.defenseCheckedList.Size = new System.Drawing.Size(159, 191);
             this.defenseCheckedList.TabIndex = 3;
             this.defenseCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
@@ -275,9 +265,9 @@ namespace Hero_Designer.Forms
             "Negative",
             "Toxic",
             "Psionic"});
-            this.resistCheckedList.Location = new System.Drawing.Point(171, 32);
+            this.resistCheckedList.Location = new System.Drawing.Point(170, 32);
             this.resistCheckedList.Name = "resistCheckedList";
-            this.resistCheckedList.Size = new System.Drawing.Size(179, 191);
+            this.resistCheckedList.Size = new System.Drawing.Size(176, 191);
             this.resistCheckedList.TabIndex = 4;
             this.resistCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
@@ -298,9 +288,9 @@ namespace Hero_Designer.Forms
             "Hitpoints (Maximum)",
             "Hitpoints (Regeneration)",
             "ToHit"});
-            this.miscCheckedList.Location = new System.Drawing.Point(357, 32);
+            this.miscCheckedList.Location = new System.Drawing.Point(353, 32);
             this.miscCheckedList.Name = "miscCheckedList";
-            this.miscCheckedList.Size = new System.Drawing.Size(195, 191);
+            this.miscCheckedList.Size = new System.Drawing.Size(199, 191);
             this.miscCheckedList.TabIndex = 5;
             this.miscCheckedList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox_ItemCheck);
             // 
@@ -342,6 +332,17 @@ namespace Hero_Designer.Forms
             this.label6.TabIndex = 22;
             this.label6.Text = "Note: You must select at least 1 stat in order to submit your build.";
             // 
+            // ctlAvatar1
+            // 
+            this.ctlAvatar1.BackColor = System.Drawing.Color.White;
+            this.ctlAvatar1.Image = global::Hero_Designer.Resources.defaultAvatar;
+            this.ctlAvatar1.Location = new System.Drawing.Point(6, 3);
+            this.ctlAvatar1.Name = "ctlAvatar1";
+            this.ctlAvatar1.Size = new System.Drawing.Size(64, 64);
+            this.ctlAvatar1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.ctlAvatar1.TabIndex = 6;
+            this.ctlAvatar1.TabStop = false;
+            // 
             // frmDiscord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -366,9 +367,9 @@ namespace Hero_Designer.Forms
             this.Text = "Export as Default User";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

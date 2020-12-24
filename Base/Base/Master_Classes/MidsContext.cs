@@ -37,5 +37,23 @@ namespace Base.Master_Classes
                 throw new InvalidOperationException(
                     "Program app version is not internally consistent, failing startup");
         }
+
+        public static string GetCryptedValue(string type, string name)
+        {
+            switch (type)
+            {
+                case "Auth":
+                    ConfigSp.Auth.TryGetValue(name, out var authValue);
+                    return authValue?.ToString();
+                case "User":
+                    ConfigSp.User.TryGetValue(name, out var userValue);
+                    return userValue?.ToString();
+                case "BotUser":
+                    ConfigSp.BotUser.TryGetValue(name, out var botValue);
+                    return botValue?.ToString();
+                default:
+                    return null;
+            }
+        }
     }
 }

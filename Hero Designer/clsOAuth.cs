@@ -76,133 +76,115 @@ namespace Hero_Designer
 
         private static void RequestToken(string accessCode)
         {
-            var client = new RestClient(API_ENDPOINT);
-            var request = new RestRequest("oauth2/token", Method.POST);
-            request.AddParameter("client_id", CLIENT_ID);
-            request.AddParameter("client_secret", CLIENT_SECRET);
-            request.AddParameter("grant_type", "authorization_code");
-            request.AddParameter("code", accessCode);
-            request.AddParameter("redirect_uri", REDIRECT_URI);
-            request.AddParameter("scope", SCOPE);
-            var response = client.Execute(request);
-            var jDiscordObject = JsonConvert.DeserializeObject<DiscordObject>(response.Content);
-            jDiscordObject.DateTime = DateTime.Now;
-            var authDict = new Dictionary<string, object>();
+            try
+            {
+                var client = new RestClient(API_ENDPOINT);
+                var request = new RestRequest("oauth2/token", Method.POST);
+                request.AddParameter("client_id", CLIENT_ID);
+                request.AddParameter("client_secret", CLIENT_SECRET);
+                request.AddParameter("grant_type", "authorization_code");
+                request.AddParameter("code", accessCode);
+                request.AddParameter("redirect_uri", REDIRECT_URI);
+                request.AddParameter("scope", SCOPE);
+                var response = client.Execute(request);
+                var jDiscordObject = JsonConvert.DeserializeObject<DiscordObject>(response.Content);
+                jDiscordObject.DateTime = DateTime.Now;
+                var authDict = new Dictionary<string, object>();
 
-            var properties = typeof(DiscordObject).GetProperties();
-            foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
+                var properties = typeof(DiscordObject).GetProperties();
+                foreach (var property in properties)
+                    authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
 
-            MidsContext.Config.DiscordAuthorized = true;
-            MidsContext.ConfigSp.Auth = authDict;
+                MidsContext.Config.DiscordAuthorized = true;
+                MidsContext.ConfigSp.Auth = authDict;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
         }
 
         public static bool RefreshToken(string refreshToken)
         {
-            var client = new RestClient(API_ENDPOINT);
-            var request = new RestRequest("oauth2/token", Method.POST);
-            request.AddParameter("client_id", CLIENT_ID);
-            request.AddParameter("client_secret", CLIENT_SECRET);
-            request.AddParameter("grant_type", "refresh_token");
-            request.AddParameter("refresh_token", refreshToken);
-            request.AddParameter("redirect_uri", REDIRECT_URI);
-            request.AddParameter("scope", SCOPE);
-            var response = client.Execute(request);
-            var jDiscordObject = JsonConvert.DeserializeObject<DiscordObject>(response.Content);
-            jDiscordObject.DateTime = DateTime.Now;
-            var authDict = new Dictionary<string, object>();
-
-            var properties = typeof(DiscordObject).GetProperties();
-            foreach (var property in properties) authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
-
-            MidsContext.ConfigSp.Auth = authDict;
-            return true;
-        }
-
-        public static string GetCryptedValue(string type, string name)
-        {
-            switch (type)
+            try
             {
-                case "Auth":
-                    MidsContext.ConfigSp.Auth.TryGetValue(name, out var authValue);
-                    return authValue?.ToString();
-                case "User":
-                    MidsContext.ConfigSp.User.TryGetValue(name, out var userValue);
-                    return userValue?.ToString();
-                default:
-                    return null;
+                var client = new RestClient(API_ENDPOINT);
+                var request = new RestRequest("oauth2/token", Method.POST);
+                request.AddParameter("client_id", CLIENT_ID);
+                request.AddParameter("client_secret", CLIENT_SECRET);
+                request.AddParameter("grant_type", "refresh_token");
+                request.AddParameter("refresh_token", refreshToken);
+                request.AddParameter("redirect_uri", REDIRECT_URI);
+                request.AddParameter("scope", SCOPE);
+                var response = client.Execute(request);
+                var jDiscordObject = JsonConvert.DeserializeObject<DiscordObject>(response.Content);
+                jDiscordObject.DateTime = DateTime.Now;
+                var authDict = new Dictionary<string, object>();
+
+                var properties = typeof(DiscordObject).GetProperties();
+                foreach (var property in properties)
+                    authDict.Add(property.Name, property.GetValue(jDiscordObject, null));
+
+                MidsContext.ConfigSp.Auth = authDict;
+                return true;
             }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
+
+            return false;
         }
 
         public static void RequestUser(string tokenString)
         {
-            var client = new RestClient(API_ENDPOINT);
-            var request = new RestRequest("users/@me", Method.GET);
-            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
-            var response = client.Execute(request);
-            var jUserObject = JsonConvert.DeserializeObject<DiscordUser>(response.Content);
-            var userDict = new Dictionary<string, object>();
-            var properties = typeof(DiscordUser).GetProperties();
-            foreach (var property in properties) userDict.Add(property.Name, property.GetValue(jUserObject, null));
+            try
+            {
+                var client = new RestClient(API_ENDPOINT);
+                var request = new RestRequest("users/@me", Method.GET);
+                client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
+                var response = client.Execute(request);
+                var jUserObject = JsonConvert.DeserializeObject<DiscordUser>(response.Content);
+                var userDict = new Dictionary<string, object>();
+                var properties = typeof(DiscordUser).GetProperties();
+                foreach (var property in properties) userDict.Add(property.Name, property.GetValue(jUserObject, null));
 
-            MidsContext.ConfigSp.User = userDict;
+                MidsContext.ConfigSp.User = userDict;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
         }
 
         public static void RequestServers(string tokenString)
         {
-            var client = new RestClient(API_ENDPOINT);
-            var request = new RestRequest("users/@me/guilds", Method.GET);
-            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
-            var response = client.Execute(request);
-            var jServerObject = Deserialize<DiscordServerObject>(response.Content);
-            var serverCount = jServerObject.Count;
-            MidsContext.ConfigSp.ServerCount = serverCount;
-            var serversDict = new Dictionary<string, Dictionary<string, string>>();
-            for (var i = 0; i < serverCount; i++)
+            try
             {
-                var serverInfo = new DiscordServerInfo {ServerNumber = $"Server{i}", Name = jServerObject[i].name, Id = jServerObject[i].id};
-                serversDict.Add(serverInfo.ServerNumber, new Dictionary<string, string>());
-                serversDict[serverInfo.ServerNumber].Add("name", serverInfo.Name);
-                serversDict[serverInfo.ServerNumber].Add("id", serverInfo.Id);
+                var client = new RestClient(API_ENDPOINT);
+                var request = new RestRequest("users/@me/guilds", Method.GET);
+                client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
+                var response = client.Execute(request);
+                var jServerObject = Deserialize<DiscordServerObject>(response.Content);
+                var serverCount = jServerObject.Count;
+                MidsContext.ConfigSp.ServerCount = serverCount;
+                /*var serversDict = new Dictionary<string, Dictionary<string, string>>();
+                for (var i = 0; i < serverCount; i++)
+                {
+                    var serverInfo = new DiscordServerInfo {ServerNumber = $"Server{i}", Name = jServerObject[i].name, Id = jServerObject[i].id};
+                    serversDict.Add(serverInfo.ServerNumber, new Dictionary<string, string>());
+                    serversDict[serverInfo.ServerNumber].Add("name", serverInfo.Name);
+                    serversDict[serverInfo.ServerNumber].Add("id", serverInfo.Id);
+                }*/
+                var serverWrite = jServerObject.ToDictionary(x => x.name);
+                var dServersList = new List<string>();
+                foreach (var entry in serverWrite) dServersList.Add(entry.Value.id);
+                //MidsContext.ConfigSp.Servers = serversDict;
+                MidsContext.ConfigSp.ServerList = dServersList;
             }
-            var serverWrite = jServerObject.ToDictionary(x => x.name);
-            var dServersList = new List<string>();
-            foreach (var entry in serverWrite) dServersList.Add(entry.Value.name);
-            MidsContext.ConfigSp.Servers = serversDict;
-            MidsContext.ConfigSp.ServerList = dServersList;
-        }
-
-        public static void RequestServerChannels(string tokenString, int serverCount)
-        {
-            for (var index = 0; index < serverCount; index++)
+            catch (Exception e)
             {
-                try
-                {
-                    Console.WriteLine($"Server{index}");
-                    var aOpenSubKey = Registry.CurrentUser.OpenSubKey($@"SOFTWARE\RebornTeam\Mids Reborn\Servers\Server{index}", true);
-                    if (aOpenSubKey != null)
-                    {
-                        var sID = aOpenSubKey.GetValue("id");
-                        var client = new RestClient(API_ENDPOINT);
-                        var request = new RestRequest($@"guilds/{sID}/channels", Method.GET);
-                        client.Authenticator =
-                            new OAuth2AuthorizationRequestHeaderAuthenticator(tokenString, "Bearer");
-                        var response = client.Execute(request);
-                        var jServerObject = Deserialize<DiscordServerChannels>(response.Content);
-                        var jChannelDict = jServerObject
-                            .Where(x => x.guild_id == Convert.ToInt32(sID) && x.type == 0)
-                            .ToDictionary(y => y.name);
-                        foreach (var channel in jChannelDict)
-                        {
-                            Console.WriteLine($"{channel.Key} - {channel.Value.name} - {channel.Value.type}");
-                        }
-                    }
-
-                    aOpenSubKey?.Close();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"{e.Message}\r\n\r\n{e.StackTrace}");
-                }
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
             }
         }
 

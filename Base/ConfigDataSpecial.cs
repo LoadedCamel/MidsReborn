@@ -7,9 +7,10 @@ using Newtonsoft.Json;
 public class ConfigDataSpecial
 {
     public Dictionary<string, object> Auth { get; set; }
-    public Dictionary<string, object> ValidatedServers { get; set; }
+    public Dictionary<string, List<string>> ValidatedServers { get; set; }
     public Dictionary<string, object> User { get; set; }
     public Dictionary<string, Dictionary<string, string>> Servers { get; set; }
+    public Dictionary<string, object> BotUser { get; set; }
     public List<string> ServerList { get; set; }
     public int ServerCount { get; set; }
     public bool IsInitialized { get; set; }
@@ -113,4 +114,11 @@ public class DiscordServerChannels
     [JsonProperty(PropertyName = "name")] public string name { get; set; }
     [JsonProperty(PropertyName = "type")] public int type { get; set; }
     [JsonProperty(PropertyName = "guild_id")] public int guild_id { get; set; }
+}
+
+[JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+public class ValidatedServer
+{
+    [JsonProperty(PropertyName = "name")] public string name { get; set; }
+    [JsonProperty(PropertyName = "channels")] public List<string> channels { get; set; }
 }
