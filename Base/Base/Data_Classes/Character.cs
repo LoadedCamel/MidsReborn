@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using Base.Display;
 using Base.Master_Classes;
@@ -1234,6 +1235,7 @@ namespace Base.Data_Classes
             if (rIdx < 0) return section1;
 
             var recipe = DatabaseAPI.Database.Recipes[rIdx];
+            if (recipe.ExternalName.Contains("Superior")) return section1;
             var index1 = -1;
             var num1 = 52;
             var num2 = 0;

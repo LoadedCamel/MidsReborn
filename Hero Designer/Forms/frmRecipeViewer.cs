@@ -215,7 +215,7 @@ namespace Hero_Designer.Forms
             var iIndent = 1;
             var popupData = new PopUp.PopupData();
             var tl = new CountingList[0];
-            if (lvDPA.SelectedIndices.Count < 1)
+            if (lvDPA.SelectedIndices.Count < 1 || lvDPA.SelectedItems[0].Text.Contains("Superior"))
                 return popupData;
             if (lvDPA.SelectedIndices[0] == 0)
             {
@@ -451,8 +451,7 @@ namespace Hero_Designer.Forms
                 return popupData;
             {
                 var index1 = popupData.Add();
-                popupData.Sections[index1] =
-                    Character.PopRecipeInfo(rIdx, Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text) - 1);
+                popupData.Sections[index1] = Character.PopRecipeInfo(rIdx, Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text) - 1);
                 if (popupData.Sections[index1].Content != null && popupData.Sections[index1].Content.Length > 0)
                 {
                     var content = popupData.Sections[index1].Content;

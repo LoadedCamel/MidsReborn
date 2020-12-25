@@ -68,7 +68,6 @@ namespace Hero_Designer.Forms
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblRewardMerits = new System.Windows.Forms.Label();
             this.imageButton1 = new midsControls.ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecipe)).BeginInit();
@@ -448,9 +447,9 @@ namespace Hero_Designer.Forms
             // 
             this.panel5.BackColor = System.Drawing.Color.Transparent;
             this.panel5.Controls.Add(this.lblCatalysts);
-            this.panel5.Controls.Add(this.pictureBox5);
+            //this.panel5.Controls.Add(this.pictureBox5);
             this.panel5.Controls.Add(this.lblRewardMerits);
-            this.panel5.Controls.Add(this.pictureBox6);
+            //this.panel5.Controls.Add(this.pictureBox6);
             this.panel5.Location = new System.Drawing.Point(194, 538);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(372, 32);
@@ -560,7 +559,6 @@ namespace Hero_Designer.Forms
         private Label lblRewardMerits;
         private PictureBox pictureBox6;
         private midsControls.ImageButton imageButton1;
-        private Label lblCatalysts;
         private PictureBox pictureBox2;
     }
 }
