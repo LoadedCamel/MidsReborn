@@ -64,15 +64,15 @@ namespace Hero_Designer.Forms
                 DisplayName = "New Class"
             };
             using var frmEditArchetype = new frmEditArchetype(ref iAT);
-            var num = (int) frmEditArchetype.ShowDialog();
+            var num = (int)frmEditArchetype.ShowDialog();
             if (frmEditArchetype.DialogResult != DialogResult.OK)
                 return;
             var database = DatabaseAPI.Database;
-            var archetypeArray = (Archetype[]) Utils.CopyArray(database.Classes,
+            var archetypeArray = (Archetype[])Utils.CopyArray(database.Classes,
                 new Archetype[DatabaseAPI.Database.Classes.Length + 1]);
             database.Classes = archetypeArray;
             DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] =
-                new Archetype(frmEditArchetype.MyAT) {IsNew = true};
+                new Archetype(frmEditArchetype.MyAT) { IsNew = true };
             UpdateLists(lvGroup.Items.Count - 1);
         }
 
@@ -93,15 +93,15 @@ namespace Hero_Designer.Forms
                 iAT.ClassName += "_Clone";
                 iAT.DisplayName += " (Clone)";
                 using var frmEditArchetype = new frmEditArchetype(ref iAT);
-                var num2 = (int) frmEditArchetype.ShowDialog();
+                var num2 = (int)frmEditArchetype.ShowDialog();
                 if (frmEditArchetype.DialogResult != DialogResult.OK)
                     return;
                 var database = DatabaseAPI.Database;
-                var archetypeArray = (Archetype[]) Utils.CopyArray(database.Classes,
+                var archetypeArray = (Archetype[])Utils.CopyArray(database.Classes,
                     new Archetype[DatabaseAPI.Database.Classes.Length + 1]);
                 database.Classes = archetypeArray;
                 DatabaseAPI.Database.Classes[DatabaseAPI.Database.Classes.Length - 1] =
-                    new Archetype(frmEditArchetype.MyAT) {IsNew = true};
+                    new Archetype(frmEditArchetype.MyAT) { IsNew = true };
                 UpdateLists(lvGroup.Items.Count - 1);
             }
         }
@@ -116,7 +116,7 @@ namespace Hero_Designer.Forms
                 MessageBox.Show("An unknown error caused an invalid PowerIndex return value.", "Wha?",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            else if (MessageBox.Show($"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?","Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            else if (MessageBox.Show($"Really delete Class: {DatabaseAPI.Database.Classes[index1].ClassName} ({DatabaseAPI.Database.Classes[index1].DisplayName})?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 var archetypeArray = new Archetype[DatabaseAPI.Database.Classes.Length - 1 + 1];
                 var num2 = index1;
@@ -186,7 +186,7 @@ namespace Hero_Designer.Forms
                 using var frmEditArchetype = new frmEditArchetype(ref DatabaseAPI.Database.Classes[index]);
                 if (frmEditArchetype.ShowDialog() != DialogResult.OK)
                     return;
-                DatabaseAPI.Database.Classes[index] = new Archetype(frmEditArchetype.MyAT) {IsModified = true};
+                DatabaseAPI.Database.Classes[index] = new Archetype(frmEditArchetype.MyAT) { IsModified = true };
                 if (DatabaseAPI.Database.Classes[index].ClassName != className)
                     RefreshLists();
             }
@@ -223,7 +223,7 @@ namespace Hero_Designer.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (!Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
                 BusyMsg("Re-Indexing && Saving...");
                 foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
@@ -262,12 +262,12 @@ namespace Hero_Designer.Forms
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
-                {
-                    if ((lvGroup.SelectedItems.Count > 0) & (lvSet.SelectedItems.Count > 0))
-                        iPower.FullName =
-                            $"{lvGroup.SelectedItems[0].SubItems[0].Text}{lvSet.SelectedItems[0].SubItems[0].Text}.New_Power";
-                    break;
-                }
+                    {
+                        if ((lvGroup.SelectedItems.Count > 0) & (lvSet.SelectedItems.Count > 0))
+                            iPower.FullName =
+                                $"{lvGroup.SelectedItems[0].SubItems[0].Text}{lvSet.SelectedItems[0].SubItems[0].Text}.New_Power";
+                        break;
+                    }
                 case 1 when (lvGroup.SelectedItems.Count > 0) & (lvSet.SelectedItems.Count > 0):
                     iPower.FullName =
                         $"{DatabaseAPI.Database.Classes[lvGroup.SelectedIndices[0]].PrimaryGroup}{lvSet.SelectedItems[0].SubItems[0].Text}.New_Power";
@@ -280,10 +280,10 @@ namespace Hero_Designer.Forms
                 return;
             var database = DatabaseAPI.Database;
             var powerArray =
-                (IPower[]) Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
+                (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
             database.Power = powerArray;
             DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] =
-                new Power(frmEditPower.myPower) {IsNew = true};
+                new Power(frmEditPower.myPower) { IsNew = true };
             UpdateLists();
         }
 
@@ -314,14 +314,14 @@ namespace Hero_Designer.Forms
                 newPower = frmEditPower.myPower;
                 var database = DatabaseAPI.Database;
                 var powerArray =
-                    (IPower[]) Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
+                    (IPower[])Utils.CopyArray(database.Power, new IPower[DatabaseAPI.Database.Power.Length + 1]);
                 database.Power = powerArray;
                 DatabaseAPI.Database.Power[DatabaseAPI.Database.Power.Length - 1] = newPower;
                 //Add the power to the power set otherwise we'll get issues later when upting the UI.
                 if (newPower.PowerSetID > -1)
                 {
                     var powerSet = DatabaseAPI.GetPowersetByName(newPower.FullName);
-                    powerArray = (IPower[]) Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
+                    powerArray = (IPower[])Utils.CopyArray(powerSet.Powers, new IPower[powerSet.Powers.Length + 1]);
                     powerSet.Powers = powerArray;
                     powerArray[powerSet.Powers.Length - 1] = newPower;
                 }
@@ -413,7 +413,7 @@ namespace Hero_Designer.Forms
                 using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
-                IPower newPower = new Power(frmEditPower.myPower) {IsModified = true};
+                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
                 DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
                     return;
@@ -541,11 +541,11 @@ namespace Hero_Designer.Forms
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
-                {
-                    if (lvGroup.SelectedItems.Count > 0)
-                        iSet.FullName = lvGroup.SelectedItems[0].SubItems[0].Text + ".New_Set";
-                    break;
-                }
+                    {
+                        if (lvGroup.SelectedItems.Count > 0)
+                            iSet.FullName = lvGroup.SelectedItems[0].SubItems[0].Text + ".New_Set";
+                        break;
+                    }
                 case 1 when lvGroup.SelectedItems.Count > 0:
                     iSet.FullName = DatabaseAPI.Database.Classes[lvGroup.SelectedIndices[0]].PrimaryGroup + ".New_Set";
                     break;
@@ -553,15 +553,15 @@ namespace Hero_Designer.Forms
 
             iSet.DisplayName = "New Set";
             using var frmEditPowerset = new frmEditPowerset(ref iSet);
-            var num = (int) frmEditPowerset.ShowDialog();
+            var num = (int)frmEditPowerset.ShowDialog();
             if (frmEditPowerset.DialogResult != DialogResult.OK)
                 return;
             var database = DatabaseAPI.Database;
-            var powersetArray = (IPowerset[]) Utils.CopyArray(database.Powersets,
+            var powersetArray = (IPowerset[])Utils.CopyArray(database.Powersets,
                 new IPowerset[DatabaseAPI.Database.Powersets.Length + 1]);
             database.Powersets = powersetArray;
             DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Powersets.Length - 1] =
-                new Powerset(frmEditPowerset.myPS) {IsNew = true, nID = DatabaseAPI.Database.Powersets.Length - 1};
+                new Powerset(frmEditPowerset.myPS) { IsNew = true, nID = DatabaseAPI.Database.Powersets.Length - 1 };
             UpdateLists();
         }
 
@@ -599,7 +599,7 @@ namespace Hero_Designer.Forms
                 DatabaseAPI.Database.Powersets = new IPowerset[DatabaseAPI.Database.Powersets.Length - 2 + 1];
                 var num3 = DatabaseAPI.Database.Powersets.Length - 1;
                 for (var index3 = 0; index3 <= num3; ++index3)
-                    DatabaseAPI.Database.Powersets[index3] = new Powerset(powersetArray[index3]) {nID = index3};
+                    DatabaseAPI.Database.Powersets[index3] = new Powerset(powersetArray[index3]) { nID = index3 };
                 var Powerset = -1;
                 if (lvSet.Items.Count > 0)
                 {
@@ -633,7 +633,7 @@ namespace Hero_Designer.Forms
                 using var frmEditPowerset = new frmEditPowerset(ref powerset);
                 if (frmEditPowerset.ShowDialog() != DialogResult.OK)
                     return;
-                DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.myPS) {IsModified = true};
+                DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.myPS) { IsModified = true };
                 if (DatabaseAPI.Database.Powersets[Powerset].FullName == fullName)
                     return;
                 BusyMsg("Re-Indexing...");
@@ -816,7 +816,7 @@ namespace Hero_Designer.Forms
             {
                 MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                 ProjectData.SetProjectError(ex);
-                var num = (int) MessageBox.Show(ex.Message);
+                var num = (int)MessageBox.Show(ex.Message);
                 ProjectData.ClearProjectError();
             }
         }
@@ -831,44 +831,44 @@ namespace Hero_Designer.Forms
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
-                {
-                    foreach (var powersetGroup in DatabaseAPI.Database.PowersetGroups.Values)
                     {
-                        var imageIndex = -1;
-                        var num = DatabaseAPI.Database.Classes.Length - 1;
-                        for (var index = 0; index <= num; ++index)
+                        foreach (var powersetGroup in DatabaseAPI.Database.PowersetGroups.Values)
                         {
-                            if (!(string.Equals(DatabaseAPI.Database.Classes[index].PrimaryGroup, powersetGroup.Name,
-                                StringComparison.OrdinalIgnoreCase) | string.Equals(
-                                DatabaseAPI.Database.Classes[index].SecondaryGroup,
-                                powersetGroup.Name, StringComparison.OrdinalIgnoreCase)))
-                                continue;
-                            imageIndex = index;
-                            break;
+                            var imageIndex = -1;
+                            var num = DatabaseAPI.Database.Classes.Length - 1;
+                            for (var index = 0; index <= num; ++index)
+                            {
+                                if (!(string.Equals(DatabaseAPI.Database.Classes[index].PrimaryGroup, powersetGroup.Name,
+                                    StringComparison.OrdinalIgnoreCase) | string.Equals(
+                                    DatabaseAPI.Database.Classes[index].SecondaryGroup,
+                                    powersetGroup.Name, StringComparison.OrdinalIgnoreCase)))
+                                    continue;
+                                imageIndex = index;
+                                break;
+                            }
+
+                            if (imageIndex > -1)
+                                lvGroup.Items.Add(new ListViewItem(powersetGroup.Name, imageIndex));
+                            else
+                                lvGroup.Items.Add(powersetGroup.Name);
                         }
 
-                        if (imageIndex > -1)
-                            lvGroup.Items.Add(new ListViewItem(powersetGroup.Name, imageIndex));
-                        else
-                            lvGroup.Items.Add(powersetGroup.Name);
+                        lvGroup.Columns[0].Text = "Group";
+                        lvGroup.Enabled = true;
+                        pnlGroup.Enabled = false;
+                        break;
                     }
-
-                    lvGroup.Columns[0].Text = "Group";
-                    lvGroup.Enabled = true;
-                    pnlGroup.Enabled = false;
-                    break;
-                }
                 case 1:
-                {
-                    var num = DatabaseAPI.Database.Classes.Length - 1;
-                    for (var imageIndex = 0; imageIndex <= num; ++imageIndex)
-                        lvGroup.Items.Add(new ListViewItem(DatabaseAPI.Database.Classes[imageIndex].ClassName,
-                            imageIndex));
-                    lvGroup.Columns[0].Text = "Class";
-                    lvGroup.Enabled = true;
-                    pnlGroup.Enabled = true;
-                    break;
-                }
+                    {
+                        var num = DatabaseAPI.Database.Classes.Length - 1;
+                        for (var imageIndex = 0; imageIndex <= num; ++imageIndex)
+                            lvGroup.Items.Add(new ListViewItem(DatabaseAPI.Database.Classes[imageIndex].ClassName,
+                                imageIndex));
+                        lvGroup.Columns[0].Text = "Class";
+                        lvGroup.Enabled = true;
+                        pnlGroup.Enabled = true;
+                        break;
+                    }
                 default:
                     lvGroup.Columns[0].Text = "";
                     lvGroup.Enabled = false;
@@ -947,78 +947,78 @@ namespace Hero_Designer.Forms
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
-                {
-                    if (lvSet.SelectedItems.Count > 0)
-                        iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text);
-                    break;
-                }
-                case 1:
-                {
-                    if (lvSet.SelectedItems.Count > 0)
                     {
-                        var uidClass = "";
-                        if (lvGroup.SelectedItems.Count > 0)
-                            uidClass = lvGroup.SelectedItems[0].SubItems[0].Text;
-                        iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text, uidClass);
-                    }
-
-                    break;
-                }
-                case 2:
-                {
-                    if (lvSet.SelectedItems.Count > 0)
-                    {
-                        if (lvSet.SelectedItems[0].SubItems[3].Text != "")
+                        if (lvSet.SelectedItems.Count > 0)
                             iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text);
-                        else if (lvSet.SelectedItems[0].SubItems[4].Text != "")
-                            iPowers1 = DatabaseAPI.NidPowers(
-                                (int) Math.Round(Conversion.Val(lvSet.SelectedItems[0].SubItems[4].Text)));
+                        break;
                     }
-
-                    break;
-                }
-                case 4:
-                {
-                    if (lvSet.SelectedItems.Count > 0)
+                case 1:
                     {
-                        var index = lvSet.SelectedItems[0].SubItems[4].Text == ""
-                            ? -1
-                            : (int) Math.Round(Conversion.Val(lvSet.SelectedItems[0].SubItems[4].Text));
-                        if (index > -1)
+                        if (lvSet.SelectedItems.Count > 0)
                         {
-                            iPowers1 = new int[DatabaseAPI.Database.Powersets[index].Power.Length - 1 + 1];
-                            Array.Copy(DatabaseAPI.Database.Powersets[index].Power, iPowers1, iPowers1.Length);
+                            var uidClass = "";
+                            if (lvGroup.SelectedItems.Count > 0)
+                                uidClass = lvGroup.SelectedItems[0].SubItems[0].Text;
+                            iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text, uidClass);
                         }
-                    }
 
-                    break;
-                }
-                case 5:
-                {
-                    var num = DatabaseAPI.Database.Power.Length - 1;
-                    for (var index = 0; index <= num; ++index)
+                        break;
+                    }
+                case 2:
                     {
-                        if (!((DatabaseAPI.Database.Power[index].GroupName == "") |
-                              (DatabaseAPI.Database.Power[index].SetName == "") |
-                              (DatabaseAPI.Database.Power[index].GetPowerSet() == null)))
-                            continue;
-                        iPowers1 = (int[]) Utils.CopyArray(iPowers1, new int[iPowers1.Length + 1]);
-                        iPowers1[iPowers1.Length - 1] = index;
-                    }
+                        if (lvSet.SelectedItems.Count > 0)
+                        {
+                            if (lvSet.SelectedItems[0].SubItems[3].Text != "")
+                                iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text);
+                            else if (lvSet.SelectedItems[0].SubItems[4].Text != "")
+                                iPowers1 = DatabaseAPI.NidPowers(
+                                    (int)Math.Round(Conversion.Val(lvSet.SelectedItems[0].SubItems[4].Text)));
+                        }
 
-                    DisplayFullName = true;
-                    break;
-                }
+                        break;
+                    }
+                case 4:
+                    {
+                        if (lvSet.SelectedItems.Count > 0)
+                        {
+                            var index = lvSet.SelectedItems[0].SubItems[4].Text == ""
+                                ? -1
+                                : (int)Math.Round(Conversion.Val(lvSet.SelectedItems[0].SubItems[4].Text));
+                            if (index > -1)
+                            {
+                                iPowers1 = new int[DatabaseAPI.Database.Powersets[index].Power.Length - 1 + 1];
+                                Array.Copy(DatabaseAPI.Database.Powersets[index].Power, iPowers1, iPowers1.Length);
+                            }
+                        }
+
+                        break;
+                    }
+                case 5:
+                    {
+                        var num = DatabaseAPI.Database.Power.Length - 1;
+                        for (var index = 0; index <= num; ++index)
+                        {
+                            if (!((DatabaseAPI.Database.Power[index].GroupName == "") |
+                                  (DatabaseAPI.Database.Power[index].SetName == "") |
+                                  (DatabaseAPI.Database.Power[index].GetPowerSet() == null)))
+                                continue;
+                            iPowers1 = (int[])Utils.CopyArray(iPowers1, new int[iPowers1.Length + 1]);
+                            iPowers1[iPowers1.Length - 1] = index;
+                        }
+
+                        DisplayFullName = true;
+                        break;
+                    }
                 case 3:
-                {
-                    BusyMsg("Building List...");
-                    iPowers1 = new int[DatabaseAPI.Database.Power.Length - 1 + 1];
-                    var num = DatabaseAPI.Database.Power.Length - 1;
-                    for (var index = 0; index <= num; ++index)
-                        iPowers1[index] = index;
-                    DisplayFullName = true;
-                    break;
-                }
+                    {
+                        BusyMsg("Building List...");
+                        iPowers1 = new int[DatabaseAPI.Database.Power.Length - 1 + 1];
+                        var num = DatabaseAPI.Database.Power.Length - 1;
+                        for (var index = 0; index <= num; ++index)
+                            iPowers1[index] = index;
+                        DisplayFullName = true;
+                        break;
+                    }
             }
 
             lvPower.BeginUpdate();
@@ -1087,32 +1087,32 @@ namespace Hero_Designer.Forms
                 switch (cbFilter.SelectedIndex)
                 {
                     case 4:
-                    {
-                        var numArray3 = Array.Empty<int>();
-                        var num = DatabaseAPI.Database.Powersets.Length - 1;
-                        for (var index = 0; index <= num; ++index)
                         {
-                            if (!((DatabaseAPI.Database.Powersets[index].GetGroup() == null) |
-                                  string.IsNullOrEmpty(DatabaseAPI.Database.Powersets[index].GroupName)))
-                                continue;
-                            int[] iArray2 = {index};
-                            numArray3 = ConcatArray(numArray3, iArray2);
-                        }
+                            var numArray3 = Array.Empty<int>();
+                            var num = DatabaseAPI.Database.Powersets.Length - 1;
+                            for (var index = 0; index <= num; ++index)
+                            {
+                                if (!((DatabaseAPI.Database.Powersets[index].GetGroup() == null) |
+                                      string.IsNullOrEmpty(DatabaseAPI.Database.Powersets[index].GroupName)))
+                                    continue;
+                                int[] iArray2 = { index };
+                                numArray3 = ConcatArray(numArray3, iArray2);
+                            }
 
-                        BuildPowersetImageList(numArray3);
-                        List_Sets_AddBlock(numArray3);
-                        lvSet.Enabled = true;
-                        break;
-                    }
+                            BuildPowersetImageList(numArray3);
+                            List_Sets_AddBlock(numArray3);
+                            lvSet.Enabled = true;
+                            break;
+                        }
                     case 2:
-                    {
-                        BusyMsg("Building List...");
-                        var iSets = DatabaseAPI.NidSets("", "", Enums.ePowerSetType.None);
-                        BuildPowersetImageList(iSets);
-                        List_Sets_AddBlock(iSets);
-                        lvSet.Enabled = true;
-                        break;
-                    }
+                        {
+                            BusyMsg("Building List...");
+                            var iSets = DatabaseAPI.NidSets("", "", Enums.ePowerSetType.None);
+                            BuildPowersetImageList(iSets);
+                            List_Sets_AddBlock(iSets);
+                            lvSet.Enabled = true;
+                            break;
+                        }
                     default:
                         lvSet.Enabled = false;
                         break;

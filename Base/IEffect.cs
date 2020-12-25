@@ -156,13 +156,15 @@ public interface IEffect : IComparable, ICloneable
     float AtrModRange { get; set; }
     float AtrModRechargeTime { get; set; }
     float AtrModSecondaryRange { get; set; }
-    List<KeyValue<string, string>> ActiveConditionals { get; set; }  
+    List<KeyValue<string, string>> ActiveConditionals { get; set; }
     bool Validated { get; set; }
     IPower GetPower();
     void SetPower(IPower power);
 
     bool isDamage();
 
+    void UpdateAttrib();
+    bool ValidateConditional();
     bool ValidateConditional(string powername);
     bool ValidateConditional(string ctype = "", string powername = "");
 

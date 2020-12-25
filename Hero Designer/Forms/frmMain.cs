@@ -169,7 +169,7 @@ namespace Hero_Designer.Forms
         {
             if (MainModule.MidsController.Toon == null) return "";
             if (!stripExt) return LastFileName;
-            
+
             Regex r = new Regex(@"\.(([tT][xX][tT])|([mM][hHxX][dD]))$");
             return r.Replace(LastFileName, "");
         }
@@ -961,7 +961,7 @@ namespace Hero_Designer.Forms
 
             var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, iSetType);
             iCB.SelectedIndex =
-                DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[(int) iSetID], powersetIndexes);
+                DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[(int)iSetID], powersetIndexes);
         }
 
         private void command_ForumImport()
@@ -990,7 +990,7 @@ namespace Hero_Designer.Forms
             {
                 if (str != null && str.Length < 1)
                 {
-                    var num = (int) MessageBox.Show(
+                    var num = (int)MessageBox.Show(
                         "No data. Please check that you copied the build data from the forum correctly and that it's a valid format.",
                         "Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1075,9 +1075,10 @@ namespace Hero_Designer.Forms
             RefreshInfo();
         }
 
+
         private static PowerEntry[] DeepCopyPowerList()
         {
-            return MidsContext.Character.CurrentBuild.Powers.Select(x => (PowerEntry) x.Clone()).ToArray();
+            return MidsContext.Character.CurrentBuild.Powers.Select(x => (PowerEntry)x.Clone()).ToArray();
         }
 
         private Rectangle Dilate(Rectangle irect, int iAdd)
@@ -1138,7 +1139,7 @@ namespace Hero_Designer.Forms
             Rectangle rectangle1;
             for (var i = 0; i <= num1; ++i)
             {
-                point1.X = (int) Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.szSlot.Width * 6) / 2.0);
+                point1.X = (int)Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.szSlot.Width * 6) / 2.0);
                 point1.Y = point2.Y + clsDrawX.OffsetY;
                 ++FlipSlotState[i];
                 var num2 = 1f;
@@ -1166,7 +1167,7 @@ namespace Hero_Designer.Forms
                     var num3 = FlipSlotState[i] / (FlipSteps / 2f);
                     if (num3 > 1.0)
                     {
-                        num2 = (float) (-1.0 * (1.0 - num3));
+                        num2 = (float)(-1.0 * (1.0 - num3));
                         index = slot.Enhancement.Enh;
                         Enh1 = index;
                         Enh2 = slot.FlippedEnhancement.Enh;
@@ -1187,9 +1188,9 @@ namespace Hero_Designer.Forms
                 rectangle1 = new Rectangle(point1.X + 30 * i, point1.Y, 30, 30);
                 if (!(num2 > 0.0))
                     continue;
-                var rectangle2 = new Rectangle((int) Math.Round(rectangle1.X + (30.0 - 30.0 * num2) / 2.0),
+                var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30.0 - 30.0 * num2) / 2.0),
                     rectangle1.Y,
-                    (int) Math.Round(30.0 * num2), 30);
+                    (int)Math.Round(30.0 * num2), 30);
                 rectangle2 = drawing.ScaleDown(rectangle2);
                 rectangle1 = drawing.ScaleDown(rectangle1);
                 if (index > -1)
@@ -1280,7 +1281,7 @@ namespace Hero_Designer.Forms
             return true;
         }
 
-        private void DoRedraw()
+        public void DoRedraw()
         {
             if (drawing == null)
             {
@@ -1293,11 +1294,11 @@ namespace Hero_Designer.Forms
             var flowWidth = width;
             if (flowWidth < drawingArea.Width)
             {
-                scale = flowWidth / (double) drawingArea.Width;
+                scale = flowWidth / (double)drawingArea.Width;
             }
 
             pnlGFX.Width = flowWidth - 10;
-            pnlGFX.Height = (int) Math.Round(drawingArea.Height * scale);
+            pnlGFX.Height = (int)Math.Round(drawingArea.Height * scale);
             pnlGFX.Update();
             pnlGFXFlow.Update();
             NoResizeEvent = false;
@@ -1317,14 +1318,14 @@ namespace Hero_Designer.Forms
             var drawingArea = drawing.GetDrawingArea();
             var drawingWidth = pnlGFXFlow.Width - 30; // num5
             if (drawingWidth < drawingArea.Width)
-                scale = drawingWidth / (double) drawingArea.Width;
-            var drawingHeight = (int) Math.Round(drawingArea.Height * scale);
+                scale = drawingWidth / (double)drawingArea.Width;
+            var drawingHeight = (int)Math.Round(drawingArea.Height * scale);
             pnlGFX.Width = drawingWidth;
             pnlGFX.Height = drawingHeight;
             drawing.bxBuffer.Size = pnlGFX.Size;
             Control pnlGfx = pnlGFX;
             drawing.ReInit(pnlGfx);
-            pnlGFX = (PictureBox) pnlGfx;
+            pnlGFX = (PictureBox)pnlGfx;
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
             pnlGFX.Update();
             pnlGFX.Refresh();
@@ -1611,8 +1612,7 @@ namespace Hero_Designer.Forms
         {
             if (show)
             {
-                if (fRecipe == null)
-                    fRecipe = new frmRecipeViewer(this);
+                fRecipe ??= new frmRecipeViewer(this);
                 fRecipe.SetLocation();
                 fRecipe.Show();
                 FloatUpdate();
@@ -1945,7 +1945,7 @@ namespace Hero_Designer.Forms
                 if (power.SkipMax)
                     continue;
                 var damageValue = power.FXGetDamageValue();
-                if (damageValue > (double) highBase)
+                if (damageValue > (double)highBase)
                     highBase = damageValue;
             }
 
@@ -1955,7 +1955,7 @@ namespace Hero_Designer.Forms
                 if (power.SkipMax)
                     continue;
                 var damageValue = power.FXGetDamageValue();
-                if (damageValue > (double) highBase)
+                if (damageValue > (double)highBase)
                     highBase = damageValue;
             }
 
@@ -2039,7 +2039,7 @@ namespace Hero_Designer.Forms
                 fTotals?.Refresh();
                 SetTitleBar();
                 UpdateColors();
-                
+
                 DoRedraw();
             }
             catch (Exception ex)
@@ -2077,9 +2077,9 @@ namespace Hero_Designer.Forms
                 if (e.Enh != power.Slots[EnhancingSlot].Enhancement.Enh)
                     enhChanged = true;
                 var hasProc = power.HasProc();
-                power.Slots[EnhancingSlot].Enhancement = (I9Slot) e.Clone();
+                power.Slots[EnhancingSlot].Enhancement = (I9Slot)e.Clone();
                 if (e.Enh > -1)
-                    LastEnhPlaced = (I9Slot) e.Clone();
+                    LastEnhPlaced = (I9Slot)e.Clone();
                 if (enhChanged)
                 {
                     if (e.Enh > -1)
@@ -2634,11 +2634,11 @@ namespace Hero_Designer.Forms
 
         private void MiniPaint(ref PaintEventArgs e, Enums.PowersetType iId)
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[(int) iId] == null)
+            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[(int)iId] == null)
                 return;
             var destRect = new RectangleF(1f, (lblLocked0.Height - 16) / 2f, 16f, 16f);
             --destRect.Y;
-            var srcRect = new RectangleF(MidsContext.Character.Powersets[(int) iId].nID * 16, 0.0f, 16f, 16f);
+            var srcRect = new RectangleF(MidsContext.Character.Powersets[(int)iId].nID * 16, 0.0f, 16f, 16f);
             var graphics = e.Graphics;
             graphics.DrawImage(I9Gfx.Powersets.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
             destRect.X = lblLocked0.Width - 19;
@@ -2688,7 +2688,7 @@ namespace Hero_Designer.Forms
             else
             {
                 var str = !MainModule.MidsController.Toon.Locked ? MidsContext.Character.Name : string.Empty;
-                MidsContext.Character.Reset((Archetype) cbAT.SelectedItem, cbOrigin.SelectedIndex);
+                MidsContext.Character.Reset((Archetype)cbAT.SelectedItem, cbOrigin.SelectedIndex);
                 if (MidsContext.Character.Powersets[0].nIDLinkSecondary > -1)
                     MidsContext.Character.Powersets[1] =
                         DatabaseAPI.Database.Powersets[MidsContext.Character.Powersets[0].nIDLinkSecondary];
@@ -3002,12 +3002,16 @@ namespace Hero_Designer.Forms
                         if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
                         {
                             MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = false;
                         }
                         else
                         {
                             var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
                             if ((eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup))
+                            {
                                 MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
+                                MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
+                            }
                         }
 
                         MidsContext.Character.Validate();
@@ -3097,9 +3101,9 @@ namespace Hero_Designer.Forms
 
 
                         var point = new Point(
-                            (int) Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X -
+                            (int)Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X -
                                              I9Picker.Width / 2.0),
-                            (int) Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y -
+                            (int)Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y -
                                              I9Picker.Height / 2.0));
                         if (point.Y < MenuBar.Height)
                             point.Y = MenuBar.Height;
@@ -3193,7 +3197,7 @@ namespace Hero_Designer.Forms
         {
             if (dragdropScenarioAction[index] != 0) return null;
             var (result, remember) = frmOptionListDlg.ShowWithOptions(true, defaultOpt ?? 1, descript, options);
-            dragdropScenarioAction[index] = (short) result;
+            dragdropScenarioAction[index] = (short)result;
             if (remember == true)
                 MidsContext.Config.DragDropScenarioAction[index] = dragdropScenarioAction[index];
             return remember;
@@ -3212,7 +3216,7 @@ namespace Hero_Designer.Forms
                         : frmOptionListDlg.ShowWithOptions(true, 1, "Power is moved or swapped too low",
                             "Move/swap power to its lowest possible level",
                             "Allow power to be moved anyway (mark as invalid)");
-                    dragdropScenarioAction[0] = (short) result;
+                    dragdropScenarioAction[0] = (short)result;
                     if (canOverride)
                         if (dragdropScenarioAction[0] == 2)
                             dragdropScenarioAction[0] = 3;
@@ -3303,7 +3307,7 @@ namespace Hero_Designer.Forms
                 tp[start].NIDPower != -1
                     ? new PowerEntry(DatabaseAPI.Database.Power[tp[start].NIDPower])
                     : new PowerEntry();
-            powerEntry.Slots = (SlotEntry[]) tp[start].Slots.Clone();
+            powerEntry.Slots = (SlotEntry[])tp[start].Slots.Clone();
             powerEntry.Level = tp[start].Level;
             clearPower(tp, start);
             var flag2 = false;
@@ -3432,7 +3436,7 @@ namespace Hero_Designer.Forms
 
         private void PowerPicked(Enums.PowersetType SetID, int nIDPower)
         {
-            MainModule.MidsController.Toon.BuildPower(MidsContext.Character.Powersets[(int) SetID].nID, nIDPower);
+            MainModule.MidsController.Toon.BuildPower(MidsContext.Character.Powersets[(int)SetID].nID, nIDPower);
             PowerModified(true);
             /* Disabled
              * MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
@@ -3546,34 +3550,34 @@ namespace Hero_Designer.Forms
                 switch (mode)
                 {
                     case 1:
-                    {
-                        CheckInitDdsaValue(12, null,
-                            "The power in the destination slot is prevented from being shifted up",
-                            "Unlock and shift all level-locked powers",
-                            "Shift destination power to the first valid and empty slot",
-                            "Swap instead of move");
-                        if (dragdropScenarioAction[12] == 1)
-                            return 0;
-                        if (dragdropScenarioAction[12] == 2)
                         {
-                            dragdropScenarioAction[11] = 2;
-                            return 2;
-                        }
+                            CheckInitDdsaValue(12, null,
+                                "The power in the destination slot is prevented from being shifted up",
+                                "Unlock and shift all level-locked powers",
+                                "Shift destination power to the first valid and empty slot",
+                                "Swap instead of move");
+                            if (dragdropScenarioAction[12] == 1)
+                                return 0;
+                            if (dragdropScenarioAction[12] == 2)
+                            {
+                                dragdropScenarioAction[11] = 2;
+                                return 2;
+                            }
 
-                        if (dragdropScenarioAction[12] != 3 && dragdropScenarioAction[12] == 4)
-                            return 3;
-                        break;
-                    }
+                            if (dragdropScenarioAction[12] != 3 && dragdropScenarioAction[12] == 4)
+                                return 3;
+                            break;
+                        }
                     case 2:
-                    {
-                        CheckInitDdsaValue(11, null, "A power placed at its minimum level is being shifted up",
-                            "Shift it along with the other powers", "Shift other powers around it");
-                        if (dragdropScenarioAction[11] == 1)
-                            return 0;
-                        if (dragdropScenarioAction[11] != 2 && dragdropScenarioAction[11] == 3)
-                            return 1;
-                        break;
-                    }
+                        {
+                            CheckInitDdsaValue(11, null, "A power placed at its minimum level is being shifted up",
+                                "Shift it along with the other powers", "Shift other powers around it");
+                            if (dragdropScenarioAction[11] == 1)
+                                return 0;
+                            if (dragdropScenarioAction[11] != 2 && dragdropScenarioAction[11] == 3)
+                                return 1;
+                            break;
+                        }
                 }
 
             var num5 = tp[22].SlotCount + tp[23].SlotCount;
@@ -3644,8 +3648,8 @@ namespace Hero_Designer.Forms
                             tp[index].Slots
                                 .RemoveLast(); // (SlotEntry[])Utils.CopyArray(tp[index].Slots, (Array)new SlotEntry[tp[index].SlotCount - 2 + 1]);
                 }
-                else if (((num6 != 6 ? 0 : mode < 2 ? 1 : 0) & (dragdropScenarioAction[6] == (short) 3 ? 1 : 0)) != 0 ||
-                         ((num6 != 3 ? 0 : mode < 2 ? 1 : 0) & (dragdropScenarioAction[3] == (short) 3 ? 1 : 0)) != 0 ||
+                else if (((num6 != 6 ? 0 : mode < 2 ? 1 : 0) & (dragdropScenarioAction[6] == (short)3 ? 1 : 0)) != 0 ||
+                         ((num6 != 3 ? 0 : mode < 2 ? 1 : 0) & (dragdropScenarioAction[3] == (short)3 ? 1 : 0)) != 0 ||
                          num6 == 9 && dragdropScenarioAction[9] == 3)
                 {
                     var index1 = start <= finish ? start : finish;
@@ -4422,12 +4426,12 @@ namespace Hero_Designer.Forms
                 else if (num2 >= I9Popup.Width)
                 {
                     x = ObjectBounds.Right;
-                    y = (int) Math.Round(ObjectBounds.Top + ObjectBounds.Height / 2.0 - I9Popup.Height / 2.0);
+                    y = (int)Math.Round(ObjectBounds.Top + ObjectBounds.Height / 2.0 - I9Popup.Height / 2.0);
                 }
                 else if (left >= I9Popup.Width)
                 {
                     x = ObjectBounds.Left - I9Popup.Width;
-                    y = (int) Math.Round(ObjectBounds.Top + ObjectBounds.Height / 2.0 - I9Popup.Height / 2.0);
+                    y = (int)Math.Round(ObjectBounds.Top + ObjectBounds.Height / 2.0 - I9Popup.Height / 2.0);
                 }
                 else
                 {
@@ -4455,7 +4459,7 @@ namespace Hero_Designer.Forms
             }
             else if (true)
             {
-                y = (int) Math.Round(ObjectBounds.Top + ObjectBounds.Height / 2.0 - I9Popup.Height / 2.0);
+                y = (int)Math.Round(ObjectBounds.Top + ObjectBounds.Height / 2.0 - I9Popup.Height / 2.0);
                 if (y < 0)
                     y = 0;
                 var num3 = y + I9Popup.Height;
@@ -4472,7 +4476,7 @@ namespace Hero_Designer.Forms
 
             if (x < 0)
             {
-                x = (int) Math.Round(ObjectBounds.Left + ObjectBounds.Width / 2.0 - I9Popup.Width / 2.0);
+                x = (int)Math.Round(ObjectBounds.Left + ObjectBounds.Width / 2.0 - I9Popup.Width / 2.0);
                 if (left < (I9Popup.Width - ObjectBounds.Width) / 2.0)
                 {
                     x = left;
@@ -4892,9 +4896,9 @@ namespace Hero_Designer.Forms
             };
             rectangle1.Height = 15;
             rectangle1.Width = rectangle1.Height;
-            rectangle1.Y = (int) Math.Round(rectangle2.Top + (rectangle2.Height - rectangle1.Height) / 2.0);
+            rectangle1.Y = (int)Math.Round(rectangle2.Top + (rectangle2.Height - rectangle1.Height) / 2.0);
             rectangle1.X =
-                (int) Math.Round(rectangle2.Right - (rectangle1.Width + (rectangle2.Height - rectangle1.Height) / 2.0));
+                (int)Math.Round(rectangle2.Right - (rectangle1.Width + (rectangle2.Height - rectangle1.Height) / 2.0));
             return (iX > rectangle1.X) & (iX < rectangle1.Right) & (iY > rectangle1.Top) & (iY < rectangle1.Bottom);
         }
 
@@ -4958,10 +4962,10 @@ namespace Hero_Designer.Forms
                 "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 for (var index1 = 0; index1 <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++index1)
-                for (var index2 = 0;
-                    index2 <= MidsContext.Character.CurrentBuild.Powers[index1].Slots.Length - 1;
-                    ++index2)
-                    MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh = -1;
+                    for (var index2 = 0;
+                        index2 <= MidsContext.Character.CurrentBuild.Powers[index1].Slots.Length - 1;
+                        ++index2)
+                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh = -1;
 
                 DoRedraw();
                 RefreshInfo();
@@ -5308,7 +5312,7 @@ namespace Hero_Designer.Forms
             }
             else
             {
-                MessageBox.Show("Popmenu saved.\r\nIf necessary, restart your client for it to be updated.\r\nUse /popmenu " + clsGenFreebies.MenuName  + " to open it.",
+                MessageBox.Show("Popmenu saved.\r\nIf necessary, restart your client for it to be updated.\r\nUse /popmenu " + clsGenFreebies.MenuName + " to open it.",
                     "Woop",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -5908,9 +5912,9 @@ namespace Hero_Designer.Forms
 
             var rectangle = new Rectangle();
             ref var local = ref rectangle;
-            var size = drawing.bxPower[(int) ePowerState].Size;
+            var size = drawing.bxPower[(int)ePowerState].Size;
             var width = size.Width;
-            size = drawing.bxPower[(int) ePowerState].Size;
+            size = drawing.bxPower[(int)ePowerState].Size;
             var height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
             var destRect = new Rectangle(0, 0, pbDynMode.Width, pbDynMode.Height);
@@ -5928,7 +5932,7 @@ namespace Hero_Designer.Forms
                     0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel, drawing.pImageAttributes);
             var height2 = bFont.GetHeight(dmBuffer.Graphics) + 2f;
-            var Bounds = new RectangleF(0.0f, (float) ((pbDynMode.Height - (double) height2) / 2.0), pbDynMode.Width,
+            var Bounds = new RectangleF(0.0f, (float)((pbDynMode.Height - (double)height2) / 2.0), pbDynMode.Width,
                 height2);
             var graphics = dmBuffer.Graphics;
             clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);

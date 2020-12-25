@@ -134,7 +134,7 @@ namespace Hero_Designer.Forms.Controls
             set
             {
                 if (!Enum.IsDefined(typeof(Enums.eVisibleSize), value))
-                    throw new InvalidEnumArgumentException(nameof(value), (int) value, typeof(Enums.eVisibleSize));
+                    throw new InvalidEnumArgumentException(nameof(value), (int)value, typeof(Enums.eVisibleSize));
             }
         }
 
@@ -602,6 +602,7 @@ namespace Hero_Designer.Forms.Controls
 
         private void display_Info(bool NoLevel = false, int iEnhLvl = -1)
         {
+
             if (!NoLevel & (pBase.Level > 0))
                 info_Title.Text = "[" + Convert.ToString(pBase.Level) + "] " + pBase.DisplayName;
             else
@@ -638,6 +639,10 @@ namespace Hero_Designer.Forms.Controls
                 }
             }
 
+            foreach (var effect in pBase.Effects)
+            {
+                effect.UpdateAttrib();
+            }
             info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, Suffix1,
                 Tip1));
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
@@ -3026,6 +3031,11 @@ namespace Hero_Designer.Forms.Controls
                 num = pBase.VariableMax;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
+            foreach (var effect in MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Effects)
+            {
+                effect.UpdateAttrib();
+                display_Info();
+            }
             if (num == pLastScaleVal)
                 return;
             SetPowerScaler();
@@ -3070,7 +3080,7 @@ namespace Hero_Designer.Forms.Controls
             Info_Damage.ColorBaseStart = Color.Green;
             Info_Damage.ColorEnhEnd = Color.Crimson;
             Info_Damage.ColorEnhStart = Color.DarkRed;
-            
+
             info_DataList.Height = 104;
             lblDmg.Visible = true;
             lblDmg.Top = info_DataList.Bottom + 4;

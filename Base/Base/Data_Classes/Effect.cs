@@ -92,29 +92,29 @@ namespace Base.Data_Classes
         {
             PowerFullName = reader.ReadString();
             UniqueID = reader.ReadInt32();
-            EffectClass = (Enums.eEffectClass) reader.ReadInt32();
-            EffectType = (Enums.eEffectType) reader.ReadInt32();
-            DamageType = (Enums.eDamage) reader.ReadInt32();
-            MezType = (Enums.eMez) reader.ReadInt32();
-            ETModifies = (Enums.eEffectType) reader.ReadInt32();
+            EffectClass = (Enums.eEffectClass)reader.ReadInt32();
+            EffectType = (Enums.eEffectType)reader.ReadInt32();
+            DamageType = (Enums.eDamage)reader.ReadInt32();
+            MezType = (Enums.eMez)reader.ReadInt32();
+            ETModifies = (Enums.eEffectType)reader.ReadInt32();
             Summon = reader.ReadString();
             DelayedTime = reader.ReadSingle();
             Ticks = reader.ReadInt32();
-            Stacking = (Enums.eStacking) reader.ReadInt32();
+            Stacking = (Enums.eStacking)reader.ReadInt32();
             BaseProbability = reader.ReadSingle();
-            Suppression = (Enums.eSuppress) reader.ReadInt32();
+            Suppression = (Enums.eSuppress)reader.ReadInt32();
             Buffable = reader.ReadBoolean();
             Resistible = reader.ReadBoolean();
-            SpecialCase = (Enums.eSpecialCase) reader.ReadInt32();
+            SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
             VariableModifiedOverride = reader.ReadBoolean();
-            PvMode = (Enums.ePvX) reader.ReadInt32();
-            ToWho = (Enums.eToWho) reader.ReadInt32();
-            DisplayPercentageOverride = (Enums.eOverrideBoolean) reader.ReadInt32();
+            PvMode = (Enums.ePvX)reader.ReadInt32();
+            ToWho = (Enums.eToWho)reader.ReadInt32();
+            DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
             Scale = reader.ReadSingle();
             nMagnitude = reader.ReadSingle();
             nDuration = reader.ReadSingle();
-            AttribType = (Enums.eAttribType) reader.ReadInt32();
-            Aspect = (Enums.eAspect) reader.ReadInt32();
+            AttribType = (Enums.eAttribType)reader.ReadInt32();
+            Aspect = (Enums.eAspect)reader.ReadInt32();
             ModifierTable = reader.ReadString();
             nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
             NearGround = reader.ReadBoolean();
@@ -129,7 +129,7 @@ namespace Base.Data_Classes
             Override = reader.ReadString();
             ProcsPerMinute = reader.ReadSingle();
 
-            PowerAttribs = (Enums.ePowerAttribs) reader.ReadInt32();
+            PowerAttribs = (Enums.ePowerAttribs)reader.ReadInt32();
             AtrOrigAccuracy = reader.ReadSingle();
             AtrOrigActivatePeriod = reader.ReadSingle();
             AtrOrigArc = reader.ReadInt32();
@@ -269,7 +269,7 @@ namespace Base.Data_Classes
                 var num1 = BaseProbability;
                 if (ProcsPerMinute > 0.0 && num1 < 0.01 && power != null)
                 {
-                    var num2 = (float) (power.AoEModifier * 0.75 + 0.25);
+                    var num2 = (float)(power.AoEModifier * 0.75 + 0.25);
                     var procsPerMinute = ProcsPerMinute;
                     var Global_Recharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
                     var rechargeval = power.BaseRechargeTime /
@@ -277,11 +277,11 @@ namespace Base.Data_Classes
                     if (power.PowerType == Enums.ePowerType.Click)
                         num1 = Math.Min(
                             Math.Max(procsPerMinute * (rechargeval + power.CastTimeReal) / (60f * num2),
-                                (float) (0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                     else
                         num1 = Math.Min(
                             Math.Max(procsPerMinute * 10 / (60f * num2),
-                                (float) (0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
                 }
 
                 //num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
@@ -691,7 +691,7 @@ namespace Base.Data_Classes
                 case Enums.eEffectType.Defense:
                 case Enums.eEffectType.Resistance:
                 case Enums.eEffectType.Elusivity:
-                    var name1 = Enum.GetName(typeof(Enums.eDamageShort), (Enums.eDamageShort) DamageType);
+                    var name1 = Enum.GetName(typeof(Enums.eDamageShort), (Enums.eDamageShort)DamageType);
                     if (EffectType == Enums.eEffectType.Damage)
                     {
                         if (Ticks > 0)
@@ -722,7 +722,7 @@ namespace Base.Data_Classes
                     str5 = str1 + " " + effectNameShort1 + str3 + str2;
                     break;
                 case Enums.eEffectType.Enhancement:
-                    var str7 = ETModifies != Enums.eEffectType.Mez ? !((ETModifies == Enums.eEffectType.Defense) | (ETModifies == Enums.eEffectType.Resistance)) ? Enums.GetEffectNameShort(ETModifies) : Enums.GetDamageNameShort(DamageType) + " " + Enums.GetEffectNameShort(ETModifies) : Enums.GetMezNameShort((Enums.eMezShort) MezType);
+                    var str7 = ETModifies != Enums.eEffectType.Mez ? !((ETModifies == Enums.eEffectType.Defense) | (ETModifies == Enums.eEffectType.Resistance)) ? Enums.GetEffectNameShort(ETModifies) : Enums.GetDamageNameShort(DamageType) + " " + Enums.GetEffectNameShort(ETModifies) : Enums.GetMezNameShort((Enums.eMezShort)MezType);
                     str5 = str1 + " " + effectNameShort1 + "(" + str7 + ")" + str3 + str2;
                     break;
                 case Enums.eEffectType.GrantPower:
@@ -747,7 +747,7 @@ namespace Base.Data_Classes
                     if (!DisplayPercentage)
                     {
                         str5 = str1 + " (" +
-                               Utilities.FixDP((float) (Mag / (double) MidsContext.Archetype.Hitpoints * 100.0)) +
+                               Utilities.FixDP((float)(Mag / (double)MidsContext.Archetype.Hitpoints * 100.0)) +
                                "%)" + effectNameShort1 + str3 + str2;
                         break;
                     }
@@ -796,8 +796,8 @@ namespace Base.Data_Classes
                     if (DisplayPercentage)
                     {
                         str5 = str1 + " (" +
-                               Utilities.FixDP((float) (MidsContext.Archetype.Hitpoints / 100.0 *
-                                                        (Mag * (double) MidsContext.Archetype.BaseRegen *
+                               Utilities.FixDP((float)(MidsContext.Archetype.Hitpoints / 100.0 *
+                                                        (Mag * (double)MidsContext.Archetype.BaseRegen *
                                                          1.66666662693024))) + " HP/s) " + effectNameShort1 + str3 +
                                str2;
                         break;
@@ -1405,29 +1405,29 @@ namespace Base.Data_Classes
         {
             writer.Write(PowerFullName);
             writer.Write(UniqueID);
-            writer.Write((int) EffectClass);
-            writer.Write((int) EffectType);
-            writer.Write((int) DamageType);
-            writer.Write((int) MezType);
-            writer.Write((int) ETModifies);
+            writer.Write((int)EffectClass);
+            writer.Write((int)EffectType);
+            writer.Write((int)DamageType);
+            writer.Write((int)MezType);
+            writer.Write((int)ETModifies);
             writer.Write(Summon);
             writer.Write(DelayedTime);
             writer.Write(Ticks);
-            writer.Write((int) Stacking);
+            writer.Write((int)Stacking);
             writer.Write(BaseProbability);
-            writer.Write((int) Suppression);
+            writer.Write((int)Suppression);
             writer.Write(Buffable);
             writer.Write(Resistible);
-            writer.Write((int) SpecialCase);
+            writer.Write((int)SpecialCase);
             writer.Write(VariableModifiedOverride);
-            writer.Write((int) PvMode);
-            writer.Write((int) ToWho);
-            writer.Write((int) DisplayPercentageOverride);
+            writer.Write((int)PvMode);
+            writer.Write((int)ToWho);
+            writer.Write((int)DisplayPercentageOverride);
             writer.Write(Scale);
             writer.Write(nMagnitude);
             writer.Write(nDuration);
-            writer.Write((int) AttribType);
-            writer.Write((int) Aspect);
+            writer.Write((int)AttribType);
+            writer.Write((int)Aspect);
             /*DatabaseAPI.Database.EffectIds.RemoveRange(DatabaseAPI.Database.EffectIds.Count - NewEffects.Count,
                 NewEffects.Count);
             DatabaseAPI.Database.EffectIds.AddRange(NewEffects.Except(DatabaseAPI.Database.EffectIds));*/
@@ -1444,7 +1444,7 @@ namespace Base.Data_Classes
             writer.Write(Override);
             writer.Write(ProcsPerMinute);
 
-            writer.Write((int) PowerAttribs);
+            writer.Write((int)PowerAttribs);
             writer.Write(AtrOrigAccuracy);
             writer.Write(AtrOrigActivatePeriod);
             writer.Write(AtrOrigArc);
@@ -1502,8 +1502,8 @@ namespace Base.Data_Classes
                     if (UniqueID < 1)
                         UniqueID = int.Parse(array[34]);
                     PowerFullName = array[0];
-                    Aspect = (Enums.eAspect) Enums.StringToFlaggedEnum(array[2], Aspect, true);
-                    AttribType = (Enums.eAttribType) Enums.StringToFlaggedEnum(array[6], AttribType, true);
+                    Aspect = (Enums.eAspect)Enums.StringToFlaggedEnum(array[2], Aspect, true);
+                    AttribType = (Enums.eAttribType)Enums.StringToFlaggedEnum(array[6], AttribType, true);
                     EffectId = array[37];
                     Reward = array[29];
                     MagnitudeExpression = array[27];
@@ -1517,7 +1517,7 @@ namespace Base.Data_Classes
                     if (Enums.IsEnumValue(array[3], Enums.eEffectType.None))
                     {
                         EffectType =
-                            (Enums.eEffectType) Enums.StringToFlaggedEnum(array[3], Enums.eEffectType.None, true);
+                            (Enums.eEffectType)Enums.StringToFlaggedEnum(array[3], Enums.eEffectType.None, true);
                         switch (Aspect)
                         {
                             case Enums.eAspect.Res:
@@ -1533,7 +1533,7 @@ namespace Base.Data_Classes
                     else if (Enums.IsEnumValue(array[3], Enums.eCSVImport_Damage.None))
                     {
                         DamageType =
-                            (Enums.eDamage) Enums.StringToFlaggedEnum(array[3], Enums.eCSVImport_Damage.None, true);
+                            (Enums.eDamage)Enums.StringToFlaggedEnum(array[3], Enums.eCSVImport_Damage.None, true);
                         switch (Aspect)
                         {
                             case Enums.eAspect.Res:
@@ -1549,7 +1549,7 @@ namespace Base.Data_Classes
                                 EffectType = Enums.eEffectType.Damage;
                                 break;
                             default:
-                                var num = (int) MessageBox.Show(
+                                var num = (int)MessageBox.Show(
                                     "Unable to interpret Damage-based attribute:\n" + array[0],
                                     "Interpretation Failed");
                                 break;
@@ -1558,7 +1558,7 @@ namespace Base.Data_Classes
                     else if (Enums.IsEnumValue(array[3], Enums.eCSVImport_Damage_Def.None))
                     {
                         DamageType =
-                            (Enums.eDamage) Enums.StringToFlaggedEnum(array[3], Enums.eCSVImport_Damage_Def.None, true);
+                            (Enums.eDamage)Enums.StringToFlaggedEnum(array[3], Enums.eCSVImport_Damage_Def.None, true);
                         switch (Aspect)
                         {
                             case Enums.eAspect.Str:
@@ -1572,7 +1572,7 @@ namespace Base.Data_Classes
                     }
                     else if (Enums.IsEnumValue(array[3], Enums.eCSVImport_Damage_Elusivity.None))
                     {
-                        DamageType = (Enums.eDamage) Enums.StringToFlaggedEnum(array[3],
+                        DamageType = (Enums.eDamage)Enums.StringToFlaggedEnum(array[3],
                             Enums.eCSVImport_Damage_Elusivity.None, true);
                         if (Aspect == Enums.eAspect.Str)
                         {
@@ -1580,14 +1580,14 @@ namespace Base.Data_Classes
                         }
                         else
                         {
-                            var num = (int) MessageBox.Show(
+                            var num = (int)MessageBox.Show(
                                 "Unable to interpret Elusivity field - not STR based:\n" + array[0],
                                 "Interpretation Failed");
                         }
                     }
                     else if (Enums.IsEnumValue(array[3], MezType))
                     {
-                        MezType = (Enums.eMez) Enums.StringToFlaggedEnum(array[3], MezType, true);
+                        MezType = (Enums.eMez)Enums.StringToFlaggedEnum(array[3], MezType, true);
                         switch (Aspect)
                         {
                             case Enums.eAspect.Res:
@@ -1604,7 +1604,7 @@ namespace Base.Data_Classes
                                 EffectType = Enums.eEffectType.Mez;
                                 break;
                             default:
-                                var num = (int) MessageBox.Show("Unable to interpret Mez-based attribute:\n" + array[0],
+                                var num = (int)MessageBox.Show("Unable to interpret Mez-based attribute:\n" + array[0],
                                     "Interpretation Failed");
                                 break;
                         }
@@ -1626,14 +1626,14 @@ namespace Base.Data_Classes
                     ProcsPerMinute = float.Parse(array[59]);
                     Ticks = 0;
                     if (float.Parse(array[19]) > 0.0)
-                        Ticks = (int) (1.0 + Math.Floor(nDuration / (double) float.Parse(array[19])));
+                        Ticks = (int)(1.0 + Math.Floor(nDuration / (double)float.Parse(array[19])));
                     DelayedTime = float.Parse(array[15]);
                     Stacking = array[18].ToLower() == "stack" ? Enums.eStacking.Yes : Enums.eStacking.No;
                     BaseProbability = float.Parse(array[20]);
-                    Suppression = (Enums.eSuppress) Enums.StringToFlaggedEnum(array[9].Replace(" ", ","), Suppression);
+                    Suppression = (Enums.eSuppress)Enums.StringToFlaggedEnum(array[9].Replace(" ", ","), Suppression);
                     if (Suppression == Enums.eSuppress.None)
                         Suppression =
-                            (Enums.eSuppress) Enums.StringToFlaggedEnum(array[10].Replace(" ", ","), Suppression);
+                            (Enums.eSuppress)Enums.StringToFlaggedEnum(array[10].Replace(" ", ","), Suppression);
                     Buffable = int.Parse(array[7]) > 0;
                     Resistible = int.Parse(array[8]) > 0;
                     var lower = array[26].ToLower();
@@ -1779,7 +1779,7 @@ namespace Base.Data_Classes
                                 }
                         }
 
-                        label_77:
+                    label_77:
                         if (SpecialCase == Enums.eSpecialCase.None)
                         {
                             var str = lower;
@@ -1843,7 +1843,7 @@ namespace Base.Data_Classes
                         }
                     }
 
-                    label_101:
+                label_101:
                     if (lower.Contains("Electronic target.HasTag?".ToLower()))
                         SpecialCase = Enums.eSpecialCase.Robot;
                     if (lower.IndexOf("source.TeamSize> 1", StringComparison.OrdinalIgnoreCase) > -1)
@@ -2037,7 +2037,7 @@ namespace Base.Data_Classes
         {
             Ticks = 0;
             if (iInterval > 0.0)
-                Ticks = (int) (1.0 + Math.Floor(iDuration / (double) iInterval));
+                Ticks = (int)(1.0 + Math.Floor(iDuration / (double)iInterval));
             return Ticks;
         }
 
@@ -2261,6 +2261,171 @@ namespace Base.Data_Classes
             return Validated;
         }
 
+        public bool ValidateConditional()
+        {
+            var getCondition = new Regex("(:.*)");
+            var getConditionItem = new Regex("(.*:)");
+            foreach (var cVp in ActiveConditionals)
+            {
+                var condition = getCondition.Replace(cVp.Key, "");
+                var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
+                var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
+                var cVal = cVp.Value.Split(' ');
+                switch (condition)
+                {
+                    case "Active":
+                        if (conditionPower != null)
+                        {
+                            cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                        }
+
+                        break;
+                    case "Taken":
+                        if (conditionPower != null)
+                        {
+                            cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
+                                .Equals(Convert.ToBoolean(cVp.Value));
+                        }
+
+                        break;
+                    case "Stacks":
+                        if (conditionPower != null)
+                        {
+                            switch (cVal[0])
+                            {
+                                case "=":
+
+                                    cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
+
+                                    break;
+                                case ">":
+                                    cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
+
+                                    break;
+                                case "<":
+                                    cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
+
+                                    break;
+                            }
+                        }
+
+                        break;
+                    case "Team":
+                        switch (cVal[0])
+                        {
+                            case "=":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
+                                    .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
+                            case ">":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                                    MidsContext.Config.TeamMembers[conditionItemName] >
+                                    Convert.ToInt32(cVal[1]))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
+                            case "<":
+                                if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                                    MidsContext.Config.TeamMembers[conditionItemName] <
+                                    Convert.ToInt32(cVal[1]))
+                                {
+                                    cVp.Validated = true;
+                                }
+                                else
+                                {
+                                    cVp.Validated = false;
+                                }
+
+                                break;
+                        }
+
+                        break;
+                }
+            }
+
+            var validCount = ActiveConditionals.Count(b => b.Validated);
+            var invalidCount = ActiveConditionals.Count(b => !b.Validated);
+            if (ActiveConditionals.Count > 0)
+            {
+                Validated = validCount == ActiveConditionals.Count;
+                if (Validated)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        public void UpdateAttrib()
+        {
+            switch (PowerAttribs)
+            {
+                case Enums.ePowerAttribs.Accuracy:
+                    var conditionsMet = ValidateConditional();
+                    power.Accuracy = conditionsMet ? AtrModAccuracy : AtrOrigAccuracy;
+                    break;
+                case Enums.ePowerAttribs.ActivateInterval:
+                    conditionsMet = ValidateConditional();
+                    power.ActivatePeriod =
+                        conditionsMet ? AtrModActivatePeriod : AtrOrigActivatePeriod;
+                    break;
+                case Enums.ePowerAttribs.Arc:
+                    conditionsMet = ValidateConditional();
+                    power.Arc = conditionsMet ? AtrModArc : AtrOrigArc;
+                    break;
+                case Enums.ePowerAttribs.CastTime:
+                    conditionsMet = ValidateConditional();
+                    power.CastTime = conditionsMet ? AtrModCastTime : AtrOrigCastTime;
+                    break;
+                case Enums.ePowerAttribs.EffectArea:
+                    conditionsMet = ValidateConditional();
+                    power.EffectArea = conditionsMet ? AtrModEffectArea : AtrOrigEffectArea;
+                    break;
+                case Enums.ePowerAttribs.EnduranceCost:
+                    conditionsMet = ValidateConditional();
+                    power.EndCost = conditionsMet ? AtrModEnduranceCost : AtrOrigEnduranceCost;
+                    break;
+                case Enums.ePowerAttribs.InterruptTime:
+                    conditionsMet = ValidateConditional();
+                    power.InterruptTime = conditionsMet ? AtrModInterruptTime : AtrOrigInterruptTime;
+                    break;
+                case Enums.ePowerAttribs.MaxTargets:
+                    conditionsMet = ValidateConditional();
+                    power.MaxTargets = conditionsMet ? AtrModMaxTargets : AtrOrigMaxTargets;
+                    break;
+                case Enums.ePowerAttribs.Radius:
+                    conditionsMet = ValidateConditional();
+                    power.Radius = conditionsMet ? AtrModRadius : AtrOrigRadius;
+                    break;
+                case Enums.ePowerAttribs.Range:
+                    conditionsMet = ValidateConditional();
+                    power.Range = conditionsMet ? AtrModRange : AtrOrigRange;
+                    break;
+                case Enums.ePowerAttribs.RechargeTime:
+                    conditionsMet = ValidateConditional();
+                    power.RechargeTime = conditionsMet ? AtrModRechargeTime : AtrOrigRechargeTime;
+                    break;
+                case Enums.ePowerAttribs.SecondaryRange:
+                    conditionsMet = ValidateConditional();
+                    power.RangeSecondary = conditionsMet ? AtrModSecondaryRange : AtrOrigSecondaryRange;
+                    break;
+            }
+
+        }
         public bool CanInclude()
         {
             if (MidsContext.Character == null | ActiveConditionals == null | ActiveConditionals?.Count == 0)
@@ -3133,7 +3298,7 @@ namespace Base.Data_Classes
             float num1;
             if (MagnitudeExpression.IndexOf(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /", StringComparison.OrdinalIgnoreCase) > -1)
             {
-                var num2 = (float) ((Math.Max(Math.Min(power.RechargeTime, 30f), 0.0f) * 0.800000011920929 + 1.79999995231628) / 5.0) / power.AoEModifier * Scale;
+                var num2 = (float)((Math.Max(Math.Min(power.RechargeTime, 30f), 0.0f) * 0.800000011920929 + 1.79999995231628) / 5.0) / power.AoEModifier * Scale;
                 if (MagnitudeExpression.Length > ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 2)
                 {
                     num2 *= float.Parse(MagnitudeExpression.Substring(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1).Substring(0, 2));
