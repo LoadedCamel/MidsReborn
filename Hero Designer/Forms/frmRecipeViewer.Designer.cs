@@ -60,6 +60,17 @@ namespace Hero_Designer.Forms
             this.lblBoosters = new System.Windows.Forms.Label();
             this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblEnhObtained = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
+            this.ctlPopUp1 = new midsControls.ctlPopUp();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.lblCatalysts = new System.Windows.Forms.Label();
+            this.lblRewardMerits = new System.Windows.Forms.Label();
+            this.imageButton1 = new midsControls.ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecipe)).BeginInit();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
@@ -358,6 +369,128 @@ namespace Hero_Designer.Forms
             this.lblEnhObtained.TabIndex = 1;
             this.lblEnhObtained.Text = "Obtained: 100/100";
             // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Black;
+            this.panel3.Controls.Add(this.panel4);
+            this.panel3.Controls.Add(this.pictureBox4);
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Location = new System.Drawing.Point(12, 244);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(698, 213);
+            this.panel3.TabIndex = 12;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.vScrollBar2);
+            this.panel4.Controls.Add(this.ctlPopUp1);
+            this.panel4.Location = new System.Drawing.Point(0, 38);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(698, 175);
+            this.panel4.TabIndex = 11;
+            // 
+            // vScrollBar2
+            // 
+            this.vScrollBar2.Location = new System.Drawing.Point(679, 0);
+            this.vScrollBar2.Maximum = 20;
+            this.vScrollBar2.Name = "vScrollBar2";
+            this.vScrollBar2.Size = new System.Drawing.Size(17, 175);
+            this.vScrollBar2.TabIndex = 3;
+            // 
+            // ctlPopUp1
+            // 
+            this.ctlPopUp1.BXHeight = 2048;
+            this.ctlPopUp1.ColumnPosition = 0.5F;
+            this.ctlPopUp1.ColumnRight = false;
+            this.ctlPopUp1.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ctlPopUp1.ForeColor = System.Drawing.Color.Black;
+            this.ctlPopUp1.InternalPadding = 3;
+            this.ctlPopUp1.Location = new System.Drawing.Point(3, -17);
+            this.ctlPopUp1.Name = "ctlPopUp1";
+            this.ctlPopUp1.ScrollY = 0F;
+            this.ctlPopUp1.SectionPadding = 8;
+            this.ctlPopUp1.Size = new System.Drawing.Size(692, 175);
+            this.ctlPopUp1.TabIndex = 2;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(60, 30);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 0;
+            this.pictureBox4.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Arial", 17.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label1.Location = new System.Drawing.Point(66, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(632, 30);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Select A Power / Recipe";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.ForeColor = System.Drawing.Color.White;
+            this.checkBox1.Location = new System.Drawing.Point(12, 217);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(176, 16);
+            this.checkBox1.TabIndex = 9;
+            this.checkBox1.Text = "Sort By Level";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Transparent;
+            this.panel5.Controls.Add(this.lblCatalysts);
+            this.panel5.Controls.Add(this.pictureBox5);
+            this.panel5.Controls.Add(this.lblRewardMerits);
+            this.panel5.Controls.Add(this.pictureBox6);
+            this.panel5.Location = new System.Drawing.Point(194, 538);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(372, 32);
+            this.panel5.TabIndex = 18;
+            // 
+            // lblCatalysts
+            // 
+            this.lblCatalysts.AutoSize = true;
+            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblCatalysts.ForeColor = System.Drawing.Color.White;
+            this.lblCatalysts.Location = new System.Drawing.Point(259, 8);
+            this.lblCatalysts.Name = "lblCatalysts";
+            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
+            this.lblCatalysts.TabIndex = 5;
+            this.lblCatalysts.Text = "x50";
+            // 
+            // lblRewardMerits
+            // 
+            this.lblRewardMerits.AutoSize = true;
+            this.lblRewardMerits.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblRewardMerits.ForeColor = System.Drawing.Color.White;
+            this.lblRewardMerits.Location = new System.Drawing.Point(37, 8);
+            this.lblRewardMerits.Name = "lblRewardMerits";
+            this.lblRewardMerits.Size = new System.Drawing.Size(26, 15);
+            this.lblRewardMerits.TabIndex = 3;
+            this.lblRewardMerits.Text = "x50";
+            // 
+            // imageButton1
+            // 
+            this.imageButton1.Checked = false;
+            this.imageButton1.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.imageButton1.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.imageButton1.Location = new System.Drawing.Point(374, 470);
+            this.imageButton1.Name = "imageButton1";
+            this.imageButton1.Size = new System.Drawing.Size(105, 22);
+            this.imageButton1.TabIndex = 19;
+            this.imageButton1.TextOff = "Shopping List >>";
+            this.imageButton1.TextOn = "<< Shopping List";
+            this.imageButton1.Toggle = true;
+            // 
             // frmRecipeViewer
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -414,6 +547,19 @@ namespace Hero_Designer.Forms
         private Label lblEnhObtained;
         private Label lblBoosters;
         private PictureBox pictureBox3;
+        private Panel panel3;
+        private Panel panel4;
+        private VScrollBar vScrollBar2;
+        private midsControls.ctlPopUp ctlPopUp1;
+        private PictureBox pictureBox4;
+        private Label label1;
+        private CheckBox checkBox1;
+        private Panel panel5;
+        private Label lblCatalysts;
+        private PictureBox pictureBox5;
+        private Label lblRewardMerits;
+        private PictureBox pictureBox6;
+        private midsControls.ImageButton imageButton1;
         private Label lblCatalysts;
         private PictureBox pictureBox2;
     }
