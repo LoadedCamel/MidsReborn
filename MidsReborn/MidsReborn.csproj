@@ -2585,11 +2585,11 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Base\mrbBase.csproj">
+    <ProjectReference Include="..\mrbBase\mrbBase.csproj">
       <Project>{78125ad1-c9f8-4fe9-9bdb-5033d5fa76cc}</Project>
       <Name>mrbBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\midsControls\mrbControls.csproj">
+    <ProjectReference Include="..\mrbControls\mrbControls.csproj">
       <Project>{8b762616-ca1e-428a-a62d-e17dd738712d}</Project>
       <Name>mrbControls</Name>
     </ProjectReference>
