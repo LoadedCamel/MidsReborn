@@ -87,9 +87,6 @@ namespace Mids_Reborn.Forms
             this.tsConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.tsUpdateCheck = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsLevelUp = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsDynamic = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.AdvancedToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAdvDBEdit = new System.Windows.Forms.ToolStripMenuItem();
@@ -757,9 +754,6 @@ namespace Mids_Reborn.Forms
             this.tsConfig,
             this.ToolStripSeparator14,
             this.tsUpdateCheck,
-            this.ToolStripSeparator22,
-            this.tsLevelUp,
-            this.tsDynamic,
             this.ToolStripSeparator5,
             this.AdvancedToolStripMenuItem1});
             this.OptionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -785,27 +779,6 @@ namespace Mids_Reborn.Forms
             this.tsUpdateCheck.Size = new System.Drawing.Size(199, 22);
             this.tsUpdateCheck.Text = "Check for &Updates Now";
             this.tsUpdateCheck.Click += new System.EventHandler(this.tsUpdateCheck_Click);
-            // 
-            // ToolStripSeparator22
-            // 
-            this.ToolStripSeparator22.Name = "ToolStripSeparator22";
-            this.ToolStripSeparator22.Size = new System.Drawing.Size(196, 6);
-            // 
-            // tsLevelUp
-            // 
-            this.tsLevelUp.Name = "tsLevelUp";
-            this.tsLevelUp.Size = new System.Drawing.Size(199, 22);
-            this.tsLevelUp.Text = "&Level-Up Mode";
-            this.tsLevelUp.ToolTipText = "Alternate between placing powers and slots, just like levelling up in-game.";
-            this.tsLevelUp.Click += new System.EventHandler(this.tsLevelUp_Click);
-            // 
-            // tsDynamic
-            // 
-            this.tsDynamic.Name = "tsDynamic";
-            this.tsDynamic.Size = new System.Drawing.Size(199, 22);
-            this.tsDynamic.Text = "&Dynamic Mode";
-            this.tsDynamic.ToolTipText = "Place powers and slots in any order.";
-            this.tsDynamic.Click += new System.EventHandler(this.tsDynamic_Click);
             // 
             // ToolStripSeparator5
             // 

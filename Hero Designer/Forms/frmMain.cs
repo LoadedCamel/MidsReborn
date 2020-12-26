@@ -5012,15 +5012,6 @@ namespace Mids_Reborn.Forms
             clsXMLUpdate.BugReportCrytilis();
         }
 
-        private void tsDynamic_Click(object sender, EventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null)
-                return;
-            MidsContext.Config.BuildMode = Enums.dmModes.Dynamic;
-            MidsContext.Character.ResetLevel();
-            PowerModified(false);
-        }
-
         private void OnRelativeClick(Enums.eEnhRelative newVal)
         {
             if (MainModule.MidsController.Toon == null)
@@ -5397,15 +5388,6 @@ namespace Mids_Reborn.Forms
             if (MidsContext.Character.CurrentBuild.SetIOLevels(MidsContext.Config.I9.DefaultIOLevel, true, false))
                 I9Picker.LastLevel = 10;
             DoRedraw();
-        }
-
-        private void tsLevelUp_Click(object sender, EventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null)
-                return;
-            MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
-            MidsContext.Character.ResetLevel();
-            PowerModified(true);
         }
 
         private void tsRecipeViewer_Click(object sender, EventArgs e)
@@ -5943,25 +5925,6 @@ namespace Mids_Reborn.Forms
                 height2);
             var graphics = dmBuffer.Graphics;
             clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
-        }
-
-        private void UpdateDynamicModeInfo()
-        {
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
-            {
-                tsDynamic.Checked = true;
-                tsLevelUp.Checked = false;
-            }
-            else
-            {
-                tsDynamic.Checked = false;
-                tsLevelUp.Checked = true;
-            }
-
-            ibTeam.TextOff = MidsContext.Config.BuildMode != Enums.dmModes.Dynamic
-                ? !MainModule.MidsController.Toon.Complete ? "Level-Up: " + (MidsContext.Character.Level + 1) :
-                "Level-Up"
-                : "Dynamic";
         }
 
         private void UpdateLLColors(ListLabelV3 iList)
