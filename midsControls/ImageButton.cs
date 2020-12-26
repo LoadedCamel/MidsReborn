@@ -6,10 +6,10 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Windows.Forms;
-using Base.Display;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase.Base.Display;
 
-namespace midsControls
+namespace mrbControls
 {
     // Token: 0x0200001C RID: 28
     [DefaultEvent("ButtonClicked")]

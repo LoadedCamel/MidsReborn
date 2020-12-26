@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmData
     {
@@ -31,7 +32,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
         private void InitializeComponent()
         {
             this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
-            this.pInfo = new midsControls.ctlPopUp();
+            this.pInfo = new ctlPopUp();
             this.SuspendLayout();
             this.pInfo.BXHeight = 2048;
             this.pInfo.ColumnPosition = 0.5f;

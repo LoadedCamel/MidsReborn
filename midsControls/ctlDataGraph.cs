@@ -4,10 +4,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 
-namespace midsControls
+namespace mrbControls
 {
     public partial class ctlDataGraph : PictureBox
     {

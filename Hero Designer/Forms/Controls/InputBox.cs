@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Hero_Designer.Forms.Controls
+namespace Mids_Reborn.Forms.Controls
 {
     public class InputBox : Form
     {

@@ -5,7 +5,7 @@ using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace midsControls
+namespace mrbControls
 {
     public sealed partial class ctlColorList : ListBox
     {

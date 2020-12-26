@@ -1,9 +1,9 @@
 using System;
 using System.Drawing;
 using System.IO;
-using Base.Display;
+using mrbBase.Base.Display;
 
-namespace Base.Data_Classes
+namespace mrbBase.Base.Data_Classes
 {
     public class Archetype : IComparable
     {

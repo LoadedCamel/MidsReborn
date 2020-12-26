@@ -7,14 +7,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Display;
-using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
-using Hero_Designer.My;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Display;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmPowerBrowser : Form
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace midsControls
+namespace mrbControls
 {
     partial class ctlProgressBar
     {

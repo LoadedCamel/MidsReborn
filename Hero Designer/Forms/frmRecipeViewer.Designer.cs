@@ -1,7 +1,8 @@
 using System.ComponentModel;
 using System.Windows.Forms;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmRecipeViewer
     {
@@ -44,18 +45,18 @@ namespace Hero_Designer.Forms
             this.lblHeader = new System.Windows.Forms.Label();
             this.Panel1 = new System.Windows.Forms.Panel();
             this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.RecipeInfo = new midsControls.ctlPopUp();
+            this.RecipeInfo = new ctlPopUp();
             this.Panel2 = new System.Windows.Forms.Panel();
             this.chkRecipe = new System.Windows.Forms.CheckBox();
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.ibMiniList = new midsControls.ImageButton();
-            this.ibClipboard = new midsControls.ImageButton();
-            this.ibTopmost = new midsControls.ImageButton();
-            this.ibClose = new midsControls.ImageButton();
-            this.ibEnhCheckMode = new midsControls.ImageButton();
+            this.ibMiniList = new ImageButton();
+            this.ibClipboard = new ImageButton();
+            this.ibTopmost = new ImageButton();
+            this.ibClose = new ImageButton();
+            this.ibEnhCheckMode = new ImageButton();
             this.pSalvageSummary = new System.Windows.Forms.Panel();
             this.lblBoosters = new System.Windows.Forms.Label();
             this.lblCatalysts = new System.Windows.Forms.Label();
@@ -63,13 +64,13 @@ namespace Hero_Designer.Forms
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
-            this.ctlPopUp1 = new midsControls.ctlPopUp();
+            this.ctlPopUp1 = new ctlPopUp();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblRewardMerits = new System.Windows.Forms.Label();
-            this.imageButton1 = new midsControls.ImageButton();
+            this.imageButton1 = new ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecipe)).BeginInit();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
@@ -225,7 +226,7 @@ namespace Hero_Designer.Forms
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::Hero_Designer.Resources.AncientScroll;
+            this.pictureBox1.Image = global::Mids_Reborn.Resources.AncientScroll;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);
@@ -236,7 +237,7 @@ namespace Hero_Designer.Forms
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::Hero_Designer.Resources.EnhancementCatalyst;
+            this.pictureBox2.Image = global::Mids_Reborn.Resources.EnhancementCatalyst;
             this.pictureBox2.Location = new System.Drawing.Point(222, 0);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(32, 32);
@@ -247,7 +248,7 @@ namespace Hero_Designer.Forms
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::Hero_Designer.Resources.EnhancementBooster;
+            this.pictureBox3.Image = global::Mids_Reborn.Resources.EnhancementBooster;
             this.pictureBox3.Location = new System.Drawing.Point(370, 0);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(32, 32);
@@ -540,7 +541,7 @@ namespace Hero_Designer.Forms
         PictureBox pbRecipe;
         ToolTip ToolTip1;
         VScrollBar VScrollBar1;
-        private midsControls.ImageButton ibEnhCheckMode;
+        private ImageButton ibEnhCheckMode;
         private Panel pSalvageSummary;
         private PictureBox pictureBox1;
         private Label lblEnhObtained;
@@ -549,7 +550,7 @@ namespace Hero_Designer.Forms
         private Panel panel3;
         private Panel panel4;
         private VScrollBar vScrollBar2;
-        private midsControls.ctlPopUp ctlPopUp1;
+        private ctlPopUp ctlPopUp1;
         private PictureBox pictureBox4;
         private Label label1;
         private CheckBox checkBox1;
@@ -558,7 +559,7 @@ namespace Hero_Designer.Forms
         private PictureBox pictureBox5;
         private Label lblRewardMerits;
         private PictureBox pictureBox6;
-        private midsControls.ImageButton imageButton1;
+        private ImageButton imageButton1;
         private PictureBox pictureBox2;
     }
 }

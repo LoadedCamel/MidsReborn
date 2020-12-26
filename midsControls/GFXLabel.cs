@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Windows.Forms;
-using Base.Display;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase.Base.Display;
 
-namespace midsControls
+namespace mrbControls
 {
     // Token: 0x02000014 RID: 20
     public class GFXLabel : UserControl

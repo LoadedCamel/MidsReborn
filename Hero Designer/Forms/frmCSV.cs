@@ -1,18 +1,17 @@
-using Base.Data_Classes;
-using Base.Master_Classes;
-using Hero_Designer.Forms.ImportExportItems;
-using Hero_Designer.My;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
+using Mids_Reborn.Forms.ImportExportItems;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmCSV : Form
     {

@@ -1,11 +1,11 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
-using Base.Master_Classes;
+using System.IO;
 using System.Windows.Forms;
-using Hero_Designer;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 
-namespace HeroViewer
+namespace Mids_Reborn
 {
     public static class FreebiesMenu
     {

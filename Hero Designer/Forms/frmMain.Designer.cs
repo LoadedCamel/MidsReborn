@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using System.Windows.Forms;
-using Hero_Designer.Forms.Controls;
-using midsControls;
+using Mids_Reborn.Forms.Controls;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmMain
     {
@@ -176,37 +176,37 @@ namespace Hero_Designer.Forms
             this.TemporaryPowersWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.topPanel = new System.Windows.Forms.Panel();
             this.lblHero = new System.Windows.Forms.Label();
-            this.heroVillain = new midsControls.ImageButton();
-            this.petsButton = new midsControls.ImageButton();
-            this.tempPowersButton = new midsControls.ImageButton();
-            this.accoladeButton = new midsControls.ImageButton();
-            this.incarnateButton = new midsControls.ImageButton();
-            this.prestigeButton = new midsControls.ImageButton();
-            this.ibPvX = new midsControls.ImageButton();
-            this.ibRecipe = new midsControls.ImageButton();
-            this.ibPopup = new midsControls.ImageButton();
+            this.heroVillain = new ImageButton();
+            this.petsButton = new ImageButton();
+            this.tempPowersButton = new ImageButton();
+            this.accoladeButton = new ImageButton();
+            this.incarnateButton = new ImageButton();
+            this.prestigeButton = new ImageButton();
+            this.ibPvX = new ImageButton();
+            this.ibRecipe = new ImageButton();
+            this.ibPopup = new ImageButton();
             this.tsBuildRcv = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.pbDynMode = new System.Windows.Forms.PictureBox();
             this.pnlGFX = new System.Windows.Forms.PictureBox();
             this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblName = new midsControls.GFXLabel();
-            this.lblOrigin = new midsControls.GFXLabel();
-            this.lblAT = new midsControls.GFXLabel();
-            this.llPool0 = new midsControls.ListLabelV3();
-            this.llPool1 = new midsControls.ListLabelV3();
-            this.llSecondary = new midsControls.ListLabelV3();
-            this.llPrimary = new midsControls.ListLabelV3();
-            this.llPool3 = new midsControls.ListLabelV3();
-            this.llPool2 = new midsControls.ListLabelV3();
-            this.llAncillary = new midsControls.ListLabelV3();
-            this.i9Picker = new midsControls.I9Picker();
-            this.I9Popup = new midsControls.ctlPopUp();
-            this.ibTotals = new midsControls.ImageButton();
-            this.ibSlotLevels = new midsControls.ImageButton();
-            this.ibTeam = new midsControls.ImageButton();
-            this.ibSets = new midsControls.ImageButton();
-            this.ibAccolade = new midsControls.ImageButton();
+            this.lblName = new GFXLabel();
+            this.lblOrigin = new GFXLabel();
+            this.lblAT = new GFXLabel();
+            this.llPool0 = new ListLabelV3();
+            this.llPool1 = new ListLabelV3();
+            this.llSecondary = new ListLabelV3();
+            this.llPrimary = new ListLabelV3();
+            this.llPool3 = new ListLabelV3();
+            this.llPool2 = new ListLabelV3();
+            this.llAncillary = new ListLabelV3();
+            this.i9Picker = new I9Picker();
+            this.I9Popup = new ctlPopUp();
+            this.ibTotals = new ImageButton();
+            this.ibSlotLevels = new ImageButton();
+            this.ibTeam = new ImageButton();
+            this.ibSets = new ImageButton();
+            this.ibAccolade = new ImageButton();
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
@@ -1499,7 +1499,7 @@ namespace Hero_Designer.Forms
             this.heroVillain.TextOff = "Hero";
             this.heroVillain.TextOn = "Villain";
             this.heroVillain.Toggle = true;
-            this.heroVillain.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.heroVillain_ButtonClicked);
+            this.heroVillain.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.heroVillain_ButtonClicked);
             // 
             // petsButton
             // 
@@ -1514,7 +1514,7 @@ namespace Hero_Designer.Forms
             this.petsButton.TextOff = "Pet Powers";
             this.petsButton.TextOn = "Pet Powers";
             this.petsButton.Toggle = true;
-            this.petsButton.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.petsButton_ButtonClicked);
+            this.petsButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.petsButton_ButtonClicked);
             // 
             // tempPowersButton
             // 
@@ -1529,7 +1529,7 @@ namespace Hero_Designer.Forms
             this.tempPowersButton.TextOff = "Temp Powers (Off)";
             this.tempPowersButton.TextOn = "Temp Powers (On)";
             this.tempPowersButton.Toggle = true;
-            this.tempPowersButton.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.tempPowersButton_ButtonClicked);
+            this.tempPowersButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.tempPowersButton_ButtonClicked);
             this.tempPowersButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tempPowersButton_MouseDown);
             // 
             // accoladeButton
@@ -1545,7 +1545,7 @@ namespace Hero_Designer.Forms
             this.accoladeButton.TextOff = "Accolades";
             this.accoladeButton.TextOn = "Accolades";
             this.accoladeButton.Toggle = true;
-            this.accoladeButton.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.accoladeButton_ButtonClicked);
+            this.accoladeButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.accoladeButton_ButtonClicked);
             // 
             // incarnateButton
             // 
@@ -1560,7 +1560,7 @@ namespace Hero_Designer.Forms
             this.incarnateButton.TextOff = "Incarnates";
             this.incarnateButton.TextOn = "Incarnates";
             this.incarnateButton.Toggle = true;
-            this.incarnateButton.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.incarnateButton_ButtonClicked);
+            this.incarnateButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.incarnateButton_ButtonClicked);
             // 
             // prestigeButton
             // 
@@ -1575,7 +1575,7 @@ namespace Hero_Designer.Forms
             this.prestigeButton.TextOff = "Prestige Powers";
             this.prestigeButton.TextOn = "Prestige Powers";
             this.prestigeButton.Toggle = true;
-            this.prestigeButton.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.prestige_ButtonClicked);
+            this.prestigeButton.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.prestige_ButtonClicked);
             // 
             // ibPvX
             // 
@@ -1590,7 +1590,7 @@ namespace Hero_Designer.Forms
             this.ibPvX.TextOff = "Mode: PvE";
             this.ibPvX.TextOn = "Mode: PvP";
             this.ibPvX.Toggle = true;
-            this.ibPvX.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibPvX_ButtonClicked);
+            this.ibPvX.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibPvX_ButtonClicked);
             // 
             // ibRecipe
             // 
@@ -1605,7 +1605,7 @@ namespace Hero_Designer.Forms
             this.ibRecipe.TextOff = "Recipes: Off";
             this.ibRecipe.TextOn = "Recipes: On";
             this.ibRecipe.Toggle = true;
-            this.ibRecipe.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibRecipe_ButtonClicked);
+            this.ibRecipe.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibRecipe_ButtonClicked);
             // 
             // ibPopup
             // 
@@ -1620,7 +1620,7 @@ namespace Hero_Designer.Forms
             this.ibPopup.TextOff = "Pop-Up: Off";
             this.ibPopup.TextOn = "Pop-Up: On";
             this.ibPopup.Toggle = true;
-            this.ibPopup.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibPopup_ButtonClicked);
+            this.ibPopup.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibPopup_ButtonClicked);
             // 
             // tsBuildRcv
             // 
@@ -1692,8 +1692,8 @@ namespace Hero_Designer.Forms
             this.llAncillary.SizeNormal = new System.Drawing.Size(138, 69);
             this.llAncillary.SuspendRedraw = false;
             this.llAncillary.TabIndex = 110;
-            this.llAncillary.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llAncillary_ItemHover);
-            this.llAncillary.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llAncillary_ItemClick);
+            this.llAncillary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llAncillary_ItemHover);
+            this.llAncillary.ItemClick += new ListLabelV3.ItemClickEventHandler(llAncillary_ItemClick);
             // 
             // llPool0
             // 
@@ -1714,10 +1714,10 @@ namespace Hero_Designer.Forms
             this.llPool0.SizeNormal = new System.Drawing.Size(136, 69);
             this.llPool0.SuspendRedraw = false;
             this.llPool0.TabIndex = 34;
-            this.llPool0.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llPool0_ItemHover);
-            this.llPool0.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llPool0_ItemClick);
+            this.llPool0.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool0_ItemHover);
+            this.llPool0.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool0_ItemClick);
             this.llPool0.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool0.EmptyHover += new midsControls.ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool0.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool1
             // 
@@ -1739,10 +1739,10 @@ namespace Hero_Designer.Forms
             this.llPool1.SizeNormal = new System.Drawing.Size(136, 69);
             this.llPool1.SuspendRedraw = false;
             this.llPool1.TabIndex = 35;
-            this.llPool1.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llPool1_ItemHover);
-            this.llPool1.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llPool1_ItemClick);
+            this.llPool1.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool1_ItemHover);
+            this.llPool1.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool1_ItemClick);
             this.llPool1.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool1.EmptyHover += new midsControls.ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool1.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llSecondary
             // 
@@ -1763,10 +1763,10 @@ namespace Hero_Designer.Forms
             this.llSecondary.SizeNormal = new System.Drawing.Size(144, 160);
             this.llSecondary.SuspendRedraw = false;
             this.llSecondary.TabIndex = 108;
-            this.llSecondary.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llSecondary_ItemHover);
-            this.llSecondary.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llSecondary_ItemClick);
-            this.llSecondary.EmptyHover += new midsControls.ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
-            this.llSecondary.ExpandChanged += new midsControls.ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
+            this.llSecondary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llSecondary_ItemHover);
+            this.llSecondary.ItemClick += new ListLabelV3.ItemClickEventHandler(llSecondary_ItemClick);
+            this.llSecondary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llSecondary.ExpandChanged += new ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
             // 
             // llPrimary
             // 
@@ -1787,10 +1787,10 @@ namespace Hero_Designer.Forms
             this.llPrimary.SizeNormal = new System.Drawing.Size(144, 160);
             this.llPrimary.SuspendRedraw = false;
             this.llPrimary.TabIndex = 107;
-            this.llPrimary.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llPrimary_ItemHover);
-            this.llPrimary.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llPrimary_ItemClick);
-            this.llPrimary.EmptyHover += new midsControls.ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
-            this.llPrimary.ExpandChanged += new midsControls.ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
+            this.llPrimary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPrimary_ItemHover);
+            this.llPrimary.ItemClick += new ListLabelV3.ItemClickEventHandler(llPrimary_ItemClick);
+            this.llPrimary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPrimary.ExpandChanged += new ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
             // 
             // llPool3
             // 
@@ -1812,10 +1812,10 @@ namespace Hero_Designer.Forms
             this.llPool3.SizeNormal = new System.Drawing.Size(136, 69);
             this.llPool3.SuspendRedraw = false;
             this.llPool3.TabIndex = 37;
-            this.llPool3.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llPool3_ItemHover);
-            this.llPool3.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llPool3_ItemClick);
+            this.llPool3.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool3_ItemHover);
+            this.llPool3.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool3_ItemClick);
             this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool3.EmptyHover += new midsControls.ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool3.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool2
             // 
@@ -1837,10 +1837,10 @@ namespace Hero_Designer.Forms
             this.llPool2.SizeNormal = new System.Drawing.Size(136, 69);
             this.llPool2.SuspendRedraw = false;
             this.llPool2.TabIndex = 36;
-            this.llPool2.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llPool2_ItemHover);
-            this.llPool2.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llPool2_ItemClick);
+            this.llPool2.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool2_ItemHover);
+            this.llPool2.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool2_ItemClick);
             this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool2.EmptyHover += new midsControls.ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool2.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // lblName
             // 
@@ -1885,10 +1885,10 @@ namespace Hero_Designer.Forms
             this.i9Picker.Size = new System.Drawing.Size(198, 235);
             this.i9Picker.TabIndex = 83;
             this.i9Picker.Visible = false;
-            this.i9Picker.EnhancementPicked += new midsControls.I9Picker.EnhancementPickedEventHandler(this.I9Picker_EnhancementPicked);
-            this.i9Picker.HoverEnhancement += new midsControls.I9Picker.HoverEnhancementEventHandler(this.I9Picker_HoverEnhancement);
-            this.i9Picker.HoverSet += new midsControls.I9Picker.HoverSetEventHandler(this.I9Picker_HoverSet);
-            this.i9Picker.Moved += new midsControls.I9Picker.MovedEventHandler(this.I9Picker_Moved);
+            this.i9Picker.EnhancementPicked += new I9Picker.EnhancementPickedEventHandler(this.I9Picker_EnhancementPicked);
+            this.i9Picker.HoverEnhancement += new I9Picker.HoverEnhancementEventHandler(this.I9Picker_HoverEnhancement);
+            this.i9Picker.HoverSet += new I9Picker.HoverSetEventHandler(this.I9Picker_HoverSet);
+            this.i9Picker.Moved += new I9Picker.MovedEventHandler(this.I9Picker_Moved);
             this.i9Picker.MouseDown += new System.Windows.Forms.MouseEventHandler(this.I9Picker_MouseDown);
             this.i9Picker.MouseLeave += new System.EventHandler(this.I9Picker_Hiding);
             // 
@@ -1922,7 +1922,7 @@ namespace Hero_Designer.Forms
             this.ibTotals.TextOff = "View Totals";
             this.ibTotals.TextOn = "Alt Text";
             this.ibTotals.Toggle = false;
-            this.ibTotals.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibTotals_ButtonClicked);
+            this.ibTotals.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTotals_ButtonClicked);
             // 
             // ibSlotLevels
             // 
@@ -1936,7 +1936,7 @@ namespace Hero_Designer.Forms
             this.ibSlotLevels.TextOff = "Slot Levels: Off";
             this.ibSlotLevels.TextOn = "Slot Levels: On";
             this.ibSlotLevels.Toggle = true;
-            this.ibSlotLevels.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibSlotLevels_ButtonClicked);
+            this.ibSlotLevels.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibSlotLevels_ButtonClicked);
             // 
             // ibMode
             // 
@@ -1950,7 +1950,7 @@ namespace Hero_Designer.Forms
             this.ibTeam.TextOff = "Team Members";
             this.ibTeam.TextOn = "Alt Text";
             this.ibTeam.Toggle = false;
-            this.ibTeam.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibTeam_ButtonClicked);
+            this.ibTeam.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTeam_ButtonClicked);
             // 
             // ibSets
             // 
@@ -1964,7 +1964,7 @@ namespace Hero_Designer.Forms
             this.ibSets.TextOff = "View Active Sets";
             this.ibSets.TextOn = "Alt Text";
             this.ibSets.Toggle = false;
-            this.ibSets.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(this.ibSets_ButtonClicked);
+            this.ibSets.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibSets_ButtonClicked);
             // 
             // ibAccolade
             // 

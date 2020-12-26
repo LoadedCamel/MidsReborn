@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using mrbControls;
 
-namespace Hero_Designer.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class frmForum
     {
@@ -62,8 +63,8 @@ namespace Hero_Designer.Forms.ImportExportItems
             this.Label2 = new System.Windows.Forms.Label();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
             this.pbTitle = new System.Windows.Forms.PictureBox();
-            this.IBCancel = new midsControls.ImageButton();
-            this.IBExport = new midsControls.ImageButton();
+            this.IBCancel = new ImageButton();
+            this.IBExport = new ImageButton();
             this.lblRecess = new System.Windows.Forms.Label();
             this.GroupBox1.SuspendLayout();
             this.GroupBox2.SuspendLayout();
@@ -362,7 +363,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             this.IBCancel.TextOff = "Cancel";
             this.IBCancel.TextOn = "Alt Text";
             this.IBCancel.Toggle = false;
-            this.IBCancel.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibCancel_ButtonClicked);
+            this.IBCancel.ButtonClicked += new ImageButton.ButtonClickedEventHandler(ibCancel_ButtonClicked);
             // 
             // ibExport
             // 
@@ -376,7 +377,7 @@ namespace Hero_Designer.Forms.ImportExportItems
             this.IBExport.TextOff = "Export Now";
             this.IBExport.TextOn = "Alt Text";
             this.IBExport.Toggle = false;
-            this.IBExport.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibExport_ButtonClicked);
+            this.IBExport.ButtonClicked += new ImageButton.ButtonClickedEventHandler(ibExport_ButtonClicked);
             this.lblRecess.BackColor = System.Drawing.Color.Black;
             this.lblRecess.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 

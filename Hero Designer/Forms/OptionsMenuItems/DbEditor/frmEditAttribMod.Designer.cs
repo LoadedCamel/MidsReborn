@@ -1,10 +1,7 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Windows.Forms.Design;
+﻿using System.Windows.Forms;
+using mrbControls;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     partial class frmEditAttribMod
     {
@@ -60,7 +57,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.lblRevision = new System.Windows.Forms.NumericUpDown();
             this.lblRevisionDate = new System.Windows.Forms.TextBox();
             this.btnExportJson = new System.Windows.Forms.Button();
-            this.pbGraph = new midsControls.ctlDataGraph();
+            this.pbGraph = new ctlDataGraph();
             ((System.ComponentModel.ISupportInitialize)(this.lblRevision)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).BeginInit();
             this.SuspendLayout();
@@ -423,7 +420,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         private Control[] dgCells;
         private NumericUpDown lblRevision;
         private TextBox lblRevisionDate;
-        private midsControls.ctlDataGraph pbGraph;
+        private ctlDataGraph pbGraph;
         private Button btnExportJson;
     }
 }

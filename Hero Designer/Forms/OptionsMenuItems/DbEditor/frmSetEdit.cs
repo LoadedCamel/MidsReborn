@@ -5,13 +5,14 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Display;
-using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmSetEdit : Form
     {

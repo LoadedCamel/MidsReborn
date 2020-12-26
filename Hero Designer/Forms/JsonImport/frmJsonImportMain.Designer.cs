@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Hero_Designer.Forms.JsonImport
+namespace Mids_Reborn.Forms.JsonImport
 {
     partial class frmJsonImportMain
     {

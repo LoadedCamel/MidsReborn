@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Base.Master_Classes;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public abstract class clsConvertibleUnitValue
     {

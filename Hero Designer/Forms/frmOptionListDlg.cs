@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmOptionListDlg : Form
     {

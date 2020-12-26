@@ -1,13 +1,12 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
-using Base.Master_Classes;
-using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmTweakMatching : Form
     {

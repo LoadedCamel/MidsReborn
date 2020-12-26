@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace midsControls.My
+namespace mrbControls.My
 {
     // Token: 0x02000009 RID: 9
     [CompilerGenerated]

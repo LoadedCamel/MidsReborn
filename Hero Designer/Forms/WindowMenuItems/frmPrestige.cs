@@ -6,14 +6,15 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Display;
-using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using midsControls;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmPrestige : Form
     {

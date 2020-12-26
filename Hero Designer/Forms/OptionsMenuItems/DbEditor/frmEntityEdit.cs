@@ -1,10 +1,9 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
+using mrbBase;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEntityEdit : Form
     {

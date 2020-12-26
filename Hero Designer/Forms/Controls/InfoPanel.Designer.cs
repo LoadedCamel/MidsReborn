@@ -1,4 +1,4 @@
-﻿namespace Hero_Designer.Forms.Controls
+﻿namespace Mids_Reborn.Forms.Controls
 {
 	partial class InfoPanel
 	{

@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer.My.Resources
+namespace Mids_Reborn.My.Resources
 {
     [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [HideModuleName]
@@ -28,6 +28,6 @@ namespace Hero_Designer.My.Resources
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         private static ResourceManager ResourceManager =>
-            resourceMan ??= new ResourceManager("Hero_Designer.Resources", typeof(Resources).Assembly);
+            resourceMan ??= new ResourceManager("Mids_Reborn.Resources", typeof(Resources).Assembly);
     }
 }

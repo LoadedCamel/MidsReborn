@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmIncarnate
     {
@@ -34,22 +35,22 @@ namespace Hero_Designer.Forms
 
             this.Panel1 = new System.Windows.Forms.Panel();
             this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.PopInfo = new midsControls.ctlPopUp();
+            this.PopInfo = new ctlPopUp();
             this.lblLock = new System.Windows.Forms.Label();
             this.Panel2 = new frmIncarnate.CustomPanel();
-            this.LLRight = new midsControls.ListLabelV3();
-            this.LLLeft = new midsControls.ListLabelV3();
-            this.OmegaButton = new midsControls.ImageButton();
-            this.VitaeButton = new midsControls.ImageButton();
-            this.StanceButton = new midsControls.ImageButton();
-            this.GenesisButton = new midsControls.ImageButton();
-            this.hybridBtn = new midsControls.ImageButton();
-            this.destinyBtn = new midsControls.ImageButton();
-            this.loreBtn = new midsControls.ImageButton();
-            this.interfaceBtn = new midsControls.ImageButton();
-            this.judgementBtn = new midsControls.ImageButton();
-            this.alphaBtn = new midsControls.ImageButton();
-            this.ibClose = new midsControls.ImageButton();
+            this.LLRight = new ListLabelV3();
+            this.LLLeft = new ListLabelV3();
+            this.OmegaButton = new ImageButton();
+            this.VitaeButton = new ImageButton();
+            this.StanceButton = new ImageButton();
+            this.GenesisButton = new ImageButton();
+            this.hybridBtn = new ImageButton();
+            this.destinyBtn = new ImageButton();
+            this.loreBtn = new ImageButton();
+            this.interfaceBtn = new ImageButton();
+            this.judgementBtn = new ImageButton();
+            this.alphaBtn = new ImageButton();
+            this.ibClose = new ImageButton();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             this.SuspendLayout();

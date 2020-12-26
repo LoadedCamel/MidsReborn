@@ -1,8 +1,6 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     partial class frmDiscord
     {
@@ -53,7 +51,7 @@ namespace Hero_Designer.Forms
             this.submitButton = new System.Windows.Forms.Button();
             this.btnImages = new System.Windows.Forms.ImageList(this.components);
             this.label6 = new System.Windows.Forms.Label();
-            this.ctlAvatar1 = new midsControls.ctlAvatar();
+            this.ctlAvatar1 = new ctlAvatar();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlAvatar1)).BeginInit();
@@ -335,7 +333,7 @@ namespace Hero_Designer.Forms
             // ctlAvatar1
             // 
             this.ctlAvatar1.BackColor = System.Drawing.Color.White;
-            this.ctlAvatar1.Image = global::Hero_Designer.Resources.defaultAvatar;
+            this.ctlAvatar1.Image = global::Mids_Reborn.Resources.defaultAvatar;
             this.ctlAvatar1.Location = new System.Drawing.Point(6, 3);
             this.ctlAvatar1.Name = "ctlAvatar1";
             this.ctlAvatar1.Size = new System.Drawing.Size(64, 64);
@@ -376,7 +374,7 @@ namespace Hero_Designer.Forms
         }
 
         #endregion
-        private midsControls.ctlAvatar ctlAvatar1;
+        private ctlAvatar ctlAvatar1;
         private System.Windows.Forms.Label lblUsername;
         private System.Windows.Forms.Label lblDiscriminator;
         private System.Windows.Forms.Panel panel1;

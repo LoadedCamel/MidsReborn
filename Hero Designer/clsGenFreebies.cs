@@ -1,11 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Base.Master_Classes;
 using System.Windows.Forms;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public static class clsGenFreebies
     {

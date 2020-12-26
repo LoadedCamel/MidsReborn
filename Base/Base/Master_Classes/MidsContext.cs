@@ -1,20 +1,20 @@
 using System;
-using Base.Data_Classes;
+using mrbBase.Base.Data_Classes;
 
-namespace Base.Master_Classes
+namespace mrbBase.Base.Master_Classes
 {
     public static class MidsContext
     {
         public const string AppName = "Mids' Reborn";
-        private const int AppMajorVersion = 2;
-        private const int AppMinorVersion = 7;
-        private const int AppBuildVersion = 3;
-        private const int AppRevisionVersion = 51;
-        public const string AppAssemblyVersion = "2.7.3.51";
-        public const string AppVersionStatus = "(Alpha)";
+        private const int AppMajorVersion = 3;
+        private const int AppMinorVersion = 0;
+        private const int AppBuildVersion = 0;
+        private const int AppRevisionVersion = 0;
+        public const string AppAssemblyVersion = "3.0.0.0";
+        public const string AppVersionStatus = "(Release Canidate)";
 
-        public const string Title = "Mids' Reborn : Hero Designer";
-        public const string AssemblyName = "Hero Designer.exe";
+        public const string Title = "Mids' Reborn";
+        public const string AssemblyName = "MidsReborn.exe";
         public static int MathLevelBase = 49;
         public static int MathLevelExemp = -1;
 

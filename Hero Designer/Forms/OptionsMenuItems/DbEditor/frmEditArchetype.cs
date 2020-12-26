@@ -1,12 +1,12 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Base.Data_Classes;
 using Microsoft.VisualBasic;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditArchetype : Form
     {

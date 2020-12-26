@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
-using Base.Master_Classes;
-using Hero_Designer.Forms.Controls;
+using Mids_Reborn.Forms.Controls;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RandomString4Net;
 using RestSharp;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public class Toon
     {

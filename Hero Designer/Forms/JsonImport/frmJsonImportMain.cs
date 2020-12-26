@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Hero_Designer.My;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
 using Newtonsoft.Json;
 
-namespace Hero_Designer.Forms.JsonImport
+namespace Mids_Reborn.Forms.JsonImport
 {
     public partial class frmJsonImportMain : Form
     {

@@ -3,12 +3,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Base.Display;
-using Base.Master_Classes;
 using Microsoft.VisualBasic;
-using midsControls;
+using mrbBase;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmTotals : Form
     {

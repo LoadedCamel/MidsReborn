@@ -3,12 +3,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Master_Classes;
 using Microsoft.VisualBasic;
-using midsControls;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmCompare : Form
     {

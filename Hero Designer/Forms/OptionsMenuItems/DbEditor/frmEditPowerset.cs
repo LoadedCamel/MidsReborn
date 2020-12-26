@@ -4,10 +4,10 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using Base.Display;
-using Microsoft.VisualBasic;
+using mrbBase;
+using mrbBase.Base.Display;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditPowerset : Form
     {

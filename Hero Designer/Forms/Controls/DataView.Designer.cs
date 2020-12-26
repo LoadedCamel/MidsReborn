@@ -1,9 +1,8 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using midsControls;
+﻿using System.Windows.Forms;
+using mrbBase;
+using mrbControls;
 
-namespace Hero_Designer.Forms.Controls
+namespace Mids_Reborn.Forms.Controls
 {
     partial class DataView
     {
@@ -36,38 +35,38 @@ namespace Hero_Designer.Forms.Controls
             this.components = new System.ComponentModel.Container();
             this.pnlTabs = new System.Windows.Forms.Panel();
             this.pnlInfo = new System.Windows.Forms.Panel();
-            this.PowerScaler = new midsControls.ctlMultiGraph();
+            this.PowerScaler = new ctlMultiGraph();
             this.info_txtSmall = new System.Windows.Forms.RichTextBox();
             this.lblDmg = new System.Windows.Forms.Label();
-            this.Info_Damage = new midsControls.ctlDamageDisplay();
-            this.info_DataList = new midsControls.ctlPairedList();
+            this.Info_Damage = new ctlDamageDisplay();
+            this.info_DataList = new ctlPairedList();
             this.Info_txtLarge = new System.Windows.Forms.RichTextBox();
-            this.info_Title = new midsControls.GFXLabel();
+            this.info_Title = new GFXLabel();
             this.pnlFX = new System.Windows.Forms.Panel();
-            this.fx_Title = new midsControls.GFXLabel();
+            this.fx_Title = new GFXLabel();
             this.fx_LblHead3 = new System.Windows.Forms.Label();
-            this.fx_List3 = new midsControls.ctlPairedList();
+            this.fx_List3 = new ctlPairedList();
             this.fx_lblHead2 = new System.Windows.Forms.Label();
             this.fx_lblHead1 = new System.Windows.Forms.Label();
-            this.fx_List2 = new midsControls.ctlPairedList();
-            this.fx_List1 = new midsControls.ctlPairedList();
+            this.fx_List2 = new ctlPairedList();
+            this.fx_List1 = new ctlPairedList();
             this.pnlTotal = new System.Windows.Forms.Panel();
             this.lblTotal = new System.Windows.Forms.Label();
-            this.gRes2 = new midsControls.ctlMultiGraph();
-            this.gRes1 = new midsControls.ctlMultiGraph();
-            this.gDef2 = new midsControls.ctlMultiGraph();
-            this.gDef1 = new midsControls.ctlMultiGraph();
-            this.total_Title = new midsControls.GFXLabel();
+            this.gRes2 = new ctlMultiGraph();
+            this.gRes1 = new ctlMultiGraph();
+            this.gDef2 = new ctlMultiGraph();
+            this.gDef1 = new ctlMultiGraph();
+            this.total_Title = new GFXLabel();
             this.total_lblMisc = new System.Windows.Forms.Label();
-            this.total_Misc = new midsControls.ctlPairedList();
+            this.total_Misc = new ctlPairedList();
             this.total_lblRes = new System.Windows.Forms.Label();
             this.total_lblDef = new System.Windows.Forms.Label();
             this.pnlEnh = new System.Windows.Forms.Panel();
             this.pnlEnhInactive = new System.Windows.Forms.Panel();
             this.pnlEnhActive = new System.Windows.Forms.Panel();
-            this.enhNameDisp = new midsControls.GFXLabel();
-            this.enhListing = new midsControls.ctlPairedList();
-            this.Enh_Title = new midsControls.GFXLabel();
+            this.enhNameDisp = new GFXLabel();
+            this.enhListing = new ctlPairedList();
+            this.Enh_Title = new GFXLabel();
             this.dbTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblFloat = new System.Windows.Forms.Label();
             this.lblShrink = new System.Windows.Forms.Label();
@@ -136,7 +135,7 @@ namespace Hero_Designer.Forms.Controls
             this.PowerScaler.Style = Enums.GraphStyle.baseOnly;
             this.PowerScaler.TabIndex = 71;
             this.PowerScaler.TextWidth = 80;
-            this.PowerScaler.BarClick += new midsControls.ctlMultiGraph.BarClickEventHandler(this.PowerScaler_BarClick);
+            this.PowerScaler.BarClick += new ctlMultiGraph.BarClickEventHandler(this.PowerScaler_BarClick);
             // 
             // info_txtSmall
             // 
@@ -208,7 +207,7 @@ namespace Hero_Designer.Forms.Controls
             this.info_DataList.Size = new System.Drawing.Size(292, 104);
             this.info_DataList.TabIndex = 19;
             this.info_DataList.ValueWidth = 55;
-            this.info_DataList.ItemHover += new midsControls.ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.info_DataList.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // Info_txtLarge
             // 
@@ -296,7 +295,7 @@ namespace Hero_Designer.Forms.Controls
             this.fx_List3.Size = new System.Drawing.Size(292, 72);
             this.fx_List3.TabIndex = 27;
             this.fx_List3.ValueWidth = 55;
-            this.fx_List3.ItemHover += new midsControls.ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List3.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // fx_lblHead2
             // 
@@ -339,7 +338,7 @@ namespace Hero_Designer.Forms.Controls
             this.fx_List2.Size = new System.Drawing.Size(292, 72);
             this.fx_List2.TabIndex = 24;
             this.fx_List2.ValueWidth = 55;
-            this.fx_List2.ItemHover += new midsControls.ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List2.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // fx_List1
             // 
@@ -360,7 +359,7 @@ namespace Hero_Designer.Forms.Controls
             this.fx_List1.Size = new System.Drawing.Size(292, 92);
             this.fx_List1.TabIndex = 23;
             this.fx_List1.ValueWidth = 60;
-            this.fx_List1.ItemHover += new midsControls.ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List1.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // pnlTotal
             // 
@@ -571,7 +570,7 @@ namespace Hero_Designer.Forms.Controls
             this.total_Misc.Size = new System.Drawing.Size(292, 60);
             this.total_Misc.TabIndex = 27;
             this.total_Misc.ValueWidth = 55;
-            this.total_Misc.ItemHover += new midsControls.ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.total_Misc.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // total_lblRes
             // 
@@ -663,7 +662,7 @@ namespace Hero_Designer.Forms.Controls
             this.enhListing.Size = new System.Drawing.Size(292, 192);
             this.enhListing.TabIndex = 71;
             this.enhListing.ValueWidth = 65;
-            this.enhListing.ItemHover += new midsControls.ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.enhListing.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // Enh_Title
             // 

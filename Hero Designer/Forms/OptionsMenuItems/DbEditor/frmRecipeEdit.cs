@@ -5,10 +5,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Hero_Designer.My;
 using Microsoft.VisualBasic.CompilerServices;
+using Mids_Reborn.My;
+using mrbBase;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmRecipeEdit : Form
     {

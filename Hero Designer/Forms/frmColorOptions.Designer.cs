@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using midsControls;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     partial class frmColorOptions
     {
@@ -74,7 +74,7 @@ namespace Hero_Designer.Forms
             this.ButtonDefault = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.ButtonOkay = new System.Windows.Forms.Button();
-            this.ctlColorList1 = new midsControls.ctlColorList();
+            this.ctlColorList1 = new ctlColorList();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 

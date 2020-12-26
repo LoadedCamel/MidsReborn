@@ -7,9 +7,9 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
-using Base.Master_Classes;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmUpdate : Form
     {

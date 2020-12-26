@@ -2,12 +2,12 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Base.Display;
-using Base.Master_Classes;
-using Hero_Designer.My;
-using midsControls;
+using Mids_Reborn.My;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class FrmTeam : Form
     {

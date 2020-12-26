@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace midsControls
+namespace mrbControls
 {
     public static class clsCustomBorderHandlers
     {

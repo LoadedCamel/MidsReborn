@@ -1,35 +1,38 @@
 using System.Windows.Forms;
 
-public partial class ZStatus : Form
+namespace mrbBase
 {
-    private Label lblStatus1;
-    private Label lblStatus2;
-    private Label lblTitle;
-
-    public ZStatus()
+    public partial class ZStatus : Form
     {
-        InitializeComponent();
-    }
+        private Label lblStatus1;
+        private Label lblStatus2;
+        private Label lblTitle;
 
-    public string StatusText1
-    {
-        set
+        public ZStatus()
         {
-            if (value == lblStatus1.Text)
-                return;
-            lblStatus1.Text = value;
-            lblStatus1.Refresh();
+            InitializeComponent();
         }
-    }
 
-    public string StatusText2
-    {
-        set
+        public string StatusText1
         {
-            if (value == lblStatus2.Text)
-                return;
-            lblStatus2.Text = value;
-            lblStatus2.Refresh();
+            set
+            {
+                if (value == lblStatus1.Text)
+                    return;
+                lblStatus1.Text = value;
+                lblStatus1.Refresh();
+            }
+        }
+
+        public string StatusText2
+        {
+            set
+            {
+                if (value == lblStatus2.Text)
+                    return;
+                lblStatus2.Text = value;
+                lblStatus2.Refresh();
+            }
         }
     }
 }

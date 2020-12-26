@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Master_Classes;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using midsControls;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmStats : Form
     {

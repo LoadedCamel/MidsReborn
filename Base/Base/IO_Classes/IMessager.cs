@@ -1,4 +1,4 @@
-namespace Base.IO_Classes
+namespace mrbBase.Base.IO_Classes
 {
     public interface IMessager
     {

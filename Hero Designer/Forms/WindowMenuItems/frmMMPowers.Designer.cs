@@ -1,7 +1,8 @@
 using System;
 using System.ComponentModel;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmMMPowers
     {
@@ -36,12 +37,12 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.cbSelPets = new System.Windows.Forms.ComboBox();
             this.Panel1 = new System.Windows.Forms.Panel();
             this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.PopInfo = new midsControls.ctlPopUp();
+            this.PopInfo = new ctlPopUp();
             this.lblLock = new System.Windows.Forms.Label();
-            this.ibClose = new midsControls.ImageButton();
+            this.ibClose = new ImageButton();
             this.Panel2 = new frmIncarnate.CustomPanel();
-            this.llRight = new midsControls.ListLabelV3();
-            this.llLeft = new midsControls.ListLabelV3();
+            this.llRight = new ListLabelV3();
+            this.llLeft = new ListLabelV3();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             this.SuspendLayout();
@@ -123,7 +124,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ibClose.TextOff = "Done";
             this.ibClose.TextOn = "Alt Text";
             this.ibClose.Toggle = false;
-            this.ibClose.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibClose_ButtonClicked);
+            this.ibClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(ibClose_ButtonClicked);
             this.Panel2.AutoScroll = true;
             this.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Panel2.Controls.Add((System.Windows.Forms.Control)this.llRight);
@@ -156,8 +157,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.llRight.SizeNormal = new System.Drawing.Size(198, 120);
             this.llRight.SuspendRedraw = false;
             this.llRight.TabIndex = 111;
-            this.llRight.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llRight_ItemHover);
-            this.llRight.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llRight_ItemClick);
+            this.llRight.ItemHover += new ListLabelV3.ItemHoverEventHandler(llRight_ItemHover);
+            this.llRight.ItemClick += new ListLabelV3.ItemClickEventHandler(llRight_ItemClick);
             this.llRight.MouseEnter += new System.EventHandler(llRight_MouseEnter);
             this.llLeft.AutoSize = true;
             this.llLeft.Expandable = false;
@@ -181,8 +182,8 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.llLeft.SuspendRedraw = false;
             this.llLeft.TabIndex = 110;
             this.llLeft.MouseEnter += new System.EventHandler(llLeft_MouseEnter);
-            this.llLeft.ItemHover += new midsControls.ListLabelV3.ItemHoverEventHandler(llLeft_ItemHover);
-            this.llLeft.ItemClick += new midsControls.ListLabelV3.ItemClickEventHandler(llLeft_ItemClick);
+            this.llLeft.ItemHover += new ListLabelV3.ItemHoverEventHandler(llLeft_ItemHover);
+            this.llLeft.ItemClick += new ListLabelV3.ItemClickEventHandler(llLeft_ItemClick);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
 

@@ -1,8 +1,6 @@
-﻿
-using System;
-using System.Windows.Forms;
+﻿using mrbControls;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     partial class FrmGCMEditor
     {
@@ -32,7 +30,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-			this.lvModifiers = new midsControls.ctlListViewColored();
+			this.lvModifiers = new ctlListViewColored();
 			this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.btnRemoveMod = new System.Windows.Forms.Button();
 			this.btnAddMod = new System.Windows.Forms.Button();
@@ -157,7 +155,7 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
 
         #endregion
 
-        private midsControls.ctlListViewColored lvModifiers;
+        private ctlListViewColored lvModifiers;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Button btnRemoveMod;
         private System.Windows.Forms.Button btnAddMod;

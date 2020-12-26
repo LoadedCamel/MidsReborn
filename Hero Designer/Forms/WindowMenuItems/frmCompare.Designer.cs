@@ -1,7 +1,9 @@
 
 using System.ComponentModel;
+using mrbBase;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmCompare
     {
@@ -48,9 +50,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.chkMatching = new System.Windows.Forms.CheckBox();
             this.tTip = new System.Windows.Forms.ToolTip(this.components);
             this.btnTweakMatch = new System.Windows.Forms.Button();
-            this.chkOnTop = new midsControls.ImageButton();
-            this.btnClose = new midsControls.ImageButton();
-            this.Graph = new midsControls.ctlMultiGraph();
+            this.chkOnTop = new ImageButton();
+            this.btnClose = new ImageButton();
+            this.Graph = new ctlMultiGraph();
             this.GroupBox4 = new System.Windows.Forms.GroupBox();
             this.lstDisplay = new System.Windows.Forms.ListBox();
             this.GroupBox1.SuspendLayout();
@@ -206,7 +208,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.chkOnTop.TextOff = "Keep On Top";
             this.chkOnTop.TextOn = "Keep On Top";
             this.chkOnTop.Toggle = true;
-            this.chkOnTop.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(chkOnTop_CheckedChanged);
+            this.chkOnTop.ButtonClicked += new ImageButton.ButtonClickedEventHandler(chkOnTop_CheckedChanged);
             this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             this.btnClose.Checked = false;
             this.btnClose.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
@@ -222,7 +224,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.btnClose.TextOff = "Close";
             this.btnClose.TextOn = "Close";
             this.btnClose.Toggle = false;
-            this.btnClose.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(btnClose_ButtonClicked);
+            this.btnClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(btnClose_ButtonClicked);
             this.Graph.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             this.Graph.Border = true;
             this.Graph.Clickable = false;

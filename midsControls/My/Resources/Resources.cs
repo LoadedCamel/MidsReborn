@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace midsControls.My.Resources
+namespace mrbControls.My.Resources
 {
     // Token: 0x02000002 RID: 2
     [CompilerGenerated]

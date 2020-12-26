@@ -1,15 +1,15 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
-using Hero_Designer.My;
+using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using Mids_Reborn.My;
+using mrbBase;
+
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmEntityListing : Form
     {

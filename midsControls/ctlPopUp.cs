@@ -5,10 +5,10 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Windows.Forms;
-using Base.Display;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase.Base.Display;
 
-namespace midsControls
+namespace mrbControls
 {
     // Token: 0x02000013 RID: 19
     [DesignerGenerated]

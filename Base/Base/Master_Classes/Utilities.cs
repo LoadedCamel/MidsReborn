@@ -1,4 +1,4 @@
-namespace Base.Master_Classes
+namespace mrbBase.Base.Master_Classes
 {
     public static class Utilities
     {

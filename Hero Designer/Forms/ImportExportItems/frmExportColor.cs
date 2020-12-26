@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
+using mrbBase;
 
-namespace Hero_Designer.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class frmExportColor : Form
     {

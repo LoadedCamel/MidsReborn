@@ -1,5 +1,5 @@
 ﻿
-namespace midsControls
+namespace mrbControls
 {
     partial class ctlLayeredBar
     {
@@ -30,11 +30,11 @@ namespace midsControls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.panel1 = new midsControls.BarPanel();
-            this.panel2 = new midsControls.BarPanel();
-            this.panel3 = new midsControls.BarPanel();
-            this.panel4 = new midsControls.BarPanel();
-            this.panel5 = new midsControls.BarPanel();
+            this.panel1 = new BarPanel();
+            this.panel2 = new BarPanel();
+            this.panel3 = new BarPanel();
+            this.panel4 = new BarPanel();
+            this.panel5 = new BarPanel();
             this.TTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 

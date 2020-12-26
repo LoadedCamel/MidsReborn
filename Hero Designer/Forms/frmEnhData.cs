@@ -4,15 +4,16 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Display;
-using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
+using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Display;
+
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmEnhData : Form
     {

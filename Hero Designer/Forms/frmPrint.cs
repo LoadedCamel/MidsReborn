@@ -1,13 +1,12 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Drawing.Printing;
 using System.Windows.Forms;
-using Base.Document_Classes;
-using Base.Master_Classes;
-using Microsoft.VisualBasic;
+using mrbBase;
+using mrbBase.Base.Document_Classes;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmPrint : Form
     {

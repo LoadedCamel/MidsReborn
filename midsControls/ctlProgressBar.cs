@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace midsControls
+namespace mrbControls
 {
     public partial class ctlProgressBar : ProgressBar
     {

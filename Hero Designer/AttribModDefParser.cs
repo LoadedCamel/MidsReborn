@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public class AttribModDefParser
     {

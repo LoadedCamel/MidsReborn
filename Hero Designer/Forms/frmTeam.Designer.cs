@@ -1,8 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Windows.Forms;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     partial class FrmTeam
     {
@@ -33,21 +32,21 @@ namespace Hero_Designer.Forms
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.udWidow = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udSoldier = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udCorruptor = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udDominator = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udMastermind = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udStalker = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udBrute = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udSentinel = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udWarshade = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udPeacebringer = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udTanker = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udScrapper = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udDefender = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udController = new Hero_Designer.Forms.EnhancedUpDown();
-            this.udBlaster = new Hero_Designer.Forms.EnhancedUpDown();
+            this.udWidow = new EnhancedUpDown();
+            this.udSoldier = new EnhancedUpDown();
+            this.udCorruptor = new EnhancedUpDown();
+            this.udDominator = new EnhancedUpDown();
+            this.udMastermind = new EnhancedUpDown();
+            this.udStalker = new EnhancedUpDown();
+            this.udBrute = new EnhancedUpDown();
+            this.udSentinel = new EnhancedUpDown();
+            this.udWarshade = new EnhancedUpDown();
+            this.udPeacebringer = new EnhancedUpDown();
+            this.udTanker = new EnhancedUpDown();
+            this.udScrapper = new EnhancedUpDown();
+            this.udDefender = new EnhancedUpDown();
+            this.udController = new EnhancedUpDown();
+            this.udBlaster = new EnhancedUpDown();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -64,7 +63,7 @@ namespace Hero_Designer.Forms
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.udAny = new Hero_Designer.Forms.EnhancedUpDown();
+            this.udAny = new EnhancedUpDown();
             this.label17 = new System.Windows.Forms.Label();
             this.tbTotalTeam = new Syncfusion.Windows.Forms.Tools.IntegerTextBox();
             this.gradientPanel1 = new Syncfusion.Windows.Forms.Tools.GradientPanel();

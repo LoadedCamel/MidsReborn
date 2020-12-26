@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public class ZipProgress
     {

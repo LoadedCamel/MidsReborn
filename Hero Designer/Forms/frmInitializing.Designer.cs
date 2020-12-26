@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     partial class frmInitializing
     {
@@ -32,9 +32,9 @@ namespace Hero_Designer.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.Label1 = new Hero_Designer.Forms.TransparentLabel();
+            this.Label1 = new TransparentLabel();
             this.tmrOp = new System.Windows.Forms.Timer(this.components);
-            this.pictureBox1 = new Hero_Designer.Forms.TransparentPictureBox();
+            this.pictureBox1 = new TransparentPictureBox();
             this.SuspendLayout();
             // 
             // Label1
@@ -60,7 +60,7 @@ namespace Hero_Designer.Forms
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::Hero_Designer.Resources.MRB_Concept;
+            this.pictureBox1.Image = global::Mids_Reborn.Resources.MRB_Concept;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(645, 432);

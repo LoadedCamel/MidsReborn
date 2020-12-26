@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Hero_Designer.My;
-using Import;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Import;
 
-namespace Hero_Designer.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class frmImportEffects : Form
     {

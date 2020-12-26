@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
-using Base.Display;
-using Base.Master_Classes;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
 
-namespace Base.Data_Classes
+namespace mrbBase.Base.Data_Classes
 {
     public class PowerEnhancements
     {

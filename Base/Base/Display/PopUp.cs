@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace Base.Display
+namespace mrbBase.Base.Display
 {
     public static class PopUp
     {

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace Base.Display
+namespace mrbBase.Base.Display
 {
     public class ExtendedBitmap : IDisposable, ICloneable
     {

@@ -5,14 +5,15 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using System.Linq;
-using Base.Display;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase;
+using mrbBase.Base.Display;
 
-namespace midsControls
+namespace mrbControls
 {
     // Token: 0x0200000C RID: 12
     [DefaultEvent("BarClick")]

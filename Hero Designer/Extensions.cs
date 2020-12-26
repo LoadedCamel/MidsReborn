@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public class ListBoxT<T>
     {

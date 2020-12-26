@@ -10,7 +10,7 @@ using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.VisualBasic.MyServices.Internal;
 
-namespace midsControls.My
+namespace mrbControls.My
 {
     // Token: 0x02000005 RID: 5
     [GeneratedCode("MyTemplate", "8.0.0.0")]

@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
-using Base.Master_Classes;
 using Microsoft.Win32;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     // 2 possibilities, the actual direct association, and the open with list options
     public static class FileAssociation

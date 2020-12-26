@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmBusy
     {

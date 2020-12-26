@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Hero_Designer.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class frmImport_SetAssignments
     {

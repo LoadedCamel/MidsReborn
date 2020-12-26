@@ -1,7 +1,8 @@
 using System.ComponentModel;
-using Hero_Designer.Forms.Controls;
+using Mids_Reborn.Forms.Controls;
+using mrbBase;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmFloatingStats
     {

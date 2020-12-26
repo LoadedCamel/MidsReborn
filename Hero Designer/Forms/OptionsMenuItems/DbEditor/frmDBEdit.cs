@@ -1,20 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Base.Master_Classes;
-using Hero_Designer.Forms.JsonImport;
-using Hero_Designer.My;
 using Microsoft.VisualBasic;
+using Mids_Reborn.Forms.JsonImport;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 using Newtonsoft.Json;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmDBEdit : Form
     {

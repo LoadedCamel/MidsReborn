@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditArchetype
     {

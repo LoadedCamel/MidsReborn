@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -7,12 +6,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Base.Display;
-using Hero_Designer.My;
-using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Base.Display;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEnhEdit : Form
     {

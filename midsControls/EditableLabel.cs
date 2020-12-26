@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 
 // https://stackoverflow.com/questions/2309662/editable-label-controls
-namespace midsControls
+namespace mrbControls
 {
     public partial class EditableLabel : Form
     {

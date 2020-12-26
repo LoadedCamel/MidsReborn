@@ -6,9 +6,10 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Base.Display;
+using mrbBase;
+using mrbBase.Base.Display;
 
-namespace midsControls
+namespace mrbControls
 {
     public class ctlDamageDisplay : UserControl
     {

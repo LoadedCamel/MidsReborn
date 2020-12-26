@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmMiniList
     {
@@ -32,7 +33,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
         {
             this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
 
-            this.PInfo = new midsControls.ctlPopUp();
+            this.PInfo = new ctlPopUp();
             this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.SuspendLayout();
             this.PInfo.BXHeight = 2048;

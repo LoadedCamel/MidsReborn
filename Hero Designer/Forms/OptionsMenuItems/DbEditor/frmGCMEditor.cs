@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Hero_Designer.Forms.Controls;
-using midsControls;
+using Mids_Reborn.Forms.Controls;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbControls;
 using Newtonsoft.Json;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class FrmGCMEditor : Form
     {

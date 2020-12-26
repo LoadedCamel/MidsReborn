@@ -1,7 +1,8 @@
 using System.ComponentModel;
 using System.Windows.Forms;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmSetFind
     {
@@ -44,9 +45,9 @@ namespace Hero_Designer.Forms
             this.ColumnHeader6 = new System.Windows.Forms.ColumnHeader();
             this.ilSets = new System.Windows.Forms.ImageList(this.components);
             this.Panel1 = new System.Windows.Forms.Panel();
-            this.ibClose = new midsControls.ImageButton();
-            this.ibTopmost = new midsControls.ImageButton();
-            this.SetInfo = new midsControls.ctlPopUp();
+            this.ibClose = new ImageButton();
+            this.ibTopmost = new ImageButton();
+            this.SetInfo = new ctlPopUp();
             this.Panel1.SuspendLayout();
             this.SuspendLayout();
             this.lvBonus.Columns.AddRange(new System.Windows.Forms.ColumnHeader[1]

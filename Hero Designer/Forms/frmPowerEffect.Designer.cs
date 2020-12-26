@@ -1,9 +1,8 @@
-using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using midsControls;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmPowerEffect
     {
@@ -58,19 +57,19 @@ namespace Hero_Designer.Forms
             this.cbFXClass = new System.Windows.Forms.ComboBox();
             this.cbFXSpecialCase = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lvConditionalOp = new midsControls.ctlListViewColored();
+            this.lvConditionalOp = new ctlListViewColored();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.removeConditional = new System.Windows.Forms.Button();
             this.addConditional = new System.Windows.Forms.Button();
-            this.lvActiveConditionals = new midsControls.ctlListViewColored();
+            this.lvActiveConditionals = new ctlListViewColored();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvConditionalBool = new midsControls.ctlListViewColored();
+            this.lvConditionalBool = new ctlListViewColored();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvConditionalType = new midsControls.ctlListViewColored();
+            this.lvConditionalType = new ctlListViewColored();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvSubConditional = new midsControls.ctlListViewColored();
+            this.lvSubConditional = new ctlListViewColored();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -88,11 +87,11 @@ namespace Hero_Designer.Forms
             this.cbAspect = new System.Windows.Forms.ComboBox();
             this.chkNearGround = new System.Windows.Forms.CheckBox();
             this.lblAffectsCaster = new System.Windows.Forms.Label();
-            this.lvEffectType = new midsControls.ctlListViewColored();
+            this.lvEffectType = new ctlListViewColored();
             this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvSubAttribute = new midsControls.ctlListViewColored();
+            this.lvSubAttribute = new ctlListViewColored();
             this.chSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvSubSub = new midsControls.ctlListViewColored();
+            this.lvSubSub = new ctlListViewColored();
             this.chSubSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Label9 = new System.Windows.Forms.Label();
             this.cmbEffectId = new System.Windows.Forms.ComboBox();

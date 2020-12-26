@@ -1,7 +1,9 @@
 using System.ComponentModel;
 using System.Windows.Forms;
+using mrbBase;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmTotals
     {
@@ -36,13 +38,13 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.lblRes = new System.Windows.Forms.Label();
             this.lblRegenRec = new System.Windows.Forms.Label();
             this.pnlDRHE = new System.Windows.Forms.Panel();
-            this.graphMaxEnd = new midsControls.ctlMultiGraph();
-            this.graphHP = new midsControls.ctlMultiGraph();
-            this.graphDef = new midsControls.ctlMultiGraph();
-            this.graphDrain = new midsControls.ctlMultiGraph();
-            this.graphRes = new midsControls.ctlMultiGraph();
-            this.graphRec = new midsControls.ctlMultiGraph();
-            this.graphRegen = new midsControls.ctlMultiGraph();
+            this.graphMaxEnd = new ctlMultiGraph();
+            this.graphHP = new ctlMultiGraph();
+            this.graphDef = new ctlMultiGraph();
+            this.graphDrain = new ctlMultiGraph();
+            this.graphRes = new ctlMultiGraph();
+            this.graphRec = new ctlMultiGraph();
+            this.graphRegen = new ctlMultiGraph();
             this.Panel1 = new System.Windows.Forms.Panel();
             this.pnlMisc = new System.Windows.Forms.Panel();
             this.rbMSec = new System.Windows.Forms.RadioButton();
@@ -50,28 +52,28 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.rbKPH = new System.Windows.Forms.RadioButton();
             this.rbMPH = new System.Windows.Forms.RadioButton();
             this.lblStealth = new System.Windows.Forms.Label();
-            this.graphStealth = new midsControls.ctlMultiGraph();
-            this.graphAcc = new midsControls.ctlMultiGraph();
-            this.graphToHit = new midsControls.ctlMultiGraph();
+            this.graphStealth = new ctlMultiGraph();
+            this.graphAcc = new ctlMultiGraph();
+            this.graphToHit = new ctlMultiGraph();
             this.lblMisc = new System.Windows.Forms.Label();
-            this.graphMovement = new midsControls.ctlMultiGraph();
+            this.graphMovement = new ctlMultiGraph();
             this.lblMovement = new System.Windows.Forms.Label();
-            this.graphHaste = new midsControls.ctlMultiGraph();
+            this.graphHaste = new ctlMultiGraph();
             this.Panel2 = new System.Windows.Forms.Panel();
-            this.graphElusivity = new midsControls.ctlMultiGraph();
-            this.graphThreat = new midsControls.ctlMultiGraph();
-            this.graphEndRdx = new midsControls.ctlMultiGraph();
-            this.graphDam = new midsControls.ctlMultiGraph();
+            this.graphElusivity = new ctlMultiGraph();
+            this.graphThreat = new ctlMultiGraph();
+            this.graphEndRdx = new ctlMultiGraph();
+            this.graphDam = new ctlMultiGraph();
             this.tab1 = new System.Windows.Forms.PictureBox();
             this.tab0 = new System.Windows.Forms.PictureBox();
             this.pbTopMost = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.pnlStatus = new System.Windows.Forms.Panel();
-            this.graphSRes = new midsControls.ctlMultiGraph();
+            this.graphSRes = new ctlMultiGraph();
             this.lblSRes = new System.Windows.Forms.Label();
-            this.graphSDeb = new midsControls.ctlMultiGraph();
+            this.graphSDeb = new ctlMultiGraph();
             this.lblSDeb = new System.Windows.Forms.Label();
-            this.graphSProt = new midsControls.ctlMultiGraph();
+            this.graphSProt = new ctlMultiGraph();
             this.lblSProt = new System.Windows.Forms.Label();
             this.tab2 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);

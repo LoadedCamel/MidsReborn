@@ -5,13 +5,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Hero_Designer.My;
-using midsControls;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbControls;
 using Newtonsoft.Json;
 using ContentAlignment = System.Drawing.ContentAlignment;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditAttribMod : Form
     {

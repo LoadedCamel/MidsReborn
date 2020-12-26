@@ -1,7 +1,8 @@
 using System;
+using mrbBase;
 using Newtonsoft.Json;
 
-namespace Hero_Designer.My
+namespace Mids_Reborn.My
 {
     internal class MyApplication
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace midsControls
+namespace mrbControls
 {
     partial class ctlListViewColored
     {

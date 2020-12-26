@@ -1,10 +1,9 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
-using midsControls;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmMiniList : Form
     {

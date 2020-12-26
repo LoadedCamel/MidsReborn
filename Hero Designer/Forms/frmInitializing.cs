@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Base.IO_Classes;
+using mrbBase.Base.IO_Classes;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmInitializing : Form, IMessager
     {

@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmDPSCalc
     {
@@ -56,10 +57,10 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.tbDPSOutput = new System.Windows.Forms.TextBox();
             this.Panel2 = new System.Windows.Forms.Panel();
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ibAutoMode = new midsControls.ImageButton();
-            this.ibClear = new midsControls.ImageButton();
-            this.ibTopmost = new midsControls.ImageButton();
-            this.ibClose = new midsControls.ImageButton();
+            this.ibAutoMode = new ImageButton();
+            this.ibClear = new ImageButton();
+            this.ibTopmost = new ImageButton();
+            this.ibClose = new ImageButton();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             this.SuspendLayout();
@@ -220,7 +221,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ibAutoMode.TextOff = "Manual";
             this.ibAutoMode.TextOn = "Alt Text";
             this.ibAutoMode.Toggle = false;
-            this.ibAutoMode.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibAutoMode_ButtonClicked);
+            this.ibAutoMode.ButtonClicked += new ImageButton.ButtonClickedEventHandler(ibAutoMode_ButtonClicked);
             this.ibClear.Checked = false;
             this.ibClear.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
 
@@ -234,7 +235,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ibClear.TextOff = "Clear";
             this.ibClear.TextOn = "Alt Text";
             this.ibClear.Toggle = false;
-            this.ibClear.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibClear_ButtonClicked);
+            this.ibClear.ButtonClicked += new ImageButton.ButtonClickedEventHandler(ibClear_ButtonClicked);
             this.ibTopmost.Checked = true;
             this.ibTopmost.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
 
@@ -248,7 +249,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ibTopmost.TextOff = "Keep On Top";
             this.ibTopmost.TextOn = "Keep On Top";
             this.ibTopmost.Toggle = true;
-            this.ibTopmost.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibTopmost_ButtonClicked);
+            this.ibTopmost.ButtonClicked += new ImageButton.ButtonClickedEventHandler(ibTopmost_ButtonClicked);
             this.ibClose.Checked = false;
             this.ibClose.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
 
@@ -262,7 +263,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.ibClose.TextOff = "Close";
             this.ibClose.TextOn = "Alt Text";
             this.ibClose.Toggle = false;
-            this.ibClose.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(ibClose_ButtonClicked);
+            this.ibClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(ibClose_ButtonClicked);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
 

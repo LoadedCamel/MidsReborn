@@ -1,13 +1,13 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Hero_Designer.My;
 using Microsoft.VisualBasic;
+using Mids_Reborn.My;
+using mrbBase;
 
-namespace Hero_Designer.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class frmImport_Recipe : Form
     {

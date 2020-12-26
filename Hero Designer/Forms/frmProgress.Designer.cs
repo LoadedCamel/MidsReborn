@@ -1,5 +1,5 @@
 ﻿
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     partial class frmProgress
     {

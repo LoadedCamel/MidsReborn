@@ -6,12 +6,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Base.Master_Classes;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmDiscord : Form
     {

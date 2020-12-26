@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using mrbControls;
 
-namespace Hero_Designer.Forms.WindowMenuItems
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmSetViewer
     {
@@ -41,9 +42,9 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.Label1 = new System.Windows.Forms.Label();
             this.rtApplied = new System.Windows.Forms.RichTextBox();
             this.Label2 = new System.Windows.Forms.Label();
-            this.chkOnTop = new midsControls.ImageButton();
-            this.btnClose = new midsControls.ImageButton();
-            this.btnSmall = new midsControls.ImageButton();
+            this.chkOnTop = new ImageButton();
+            this.btnClose = new ImageButton();
+            this.btnSmall = new ImageButton();
             this.SuspendLayout();
             this.lstSets.BackColor = System.Drawing.Color.White;
             this.lstSets.Columns.AddRange(new System.Windows.Forms.ColumnHeader[3]
@@ -139,7 +140,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.chkOnTop.TextOff = "Keep On Top";
             this.chkOnTop.TextOn = "Keep On Top";
             this.chkOnTop.Toggle = true;
-            this.chkOnTop.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(chkOnTop_CheckedChanged);
+            this.chkOnTop.ButtonClicked += new ImageButton.ButtonClickedEventHandler(chkOnTop_CheckedChanged);
 
             this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             this.btnClose.Checked = false;
@@ -154,7 +155,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.btnClose.TextOff = "Close";
             this.btnClose.TextOn = "Close";
             this.btnClose.Toggle = false;
-            this.btnClose.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(btnClose_Click);
+            this.btnClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(btnClose_Click);
             this.btnSmall.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             this.btnSmall.Checked = false;
             this.btnSmall.Font = new System.Drawing.Font("Arial", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
@@ -168,7 +169,7 @@ namespace Hero_Designer.Forms.WindowMenuItems
             this.btnSmall.TextOff = "<< Shrink";
             this.btnSmall.TextOn = ">>";
             this.btnSmall.Toggle = false;
-            this.btnSmall.ButtonClicked += new midsControls.ImageButton.ButtonClickedEventHandler(btnSmall_Click);
+            this.btnSmall.ButtonClicked += new ImageButton.ButtonClickedEventHandler(btnSmall_Click);
 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);

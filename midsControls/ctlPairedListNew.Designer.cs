@@ -1,4 +1,4 @@
-﻿namespace midsControls
+﻿namespace mrbControls
 {
     partial class ctlPairedListNew
     {

@@ -1,6 +1,8 @@
 using System.ComponentModel;
+using mrbBase;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmStats
     {
@@ -42,9 +44,9 @@ namespace Hero_Designer.Forms
             this.cbSet = new System.Windows.Forms.ComboBox();
             this.cbValues = new System.Windows.Forms.ComboBox();
             this.cbStyle = new System.Windows.Forms.ComboBox();
-            this.Graph = new midsControls.ctlMultiGraph();
-            this.chkOnTop = new midsControls.ImageButton();
-            this.btnClose = new midsControls.ImageButton();
+            this.Graph = new ctlMultiGraph();
+            this.chkOnTop = new ImageButton();
+            this.btnClose = new ImageButton();
             this.tbScaleX.BeginInit();
             this.SuspendLayout();
             this.lblKey2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;

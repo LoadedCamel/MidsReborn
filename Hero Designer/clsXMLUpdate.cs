@@ -6,10 +6,11 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
-using Base.Master_Classes;
-using Hero_Designer.Forms;
+using Mids_Reborn.Forms;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public class clsXMLUpdate
     {

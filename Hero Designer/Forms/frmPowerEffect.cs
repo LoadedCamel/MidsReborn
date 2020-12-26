@@ -5,17 +5,14 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Master_Classes;
-using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using midsControls;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmPowerEffect : Form
     {

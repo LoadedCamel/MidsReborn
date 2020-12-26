@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{27BD82DA-4B3E-4D6B-BAEA-BE59A28A96EB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Hero_Designer</RootNamespace>
-    <AssemblyName>Hero Designer</AssemblyName>
+    <RootNamespace>Mids_Reborn</RootNamespace>
+    <AssemblyName>Mids Reborn</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>latest</LangVersion>
     <FileAlignment>512</FileAlignment>
@@ -31,7 +31,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
@@ -2232,10 +2232,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="reborn.ico" />
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Syncfusion.Shared.Base, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
-    <Reference Include="Syncfusion.Shared.Windows, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
-    <Reference Include="Syncfusion.Tools.Base, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
-    <Reference Include="Syncfusion.Tools.Windows, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -2589,13 +2585,13 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Base\Base.csproj">
+    <ProjectReference Include="..\Base\mrbBase.csproj">
       <Project>{78125ad1-c9f8-4fe9-9bdb-5033d5fa76cc}</Project>
-      <Name>Base</Name>
+      <Name>mrbBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\midsControls\midsControls.csproj">
+    <ProjectReference Include="..\midsControls\mrbControls.csproj">
       <Project>{8b762616-ca1e-428a-a62d-e17dd738712d}</Project>
-      <Name>midsControls</Name>
+      <Name>mrbControls</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -2652,6 +2648,12 @@
     </PackageReference>
     <PackageReference Include="RestSharp">
       <Version>106.11.7</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Shared.Windows">
+      <Version>18.4.0.31</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Tools.Windows">
+      <Version>18.4.0.31</Version>
     </PackageReference>
     <PackageReference Include="Zstandard2.Net">
       <Version>1.4.4</Version>

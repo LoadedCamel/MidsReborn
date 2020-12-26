@@ -1,10 +1,9 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class FrmInputLevel : Form
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Base.Data_Classes
+namespace mrbBase.Base.Data_Classes
 {
     public sealed class Database : IDatabase
     {

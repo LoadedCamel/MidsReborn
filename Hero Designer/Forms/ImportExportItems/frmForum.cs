@@ -3,11 +3,11 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Base.Master_Classes;
-using Microsoft.VisualBasic;
-using midsControls;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
+using mrbControls;
 
-namespace Hero_Designer.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class frmForum : Form
     {

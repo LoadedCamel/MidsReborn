@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace midsControls
+namespace mrbControls
 {
     partial class ListLabelV3
     {

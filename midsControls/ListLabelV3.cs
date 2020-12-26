@@ -2,11 +2,11 @@
 using System.Drawing;
 using System.Drawing.Text;
 using System.Windows.Forms;
-using Base.Display;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase.Base.Display;
 
-namespace midsControls
+namespace mrbControls
 {
     public partial class ListLabelV3 : UserControl
     {

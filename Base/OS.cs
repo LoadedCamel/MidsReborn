@@ -1,30 +1,31 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 
-public static class OS
+namespace mrbBase
 {
-    public const string SaveParentFolder = "Mids Reborn Builds";
-
-    private static string AddSlash(string iPath)
-
+    public static class OS
     {
-        return !iPath.EndsWith("\\") ? iPath + "\\" : iPath;
-    }
+        public const string SaveParentFolder = "Mids Reborn Builds";
 
-    public static string GetMyDocumentsPath()
-    {
-        return AddSlash(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
-    }
+        private static string AddSlash(string iPath)
 
-    public static string GetDefaultSaveFolder()
-    {
-        return GetMyDocumentsPath() + "Hero & Villain Builds\\";
-    }
+        {
+            return !iPath.EndsWith("\\") ? iPath + "\\" : iPath;
+        }
 
-    public static string GetApplicationPath()
-    {
-        return AddSlash(Application.StartupPath);
+        public static string GetMyDocumentsPath()
+        {
+            return AddSlash(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+        }
+
+        public static string GetDefaultSaveFolder()
+        {
+            return GetMyDocumentsPath() + "Hero & Villain Builds\\";
+        }
+
+        public static string GetApplicationPath()
+        {
+            return AddSlash(Application.StartupPath);
+        }
     }
 }

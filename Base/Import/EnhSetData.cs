@@ -1,6 +1,6 @@
 using System;
 
-namespace Import
+namespace mrbBase.Import
 {
     public class EnhSetData
     {

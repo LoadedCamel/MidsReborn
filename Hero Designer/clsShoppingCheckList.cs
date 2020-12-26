@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Base.Master_Classes;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     static class clsShoppingCheckList
     {

@@ -5,12 +5,12 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Base.Display;
-using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
-using Hero_Designer.My;
-using Microsoft.VisualBasic;
+using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Base.Display;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmSetListingPvP : Form
     {

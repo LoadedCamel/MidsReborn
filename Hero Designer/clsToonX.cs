@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Display;
-using Base.Master_Classes;
-using midsControls;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
+using mrbControls;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public class clsToonX : Character
     {

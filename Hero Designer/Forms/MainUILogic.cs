@@ -1,7 +1,8 @@
 ﻿using System;
-using Base.Data_Classes;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     // non-mutating OR low var count methods OR anything easily liftable
     // avoid mutation and the service location pattern

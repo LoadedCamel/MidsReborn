@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Hero_Designer.Forms.ImportExportItems
+namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class frmImportEnhSets
     {

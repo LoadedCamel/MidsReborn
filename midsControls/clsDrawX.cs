@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
-using Base.Display;
-using Base.Master_Classes;
-using System.Diagnostics;
+using mrbBase;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
 
-namespace midsControls
+namespace mrbControls
 {
     public class clsDrawX
     {

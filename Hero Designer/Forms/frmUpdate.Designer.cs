@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using midsControls;
+using mrbControls;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     partial class frmUpdate
     {
@@ -32,9 +32,9 @@ namespace Hero_Designer.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.ctlProgressBar1 = new midsControls.ctlProgressBar();
+            this.ctlProgressBar1 = new ctlProgressBar();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.ctlProgressBar2 = new midsControls.ctlProgressBar();
+            this.ctlProgressBar2 = new ctlProgressBar();
             this.SuspendLayout();
             // 
             // ctlProgressBar1

@@ -5,16 +5,17 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Display;
-using Base.Master_Classes;
 using FastDeepCloner;
-using Hero_Designer.Forms.Controls;
-using Import;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Mids_Reborn.Forms.Controls;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
+using mrbBase.Import;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditPower : Form
     {

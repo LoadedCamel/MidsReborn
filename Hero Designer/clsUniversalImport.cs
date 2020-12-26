@@ -1,8 +1,9 @@
 using System;
 using System.Windows.Forms;
-using Base.Master_Classes;
+using mrbBase;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     public class clsUniversalImport
     {

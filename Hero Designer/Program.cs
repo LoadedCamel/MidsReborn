@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
-using Base.Master_Classes;
-using Hero_Designer.Forms;
+using Mids_Reborn.Forms;
+using mrbBase.Base.Master_Classes;
 
-namespace Hero_Designer
+namespace Mids_Reborn
 {
     internal static class Program
     {

@@ -5,10 +5,11 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Base.Display;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase;
+using mrbBase.Base.Display;
 
-namespace midsControls
+namespace mrbControls
 {
     
     public class ctlPairedList : UserControl

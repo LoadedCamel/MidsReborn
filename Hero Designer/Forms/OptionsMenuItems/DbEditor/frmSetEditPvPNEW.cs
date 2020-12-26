@@ -4,12 +4,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Display;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Display;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmSetEditPvPNEW : Form
     {

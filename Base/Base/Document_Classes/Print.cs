@@ -2,9 +2,9 @@ using System;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Windows.Forms;
-using Base.Master_Classes;
+using mrbBase.Base.Master_Classes;
 
-namespace Base.Document_Classes
+namespace mrbBase.Base.Document_Classes
 {
     public class Print : IDisposable
     {

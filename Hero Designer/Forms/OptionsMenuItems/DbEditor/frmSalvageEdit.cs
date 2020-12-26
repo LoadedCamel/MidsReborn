@@ -2,11 +2,12 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Hero_Designer.My;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Mids_Reborn.My;
+using mrbBase;
 
-namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmSalvageEdit : Form
     {

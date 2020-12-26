@@ -12,19 +12,20 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using Base.Data_Classes;
-using Base.Display;
-using Base.Master_Classes;
-using Hero_Designer.Forms.Controls;
-using Hero_Designer.Forms.ImportExportItems;
-using Hero_Designer.Forms.OptionsMenuItems;
-using Hero_Designer.Forms.OptionsMenuItems.DbEditor;
-using Hero_Designer.Forms.WindowMenuItems;
-using Hero_Designer.My;
-using midsControls;
+using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.Forms.ImportExportItems;
+using Mids_Reborn.Forms.OptionsMenuItems;
+using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using Mids_Reborn.Forms.WindowMenuItems;
+using Mids_Reborn.My;
+using mrbBase;
+using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
+using mrbControls;
 using Timer = System.Windows.Forms.Timer;
 
-namespace Hero_Designer.Forms
+namespace Mids_Reborn.Forms
 {
     public partial class frmMain : Form
     {
@@ -4517,14 +4518,19 @@ namespace Hero_Designer.Forms
 
             var str2 = str1 + MidsContext.Title;
             if (!Hero)
+            {
                 str2 = str2.Replace(nameof(Hero), "Villain");
+            }
+
             if (MidsContext.Config.MasterMode)
-                Text =
-                    $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion} {MidsContext.AppVersionStatus} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+            {
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0","")} {MidsContext.AppVersionStatus} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+            }
             else
                 //this.Text = str2 + " v" + MidsContext.AppAssemblyVersion + " (Database Issue: " + DatabaseAPI.Database.Issue + " - Updated: " + DatabaseAPI.Database.Date.ToString("dd/MM/yy") + ")";
-                Text =
-                    $@"{str2} v{MidsContext.AppAssemblyVersion} {MidsContext.AppVersionStatus} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+            {
+                Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+            }
         }
 
         private static void ShallowCopyPowerList(PowerEntry[] source)

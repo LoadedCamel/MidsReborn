@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Base.Master_Classes;
-using Newtonsoft.Json;
+using mrbBase.Base.Master_Classes;
 
-namespace Base.Data_Classes
+namespace mrbBase.Base.Data_Classes
 {
     public class Effect : IEffect, IComparable, ICloneable
     {

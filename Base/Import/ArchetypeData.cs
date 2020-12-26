@@ -1,7 +1,7 @@
 using System;
-using Base.Data_Classes;
+using mrbBase.Base.Data_Classes;
 
-namespace Import
+namespace mrbBase.Import
 {
     public class ArchetypeData
     {
