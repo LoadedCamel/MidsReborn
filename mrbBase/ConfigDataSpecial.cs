@@ -9,7 +9,7 @@ namespace mrbBase
     public class ConfigDataSpecial
     {
         public Dictionary<string, object> Auth { get; set; }
-        public Dictionary<string, List<string>> ValidatedServers { get; set; }
+        public Dictionary<string, List<string>> ValidatedServers { get; set; } = new Dictionary<string, List<string>>();
         public Dictionary<string, object> User { get; set; }
         public Dictionary<string, Dictionary<string, string>> Servers { get; set; }
         public Dictionary<string, object> BotUser { get; set; }

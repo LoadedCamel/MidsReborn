@@ -9,6 +9,7 @@ namespace mrbControls
 {
     public sealed partial class ctlEnhTabControl : TabControlAdv
     {
+        
         [Description("Enables Tab Text Outlinning")]
         [Category("Tab Enhancements")]
         [Browsable(true)]
@@ -51,6 +52,7 @@ namespace mrbControls
 
         public ctlEnhTabControl()
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzczMTM1QDMxMzgyZTM0MmUzME9URGZHeHFrdFFwZlhxQnZITjlreGZGek96bldQRGpPSmFDd3VWQ1lBaUU9");
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
             DrawItem += DrawItems;

@@ -20,7 +20,7 @@ namespace Mids_Reborn.Forms
         private List<string> defList { get; set; }
         private List<string> resList { get; set; }
         private List<string> misList { get; set; }
-        public List<ValidServer> ValidServers { get; set; }
+        private List<ValidServer> ValidServers { get; set; } = new List<ValidServer>();
 
         private int GetCheckedCount()
         {
@@ -177,7 +177,6 @@ namespace Mids_Reborn.Forms
 
         private void PopulateServerData()
         {
-            ValidServers = new List<ValidServer>();
             foreach (var kvp in MidsContext.ConfigSp.ValidatedServers)
             {
                 ValidServers.Add(new ValidServer { Name = kvp.Key, Channels = kvp.Value });
