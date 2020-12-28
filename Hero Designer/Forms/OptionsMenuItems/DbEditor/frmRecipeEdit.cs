@@ -870,14 +870,75 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.Database.Recipes[RecipeID()].IsHidden = state;
         }
 
+        private void cbSal_Enter_UpdateSubRecipe(int idx)
+        {
+            groupBox4.Visible = cbIsRecipe0.Checked;
+            label4.Text = "Sub-recipe components(Ingredient #1):";
+            var subRecipe = DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].RecipeIdx[idx]];
+            var mainLevel = DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].Level;
+            var subRecipeEntry = subRecipe.Item.Where(item => item.Level == mainLevel).DefaultIfEmpty(subRecipe.Item[0]).First();
+            lstSubRecipeComponents.Items.Clear();
+            for (var i = 0; i < subRecipeEntry.Salvage.Length; i++)
+            {
+                if (subRecipeEntry.SalvageIdx[i] <= -1) continue;
+                lstSubRecipeComponents.Items.Add(DatabaseAPI.Database.Salvage[subRecipeEntry.SalvageIdx[i]]);
+            }
+        }
+
         private void cbSal0_Enter(object sender, EventArgs e)
         {
-
+            if (!cbIsRecipe0.Checked) return;
+            cbSal_Enter_UpdateSubRecipe(0);
+            
         }
 
         private void cbSal0_Leave(object sender, EventArgs e)
         {
+            groupBox4.Visible = false;
+        }
 
+        private void cbSal1_Enter(object sender, EventArgs e)
+        {
+            if (!cbIsRecipe1.Checked) return;
+            cbSal_Enter_UpdateSubRecipe(1);
+        }
+
+        private void cbSal1_Leave(object sender, EventArgs e)
+        {
+            groupBox4.Visible = false;
+        }
+
+        private void cbSal2_Enter(object sender, EventArgs e)
+        {
+            if (!cbIsRecipe2.Checked) return;
+            cbSal_Enter_UpdateSubRecipe(2);
+        }
+
+        private void cbSal2_Leave(object sender, EventArgs e)
+        {
+            groupBox4.Visible = false;
+        }
+
+        private void cbSal3_Enter(object sender, EventArgs e)
+        {
+            if (!cbIsRecipe3.Checked) return;
+            cbSal_Enter_UpdateSubRecipe(3);
+        }
+
+        private void cbSal3_Leave(object sender, EventArgs e)
+        {
+            groupBox4.Visible = false;
+        }
+
+        private void cbSal4_Enter(object sender, EventArgs e)
+        {
+            if (!cbIsRecipe4.Checked) return;
+            cbSal_Enter_UpdateSubRecipe(4);
+        }
+
+        private void cbSal4_Leave(object sender, EventArgs e)
+        {
+            groupBox4.Visible = false;
         }
     }
 }

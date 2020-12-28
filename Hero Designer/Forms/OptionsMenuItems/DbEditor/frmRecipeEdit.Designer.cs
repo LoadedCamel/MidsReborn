@@ -333,6 +333,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbSal4.Size = new System.Drawing.Size(202, 22);
             this.cbSal4.TabIndex = 33;
             this.cbSal4.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal4.Enter += new System.EventHandler(this.cbSal4_Enter);
+            this.cbSal4.Leave += new System.EventHandler(this.cbSal4_Leave);
             // 
             // udSal3
             // 
@@ -373,6 +375,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbSal3.Size = new System.Drawing.Size(202, 22);
             this.cbSal3.TabIndex = 30;
             this.cbSal3.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal3.Enter += new System.EventHandler(this.cbSal3_Enter);
+            this.cbSal3.Leave += new System.EventHandler(this.cbSal3_Leave);
             // 
             // udSal2
             // 
@@ -413,6 +417,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbSal2.Size = new System.Drawing.Size(202, 22);
             this.cbSal2.TabIndex = 27;
             this.cbSal2.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal2.Enter += new System.EventHandler(this.cbSal2_Enter);
+            this.cbSal2.Leave += new System.EventHandler(this.cbSal2_Leave);
             // 
             // udSal1
             // 
@@ -453,6 +459,8 @@ namespace Hero_Designer.Forms.OptionsMenuItems.DbEditor
             this.cbSal1.Size = new System.Drawing.Size(202, 22);
             this.cbSal1.TabIndex = 24;
             this.cbSal1.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal1.Enter += new System.EventHandler(this.cbSal1_Enter);
+            this.cbSal1.Leave += new System.EventHandler(this.cbSal1_Leave);
             // 
             // udSal0
             // 
