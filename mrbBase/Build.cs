@@ -869,47 +869,6 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
 
             for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
             {
-                setName = GetEnhSetName(enhancement.LongName);
-                for (var i = 0; i < Powers[powerIdx].Slots.Length; i++)
-                    if (Powers[powerIdx].Slots[i].Enhancement.Enh > -1)
-                        try
-                        {
-                            if (!enhancement.Superior)
-                            {
-                                var containsSuperior = MidsContext.Character.powerEnhancements.FirstOrDefault(x =>
-                                    x.PowerName == Powers[powerIdx].Name && x.EnhancementSet ==
-                                    $"Superior {GetEnhSetName(enhancement.LongName)}");
-                                if (containsSuperior != null)
-                                {
-                                    MessageBox.Show(
-                                        $"You cannot slot both superior and non-superior versions of {setName} in your build.\r\n\nIf you wish to use this set then you must first remove the other.",
-                                        @"Unable To Slot Enhancement");
-                                    return false;
-                                }
-                            }
-                            else if (enhancement.Superior)
-                            {
-                                var enhSetName = GetEnhSetName(enhancement.LongName);
-                                if (enhSetName.Contains("Superior"))
-                                {
-                                    var containsNonSuperior = MidsContext.Character.powerEnhancements.FirstOrDefault(x =>
-                                        x.PowerName == Powers[powerIdx].Name && x.EnhancementSet ==
-                                        GetEnhSetName(enhancement.LongName).Remove(0, 9));
-                                    if (containsNonSuperior != null)
-                                    {
-                                        MessageBox.Show(
-                                            $"You cannot slot both superior and non-superior versions of {setName.Remove(0, 9)} in your build.\r\n\nIf you wish to use this set then you must first remove the other.",
-                                            @"Unable To Slot Enhancement");
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show($"{e.Message}\r\n\n{e.StackTrace}");
-                        }
-
                 for (var slotIndex = 0; slotIndex <= Powers[powerIdx].Slots.Length - 1; ++slotIndex)
                 {
                     if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
@@ -923,46 +882,8 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                         return false;
                     }
 
-                    if (enhancement.MutExID != Enums.eEnhMutex.None &&
-                        DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[slotIndex].Enhancement.Enh].MutExID ==
-                        enhancement.MutExID)
+                    if (enhancement.MutExID != Enums.eEnhMutex.None && DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[slotIndex].Enhancement.Enh].MutExID == enhancement.MutExID)
                     {
-                        //6/29/19 Pine: Added checker for ATO Mutex
-                        if (enhancement.MutExID == Enums.eEnhMutex.ArchetypeA ||
-                            enhancement.MutExID == Enums.eEnhMutex.ArchetypeB ||
-                            enhancement.MutExID == Enums.eEnhMutex.ArchetypeC ||
-                            enhancement.MutExID == Enums.eEnhMutex.ArchetypeD ||
-                            enhancement.MutExID == Enums.eEnhMutex.ArchetypeE ||
-                            enhancement.MutExID == Enums.eEnhMutex.ArchetypeF)
-                        {
-                            /*string compareStringSlottedEnh = DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[slotIndex].Enhancement.Enh].LongName;
-                        if (compareStringSlottedEnh.Contains("Superior"))
-                        {
-                            compareStringSlottedEnh = compareStringSlottedEnh.Remove(0, 9);
-                            for (var i = 0; i < Powers[powerIdx].Slots.Length; i++)
-                            {
-                                string currentEnh = DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[i].Enhancement.Enh].LongName;
-                                if (currentEnh == compareStringSlottedEnh)
-                                {
-                                    if (!silent)
-                                        MessageBox.Show(@"You cannot slot both superior and non-superior versions of this enhancement in your build.", @"Unable To Slot Enhancement");
-                                    return false;
-                                }
-                            }
-                        }
-
-                        string compareStringSlottingEnh = enhancement.LongName;
-                        if (compareStringSlottingEnh.Contains("Superior"))
-                        {
-                            compareStringSlottingEnh = compareStringSlottingEnh.Remove(0, 9);
-                        }
-
-                        if (compareStringSlottedEnh != compareStringSlottingEnh)
-                        {
-                            break;
-                        }*/
-                        }
-
                         foundMutex = true;
                         break;
                     }
