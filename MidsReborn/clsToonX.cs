@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -434,9 +435,17 @@ namespace Mids_Reborn
                         {
                             if (!(effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)))
                                 nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
+                            
                         }
                         else if (!enhancementPass)
                         {
+                            // Zed: force absorb to be flat value.
+                            // E.g. Bio Armor Parasitic Aura and Ablative Carapace use percentages.
+                            // Particle shielding does not.
+                            if (index1 == (int)Enums.eStatType.Absorb & effect.DisplayPercentage)
+                            {
+                                shortFx.Value[shortFxIdx] = shortFx.Value[shortFxIdx] * MidsContext.Character.Totals.HPMax; // MidsContext.Character.Archetype.Hitpoints
+                            }
                             nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
                         }
                     }
@@ -541,8 +550,10 @@ namespace Mids_Reborn
             TotalsCapped.HPRegen = Math.Min(TotalsCapped.HPRegen, Archetype.RegenCap - 1f);
             TotalsCapped.EndRec = Math.Min(TotalsCapped.EndRec, Archetype.RecoveryCap - 1f);
             var num11 = TotalsCapped.Res.Length - 1;
-            for (var index = 0; index <= num11; ++index)
+            for (var index = 0; index < num11; index++)
+            {
                 TotalsCapped.Res[index] = Math.Min(TotalsCapped.Res[index], Archetype.ResCap);
+            }
             if (Archetype.HPCap > 0.0)
             {
                 TotalsCapped.HPMax = Math.Min(TotalsCapped.HPMax, Archetype.HPCap);

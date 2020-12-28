@@ -210,9 +210,6 @@
     <Compile Include="Forms\WindowMenuItems\frmTemp.Designer.cs">
       <DependentUpon>frmTemp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WindowMenuItems\frmTotals.Designer.cs">
-      <DependentUpon>frmTotals.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\WindowMenuItems\frmSetViewer.Designer.cs">
       <DependentUpon>frmSetViewer.cs</DependentUpon>
     </Compile>
@@ -2402,9 +2399,6 @@
     <Compile Include="Forms\frmStats.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WindowMenuItems\frmTotals.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\frmTweakMatching.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2558,9 +2552,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmStats.resx">
       <DependentUpon>frmStats.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WindowMenuItems\frmTotals.resx">
-      <DependentUpon>frmTotals.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmTweakMatching.resx">
       <DependentUpon>frmTweakMatching.cs</DependentUpon>
