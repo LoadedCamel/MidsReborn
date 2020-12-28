@@ -9,13 +9,6 @@ using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
 {
-    public class PowerEnhancements
-    {
-        public string PowerName { get; set; }
-        public string EnhancementSet { get; set; }
-        public int EnhancementSlot { get; set; }
-    }
-
     public class Character
     {
         public static List<string> gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
@@ -35,8 +28,6 @@ namespace mrbBase.Base.Data_Classes
             Builds = new[] { new Build(this, DatabaseAPI.Database.Levels) };
             Reset();
         }
-
-        public List<PowerEnhancements> powerEnhancements { get; private set; }
 
         public string setName { get; set; }
 
@@ -532,7 +523,6 @@ namespace mrbBase.Base.Data_Classes
 
         private void RefreshActiveSpecial()
         {
-            powerEnhancements = new List<PowerEnhancements>();
             ActiveComboLevel = 0;
             AcceleratedActive = false;
             DelayedActive = false;
@@ -789,44 +779,7 @@ namespace mrbBase.Base.Data_Classes
                             break;
                     }
                 }
-
-                for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
-                {
-                    var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
-                    if (pSlotEnh > -1)
-                    {
-                        var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
-                        powerEnhancements.Add(new PowerEnhancements
-                        {
-                            PowerName = power.Name,
-                            EnhancementSet = GetEnhSetName(enhancement.LongName),
-                            EnhancementSlot = slotIndex
-                        });
-                    }
-                    else
-                    {
-                        var index = slotIndex;
-                        var toRem = powerEnhancements.FindIndex(x =>
-                            x.PowerName.Equals(power.Name) && x.EnhancementSlot == index);
-                        if (toRem != -1) powerEnhancements.RemoveAt(toRem);
-                    }
-                }
             }
-        }
-
-        private string GetEnhSetName(string longName)
-        {
-            var enhSet = string.Empty;
-            var setCount = DatabaseAPI.Database.EnhancementSets.Count;
-            for (var setIndex = 0; setIndex < setCount; setIndex++)
-                foreach (var enh in DatabaseAPI.Database.EnhancementSets[setIndex].Enhancements)
-                {
-                    var enhancement = DatabaseAPI.Database.Enhancements[enh];
-                    if (enhancement.LongName == longName)
-                        enhSet = DatabaseAPI.Database.EnhancementSets[setIndex].DisplayName;
-                }
-
-            return enhSet;
         }
 
         public void Validate()
