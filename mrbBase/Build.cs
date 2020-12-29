@@ -832,21 +832,6 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             }
         }
 
-        private string GetEnhSetName(string longName)
-        {
-            var enhSet = string.Empty;
-            var setCount = DatabaseAPI.Database.EnhancementSets.Count;
-            for (var setIndex = 0; setIndex < setCount; setIndex++)
-                foreach (var enh in DatabaseAPI.Database.EnhancementSets[setIndex].Enhancements)
-                {
-                    var enhancement = DatabaseAPI.Database.Enhancements[enh];
-                    if (enhancement.LongName == longName)
-                        enhSet = DatabaseAPI.Database.EnhancementSets[setIndex].DisplayName;
-                }
-
-            return enhSet;
-        }
-
         public bool EnhancementTest(int iSlotID, int hIdx, int iEnh, bool silent = false)
         {
             if (iEnh < 0 || iSlotID < 0) return false;

@@ -4395,7 +4395,7 @@ namespace Mids_Reborn.Forms
                     Width = 1071;
                     break;
                 case 3:
-                    Width = 1318;
+                    Width = 1280;
                     break;
                 case 4:
                     Width = 1588;

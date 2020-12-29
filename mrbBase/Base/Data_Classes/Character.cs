@@ -782,10 +782,27 @@ namespace mrbBase.Base.Data_Classes
                             displayIndex = 7;
                             power.Power.DisplayLocation = displayIndex;
                             break;
+                        case Enums.eGridType.Powerset when powName.Equals("Shadow_Step"):
+                            displayIndex = 8;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
+                        case Enums.eGridType.Powerset when powName.Equals("Shadow_Recall"):
+                            displayIndex = 9;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
+                        case Enums.eGridType.Powerset when powName.Equals("Combat_Flight"):
+                            displayIndex = 8;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
+                        case Enums.eGridType.Powerset when powName.Equals("Energy_Flight"):
+                            displayIndex = 9;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
                         default:
                             displayIndex = inherentPowers.Count - 1;
                             if (displayIndex > 7 && displayIndex < 59)
                             {
+                                Console.WriteLine(displayIndex);
                                 power.Power.DisplayLocation = displayIndex;
                                 ++displayIndex;
                             }

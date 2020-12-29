@@ -1317,7 +1317,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FillTab_SubPowers();
             refresh_PowerData();
             Updating = false;
-            if (chkSubInclude.CheckState == CheckState.Checked) cbInherentType.Enabled = true;
+            if (chkSubInclude.CheckState == CheckState.Checked)
+            {
+                cbInherentType.Enabled = true;
+            }
+
+            if (cbInherentType.SelectedIndex > 0)
+            {
+                txtVisualLocation.ReadOnly = true;
+            }
         }
 
         private static int GetClassByID(int iID)
@@ -2468,7 +2476,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtVisualLocation_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
+            if (Updating || cbInherentType.SelectedIndex > 0)
                 return;
             var power = myPower;
             var num = (float) Conversion.Val(txtVisualLocation.Text);
