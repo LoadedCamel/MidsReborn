@@ -27181,7 +27181,6 @@
       "Schedule": 4
     },
     {
-      "IsModified": true,
       "StaticIndex": 627,
       "Name": "Chance for Psi Damage",
       "ShortName": "Dam%",
@@ -54554,6 +54553,7 @@
       "LongName": "Superior Gauntleted Fist: RechargeTime/+Absorb"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1162,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -54583,6 +54583,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Blistering_Cold_A",
@@ -54590,6 +54591,7 @@
       "LongName": "Blistering Cold: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1163,
       "Name": "Damage/Endurance",
       "ShortName": "Dmg/EndRdx",
@@ -54619,6 +54621,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Blistering_Cold_B",
@@ -54626,6 +54629,7 @@
       "LongName": "Blistering Cold: Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1164,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -54662,6 +54666,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Blistering_Cold_C",
@@ -54669,6 +54674,7 @@
       "LongName": "Blistering Cold: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1165,
       "Name": "Accuracy/Damage/Recharge",
       "ShortName": "Acc/Dmg/Rchg",
@@ -54705,6 +54711,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Blistering_Cold_D",
@@ -54712,6 +54719,7 @@
       "LongName": "Blistering Cold: Accuracy/Damage/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1166,
       "Name": "Damage/Endurance/Accuracy/RechargeTime",
       "ShortName": "Dmg/EndRdx/Acc/Rchg",
@@ -54755,6 +54763,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Blistering_Cold_E",
@@ -54762,6 +54771,7 @@
       "LongName": "Blistering Cold: Damage/Endurance/Accuracy/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1167,
       "Name": "Recharge/Chance for Hold",
       "ShortName": "Rchg/HoldProc",
@@ -54784,6 +54794,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Blistering_Cold_F",
@@ -54791,6 +54802,7 @@
       "LongName": "Blistering Cold: Recharge/Chance for Hold"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1168,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -54821,6 +54833,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Blistering_Cold_A",
@@ -54829,6 +54842,7 @@
       "LongName": "Superior Blistering Cold: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1169,
       "Name": "Damage/Endurance",
       "ShortName": "Dmg/EndRdx",
@@ -54859,6 +54873,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Blistering_Cold_B",
@@ -54867,6 +54882,7 @@
       "LongName": "Superior Blistering Cold: Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1170,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -54904,6 +54920,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Blistering_Cold_C",
@@ -54912,6 +54929,7 @@
       "LongName": "Superior Blistering Cold: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1171,
       "Name": "Accuracy/Damage/Recharge",
       "ShortName": "Acc/Dmg/Rchg",
@@ -54949,6 +54967,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Blistering_Cold_D",
@@ -54957,6 +54976,7 @@
       "LongName": "Superior Blistering Cold: Accuracy/Damage/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1172,
       "Name": "Damage/Endurance/Accuracy/RechargeTime",
       "ShortName": "Dmg/EndRdx/Acc/Rchg",
@@ -55001,6 +55021,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Blistering_Cold_E",
@@ -55009,6 +55030,7 @@
       "LongName": "Superior Blistering Cold: Damage/Endurance/Accuracy/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1173,
       "Name": "Recharge/Chance for Hold",
       "ShortName": "Rchg/HoldProc",
@@ -55032,6 +55054,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Blistering_Cold_F",
@@ -55040,6 +55063,7 @@
       "LongName": "Superior Blistering Cold: Recharge/Chance for Hold"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1174,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -55069,6 +55093,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Avalanche_A",
@@ -55076,6 +55101,7 @@
       "LongName": "Avalanche: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1175,
       "Name": "Damage/Endurance",
       "ShortName": "Dmg/EndRdx",
@@ -55105,6 +55131,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Avalanche_B",
@@ -55112,6 +55139,7 @@
       "LongName": "Avalanche: Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1176,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -55148,6 +55176,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Avalanche_C",
@@ -55155,6 +55184,7 @@
       "LongName": "Avalanche: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1177,
       "Name": "Accuracy/Damage/Recharge",
       "ShortName": "Acc/Dmg/Rchg",
@@ -55191,6 +55221,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Avalanche_D",
@@ -55198,6 +55229,7 @@
       "LongName": "Avalanche: Accuracy/Damage/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1178,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -55241,6 +55273,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Avalanche_E",
@@ -55248,6 +55281,7 @@
       "LongName": "Avalanche: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1179,
       "Name": "Recharge/Chance for Knockdown",
       "ShortName": "Rchg/KDProc",
@@ -55270,6 +55304,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Avalanche_F",
@@ -55277,6 +55312,7 @@
       "LongName": "Avalanche: Recharge/Chance for Knockdown"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1180,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -55307,6 +55343,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Avalanche_A",
@@ -55315,6 +55352,7 @@
       "LongName": "Superior Avalanche: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1181,
       "Name": "Damage/Endurance",
       "ShortName": "Dmg/EndRdx",
@@ -55345,6 +55383,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Avalanche_B",
@@ -55353,6 +55392,7 @@
       "LongName": "Superior Avalanche: Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1182,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -55390,6 +55430,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Avalanche_C",
@@ -55398,6 +55439,7 @@
       "LongName": "Superior Avalanche: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1183,
       "Name": "Accuracy/Damage/Recharge",
       "ShortName": "Acc/Dmg/Rchg",
@@ -55435,6 +55477,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Avalanche_D",
@@ -55443,6 +55486,7 @@
       "LongName": "Superior Avalanche: Accuracy/Damage/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1184,
       "Name": "Accuracy/Damage/Endurance/Recharge",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -55487,6 +55531,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Avalanche_E",
@@ -55495,6 +55540,7 @@
       "LongName": "Superior Avalanche: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1185,
       "Name": "Recharge/Chance for Knockdown",
       "ShortName": "Rchg/KDProc",
@@ -55518,6 +55564,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Avalanche_F",
@@ -55526,6 +55573,7 @@
       "LongName": "Superior Avalanche: Recharge/Chance for Knockdown"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1186,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -55555,6 +55603,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Winters_Bite_A",
@@ -55562,6 +55611,7 @@
       "LongName": "Winter's Bite: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1187,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -55591,6 +55641,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Winters_Bite_B",
@@ -55598,6 +55649,7 @@
       "LongName": "Winter's Bite: Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1188,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -55634,6 +55686,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Winters_Bite_C",
@@ -55641,6 +55694,7 @@
       "LongName": "Winter's Bite: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1189,
       "Name": "Accuracy/Damage/Recharge",
       "ShortName": "Acc/Dmg/Rchg",
@@ -55677,6 +55731,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Winters_Bite_D",
@@ -55684,6 +55739,7 @@
       "LongName": "Winter's Bite: Accuracy/Damage/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1190,
       "Name": "Damage/Endurance/Accuracy/RechargeTime",
       "ShortName": "Dmg/EndRdx/Acc/Rchg",
@@ -55727,6 +55783,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Winters_Bite_E",
@@ -55734,6 +55791,7 @@
       "LongName": "Winter's Bite: Damage/Endurance/Accuracy/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1191,
       "Name": "Recharge/Chance for -Speed & -Recharge",
       "ShortName": "Rchg/SlowProc",
@@ -55756,6 +55814,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Winters_Bite_F",
@@ -55763,6 +55822,7 @@
       "LongName": "Winter's Bite: Recharge/Chance for -Speed & -Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1192,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -55793,6 +55853,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Winters_Bite_A",
@@ -55801,6 +55862,7 @@
       "LongName": "Superior Winter's Bite: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1193,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -55831,6 +55893,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Winters_Bite_B",
@@ -55839,6 +55902,7 @@
       "LongName": "Superior Winter's Bite: Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1194,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -55876,6 +55940,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Winters_Bite_C",
@@ -55884,6 +55949,7 @@
       "LongName": "Superior Winter's Bite: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1195,
       "Name": "Accuracy/Damage/Recharge",
       "ShortName": "Acc/Dmg/Rchg",
@@ -55921,6 +55987,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Winters_Bite_D",
@@ -55929,6 +55996,7 @@
       "LongName": "Superior Winter's Bite: Accuracy/Damage/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1196,
       "Name": "Damage/Endurance/Accuracy/RechargeTime",
       "ShortName": "Dmg/EndRdx/Acc/Rchg",
@@ -55973,6 +56041,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Winters_Bite_E",
@@ -55981,6 +56050,7 @@
       "LongName": "Superior Winter's Bite: Damage/Endurance/Accuracy/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1197,
       "Name": "Recharge/Chance for -Speed & -Recharge",
       "ShortName": "Rchg/SlowProc",
@@ -56004,6 +56074,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Winters_Bite_F",
@@ -56012,6 +56083,7 @@
       "LongName": "Superior Winter's Bite: Recharge/Chance for -Speed & -Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1198,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -56041,6 +56113,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Frozen_Blast_A",
@@ -56048,6 +56121,7 @@
       "LongName": "Frozen Blast: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1199,
       "Name": "Damage/Endurance",
       "ShortName": "Dmg/EndRdx",
@@ -56077,6 +56151,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Frozen_Blast_B",
@@ -56084,6 +56159,7 @@
       "LongName": "Frozen Blast: Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1200,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -56120,6 +56196,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Frozen_Blast_C",
@@ -56127,6 +56204,7 @@
       "LongName": "Frozen Blast: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1201,
       "Name": "Accuracy/Damage/Recharge",
       "ShortName": "Acc/Dmg/Rchg",
@@ -56163,6 +56241,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Frozen_Blast_D",
@@ -56170,6 +56249,7 @@
       "LongName": "Frozen Blast: Accuracy/Damage/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1202,
       "Name": "Damage/Endurance/Accuracy/RechargeTime",
       "ShortName": "Dmg/EndRdx/Acc/Rchg",
@@ -56213,6 +56293,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Frozen_Blast_E",
@@ -56220,6 +56301,7 @@
       "LongName": "Frozen Blast: Damage/Endurance/Accuracy/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1203,
       "Name": "Recharge/Chance for Immobilize",
       "ShortName": "Rchg/ImmobProc",
@@ -56242,6 +56324,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Frozen_Blast_F",
@@ -56249,6 +56332,7 @@
       "LongName": "Frozen Blast: Recharge/Chance for Immobilize"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1204,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -56279,6 +56363,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Frozen_Blast_A",
@@ -56287,6 +56372,7 @@
       "LongName": "Superior Frozen Blast: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1205,
       "Name": "Damage/Endurance",
       "ShortName": "Dmg/EndRdx",
@@ -56317,6 +56403,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Frozen_Blast_B",
@@ -56325,6 +56412,7 @@
       "LongName": "Superior Frozen Blast: Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1206,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -56362,6 +56450,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Frozen_Blast_C",
@@ -56370,6 +56459,7 @@
       "LongName": "Superior Frozen Blast: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1207,
       "Name": "Accuracy/Damage/Recharge",
       "ShortName": "Acc/Dmg/Rchg",
@@ -56407,6 +56497,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Frozen_Blast_D",
@@ -56415,6 +56506,7 @@
       "LongName": "Superior Frozen Blast: Accuracy/Damage/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1208,
       "Name": "Damage/Endurance/Accuracy/RechargeTime",
       "ShortName": "Dmg/EndRdx/Acc/Rchg",
@@ -56459,6 +56551,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Frozen_Blast_E",
@@ -56467,6 +56560,7 @@
       "LongName": "Superior Frozen Blast: Damage/Endurance/Accuracy/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1209,
       "Name": "Recharge/Chance for Immobilize",
       "ShortName": "Rchg/ImmobProc",
@@ -56490,6 +56584,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Frozen_Blast_F",
@@ -56498,6 +56593,7 @@
       "LongName": "Superior Frozen Blast: Recharge/Chance for Immobilize"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1210,
       "Name": "Accuracy/Hold",
       "ShortName": "Acc/Hold",
@@ -56527,6 +56623,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Entomb_A",
@@ -56534,6 +56631,7 @@
       "LongName": "Entomb: Accuracy/Hold"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1211,
       "Name": "Hold/Recharge",
       "ShortName": "Hold/Rchg",
@@ -56563,6 +56661,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Entomb_B",
@@ -56570,6 +56669,7 @@
       "LongName": "Entomb: Hold/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1212,
       "Name": "Endurance/Recharge",
       "ShortName": "End/Rchg",
@@ -56599,6 +56699,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Entomb_C",
@@ -56606,6 +56707,7 @@
       "LongName": "Entomb: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1213,
       "Name": "Accuracy/Hold/Endurance",
       "ShortName": "Acc/Hold/End",
@@ -56642,6 +56744,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Entomb_D",
@@ -56649,6 +56752,7 @@
       "LongName": "Entomb: Accuracy/Hold/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1214,
       "Name": "Accuracy/Hold/Endurance/Recharge",
       "ShortName": "Acc/Hold/End/Rchg",
@@ -56692,6 +56796,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Entomb_E",
@@ -56699,6 +56804,7 @@
       "LongName": "Entomb: Accuracy/Hold/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1215,
       "Name": "Recharge/Chance for +Absorb",
       "ShortName": "Rchg/AbsorbProc",
@@ -56721,6 +56827,7 @@
       "EffectChance": 1.0,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Entomb_F",
@@ -56728,6 +56835,7 @@
       "LongName": "Entomb: Recharge/Chance for +Absorb"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1216,
       "Name": "Accuracy/Hold",
       "ShortName": "Acc/Hold",
@@ -56758,6 +56866,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Entomb_A",
@@ -56766,6 +56875,7 @@
       "LongName": "Superior Entomb: Accuracy/Hold"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1217,
       "Name": "Hold/Recharge",
       "ShortName": "Hold/Rchg",
@@ -56796,6 +56906,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Entomb_B",
@@ -56804,6 +56915,7 @@
       "LongName": "Superior Entomb: Hold/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1218,
       "Name": "Endurance/Recharge",
       "ShortName": "End/Rchg",
@@ -56834,6 +56946,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Entomb_C",
@@ -56842,6 +56955,7 @@
       "LongName": "Superior Entomb: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1219,
       "Name": "Accuracy/Hold/Endurance",
       "ShortName": "Acc/Hold/End",
@@ -56879,6 +56993,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Entomb_D",
@@ -56887,6 +57002,7 @@
       "LongName": "Superior Entomb: Accuracy/Hold/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1220,
       "Name": "Accuracy/Hold/Endurance/Recharge",
       "ShortName": "Acc/Hold/End/Rchg",
@@ -56931,6 +57047,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Entomb_E",
@@ -56939,6 +57056,7 @@
       "LongName": "Superior Entomb: Accuracy/Hold/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1221,
       "Name": "Recharge/Chance for +Absorb",
       "ShortName": "Rchg/AbsorbProc",
@@ -56962,6 +57080,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Entomb_F",
