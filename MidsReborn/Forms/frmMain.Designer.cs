@@ -1067,6 +1067,7 @@ namespace Mids_Reborn.Forms
             this.tsViewIOLevels,
             this.tsViewRelative,
             this.tsViewSlotLevels,
+            this.tsViewRelativeAsSigns,
             this.ToolStripSeparator2,
             this.tsViewActualDamage_New,
             this.tsViewDPS_New,

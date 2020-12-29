@@ -299,7 +299,7 @@ namespace mrbControls
         {
             checked
             {
-                for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
                     if (MidsContext.Character.CanPlaceSlot & (Highlight == i))
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
@@ -348,27 +348,22 @@ namespace mrbControls
         {
             unchecked
             {
-                Enums.eType enhType = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID;
+                var enhType = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID;
                 if (enhType == Enums.eType.SetO || enhType == Enums.eType.InventO)
                 {
                     var iValue2 = rect;
                     iValue2.Y -= 5f;
                     iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                    string relativeLevelNumeric;
-                    string enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
-                    bool catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh);
+                    var relativeLevelNumeric = "";
+                    var enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
+                    var catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh);
                     // Catalysed enhancements take character level no matter what.
                     // Game does not allow boosters over enhancement catalysts.
-                    // [Zed] Note: I am not sure yet if catalysed enhancements are considered having the level of the user.
-                    // Meaning a max level 30 IO --MAY-- have the stats of a level 50 one, even if it doesn't exist.
-                    if (catalystSet || slot.Enhancement.RelativeLevel <= Enums.eEnhRelative.Even)
-                    {
-                        relativeLevelNumeric = string.Empty;
-                    }
-                    else
+                    if (!catalystSet & slot.Enhancement.RelativeLevel > Enums.eEnhRelative.Even & MidsContext.Config.ShowEnhRel)
                     {
                         relativeLevelNumeric = Enums.GetRelativeString(slot.Enhancement.RelativeLevel, false);
                     }
+
                     // If enhancement has boosters, need to stretch the level drawing zone a little,
                     // or relative level doesn't fit in.
                     if (!string.IsNullOrEmpty(relativeLevelNumeric))
@@ -449,9 +444,9 @@ namespace mrbControls
 
                     if (!string.IsNullOrEmpty(relativeString))
                     {
-                        RectangleF bounds2 = ScaleDown(iValue2);
-                        Color outline2 = Color.FromArgb(128, 0, 0, 0);
-                        float outlineSpace2 = 1f;
+                        var bounds2 = ScaleDown(iValue2);
+                        var outline2 = Color.FromArgb(128, 0, 0, 0);
+                        var outlineSpace2 = 1f;
 
                         DrawOutlineText(relativeString, bounds2, color, outline2, font, outlineSpace2, g);
                     }

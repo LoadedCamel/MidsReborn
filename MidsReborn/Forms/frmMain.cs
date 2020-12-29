@@ -329,11 +329,12 @@ namespace Mids_Reborn.Forms
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
                 Size = new Size(width1, height1);
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
+                tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
                 tsViewSelected();
-                tsIODefault.Text = "Default (" + (MidsContext.Config.I9.DefaultIOLevel + 1) + ")";
+                tsIODefault.Text = $"Default ({MidsContext.Config.I9.DefaultIOLevel + 1})";
                 SetDamageMenuCheckMarks();
                 //Procat: Removed during performance optimization.
                 //ReArrange(true);
@@ -357,7 +358,7 @@ namespace Mids_Reborn.Forms
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
                 Refresh();
-                Refresh();
+                //Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
