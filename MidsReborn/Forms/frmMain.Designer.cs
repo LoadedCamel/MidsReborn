@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.Controls;
 using mrbControls;
@@ -224,6 +225,7 @@ namespace Mids_Reborn.Forms
             // cbAT
             // 
             this.cbAT.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cbAT.ForeColor = System.Drawing.Color.Black;
             this.cbAT.DisplayMember = "DisplayName";
             this.cbAT.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;

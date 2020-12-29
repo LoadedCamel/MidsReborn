@@ -565,7 +565,7 @@ namespace Mids_Reborn.Forms
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.DrawBackground();
-            using var solidBrush = new SolidBrush(SystemColors.ControlText);
+            using var solidBrush = new SolidBrush(Color.Black); //new SolidBrush(SystemColors.ControlText);
             if (e.Index > -1)
             {
                 var cbAT = new ComboBoxT<Archetype>(this.cbAT);
