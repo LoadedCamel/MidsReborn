@@ -802,7 +802,6 @@ namespace mrbBase.Base.Data_Classes
                             displayIndex = inherentPowers.Count - 1;
                             if (displayIndex > 7 && displayIndex < 59)
                             {
-                                Console.WriteLine(displayIndex);
                                 power.Power.DisplayLocation = displayIndex;
                                 ++displayIndex;
                             }
