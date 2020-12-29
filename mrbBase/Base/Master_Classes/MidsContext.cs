@@ -25,6 +25,7 @@ namespace mrbBase.Base.Master_Classes
 
         public static Archetype Archetype;
         public static Character Character;
+        public static Build Build;
 
         public static ConfigData Config => ConfigData.Current;
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
@@ -34,11 +35,11 @@ namespace mrbBase
             SetBonus = new List<I9SetData>();
             LastPower = 0;
             for (var iLevel = 0; iLevel < iLevels.Count; ++iLevel)
-            for (var index = 0; index < iLevels[iLevel].Powers; ++index)
-            {
-                Powers.Add(new PowerEntry(iLevel, null, true));
-                ++LastPower;
-            }
+                for (var index = 0; index < iLevels[iLevel].Powers; ++index)
+                {
+                    Powers.Add(new PowerEntry(iLevel, null, true));
+                    ++LastPower;
+                }
         }
 
         private string setName { get; set; }
@@ -174,33 +175,33 @@ namespace mrbBase
         private void ValidateEnhancements()
         {
             foreach (var power in Powers)
-            foreach (var slot in power.Slots)
-            {
-                if (slot.Enhancement.Enh > -1)
+                foreach (var slot in power.Slots)
                 {
-                    if (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal &&
-                        (slot.Enhancement.Grade <= Enums.eEnhGrade.None) |
-                        (slot.Enhancement.Grade > Enums.eEnhGrade.SingleO))
-                        slot.Enhancement.Grade = Enums.eEnhGrade.SingleO;
-                    if ((DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal) |
-                        (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.SpecialO) &&
-                        (slot.Enhancement.RelativeLevel < Enums.eEnhRelative.None) |
-                        (slot.Enhancement.RelativeLevel > Enums.eEnhRelative.PlusFive))
-                        slot.Enhancement.RelativeLevel = MidsContext.Config.CalcEnhLevel;
-                }
+                    if (slot.Enhancement.Enh > -1)
+                    {
+                        if (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal &&
+                            (slot.Enhancement.Grade <= Enums.eEnhGrade.None) |
+                            (slot.Enhancement.Grade > Enums.eEnhGrade.SingleO))
+                            slot.Enhancement.Grade = Enums.eEnhGrade.SingleO;
+                        if ((DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal) |
+                            (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.SpecialO) &&
+                            (slot.Enhancement.RelativeLevel < Enums.eEnhRelative.None) |
+                            (slot.Enhancement.RelativeLevel > Enums.eEnhRelative.PlusFive))
+                            slot.Enhancement.RelativeLevel = MidsContext.Config.CalcEnhLevel;
+                    }
 
-                if (slot.FlippedEnhancement.Enh <= -1)
-                    continue;
-                if (DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.Normal &&
-                    (slot.FlippedEnhancement.Grade <= Enums.eEnhGrade.None) |
-                    (slot.FlippedEnhancement.Grade > Enums.eEnhGrade.SingleO))
-                    slot.FlippedEnhancement.Grade = Enums.eEnhGrade.SingleO;
-                if ((DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.Normal) |
-                    (DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.SpecialO) &&
-                    (slot.FlippedEnhancement.RelativeLevel < Enums.eEnhRelative.None) |
-                    (slot.FlippedEnhancement.RelativeLevel > Enums.eEnhRelative.PlusFive))
-                    slot.FlippedEnhancement.RelativeLevel = MidsContext.Config.CalcEnhLevel;
-            }
+                    if (slot.FlippedEnhancement.Enh <= -1)
+                        continue;
+                    if (DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.Normal &&
+                        (slot.FlippedEnhancement.Grade <= Enums.eEnhGrade.None) |
+                        (slot.FlippedEnhancement.Grade > Enums.eEnhGrade.SingleO))
+                        slot.FlippedEnhancement.Grade = Enums.eEnhGrade.SingleO;
+                    if ((DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.Normal) |
+                        (DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.SpecialO) &&
+                        (slot.FlippedEnhancement.RelativeLevel < Enums.eEnhRelative.None) |
+                        (slot.FlippedEnhancement.RelativeLevel > Enums.eEnhRelative.PlusFive))
+                        slot.FlippedEnhancement.RelativeLevel = MidsContext.Config.CalcEnhLevel;
+                }
         }
 
         public bool SetEnhGrades(Enums.eEnhGrade newVal)
@@ -219,10 +220,10 @@ namespace mrbBase
                 @"Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return false;
             foreach (var power in Powers)
-            foreach (var slot in power.Slots)
-                if (slot.Enhancement.Enh > -1 &&
-                    DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal)
-                    slot.Enhancement.Grade = newVal;
+                foreach (var slot in power.Slots)
+                    if (slot.Enhancement.Enh > -1 &&
+                        DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal)
+                        slot.Enhancement.Grade = newVal;
 
             return true;
         }
@@ -249,63 +250,63 @@ namespace mrbBase
             if (MessageBox.Show(text, "Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return false;
             foreach (var power in Powers)
-            foreach (var slot in power.Slots)
-            {
-                if (slot.Enhancement.Enh <= -1)
-                    continue;
-                switch (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID)
+                foreach (var slot in power.Slots)
                 {
-                    case Enums.eType.InventO:
-                        var levelMin1 = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].LevelMin;
-                        var levelMax = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].LevelMax;
-                        if ((newVal >= levelMin1) & (newVal <= levelMax))
-                        {
-                            slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(newVal, levelMin1, levelMax);
+                    if (slot.Enhancement.Enh <= -1)
+                        continue;
+                    switch (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID)
+                    {
+                        case Enums.eType.InventO:
+                            var levelMin1 = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].LevelMin;
+                            var levelMax = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].LevelMax;
+                            if ((newVal >= levelMin1) & (newVal <= levelMax))
+                            {
+                                slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(newVal, levelMin1, levelMax);
+                                break;
+                            }
+
+                            if (newVal > levelMax)
+                            {
+                                slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(levelMax, levelMin1, levelMax);
+                                break;
+                            }
+
+                            if (newVal < levelMin1)
+                                slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(levelMin1, levelMin1, levelMax);
+
                             break;
-                        }
+                        case Enums.eType.SetO:
+                            var levelMin2 = DatabaseAPI.Database
+                                .EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet].LevelMin;
+                            var num = DatabaseAPI.Database
+                                .EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet].LevelMax;
+                            if (num > 49)
+                                num = 49;
+                            if ((newVal >= levelMin2) & (newVal <= num))
+                            {
+                                slot.Enhancement.IOLevel = newVal;
+                                break;
+                            }
 
-                        if (newVal > levelMax)
-                        {
-                            slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(levelMax, levelMin1, levelMax);
+                            if (newVal > num)
+                            {
+                                slot.Enhancement.IOLevel = num;
+                                break;
+                            }
+
+                            if (newVal < levelMin2) slot.Enhancement.IOLevel = levelMin2;
+
                             break;
-                        }
-
-                        if (newVal < levelMin1)
-                            slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(levelMin1, levelMin1, levelMax);
-
-                        break;
-                    case Enums.eType.SetO:
-                        var levelMin2 = DatabaseAPI.Database
-                            .EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet].LevelMin;
-                        var num = DatabaseAPI.Database
-                            .EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet].LevelMax;
-                        if (num > 49)
-                            num = 49;
-                        if ((newVal >= levelMin2) & (newVal <= num))
-                        {
-                            slot.Enhancement.IOLevel = newVal;
+                        case Enums.eType.None:
                             break;
-                        }
-
-                        if (newVal > num)
-                        {
-                            slot.Enhancement.IOLevel = num;
+                        case Enums.eType.Normal:
                             break;
-                        }
-
-                        if (newVal < levelMin2) slot.Enhancement.IOLevel = levelMin2;
-
-                        break;
-                    case Enums.eType.None:
-                        break;
-                    case Enums.eType.Normal:
-                        break;
-                    case Enums.eType.SpecialO:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                        case Enums.eType.SpecialO:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
-            }
 
             return true;
         }
@@ -323,7 +324,8 @@ namespace mrbBase
                         continue;
                     var historyMap = new HistoryMap
                     {
-                        Level = lvlIdx, HID = powerIdx
+                        Level = lvlIdx,
+                        HID = powerIdx
                     };
                     var appendText = string.Empty;
                     var choiceText = power.Chosen ? "Added" : "Received";
@@ -362,7 +364,9 @@ namespace mrbBase
                             continue;
                         var historyMap = new HistoryMap
                         {
-                            Level = lvlIdx, HID = powerIdx, SID = slotIdx
+                            Level = lvlIdx,
+                            HID = powerIdx,
+                            SID = slotIdx
                         };
                         var str = string.Empty;
                         if (power.Slots[slotIdx].Enhancement.Enh > -1)
@@ -564,41 +568,41 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                 DialogResult.Yes)
                 return false;
             foreach (var power in Powers)
-            foreach (var slot in power.Slots)
-            {
-                if (slot.Enhancement.Enh <= -1) continue;
+                foreach (var slot in power.Slots)
+                {
+                    if (slot.Enhancement.Enh <= -1) continue;
 
-                var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
-                if (enhancement.TypeID == Enums.eType.SpecialO)
-                {
-                    if (newVal > Enums.eEnhRelative.PlusTwo) newVal = Enums.eEnhRelative.PlusTwo;
-                }
-                else if (enhancement.TypeID == Enums.eType.Normal)
-                {
-                    if (newVal > Enums.eEnhRelative.PlusThree) newVal = Enums.eEnhRelative.PlusThree;
-                }
-                else if (enhancement.TypeID == Enums.eType.InventO || enhancement.TypeID == Enums.eType.SetO)
-                {
-                    if (newVal < Enums.eEnhRelative.Even && newVal != Enums.eEnhRelative.None)
-                        newVal = Enums.eEnhRelative.Even;
-                }
+                    var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
+                    if (enhancement.TypeID == Enums.eType.SpecialO)
+                    {
+                        if (newVal > Enums.eEnhRelative.PlusTwo) newVal = Enums.eEnhRelative.PlusTwo;
+                    }
+                    else if (enhancement.TypeID == Enums.eType.Normal)
+                    {
+                        if (newVal > Enums.eEnhRelative.PlusThree) newVal = Enums.eEnhRelative.PlusThree;
+                    }
+                    else if (enhancement.TypeID == Enums.eType.InventO || enhancement.TypeID == Enums.eType.SetO)
+                    {
+                        if (newVal < Enums.eEnhRelative.Even && newVal != Enums.eEnhRelative.None)
+                            newVal = Enums.eEnhRelative.Even;
+                    }
 
-                /*
-                if (newVal > Enums.eEnhRelative.PlusThree)
-                {
-                    int num = enhancement.TypeID == Enums.eType.Normal ? 0 : (enhancement.TypeID != Enums.eType.SpecialO ? 1 : 0);
-                    slot.Enhancement.RelativeLevel = num != 0 ? newVal : Enums.eEnhRelative.PlusThree;
-                }
-                else if (newVal < Enums.eEnhRelative.Even)
-                {
-                    int num = enhancement.TypeID == Enums.eType.Normal ? 0 : (enhancement.TypeID != Enums.eType.SpecialO ? 1 : 0);
-                    slot.Enhancement.RelativeLevel = num != 0 ? Enums.eEnhRelative.Even : newVal;
-                }
-                else
+                    /*
+                    if (newVal > Enums.eEnhRelative.PlusThree)
+                    {
+                        int num = enhancement.TypeID == Enums.eType.Normal ? 0 : (enhancement.TypeID != Enums.eType.SpecialO ? 1 : 0);
+                        slot.Enhancement.RelativeLevel = num != 0 ? newVal : Enums.eEnhRelative.PlusThree;
+                    }
+                    else if (newVal < Enums.eEnhRelative.Even)
+                    {
+                        int num = enhancement.TypeID == Enums.eType.Normal ? 0 : (enhancement.TypeID != Enums.eType.SpecialO ? 1 : 0);
+                        slot.Enhancement.RelativeLevel = num != 0 ? Enums.eEnhRelative.Even : newVal;
+                    }
+                    else
+                        slot.Enhancement.RelativeLevel = newVal;
+                    */
                     slot.Enhancement.RelativeLevel = newVal;
-                */
-                slot.Enhancement.RelativeLevel = newVal;
-            }
+                }
 
             return true;
         }
@@ -606,33 +610,33 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
         private void CheckAndFixAllEnhancements()
         {
             foreach (var power in Powers)
-            foreach (var slot in power.Slots)
-                if (power.Power != null)
-                {
-                    if (slot.Enhancement.Enh > -1)
+                foreach (var slot in power.Slots)
+                    if (power.Power != null)
                     {
-                        if (!power.Power.IsEnhancementValid(slot.Enhancement.Enh))
-                            slot.Enhancement.Enh = -1;
-                        else
-                            slot.Enhancement.IOLevel = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh]
-                                .CheckAndFixIOLevel(slot.Enhancement.IOLevel);
-                    }
+                        if (slot.Enhancement.Enh > -1)
+                        {
+                            if (!power.Power.IsEnhancementValid(slot.Enhancement.Enh))
+                                slot.Enhancement.Enh = -1;
+                            else
+                                slot.Enhancement.IOLevel = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh]
+                                    .CheckAndFixIOLevel(slot.Enhancement.IOLevel);
+                        }
 
-                    if (slot.FlippedEnhancement.Enh <= -1)
-                        continue;
-                    if (!power.Power.IsEnhancementValid(slot.FlippedEnhancement.Enh))
-                        slot.FlippedEnhancement.Enh = -1;
+                        if (slot.FlippedEnhancement.Enh <= -1)
+                            continue;
+                        if (!power.Power.IsEnhancementValid(slot.FlippedEnhancement.Enh))
+                            slot.FlippedEnhancement.Enh = -1;
+                        else
+                            slot.FlippedEnhancement.IOLevel = DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh]
+                                .CheckAndFixIOLevel(slot.FlippedEnhancement.IOLevel);
+                    }
                     else
-                        slot.FlippedEnhancement.IOLevel = DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh]
-                            .CheckAndFixIOLevel(slot.FlippedEnhancement.IOLevel);
-                }
-                else
-                {
-                    slot.Enhancement.Enh = -1;
-                    slot.Enhancement.IOLevel = 0;
-                    slot.FlippedEnhancement.Enh = -1;
-                    slot.FlippedEnhancement.IOLevel = 0;
-                }
+                    {
+                        slot.Enhancement.Enh = -1;
+                        slot.Enhancement.IOLevel = 0;
+                        slot.FlippedEnhancement.Enh = -1;
+                        slot.FlippedEnhancement.IOLevel = 0;
+                    }
 
             ValidateEnhancements();
         }
@@ -770,15 +774,15 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             if (!valid)
                 return false;
             foreach (var numArray in power.Requires.NPowerIDNot)
-            foreach (var nIDPower in numArray)
-            {
-                if (nIDPower <= -1) continue;
-                var histIdx = -1;
-                if (nIDPower != nIdSkip)
-                    histIdx = FindInToonHistory(nIDPower);
-                if (histIdx > -1)
-                    return false;
-            }
+                foreach (var nIDPower in numArray)
+                {
+                    if (nIDPower <= -1) continue;
+                    var histIdx = -1;
+                    if (nIDPower != nIdSkip)
+                        histIdx = FindInToonHistory(nIDPower);
+                    if (histIdx > -1)
+                        return false;
+                }
 
             return true;
         }
@@ -848,75 +852,158 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             if (iEnh < 0 || iSlotID < 0) return false;
 
             var enhancement = DatabaseAPI.Database.Enhancements[iEnh];
-            var foundMutex = false;
-            var foundInPower = false;
-            if (enhancement.TypeID == Enums.eType.SetO && enhancement.nIDSet > -1 && hIdx > -1 &&
-                Powers[hIdx].Power != null)
+            //var foundMutex = false;
+            //var foundInPower = false;
+            if (enhancement.TypeID == Enums.eType.SetO && enhancement.nIDSet > -1 && hIdx > -1 && Powers[hIdx].Power != null)
             {
                 var allowedSet = false;
                 var setType = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType;
                 for (var index = 0; index <= Powers[hIdx].Power.SetTypes.Length - 1; ++index)
                 {
                     if (Powers[hIdx].Power.SetTypes[index] != setType)
+                    {
                         continue;
+                    }
+
                     allowedSet = true;
                     break;
                 }
 
                 if (!allowedSet)
-                    return false;
-            }
-
-            for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
-            {
-                for (var slotIndex = 0; slotIndex <= Powers[powerIdx].Slots.Length - 1; ++slotIndex)
                 {
-                    if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
-                        continue;
-                    if (enhancement.Unique && Powers[powerIdx].Slots[slotIndex].Enhancement.Enh == iEnh)
-                    {
-                        if (!silent)
-                            MessageBox.Show(
-                                $@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.",
-                                @"Unable To Slot Enhancement");
-                        return false;
-                    }
-
-                    if (enhancement.MutExID != Enums.eEnhMutex.None && DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[slotIndex].Enhancement.Enh].MutExID == enhancement.MutExID)
-                    {
-                        foundMutex = true;
-                        break;
-                    }
-
-                    if (enhancement.nIDSet <= -1 || powerIdx != hIdx ||
-                        Powers[powerIdx].Slots[slotIndex].Enhancement.Enh != iEnh)
-                        continue;
-                    foundInPower = true;
-                    break;
+                    return false;
                 }
             }
 
-            if (foundMutex)
+            foreach (var power in Powers)
             {
-                if (!silent)
-                    MessageBox.Show(
-                        enhancement.LongName + " is mutually exclusive with enhancements in the " +
-                        Enum.GetName(enhancement.MutExID.GetType(), enhancement.MutExID) +
-                        " group. You can only slot one member of this group across your entire build.",
-                        "Can't Slot Enhancement");
+                foreach (var slot in power.Slots)
+                {
+                    if (slot.Enhancement.Enh != -1)
+                    {
 
-                return false;
+                        if (enhancement.Unique && slot.Enhancement.Enh == iEnh)
+                        {
+                            if (!silent)
+                            {
+                                MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
+                                return false;
+                            }
+                        }
+                    }
+
+                    if (enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None)
+                    {
+                        var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
+                        var containsNormal = false;
+                        var foundEnh = string.Empty;
+                        foreach (var item in MidsContext.Character.PEnhancementsList)
+                        {
+                            if (item.Contains(nVersion))
+                            {
+                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
+                                containsNormal = true;
+                            }
+                        }
+                        if (containsNormal)
+                        {
+                            if (!silent)
+                            {
+                                MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one type of this enhancement across your entire build.", @"Unable To Slot Enhancement");
+                                return false;
+                            }
+                        }
+                    }
+                    else if (!enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None && enhancement.MutExID != Enums.eEnhMutex.Stealth)
+                    {
+                        var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
+                        var containsSuperior = false;
+                        var foundEnh = string.Empty;
+                        foreach (var item in MidsContext.Character.PEnhancementsList)
+                        {
+                            if (item.Contains($"Superior_Attuned_{nVersion}") || item.Contains($"Superior_Attuned_Superior_{nVersion}"))
+                            {
+                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
+                                containsSuperior = true;
+                            }
+                        }
+                        if (containsSuperior)
+                        {
+                            if (!silent)
+                            {
+                                MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one type of this enhancement across your entire build.", @"Unable To Slot Enhancement");
+                                return false;
+                            }
+                        }
+                    }
+                    else if (enhancement.MutExID == Enums.eEnhMutex.Stealth)
+                    {
+                        var containsStealth = false;
+                        var foundEnh = string.Empty;
+                        foreach (var item in MidsContext.Character.PEnhancementsList)
+                        {
+                            if (DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].MutExID == Enums.eEnhMutex.Stealth)
+                            {
+                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
+                                containsStealth = true;
+                            }
+                        }
+
+                        if (containsStealth)
+                        {
+                            if (!silent)
+                            {
+                                MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one stealth proc across your entire build.", @"Unable To Slot Enhancement");
+                                return false;
+                            }
+                        }
+                    }
+                }
             }
+            /*for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
+            {
+                for (var slotIndex = 0; slotIndex <= Powers[powerIdx].Slots.Length - 1; slotIndex++)
+                {
+                    if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
+                    {
+                        continue;
+                    }
 
-            if (!foundInPower)
-                return true;
-            if (!silent)
-                MessageBox.Show(
-                    enhancement.LongName +
-                    " is already slotted in this power. You can only slot one of each enhancement from the set in a given power.",
-                    "Can't Slot Enhancement");
+                    if (enhancement.Unique && Powers[powerIdx].Slots[slotIndex].Enhancement.Enh == iEnh)
+                    {
+                        if (!silent)
+                        {
+                            MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
+                            return false;
+                        }
+                    }
 
-            return false;
+                    if (enhancement.Superior && DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[slotIndex].Enhancement.Enh].MutExID == enhancement.MutExID)
+                    {
+                        if (!silent)
+                        {
+                            Console.WriteLine(@"--Superior--");
+                            Console.WriteLine(iSlotID);
+                            Console.WriteLine(slotIndex);
+                            Console.WriteLine(enhancement.UID);
+                            Console.WriteLine(enhancement.MutExID);
+                        }
+                    }
+                    else if (!enhancement.Superior && DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[slotIndex].Enhancement.Enh].MutExID == enhancement.MutExID)
+                    {
+                        if (!silent)
+                        {
+                            Console.WriteLine(@"--Not Superior--");
+                            Console.WriteLine(iSlotID);
+                            Console.WriteLine(slotIndex);
+                            Console.WriteLine(enhancement.UID);
+                            Console.WriteLine(enhancement.MutExID);
+                        }
+                    }
+
+                }
+            }*/
+            return true;
         }
 
         public void GenerateSetBonusData()
@@ -951,15 +1038,15 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                 setCount[index] = 0;
             var effectList = new List<IEffect>();
             foreach (var setBonus in SetBonus)
-            foreach (var setInfo in setBonus.SetInfo)
-            foreach (var power in setInfo.Powers.Where(x => x > -1))
-            {
-                if (power > setCount.Length - 1)
-                    throw new IndexOutOfRangeException("power to setBonusArray");
-                ++setCount[power];
-                if (setCount[power] < 6)
-                    effectList.AddRange(DatabaseAPI.Database.Power[power].Effects.Select(t => (IEffect) t.Clone()));
-            }
+                foreach (var setInfo in setBonus.SetInfo)
+                    foreach (var power in setInfo.Powers.Where(x => x > -1))
+                    {
+                        if (power > setCount.Length - 1)
+                            throw new IndexOutOfRangeException("power to setBonusArray");
+                        ++setCount[power];
+                        if (setCount[power] < 6)
+                            effectList.AddRange(DatabaseAPI.Database.Power[power].Effects.Select(t => (IEffect)t.Clone()));
+                    }
 
             power1.Effects = effectList.ToArray();
             return power1;
@@ -978,7 +1065,7 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                 {
                     Array.Resize(ref array, array.Length + 1);
                     var index3 = array.Length - 1;
-                    array[index3] = (IEffect) effIdx.Clone();
+                    array[index3] = (IEffect)effIdx.Clone();
                     array[index3].Math_Mag = effIdx.Mag;
                 }
                 else
@@ -996,7 +1083,7 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             {
                 if (fxList[index].EffectType != testFX.EffectType || !((fxList[index].Mag > 0.0) & (testFX.Mag > 0.0)) &&
                     !((fxList[index].Mag < 0.0) & (testFX.Mag < 0.0)) &&
-                    !(Math.Abs(fxList[index].Mag - ((double) testFX.Mag > 0.0 ? 1f : 0.0f)) <
+                    !(Math.Abs(fxList[index].Mag - ((double)testFX.Mag > 0.0 ? 1f : 0.0f)) <
                       0.001))
                     continue;
                 if (
@@ -1071,14 +1158,14 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                         else
                         {
                             foreach (var num1 in power1.NGroupMembership)
-                            foreach (var num2 in power3.NGroupMembership)
-                            {
-                                if (num1 != num2)
-                                    continue;
-                                powerEntryList.Add(power2);
-                                if (power3.MutexAuto)
-                                    mutexAuto = true;
-                            }
+                                foreach (var num2 in power3.NGroupMembership)
+                                {
+                                    if (num1 != num2)
+                                        continue;
+                                    powerEntryList.Add(power2);
+                                    if (power3.MutexAuto)
+                                        mutexAuto = true;
+                                }
                         }
                     }
 

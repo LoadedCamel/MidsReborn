@@ -26,8 +26,11 @@ namespace mrbBase.Base.Data_Classes
             TotalsCapped = new TotalStatistics();
             DisplayStats = new Statistics(this);
             Builds = new[] { new Build(this, DatabaseAPI.Database.Levels) };
+            PEnhancementsList = new List<string>();
             Reset();
         }
+
+        public List<string> PEnhancementsList { get; set; }
 
         public string setName { get; set; }
 
@@ -406,6 +409,7 @@ namespace mrbBase.Base.Data_Classes
             Totals.Init();
             TotalsCapped.Init();
             RequestedLevel = -1;
+            PEnhancementsList = new List<string>();
         }
 
         public bool ValidateConditional(IPower power)
@@ -556,6 +560,7 @@ namespace mrbBase.Base.Data_Classes
             FastSnipe = false;
             NotFastSnipe = true;
             inherentPowers = new List<IPower>();
+            PEnhancementsList = new List<string>();
 
             foreach (var power in CurrentBuild.Powers)
             {
@@ -580,10 +585,18 @@ namespace mrbBase.Base.Data_Classes
 
                         break;
                 }
-                /*foreach (var effect in power.Power.Effects)
+                for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
                 {
-                    effect.UpdateAttrib();
-                }*/
+                    var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
+                    if (pSlotEnh != -1)
+                    {
+                        var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
+                        if (!PEnhancementsList.Contains(enhancement.UID))
+                        {
+                            PEnhancementsList.Add(enhancement.UID);
+                        }
+                    }
+                }
             }
 
             foreach (var power in CurrentBuild.Powers)
