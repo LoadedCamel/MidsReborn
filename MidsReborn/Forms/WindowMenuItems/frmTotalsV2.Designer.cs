@@ -2213,7 +2213,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar34.EnableOverlay2 = false;
             this.bar34.Group = "";
             this.bar34.Location = new System.Drawing.Point(153, 3);
-            this.bar34.MaximumBarValue = 500F;
+            this.bar34.MaximumBarValue = 750F;
             this.bar34.MinimumBarValue = 0F;
             this.bar34.Name = "bar34";
             this.bar34.Size = new System.Drawing.Size(343, 13);
@@ -2379,7 +2379,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar32.EnableOverlay2 = false;
             this.bar32.Group = "";
             this.bar32.Location = new System.Drawing.Point(152, 3);
-            this.bar32.MaximumBarValue = 100F;
+            this.bar32.MaximumBarValue = 250F;
             this.bar32.MinimumBarValue = 0F;
             this.bar32.Name = "bar32";
             this.bar32.Size = new System.Drawing.Size(343, 13);
