@@ -565,7 +565,7 @@ namespace Mids_Reborn.Forms
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.DrawBackground();
-            using var solidBrush = new SolidBrush(SystemColors.ControlText);
+            using var solidBrush = new SolidBrush(Color.Black);
             if (e.Index > -1)
             {
                 var cbAT = new ComboBoxT<Archetype>(this.cbAT);
@@ -1308,37 +1308,38 @@ namespace Mids_Reborn.Forms
             drawing.FullRedraw();
         }
 
-        private void DoResize()
+        private void DoResize(bool forceResize = false)
         {
             //lblHero.Width = ibRecipe.Left - 4;
-            if (NoResizeEvent || drawing == null) return;
+            if (drawing == null) return;
 
-            var clientWidth = ClientSize.Width - pnlGFXFlow.Left; // num1
-            var clientHeight = ClientSize.Height - pnlGFXFlow.Top; // num2
+            var prevDrawingWidth = pnlGFX.Width;
+            var clientWidth = ClientSize.Width - pnlGFXFlow.Left;
+            var clientHeight = ClientSize.Height - pnlGFXFlow.Top;
             pnlGFXFlow.Width = clientWidth;
             pnlGFXFlow.Height = clientHeight;
-            var scale = 1.0;
             var drawingArea = drawing.GetDrawingArea();
-            var drawingWidth = pnlGFXFlow.Width - 30; // num5
-            if (drawingWidth < drawingArea.Width)
-                scale = drawingWidth / (double)drawingArea.Width;
+            var drawingWidth = pnlGFXFlow.Width - 30;
+            // Zed: fix for drawing area turning black if scale is >= 1
+            var prevScale = prevDrawingWidth / (double)drawingArea.Width;
+            var scale = drawingWidth / (double)drawingArea.Width;
+            NoResizeEvent = prevScale >= 1 & scale >= 1;
+            if (NoResizeEvent & !forceResize) return;
+            scale = Math.Min(scale, 1);
             var drawingHeight = (int)Math.Round(drawingArea.Height * scale);
             pnlGFX.Width = drawingWidth;
             pnlGFX.Height = drawingHeight;
+
             drawing.bxBuffer.Size = pnlGFX.Size;
             Control pnlGfx = pnlGFX;
             drawing.ReInit(pnlGfx);
             pnlGFX = (PictureBox)pnlGfx;
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
-            pnlGFX.Update();
-            pnlGFX.Refresh();
-
-            NoResizeEvent = true;
-            drawing.SetScaling(scale < 1.0 ? pnlGFX.Size : drawing.bxBuffer.Size);
-            NoResizeEvent = false;
+            drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
             ReArrange(false);
             pnlGFX.Update();
             pnlGFX.Refresh();
+            NoResizeEvent = true;
         }
 
         private bool doSave()
@@ -5860,12 +5861,15 @@ namespace Mids_Reborn.Forms
             //llPrimary.Font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
             llPrimary.Font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             llSecondary.Font = llPrimary.Font;
-            var num1 = llPrimary.Items.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-                llPrimary.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
-            var num2 = llSecondary.Items.Length - 1;
-            for (var index = 0; index <= num2; ++index)
-                llSecondary.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
+            foreach (var e in llPrimary.Items)
+            {
+                e.Bold = MidsContext.Config.RtFont.PairedBold;
+            }
+
+            foreach (var e in llSecondary.Items)
+            {
+                e.Bold = MidsContext.Config.RtFont.PairedBold;
+            }
             heroVillain.Checked = !MidsContext.Character.IsHero();
             dvAnchored.SetLocation(new Point(llPrimary.Left, llPrimary.Top + raGreater(llPrimary.SizeNormal.Height, llSecondary.SizeNormal.Height) + 5), ForceComplete);
             llPrimary.SuspendRedraw = false;
