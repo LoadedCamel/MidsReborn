@@ -342,7 +342,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             string percentageSign;
             bool plusSignEnabled;
             string movementUnit;
-
+            
             switch (barGroup)
             {
                 case "Defense":
@@ -365,6 +365,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                   (trigger.ValueOverlay1 != 0
                                       ? $"\r\nAbsorb: {trigger.ValueOverlay1:##0.##} ({(trigger.ValueOverlay1 / trigger.ValueBase * 100):##0.##}% of base HP)"
                                       : "");
+                    break;
+
+                case "HP" when barIndex == (int)Enums.eBarType.Regeneration:
+                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
+                                      ? $"{trigger.ValueMainBar:##0.##}% {barTypesNames[barIndex]}"
+                                      : $"{trigger.ValueOverCap:##0.##}% {barTypesNames[barIndex]}, capped at {trigger.ValueMainBar:##0.##}%"
+                                  ) +
+                                  $" ({MidsContext.Character.DisplayStats.HealthRegenHPPerSec:##0.##} HP/s)" +
+                                  (trigger.ValueBase > 0 ? $"\r\nBase: {trigger.ValueBase:##0.##}%" : "");
                     break;
 
                 case "Endurance" when barIndex == (int) Enums.eBarType.EndRec:
@@ -415,7 +424,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     break;
 
                 // Triple bar main + base + overcap
-                case "HP" when barIndex == (int) Enums.eBarType.Regeneration:
                 case "Perception" when trigger.EnableBaseValue && trigger.EnableOverCap:
                 case "" when trigger.EnableBaseValue && trigger.EnableOverCap:
                     lv = FetchLv(barIndex);
