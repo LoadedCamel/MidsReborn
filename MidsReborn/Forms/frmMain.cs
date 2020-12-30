@@ -473,10 +473,9 @@ namespace Mids_Reborn.Forms
                         Powerset.nIDTrunkSet,
                         -1, -1, "", ListLabelV3.LLFontFlags.Bold, ListLabelV3.LLTextAlign.Center);
                     llPower.AddItem(iItem1);
-                    for (var iIDXPower = 0; iIDXPower <= powerset.Powers.Length - 1; ++iIDXPower)
+                    for (var iIDXPower = 0; iIDXPower < powerset.Powers.Length; iIDXPower++)
                     {
-                        if (powerset.Powers[iIDXPower].Level <= 0)
-                            continue;
+                        if (powerset.Powers[iIDXPower].Level <= 0) continue;
                         message = "";
                         var iItem2 = new ListLabelV3.ListLabelItemV3(powerset.Powers[iIDXPower].DisplayName,
                             MainModule.MidsController.Toon.PowerState(powerset.Powers[iIDXPower].PowerIndex,
@@ -498,15 +497,13 @@ namespace Mids_Reborn.Forms
                 }
 
                 if (Powerset.Powers != null)
-                    for (var iIDXPower = 0; iIDXPower <= Powerset.Powers.Length - 1; ++iIDXPower)
+                    for (var iIDXPower = 0; iIDXPower < Powerset.Powers.Length; iIDXPower++)
                     {
                         if (Powerset.Powers[iIDXPower].Level <= 0 || !Powerset.Powers[iIDXPower]
                             .AllowedForClass(MidsContext.Character.Archetype.Idx))
                             continue;
                         message = "";
-                        var targetPs =
-                            MainModule.MidsController.Toon.PowerState(Powerset.Powers[iIDXPower].PowerIndex,
-                                ref message);
+                        var targetPs = MainModule.MidsController.Toon.PowerState(Powerset.Powers[iIDXPower].PowerIndex, ref message);
                         var power = Powerset.Powers[iIDXPower];
                         var iItem = new ListLabelV3.ListLabelItemV3(
                             Powerset.Powers[iIDXPower].DisplayName,
@@ -517,8 +514,7 @@ namespace Mids_Reborn.Forms
                         {
                             Bold = MidsContext.Config.RtFont.PairedBold
                         };
-                        if (iItem.ItemState == ListLabelV3.LLItemState.Invalid)
-                            iItem.Italic = true;
+                        if (iItem.ItemState == ListLabelV3.LLItemState.Invalid) iItem.Italic = true;
                         llPower.AddItem(iItem);
                     }
 
@@ -6054,19 +6050,17 @@ namespace Mids_Reborn.Forms
         {
             llPower.SuspendRedraw = true;
             if (llPower.Items.Length == 0)
-                llPower.AddItem(new ListLabelV3.ListLabelItemV3("Nothing", ListLabelV3.LLItemState.Disabled, -1, -1, -1,
-                    string.Empty));
-            var num = llPower.Items.Length - 1;
-            for (var index = 0; index <= num; ++index)
             {
-                var ListLabelItemV3 = llPower.Items[index];
-                if (!((ListLabelItemV3.nIDSet > -1) & (ListLabelItemV3.IDXPower > -1)))
-                    continue;
-                var message = string.Empty;
-                ListLabelItemV3.ItemState =
-                    MainModule.MidsController.Toon.PowerState(ListLabelItemV3.nIDPower, ref message);
-                ListLabelItemV3.Italic = ListLabelItemV3.ItemState == ListLabelV3.LLItemState.Invalid;
-                ListLabelItemV3.Bold = MidsContext.Config.RtFont.PairedBold;
+                llPower.AddItem(new ListLabelV3.ListLabelItemV3("Nothing", ListLabelV3.LLItemState.Disabled, -1, -1, -1, ""));
+            }
+            
+            foreach (var listLabelItemV3 in llPower.Items)
+            {
+                if (!((listLabelItemV3.nIDSet > -1) & (listLabelItemV3.IDXPower > -1))) continue;
+                var message = "";
+                listLabelItemV3.ItemState = MainModule.MidsController.Toon.PowerState(listLabelItemV3.nIDPower, ref message);
+                listLabelItemV3.Italic = listLabelItemV3.ItemState == ListLabelV3.LLItemState.Invalid;
+                listLabelItemV3.Bold = MidsContext.Config.RtFont.PairedBold;
             }
 
             llPower.SuspendRedraw = false;

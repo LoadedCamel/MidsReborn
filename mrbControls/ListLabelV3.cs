@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Windows.Forms;
@@ -433,19 +434,28 @@ namespace mrbControls
         {
             checked
             {
-                if (Items.Length == 0)
-                    return;
+                if (Items.Length == 0) return;
                 InitBuffer();
                 if (AutoSize)
                 {
                     if (AutoSizeMode == AutoSizeMode.GrowAndShrink)
+                    {
                         Height = DesiredHeight;
+                    }
                     else if (DesiredHeight > SizeNormal.Height)
+                    {
                         Height = DesiredHeight;
+                    }
                     else
+                    {
                         Height = SizeNormal.Height;
+                    }
                 }
-
+                else
+                {
+                    Height = 18 * Items.Length;
+                }
+                
                 var bRect = new Rectangle(xPadding, 0, Width - xPadding * 2, Height);
                 RecalcLines(bRect);
                 if ((ScrollSteps > 0) | isExpanded)

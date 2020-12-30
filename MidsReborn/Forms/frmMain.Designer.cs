@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.Controls;
 using mrbControls;
@@ -1778,8 +1777,8 @@ namespace Mids_Reborn.Forms
             this.llPool3.Location = new System.Drawing.Point(328, 530);
             this.llPool3.MaxHeight = 500;
             this.llPool3.Name = "llPool3";
-            this.llPool3.PaddingX = 1;
-            this.llPool3.PaddingY = 1;
+            this.llPool3.PaddingX = 2;
+            this.llPool3.PaddingY = 2;
             this.llPool3.Scrollable = true;
             this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool3.ScrollBarWidth = 8;
@@ -1803,8 +1802,8 @@ namespace Mids_Reborn.Forms
             this.llPool2.Location = new System.Drawing.Point(328, 422);
             this.llPool2.MaxHeight = 500;
             this.llPool2.Name = "llPool2";
-            this.llPool2.PaddingX = 1;
-            this.llPool2.PaddingY = 1;
+            this.llPool2.PaddingX = 2;
+            this.llPool2.PaddingY = 2;
             this.llPool2.Scrollable = true;
             this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool2.ScrollBarWidth = 8;
