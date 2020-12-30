@@ -837,8 +837,10 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             if (iEnh < 0 || iSlotID < 0) return false;
 
             var enhancement = DatabaseAPI.Database.Enhancements[iEnh];
-            //var foundMutex = false;
-            //var foundInPower = false;
+            var foundMutex = false;
+            var foundInPower = false;
+            var foundEnh = string.Empty;
+            var mutexType = -1;
             if (enhancement.TypeID == Enums.eType.SetO && enhancement.nIDSet > -1 && hIdx > -1 && Powers[hIdx].Power != null)
             {
                 var allowedSet = false;
@@ -860,135 +862,94 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                 }
             }
 
-            foreach (var power in Powers)
+            for (var powerIdx = 0; powerIdx < Powers.Count; ++powerIdx)
             {
-                foreach (var slot in power.Slots)
+                var power = Powers[powerIdx];
+                for (var slotIndex = 0; slotIndex <= power.Slots.Length - 1; ++slotIndex)
                 {
-                    if (slot.Enhancement.Enh != -1)
+                    if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
+                        continue;
+                    if (enhancement.Unique && Powers[powerIdx].Slots[slotIndex].Enhancement.Enh == iEnh)
                     {
-
-                        if (enhancement.Unique && slot.Enhancement.Enh == iEnh)
+                        if (!silent)
                         {
-                            if (!silent)
-                            {
-                                MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
-                                return false;
-                            }
+                            MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
                         }
+                        return false;
                     }
 
                     if (enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None)
                     {
                         var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
-                        var containsNormal = false;
-                        var foundEnh = string.Empty;
                         foreach (var item in MidsContext.Character.PEnhancementsList)
                         {
                             if (item.Contains(nVersion))
                             {
                                 foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                containsNormal = true;
-                            }
-                        }
-                        if (containsNormal)
-                        {
-                            if (!silent)
-                            {
-                                MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one type of this enhancement across your entire build.", @"Unable To Slot Enhancement");
-                                return false;
+                                mutexType = 0;
+                                foundMutex = true;
                             }
                         }
                     }
                     else if (!enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None && enhancement.MutExID != Enums.eEnhMutex.Stealth)
                     {
                         var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
-                        var containsSuperior = false;
-                        var foundEnh = string.Empty;
                         foreach (var item in MidsContext.Character.PEnhancementsList)
                         {
                             if (item.Contains($"Superior_Attuned_{nVersion}") || item.Contains($"Superior_Attuned_Superior_{nVersion}"))
                             {
                                 foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                containsSuperior = true;
-                            }
-                        }
-                        if (containsSuperior)
-                        {
-                            if (!silent)
-                            {
-                                MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one type of this enhancement across your entire build.", @"Unable To Slot Enhancement");
-                                return false;
+                                mutexType = 0;
+                                foundMutex = true;
                             }
                         }
                     }
                     else if (enhancement.MutExID == Enums.eEnhMutex.Stealth)
                     {
-                        var containsStealth = false;
-                        var foundEnh = string.Empty;
                         foreach (var item in MidsContext.Character.PEnhancementsList)
                         {
                             if (DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].MutExID == Enums.eEnhMutex.Stealth)
                             {
                                 foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                containsStealth = true;
-                            }
-                        }
-
-                        if (containsStealth)
-                        {
-                            if (!silent)
-                            {
-                                MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one stealth proc across your entire build.", @"Unable To Slot Enhancement");
-                                return false;
+                                mutexType = 1;
+                                foundMutex = true;
                             }
                         }
                     }
+
+                    if (enhancement.nIDSet <= -1 || powerIdx != hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh != iEnh) continue;
+                    foundInPower = true;
+                    break;
                 }
             }
-            /*for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
+
+            if (foundMutex)
             {
-                for (var slotIndex = 0; slotIndex <= Powers[powerIdx].Slots.Length - 1; slotIndex++)
+                if (!silent)
                 {
-                    if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
+                    switch (mutexType)
                     {
-                        continue;
+                        case 0:
+                            MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one type of this enhancement across your entire build.", @"Unable To Slot Enhancement");
+                            break;
+                        case 1:
+                            MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one stealth proc across your entire build.", @"Unable To Slot Enhancement");
+                            break;
                     }
 
-                    if (enhancement.Unique && Powers[powerIdx].Slots[slotIndex].Enhancement.Enh == iEnh)
-                    {
-                        if (!silent)
-                        {
-                            MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
-                            return false;
-                        }
-                    }
-
-                    if (enhancement.Superior && DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[slotIndex].Enhancement.Enh].MutExID == enhancement.MutExID)
-                    {
-                        if (!silent)
-                        {
-                            Console.WriteLine(@"--Superior--");
-                            Console.WriteLine(iSlotID);
-                            Console.WriteLine(slotIndex);
-                            Console.WriteLine(enhancement.UID);
-                            Console.WriteLine(enhancement.MutExID);
-                        }
-                    }
-                    else if (!enhancement.Superior && DatabaseAPI.Database.Enhancements[Powers[powerIdx].Slots[slotIndex].Enhancement.Enh].MutExID == enhancement.MutExID)
-                    {
-                        if (!silent)
-                        {
-                            Console.WriteLine(@"--Not Superior--");
-                            Console.WriteLine(iSlotID);
-                            Console.WriteLine(slotIndex);
-                            Console.WriteLine(enhancement.UID);
-                            Console.WriteLine(enhancement.MutExID);
-                        }
-                    }
-
+                    return false;
                 }
-            }*/
-            return true;
+            }
+            if (!foundInPower)
+            {
+                return true;
+            }
+
+            if (!silent)
+            {
+                MessageBox.Show(@$"{enhancement.LongName} is already slotted in this power. You can only slot one of each enhancement from the set in a given power.", @"Unable To Slot Enhancement");
+            }
+            return false;
         }
 
         public void GenerateSetBonusData()
