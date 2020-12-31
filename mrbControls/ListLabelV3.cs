@@ -451,7 +451,7 @@ namespace mrbControls
                         Height = SizeNormal.Height;
                     }
                 }
-                else
+                else if (Name == "llAncillary" | Name.StartsWith("llPool"))
                 {
                     Height = 18 * Items.Length;
                 }
