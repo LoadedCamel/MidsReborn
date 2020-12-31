@@ -69,7 +69,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 i++;
                 if (i > startLine)
                 {
-                    Console.WriteLine(MidsContext.AppVersion.ToString());
                     if (result.Contains($"## {Type} [{Version}]"))
                     {
                         builder.AppendFormat($"{result}\r\n");
