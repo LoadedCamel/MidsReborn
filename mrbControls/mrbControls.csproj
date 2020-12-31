@@ -69,8 +69,26 @@
     <Compile Include="ctlColorList.Designer.cs">
       <DependentUpon>ctlColorList.cs</DependentUpon>
     </Compile>
+    <Compile Include="ctlCombo.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlCombo.Designer.cs">
+      <DependentUpon>ctlCombo.cs</DependentUpon>
+    </Compile>
     <Compile Include="ctlDamageDisplay.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlEnhancedList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlEnhancedList.Designer.cs">
+      <DependentUpon>ctlEnhancedList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlEnhPopupPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlEnhPopupPanel.Designer.cs">
+      <DependentUpon>ctlEnhPopupPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="ctlEnhTabControl.cs">
       <SubType>Component</SubType>
@@ -84,8 +102,20 @@
     <Compile Include="ctlListViewColored.Designer.cs">
       <DependentUpon>ctlListViewColored.cs</DependentUpon>
     </Compile>
+    <Compile Include="ctlLockedTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlLockedTextBox.Designer.cs">
+      <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="ctlMultiGraph.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlOutlinedLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlOutlinedLabel.Designer.cs">
+      <DependentUpon>ctlOutlinedLabel.cs</DependentUpon>
     </Compile>
     <Compile Include="ctlPairedList.cs">
       <SubType>UserControl</SubType>
@@ -96,8 +126,32 @@
     <Compile Include="ctlPairedListNew.Designer.cs">
       <DependentUpon>ctlPairedListNew.cs</DependentUpon>
     </Compile>
+    <Compile Include="ctlPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlPanel.Designer.cs">
+      <DependentUpon>ctlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="ctlPopUp.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlPowerButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlPowerButton.Designer.cs">
+      <DependentUpon>ctlPowerButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlPowerList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlPowerList.Designer.cs">
+      <DependentUpon>ctlPowerList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlTablePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlTablePanel.Designer.cs">
+      <DependentUpon>ctlTablePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="EditableLabel.cs">
       <SubType>Form</SubType>
@@ -151,16 +205,34 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ctlCombo.resx">
+      <DependentUpon>ctlCombo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctlDamageDisplay.resources" />
+    <EmbeddedResource Include="ctlEnhPopupPanel.resx">
+      <DependentUpon>ctlEnhPopupPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctlLayeredBar.resx">
       <DependentUpon>ctlLayeredBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlLockedTextBox.resx">
+      <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ctlMultiGraph.resources" />
     <EmbeddedResource Include="ctlPairedList.resources" />
     <EmbeddedResource Include="ctlPairedListNew.resx">
       <DependentUpon>ctlPairedListNew.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ctlPanel.resx">
+      <DependentUpon>ctlPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctlPopUp.resources" />
+    <EmbeddedResource Include="ctlPowerButton.resx">
+      <DependentUpon>ctlPowerButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlPowerList.resx">
+      <DependentUpon>ctlPowerList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GFXLabel.resources" />
     <EmbeddedResource Include="I9Picker.resources" />
     <EmbeddedResource Include="ImageButton.resources" />

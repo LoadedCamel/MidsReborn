@@ -378,6 +378,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UI %28v2%29\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI %28v2%29\Form1.designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Content Include="Images\Classes\1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -462,6 +468,9 @@
     <Content Include="Data\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="UI %28v2%29\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Images\defaultAvatar.png" />
     <Content Include="Images\Enhancements\Acc.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
