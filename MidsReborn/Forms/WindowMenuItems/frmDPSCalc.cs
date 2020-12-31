@@ -635,7 +635,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private struct PowerList
         {
             public string PowerName;
-            public float baseDamage;
+            public float BaseDamage;
             public float Damage;
             public float DPA;
             public float HidenDPA;

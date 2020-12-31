@@ -2165,8 +2165,8 @@ namespace Mids_Reborn.Forms
         MenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
         PictureBox pbDynMode;
-        PictureBox pnlGFX;
-        FlowLayoutPanel pnlGFXFlow;
+        public PictureBox pnlGFX;
+        public FlowLayoutPanel pnlGFXFlow;
         ToolStripMenuItem SetAllIOsToDefault35ToolStripMenuItem;
         ToolStripMenuItem SlotsToolStripMenuItem;
         ToolStripMenuItem TemporaryPowersWindowToolStripMenuItem;

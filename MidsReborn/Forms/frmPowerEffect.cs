@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -475,7 +476,7 @@ namespace Mids_Reborn.Forms
                 MessageBox.Show("No effect data on the clipboard!", "Unable to Paste", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             else
-                using (var memoryStream = new MemoryStream((byte[])Clipboard.GetDataObject()?.GetData(format.Name) ??
+                using (var memoryStream = new MemoryStream(Clipboard.GetDataObject()?.GetData(format.Name) as byte[] ??
                                                            throw new InvalidOperationException()))
                 using (var reader = new BinaryReader(memoryStream))
                 {

@@ -31,7 +31,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
@@ -81,7 +81,7 @@
     <Compile Include="clsShoppingCheckList.cs" />
     <Compile Include="clsGenFreebies.cs" />
     <Compile Include="clsOAuth.cs" />
-    <Compile Include="clsZip.cs" />
+    <Compile Include="Forms\UpdateSystem\clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
     <Compile Include="FileAssociation.cs" />
     <Compile Include="Forms\Controls\DataView.cs">
@@ -99,11 +99,29 @@
     <Compile Include="Forms\Controls\InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\UpdateSystem\UpdateQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\UpdateQuery.Designer.cs">
+      <DependentUpon>UpdateQuery.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmProgress.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmProgress.Designer.cs">
       <DependentUpon>frmProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\PatchNotes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\PatchNotes.Designer.cs">
+      <DependentUpon>PatchNotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\Updater.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\Updater.Designer.cs">
+      <DependentUpon>Updater.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmTotalsV2.cs">
       <SubType>Form</SubType>
@@ -2173,6 +2191,9 @@
     <EmbeddedResource Include="Forms\Controls\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\UpdateQuery.resx">
+      <DependentUpon>UpdateQuery.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmProgress.resx">
       <DependentUpon>frmProgress.cs</DependentUpon>
     </EmbeddedResource>
@@ -2218,6 +2239,12 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\frmAttribModImporter.resx">
       <DependentUpon>frmAttribModImporter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
+      <DependentUpon>PatchNotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\Updater.resx">
+      <DependentUpon>Updater.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmPrestige.resx">
       <DependentUpon>frmPrestige.cs</DependentUpon>
     </EmbeddedResource>
@@ -2253,7 +2280,7 @@
     <Compile Include="clsOutput.cs" />
     <Compile Include="clsToonX.cs" />
     <Compile Include="clsUniversalImport.cs" />
-    <Compile Include="clsXMLUpdate.cs" />
+    <Compile Include="Forms\UpdateSystem\clsXMLUpdate.cs" />
     <Compile Include="Forms\WindowMenuItems\frmAccolade.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2628,6 +2655,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CircularProgressBar">
+      <Version>2.8.0.16</Version>
+    </PackageReference>
     <PackageReference Include="FastDeepCloner">
       <Version>1.3.5</Version>
     </PackageReference>

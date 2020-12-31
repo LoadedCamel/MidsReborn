@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -17,7 +18,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
     public partial class frmEditAttribMod : Form
     {
         private Modifiers TempAttribMods = new Modifiers();
-        private frmBusy _bFrm;
+        private frmBusy? _bFrm;
 
         public frmEditAttribMod()
         {
@@ -139,7 +140,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DialogResult r = f.ShowDialog();
             if (r != DialogResult.OK) return;
 
-            Modifiers m = new Modifiers();
+            Modifiers? m = new Modifiers();
             string src = File.ReadAllText(f.FileName);
             JsonSerializerSettings jsonOpt = new JsonSerializerSettings
             {
@@ -154,7 +155,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 if (src.TrimStart(' ', '\t', '\r', '\n', '\0').StartsWith("["))
                 {
-                    Modifiers.ModifierTable[] tables =
+                    Modifiers.ModifierTable[]? tables =
                         JsonConvert.DeserializeObject<Modifiers.ModifierTable[]>(src, jsonOpt);
                     if (tables == null) throw new FormatException("JSON file contains no modifier tables.");
 

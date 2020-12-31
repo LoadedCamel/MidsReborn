@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace Mids_Reborn
+namespace Mids_Reborn.Forms.UpdateSystem
 {
     public class ZipProgress
     {
@@ -25,8 +25,7 @@ namespace Mids_Reborn
             ExtractToDirectory(source, destinationDirectoryName, progress, overwrite: false);
         }*/
 
-        public static void ExtractToDirectory(this ZipArchive source, string destinationDirectoryName,
-            IProgress<ZipProgress> progress, bool overwrite)
+        public static void ExtractToDirectory(this ZipArchive source, string destinationDirectoryName, IProgress<ZipProgress> progress, bool overwrite)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

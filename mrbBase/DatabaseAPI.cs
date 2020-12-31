@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -162,7 +163,7 @@ namespace mrbBase
                 se => string.Equals(se.UID, uidEntity, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static int[] NidSets(PowersetGroup group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
+        private static int[] NidSets(PowersetGroup? group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
         {
             if ((nType == Enums.ePowerSetType.Inherent || nType == Enums.ePowerSetType.Pool) && nIDClass > -1 &&
                 !Database.Classes[nIDClass].Playable)
@@ -381,7 +382,7 @@ namespace mrbBase
             return powersetGroup.Powersets.ContainsKey(iName) ? powersetGroup.Powersets[iName] : null;
         }
 
-        public static IPowerset GetPowersetByName(string iName, string iArchetype)
+        public static IPowerset? GetPowersetByName(string iName, string iArchetype)
         {
             var idx = GetArchetypeByName(iArchetype).Idx;
             foreach (var powerset1 in Database.Powersets)
@@ -2215,7 +2216,7 @@ namespace mrbBase
             return num;
         }
 
-        public static void MatchAllIDs(IMessager iFrm = null)
+        public static void MatchAllIDs(IMessager? iFrm = null)
         {
             UpdateMessage(iFrm, "Matching Group IDs...");
             FillGroupArray();
@@ -2235,7 +2236,7 @@ namespace mrbBase
             MatchSummonIDs();
         }
 
-        private static void UpdateMessage(IMessager iFrm, string iMsg)
+        private static void UpdateMessage(IMessager? iFrm, string iMsg)
 
         {
             iFrm?.SetMessage(iMsg);
@@ -2574,10 +2575,10 @@ namespace mrbBase
         public override Boolean CanConvert(Type objectType)
             => objectType == typeof(TAbstract);
 
-        public override Object ReadJson(JsonReader reader, Type type, Object value, JsonSerializer jser)
+        public override Object? ReadJson(JsonReader reader, Type type, Object? value, JsonSerializer jser)
             => jser.Deserialize<TReal>(reader);
 
-        public override void WriteJson(JsonWriter writer, Object value, JsonSerializer jser)
+        public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer jser)
             => jser.Serialize(writer, value);
     }
 }

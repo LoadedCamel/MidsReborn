@@ -7,6 +7,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using Mids_Reborn.Forms.UpdateSystem;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms
@@ -45,9 +46,7 @@ namespace Mids_Reborn.Forms
                 var client = new WebClient();
                 client.DownloadProgressChanged += Client_DownloadProgressChanged;
                 client.DownloadFileCompleted += Client_DownloadFileCompleted;
-                UpdateFile =
-                    new Uri(
-                        $"{Path.GetDirectoryName(MidsContext.Config.UpdatePath)?.Replace("https:\\", "https://").Replace("\\", "/")}/{VersionText}.zip");
+                UpdateFile = new Uri($"{Path.GetDirectoryName(MidsContext.Config.UpdatePath)?.Replace("https:\\", "https://").Replace("\\", "/")}/{VersionText}.zip");
                 Directory.CreateDirectory($"{Path.GetTempPath()}\\MidsTemp\\");
                 TempFile = $"{Path.GetTempPath()}\\MidsTemp\\{VersionText}.zip";
                 client.DownloadFileAsync(UpdateFile, TempFile);
@@ -64,9 +63,8 @@ namespace Mids_Reborn.Forms
                 var totalBytes = double.Parse(e.TotalBytesToReceive.ToString(CultureInfo.InvariantCulture),
                     CultureInfo.InvariantCulture);
                 var percentage = bytesIn / totalBytes * 100;
-                ctlProgressBar1.Value = int.Parse(Math.Truncate(percentage).ToString(CultureInfo.InvariantCulture),
-                    CultureInfo.InvariantCulture);
-                ctlProgressBar1.Text = $@"{ctlProgressBar1.StatusText} - {ctlProgressBar1.Value}%";
+                //ctlProgressBar1.Value = int.Parse(Math.Truncate(percentage).ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
+                //ctlProgressBar1.Text = $@"{ctlProgressBar1.StatusText} - {ctlProgressBar1.Value}%";
             });
         }
 
@@ -74,7 +72,7 @@ namespace Mids_Reborn.Forms
         {
             BeginInvoke((MethodInvoker) delegate
             {
-                ctlProgressBar1.Text = @"Download Complete";
+                //ctlProgressBar1.Text = @"Download Complete";
                 DLComplete = true;
                 BeginInstall();
             });
@@ -89,11 +87,11 @@ namespace Mids_Reborn.Forms
         {
             var asmLOC = Assembly.GetExecutingAssembly().Location;
             var dirLOC = $"{Directory.GetParent(asmLOC)}";
-            ctlProgressBar2.Value = 0;
+            //ctlProgressBar2.Value = 0;
             switch (updateType)
             {
                 case "App":
-                    ctlProgressBar2.StatusText = $"Installing: Mids {VersionText}";
+                    //ctlProgressBar2.StatusText = $"Installing: Mids {VersionText}";
                     foreach (var filename in Directory.GetFiles(dirLOC, "*.dll"))
                         File.Move(filename, $"{filename}.bak");
 
@@ -101,7 +99,7 @@ namespace Mids_Reborn.Forms
                         $"{Assembly.GetExecutingAssembly().Location}.bak");
                     break;
                 case "Database":
-                    ctlProgressBar2.StatusText = $"Installing: {updateType} {VersionText}";
+                    //ctlProgressBar2.StatusText = $"Installing: {updateType} {VersionText}";
                     break;
             }
 
@@ -110,7 +108,7 @@ namespace Mids_Reborn.Forms
 
         private void RunZipExtractor()
         {
-            ctlProgressBar2.Maximum = 100;
+            //ctlProgressBar2.Maximum = 100;
             zipExtractor = new BackgroundWorker();
             zipExtractor.DoWork += zipExtractor_DoWork;
             zipExtractor.ProgressChanged += zipExtractor_ProgressChanged;
@@ -141,10 +139,10 @@ namespace Mids_Reborn.Forms
         private void zipExtractor_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             var totalPercent = e.ProgressPercentage;
-            if (totalPercent > ctlProgressBar2.Maximum) totalPercent = 100;
+            //if (totalPercent > ctlProgressBar2.Maximum) totalPercent = 100;
 
-            ctlProgressBar2.Value = totalPercent;
-            ctlProgressBar2.Text = $@"{ctlProgressBar2.StatusText}";
+            //ctlProgressBar2.Value = totalPercent;
+            //ctlProgressBar2.Text = $@"{ctlProgressBar2.StatusText}";
         }
 
         private static void TransferFiles(string sourcePath, string destinationPath)
@@ -172,9 +170,9 @@ namespace Mids_Reborn.Forms
         {
             var asmLOC = Assembly.GetExecutingAssembly().Location;
             var dirLOC = $"{Directory.GetParent(asmLOC)}";
-            ctlProgressBar2.Value = ctlProgressBar2.Maximum;
-            ctlProgressBar2.Text = "Installation Complete!";
-            ctlProgressBar2.StatusText = "Install Complete!";
+            //ctlProgressBar2.Value = ctlProgressBar2.Maximum;
+            //ctlProgressBar2.Text = "Installation Complete!";
+            //ctlProgressBar2.StatusText = "Install Complete!";
             var completed = MessageBox.Show(@"The update was successfully applied, Mids will now restart.",
                 @"Update Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (completed == DialogResult.OK)

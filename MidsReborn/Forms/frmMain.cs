@@ -16,6 +16,7 @@ using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using Mids_Reborn.My;
 using mrbBase;
@@ -82,7 +83,7 @@ namespace Mids_Reborn.Forms
             InitializeComponent();
             Application.EnableVisualStyles();
             foreach (var backup in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.bak")) File.Delete(backup);
-            if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate();
+            if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate(this);
 
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
@@ -2995,8 +2996,7 @@ namespace Mids_Reborn.Forms
                 var flag = MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower < 0;
                 /*if (e.Button == MouseButtons.Left & ModifierKeys == (Keys.Shift | Keys.Control) && EditAccoladesOrTemps(hIDPower))
                     return;*/
-                if ((e.Button == MouseButtons.Left) & (ModifierKeys == (Keys.Shift | Keys.Control)) &&
-                    EditAccoladesOrTemps(hIDPower))
+                if ((e.Button == MouseButtons.Left) & (ModifierKeys == (Keys.Shift | Keys.Control)) && EditAccoladesOrTemps(hIDPower))
                     return;
                 if ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & (e.Button == MouseButtons.Left))
                 {
@@ -3056,8 +3056,7 @@ namespace Mids_Reborn.Forms
                 {
                     if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
                     {
-                        MainModule.MidsController.Toon.RequestedLevel =
-                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
+                        MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
                         MidsContext.Character.ResetLevel();
                     }
 
@@ -4120,7 +4119,7 @@ namespace Mids_Reborn.Forms
                 ++index3;
             }
 
-            var numArray2 = fakeInitialize(3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23,
+            var slotLevels = fakeInitialize(3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23,
                 23, 25, 25, 27, 27,
                 29, 29, 31, 31, 31, 33, 33, 33, 34, 34, 34, 36, 36, 36, 37, 37, 37, 39, 39, 39, 40, 40, 40, 42, 42, 42,
                 43, 43, 43, 45, 45, 45,
@@ -4133,23 +4132,23 @@ namespace Mids_Reborn.Forms
                 var num3 = tp[numArray1[index2]].SlotCount - 1;
                 for (var index4 = 1; index4 <= num3; ++index4)
                 {
-                    if (index6 == numArray2.Length)
+                    if (index6 == slotLevels.Length)
                         flag1 = true;
                     tp[numArray1[index2]].Slots[index4].Level = 50;
                     if (flag1)
                         continue;
                     if (tp[numArray1[index2]].NIDPower == -1 ||
                         !DatabaseAPI.Database.Power[tp[numArray1[index2]].NIDPower].AllowFrontLoading)
-                        while (numArray2[index6] <= tp[numArray1[index2]].Level)
+                        while (slotLevels[index6] <= tp[numArray1[index2]].Level)
                         {
                             ++index6;
-                            if (index6 != numArray2.Length)
+                            if (index6 != slotLevels.Length)
                                 continue;
                             flag1 = true;
                             break;
                         }
 
-                    tp[numArray1[index2]].Slots[index4].Level = numArray2[index6] - 1;
+                    tp[numArray1[index2]].Slots[index4].Level = slotLevels[index6] - 1;
                     ++index6;
                 }
             }
@@ -5460,16 +5459,9 @@ namespace Mids_Reborn.Forms
             clsXMLUpdate.GoToGitHub();
         }
 
-        private void AutoUpdater_ApplicationExitEvent()
-        {
-            Text = @"Closing application...";
-            Thread.Sleep(5000);
-            Application.Exit();
-        }
-
         private void tsUpdateCheck_Click(object sender, EventArgs e)
         {
-            clsXMLUpdate.CheckUpdate();
+            clsXMLUpdate.CheckUpdate(this);
         }
 
         /*private void ForceReinstall()
