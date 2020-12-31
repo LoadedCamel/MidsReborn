@@ -5289,8 +5289,10 @@ namespace Mids_Reborn.Forms
 
         private void tsFilePrint_Click(object sender, EventArgs e)
         {
-            using var frmPrint = new frmPrint();
-            frmPrint.Show();
+            // Fix for issue #42
+            // //using var frmPrint = new frmPrint();
+            //frmPrint.Show();
+            new frmPrint().Show();
         }
 
         private void tsFileQuit_Click(object sender, EventArgs e)

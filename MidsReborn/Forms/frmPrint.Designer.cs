@@ -45,6 +45,7 @@ namespace Mids_Reborn.Forms
             this.dlgSetup = new System.Windows.Forms.PageSetupDialog();
             this.lblPrinter = new System.Windows.Forms.Label();
             this.btnLayout = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.GroupBox1.SuspendLayout();
             this.GroupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -173,9 +174,9 @@ namespace Mids_Reborn.Forms
             // lblPrinter
             // 
             this.lblPrinter.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblPrinter.Location = new System.Drawing.Point(12, 12);
+            this.lblPrinter.Location = new System.Drawing.Point(57, 12);
             this.lblPrinter.Name = "lblPrinter";
-            this.lblPrinter.Size = new System.Drawing.Size(310, 23);
+            this.lblPrinter.Size = new System.Drawing.Size(265, 23);
             this.lblPrinter.TabIndex = 7;
             this.lblPrinter.Text = "No Printer";
             this.lblPrinter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -190,12 +191,23 @@ namespace Mids_Reborn.Forms
             this.btnLayout.UseVisualStyleBackColor = true;
             this.btnLayout.Click += new System.EventHandler(this.btnLayout_Click);
             // 
+            // label1
+            // 
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label1.Location = new System.Drawing.Point(12, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 23);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Printer:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // frmPrint
             // 
             this.AcceptButton = this.btnPrint;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(462, 180);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnLayout);
             this.Controls.Add(this.lblPrinter);
             this.Controls.Add(this.btnCancel);
@@ -232,5 +244,6 @@ namespace Mids_Reborn.Forms
         RadioButton rbProfileLong;
         RadioButton rbProfileNone;
         RadioButton rbProfileShort;
+        private Label label1;
     }
 }

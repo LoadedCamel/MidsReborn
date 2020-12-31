@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Windows.Forms;
 using mrbBase;
@@ -56,10 +57,12 @@ namespace Mids_Reborn.Forms
 
         private void btnPrinter_Click(object sender, EventArgs e)
         {
-            new PrintDialog
+            var ret = new PrintDialog
             {
                 Document = _printer.Document
             }.ShowDialog();
+            if (ret == DialogResult.Cancel) return;
+            
             lblPrinter.Text = _printer.Document.PrinterSettings.PrinterName;
         }
 
