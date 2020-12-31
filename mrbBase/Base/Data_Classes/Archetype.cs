@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using mrbBase.Base.Display;
 
 namespace mrbBase.Base.Data_Classes
@@ -9,6 +11,11 @@ namespace mrbBase.Base.Data_Classes
     {
         public bool IsModified;
         public bool IsNew;
+        public Image Image(List<string> atImages)
+        {
+            var img = atImages.FirstOrDefault(i => i.Contains(ClassName));
+            return System.Drawing.Image.FromFile(img ?? throw new InvalidOperationException());
+        }
 
         public Archetype()
         {
