@@ -10,7 +10,7 @@ namespace mrbBase.Base.Master_Classes
         private const int AppMinorVersion = 0;
         private const int AppBuildVersion = 2;
         private const int AppRevisionVersion = 2;
-        public const string AppAssemblyVersion = "3.0.1.9";
+        public const string AppAssemblyVersion = "3.0.2.2";
         public const string AppVersionStatus = "(Release Canidate)";
 
         public const string Title = "Mids' Reborn";
