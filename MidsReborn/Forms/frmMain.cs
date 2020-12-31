@@ -1284,10 +1284,8 @@ namespace Mids_Reborn.Forms
 
         public void DoRedraw()
         {
-            if (drawing == null)
-            {
-                return;
-            }
+            if (drawing == null) return;
+            
             NoResizeEvent = true;
             var width = pnlGFXFlow.Width;
             var scale = 1.0;
@@ -1298,7 +1296,8 @@ namespace Mids_Reborn.Forms
                 scale = flowWidth / (double)drawingArea.Width;
             }
 
-            pnlGFX.Width = flowWidth - 10;
+            // Prevent horizontal scrollbar to appear
+            pnlGFX.Width = flowWidth - 26; // - 10;
             pnlGFX.Height = (int)Math.Round(drawingArea.Height * scale);
             pnlGFX.Update();
             pnlGFXFlow.Update();
@@ -5749,8 +5748,7 @@ namespace Mids_Reborn.Forms
 
         private void UpdateControls(bool ForceComplete = false)
         {
-            if (loading)
-                return;
+            if (loading) return;
 
             NoUpdate = true;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
