@@ -81,7 +81,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.cbEnh = new System.Windows.Forms.ComboBox();
             this.GroupBox2 = new System.Windows.Forms.GroupBox();
-            this.txtStaticIndex = new System.Windows.Forms.TextBox();
             this.Label16 = new System.Windows.Forms.Label();
             this.cbIsHidden = new System.Windows.Forms.CheckBox();
             this.cbIsVirtual = new System.Windows.Forms.CheckBox();
@@ -107,6 +106,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lstSubRecipeComponents = new System.Windows.Forms.ListBox();
+            this.udStaticIndex = new System.Windows.Forms.NumericUpDown();
+            this.btnAutoMarkGeneric = new System.Windows.Forms.Button();
             this.GroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udSal4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal3)).BeginInit();
@@ -121,6 +122,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaticIndex)).BeginInit();
             this.SuspendLayout();
             // 
             // lvDPA
@@ -732,7 +734,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // GroupBox2
             // 
-            this.GroupBox2.Controls.Add(this.txtStaticIndex);
+            this.GroupBox2.Controls.Add(this.btnAutoMarkGeneric);
+            this.GroupBox2.Controls.Add(this.udStaticIndex);
             this.GroupBox2.Controls.Add(this.Label16);
             this.GroupBox2.Controls.Add(this.cbIsHidden);
             this.GroupBox2.Controls.Add(this.cbIsVirtual);
@@ -752,13 +755,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox2.TabIndex = 9;
             this.GroupBox2.TabStop = false;
             this.GroupBox2.Text = "Recipe:";
-            // 
-            // txtStaticIndex
-            // 
-            this.txtStaticIndex.Location = new System.Drawing.Point(6, 39);
-            this.txtStaticIndex.Name = "txtStaticIndex";
-            this.txtStaticIndex.Size = new System.Drawing.Size(202, 20);
-            this.txtStaticIndex.TabIndex = 355;
             // 
             // Label16
             // 
@@ -794,7 +790,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // cbIsGeneric
             // 
             this.cbIsGeneric.AutoSize = true;
-            this.cbIsGeneric.Location = new System.Drawing.Point(16, 305);
+            this.cbIsGeneric.Location = new System.Drawing.Point(16, 302);
             this.cbIsGeneric.Name = "cbIsGeneric";
             this.cbIsGeneric.Size = new System.Drawing.Size(64, 18);
             this.cbIsGeneric.TabIndex = 352;
@@ -804,7 +800,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblEnh
             // 
-            this.lblEnh.Location = new System.Drawing.Point(6, 270);
+            this.lblEnh.Location = new System.Drawing.Point(6, 267);
             this.lblEnh.Name = "lblEnh";
             this.lblEnh.Size = new System.Drawing.Size(202, 28);
             this.lblEnh.TabIndex = 17;
@@ -1014,6 +1010,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lstSubRecipeComponents.Size = new System.Drawing.Size(397, 116);
             this.lstSubRecipeComponents.TabIndex = 0;
             // 
+            // udStaticIndex
+            // 
+            this.udStaticIndex.Enabled = false;
+            this.udStaticIndex.Location = new System.Drawing.Point(6, 39);
+            this.udStaticIndex.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.udStaticIndex.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.udStaticIndex.Name = "udStaticIndex";
+            this.udStaticIndex.Size = new System.Drawing.Size(202, 20);
+            this.udStaticIndex.TabIndex = 357;
+            this.udStaticIndex.ThousandsSeparator = true;
+            this.udStaticIndex.ValueChanged += new System.EventHandler(this.udStaticIndex_ValueChanged);
+            this.udStaticIndex.Leave += new System.EventHandler(this.udStaticIndex_Leave);
+            // 
+            // btnAutoMarkGeneric
+            // 
+            this.btnAutoMarkGeneric.Location = new System.Drawing.Point(107, 300);
+            this.btnAutoMarkGeneric.Name = "btnAutoMarkGeneric";
+            this.btnAutoMarkGeneric.Size = new System.Drawing.Size(98, 24);
+            this.btnAutoMarkGeneric.TabIndex = 358;
+            this.btnAutoMarkGeneric.Text = "Auto-mark all";
+            this.btnAutoMarkGeneric.UseVisualStyleBackColor = true;
+            this.btnAutoMarkGeneric.Click += new System.EventHandler(this.btnAutoMarkGeneric_Click);
+            // 
             // frmRecipeEdit
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1054,6 +1081,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.udStaticIndex)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1132,8 +1160,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private CheckBox cbIsGeneric;
         private CheckBox cbIsHidden;
         private ColumnHeader columnHeader5;
-        private TextBox txtStaticIndex;
         private Label Label16;
         private ColumnHeader columnHeader6;
+        private NumericUpDown udStaticIndex;
+        private Button btnAutoMarkGeneric;
     }
 }
