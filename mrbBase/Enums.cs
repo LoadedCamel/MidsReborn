@@ -26,8 +26,8 @@ namespace mrbBase
 
         public enum dmModes
         {
-            LevelUp,
-            Dynamic,
+            None,
+            Normal,
             Respec
         }
 

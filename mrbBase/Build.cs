@@ -404,9 +404,15 @@ namespace mrbBase
         {
             var slotsPlacedAtLevel = 0;
             foreach (var powerIdx in Powers)
+            {
                 for (var slotIdx = 0; slotIdx < powerIdx.Slots.Length; ++slotIdx)
+                {
                     if (powerIdx.Slots[slotIdx].Level == level)
+                    {
                         ++slotsPlacedAtLevel;
+                    }
+                }
+            }
 
             return slotsPlacedAtLevel;
         }

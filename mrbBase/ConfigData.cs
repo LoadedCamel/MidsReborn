@@ -128,7 +128,7 @@ namespace mrbBase
         public bool DiscordAuthorized { get; set; }
         public int Registered { get; set; } = 0;
         public bool DisableDesaturateInherent { get; set; }
-        public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Dynamic;
+        public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Normal;
         public Enums.dmItem BuildOption { get; set; } = Enums.dmItem.Slot;
         public bool DisableShowPopup { get; set; }
         public bool DisableAlphaPopup { get; set; }

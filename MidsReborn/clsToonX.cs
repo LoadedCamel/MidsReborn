@@ -128,18 +128,11 @@ namespace Mids_Reborn
                 var i = -1;
                 switch (MidsContext.Config.BuildMode)
                 {
-                    case Enums.dmModes.LevelUp:
-                    {
-                        i = GetFirstAvailablePowerIndex(DatabaseAPI.Database.Power[powerID].Level - 1);
-                        if (i < 0)
-                            message = "You cannot place any additional powers unless you first remove one.";
-                        else if (CurrentBuild.Powers[i].Level > Level)
-                            i = -1;
-                        else if (!TestPower(powerID))
-                            i = -1;
+                    case Enums.dmModes.Normal:
+                        i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel,
+                            DatabaseAPI.Database.Power[powerID].Level - 1));
                         break;
-                    }
-                    case Enums.dmModes.Dynamic:
+                    case Enums.dmModes.Respec:
                         i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel,
                             DatabaseAPI.Database.Power[powerID].Level - 1));
                         break;
@@ -1655,7 +1648,7 @@ namespace Mids_Reborn
             // why are these two being saved then set back later, is something mutating them?
             var buildMode = MidsContext.Config.BuildMode;
             var buildOption = MidsContext.Config.BuildOption;
-            MidsContext.Config.BuildMode = Enums.dmModes.Dynamic;
+            MidsContext.Config.BuildMode = Enums.dmModes.Normal;
             MidsContext.Config.BuildOption = Enums.dmItem.Slot;
             var ret = IoGrab2(iStream);
             Name = ret[0];
@@ -2271,7 +2264,9 @@ namespace Mids_Reborn
             var inToonHistory = CurrentBuild.FindInToonHistory(nIDPower);
             var flag1 = inToonHistory > -1;
             var num1 = Level;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic && RequestedLevel > -1)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal && RequestedLevel > -1)
+                num1 = RequestedLevel;
+            else if (MidsContext.Config.BuildMode == Enums.dmModes.Respec && RequestedLevel > -1)
                 num1 = RequestedLevel;
             var nLevel = num1;
             if (flag1)

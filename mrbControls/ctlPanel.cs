@@ -6,7 +6,7 @@ namespace mrbControls
     {
         public ctlPanel()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ContainerControl|ControlStyles.ResizeRedraw|ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.DoubleBuffer|ControlStyles.ContainerControl|ControlStyles.ResizeRedraw|ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
         }
     }

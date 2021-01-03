@@ -1440,7 +1440,16 @@ namespace mrbBase
 
         public static bool LoadLevelsDatabase()
         {
-            var path = Files.SelectDataFileLoad("Levels.mhd");
+            var path = string.Empty;
+            switch (MidsContext.Config.BuildMode)
+            {
+                case Enums.dmModes.Normal:
+                    path = Files.SelectDataFileLoad("NLevels.mhd");
+                    break;
+                case Enums.dmModes.Respec:
+                    path = Files.SelectDataFileLoad("RLevels.mhd");
+                    break;
+            }
             Database.Levels = new LevelMap[0];
             StreamReader iStream;
             try
