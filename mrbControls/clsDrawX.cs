@@ -23,19 +23,54 @@ namespace mrbControls
 
         private const string NewSlotName = "Newslot.png";
 
+        // Horizontal space between power slots
         private const int PaddingX = 15;
 
+        // Vertical space between power slots
         private const int PaddingY = 25;
 
+        // Vertical offset for enhancement slots
         public const int OffsetY = 23;
 
-        private const int EnhOffsetX = 30;
+        // Horizontal offset for enhancement slots
+        private const int OffsetX = 30;
 
         private const int OffsetInherent = 10;
 
-        private const int vcPowers = 24;
+        // Same size as target drawing area
+        private Size szBuffer;
 
-        private const int icoOffset = 32;
+        // Size of a power slot
+        public Size SzPower { get; }
+
+        // Size of an enhancement slot
+        public Size szSlot;
+
+        // Surface to draw on before combining to display
+        public ExtendedBitmap bxBuffer;
+
+        // List of disabled, empty, filled, waiting
+        public readonly List<ExtendedBitmap> bxPower;
+
+        // The unplaced enhancement slot image
+        private readonly ExtendedBitmap bxNewSlot;
+
+        // Graphics object of target drawing surface (The panel)
+        private Graphics gTarget;
+
+
+        // Column variables
+        private const int vcPowers = 24;
+        private int vcCols;
+        private int vcRowsPowers;
+
+        // Recoloring variables
+        private ColorMatrix pColorMatrix;
+        public ImageAttributes pImageAttributes;
+
+        // Scaling variables
+        private float ScaleValue;
+        public bool Scaling { get; private set; }
 
         public static readonly float[][] heroMatrix =
         {
@@ -60,7 +95,6 @@ namespace mrbControls
                 0f, 0f, 0f, 0f, 1f
             }
         };
-
         private static readonly float[][] villainMatrix =
         {
             new[]
@@ -84,41 +118,15 @@ namespace mrbControls
                 0, 0, 0, 0, 1f
             }
         };
-
-        private readonly ExtendedBitmap bxNewSlot;
-
-        //public readonly ExtendedBitmap[] bxPower;
-        public readonly List<ExtendedBitmap> bxPower;
-
+        private const int icoOffset = 32;
         private Color BackColor;
-
-        public ExtendedBitmap bxBuffer;
-
         private Control cTarget;
-
         private Font DefaultFont;
-
-        private Graphics gTarget;
-
         public int Highlight;
-
         public Enums.eInterfaceMode InterfaceMode;
-
-        private ColorMatrix pColorMatrix;
-
-        public ImageAttributes pImageAttributes;
-
+        
         //bool VillainColor;
-
-        private float ScaleValue;
-
-        private Size szBuffer;
-
-        public Size szSlot;
-
-        private int vcCols;
-        private int vcRowsPowers;
-
+        
         public clsDrawX(Control iTarget)
         {
             InterfaceMode = 0;
@@ -182,16 +190,9 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x1700000A RID: 10
-        // (get) Token: 0x0600001B RID: 27 RVA: 0x000022E0 File Offset: 0x000004E0
-        public bool EpicColumns => MidsContext.Character != null && MidsContext.Character.Archetype != null &&
-                                   MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic;
+        public bool EpicColumns => MidsContext.Character != null && MidsContext.Character.Archetype != null && MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic;
 
-        // Token: 0x1700000B RID: 11
-        // (get) Token: 0x0600001C RID: 28 RVA: 0x0000231C File Offset: 0x0000051C
-        public bool Scaling { get; private set; }
-
-        public int Columns
+       public int Columns
         {
             set
             {
@@ -214,8 +215,6 @@ namespace mrbControls
                 vcRowsPowers = vcPowers / vcCols;
             }
         }
-
-        public Size SzPower { get; }
 
         public void ReInit(Control iTarget)
         {
@@ -478,7 +477,7 @@ namespace mrbControls
             checked
             {
                 //Position of enhancements drawing
-                point.X = (int)Math.Round(result.X - EnhOffsetX + checked(SzPower.Width - szSlot.Width * 6) / 2.0);
+                point.X = (int)Math.Round(result.X - OffsetX + checked(SzPower.Width - szSlot.Width * 6) / 2.0);
                 point.Y = result.Y + OffsetY;
                 //
                 Graphics graphics = bxBuffer.Graphics;
@@ -1066,31 +1065,42 @@ namespace mrbControls
 
         public void SetScaling(Size iSize)
         {
-            var scaleEnabled = Scaling;
-            var scaleValue = ScaleValue;
+            var origScaling = Scaling;
+            var origScaleValue = ScaleValue;
             if ((iSize.Width < 10) | (iSize.Height < 10))
                 return;
             var drawingArea = GetDrawingArea();
             if ((drawingArea.Width > iSize.Width) | (drawingArea.Height > iSize.Height))
             {
+                // Enable scaling
                 Scaling = true;
-                ScaleValue = (double) drawingArea.Width / iSize.Width > drawingArea.Height / (double) iSize.Height
-                    ? (float) (drawingArea.Width / (double) iSize.Width)
-                    : (float) (drawingArea.Height / (double) iSize.Height);
+                if ((double) drawingArea.Width / iSize.Width > drawingArea.Height / (double) iSize.Height)
+                {
+                    // Shrink to fit width
+                    ScaleValue = (float) (drawingArea.Width / (double) iSize.Width);
+                }
+                else
+                {
+                    // Fit height
+                    ScaleValue = (float) (drawingArea.Height / (double) iSize.Height);
+                }
+
                 ResetTarget();
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
-                if (!(Math.Abs(ScaleValue - scaleValue) > float.Epsilon))
-                    return;
-                FullRedraw();
-                bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-                bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
+
+                if (ScaleValue != origScaleValue)
+                {
+                    FullRedraw();
+                    bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+                    bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
+                }
             }
             else
             {
@@ -1098,14 +1108,16 @@ namespace mrbControls
                 ScaleValue = 1f;
                 ResetTarget();
                 Scaling = false;
-                if ((scaleEnabled != Scaling) | (Math.Abs(scaleValue - ScaleValue) > float.Epsilon)) FullRedraw();
+                if (origScaling != Scaling | origScaleValue != ScaleValue)
+                {
+                    FullRedraw();
+                }
             }
         }
 
         private void ResetTarget()
         {
-            bxBuffer.Graphics.TextRenderingHint =
-                ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.ClearTypeGridFit;
+            bxBuffer.Graphics.TextRenderingHint = ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.ClearTypeGridFit;
             gTarget.Dispose();
             gTarget = cTarget.CreateGraphics();
             gTarget.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -1117,6 +1129,8 @@ namespace mrbControls
 
         public int ScaleDown(int iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             int result;
             if (!Scaling)
             {
@@ -1133,6 +1147,8 @@ namespace mrbControls
 
         public int ScaleUp(int iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             int result;
             if (!Scaling)
             {
@@ -1149,6 +1165,8 @@ namespace mrbControls
 
         private float ScaleDown(float iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             float result;
             if (!Scaling)
             {
@@ -1165,6 +1183,8 @@ namespace mrbControls
 
         public Rectangle ScaleDown(Rectangle iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             checked
             {
                 Rectangle result;
@@ -1187,6 +1207,8 @@ namespace mrbControls
 
         private RectangleF ScaleDown(RectangleF iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             checked
             {
                 if (!Scaling)
@@ -1317,6 +1339,7 @@ namespace mrbControls
 
         public Rectangle PowerBoundsUnScaled(int hIdx)
         {
+            // Returns unscaled bounds
             var rectangle = new Rectangle(0, 0, 1, 1);
             checked
             {
@@ -2109,6 +2132,7 @@ namespace mrbControls
             var powerIdx = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry);
             checked
             {
+                // Assume that this is a copy and not the actual powerEntry item
                 if (powerIdx == -1)
                 {
                     const int num2 = 0;
@@ -2131,9 +2155,15 @@ namespace mrbControls
                 if (!powerEntry.Chosen)
                 {
                     if (displayLocation == -1 && powerEntry.Power != null)
+                    {
                         displayLocation = powerEntry.Power.DisplayLocation;
+                    }
 
-                    if (displayLocation <= -1) return CRtoXY(iCol, iRow);
+                    if (displayLocation <= -1)
+                    {
+                        return CRtoXY(iCol, iRow);
+                    }
+
                     iRow = vcRowsPowers;
                     for (var i = 0; i <= inherentGrid.Length - 1; i++)
                     {
@@ -2186,6 +2216,8 @@ namespace mrbControls
 
         private Point CRtoXY(int iCol, int iRow)
         {
+            // Convert a column/row location to the top left XY co-ord of a power entry
+            // 3 Columns, 15 Rows
             var result = new Point(0, 0);
             checked
             {

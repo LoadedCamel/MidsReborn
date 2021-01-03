@@ -11,7 +11,7 @@ using mrbBase;
 
 namespace Mids_Reborn.UIv2.v2Controls
 {
-    public partial class PowersControl : TableLayoutPanel
+    public partial class PowersControl : PictureBox
     {
         [Description("The color of the Power text.")]
         [Category("PowerSettings")]
@@ -39,9 +39,26 @@ namespace Mids_Reborn.UIv2.v2Controls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Collection<ButtonImages> ButtonImages => field;
 
+        [Description("Sets the number of columns to be used.")]
+        [Category("PowerSettings")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public int Columns { get; set; }
+
+        [Description("Sets the number of rows to be used.")]
+        [Category("PowerSettings")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public int Rows { get; set; }
+
         private List<PowerItem> Items { get; set; }
         public PowersControl()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor | ControlStyles.UserPaint, true);
             Items = new List<PowerItem>();
             InitializeComponent();
         }
@@ -63,6 +80,11 @@ namespace Mids_Reborn.UIv2.v2Controls
         {
             var match = Items.FindIndex(p => p.Position == pos);
             Items.RemoveAt(match);
+        }
+
+        private void DrawPowers()
+        {
+
         }
     }
 
