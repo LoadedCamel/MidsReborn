@@ -970,9 +970,7 @@ namespace mrbControls
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset > -1)
                         {
-                            if (DatabaseAPI.Database
-                                .Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset]
-                                .Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable)
+                            if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable)
                                 isValid = true;
                         }
                         else

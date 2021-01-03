@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using mrbControls;
 
-namespace Mids_Reborn
+namespace Mids_Reborn.UIv2
 {
     partial class Form1
     {
@@ -35,49 +35,45 @@ namespace Mids_Reborn
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuSlideTimer = new System.Windows.Forms.Timer(this.components);
             this.BGImage = new System.Windows.Forms.PictureBox();
-            this.MainPanel = new ctlPanel();
-            this.pnlGFXFlow = new System.Windows.Forms.FlowLayoutPanel();
-            this.pnlGFX = new System.Windows.Forms.PictureBox();
-            this.Ancillary_Powers = new ctlPowerList();
-            this.cbAncillary = new ctlCombo();
+            this.MainPanel = new mrbControls.ctlPanel();
+            this.Ancillary_Powers = new mrbControls.ctlPowerList();
+            this.cbAncillary = new mrbControls.ctlCombo();
             this.label11 = new System.Windows.Forms.Label();
-            this.Pool3_Powers = new ctlPowerList();
-            this.cbPool3 = new ctlCombo();
+            this.Pool3_Powers = new mrbControls.ctlPowerList();
+            this.cbPool3 = new mrbControls.ctlCombo();
             this.label10 = new System.Windows.Forms.Label();
-            this.Pool2_Powers = new ctlPowerList();
-            this.cbPool2 = new ctlCombo();
+            this.Pool2_Powers = new mrbControls.ctlPowerList();
+            this.cbPool2 = new mrbControls.ctlCombo();
             this.label9 = new System.Windows.Forms.Label();
-            this.Pool1_Powers = new ctlPowerList();
-            this.cbPool1 = new ctlCombo();
+            this.Pool1_Powers = new mrbControls.ctlPowerList();
+            this.cbPool1 = new mrbControls.ctlCombo();
             this.label8 = new System.Windows.Forms.Label();
-            this.Pool0_Powers = new ctlPowerList();
-            this.cbPool0 = new ctlCombo();
+            this.Pool0_Powers = new mrbControls.ctlPowerList();
+            this.cbPool0 = new mrbControls.ctlCombo();
             this.label7 = new System.Windows.Forms.Label();
-            this.Secondary_Powers = new ctlPowerList();
-            this.Primary_Powers = new ctlPowerList();
-            this.cbSecondary = new ctlCombo();
+            this.Secondary_Powers = new mrbControls.ctlPowerList();
+            this.Primary_Powers = new mrbControls.ctlPowerList();
+            this.cbSecondary = new mrbControls.ctlCombo();
             this.label6 = new System.Windows.Forms.Label();
-            this.cbPrimary = new ctlCombo();
+            this.cbPrimary = new mrbControls.ctlCombo();
             this.label5 = new System.Windows.Forms.Label();
-            this.cbOrigin = new ctlCombo();
+            this.cbOrigin = new mrbControls.ctlCombo();
             this.label4 = new System.Windows.Forms.Label();
-            this.cbAT = new ctlCombo();
+            this.cbAT = new mrbControls.ctlCombo();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.SlidePanel = new ctlPanel();
+            this.SlidePanel = new mrbControls.ctlPanel();
             this.MenuGrip = new FontAwesome.Sharp.IconButton();
-            this.menuPanel = new ctlPanel();
-            this.TopPanel = new ctlPanel();
+            this.menuPanel = new mrbControls.ctlPanel();
+            this.TopPanel = new mrbControls.ctlPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.ExitPanel = new ctlPanel();
+            this.ExitPanel = new mrbControls.ctlPanel();
             this.MinimizeButton = new FontAwesome.Sharp.IconButton();
             this.CloseButton = new FontAwesome.Sharp.IconButton();
             ((System.ComponentModel.ISupportInitialize)(this.BGImage)).BeginInit();
             this.MainPanel.SuspendLayout();
-            this.pnlGFXFlow.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlGFX)).BeginInit();
             this.SlidePanel.SuspendLayout();
             this.TopPanel.SuspendLayout();
             this.ExitPanel.SuspendLayout();
@@ -102,7 +98,6 @@ namespace Mids_Reborn
             // MainPanel
             // 
             this.MainPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.MainPanel.Controls.Add(this.pnlGFXFlow);
             this.MainPanel.Controls.Add(this.Ancillary_Powers);
             this.MainPanel.Controls.Add(this.cbAncillary);
             this.MainPanel.Controls.Add(this.label11);
@@ -136,23 +131,6 @@ namespace Mids_Reborn
             this.MainPanel.Size = new System.Drawing.Size(1325, 976);
             this.MainPanel.TabIndex = 3;
             // 
-            // pnlGFXFlow
-            // 
-            this.pnlGFXFlow.Controls.Add(this.pnlGFX);
-            this.pnlGFXFlow.Location = new System.Drawing.Point(615, 6);
-            this.pnlGFXFlow.Name = "pnlGFXFlow";
-            this.pnlGFXFlow.Size = new System.Drawing.Size(702, 967);
-            this.pnlGFXFlow.TabIndex = 105;
-            // 
-            // pnlGFX
-            // 
-            this.pnlGFX.BackColor = System.Drawing.Color.Transparent;
-            this.pnlGFX.Location = new System.Drawing.Point(3, 3);
-            this.pnlGFX.Name = "pnlGFX";
-            this.pnlGFX.Size = new System.Drawing.Size(712, 964);
-            this.pnlGFX.TabIndex = 104;
-            this.pnlGFX.TabStop = false;
-            // 
             // Ancillary_Powers
             // 
             this.Ancillary_Powers.BackColor = System.Drawing.Color.Transparent;
@@ -177,7 +155,7 @@ namespace Mids_Reborn
             // 
             // cbAncillary
             // 
-            this.cbAncillary.ComboType = ctlCombo.ComboBoxType.Ancillary;
+            this.cbAncillary.ComboType = mrbControls.ctlCombo.ComboBoxType.Ancillary;
             this.cbAncillary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbAncillary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAncillary.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -226,7 +204,7 @@ namespace Mids_Reborn
             // 
             // cbPool3
             // 
-            this.cbPool3.ComboType = ctlCombo.ComboBoxType.Pool;
+            this.cbPool3.ComboType = mrbControls.ctlCombo.ComboBoxType.Pool;
             this.cbPool3.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPool3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -275,7 +253,7 @@ namespace Mids_Reborn
             // 
             // cbPool2
             // 
-            this.cbPool2.ComboType = ctlCombo.ComboBoxType.Pool;
+            this.cbPool2.ComboType = mrbControls.ctlCombo.ComboBoxType.Pool;
             this.cbPool2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPool2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -324,7 +302,7 @@ namespace Mids_Reborn
             // 
             // cbPool1
             // 
-            this.cbPool1.ComboType = ctlCombo.ComboBoxType.Pool;
+            this.cbPool1.ComboType = mrbControls.ctlCombo.ComboBoxType.Pool;
             this.cbPool1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPool1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -373,7 +351,7 @@ namespace Mids_Reborn
             // 
             // cbPool0
             // 
-            this.cbPool0.ComboType = ctlCombo.ComboBoxType.Pool;
+            this.cbPool0.ComboType = mrbControls.ctlCombo.ComboBoxType.Pool;
             this.cbPool0.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPool0.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPool0.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -453,7 +431,7 @@ namespace Mids_Reborn
             // 
             // cbSecondary
             // 
-            this.cbSecondary.ComboType = ctlCombo.ComboBoxType.Secondary;
+            this.cbSecondary.ComboType = mrbControls.ctlCombo.ComboBoxType.Secondary;
             this.cbSecondary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbSecondary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSecondary.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -480,7 +458,7 @@ namespace Mids_Reborn
             // 
             // cbPrimary
             // 
-            this.cbPrimary.ComboType = ctlCombo.ComboBoxType.Primary;
+            this.cbPrimary.ComboType = mrbControls.ctlCombo.ComboBoxType.Primary;
             this.cbPrimary.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbPrimary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPrimary.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -507,7 +485,7 @@ namespace Mids_Reborn
             // 
             // cbOrigin
             // 
-            this.cbOrigin.ComboType = ctlCombo.ComboBoxType.Origin;
+            this.cbOrigin.ComboType = mrbControls.ctlCombo.ComboBoxType.Origin;
             this.cbOrigin.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbOrigin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbOrigin.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -534,7 +512,7 @@ namespace Mids_Reborn
             // 
             // cbAT
             // 
-            this.cbAT.ComboType = ctlCombo.ComboBoxType.Archetype;
+            this.cbAT.ComboType = mrbControls.ctlCombo.ComboBoxType.Archetype;
             this.cbAT.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAT.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -594,15 +572,14 @@ namespace Mids_Reborn
             this.MenuGrip.BackColor = System.Drawing.Color.Transparent;
             this.MenuGrip.FlatAppearance.BorderSize = 0;
             this.MenuGrip.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MenuGrip.Flip = FontAwesome.Sharp.FlipOrientation.Normal;
             this.MenuGrip.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MenuGrip.IconChar = FontAwesome.Sharp.IconChar.Bars;
             this.MenuGrip.IconColor = System.Drawing.Color.White;
+            this.MenuGrip.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.MenuGrip.IconSize = 32;
             this.MenuGrip.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.MenuGrip.Location = new System.Drawing.Point(9, 6);
             this.MenuGrip.Name = "MenuGrip";
-            this.MenuGrip.Rotation = 0D;
             this.MenuGrip.Size = new System.Drawing.Size(35, 38);
             this.MenuGrip.TabIndex = 0;
             this.MenuGrip.UseVisualStyleBackColor = false;
@@ -637,11 +614,11 @@ namespace Mids_Reborn
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Showcard Gothic", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.DodgerBlue;
             this.label1.Location = new System.Drawing.Point(47, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 20);
+            this.label1.Size = new System.Drawing.Size(110, 20);
             this.label1.TabIndex = 2;
             this.label1.Text = "Mids Reborn";
             // 
@@ -674,13 +651,12 @@ namespace Mids_Reborn
             // 
             this.MinimizeButton.FlatAppearance.BorderSize = 0;
             this.MinimizeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MinimizeButton.Flip = FontAwesome.Sharp.FlipOrientation.Normal;
             this.MinimizeButton.IconChar = FontAwesome.Sharp.IconChar.WindowMinimize;
             this.MinimizeButton.IconColor = System.Drawing.Color.White;
+            this.MinimizeButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.MinimizeButton.IconSize = 32;
             this.MinimizeButton.Location = new System.Drawing.Point(3, 10);
             this.MinimizeButton.Name = "MinimizeButton";
-            this.MinimizeButton.Rotation = 0D;
             this.MinimizeButton.Size = new System.Drawing.Size(23, 23);
             this.MinimizeButton.TabIndex = 2;
             this.MinimizeButton.UseVisualStyleBackColor = true;
@@ -692,13 +668,12 @@ namespace Mids_Reborn
             // 
             this.CloseButton.FlatAppearance.BorderSize = 0;
             this.CloseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CloseButton.Flip = FontAwesome.Sharp.FlipOrientation.Normal;
             this.CloseButton.IconChar = FontAwesome.Sharp.IconChar.WindowClose;
             this.CloseButton.IconColor = System.Drawing.Color.White;
+            this.CloseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.CloseButton.IconSize = 32;
             this.CloseButton.Location = new System.Drawing.Point(32, 10);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Rotation = 0D;
             this.CloseButton.Size = new System.Drawing.Size(23, 23);
             this.CloseButton.TabIndex = 0;
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -729,8 +704,6 @@ namespace Mids_Reborn
             ((System.ComponentModel.ISupportInitialize)(this.BGImage)).EndInit();
             this.MainPanel.ResumeLayout(false);
             this.MainPanel.PerformLayout();
-            this.pnlGFXFlow.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pnlGFX)).EndInit();
             this.SlidePanel.ResumeLayout(false);
             this.TopPanel.ResumeLayout(false);
             this.TopPanel.PerformLayout();
@@ -779,7 +752,5 @@ namespace Mids_Reborn
         private ctlCombo cbAncillary;
         private Label label11;
         private ctlPanel menuPanel;
-        private FlowLayoutPanel pnlGFXFlow;
-        private PictureBox pnlGFX;
     }
 }

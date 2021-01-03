@@ -43,7 +43,7 @@ namespace mrbBase.Base.Data_Classes
                 if (LevelCache > -1) return LevelCache;
 
                 int num2;
-                if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+                if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
                 {
                     num2 = CurrentBuild.GetMaxLevel();
                 }
@@ -200,17 +200,15 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+                if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
                 {
-                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 &&
-                        MidsContext.Config.BuildOption != Enums.dmItem.Power)
+                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
                         return true;
                 }
-                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) &&
-                         DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
+                /*else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
                 {
                     return true;
-                }
+                }*/
 
                 return false;
             }
@@ -1074,11 +1072,16 @@ namespace mrbBase.Base.Data_Classes
         private int GetFirstAvailableSlotLevel(int iLevel = 0)
         {
             if (iLevel < 0)
+            {
                 iLevel = 0;
+            }
+
             for (var level = iLevel; level < DatabaseAPI.Database.Levels.Length; ++level)
-                if (DatabaseAPI.Database.Levels[level].Slots > 0 &&
-                    DatabaseAPI.Database.Levels[level].Slots - CurrentBuild.SlotsPlacedAtLevel(level) > 0)
+            {
+                if (DatabaseAPI.Database.Levels[level].Slots > 0 && DatabaseAPI.Database.Levels[level].Slots - CurrentBuild.SlotsPlacedAtLevel(level) > 0)
                     return level;
+            }
+
             return -1;
         }
 
@@ -1086,15 +1089,19 @@ namespace mrbBase.Base.Data_Classes
         {
             if (power.Power == null || !CanPlaceSlot || power.SlotCount > 5)
                 return -1;
-            if (!DatabaseAPI.Database.Power[power.NIDPower].Slottable) return -1;
+            if (!DatabaseAPI.Database.Power[power.NIDPower].Slottable)
+            {
+                return -1;
+            }
 
             var iLevel = power.Level;
             if (DatabaseAPI.Database.Power[power.NIDPower].AllowFrontLoading)
+            {
                 iLevel = 0;
+            }
+
             var firstAvailable = GetFirstAvailableSlotLevel(iLevel);
-            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp &&
-                firstAvailable > CurrentBuild.GetMaxLevel() + 1)
-                firstAvailable = -1;
+
             return firstAvailable;
         }
 

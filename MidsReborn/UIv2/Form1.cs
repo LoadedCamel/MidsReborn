@@ -11,7 +11,7 @@ using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 
-namespace Mids_Reborn
+namespace Mids_Reborn.UIv2
 {
     public partial class Form1 : Form
     {

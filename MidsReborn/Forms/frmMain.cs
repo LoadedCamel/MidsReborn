@@ -346,6 +346,7 @@ namespace Mids_Reborn.Forms
                 NoUpdate = false;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 ibSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
+                UpdateModeInfo();
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 ibPopup.Checked = !MidsContext.Config.DisableShowPopup;
                 ibRecipe.Checked = MidsContext.Config.PopupRecipes;
@@ -396,6 +397,31 @@ namespace Mids_Reborn.Forms
         }
 
         //void accoladeButton_ButtonClicked() => PowerModified(markModified: false);
+
+        private void ibMode_ButtonClicked()
+        {
+            if (MainModule.MidsController.Toon == null)
+                return;
+            MidsContext.Config.BuildMode = MidsContext.Config.BuildMode != Enums.dmModes.Normal ? Enums.dmModes.Normal : Enums.dmModes.Respec;
+            if (!DatabaseAPI.LoadLevelsDatabase()) return;
+            MidsContext.Character.ResetLevel();
+            PowerModified(markModified: false);
+            UpdateDMBuffer();
+            pbDynMode.Refresh();
+        }
+
+        private void UpdateModeInfo()
+        {
+            switch (MidsContext.Config.BuildMode)
+            {
+                case Enums.dmModes.Normal:
+                    ibMode.TextOff = "Normal";
+                    break;
+                case Enums.dmModes.Respec:
+                    ibMode.TextOff = "Respec";
+                    break;
+            }
+        }
 
         private void accoladeButton_ButtonClicked()
         {
@@ -1101,13 +1127,14 @@ namespace Mids_Reborn.Forms
             var str2 = "";
             var ch = MidsContext.Character;
             var level = ch.Level;
-            if (!((ch.CurrentBuild.TotalSlotsAvailable - ch.CurrentBuild.SlotsPlaced < 1) &
-                  (ch.CurrentBuild.LastPower + 1 - ch.CurrentBuild.PowersPlaced < 1)) && ch.Level > 0)
+            if (!((ch.CurrentBuild.TotalSlotsAvailable - ch.CurrentBuild.SlotsPlaced < 1) & (ch.CurrentBuild.LastPower + 1 - ch.CurrentBuild.PowersPlaced < 1)) && ch.Level > 0)
+            {
                 str1 = " (Placing " + (ch.Level + 1) + ")";
+            }
+
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
             var str3 = ch.Name + ": ";
-            if ((MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) & (str1 != ""))
-                str3 = str3 + "Level " + level + str1 + " ";
+
             var str4 = str3 + ch.Archetype.Origin[ch.Origin] + " " + ch.Archetype.DisplayName;
             if (MainModule.MidsController.Toon.Locked)
                 str4 = str4 + " (" + ch.Powersets[0].DisplayName + " / " + ch.Powersets[1].DisplayName + ")" + str2;
@@ -1295,7 +1322,6 @@ namespace Mids_Reborn.Forms
             {
                 scale = flowWidth / (double)drawingArea.Width;
             }
-
             // Prevent horizontal scrollbar to appear
             pnlGFX.Width = flowWidth - 26; // - 10;
             pnlGFX.Height = (int)Math.Round(drawingArea.Height * scale);
@@ -2749,7 +2775,7 @@ namespace Mids_Reborn.Forms
 
         private void pbDynMode_Click(object sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Config.BuildMode != Enums.dmModes.Dynamic)
+            if (MainModule.MidsController.Toon == null)
                 return;
             MidsContext.Config.BuildOption = MidsContext.Config.BuildOption == Enums.dmItem.Power
                 ? Enums.dmItem.Slot
@@ -2868,11 +2894,12 @@ namespace Mids_Reborn.Forms
                 return;
             MainModule.MidsController.Toon.BuildSlot(dragStartPower, dragStartSlot);
             // no idea what pnlGFX_MouseDoubleClick represents, marking modified as it would have before the added arg
-            var powerEntryArray = DeepCopyPowerList();
+            /*var powerEntryArray = DeepCopyPowerList();
             RearrangeAllSlotsInBuild(powerEntryArray, true);
             ShallowCopyPowerList(powerEntryArray);
             PowerModified(false);
-            DoRedraw();
+            DoRedraw();*/
+            PowerModified(true);
             FileModified = true;
             DoneDblClick = true;
             LastClickPlacedSlot = false;
@@ -3053,12 +3080,6 @@ namespace Mids_Reborn.Forms
                 }
                 else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Shift) & (slotID > -1))
                 {
-                    if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
-                    {
-                        MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
-                        MidsContext.Character.ResetLevel();
-                    }
-
                     MainModule.MidsController.Toon.BuildSlot(hIDPower, slotID);
                     PowerModified(true);
                     LastClickPlacedSlot = false;
@@ -3067,12 +3088,21 @@ namespace Mids_Reborn.Forms
                 {
                     if ((e.Button == MouseButtons.Left) & !EnhPickerActive)
                     {
-                        if ((MidsContext.Config.BuildMode == Enums.dmModes.Dynamic) & flag)
+                        if ((MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
                         {
                             if (true & (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1))
                             {
-                                MainModule.MidsController.Toon.RequestedLevel =
-                                    MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                UpdatePowerLists();
+                                DoRedraw();
+                                return;
+                            }
+                        }
+                        else if ((MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
+                        {
+                            if (true & (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1))
+                            {
+                                MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
                                 UpdatePowerLists();
                                 DoRedraw();
                                 return;
@@ -3083,11 +3113,12 @@ namespace Mids_Reborn.Forms
                             if (MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
                             {
                                 // adding a slot by itself doesn't really change the build substantially without an enh going into it
-                                var powerEntryArray = DeepCopyPowerList();
+                                /*var powerEntryArray = DeepCopyPowerList();
                                 RearrangeAllSlotsInBuild(powerEntryArray, true);
                                 ShallowCopyPowerList(powerEntryArray);
                                 PowerModified(false);
-                                DoRedraw();
+                                DoRedraw();*/
+                                PowerModified(false);
                                 LastClickPlacedSlot = true;
                                 /* Disabled until can find why it is not saving
                                         MidsContext.Config.Tips.Show(Tips.TipType.FirstEnh);*/
@@ -3122,11 +3153,7 @@ namespace Mids_Reborn.Forms
                                 ref drawing, enhancements);
 
 
-                        var point = new Point(
-                            (int)Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X -
-                                             I9Picker.Width / 2.0),
-                            (int)Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y -
-                                             I9Picker.Height / 2.0));
+                        var point = new Point((int)Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X - I9Picker.Width / 2.0), (int)Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y - I9Picker.Height / 2.0));
                         if (point.Y < MenuBar.Height)
                             point.Y = MenuBar.Height;
                         Size clientSize;
@@ -3179,10 +3206,9 @@ namespace Mids_Reborn.Forms
             fixStatIncludes();
             if (markModified)
                 FileModified = true;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
             {
-                index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon
-                    .RequestedLevel);
+                index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
                 if (index < 0)
                     index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
             }
@@ -3212,7 +3238,7 @@ namespace Mids_Reborn.Forms
             Application.DoEvents();
             UpdateControls();
             RefreshInfo();
-            //UpdateDynamicModeInfo();
+            UpdateModeInfo();
             pbDynMode.Refresh();
         }
 
@@ -4122,7 +4148,7 @@ namespace Mids_Reborn.Forms
                 23, 25, 25, 27, 27,
                 29, 29, 31, 31, 31, 33, 33, 33, 34, 34, 34, 36, 36, 36, 37, 37, 37, 39, 39, 39, 40, 40, 40, 42, 42, 42,
                 43, 43, 43, 45, 45, 45,
-                46, 46, 46, 47, 47, 48, 48, 48, 49, 49, 50, 50, 50);
+                46, 46, 46, 48, 48, 48, 50, 50, 50);
             var flag1 = false;
             var index6 = 0;
             var num5 = tp.Length - 1;
@@ -5702,7 +5728,7 @@ namespace Mids_Reborn.Forms
             {
                 ibSets, ibPvX, incarnateButton, tempPowersButton, petsButton, accoladeButton, heroVillain,
                 prestigeButton, ibTotals, ibTeam, ibSlotLevels,
-                ibPopup, ibRecipe, ibAccolade
+                ibPopup, ibRecipe, ibAccolade, ibMode
             };
             foreach (var ib in ibs)
             {
@@ -5865,11 +5891,6 @@ namespace Mids_Reborn.Forms
             llSecondary.SuspendRedraw = false;
             if (myDataView != null && (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
                 dvAnchored_TabChanged(myDataView.TabPageIndex);
-            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
-            {
-                UpdateDMBuffer();
-                pbDynMode.Refresh();
-            }
 
             DoResize();
             NoUpdate = false;
@@ -5883,7 +5904,7 @@ namespace Mids_Reborn.Forms
                 dmBuffer = new ExtendedBitmap(pbDynMode.Width, pbDynMode.Height);
             Enums.ePowerState ePowerState;
             string iStr;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
             {
                 if (MidsContext.Config.BuildOption == Enums.dmItem.Slot)
                 {
@@ -5912,8 +5933,6 @@ namespace Mids_Reborn.Forms
 
             if (MainModule.MidsController.Toon.Complete)
             {
-                if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
-                    ePowerState = Enums.ePowerState.Used;
                 iStr = "Complete";
             }
 
@@ -6250,7 +6269,7 @@ namespace Mids_Reborn.Forms
             SetTitleBar();
 
             var idx = -1;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
             {
                 idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon
                     .RequestedLevel);
@@ -6294,7 +6313,7 @@ namespace Mids_Reborn.Forms
             MainModule.MidsController.Toon.Complete = !sl.IsValidNext();
             fixStatIncludes();
             FileModified = false;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal)
             {
                 index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
                 if (index < 0)
