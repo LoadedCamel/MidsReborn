@@ -348,6 +348,7 @@ namespace mrbBase.Base.Data_Classes
 
         public bool DisplayPercentage
         {
+            //Computed at display-time unless an override has been set
             get
             {
                 bool flag;

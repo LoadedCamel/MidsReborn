@@ -410,119 +410,10 @@ namespace mrbBase.Base.Data_Classes
             PEnhancementsList = new List<string>();
         }
 
-        public bool ValidateConditional(IPower power)
-        {
-            foreach (var effect in power.Effects)
-            {
-                var getCondition = new Regex("(:.*)");
-                var getConditionItem = new Regex("(.*:)");
-                foreach (var cVp in effect.ActiveConditionals)
-                {
-                    var condition = getCondition.Replace(cVp.Key, "");
-                    var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                    var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                    var cVal = cVp.Value.Split(' ');
-                    switch (condition)
-                    {
-                        case "Active":
-                            if (conditionPower != null)
-                            {
-                                cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
-                            }
 
-                            break;
-                        case "Taken":
-                            if (conditionPower != null)
-                            {
-                                cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
-                                    .Equals(Convert.ToBoolean(cVp.Value));
-                            }
-
-                            break;
-                        case "Stacks":
-                            if (conditionPower != null)
-                            {
-                                switch (cVal[0])
-                                {
-                                    case "=":
-
-                                        cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
-
-                                        break;
-                                    case ">":
-                                        cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
-
-                                        break;
-                                    case "<":
-                                        cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
-
-                                        break;
-                                }
-                            }
-
-                            break;
-                        case "Team":
-                            switch (cVal[0])
-                            {
-                                case "=":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
-                                        .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                                case ">":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                        MidsContext.Config.TeamMembers[conditionItemName] >
-                                        Convert.ToInt32(cVal[1]))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                                case "<":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                        MidsContext.Config.TeamMembers[conditionItemName] <
-                                        Convert.ToInt32(cVal[1]))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                            }
-
-                            break;
-                    }
-                }
-
-                var validCount = effect.ActiveConditionals.Count(b => b.Validated);
-                var invalidCount = effect.ActiveConditionals.Count(b => !b.Validated);
-                if (effect.ActiveConditionals.Count > 0)
-                {
-                    effect.Validated = validCount == effect.ActiveConditionals.Count;
-                    if (effect.Validated)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
+        /// <summary>
+        /// Call this function when a power is enabled/disabled, added, or removed, including when the archetype is changed.
+        /// </summary>
         private void RefreshActiveSpecial()
         {
             ActiveComboLevel = 0;
@@ -816,10 +707,19 @@ namespace mrbBase.Base.Data_Classes
             RefreshActiveSpecial();
         }
 
+        /// <summary>
+        /// Returns true if there is a clash between two chosen powersets.
+        /// </summary>
+        /// <param name="nIDPower"></param>
+        /// <returns></returns>
         protected bool PowersetMutexClash(int nIDPower)
         {
+            //Returns true if there's a clash.
             var powerSetId = DatabaseAPI.Database.Power[nIDPower].PowerSetID;
+
             Enums.PowersetType powersetType;
+
+            //Only check the one set (ie, if power is in primary, we check secondary)
             switch (DatabaseAPI.Database.Powersets[powerSetId].SetType)
             {
                 case Enums.ePowerSetType.Primary:
@@ -838,11 +738,23 @@ namespace mrbBase.Base.Data_Classes
             if (powersetType == Enums.PowersetType.None)
                 return false;
             for (var index = 0; index <= DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets.Length - 1; ++index)
+            {
                 if (DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets[index] == Powersets[(int)powersetType].nID)
+                {
+                    // Powerset combination is denied
                     return true;
+                }
+            }
+
             for (var index = 0; index <= Powersets[(int)powersetType].nIDMutexSets.Length - 1; ++index)
+            {
                 if (Powersets[(int)powersetType].nIDMutexSets[index] == powerSetId)
+                {
+                    // Powerset combination is denied
                     return true;
+                }
+            }
+
             return false;
         }
 
