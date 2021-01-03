@@ -33,9 +33,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             this.lvDPA = new System.Windows.Forms.ListView();
             this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnReGuess = new System.Windows.Forms.Button();
@@ -79,6 +81,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.cbEnh = new System.Windows.Forms.ComboBox();
             this.GroupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtStaticIndex = new System.Windows.Forms.TextBox();
+            this.Label16 = new System.Windows.Forms.Label();
             this.cbIsHidden = new System.Windows.Forms.CheckBox();
             this.cbIsVirtual = new System.Windows.Forms.CheckBox();
             this.cbIsGeneric = new System.Windows.Forms.CheckBox();
@@ -123,30 +127,38 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.lvDPA.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ColumnHeader1,
+            this.columnHeader5,
             this.ColumnHeader2,
             this.ColumnHeader3,
-            this.ColumnHeader4});
+            this.ColumnHeader4,
+            this.columnHeader6});
             this.lvDPA.FullRowSelect = true;
             this.lvDPA.HideSelection = false;
             this.lvDPA.Location = new System.Drawing.Point(12, 12);
             this.lvDPA.MultiSelect = false;
             this.lvDPA.Name = "lvDPA";
-            this.lvDPA.Size = new System.Drawing.Size(599, 273);
+            this.lvDPA.Size = new System.Drawing.Size(662, 322);
             this.lvDPA.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvDPA.TabIndex = 0;
             this.lvDPA.UseCompatibleStateImageBehavior = false;
             this.lvDPA.View = System.Windows.Forms.View.Details;
+            this.lvDPA.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvDPA_ColumnClick);
             this.lvDPA.SelectedIndexChanged += new System.EventHandler(this.lvDPA_SelectedIndexChanged);
             // 
             // ColumnHeader1
             // 
             this.ColumnHeader1.Text = "Recipe";
-            this.ColumnHeader1.Width = 226;
+            this.ColumnHeader1.Width = 201;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Index";
+            this.columnHeader5.Width = 45;
             // 
             // ColumnHeader2
             // 
             this.ColumnHeader2.Text = "Enhancement";
-            this.ColumnHeader2.Width = 183;
+            this.ColumnHeader2.Width = 208;
             // 
             // ColumnHeader3
             // 
@@ -156,11 +168,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader4
             // 
             this.ColumnHeader4.Text = "Entries";
+            this.ColumnHeader4.Width = 45;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Flags";
+            this.columnHeader6.Width = 40;
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(12, 491);
+            this.btnCancel.Location = new System.Drawing.Point(12, 536);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(113, 24);
             this.btnCancel.TabIndex = 5;
@@ -171,7 +189,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(131, 491);
+            this.btnOK.Location = new System.Drawing.Point(131, 536);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(113, 24);
             this.btnOK.TabIndex = 4;
@@ -181,13 +199,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnReGuess
             // 
-            this.btnReGuess.Location = new System.Drawing.Point(269, 491);
+            this.btnReGuess.Location = new System.Drawing.Point(269, 536);
             this.btnReGuess.Name = "btnReGuess";
             this.btnReGuess.Size = new System.Drawing.Size(147, 24);
             this.btnReGuess.TabIndex = 7;
             this.btnReGuess.Text = "Re-Guess all recipes";
             this.btnReGuess.UseVisualStyleBackColor = true;
-            this.btnReGuess.Click += new System.EventHandler(this.Button1_Click);
+            this.btnReGuess.Click += new System.EventHandler(this.btnReGuess_Click);
             // 
             // GroupBox1
             // 
@@ -222,12 +240,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox1.Controls.Add(this.udBuy);
             this.GroupBox1.Controls.Add(this.Label5);
             this.GroupBox1.Controls.Add(this.udLevel);
-            this.GroupBox1.Location = new System.Drawing.Point(12, 321);
+            this.GroupBox1.Location = new System.Drawing.Point(12, 366);
             this.GroupBox1.Name = "GroupBox1";
             this.GroupBox1.Size = new System.Drawing.Size(688, 164);
             this.GroupBox1.TabIndex = 8;
             this.GroupBox1.TabStop = false;
-            this.GroupBox1.Text = "Recipe Entry:";
+            this.GroupBox1.Text = "Recipe Info:";
             // 
             // cbIsRecipe4
             // 
@@ -333,6 +351,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal4.Size = new System.Drawing.Size(202, 22);
             this.cbSal4.TabIndex = 33;
             this.cbSal4.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal4.Enter += new System.EventHandler(this.cbSal4_Enter);
             // 
             // udSal3
             // 
@@ -373,6 +392,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal3.Size = new System.Drawing.Size(202, 22);
             this.cbSal3.TabIndex = 30;
             this.cbSal3.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal3.Enter += new System.EventHandler(this.cbSal3_Enter);
             // 
             // udSal2
             // 
@@ -413,6 +433,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal2.Size = new System.Drawing.Size(202, 22);
             this.cbSal2.TabIndex = 27;
             this.cbSal2.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal2.Enter += new System.EventHandler(this.cbSal2_Enter);
             // 
             // udSal1
             // 
@@ -453,6 +474,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal1.Size = new System.Drawing.Size(202, 22);
             this.cbSal1.TabIndex = 24;
             this.cbSal1.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
+            this.cbSal1.Enter += new System.EventHandler(this.cbSal1_Enter);
             // 
             // udSal0
             // 
@@ -494,7 +516,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal0.TabIndex = 21;
             this.cbSal0.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
             this.cbSal0.Enter += new System.EventHandler(this.cbSal0_Enter);
-            this.cbSal0.Leave += new System.EventHandler(this.cbSal0_Leave);
+            this.cbSal0.Leave += new System.EventHandler(this.cbSalX_Leave);
             // 
             // Label9
             // 
@@ -646,13 +668,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lstItems.ItemHeight = 14;
             this.lstItems.Location = new System.Drawing.Point(6, 22);
             this.lstItems.Name = "lstItems";
-            this.lstItems.Size = new System.Drawing.Size(202, 172);
+            this.lstItems.Size = new System.Drawing.Size(202, 228);
             this.lstItems.TabIndex = 0;
             this.lstItems.SelectedIndexChanged += new System.EventHandler(this.lstItems_SelectedIndexChanged);
             // 
             // Label3
             // 
-            this.Label3.Location = new System.Drawing.Point(6, 104);
+            this.Label3.Location = new System.Drawing.Point(6, 162);
             this.Label3.Name = "Label3";
             this.Label3.Size = new System.Drawing.Size(86, 22);
             this.Label3.TabIndex = 11;
@@ -663,7 +685,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.cbRarity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbRarity.FormattingEnabled = true;
-            this.cbRarity.Location = new System.Drawing.Point(6, 129);
+            this.cbRarity.Location = new System.Drawing.Point(6, 187);
             this.cbRarity.Name = "cbRarity";
             this.cbRarity.Size = new System.Drawing.Size(202, 22);
             this.cbRarity.TabIndex = 10;
@@ -671,7 +693,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label1
             // 
-            this.Label1.Location = new System.Drawing.Point(6, 16);
+            this.Label1.Location = new System.Drawing.Point(6, 61);
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(126, 20);
             this.Label1.TabIndex = 13;
@@ -680,7 +702,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // txtRecipeName
             // 
-            this.txtRecipeName.Location = new System.Drawing.Point(6, 39);
+            this.txtRecipeName.Location = new System.Drawing.Point(6, 84);
             this.txtRecipeName.Name = "txtRecipeName";
             this.txtRecipeName.Size = new System.Drawing.Size(202, 20);
             this.txtRecipeName.TabIndex = 12;
@@ -688,7 +710,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label2
             // 
-            this.Label2.Location = new System.Drawing.Point(6, 154);
+            this.Label2.Location = new System.Drawing.Point(6, 218);
             this.Label2.Name = "Label2";
             this.Label2.Size = new System.Drawing.Size(86, 18);
             this.Label2.TabIndex = 15;
@@ -701,7 +723,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbEnh.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbEnh.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEnh.FormattingEnabled = true;
-            this.cbEnh.Location = new System.Drawing.Point(6, 172);
+            this.cbEnh.Location = new System.Drawing.Point(6, 236);
             this.cbEnh.Name = "cbEnh";
             this.cbEnh.Size = new System.Drawing.Size(202, 22);
             this.cbEnh.Sorted = true;
@@ -710,6 +732,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // GroupBox2
             // 
+            this.GroupBox2.Controls.Add(this.txtStaticIndex);
+            this.GroupBox2.Controls.Add(this.Label16);
             this.GroupBox2.Controls.Add(this.cbIsHidden);
             this.GroupBox2.Controls.Add(this.cbIsVirtual);
             this.GroupBox2.Controls.Add(this.cbIsGeneric);
@@ -722,17 +746,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox2.Controls.Add(this.cbRarity);
             this.GroupBox2.Controls.Add(this.Label1);
             this.GroupBox2.Controls.Add(this.Label3);
-            this.GroupBox2.Location = new System.Drawing.Point(619, 12);
+            this.GroupBox2.Location = new System.Drawing.Point(680, 12);
             this.GroupBox2.Name = "GroupBox2";
-            this.GroupBox2.Size = new System.Drawing.Size(214, 303);
+            this.GroupBox2.Size = new System.Drawing.Size(214, 352);
             this.GroupBox2.TabIndex = 9;
             this.GroupBox2.TabStop = false;
             this.GroupBox2.Text = "Recipe:";
             // 
+            // txtStaticIndex
+            // 
+            this.txtStaticIndex.Location = new System.Drawing.Point(6, 39);
+            this.txtStaticIndex.Name = "txtStaticIndex";
+            this.txtStaticIndex.Size = new System.Drawing.Size(202, 20);
+            this.txtStaticIndex.TabIndex = 355;
+            // 
+            // Label16
+            // 
+            this.Label16.Location = new System.Drawing.Point(6, 16);
+            this.Label16.Name = "Label16";
+            this.Label16.Size = new System.Drawing.Size(126, 20);
+            this.Label16.TabIndex = 356;
+            this.Label16.Text = "Static Index:";
+            this.Label16.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
             // cbIsHidden
             // 
             this.cbIsHidden.AutoSize = true;
-            this.cbIsHidden.Location = new System.Drawing.Point(16, 279);
+            this.cbIsHidden.Location = new System.Drawing.Point(131, 326);
             this.cbIsHidden.Name = "cbIsHidden";
             this.cbIsHidden.Size = new System.Drawing.Size(59, 18);
             this.cbIsHidden.TabIndex = 354;
@@ -743,7 +783,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // cbIsVirtual
             // 
             this.cbIsVirtual.AutoSize = true;
-            this.cbIsVirtual.Location = new System.Drawing.Point(16, 255);
+            this.cbIsVirtual.Location = new System.Drawing.Point(16, 326);
             this.cbIsVirtual.Name = "cbIsVirtual";
             this.cbIsVirtual.Size = new System.Drawing.Size(57, 18);
             this.cbIsVirtual.TabIndex = 353;
@@ -754,7 +794,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // cbIsGeneric
             // 
             this.cbIsGeneric.AutoSize = true;
-            this.cbIsGeneric.Location = new System.Drawing.Point(16, 231);
+            this.cbIsGeneric.Location = new System.Drawing.Point(16, 305);
             this.cbIsGeneric.Name = "cbIsGeneric";
             this.cbIsGeneric.Size = new System.Drawing.Size(64, 18);
             this.cbIsGeneric.TabIndex = 352;
@@ -764,7 +804,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblEnh
             // 
-            this.lblEnh.Location = new System.Drawing.Point(6, 200);
+            this.lblEnh.Location = new System.Drawing.Point(6, 270);
             this.lblEnh.Name = "lblEnh";
             this.lblEnh.Size = new System.Drawing.Size(202, 28);
             this.lblEnh.TabIndex = 17;
@@ -773,7 +813,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // txtExtern
             // 
-            this.txtExtern.Location = new System.Drawing.Point(6, 85);
+            this.txtExtern.Location = new System.Drawing.Point(6, 135);
             this.txtExtern.Name = "txtExtern";
             this.txtExtern.Size = new System.Drawing.Size(202, 20);
             this.txtExtern.TabIndex = 18;
@@ -781,7 +821,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label15
             // 
-            this.Label15.Location = new System.Drawing.Point(6, 62);
+            this.Label15.Location = new System.Drawing.Point(6, 112);
             this.Label15.Name = "Label15";
             this.Label15.Size = new System.Drawing.Size(86, 20);
             this.Label15.TabIndex = 19;
@@ -790,7 +830,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnI50
             // 
-            this.btnI50.Location = new System.Drawing.Point(117, 260);
+            this.btnI50.Location = new System.Drawing.Point(117, 319);
             this.btnI50.Name = "btnI50";
             this.btnI50.Size = new System.Drawing.Size(31, 24);
             this.btnI50.TabIndex = 28;
@@ -800,7 +840,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnI40
             // 
-            this.btnI40.Location = new System.Drawing.Point(80, 260);
+            this.btnI40.Location = new System.Drawing.Point(80, 319);
             this.btnI40.Name = "btnI40";
             this.btnI40.Size = new System.Drawing.Size(31, 24);
             this.btnI40.TabIndex = 27;
@@ -810,7 +850,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnI25
             // 
-            this.btnI25.Location = new System.Drawing.Point(43, 260);
+            this.btnI25.Location = new System.Drawing.Point(43, 319);
             this.btnI25.Name = "btnI25";
             this.btnI25.Size = new System.Drawing.Size(31, 24);
             this.btnI25.TabIndex = 26;
@@ -820,7 +860,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnI20
             // 
-            this.btnI20.Location = new System.Drawing.Point(6, 260);
+            this.btnI20.Location = new System.Drawing.Point(6, 319);
             this.btnI20.Name = "btnI20";
             this.btnI20.Size = new System.Drawing.Size(31, 24);
             this.btnI20.TabIndex = 25;
@@ -830,7 +870,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnIncrement
             // 
-            this.btnIncrement.Location = new System.Drawing.Point(154, 260);
+            this.btnIncrement.Location = new System.Drawing.Point(154, 319);
             this.btnIncrement.Name = "btnIncrement";
             this.btnIncrement.Size = new System.Drawing.Size(54, 24);
             this.btnIncrement.TabIndex = 24;
@@ -840,7 +880,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnDown
             // 
-            this.btnDown.Location = new System.Drawing.Point(108, 230);
+            this.btnDown.Location = new System.Drawing.Point(108, 289);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(100, 24);
             this.btnDown.TabIndex = 23;
@@ -849,7 +889,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnUp
             // 
-            this.btnUp.Location = new System.Drawing.Point(108, 200);
+            this.btnUp.Location = new System.Drawing.Point(108, 259);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(100, 24);
             this.btnUp.TabIndex = 22;
@@ -858,7 +898,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnDel
             // 
-            this.btnDel.Location = new System.Drawing.Point(6, 230);
+            this.btnDel.Location = new System.Drawing.Point(6, 289);
             this.btnDel.Name = "btnDel";
             this.btnDel.Size = new System.Drawing.Size(100, 24);
             this.btnDel.TabIndex = 21;
@@ -868,7 +908,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(6, 200);
+            this.btnAdd.Location = new System.Drawing.Point(6, 259);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(100, 24);
             this.btnAdd.TabIndex = 20;
@@ -878,7 +918,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnRAdd
             // 
-            this.btnRAdd.Location = new System.Drawing.Point(12, 291);
+            this.btnRAdd.Location = new System.Drawing.Point(12, 340);
             this.btnRAdd.Name = "btnRAdd";
             this.btnRAdd.Size = new System.Drawing.Size(100, 24);
             this.btnRAdd.TabIndex = 21;
@@ -888,7 +928,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnRDel
             // 
-            this.btnRDel.Location = new System.Drawing.Point(118, 291);
+            this.btnRDel.Location = new System.Drawing.Point(118, 340);
             this.btnRDel.Name = "btnRDel";
             this.btnRDel.Size = new System.Drawing.Size(100, 24);
             this.btnRDel.TabIndex = 22;
@@ -898,7 +938,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnRUp
             // 
-            this.btnRUp.Location = new System.Drawing.Point(405, 291);
+            this.btnRUp.Location = new System.Drawing.Point(469, 340);
             this.btnRUp.Name = "btnRUp";
             this.btnRUp.Size = new System.Drawing.Size(100, 24);
             this.btnRUp.TabIndex = 23;
@@ -907,7 +947,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnRDown
             // 
-            this.btnRDown.Location = new System.Drawing.Point(511, 291);
+            this.btnRDown.Location = new System.Drawing.Point(575, 340);
             this.btnRDown.Name = "btnRDown";
             this.btnRDown.Size = new System.Drawing.Size(100, 24);
             this.btnRDown.TabIndex = 24;
@@ -917,7 +957,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // btnRunSeq
             // 
             this.btnRunSeq.Enabled = false;
-            this.btnRunSeq.Location = new System.Drawing.Point(250, 291);
+            this.btnRunSeq.Location = new System.Drawing.Point(294, 340);
             this.btnRunSeq.Name = "btnRunSeq";
             this.btnRunSeq.Size = new System.Drawing.Size(100, 24);
             this.btnRunSeq.TabIndex = 26;
@@ -937,23 +977,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox3.Controls.Add(this.btnUp);
             this.groupBox3.Controls.Add(this.btnIncrement);
             this.groupBox3.Controls.Add(this.btnDown);
-            this.groupBox3.Location = new System.Drawing.Point(839, 12);
+            this.groupBox3.Location = new System.Drawing.Point(900, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(214, 303);
+            this.groupBox3.Size = new System.Drawing.Size(214, 352);
             this.groupBox3.TabIndex = 27;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Recipe entries:";
+            this.groupBox3.Text = "Recipe Entries:";
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.label4);
             this.groupBox4.Controls.Add(this.lstSubRecipeComponents);
-            this.groupBox4.Location = new System.Drawing.Point(706, 321);
+            this.groupBox4.Location = new System.Drawing.Point(706, 366);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(347, 164);
+            this.groupBox4.Size = new System.Drawing.Size(409, 164);
             this.groupBox4.TabIndex = 28;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Recipe entries:";
+            this.groupBox4.Text = "Sub-Recipe Info:";
             this.groupBox4.Visible = false;
             // 
             // label4
@@ -971,13 +1011,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lstSubRecipeComponents.ItemHeight = 14;
             this.lstSubRecipeComponents.Location = new System.Drawing.Point(6, 39);
             this.lstSubRecipeComponents.Name = "lstSubRecipeComponents";
-            this.lstSubRecipeComponents.Size = new System.Drawing.Size(335, 116);
+            this.lstSubRecipeComponents.Size = new System.Drawing.Size(397, 116);
             this.lstSubRecipeComponents.TabIndex = 0;
             // 
             // frmRecipeEdit
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1060, 526);
+            this.ClientSize = new System.Drawing.Size(1127, 568);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnRunSeq);
@@ -1091,5 +1131,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private CheckBox cbIsVirtual;
         private CheckBox cbIsGeneric;
         private CheckBox cbIsHidden;
+        private ColumnHeader columnHeader5;
+        private TextBox txtStaticIndex;
+        private Label Label16;
+        private ColumnHeader columnHeader6;
     }
 }

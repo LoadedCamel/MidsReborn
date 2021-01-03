@@ -398,38 +398,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     movementUnit = lv.FormatType == 5
                         ? clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat)
                         : clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
-                    // Bar values are unit-independant
-                    /*
-                    var displayStats = MidsContext.Character.DisplayStats;
-SetBarsBulk(
-	barsList,
-	"Movement",
-	new[] // Main
-	{
-		displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat,
-			false), // Enums.eSpeedMeasure.FeetPerSecond
-		displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false),
-		displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat),
-		displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour,
-			false) // Enums.eSpeedMeasure.MilesPerHour
-	},
-	new[] // Base
-	{
-		displayStats.Speed(Statistics.BaseRunSpeed, Enums.eSpeedMeasure.FeetPerSecond),
-		displayStats.Speed(Statistics.BaseJumpSpeed, Enums.eSpeedMeasure.FeetPerSecond),
-		displayStats.Speed(Statistics.BaseJumpHeight, Enums.eSpeedMeasure.FeetPerSecond),
-		displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) == 0
-			? 0
-			: displayStats.Speed(Statistics.BaseFlySpeed, Enums.eSpeedMeasure.MilesPerHour)
-	},
-	new[] // Overcap
-	{
-		displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
-		displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
-		displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
-		displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true)
-	});
-                     */
                     float valueMainBar = 0;
                     float valueBase = 0;
                     float valueOverCap = 0;
