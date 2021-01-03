@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -37,38 +36,38 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         #region Enums sub-lists (groups)
 
-        private readonly List<Enums.eDamage> DefenseDamageList = new List<Enums.eDamage>
+        private readonly List<Enums.eDamage> DefenseDamageList = new List<Enums.eDamage>()
         {
             Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
             Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Melee,
             Enums.eDamage.Ranged, Enums.eDamage.AoE
         };
 
-        private readonly List<Enums.eDamage> ResistanceDamageList = new List<Enums.eDamage>
+        private readonly List<Enums.eDamage> ResistanceDamageList = new List<Enums.eDamage>()
         {
             Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
             Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Toxic, Enums.eDamage.Psionic
         };
 
-        private readonly List<Enums.eEffectType> MovementTypesList = new List<Enums.eEffectType>
+        private readonly List<Enums.eEffectType> MovementTypesList = new List<Enums.eEffectType>()
         {
             Enums.eEffectType.SpeedRunning, Enums.eEffectType.SpeedJumping, Enums.eEffectType.JumpHeight,
             Enums.eEffectType.SpeedFlying
         };
 
-        private readonly List<Enums.eEffectType> PerceptionEffectsList = new List<Enums.eEffectType>
+        private readonly List<Enums.eEffectType> PerceptionEffectsList = new List<Enums.eEffectType>()
         {
             Enums.eEffectType.StealthRadius, Enums.eEffectType.StealthRadiusPlayer, Enums.eEffectType.PerceptionRadius
         };
 
-        private readonly List<Enums.eMez> MezList = new List<Enums.eMez>
+        private readonly List<Enums.eMez> MezList = new List<Enums.eMez>()
         {
             Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized,
             Enums.eMez.Knockback, Enums.eMez.Repel, Enums.eMez.Confused, Enums.eMez.Terrorized,
             Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
         };
 
-        private readonly List<Enums.eEffectType> DebuffEffectsList = new List<Enums.eEffectType>
+        private readonly List<Enums.eEffectType> DebuffEffectsList = new List<Enums.eEffectType>()
         {
             Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
             Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
@@ -85,9 +84,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             queue.Enqueue(root);
             do
             {
-                Control control = queue.Dequeue();
+                var control = queue.Dequeue();
                 yield return control;
-                foreach (Control child in control.Controls.OfType<Control>())
+                foreach (var child in control.Controls.OfType<Control>())
                 {
                     queue.Enqueue(child);
                 }
@@ -100,9 +99,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             queue.Enqueue(root);
             do
             {
-                Control control = queue.Dequeue();
+                var control = queue.Dequeue();
                 if (control.GetType() == typeof(T)) yield return control;
-                foreach (Control child in control.Controls.OfType<Control>())
+                foreach (var child in control.Controls.OfType<Control>())
                 {
                     queue.Enqueue(child);
                 }
@@ -122,11 +121,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 InitializeComponent();
                 SetLvTypes();
                 _myParent = iParent;
-                foreach (Control control in GetControlHierarchy(tabControlAdv2))
+                foreach (var control in GetControlHierarchy(tabControlAdv2))
                 {
                     if (!control.Name.Contains("bar")) continue;
                     //ctlLayeredBar bar = Controls.Find(control.Name, true).Cast<ctlLayeredBar>().FirstOrDefault();
-                    ctlLayeredBar bar = (ctlLayeredBar) control;
+                    var bar = (ctlLayeredBar) control;
                     bar.BarHover += Bar_Hover;
                 }
 
@@ -320,7 +319,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (sender is BarPanel panel)
             {
                 isPanel = true;
-                Control parentControl = panel.Parent;
+                var parentControl = panel.Parent;
                 trigger = (ctlLayeredBar) parentControl;
             }
             else
@@ -329,14 +328,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 trigger = (ctlLayeredBar) sender;
             }
 
-            Statistics displayStats = MidsContext.Character.DisplayStats;
+            var displayStats = MidsContext.Character.DisplayStats;
             var barGroup = trigger.Group;
             var barIndex = GetBarIndex(trigger);
             var vectorTypeIndex = string.IsNullOrEmpty(trigger.Group) ? -1 : GetBarVectorTypeIndex(barIndex, barGroup);
             var atName = MidsContext.Character.Archetype.DisplayName;
             string tooltipText;
-            string[] barTypesNames = Enum.GetNames(typeof(Enums.eBarType));
-            Regex r = new Regex(@"/([A-Z])/");
+            var barTypesNames = Enum.GetNames(typeof(Enums.eBarType));
+            var r = new Regex(@"/([A-Z])/");
             barTypesNames = barTypesNames.Select(e => r.Replace(e, " $1").TrimStart()).ToArray();
             BarLabel lv;
             string percentageSign;
@@ -399,12 +398,76 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     movementUnit = lv.FormatType == 5
                         ? clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat)
                         : clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
-                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
-                                      ? $"{trigger.ValueMainBar:##0.##} {movementUnit} {barTypesNames[barIndex]}"
-                                      : $"{trigger.ValueOverCap:##0.##} {movementUnit} {barTypesNames[barIndex]}, capped at {trigger.ValueMainBar:##0.##} {movementUnit}"
+                    // Bar values are unit-independant
+                    /*
+                    var displayStats = MidsContext.Character.DisplayStats;
+SetBarsBulk(
+	barsList,
+	"Movement",
+	new[] // Main
+	{
+		displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat,
+			false), // Enums.eSpeedMeasure.FeetPerSecond
+		displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false),
+		displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat),
+		displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour,
+			false) // Enums.eSpeedMeasure.MilesPerHour
+	},
+	new[] // Base
+	{
+		displayStats.Speed(Statistics.BaseRunSpeed, Enums.eSpeedMeasure.FeetPerSecond),
+		displayStats.Speed(Statistics.BaseJumpSpeed, Enums.eSpeedMeasure.FeetPerSecond),
+		displayStats.Speed(Statistics.BaseJumpHeight, Enums.eSpeedMeasure.FeetPerSecond),
+		displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false) == 0
+			? 0
+			: displayStats.Speed(Statistics.BaseFlySpeed, Enums.eSpeedMeasure.MilesPerHour)
+	},
+	new[] // Overcap
+	{
+		displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
+		displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
+		displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
+		displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true)
+	});
+                     */
+                    float valueMainBar = 0;
+                    float valueBase = 0;
+                    float valueOverCap = 0;
+                    switch (barIndex)
+                    {
+                        case (int)Enums.eBarType.RunSpeed:
+                            valueMainBar = displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, false);
+                            valueBase = displayStats.Speed(Statistics.BaseRunSpeed, MidsContext.Config.SpeedFormat);
+                            valueOverCap = displayStats.MovementRunSpeed(MidsContext.Config.SpeedFormat, true);
+                            break;
+
+                        case (int)Enums.eBarType.JumpSpeed:
+                            valueMainBar = displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false);
+                            valueBase = displayStats.Speed(Statistics.BaseJumpSpeed, MidsContext.Config.SpeedFormat);
+                            valueOverCap = displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, true);
+                            break;
+
+                        case (int)Enums.eBarType.JumpHeight:
+                            valueMainBar = displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat);
+                            valueBase = displayStats.Speed(Statistics.BaseJumpHeight, MidsContext.Config.SpeedFormat);
+                            valueOverCap = displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat);
+                            break;
+
+                        case (int)Enums.eBarType.FlySpeed:
+                            valueMainBar = displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false);
+                            valueBase = displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false) == 0
+                                ? 0
+                                : displayStats.Speed(Statistics.BaseFlySpeed, MidsContext.Config.SpeedFormat);
+                            valueOverCap = displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, true);
+                            break;
+                    }
+                        
+                    tooltipText = (valueOverCap > valueMainBar
+                                      ? $"{valueOverCap:##0.##} {movementUnit} {barTypesNames[barIndex]}, capped at {valueMainBar:##0.##} {movementUnit}"
+                                      : $"{valueMainBar:##0.##} {movementUnit} {barTypesNames[barIndex]}"
                                   ) +
-                                  (trigger.ValueBase > 0
-                                      ? $"\r\nBase: {trigger.ValueBase:##0.##} {movementUnit}"
+                                  (valueBase > 0
+                                      ? $"\r\nBase: {valueBase:##0.##} {movementUnit}"
                                       : "");
                     break;
 
@@ -478,9 +541,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             if (isPanel)
             {
-                BarPanel panelTrigger = (BarPanel) sender;
+                var panelTrigger = (BarPanel) sender;
                 panelTrigger.SetTip(tooltipText);
-                ctlLayeredBar parentBarCtl = (ctlLayeredBar) panelTrigger.Parent;
+                var parentBarCtl = (ctlLayeredBar) panelTrigger.Parent;
                 parentBarCtl.HighlightBarColors();
             }
             else
@@ -508,7 +571,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private string FormatVectorType(Type enumType, int vectorTypeIndex)
         {
             var name = UcFirst(Enum.GetName(enumType, vectorTypeIndex));
-            Regex r = new Regex(@"([A-Z])");
+            var r = new Regex(@"([A-Z])");
             name = r.Replace(name, " " + "$1").TrimStart();
 
             return name switch
@@ -641,11 +704,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void Radio_CheckedChanged(object sender, EventArgs e)
         {
-            RadioButton sendingControl = (RadioButton) sender;
+            var sendingControl = (RadioButton) sender;
             IEnumerable<RadioButton> radioControls = Controls.OfType<RadioButton>();
             if (!sendingControl.Checked) return;
 
-            foreach (RadioButton radio in radioControls)
+            foreach (var radio in radioControls)
             {
                 if (radio.Name != sendingControl.Name)
                 {
@@ -653,7 +716,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
             }
 
-            Enums.eSpeedMeasure previousCfgSpeedMeasure = MidsContext.Config.SpeedFormat;
+            var previousCfgSpeedMeasure = MidsContext.Config.SpeedFormat;
 
             MidsContext.Config.SpeedFormat = sendingControl.Name switch
             {
@@ -827,9 +890,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (_myParent?.Drawing == null) return;
 
             var iStr = "Close";
-            Rectangle rectangle = new Rectangle();
-            ref Rectangle local = ref rectangle;
-            Size size = MidsContext.Character.IsHero()
+            var rectangle = new Rectangle();
+            ref var local = ref rectangle;
+            var size = MidsContext.Character.IsHero()
                 ? _myParent.Drawing.bxPower[2].Size
                 : _myParent.Drawing.bxPower[4].Size;
             var width = size.Width;
@@ -838,12 +901,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 : _myParent.Drawing.bxPower[4].Size;
             var height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
-            Rectangle destRect = new Rectangle(0, 0, 105, 22);
-            using StringFormat stringFormat = new StringFormat();
-            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            var destRect = new Rectangle(0, 0, 105, 22);
+            using var stringFormat = new StringFormat();
+            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             extendedBitmap.Graphics.DrawImage(
                 MidsContext.Character.IsHero()
@@ -851,8 +914,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                 GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             var height2 = bFont.GetHeight(e.Graphics) + 2;
-            RectangleF Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
-            Graphics graphics = extendedBitmap.Graphics;
+            var Bounds = new RectangleF(0, (22 - height2) / 2, 105, height2);
+            var graphics = extendedBitmap.Graphics;
             clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
@@ -871,14 +934,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var index = 2;
             if (KeepOnTop) index = 3;
             var iStr = "Keep On top";
-            Rectangle rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
+            var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
                 _myParent.Drawing.bxPower[index].Size.Height);
-            Rectangle destRect = new Rectangle(0, 0, 105, 22);
-            using StringFormat stringFormat = new StringFormat();
-            using Font bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
+            var destRect = new Rectangle(0, 0, 105, 22);
+            using var stringFormat = new StringFormat();
+            using var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-            using ExtendedBitmap extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
+            using var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             if (index == 3)
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
@@ -887,8 +950,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 extendedBitmap.Graphics.DrawImage(_myParent.Drawing.bxPower[index].Bitmap, destRect, 0, 0,
                     rectangle.Width, rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
             var height = bFont.GetHeight(e.Graphics) + 2;
-            RectangleF Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
-            Graphics graphics = extendedBitmap.Graphics;
+            var Bounds = new RectangleF(0, (22 - height) / 2, 105, height);
+            var graphics = extendedBitmap.Graphics;
             clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
@@ -1085,8 +1148,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             //pbTopMost.Refresh();
             //Character.TotalStatistics uncappedStats = MidsContext.Character.Totals;
             //Character.TotalStatistics cappedStats = MidsContext.Character.TotalsCapped;
-            Statistics displayStats = MidsContext.Character.DisplayStats;
-            Stopwatch watch = Stopwatch.StartNew();
+            var displayStats = MidsContext.Character.DisplayStats;
+            //var watch = Stopwatch.StartNew();
             tabControlAdv2.SuspendLayout();
             IEnumerable<ctlLayeredBar> barsList = new List<ctlLayeredBar>();
             IEnumerable<BarLabel> lvList = new List<BarLabel>();
@@ -1095,18 +1158,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             #region Bars setup
 
-            try
-            {
-                SetBarsBulk(
-                    barsList,
-                    "Defense",
-                    DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
-                );
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
-            }
+            SetBarsBulk(
+                barsList,
+                "Defense",
+                DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray()
+            );
 
             SetBarsBulk(
                 barsList,
@@ -1299,8 +1355,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             tabControlAdv2.ResumeLayout();
 
-            watch.Stop();
-            Debug.WriteLine($"frmTotalsV2.UpdateData(): {watch.ElapsedMilliseconds}ms");
+            //watch.Stop();
+            //Debug.WriteLine($"frmTotalsV2.UpdateData(): {watch.ElapsedMilliseconds}ms");
         }
     }
 
