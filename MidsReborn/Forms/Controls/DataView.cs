@@ -3321,26 +3321,22 @@ namespace Mids_Reborn.Forms.Controls
 
         public void SetFontData()
         {
-            info_DataList.Font = new Font(info_DataList.Font.FontFamily, MidsContext.Config.RtFont.PairedBase,
-                FontStyle.Regular);
-            //fx_List1.Font = new Font(fx_List1.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Regular);
-            fx_List1.Font = new Font("Arial", 10f, FontStyle.Regular, GraphicsUnit.Pixel, 1);
-            fx_List2.Font = new Font(fx_List2.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Regular);
-            fx_List3.Font = new Font(fx_List3.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Regular);
-            total_Misc.Font = new Font(total_Misc.Font.FontFamily, MidsContext.Config.RtFont.PairedBase,
-                FontStyle.Regular);
-            enhListing.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase,
-                FontStyle.Regular);
-            pnlEnhActive.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase,
-                FontStyle.Bold);
+            var style = !MidsContext.Config.RtFont.PairedBold ? FontStyle.Regular : FontStyle.Bold;
+            info_DataList.Font = new Font(info_DataList.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            fx_List1.Font = new Font(fx_List1.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            fx_List2.Font = new Font(fx_List2.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            fx_List3.Font = new Font(fx_List3.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            total_Misc.Font = new Font(total_Misc.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            enhListing.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            pnlEnhActive.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
             info_DataList.ForceBold = MidsContext.Config.RtFont.PairedBold;
             fx_List1.ForceBold = MidsContext.Config.RtFont.PairedBold;
             fx_List2.ForceBold = MidsContext.Config.RtFont.PairedBold;
             fx_List3.ForceBold = MidsContext.Config.RtFont.PairedBold;
             total_Misc.ForceBold = MidsContext.Config.RtFont.PairedBold;
             enhListing.ForceBold = MidsContext.Config.RtFont.PairedBold;
-            //gDef1.Font = new Font(gDef1.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold);
-            gDef1.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
+            gDef1.Font = new Font(gDef1.Font.FontFamily, 8.25f, style);
+            //gDef1.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
             gDef2.Font = gDef1.Font;
             gRes1.Font = gDef1.Font;
             gRes2.Font = gDef1.Font;
