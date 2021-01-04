@@ -17,6 +17,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
     {
         private bool NoUpdate;
         private ListViewColumnSorter _lvColumnSorter;
+        private int _noEnhancementIdx;
 
         #region ListView column sorter
 
@@ -110,21 +111,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             idxList.Sort();
             for (var i = 0; i < idxList.Count; i++)
             {
-                if (i != k)
+                if (i == k++) continue;
+                if (!silent)
                 {
-                    if (!silent)
-                    {
-                        MessageBox.Show(
-                            $"Warning: Recipe {DatabaseAPI.Database.Recipes[i].ExternalName} has index {i} (should be {k})",
-                            "Inconsistent index detected",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning);
-                    }
-
-                    return false;
+                    MessageBox.Show(
+                        $"Warning: Recipe {DatabaseAPI.Database.Recipes[i].InternalName} has index {i} (should be {k})",
+                        "Inconsistent index detected",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
                 }
 
-                k++;
+                return false;
             }
 
             return true;
@@ -266,34 +263,41 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbEnh.SelectedText = "None";
             lblEnh.Visible = false;
             cbEnh.Select();
-            //cbEnh.SelectAll();
         }
 
         private void btnRDel_Click(object sender, EventArgs e)
         {
-            if (RecipeID() < 0)
-                return;
+            if (RecipeID() < 0) return;
             var recipeId = RecipeID();
             var recipeArray = new Recipe[DatabaseAPI.Database.Recipes.Length - 1];
-            var recipeCount = -1;
+            var recipeCount = 0;
             for (var recipeIdx = 0; recipeIdx < DatabaseAPI.Database.Recipes.Length; recipeIdx++)
             {
-                if (recipeIdx == recipeId)
-                    continue;
-                ++recipeCount;
-                recipeArray[recipeCount] = new Recipe(ref DatabaseAPI.Database.Recipes[recipeIdx]);
+                if (recipeIdx == recipeId) continue;
+                recipeArray[recipeCount++] = new Recipe(ref DatabaseAPI.Database.Recipes[recipeIdx]);
             }
 
-            DatabaseAPI.Database.Recipes = new Recipe[recipeArray.Length - 1 + 1];
+            /*DatabaseAPI.Database.Recipes = new Recipe[recipeArray.Length];
             for (var recipeIdx = 0; recipeIdx < DatabaseAPI.Database.Recipes.Length; recipeIdx++)
+            {
                 DatabaseAPI.Database.Recipes[recipeIdx] = new Recipe(ref recipeArray[recipeIdx]);
+            }*/
+
+            DatabaseAPI.Database.Recipes = (Recipe[]) recipeArray.Clone();
+
             FillList();
             if (lvDPA.Items.Count > recipeId)
+            {
                 lvDPA.Items[recipeId].Selected = true;
+            }
             else if (lvDPA.Items.Count > recipeId - 1)
+            {
                 lvDPA.Items[recipeId - 1].Selected = true;
+            }
             else if (lvDPA.Items.Count > 0)
+            {
                 lvDPA.Items[0].Selected = true;
+            }
         }
 
         private void btnRunSeq_Click(object sender, EventArgs e)
@@ -315,7 +319,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvDPA.Items[lvDPA.Items.Count - 1].Selected = true;
             lvDPA.Items[lvDPA.Items.Count - 1].EnsureVisible();
             cbEnh.Select();
-            //cbEnh.SelectAll();
         }
 
         private void btnReGuess_Click(object sender, EventArgs e)
@@ -328,7 +331,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (NoUpdate || RecipeID() <= -1 || cbEnh.SelectedIndex <= -1) return;
             var recipe = DatabaseAPI.Database.Recipes[RecipeID()];
-            recipe.EnhIdx = (cbEnh.SelectedText.ToLower() == "none") ? -1 : cbEnh.SelectedIndex - 1;
+            recipe.EnhIdx = cbEnh.SelectedText.ToLower() == "none"
+                ? -1
+                : DatabaseAPI.Database.Enhancements.TryFindIndex(e => e.UID == cbEnh.SelectedText);
             if (recipe.EnhIdx > -1)
             {
                 recipe.Enhancement = cbEnh.Text;
@@ -511,6 +516,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             cbEnh.EndUpdate();
+
+            for (var i = 0; i < cbEnh.Items.Count; i++)
+            {
+                if (cbEnh.Items[i].ToString() != "None") continue;
+                _noEnhancementIdx = i;
+                break;
+            }
+            
+            Debug.WriteLine($"frmRecipeEdit_Load(): noEnhancementIdx: {_noEnhancementIdx}");
+            
             cbSal0.BeginUpdate();
             cbSal1.BeginUpdate();
             cbSal2.BeginUpdate();
@@ -704,11 +719,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void ShowRecipeInfo(int index)
         {
-            Debug.WriteLine($"ShowRecipeInfo({index})");
             //var recipeItem = lvDPA.SelectedItems[0].Text;
             //var rIndex = Array.FindIndex(DatabaseAPI.Database.Recipes, 0, x => x.InternalName == recipeItem);
             var rIndex = Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text);
-            Debug.WriteLine($"rIndex: {rIndex}");
             if ((rIndex < 0) | (rIndex > DatabaseAPI.Database.Recipes.Length - 1))
             {
                 ClearInfo();
@@ -737,19 +750,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
                 else
                 {
-                    cbEnh.SelectedIndex = -1;
+                    cbEnh.SelectedIndex = _noEnhancementIdx;
                     lblEnh.Text = "";
                 }
                 
-                Debug.WriteLine($"enhIdx: {enhIdx}");
-
                 try
                 {
                     cbRarity.SelectedIndex = (int) DatabaseAPI.Database.Recipes[rIndex].Rarity;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"ShowRecipeInfo({index}) #2:\r\n{ex.Message}\r\n{ex.StackTrace}");
+                    MessageBox.Show($"ShowRecipeInfo({index}) #3:\r\n{ex.Message}\r\n{ex.StackTrace}");
                     DatabaseAPI.Database.Recipes[rIndex].Rarity = Recipe.RecipeRarity.Common;
                 }
 
@@ -768,8 +779,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lstItems.Items.Add($"Level: {r.Level + 1}");
                 }
                 
-                Debug.WriteLine($"lstItems.Items.Count: {lstItems.Items.Count}");
-
                 if (lstItems.Items.Count > 0) lstItems.SelectedIndex = 0;
                 NoUpdate = false;
             }

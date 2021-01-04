@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
+using mrbControls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -81,6 +82,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.cbEnh = new System.Windows.Forms.ComboBox();
             this.GroupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnAutoMarkGeneric = new System.Windows.Forms.Button();
+            this.udStaticIndex = new System.Windows.Forms.NumericUpDown();
             this.Label16 = new System.Windows.Forms.Label();
             this.cbIsHidden = new System.Windows.Forms.CheckBox();
             this.cbIsVirtual = new System.Windows.Forms.CheckBox();
@@ -99,15 +102,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnRAdd = new System.Windows.Forms.Button();
             this.btnRDel = new System.Windows.Forms.Button();
-            this.btnRUp = new System.Windows.Forms.Button();
-            this.btnRDown = new System.Windows.Forms.Button();
             this.btnRunSeq = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lstSubRecipeComponents = new System.Windows.Forms.ListBox();
-            this.udStaticIndex = new System.Windows.Forms.NumericUpDown();
-            this.btnAutoMarkGeneric = new System.Windows.Forms.Button();
             this.GroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udSal4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal3)).BeginInit();
@@ -120,9 +119,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ((System.ComponentModel.ISupportInitialize)(this.udBuy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udLevel)).BeginInit();
             this.GroupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaticIndex)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udStaticIndex)).BeginInit();
             this.SuspendLayout();
             // 
             // lvDPA
@@ -756,6 +755,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox2.TabStop = false;
             this.GroupBox2.Text = "Recipe:";
             // 
+            // btnAutoMarkGeneric
+            // 
+            this.btnAutoMarkGeneric.Location = new System.Drawing.Point(107, 300);
+            this.btnAutoMarkGeneric.Name = "btnAutoMarkGeneric";
+            this.btnAutoMarkGeneric.Size = new System.Drawing.Size(98, 24);
+            this.btnAutoMarkGeneric.TabIndex = 358;
+            this.btnAutoMarkGeneric.Text = "Auto-mark all";
+            this.btnAutoMarkGeneric.UseVisualStyleBackColor = true;
+            this.btnAutoMarkGeneric.Click += new System.EventHandler(this.btnAutoMarkGeneric_Click);
+            // 
+            // udStaticIndex
+            // 
+            this.udStaticIndex.Enabled = false;
+            this.udStaticIndex.Location = new System.Drawing.Point(6, 39);
+            this.udStaticIndex.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.udStaticIndex.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.udStaticIndex.Name = "udStaticIndex";
+            this.udStaticIndex.Size = new System.Drawing.Size(202, 20);
+            this.udStaticIndex.TabIndex = 357;
+            this.udStaticIndex.ThousandsSeparator = true;
+            this.udStaticIndex.ValueChanged += new System.EventHandler(this.udStaticIndex_ValueChanged);
+            this.udStaticIndex.Leave += new System.EventHandler(this.udStaticIndex_Leave);
+            // 
             // Label16
             // 
             this.Label16.Location = new System.Drawing.Point(6, 16);
@@ -932,28 +962,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnRDel.UseVisualStyleBackColor = true;
             this.btnRDel.Click += new System.EventHandler(this.btnRDel_Click);
             // 
-            // btnRUp
-            // 
-            this.btnRUp.Location = new System.Drawing.Point(469, 340);
-            this.btnRUp.Name = "btnRUp";
-            this.btnRUp.Size = new System.Drawing.Size(100, 24);
-            this.btnRUp.TabIndex = 23;
-            this.btnRUp.Text = "Up";
-            this.btnRUp.UseVisualStyleBackColor = true;
-            // 
-            // btnRDown
-            // 
-            this.btnRDown.Location = new System.Drawing.Point(575, 340);
-            this.btnRDown.Name = "btnRDown";
-            this.btnRDown.Size = new System.Drawing.Size(100, 24);
-            this.btnRDown.TabIndex = 24;
-            this.btnRDown.Text = "Down";
-            this.btnRDown.UseVisualStyleBackColor = true;
-            // 
             // btnRunSeq
             // 
             this.btnRunSeq.Enabled = false;
-            this.btnRunSeq.Location = new System.Drawing.Point(294, 340);
+            this.btnRunSeq.Location = new System.Drawing.Point(574, 340);
             this.btnRunSeq.Name = "btnRunSeq";
             this.btnRunSeq.Size = new System.Drawing.Size(100, 24);
             this.btnRunSeq.TabIndex = 26;
@@ -1010,37 +1022,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lstSubRecipeComponents.Size = new System.Drawing.Size(397, 116);
             this.lstSubRecipeComponents.TabIndex = 0;
             // 
-            // udStaticIndex
-            // 
-            this.udStaticIndex.Enabled = false;
-            this.udStaticIndex.Location = new System.Drawing.Point(6, 39);
-            this.udStaticIndex.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.udStaticIndex.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            this.udStaticIndex.Name = "udStaticIndex";
-            this.udStaticIndex.Size = new System.Drawing.Size(202, 20);
-            this.udStaticIndex.TabIndex = 357;
-            this.udStaticIndex.ThousandsSeparator = true;
-            this.udStaticIndex.ValueChanged += new System.EventHandler(this.udStaticIndex_ValueChanged);
-            this.udStaticIndex.Leave += new System.EventHandler(this.udStaticIndex_Leave);
-            // 
-            // btnAutoMarkGeneric
-            // 
-            this.btnAutoMarkGeneric.Location = new System.Drawing.Point(107, 300);
-            this.btnAutoMarkGeneric.Name = "btnAutoMarkGeneric";
-            this.btnAutoMarkGeneric.Size = new System.Drawing.Size(98, 24);
-            this.btnAutoMarkGeneric.TabIndex = 358;
-            this.btnAutoMarkGeneric.Text = "Auto-mark all";
-            this.btnAutoMarkGeneric.UseVisualStyleBackColor = true;
-            this.btnAutoMarkGeneric.Click += new System.EventHandler(this.btnAutoMarkGeneric_Click);
-            // 
             // frmRecipeEdit
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1048,8 +1029,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnRunSeq);
-            this.Controls.Add(this.btnRDown);
-            this.Controls.Add(this.btnRUp);
             this.Controls.Add(this.btnRDel);
             this.Controls.Add(this.btnRAdd);
             this.Controls.Add(this.GroupBox2);
@@ -1079,9 +1058,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             ((System.ComponentModel.ISupportInitialize)(this.udLevel)).EndInit();
             this.GroupBox2.ResumeLayout(false);
             this.GroupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udStaticIndex)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.udStaticIndex)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1100,10 +1079,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         Button btnOK;
         Button btnRAdd;
         Button btnRDel;
-        Button btnRDown;
         Button btnReGuess;
         Button btnRunSeq;
-        Button btnRUp;
         Button btnUp;
         ComboBox cbEnh;
         ComboBox cbRarity;
