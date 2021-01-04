@@ -469,298 +469,303 @@ namespace mrbControls
             Rectangle indRect = new Rectangle();
             Font font;
             var style = !MidsContext.Config.RtFont.PowersBold ? FontStyle.Regular : FontStyle.Bold;
-            if (MidsContext.Config.RtFont.PowersBase > 0)
-            {
-                font = new Font(_defaultFont.FontFamily, FontScale(MidsContext.Config.RtFont.PowersBase), style, GraphicsUnit.Point, 0);
-            }
-            else
-            {
-                font = new Font(_defaultFont.FontFamily, FontScale(8), style, GraphicsUnit.Point, 0);
-            }
+            font = MidsContext.Config.RtFont.PowersBase > 0 ? new Font(_defaultFont.FontFamily, FontScale(MidsContext.Config.RtFont.PowersBase), style, GraphicsUnit.Point, 0) : new Font(_defaultFont.FontFamily, FontScale(8), style, GraphicsUnit.Point, 0);
 
             int newSlotLevel = MidsContext.Character.SlotCheck(iSlot);
             bool toggling = InterfaceMode == Enums.eInterfaceMode.PowerToggle;
-            var indicating = false;
             RectangleF i9Bounds;
             var displayState = iSlot.State;
 
             bool canPlaceSlot = MidsContext.Character.CanPlaceSlot;
-            var drawNewSlot = iSlot.Power != null && (iSlot.State != Enums.ePowerState.Empty && canPlaceSlot) &&
-                              iSlot.Slots.Length < 6 && singleDraw && iSlot.Power.Slottable &
-                              InterfaceMode != Enums.eInterfaceMode.PowerToggle;
+            var drawNewSlot = iSlot.Power != null && (iSlot.State != Enums.ePowerState.Empty && canPlaceSlot) && iSlot.Slots.Length < 6 && singleDraw && iSlot.Power.Slottable & InterfaceMode != Enums.eInterfaceMode.PowerToggle;
             Point location = PowerPosition(iSlot);
             Point slotLocation = default;
-
-            slotLocation.X = (int) Math.Round(location.X - OffsetX + checked(SzPower.Width - szSlot.Width * 6) / 2.0);
-            slotLocation.Y = location.Y + OffsetY;
-            Graphics graphics = bxBuffer.Graphics;
-            Rectangle clipRect = new Rectangle(slotLocation.X, slotLocation.Y, SzPower.Width, SzPower.Height);
-            graphics.FillRectangle(pBrush, ScaleDown(clipRect));
-
-            if (!toggling)
+            checked
             {
-                if (iSlot.Power != null)
+                slotLocation.X = (int) Math.Round(location.X - OffsetX + checked(SzPower.Width - szSlot.Width * 6) / 2.0);
+                slotLocation.Y = location.Y + OffsetY;
+                Graphics graphics = bxBuffer.Graphics;
+                Rectangle clipRect = new Rectangle(slotLocation.X, slotLocation.Y, SzPower.Width, SzPower.Height);
+                graphics.FillRectangle(pBrush, ScaleDown(clipRect));
+
+                if (!toggling)
                 {
-                    if (singleDraw && newSlotLevel > -1 && canPlaceSlot &&
-                        InterfaceMode != Enums.eInterfaceMode.PowerToggle && iSlot.PowerSet != null &&
-                        iSlot.Slots.Length < 6 && iSlot.Power.Slottable)
+                    if (iSlot.Power != null)
+                    {
+                        if (singleDraw && newSlotLevel > -1 && canPlaceSlot &&
+                            InterfaceMode != Enums.eInterfaceMode.PowerToggle && iSlot.PowerSet != null &&
+                            iSlot.Slots.Length < 6 && iSlot.Power.Slottable)
+                        {
+                            displayState = Enums.ePowerState.Open;
+                        }
+                        else if (iSlot.Chosen & !canPlaceSlot & InterfaceMode != Enums.eInterfaceMode.PowerToggle &
+                                 Highlight == MidsContext.Character.CurrentBuild.Powers.IndexOf(iSlot))
+                        {
+                            displayState = Enums.ePowerState.Open;
+                        }
+                    }
+                    else if (MidsContext.Character.CurrentBuild.Powers.IndexOf(iSlot) == IndexFromLevel())
                     {
                         displayState = Enums.ePowerState.Open;
                     }
-                    else if (iSlot.Chosen & !canPlaceSlot & InterfaceMode != Enums.eInterfaceMode.PowerToggle &
-                             Highlight == MidsContext.Character.CurrentBuild.Powers.IndexOf(iSlot))
+                }
+
+                pBounds.Height = szSlot.Height;
+                pBounds.Width = szSlot.Width;
+                pStringFormat.Alignment = StringAlignment.Center;
+                pStringFormat.LineAlignment = StringAlignment.Center;
+                bool isGrey = false;
+                ImageAttributes imageAttr;
+                if (toggling)
+                {
+                    if (displayState == Enums.ePowerState.Open)
+                    {
+                        displayState = Enums.ePowerState.Empty;
+                    }
+
+                    if (iSlot.StatInclude & displayState == Enums.ePowerState.Used)
                     {
                         displayState = Enums.ePowerState.Open;
+                        isGrey = iSlot.Level >= MidsContext.Config.ForceLevel;
+                        imageAttr = GreySlot(isGrey, true);
+                    }
+                    else if (iSlot.CanIncludeForStats())
+                    {
+                        isGrey = (iSlot.Level >= MidsContext.Config.ForceLevel);
+                        imageAttr = GreySlot(isGrey);
+                    }
+                    else
+                    {
+                        imageAttr = GreySlot(true);
+                        isGrey = true;
                     }
                 }
-                else if (MidsContext.Character.CurrentBuild.Powers.IndexOf(iSlot) == IndexFromLevel())
-                {
-                    displayState = Enums.ePowerState.Open;
-                }
-            }
-
-            pBounds.Height = szSlot.Height;
-            pBounds.Width = szSlot.Width;
-            pStringFormat.Alignment = StringAlignment.Center;
-            pStringFormat.LineAlignment = StringAlignment.Center;
-            bool isGrey = false;
-            ImageAttributes imageAttr;
-            if (toggling)
-            {
-                if (displayState == Enums.ePowerState.Open)
-                {
-                    displayState = Enums.ePowerState.Empty;
-                }
-
-                if (iSlot.StatInclude & displayState == Enums.ePowerState.Used)
-                {
-                    displayState = Enums.ePowerState.Open;
-                    isGrey = iSlot.Level >= MidsContext.Config.ForceLevel;
-                    imageAttr = GreySlot(isGrey, true);
-                }
-                else if (iSlot.CanIncludeForStats())
+                else
                 {
                     isGrey = (iSlot.Level >= MidsContext.Config.ForceLevel);
                     imageAttr = GreySlot(isGrey);
                 }
-                else
-                {
-                    imageAttr = GreySlot(true);
-                    isGrey = true;
-                }
-            }
-            else
-            {
-                isGrey = (iSlot.Level >= MidsContext.Config.ForceLevel);
-                imageAttr = GreySlot(isGrey);
-            }
 
-            Rectangle rBounds = new Rectangle(location.X, location.Y, bxPower[(int) displayState].Size.Width, bxPower[(int) displayState].Size.Height);
-            Image bitmap = !MidsContext.Character.IsHero() ? bxPower[4].Bitmap : bxPower[2].Bitmap;
-            if (displayState == Enums.ePowerState.Used || toggling)
-            {
-                if (!MidsContext.Config.DisableDesaturateInherent & !iSlot.Chosen)
+                Rectangle rBounds = new Rectangle(location.X, location.Y, bxPower[(int) displayState].Size.Width,
+                    bxPower[(int) displayState].Size.Height);
+                Image bitmap = !MidsContext.Character.IsHero() ? bxPower[4].Bitmap : bxPower[2].Bitmap;
+                if (displayState == Enums.ePowerState.Used || toggling)
                 {
-                    imageAttr = Desaturate(isGrey, displayState == Enums.ePowerState.Open);
-                }
+                    if (!MidsContext.Config.DisableDesaturateInherent & !iSlot.Chosen)
+                    {
+                        imageAttr = Desaturate(isGrey, displayState == Enums.ePowerState.Open);
+                    }
 
-                graphics.DrawImage(bitmap, ScaleDown(rBounds), 0, 0, bxPower[(int) displayState].ClipRect.Width,
-                    bxPower[(int) displayState].ClipRect.Height, GraphicsUnit.Pixel, imageAttr);
-            }
-            else
-            {
-                graphics.DrawImage(bitmap, ScaleDown(rBounds), 0, 0, bxPower[(int) displayState].ClipRect.Width,
-                    bxPower[(int) displayState].ClipRect.Height, GraphicsUnit.Pixel);
-            }
-
-            if ((indicating | toggling) & iSlot.CanIncludeForStats())
-            {
-                indRect.Height = 15;
-                indRect.Width = indRect.Height;
-                indRect.Y = (int) Math.Round(rBounds.Top + checked(rBounds.Height - indRect.Height) / 2.0);
-                indRect.X = (int) Math.Round(rBounds.Right -
-                                             (indRect.Width + checked(rBounds.Height - indRect.Height) / 2.0));
-                indRect = ScaleDown(indRect);
-                PathGradientBrush brush2;
-                if (iSlot.StatInclude)
-                {
-                    Rectangle iRect = indRect;
-                    PointF iCenter = new PointF(-0.25f, -0.33f);
-                    brush2 = MakePathBrush(iRect, iCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0));
+                    graphics.DrawImage(bitmap, ScaleDown(rBounds), 0, 0, bxPower[(int) displayState].ClipRect.Width,
+                        bxPower[(int) displayState].ClipRect.Height, GraphicsUnit.Pixel, imageAttr);
                 }
                 else
                 {
-                    Rectangle iRect2 = indRect;
-                    PointF iCenter = new PointF(-0.25f, -0.33f);
-                    brush2 = MakePathBrush(iRect2, iCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                    graphics.DrawImage(bitmap, ScaleDown(rBounds), 0, 0, bxPower[(int) displayState].ClipRect.Width,
+                        bxPower[(int) displayState].ClipRect.Height, GraphicsUnit.Pixel);
                 }
 
-                graphics.FillEllipse(brush2, indRect);
-                graphics.DrawEllipse(indPen, indRect);
-            }
+                if (iSlot.CanIncludeForStats())
+                {
+                    indRect.Height = 15;
+                    indRect.Width = indRect.Height;
+                    indRect.Y = (int) Math.Round(rBounds.Top + checked(rBounds.Height - indRect.Height) / 2.0);
+                    indRect.X = (int) Math.Round(rBounds.Right -
+                                                 (indRect.Width + checked(rBounds.Height - indRect.Height) / 2.0));
+                    indRect = ScaleDown(indRect);
+                    PathGradientBrush brush2;
+                    if (iSlot.StatInclude)
+                    {
+                        Rectangle iRect = indRect;
+                        PointF iCenter = new PointF(-0.25f, -0.33f);
+                        brush2 = MakePathBrush(iRect, iCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0));
+                    }
+                    else
+                    {
+                        Rectangle iRect2 = indRect;
+                        PointF iCenter = new PointF(-0.25f, -0.33f);
+                        brush2 = MakePathBrush(iRect2, iCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                    }
 
-            //
-            SolidBrush solidBrush;
-            //if (!System.Diagnostics.Debugger.IsAttached || !this.IsInDesignMode() || !System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
-            var inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");
-            for (var i = 0; i <= iSlot.Slots.Length - 1; i++)
-            {
-                var slot = iSlot.Slots[i];
-                // Enhancment spacing and position?
-                pBounds.X = slotLocation.X + (szSlot.Width + 2) * i;
-                pBounds.Y = slotLocation.Y;
+                    graphics.FillEllipse(brush2, indRect);
+                    graphics.DrawEllipse(indPen, indRect);
+                }
+
                 //
-                if (slot.Enhancement.Enh < 0)
+                SolidBrush solidBrush;
+                //if (!System.Diagnostics.Debugger.IsAttached || !this.IsInDesignMode() || !System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
+                var inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");
+                for (var i = 0; i <= iSlot.Slots.Length - 1; i++)
                 {
-                    Rectangle clipRect2 = new Rectangle((int) Math.Round(pBounds.X), slotLocation.Y, szSlot.Width, szSlot.Height); 
-                    // New slot rectangle
-                    graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, szSlot.Width, szSlot.Height, GraphicsUnit.Pixel, pImageAttributes);
-                    if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
+                    var slot = iSlot.Slots[i];
+                    // Enhancment spacing and position?
+                    pBounds.X = slotLocation.X + (szSlot.Width + 2) * i;
+                    pBounds.Y = slotLocation.Y;
+                    //
+                    if (slot.Enhancement.Enh < 0)
                     {
-                        solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                        graphics.FillEllipse(solidBrush, ScaleDown(pBounds));
-                        graphics.DrawEllipse(pPen, ScaleDown(pBounds));
+                        Rectangle clipRect2 = new Rectangle((int) Math.Round(pBounds.X), slotLocation.Y, szSlot.Width,
+                            szSlot.Height);
+                        // New slot rectangle
+                        graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, szSlot.Width,
+                            szSlot.Height, GraphicsUnit.Pixel, pImageAttributes);
+                        if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
+                            (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
+                            (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level))
+                        {
+                            solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
+                            graphics.FillEllipse(solidBrush, ScaleDown(pBounds));
+                            graphics.DrawEllipse(pPen, ScaleDown(pBounds));
+                        }
                     }
+                    else
+                    {
+                        if (inDesigner) continue;
+                        IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
+                        Rectangle clipRect2 = new Rectangle((int) Math.Round(pBounds.X), slotLocation.Y, szSlot.Width,
+                            szSlot.Height);
+                        I9Gfx.DrawEnhancementAt(ref graphics, ScaleDown(clipRect2), enhancement.ImageIdx,
+                            I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
+                        if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
+                            (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
+                            (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) |
+                            (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
+                        {
+                            solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
+                            i9Bounds = pBounds;
+                            i9Bounds.Inflate(1f, 1f);
+                            graphics.FillEllipse(solidBrush, ScaleDown(i9Bounds));
+                        }
+
+                        if (slot.Enhancement.Enh > -1)
+                            DrawEnhancementLevel(slot, font, graphics, ref pBounds);
+                    }
+
+                    if (!MidsContext.Config.ShowSlotLevels) continue;
+
+                    i9Bounds = pBounds;
+                    unchecked
+                    {
+                        //Positioning of slot level text
+                        i9Bounds.Y += i9Bounds.Height + 12;
+                        i9Bounds.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
+                        i9Bounds.Y -= i9Bounds.Height;
+                        i9Bounds.X += i9Bounds.Width;
+                        i9Bounds.X -= i9Bounds.Width - 1;
+                    }
+
+                    DrawOutlineText(
+                        iStr: Convert.ToString(slot.Level + 1),
+                        bounds: ScaleDown(i9Bounds),
+                        textColor: Color.FromArgb(0, 255, 0),
+                        outlineColor: Color.FromArgb(192, 0, 0, 0),
+                        bFont: font,
+                        outlineSpace: 1f,
+                        g: graphics);
+                }
+
+                //Draws the new slot hover
+                if (newSlotLevel > -1 && (displayState != Enums.ePowerState.Empty && drawNewSlot))
+                {
+                    i9Bounds = new Rectangle(slotLocation.X + (szSlot.Width + 2) * (iSlot.Slots.Length), slotLocation.Y,
+                        szSlot.Width, szSlot.Height);
+                    graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(i9Bounds));
+                    i9Bounds.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
+                    i9Bounds.Y += (szSlot.Height - i9Bounds.Height) / 2f;
+                    DrawOutlineText(Convert.ToString(newSlotLevel + 1), ScaleDown(i9Bounds),
+                        Color.FromArgb(0, 255, 255), Color.FromArgb(192, 0, 0, 0), font, 1f, graphics);
+                }
+
+                //Power name text positioning
+                solidBrush = new SolidBrush(Color.White);
+                pStringFormat = new StringFormat();
+                pBounds.X = location.X + 10;
+                pBounds.Y = location.Y + 4;
+                pBounds.Width = SzPower.Width;
+                pBounds.Height = _defaultFont.GetHeight() * 2f;
+                Enums.ePowerState ePowerState2 = iSlot.State;
+                if (ePowerState2 == Enums.ePowerState.Empty & displayState == Enums.ePowerState.Open)
+                {
+                    ePowerState2 = displayState;
+                }
+
+                switch (ePowerState2)
+                {
+                    case 0:
+                        solidBrush = new SolidBrush(Color.Transparent);
+                        pString = "";
+                        break;
+                    case Enums.ePowerState.Empty:
+                        solidBrush = new SolidBrush(Color.WhiteSmoke);
+                        pString = "(" + Convert.ToString(iSlot.Level + 1) + ")";
+                        break;
+                    case Enums.ePowerState.Used:
+                        switch (iSlot.PowerSet.SetType)
+                        {
+                            case Enums.ePowerSetType.Primary:
+                                sString = "";
+                                break;
+                            case Enums.ePowerSetType.Secondary:
+                                sString = "";
+                                break;
+                            case Enums.ePowerSetType.Ancillary:
+                                sString = "";
+                                break;
+                            case Enums.ePowerSetType.Inherent:
+                                sString = "";
+                                break;
+                            case Enums.ePowerSetType.Pool:
+                                sString = "";
+                                break;
+                        }
+
+                        solidBrush = !MidsContext.Character.IsHero()
+                            ? new SolidBrush(Color.White)
+                            : new SolidBrush(Color.Black);
+
+                        pString = iSlot.Virtual
+                            ? iSlot.Name
+                            : string.Concat("(", Convert.ToString(iSlot.Level + 1), ") ", iSlot.Name, " ", sString);
+                        break;
+                    case Enums.ePowerState.Open:
+                        solidBrush = new SolidBrush(Color.WhiteSmoke);
+                        pString = "(" + Convert.ToString(iSlot.Level + 1) + ")";
+                        break;
+                }
+
+                if (displayState == Enums.ePowerState.Empty & iSlot.State == Enums.ePowerState.Used)
+                {
+                    solidBrush = new SolidBrush(Color.WhiteSmoke);
+                }
+
+                if (InterfaceMode == Enums.eInterfaceMode.PowerToggle && solidBrush.Color == Color.Black &&
+                    !iSlot.CanIncludeForStats())
+                {
+                    solidBrush = new SolidBrush(Color.FromArgb(128, 0, 0, 0));
+                }
+
+                pStringFormat.FormatFlags |= StringFormatFlags.NoWrap;
+                if (MidsContext.Config.EnhanceVisibility)
+                {
+                    i9Bounds = ScaleDown(pBounds);
+                    Color outlineColor = Color.Black;
+                    Color textColor = Color.White;
+                    float outlineSpace5 = 1f;
+                    graphics.CompositingQuality = CompositingQuality.HighQuality;
+                    graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                    graphics.PageUnit = GraphicsUnit.Pixel;
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    DrawOutlineText(pString, i9Bounds, textColor, outlineColor, font, outlineSpace5, graphics, false,
+                        true);
                 }
                 else
                 {
-                    if (inDesigner) continue;
-                    IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
-                    Rectangle clipRect2 = new Rectangle((int) Math.Round(pBounds.X), slotLocation.Y, szSlot.Width, szSlot.Height);
-                    I9Gfx.DrawEnhancementAt(ref graphics, ScaleDown(clipRect2), enhancement.ImageIdx, I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
-                    if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel | (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) | (!iSlot.AllowFrontLoading & slot.Level < iSlot.Level) | (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
-                    {
-                        solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                        i9Bounds = pBounds;
-                        i9Bounds.Inflate(1f, 1f);
-                        graphics.FillEllipse(solidBrush, ScaleDown(i9Bounds));
-                    }
-
-                    if (slot.Enhancement.Enh > -1)
-                        DrawEnhancementLevel(slot, font, graphics, ref pBounds);
+                    graphics.DrawString(pString, font, solidBrush, ScaleDown(pBounds), pStringFormat);
                 }
 
-                if (!MidsContext.Config.ShowSlotLevels) continue;
-
-                i9Bounds = pBounds;
-                unchecked
-                {
-                    //Positioning of slot level text
-                    i9Bounds.Y += i9Bounds.Height + 12;
-                    i9Bounds.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
-                    i9Bounds.Y -= i9Bounds.Height;
-                    i9Bounds.X += i9Bounds.Width;
-                    i9Bounds.X -= i9Bounds.Width - 1;
-                }
-
-                DrawOutlineText(
-                    iStr: Convert.ToString(slot.Level + 1),
-                    bounds: ScaleDown(i9Bounds),
-                    textColor: Color.FromArgb(0, 255, 0),
-                    outlineColor: Color.FromArgb(192, 0, 0, 0),
-                    bFont: font,
-                    outlineSpace: 1f,
-                    g: graphics);
+                return location;
             }
-
-            //Draws the new slot hover
-            if (newSlotLevel > -1 && (displayState != Enums.ePowerState.Empty && drawNewSlot))
-            {
-                i9Bounds = new Rectangle(slotLocation.X + (szSlot.Width + 2) * (iSlot.Slots.Length), slotLocation.Y, szSlot.Width, szSlot.Height);
-                graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(i9Bounds));
-                i9Bounds.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
-                i9Bounds.Y += (szSlot.Height - i9Bounds.Height) / 2f;
-                DrawOutlineText(Convert.ToString(newSlotLevel + 1), ScaleDown(i9Bounds), Color.FromArgb(0, 255, 255), Color.FromArgb(192, 0, 0, 0), font, 1f, graphics);
-            }
-
-            //Power name text positioning
-            solidBrush = new SolidBrush(Color.White);
-            pStringFormat = new StringFormat();
-            pBounds.X = location.X + 10;
-            pBounds.Y = location.Y + 4;
-            pBounds.Width = SzPower.Width;
-            pBounds.Height = _defaultFont.GetHeight() * 2f;
-            Enums.ePowerState ePowerState2 = iSlot.State;
-            if (ePowerState2 == Enums.ePowerState.Empty & displayState == Enums.ePowerState.Open)
-            {
-                ePowerState2 = displayState;
-            }
-
-            switch (ePowerState2)
-            {
-                case 0:
-                    solidBrush = new SolidBrush(Color.Transparent);
-                    pString = "";
-                    break;
-                case Enums.ePowerState.Empty:
-                    solidBrush = new SolidBrush(Color.WhiteSmoke);
-                    pString = "(" + Convert.ToString(iSlot.Level + 1) + ")";
-                    break;
-                case Enums.ePowerState.Used:
-                    switch (iSlot.PowerSet.SetType)
-                    {
-                        case Enums.ePowerSetType.Primary:
-                            sString = "";
-                            break;
-                        case Enums.ePowerSetType.Secondary:
-                            sString = "";
-                            break;
-                        case Enums.ePowerSetType.Ancillary:
-                            sString = "";
-                            break;
-                        case Enums.ePowerSetType.Inherent:
-                            sString = "";
-                            break;
-                        case Enums.ePowerSetType.Pool:
-                            sString = "";
-                            break;
-                    }
-
-                    solidBrush = !MidsContext.Character.IsHero()
-                        ? new SolidBrush(Color.White)
-                        : new SolidBrush(Color.Black);
-
-                    pString = iSlot.Virtual
-                        ? iSlot.Name
-                        : string.Concat("(", Convert.ToString(iSlot.Level + 1), ") ", iSlot.Name, " ", sString);
-                    break;
-                case Enums.ePowerState.Open:
-                    solidBrush = new SolidBrush(Color.WhiteSmoke);
-                    pString = "(" + Convert.ToString(iSlot.Level + 1) + ")";
-                    break;
-            }
-
-            if (displayState == Enums.ePowerState.Empty & iSlot.State == Enums.ePowerState.Used)
-            {
-                solidBrush = new SolidBrush(Color.WhiteSmoke);
-            }
-
-            if (InterfaceMode == Enums.eInterfaceMode.PowerToggle && solidBrush.Color == Color.Black &&
-                !iSlot.CanIncludeForStats())
-            {
-                solidBrush = new SolidBrush(Color.FromArgb(128, 0, 0, 0));
-            }
-
-            pStringFormat.FormatFlags |= StringFormatFlags.NoWrap;
-            if (MidsContext.Config.EnhanceVisibility)
-            {
-                i9Bounds = ScaleDown(pBounds);
-                Color outlineColor = Color.Black;
-                Color textColor = Color.White;
-                float outlineSpace5 = 1f;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-                graphics.PageUnit = GraphicsUnit.Pixel;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                DrawOutlineText(pString, i9Bounds, textColor, outlineColor, font, outlineSpace5, graphics, false, true);
-            }
-            else
-            {
-                graphics.DrawString(pString, font, solidBrush, ScaleDown(pBounds), pStringFormat);
-            }
-
-            return location;
         }
 
         private PathGradientBrush MakePathBrush(Rectangle iRect, PointF iCenter, Color iColor1, Color icolor2)
