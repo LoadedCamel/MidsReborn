@@ -39928,7 +39928,6 @@
       "LongName": "Command of the Mastermind: Accuracy/Damage/Endurance/Recharge"
     },
     {
-      "IsModified": true,
       "StaticIndex": 891,
       "Name": "Recharge/Pet +AoE Defense Aura",
       "ShortName": "Rchg/PetAoEDef",
@@ -51876,7 +51875,6 @@
       "LongName": "Mark of Supremacy: Accuracy/Damage/Endurance"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1107,
       "Name": "Endurance/Pet +Resist +Regen",
       "ShortName": "EndRdx/+Resist/+Regen",
@@ -52156,7 +52154,6 @@
       "LongName": "Superior Mark of Supremacy: Accuracy/Damage/Endurance"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1113,
       "Name": "Endurance/Pet +Resist +Regen",
       "ShortName": "EndRdx/+Resist/+Regen",
@@ -52460,7 +52457,6 @@
       "LongName": "Critical Strikes: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1119,
       "Name": "RechargeTime/+50% Crit Proc",
       "ShortName": "Rchg/+50% Crit",
@@ -53071,7 +53067,6 @@
       "LongName": "Spider's Bite: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1131,
       "Name": "RechargeTime/Global Toxic",
       "ShortName": "Rchg/Global Toxic",
@@ -53379,7 +53374,6 @@
       "LongName": "Superior Spider's Bite: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1137,
       "Name": "RechargeTime/Global Toxic",
       "ShortName": "Rchg/Global Toxic",
@@ -53683,7 +53677,6 @@
       "LongName": "Assassin's Mark: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1143,
       "Name": "RechargeTime/Rchg Build Up",
       "ShortName": "Rchg/Rchg Build Up",
@@ -53991,7 +53984,6 @@
       "LongName": "Superior Assassin's Mark: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1149,
       "Name": "RechargeTime/Rchg Build Up",
       "ShortName": "Rchg/Rchg Build Up",
@@ -54295,7 +54287,6 @@
       "LongName": "Gauntleted Fist: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1155,
       "Name": "RechargeTime/+Absorb",
       "ShortName": "Rchg/+Absorb",
@@ -54603,7 +54594,6 @@
       "LongName": "Superior Gauntleted Fist: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1161,
       "Name": "RechargeTime/+Absorb",
       "ShortName": "Rchg/+Absorb",
@@ -56892,7 +56882,6 @@
       "LongName": "Entomb: Accuracy/Hold/Endurance/Recharge"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1215,
       "Name": "Recharge/Chance for +Absorb",
       "ShortName": "Rchg/AbsorbProc",
@@ -57139,7 +57128,6 @@
       "LongName": "Superior Entomb: Accuracy/Hold/Endurance/Recharge"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1221,
       "Name": "Recharge/Chance for +Absorb",
       "ShortName": "Rchg/AbsorbProc",
@@ -57172,6 +57160,7 @@
       "LongName": "Superior Entomb: Recharge/Chance for +Absorb"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1222,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -57202,6 +57191,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Sentinels_Ward_A",
@@ -57209,6 +57199,7 @@
       "LongName": "Sentinel's Ward: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1223,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -57239,6 +57230,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Sentinels_Ward_B",
@@ -57246,6 +57238,7 @@
       "LongName": "Sentinel's Ward: Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1224,
       "Name": "Accuracy/Damage/RechargeTime",
       "ShortName": "Acc/Dmg/Rchg",
@@ -57283,6 +57276,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Sentinels_Ward_C",
@@ -57290,6 +57284,7 @@
       "LongName": "Sentinel's Ward: Accuracy/Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1225,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -57327,13 +57322,15 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
-      "UID": "Attuned_Sentinels_Ward_",
+      "UID": "Attuned_Sentinels_Ward_D",
       "HasEnhEffect": true,
       "LongName": "Sentinel's Ward: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1226,
       "Name": "Accuracy/Damage/Endurance/RechargeTime",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -57378,6 +57375,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Sentinels_Ward_E",
@@ -57409,6 +57407,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Sentinels_Ward_F",
@@ -57416,6 +57415,7 @@
       "LongName": "Sentinel's Ward: RechargeTime/Chance for +Absorb"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1228,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -57446,6 +57446,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Sentinel's_Ward_A",
@@ -57454,6 +57455,7 @@
       "LongName": "Superior Sentinel's Ward: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1229,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -57484,6 +57486,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Sentinel's_Ward_B",
@@ -57492,6 +57495,7 @@
       "LongName": "Superior Sentinel's Ward: Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1230,
       "Name": "Accuracy/Damage/RechargeTime",
       "ShortName": "Acc/Dmg/Rchg",
@@ -57529,6 +57533,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Sentinel's_Ward_C",
@@ -57537,6 +57542,7 @@
       "LongName": "Superior Sentinel's Ward: Accuracy/Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1231,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -57574,6 +57580,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Sentinel's_Ward_D",
@@ -57582,6 +57589,7 @@
       "LongName": "Superior Sentinel's Ward: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1232,
       "Name": "Accuracy/Damage/Endurance/RechargeTime",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -57626,6 +57634,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Sentinel's_Ward_E",
@@ -57658,6 +57667,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Sentinel's_Ward_F",
@@ -57666,6 +57676,7 @@
       "LongName": "Superior Sentinel's Ward: RechargeTime/Chance for +Absorb"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1234,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -57696,6 +57707,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Opportunity_Strikes_A",
@@ -57703,6 +57715,7 @@
       "LongName": "Opportunity Strikes: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1235,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -57733,6 +57746,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Opportunity_Strikes_B",
@@ -57740,6 +57754,7 @@
       "LongName": "Opportunity Strikes: Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1236,
       "Name": "Accuracy/Damage/RechargeTime",
       "ShortName": "Acc/Dmg/Rchg",
@@ -57777,6 +57792,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Opportunity_Strikes_C",
@@ -57784,6 +57800,7 @@
       "LongName": "Opportunity Strikes: Accuracy/Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1237,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -57821,6 +57838,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Opportunity_Strikes_D",
@@ -57828,6 +57846,7 @@
       "LongName": "Opportunity Strikes: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1238,
       "Name": "Accuracy/Damage/Endurance/RechargeTime",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -57872,6 +57891,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Opportunity_Strikes_E",
@@ -57903,6 +57923,7 @@
       "LevelMin": 9,
       "LevelMax": 52,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Attuned_Opportunity_Strikes_F",
@@ -57910,6 +57931,7 @@
       "LongName": "Opportunity Strikes: RechargeTime/Chance for Opportunity"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1240,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -57940,6 +57962,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 2,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Opportunity_Strikes_A",
@@ -57948,6 +57971,7 @@
       "LongName": "Superior Opportunity Strikes: Accuracy/Damage"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1241,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -57978,6 +58002,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 3,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Opportunity_Strikes_B",
@@ -57986,6 +58011,7 @@
       "LongName": "Superior Opportunity Strikes: Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1242,
       "Name": "Accuracy/Damage/RechargeTime",
       "ShortName": "Acc/Dmg/Rchg",
@@ -58023,6 +58049,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 4,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Opportunity_Strikes_C",
@@ -58031,6 +58058,7 @@
       "LongName": "Superior Opportunity Strikes: Accuracy/Damage/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1243,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -58068,6 +58096,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 5,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Opportunity_Strikes_D",
@@ -58076,6 +58105,7 @@
       "LongName": "Superior Opportunity Strikes: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1244,
       "Name": "Accuracy/Damage/Endurance/RechargeTime",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -58120,6 +58150,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 6,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Opportunity_Strikes_E",
@@ -58152,6 +58183,7 @@
       "LevelMin": 49,
       "LevelMax": 49,
       "Unique": true,
+      "MutExID": 7,
       "RecipeName": "Alt",
       "RecipeIDX": 1072,
       "UID": "Superior_Attuned_Superior_Opportunity_Strikes_F",
