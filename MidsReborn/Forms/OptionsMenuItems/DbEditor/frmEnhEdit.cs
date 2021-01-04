@@ -26,14 +26,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void AddListItem(int Index)
         {
-            var items = new string[6];
+            var items = new string[7];
             var enhancement = DatabaseAPI.Database.Enhancements[Index];
-            items[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " +
-                       Convert.ToString(enhancement.StaticIndex, CultureInfo.InvariantCulture);
+            items[0] = enhancement.Name + " (" + enhancement.ShortName + ") - " + Convert.ToString(enhancement.StaticIndex, CultureInfo.InvariantCulture);
             items[1] = Enum.GetName(enhancement.TypeID.GetType(), enhancement.TypeID);
             items[2] = Convert.ToString(enhancement.Effect.Length, CultureInfo.InvariantCulture);
             items[3] = "";
             items[5] = enhancement.UID;
+            items[6] = enhancement.LongName;
             var num1 = enhancement.ClassID.Length - 1;
             for (var index1 = 0; index1 <= num1; ++index1)
             {
@@ -192,7 +192,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
-            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
+            Console.WriteLine(lvEnh.SelectedItems[0].SubItems[6].Text);
+            //var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
+            var selectedIndex = DatabaseAPI.GetEnhancementByName(lvEnh.SelectedItems[0].SubItems[6].Text);
             using var frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[selectedIndex], 0);
             var num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)

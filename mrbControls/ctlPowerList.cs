@@ -14,6 +14,15 @@ namespace mrbControls
             DrawMode = DrawMode.OwnerDrawFixed;
         }
 
+        public enum ItemState
+        {
+            Enabled,
+            Selected,
+            Disabled,
+            SelectedDisabled,
+            Invalid
+        }
+
         public Color SelectionBackColor { get; set; } = Color.DarkOrange;
 
         [DllImport("uxtheme", ExactSpelling = true)]
@@ -41,12 +50,14 @@ namespace mrbControls
 
                     if (e.ClipRectangle.IntersectsWith(rec))
                     {
-                        if ((SelectionMode == SelectionMode.One && SelectedIndex == i) ||
-                            (SelectionMode == SelectionMode.MultiSimple && SelectedIndices.Contains(i)) ||
-                            (SelectionMode == SelectionMode.MultiExtended && SelectedIndices.Contains(i)))
+                        if (SelectionMode == SelectionMode.One && SelectedIndex == i || SelectionMode == SelectionMode.MultiSimple && SelectedIndices.Contains(i) || SelectionMode == SelectionMode.MultiExtended && SelectedIndices.Contains(i))
+                        {
                             OnDrawItem(new DrawItemEventArgs(g, Font, rec, i, DrawItemState.Selected, ForeColor, BackColor));
+                        }
                         else
+                        {
                             OnDrawItem(new DrawItemEventArgs(g, Font, rec, i, DrawItemState.Default, ForeColor, BackColor));
+                        }
 
                         reg.Complement(rec);
                     }

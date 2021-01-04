@@ -64,13 +64,13 @@ namespace mrbControls
                 {
                     case ComboBoxType.Archetype:
                         imagesFolder = $"{Application.StartupPath}\\Images\\Archetypes";
-                        var archetype = (Archetype) Items[e.Index];
-                        comboImage = archetype.Image(Directory.GetFiles(imagesFolder).ToList());
+                        //var archetype = (Archetype) Items[e.Index];
+                        //comboImage = archetype.Image(Directory.GetFiles(imagesFolder).ToList());
                         break;
                     case ComboBoxType.Origin:
                         imagesFolder = $"{Application.StartupPath}\\Images\\Origins";
-                        images = Directory.GetFiles(imagesFolder).ToList();
-                        comboImage = Image.FromFile(images.FirstOrDefault(i => i.Contains(Items[e.Index].ToString())) ?? throw new InvalidOperationException());
+                        //images = Directory.GetFiles(imagesFolder).ToList();
+                        //comboImage = Image.FromFile(images.FirstOrDefault(i => i.Contains(Items[e.Index].ToString())) ?? throw new InvalidOperationException());
                         break;
                     case ComboBoxType.Primary:
                         imagesFolder = $"{Application.StartupPath}\\Images\\Powersets";

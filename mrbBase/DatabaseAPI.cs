@@ -841,7 +841,8 @@ namespace mrbBase
             //takes the ShortName (example: ResDam) and returns the index in the enhancement array
             return Database.Enhancements.TryFindIndex(enh =>
                 string.Equals(enh.ShortName, iName, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(enh.Name, iName, StringComparison.OrdinalIgnoreCase));
+                string.Equals(enh.Name, iName, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(enh.LongName, iName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int GetEnhancementByName(string iName, Enums.eType iType)
