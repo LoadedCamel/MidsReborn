@@ -531,7 +531,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             rbChanceMax.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Max;
             rbChanceIgnore.Checked = config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum;
             udBaseToHit.Value = new decimal(config.BaseAcc * 100f);
-            chkVillainColor.Checked = !config.DisableVillainColors;
             chkUpdates.Checked = config.CheckForUpdates;
             chkShowSOLevels.Checked = config.ShowSOLevels;
             chkEnableDmgGraph.Checked = !config.DisableDataDamageGraph;
@@ -549,12 +548,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkColorPrint.Checked = config.PrintInColor;
             udRTFSize.Value = new decimal(config.RtFont.RTFBase / 2.0);
             udStatSize.Value = new decimal(config.RtFont.PairedBase);
+            udPowSelectSize.Value = new decimal(config.RtFont.PowersSelectBase);
+            udPowersSize.Value = new decimal(config.RtFont.PowersBase);
             chkTextBold.Checked = config.RtFont.RTFBold;
             chkStatBold.Checked = config.RtFont.PairedBold;
+            chkPowSelBold.Checked = config.RtFont.PowersSelectBold;
+            chkPowersBold.Checked = config.RtFont.PowersBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
             lblSaveFolder.Text = config.GetSaveFolder();
             //this.txtUpdatePath.Text = config.UpdatePath;
-            chkColorInherent.Checked = !config.DisableDesaturateInherent;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
@@ -744,7 +746,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             else if (rbChanceIgnore.Checked)
                 config.DamageMath.Calculate = ConfigData.EDamageMath.Minimum;
             config.BaseAcc = Convert.ToSingle(decimal.Divide(udBaseToHit.Value, new decimal(100)));
-            config.DisableVillainColors = !chkVillainColor.Checked;
+            config.DisableVillainColors = false;
             config.CheckForUpdates = chkUpdates.Checked;
             config.I9.DefaultIOLevel = Convert.ToInt32(udIOLevel.Value) - 1;
             config.I9.IgnoreEnhFX = !chkIOEffects.Checked;
@@ -758,6 +760,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.RtFont.PairedBase = Convert.ToSingle(udStatSize.Value);
             config.RtFont.RTFBold = chkTextBold.Checked;
             config.RtFont.PairedBold = chkStatBold.Checked;
+            config.RtFont.PowersSelectBase = Convert.ToSingle(udPowSelectSize.Value);
+            config.RtFont.PowersSelectBold = chkPowSelBold.Checked;
+            config.RtFont.PowersBase = Convert.ToSingle(udPowersSize.Value);
+            config.RtFont.PowersBold = chkPowersBold.Checked;
             config.DisableLoadLastFileOnStart = !chkLoadLastFile.Checked;
             if (config.DefaultSaveFolderOverride != lblSaveFolder.Text)
             {
@@ -768,7 +774,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 
             config.EnhanceVisibility = chkHighVis.Checked;
             //config.UpdatePath = this.txtUpdatePath.Text;
-            config.DisableDesaturateInherent = !chkColorInherent.Checked;
+            config.DisableDesaturateInherent = false;
             config.DisableRepeatOnMiddleClick = !chkMiddle.Checked;
             config.NoToolTips = chkNoTips.Checked;
             config.DisableAlphaPopup = !chkShowAlphaPopup.Checked;

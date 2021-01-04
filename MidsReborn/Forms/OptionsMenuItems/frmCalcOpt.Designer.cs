@@ -36,10 +36,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.btnCancel = new System.Windows.Forms.Button();
             this.TabControl1 = new System.Windows.Forms.TabControl();
             this.TabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.cbTotalsWindowTitleOpt = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.chkNoTips = new System.Windows.Forms.CheckBox();
             this.chkMiddle = new System.Windows.Forms.CheckBox();
             this.GroupBox17 = new System.Windows.Forms.GroupBox();
-            this.chkColorInherent = new System.Windows.Forms.CheckBox();
             this.chkShowAlphaPopup = new System.Windows.Forms.CheckBox();
             this.chkHighVis = new System.Windows.Forms.CheckBox();
             this.Label36 = new System.Windows.Forms.Label();
@@ -47,7 +49,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.chkTextBold = new System.Windows.Forms.CheckBox();
             this.btnFontColor = new System.Windows.Forms.Button();
             this.Label22 = new System.Windows.Forms.Label();
-            this.chkVillainColor = new System.Windows.Forms.CheckBox();
             this.Label21 = new System.Windows.Forms.Label();
             this.udStatSize = new System.Windows.Forms.NumericUpDown();
             this.udRTFSize = new System.Windows.Forms.NumericUpDown();
@@ -178,11 +179,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.groupBox18 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cbTotalsWindowTitleOpt = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.udPowSelectSize = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.udPowersSize = new System.Windows.Forms.NumericUpDown();
+            this.chkPowSelBold = new System.Windows.Forms.CheckBox();
+            this.chkPowersBold = new System.Windows.Forms.CheckBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
+            this.groupBox18.SuspendLayout();
             this.GroupBox17.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udStatSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udRTFSize)).BeginInit();
@@ -214,7 +219,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage1.SuspendLayout();
             this.GroupBox9.SuspendLayout();
             this.GroupBox7.SuspendLayout();
-            this.groupBox18.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udPowSelectSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udPowersSize)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOK
@@ -269,18 +275,52 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage3.Text = "Enhancements & View";
             this.TabPage3.UseVisualStyleBackColor = true;
             // 
+            // groupBox18
+            // 
+            this.groupBox18.Controls.Add(this.cbTotalsWindowTitleOpt);
+            this.groupBox18.Controls.Add(this.label2);
+            this.groupBox18.Location = new System.Drawing.Point(196, 120);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(545, 44);
+            this.groupBox18.TabIndex = 79;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "Totals Window:";
+            // 
+            // cbTotalsWindowTitleOpt
+            // 
+            this.cbTotalsWindowTitleOpt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTotalsWindowTitleOpt.FormattingEnabled = true;
+            this.cbTotalsWindowTitleOpt.Items.AddRange(new object[] {
+            "Generic - Totals for Self",
+            "Character name (if set) + Archetype + Powersets",
+            "Build file name (if set) + Archetype + Powersets",
+            "Character name (if set) + Build file name (fallback to generic if none)"});
+            this.cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(186, 14);
+            this.cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
+            this.cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(268, 22);
+            this.cbTotalsWindowTitleOpt.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(95, 19);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(85, 14);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Show in titlebar:";
+            // 
             // chkNoTips
             // 
-            this.chkNoTips.Location = new System.Drawing.Point(458, 304);
+            this.chkNoTips.Location = new System.Drawing.Point(417, 304);
             this.chkNoTips.Name = "chkNoTips";
-            this.chkNoTips.Size = new System.Drawing.Size(141, 18);
+            this.chkNoTips.Size = new System.Drawing.Size(78, 18);
             this.chkNoTips.TabIndex = 78;
             this.chkNoTips.Text = "No Tooltips";
             this.chkNoTips.Visible = false;
             // 
             // chkMiddle
             // 
-            this.chkMiddle.Location = new System.Drawing.Point(207, 285);
+            this.chkMiddle.Location = new System.Drawing.Point(500, 304);
             this.chkMiddle.Name = "chkMiddle";
             this.chkMiddle.Size = new System.Drawing.Size(222, 18);
             this.chkMiddle.TabIndex = 77;
@@ -288,7 +328,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // GroupBox17
             // 
-            this.GroupBox17.Controls.Add(this.chkColorInherent);
+            this.GroupBox17.Controls.Add(this.chkPowersBold);
+            this.GroupBox17.Controls.Add(this.chkPowSelBold);
+            this.GroupBox17.Controls.Add(this.udPowersSize);
+            this.GroupBox17.Controls.Add(this.label18);
+            this.GroupBox17.Controls.Add(this.udPowSelectSize);
+            this.GroupBox17.Controls.Add(this.label17);
             this.GroupBox17.Controls.Add(this.chkShowAlphaPopup);
             this.GroupBox17.Controls.Add(this.chkHighVis);
             this.GroupBox17.Controls.Add(this.Label36);
@@ -296,31 +341,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox17.Controls.Add(this.chkTextBold);
             this.GroupBox17.Controls.Add(this.btnFontColor);
             this.GroupBox17.Controls.Add(this.Label22);
-            this.GroupBox17.Controls.Add(this.chkVillainColor);
             this.GroupBox17.Controls.Add(this.Label21);
             this.GroupBox17.Controls.Add(this.udStatSize);
             this.GroupBox17.Controls.Add(this.udRTFSize);
             this.GroupBox17.Location = new System.Drawing.Point(196, 166);
             this.GroupBox17.Name = "GroupBox17";
-            this.GroupBox17.Size = new System.Drawing.Size(545, 116);
+            this.GroupBox17.Size = new System.Drawing.Size(545, 132);
             this.GroupBox17.TabIndex = 76;
             this.GroupBox17.TabStop = false;
             this.GroupBox17.Text = "Font Size/Colors:";
             // 
-            // chkColorInherent
-            // 
-            this.chkColorInherent.Enabled = false;
-            this.chkColorInherent.Location = new System.Drawing.Point(11, 92);
-            this.chkColorInherent.Name = "chkColorInherent";
-            this.chkColorInherent.Size = new System.Drawing.Size(222, 20);
-            this.chkColorInherent.TabIndex = 70;
-            this.chkColorInherent.Text = "Use alternate colors for inherents";
-            this.myTip.SetToolTip(this.chkColorInherent, "Uses alternate colors for inherents.");
-            this.chkColorInherent.Visible = false;
-            // 
             // chkShowAlphaPopup
             // 
-            this.chkShowAlphaPopup.Location = new System.Drawing.Point(11, 74);
+            this.chkShowAlphaPopup.Location = new System.Drawing.Point(280, 82);
             this.chkShowAlphaPopup.Name = "chkShowAlphaPopup";
             this.chkShowAlphaPopup.Size = new System.Drawing.Size(190, 18);
             this.chkShowAlphaPopup.TabIndex = 79;
@@ -328,7 +361,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // chkHighVis
             // 
-            this.chkHighVis.Location = new System.Drawing.Point(262, 74);
+            this.chkHighVis.Location = new System.Drawing.Point(280, 106);
             this.chkHighVis.Name = "chkHighVis";
             this.chkHighVis.Size = new System.Drawing.Size(222, 20);
             this.chkHighVis.TabIndex = 69;
@@ -338,7 +371,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // Label36
             // 
-            this.Label36.Location = new System.Drawing.Point(138, 8);
+            this.Label36.Location = new System.Drawing.Point(161, 8);
             this.Label36.Name = "Label36";
             this.Label36.Size = new System.Drawing.Size(39, 16);
             this.Label36.TabIndex = 64;
@@ -348,7 +381,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // chkStatBold
             // 
             this.chkStatBold.AutoSize = true;
-            this.chkStatBold.Location = new System.Drawing.Point(150, 50);
+            this.chkStatBold.Location = new System.Drawing.Point(173, 50);
             this.chkStatBold.Name = "chkStatBold";
             this.chkStatBold.Size = new System.Drawing.Size(15, 14);
             this.chkStatBold.TabIndex = 63;
@@ -357,7 +390,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // chkTextBold
             // 
             this.chkTextBold.AutoSize = true;
-            this.chkTextBold.Location = new System.Drawing.Point(150, 25);
+            this.chkTextBold.Location = new System.Drawing.Point(173, 25);
             this.chkTextBold.Name = "chkTextBold";
             this.chkTextBold.Size = new System.Drawing.Size(15, 14);
             this.chkTextBold.TabIndex = 62;
@@ -365,7 +398,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // btnFontColor
             // 
-            this.btnFontColor.Location = new System.Drawing.Point(312, 30);
+            this.btnFontColor.Location = new System.Drawing.Point(280, 32);
             this.btnFontColor.Name = "btnFontColor";
             this.btnFontColor.Size = new System.Drawing.Size(172, 27);
             this.btnFontColor.TabIndex = 61;
@@ -375,37 +408,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // Label22
             // 
-            this.Label22.Location = new System.Drawing.Point(7, 47);
+            this.Label22.Location = new System.Drawing.Point(16, 47);
             this.Label22.Name = "Label22";
-            this.Label22.Size = new System.Drawing.Size(78, 20);
+            this.Label22.Size = new System.Drawing.Size(91, 20);
             this.Label22.TabIndex = 60;
-            this.Label22.Text = "Stats/Powers:";
+            this.Label22.Text = "Stats:";
             this.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // chkVillainColor
-            // 
-            this.chkVillainColor.Enabled = false;
-            this.chkVillainColor.Location = new System.Drawing.Point(262, 92);
-            this.chkVillainColor.Name = "chkVillainColor";
-            this.chkVillainColor.Size = new System.Drawing.Size(222, 20);
-            this.chkVillainColor.TabIndex = 68;
-            this.chkVillainColor.Text = "Use alternate colors for villains";
-            this.myTip.SetToolTip(this.chkVillainColor, "Draws villain builds in red rather than blue.");
-            this.chkVillainColor.Visible = false;
             // 
             // Label21
             // 
-            this.Label21.Location = new System.Drawing.Point(7, 22);
+            this.Label21.Location = new System.Drawing.Point(5, 21);
             this.Label21.Name = "Label21";
-            this.Label21.Size = new System.Drawing.Size(78, 20);
+            this.Label21.Size = new System.Drawing.Size(102, 20);
             this.Label21.TabIndex = 59;
-            this.Label21.Text = "Info Tab Text:";
+            this.Label21.Text = "InfoPanel Tab Text:";
             this.Label21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // udStatSize
             // 
             this.udStatSize.DecimalPlaces = 2;
-            this.udStatSize.Location = new System.Drawing.Point(87, 47);
+            this.udStatSize.Location = new System.Drawing.Point(108, 47);
             this.udStatSize.Maximum = new decimal(new int[] {
             14,
             0,
@@ -427,7 +449,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // udRTFSize
             // 
-            this.udRTFSize.Location = new System.Drawing.Point(87, 21);
+            this.udRTFSize.Location = new System.Drawing.Point(108, 21);
             this.udRTFSize.Maximum = new decimal(new int[] {
             14,
             0,
@@ -442,14 +464,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.udRTFSize.Size = new System.Drawing.Size(52, 20);
             this.udRTFSize.TabIndex = 0;
             this.udRTFSize.Value = new decimal(new int[] {
-            8,
+            825,
             0,
             0,
-            0});
+            131072});
             // 
             // chkIOPrintLevels
             // 
-            this.chkIOPrintLevels.Location = new System.Drawing.Point(207, 304);
+            this.chkIOPrintLevels.Location = new System.Drawing.Point(194, 304);
             this.chkIOPrintLevels.Name = "chkIOPrintLevels";
             this.chkIOPrintLevels.Size = new System.Drawing.Size(221, 18);
             this.chkIOPrintLevels.TabIndex = 75;
@@ -1828,39 +1850,87 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.cPicker.FullOpen = true;
             // 
-            // groupBox18
+            // label17
             // 
-            this.groupBox18.Controls.Add(this.cbTotalsWindowTitleOpt);
-            this.groupBox18.Controls.Add(this.label2);
-            this.groupBox18.Location = new System.Drawing.Point(196, 120);
-            this.groupBox18.Name = "groupBox18";
-            this.groupBox18.Size = new System.Drawing.Size(545, 44);
-            this.groupBox18.TabIndex = 79;
-            this.groupBox18.TabStop = false;
-            this.groupBox18.Text = "Totals Window:";
+            this.label17.Location = new System.Drawing.Point(11, 73);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(96, 20);
+            this.label17.TabIndex = 80;
+            this.label17.Text = "Power Selections:";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label2
+            // udPowSelectSize
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(95, 19);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 14);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Show in titlebar:";
+            this.udPowSelectSize.DecimalPlaces = 2;
+            this.udPowSelectSize.Location = new System.Drawing.Point(108, 73);
+            this.udPowSelectSize.Maximum = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
+            this.udPowSelectSize.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.udPowSelectSize.Name = "udPowSelectSize";
+            this.udPowSelectSize.Size = new System.Drawing.Size(52, 20);
+            this.udPowSelectSize.TabIndex = 81;
+            this.udPowSelectSize.Value = new decimal(new int[] {
+            825,
+            0,
+            0,
+            131072});
             // 
-            // cbTotalsWindowTitleOpt
+            // label18
             // 
-            this.cbTotalsWindowTitleOpt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbTotalsWindowTitleOpt.FormattingEnabled = true;
-            this.cbTotalsWindowTitleOpt.Items.AddRange(new object[] {
-            "Generic - Totals for Self",
-            "Character name (if set) + Archetype + Powersets",
-            "Build file name (if set) + Archetype + Powersets",
-            "Character name (if set) + Build file name (fallback to generic if none)"});
-            this.cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(186, 14);
-            this.cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
-            this.cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(268, 22);
-            this.cbTotalsWindowTitleOpt.TabIndex = 1;
+            this.label18.Location = new System.Drawing.Point(29, 98);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(78, 20);
+            this.label18.TabIndex = 82;
+            this.label18.Text = "Powers:";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udPowersSize
+            // 
+            this.udPowersSize.DecimalPlaces = 2;
+            this.udPowersSize.Location = new System.Drawing.Point(108, 98);
+            this.udPowersSize.Maximum = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
+            this.udPowersSize.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.udPowersSize.Name = "udPowersSize";
+            this.udPowersSize.Size = new System.Drawing.Size(52, 20);
+            this.udPowersSize.TabIndex = 83;
+            this.udPowersSize.Value = new decimal(new int[] {
+            825,
+            0,
+            0,
+            131072});
+            // 
+            // chkPowSelBold
+            // 
+            this.chkPowSelBold.AutoSize = true;
+            this.chkPowSelBold.Location = new System.Drawing.Point(173, 76);
+            this.chkPowSelBold.Name = "chkPowSelBold";
+            this.chkPowSelBold.Size = new System.Drawing.Size(15, 14);
+            this.chkPowSelBold.TabIndex = 84;
+            this.chkPowSelBold.UseVisualStyleBackColor = true;
+            // 
+            // chkPowersBold
+            // 
+            this.chkPowersBold.AutoSize = true;
+            this.chkPowersBold.Location = new System.Drawing.Point(173, 101);
+            this.chkPowersBold.Name = "chkPowersBold";
+            this.chkPowersBold.Size = new System.Drawing.Size(15, 14);
+            this.chkPowersBold.TabIndex = 85;
+            this.chkPowersBold.UseVisualStyleBackColor = true;
             // 
             // frmCalcOpt
             // 
@@ -1884,6 +1954,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.Text = "Options";
             this.TabControl1.ResumeLayout(false);
             this.TabPage3.ResumeLayout(false);
+            this.groupBox18.ResumeLayout(false);
+            this.groupBox18.PerformLayout();
             this.GroupBox17.ResumeLayout(false);
             this.GroupBox17.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udStatSize)).EndInit();
@@ -1921,8 +1993,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage1.PerformLayout();
             this.GroupBox9.ResumeLayout(false);
             this.GroupBox7.ResumeLayout(false);
-            this.groupBox18.ResumeLayout(false);
-            this.groupBox18.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udPowSelectSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udPowersSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1936,7 +2008,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         Button btnSaveFolder;
         Button btnSaveFolderReset;
         ComboBox cbEnhLevel;
-        CheckBox chkColorInherent;
         CheckBox chkColorPrint;
         CheckBox chkHighVis;
         CheckBox chkIOEffects;
@@ -1952,7 +2023,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         CheckBox chkTextBold;
         CheckBox chkUpdates;
         CheckBox chkUseArcanaTime;
-        CheckBox chkVillainColor;
         CheckedListBox clbSuppression;
         ComboBox cmbAction;
         ColorDialog cPicker;
@@ -2079,5 +2149,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private GroupBox groupBox18;
         private ComboBox cbTotalsWindowTitleOpt;
         private Label label2;
+        private Label label17;
+        private NumericUpDown udPowSelectSize;
+        private CheckBox chkPowersBold;
+        private CheckBox chkPowSelBold;
+        private NumericUpDown udPowersSize;
+        private Label label18;
     }
 }

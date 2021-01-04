@@ -5702,8 +5702,9 @@ namespace Mids_Reborn.Forms
             I9Popup.BackColor = Color.Black;
             I9Popup.ForeColor = I9Picker.ForeColor;
             myDataView.BackColor = BackColor;
-            //var font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
-            using var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            /*var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
+            using var font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);*/
+            //using var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             var toColor = new Control[]
             {
                 llPrimary, llSecondary, llPool0, llPool1, llPool2, llPool3, llAncillary, lblName, lblAT, lblOrigin,
@@ -5715,7 +5716,7 @@ namespace Mids_Reborn.Forms
                 if (!(colorItem is ListLabelV3 ll))
                     continue;
                 UpdateLLColors(ll);
-                ll.Font = font;
+                //ll.Font = font;
             }
 
             var toOtherColor = new Control[]
@@ -5873,18 +5874,28 @@ namespace Mids_Reborn.Forms
             llPrimary.PaddingY = 2;
             llSecondary.PaddingY = 2;
             FixPrimarySecondaryHeight();
-            //llPrimary.Font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
-            llPrimary.Font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            foreach (var llControl in Controls.OfType<ListLabelV3>())
+            {
+                var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
+                llControl.Font = new Font(llControl.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
+                foreach (var e in llControl.Items)
+                {
+                    e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+                }
+            }
+
+            /*llPrimary.Font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, FontStyle.Bold, GraphicsUnit.Point);
+            //llPrimary.Font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             llSecondary.Font = llPrimary.Font;
             foreach (var e in llPrimary.Items)
             {
-                e.Bold = MidsContext.Config.RtFont.PairedBold;
+                e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
             }
 
             foreach (var e in llSecondary.Items)
             {
-                e.Bold = MidsContext.Config.RtFont.PairedBold;
-            }
+                e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+            }*/
             heroVillain.Checked = !MidsContext.Character.IsHero();
             dvAnchored.SetLocation(new Point(llPrimary.Left, llPrimary.Top + raGreater(llPrimary.SizeNormal.Height, llSecondary.SizeNormal.Height) + 5), ForceComplete);
             llPrimary.SuspendRedraw = false;
