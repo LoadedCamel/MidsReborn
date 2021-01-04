@@ -501,7 +501,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void frmRecipeEdit_Load(object sender, EventArgs e)
-        {  
+        {
+            // Mitigate flickering on the ListView control.
+            // https://stackoverflow.com/a/42389596
+            lvDPA
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvDPA, true, null);
             var recipeRarity = Recipe.RecipeRarity.Common;
             cbRarity.BeginUpdate();
             cbRarity.Items.Clear();

@@ -227,13 +227,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lv30.FormatType = 6;
 
             lv31.Group = "";
-            lv31.FormatType = 7;
+            lv31.FormatType = 0;
             lv32.Group = "";
             lv32.FormatType = 7;
             lv33.Group = "";
             lv33.FormatType = 7;
             lv34.Group = "";
-            lv34.FormatType = 7;
+            lv34.FormatType = 0;
             lv35.Group = "";
             lv35.FormatType = 7;
             lv36.Group = "";
