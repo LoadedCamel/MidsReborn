@@ -36,19 +36,17 @@ namespace Mids_Reborn
                 if (exTarget != null)
                 {
                     // Zed: add extra info here.
-                    string[] args = Environment.GetCommandLineArgs();
+                    var args = Environment.GetCommandLineArgs();
                     if (args.Skip(1).Contains("-debug"))
                     {
                         MessageBox.Show(
-                            "Error: " + exTarget.Message + "\n" +
-                            "Stack Trace: " + exTarget.StackTrace + "\n" +
-                            "Exception type: " + exTarget.GetType().Name,
-                            "Error [Debug mode enabled]", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            $"Error: {exTarget.Message}\r\nException type: {exTarget.GetType().Name}\r\nStack Trace:\r\n{exTarget.StackTrace}",
+                            $"Error [Debug mode] [Mids Reborn v{Application.ProductVersion}]", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
-                        MessageBox.Show($"Error (Program.cs): {exTarget.Message}\r\n{exTarget.StackTrace}", exTarget.GetType().Name, MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                        MessageBox.Show($"Error: {exTarget.Message}\r\n{exTarget.StackTrace}", exTarget.GetType().Name,
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     throw;
