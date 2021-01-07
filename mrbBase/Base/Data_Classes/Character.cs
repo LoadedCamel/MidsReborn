@@ -466,14 +466,17 @@ namespace mrbBase.Base.Data_Classes
                         if (!power.StatInclude)
                         {
                             power.Power.Active = false;
+                            //Console.WriteLine($"{powName} Acctive: {power.Power.Active}");
                         }
-                        else if (power.StatInclude && !power.HasProc())
+                        else if (power.StatInclude)
                         {
                             power.Power.Active = true;
+                            //Console.WriteLine($"{powName} Acctive: {power.Power.Active}");
                         }
 
                         break;
                 }
+
                 for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
                 {
                     var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;

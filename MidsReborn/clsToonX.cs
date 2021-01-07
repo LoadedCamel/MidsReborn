@@ -598,10 +598,8 @@ namespace Mids_Reborn
             {
                 if (CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh <= -1)
                     continue;
-                var hasPower = DatabaseAPI.Database
-                    .Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].Effect
-                    .Any(e => e.Mode == Enums.eEffMode.FX);
-                if (!hasPower)
+                var hasPower = DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].Effect.Any(e => e.Mode == Enums.eEffMode.FX);
+                if (!hasPower || (CurrentBuild.Powers[iIndex].ProcInclude && DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].IsProc))
                     continue;
                 var enhIndex = CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh;
                 var enh = DatabaseAPI.Database.Enhancements[enhIndex];
@@ -2024,43 +2022,34 @@ namespace Mids_Reborn
 
             for (var index1 = 0; index1 <= CurrentBuild.Powers[hIDX].SlotCount - 1; ++index1)
             {
-                if (CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh <= -1)
-                    continue;
-                for (var index2 = 0;
-                    index2 <= DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh]
-                        .Effect.Length - 1;
-                    ++index2)
+                if (CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh <= -1) continue;
+                for (var index2 = 0; index2 <= DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect.Length - 1; ++index2)
                 {
-                    var effect = DatabaseAPI.Database
-                        .Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect;
+                    var effect = DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect;
                     var index3 = index2;
-                    if (effect[index3].Mode != Enums.eEffMode.Enhancement)
-                        continue;
+                    if (effect[index3].Mode != Enums.eEffMode.Enhancement) continue;
                     if (effect[index3].Enhance.ID == 12)
-                        nMez[effect[index3].Enhance.SubID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement
-                            .GetEnhancementEffect(Enums.eEnhance.Mez, effect[index3].Enhance.SubID, 1f);
+                    {
+                        nMez[effect[index3].Enhance.SubID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.GetEnhancementEffect(Enums.eEnhance.Mez, effect[index3].Enhance.SubID, 1f);
+                    }
                     else
-                        switch (DatabaseAPI.Database
-                            .Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect[index2]
-                            .BuffMode)
+                    {
+                        switch (DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect[index2].BuffMode)
                         {
                             case Enums.eBuffDebuff.BuffOnly:
-                                nBuff[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement
-                                    .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
+                                nBuff[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
                                 break;
                             case Enums.eBuffDebuff.DeBuffOnly:
-                                if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) &
-                                    (effect[index3].Enhance.ID != 11))
-                                    nDebuff[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1]
-                                        .Enhancement
-                                        .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, -1f);
-
+                                if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) & (effect[index3].Enhance.ID != 11))
+                                {
+                                    nDebuff[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, -1f);
+                                }
                                 break;
                             default:
-                                nAny[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement
-                                    .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
+                                nAny[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
                                 break;
                         }
+                    }
                 }
             }
 

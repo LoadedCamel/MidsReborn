@@ -28,6 +28,7 @@ namespace mrbBase
             Slots = new SlotEntry[0];
             SubPowers = new PowerSubEntry[0];
             VariableValue = 0;
+            ProcInclude = false;
         }
 
         public PowerEntry(int iLevel = -1, IPower power = null, bool chosen = false)
@@ -84,6 +85,7 @@ namespace mrbBase
 
             Tag = false;
             VariableValue = 0;
+            ProcInclude = false;
         }
 
         // public fields are bad, mkay? O_o
@@ -93,6 +95,7 @@ namespace mrbBase
         public int NIDPower { get; set; }
         public bool Tag { get; set; }
         public bool StatInclude { get; set; }
+        public bool ProcInclude { get; set; }
         public int VariableValue { get; set; }
         public SlotEntry[] Slots { get; set; }
         public PowerSubEntry[] SubPowers { get; set; }
@@ -122,6 +125,7 @@ namespace mrbBase
             var powerEntry = new PowerEntry(Level, Power, Chosen)
             {
                 StatInclude = StatInclude,
+                ProcInclude = ProcInclude,
                 Tag = Tag,
                 VariableValue = VariableValue,
                 SubPowers = (PowerSubEntry[]) SubPowers.Clone(),
@@ -154,6 +158,7 @@ namespace mrbBase
             Tag = iPe.Tag;
             StatInclude = iPe.StatInclude;
             VariableValue = iPe.VariableValue;
+            ProcInclude = iPe.ProcInclude;
             if (iPe.Slots != null)
             {
                 Slots = new SlotEntry[iPe.Slots.Length];
@@ -179,212 +184,39 @@ namespace mrbBase
 
         public bool HasProc()
         {
-            for (var index1 = 0; index1 <= SlotCount - 1; ++index1)
+            for (var index = 0; index < SlotCount; ++index)
             {
-                if (Slots[index1].Enhancement.Enh < 0) continue;
-                var enh = DatabaseAPI.Database.Enhancements[Slots[index1].Enhancement.Enh];
+                if (Slots[index].Enhancement.Enh < 0) continue;
+                var enh = DatabaseAPI.Database.Enhancements[Slots[index].Enhancement.Enh];
                 var power = enh.GetPower();
-                if (DatabaseAPI.Database.Enhancements[Slots[index1].Enhancement.Enh].Effect.Length <= 0 || power == null)
-                    continue;
-                foreach (var index2 in power.Effects)
+                if (DatabaseAPI.Database.Enhancements[Slots[index].Enhancement.Enh].IsProc && power != null)
                 {
-                    var num = 0;
-                    switch (index2.EffectType)
-                    {
-                        case Enums.eEffectType.None:
-                        case Enums.eEffectType.Damage:
-                        case Enums.eEffectType.DamageBuff:
-                        case Enums.eEffectType.Enhancement:
-                        case Enums.eEffectType.Heal:
-                            num = 1;
-                            break;
-                        case Enums.eEffectType.Mez:
-                            if (index2.Mag > 0.0)
-                                goto case Enums.eEffectType.None;
-                            else
-                                goto default;
-                        case Enums.eEffectType.Accuracy:
-                            break;
-                        case Enums.eEffectType.ViewAttrib:
-                            break;
-                        case Enums.eEffectType.Defense:
-                            break;
-                        case Enums.eEffectType.DropToggles:
-                            break;
-                        case Enums.eEffectType.Endurance:
-                            break;
-                        case Enums.eEffectType.EnduranceDiscount:
-                            break;
-                        case Enums.eEffectType.Fly:
-                            break;
-                        case Enums.eEffectType.SpeedFlying:
-                            break;
-                        case Enums.eEffectType.GrantPower:
-                            break;
-                        case Enums.eEffectType.HitPoints:
-                            break;
-                        case Enums.eEffectType.InterruptTime:
-                            break;
-                        case Enums.eEffectType.JumpHeight:
-                            break;
-                        case Enums.eEffectType.SpeedJumping:
-                            break;
-                        case Enums.eEffectType.Meter:
-                            break;
-                        case Enums.eEffectType.MezResist:
-                            break;
-                        case Enums.eEffectType.MovementControl:
-                            break;
-                        case Enums.eEffectType.MovementFriction:
-                            break;
-                        case Enums.eEffectType.PerceptionRadius:
-                            break;
-                        case Enums.eEffectType.Range:
-                            break;
-                        case Enums.eEffectType.RechargeTime:
-                            break;
-                        case Enums.eEffectType.Recovery:
-                            break;
-                        case Enums.eEffectType.Regeneration:
-                            break;
-                        case Enums.eEffectType.ResEffect:
-                            break;
-                        case Enums.eEffectType.Resistance:
-                            break;
-                        case Enums.eEffectType.RevokePower:
-                            break;
-                        case Enums.eEffectType.Reward:
-                            break;
-                        case Enums.eEffectType.SpeedRunning:
-                            break;
-                        case Enums.eEffectType.SetCostume:
-                            break;
-                        case Enums.eEffectType.SetMode:
-                            break;
-                        case Enums.eEffectType.Slow:
-                            break;
-                        case Enums.eEffectType.StealthRadius:
-                            break;
-                        case Enums.eEffectType.StealthRadiusPlayer:
-                            break;
-                        case Enums.eEffectType.EntCreate:
-                            break;
-                        case Enums.eEffectType.ThreatLevel:
-                            break;
-                        case Enums.eEffectType.ToHit:
-                            break;
-                        case Enums.eEffectType.Translucency:
-                            break;
-                        case Enums.eEffectType.XPDebtProtection:
-                            break;
-                        case Enums.eEffectType.SilentKill:
-                            break;
-                        case Enums.eEffectType.Elusivity:
-                            break;
-                        case Enums.eEffectType.GlobalChanceMod:
-                            break;
-                        case Enums.eEffectType.CombatModShift:
-                            break;
-                        case Enums.eEffectType.UnsetMode:
-                            break;
-                        case Enums.eEffectType.Rage:
-                            break;
-                        case Enums.eEffectType.MaxRunSpeed:
-                            break;
-                        case Enums.eEffectType.MaxJumpSpeed:
-                            break;
-                        case Enums.eEffectType.MaxFlySpeed:
-                            break;
-                        case Enums.eEffectType.DesignerStatus:
-                            break;
-                        case Enums.eEffectType.PowerRedirect:
-                            break;
-                        case Enums.eEffectType.TokenAdd:
-                            break;
-                        case Enums.eEffectType.ExperienceGain:
-                            break;
-                        case Enums.eEffectType.InfluenceGain:
-                            break;
-                        case Enums.eEffectType.PrestigeGain:
-                            break;
-                        case Enums.eEffectType.AddBehavior:
-                            break;
-                        case Enums.eEffectType.RechargePower:
-                            break;
-                        case Enums.eEffectType.RewardSourceTeam:
-                            break;
-                        case Enums.eEffectType.VisionPhase:
-                            break;
-                        case Enums.eEffectType.CombatPhase:
-                            break;
-                        case Enums.eEffectType.ClearFog:
-                            break;
-                        case Enums.eEffectType.SetSZEValue:
-                            break;
-                        case Enums.eEffectType.ExclusiveVisionPhase:
-                            break;
-                        case Enums.eEffectType.Absorb:
-                            break;
-                        case Enums.eEffectType.XAfraid:
-                            break;
-                        case Enums.eEffectType.XAvoid:
-                            break;
-                        case Enums.eEffectType.BeastRun:
-                            break;
-                        case Enums.eEffectType.ClearDamagers:
-                            break;
-                        case Enums.eEffectType.EntCreate_x:
-                            break;
-                        case Enums.eEffectType.Glide:
-                            break;
-                        case Enums.eEffectType.Hoverboard:
-                            break;
-                        case Enums.eEffectType.Jumppack:
-                            break;
-                        case Enums.eEffectType.MagicCarpet:
-                            break;
-                        case Enums.eEffectType.NinjaRun:
-                            break;
-                        case Enums.eEffectType.Null:
-                            break;
-                        case Enums.eEffectType.NullBool:
-                            break;
-                        case Enums.eEffectType.Stealth:
-                            break;
-                        case Enums.eEffectType.SteamJump:
-                            break;
-                        case Enums.eEffectType.Walk:
-                            break;
-                        case Enums.eEffectType.XPDebt:
-                            break;
-                        case Enums.eEffectType.ForceMove:
-                            break;
-                        case Enums.eEffectType.ModifyAttrib:
-                            break;
-                        default:
-                            num = index2.ToWho == Enums.eToWho.Target ? 1 : 0;
-                            break;
-                    }
-
-                    if (num == 0)
-                        return true;
+                    return true;
                 }
             }
-
             return false;
         }
 
         public bool CanIncludeForStats()
         {
-            return (NIDPowerset > -1) & (IDXPower > -1) && (HasProc() ||
-                                                            DatabaseAPI.Database.Powersets[NIDPowerset].Powers[IDXPower]
-                                                                .PowerType == Enums.ePowerType.Toggle ||
-                                                            DatabaseAPI.Database.Powersets[NIDPowerset].Powers[IDXPower]
-                                                                .PowerType == Enums.ePowerType.Click &&
-                                                            DatabaseAPI.Database.Powersets[NIDPowerset].Powers[IDXPower]
-                                                                .ClickBuff ||
-                                                            DatabaseAPI.Database.Powersets[NIDPowerset].Powers[IDXPower]
-                                                                .PowerType == Enums.ePowerType.Auto_);
+            if (NIDPowerset > -1 & IDXPower > -1)
+            {
+                switch (DatabaseAPI.Database.Powersets[NIDPowerset].Powers[IDXPower].PowerType)
+                {
+                    case Enums.ePowerType.Auto_:
+                        return true;
+                    case Enums.ePowerType.Click:
+                        if (DatabaseAPI.Database.Powersets[NIDPowerset].Powers[IDXPower].ClickBuff)
+                        {
+                            return true;
+                        }
+                        break;
+                    case Enums.ePowerType.Toggle:
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         public void CheckVariableBounds()
@@ -423,6 +255,7 @@ namespace mrbBase
             NIDPower = -1;
             Tag = false;
             StatInclude = false;
+            ProcInclude = false;
             SubPowers = new PowerSubEntry[0];
             if (Slots.Length != 1 || Slots[0].Enhancement.Enh != -1)
                 return;
