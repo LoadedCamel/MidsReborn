@@ -107,6 +107,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lstSubRecipeComponents = new System.Windows.Forms.ListBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.btnMassUpdateTags = new System.Windows.Forms.Button();
             this.GroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udSal4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal3)).BeginInit();
@@ -1022,10 +1025,42 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lstSubRecipeComponents.Size = new System.Drawing.Size(397, 116);
             this.lstSubRecipeComponents.TabIndex = 0;
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(587, 541);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(113, 14);
+            this.label17.TabIndex = 29;
+            this.label17.Text = "Updating tags... 100%";
+            this.label17.Visible = false;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(715, 540);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(155, 17);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBar1.TabIndex = 30;
+            this.progressBar1.Visible = false;
+            // 
+            // btnMassUpdateTags
+            // 
+            this.btnMassUpdateTags.Location = new System.Drawing.Point(456, 536);
+            this.btnMassUpdateTags.Name = "btnMassUpdateTags";
+            this.btnMassUpdateTags.Size = new System.Drawing.Size(125, 24);
+            this.btnMassUpdateTags.TabIndex = 31;
+            this.btnMassUpdateTags.Text = "Bulk update tags";
+            this.btnMassUpdateTags.UseVisualStyleBackColor = true;
+            this.btnMassUpdateTags.Click += new System.EventHandler(this.btnMassUpdateTags_Click);
+            // 
             // frmRecipeEdit
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1127, 568);
+            this.Controls.Add(this.label17);
+            this.Controls.Add(this.btnMassUpdateTags);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnRunSeq);
@@ -1062,6 +1097,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
         #endregion
@@ -1141,5 +1177,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private ColumnHeader columnHeader6;
         private NumericUpDown udStaticIndex;
         private Button btnAutoMarkGeneric;
+        private Label label17;
+        private ProgressBar progressBar1;
+        private Button btnMassUpdateTags;
     }
 }

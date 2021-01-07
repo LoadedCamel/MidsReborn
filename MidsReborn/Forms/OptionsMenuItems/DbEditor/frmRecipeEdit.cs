@@ -1,15 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
+using Mids_Reborn.Forms.WindowMenuItems;
 using Mids_Reborn.My;
 using mrbBase;
+using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -508,7 +509,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 .GetType()
                 .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                 ?.SetValue(lvDPA, true, null);
-            var recipeRarity = Recipe.RecipeRarity.Common;
+            const Recipe.RecipeRarity recipeRarity = Recipe.RecipeRarity.Common;
             cbRarity.BeginUpdate();
             cbRarity.Items.Clear();
             cbRarity.Items.AddRange(Enum.GetNames(recipeRarity.GetType()).Cast<object>().ToArray());
@@ -529,8 +530,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 _noEnhancementIdx = i;
                 break;
             }
-            
-            Debug.WriteLine($"frmRecipeEdit_Load(): noEnhancementIdx: {_noEnhancementIdx}");
             
             cbSal0.BeginUpdate();
             cbSal1.BeginUpdate();
@@ -564,6 +563,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbSal4.EndUpdate();
             _lvColumnSorter = new ListViewColumnSorter();
             lvDPA.ListViewItemSorter = _lvColumnSorter;
+            btnAutoMarkGeneric.Visible = MidsContext.Config.MasterMode;
+            btnMassUpdateTags.Visible = MidsContext.Config.MasterMode;
             NoUpdate = false;
         }
 
@@ -1134,16 +1135,127 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnAutoMarkGeneric_Click(object sender, EventArgs e)
         {
+            label17.Text = "Updating tags... 0%";
+            label17.Visible = true;
+            progressBar1.Visible = true;
+            
+            lvDPA.SuspendLayout();
+            lvDPA.BeginUpdate();
             for (var i = 0; i < lvDPA.Items.Count; i++)
             {
                 var index = Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text);
                 var recipe = DatabaseAPI.Database.Recipes[index];
                 recipe.IsGeneric = recipe.EnhIdx == -1;
                 lvDPA.Items[i].SubItems[5].Text = GetRecipeFlags(index);
+                if (i <= 0 || i % 10 != 0) continue;
+                
+                var vp = (int)Math.Round((float) i / lvDPA.Items.Count * 100);
+                label17.Text = $"Updating tags... {vp}%";
+                progressBar1.Value = vp;
             }
 
-            if (lvDPA.SelectedItems.Count <= 0) return;
-            cbIsGeneric.Checked = DatabaseAPI.Database.Recipes[Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text)].IsGeneric;
+            if (lvDPA.SelectedItems.Count > 0)
+            {
+                cbIsGeneric.Checked = DatabaseAPI.Database.Recipes[Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text)].IsGeneric;
+            }
+            lvDPA.EndUpdate();
+            lvDPA.ResumeLayout();
+
+            label17.Visible = false;
+            progressBar1.Visible = false;
+        }
+
+        private void btnMassUpdateTags_Click(object sender, EventArgs e)
+        {
+            var frmFilter = new frmRecipeEditorBulkFilter();
+            var ret = frmFilter.ShowDialog(this);
+            if (ret != DialogResult.OK) return;
+            
+            var filterParams = frmFilter.FilterResult;
+
+            label17.Text = "Updating tags... 0%";
+            label17.Visible = true;
+            progressBar1.Visible = true;
+
+            lvDPA.SuspendLayout();
+            lvDPA.BeginUpdate();
+            for (var i = 0; i < lvDPA.Items.Count; i++)
+            {
+                var index = Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text);
+                var recipe = DatabaseAPI.Database.Recipes[index];
+                var testCond = false;
+                if (!(filterParams.UseFilter & filterParams.Column != -1 &
+                      filterParams.FlagConditionType != frmRecipeEditorBulkFilter.FlagConditionType.None &
+                      !string.IsNullOrWhiteSpace(filterParams.ConditionText)))
+                {
+                    testCond = true;
+                }
+                else
+                {
+                    var lvColumn = filterParams.Column switch
+                    {
+                        1 => 2,
+                        2 => 3,
+                        3 => 5,
+                        _ => 0
+                    };
+
+                    testCond = filterParams.FlagConditionType switch
+                    {
+                        frmRecipeEditorBulkFilter.FlagConditionType.Is => lvDPA.Items[i]
+                            .SubItems[lvColumn].Text == filterParams.ConditionText,
+                        frmRecipeEditorBulkFilter.FlagConditionType.Contains => lvDPA.Items[i]
+                            .SubItems[lvColumn]
+                            .Text.Contains(filterParams.ConditionText),
+                        frmRecipeEditorBulkFilter.FlagConditionType.StartsWith => lvDPA.Items[i]
+                            .SubItems[lvColumn]
+                            .Text.StartsWith(filterParams.ConditionText),
+                        frmRecipeEditorBulkFilter.FlagConditionType.DoesNotContain => !lvDPA.Items[i]
+                            .SubItems[lvColumn]
+                            .Text.Contains(filterParams.ConditionText),
+                        frmRecipeEditorBulkFilter.FlagConditionType.DoesNotStartWith => !lvDPA.Items[i]
+                            .SubItems[lvColumn]
+                            .Text.StartsWith(filterParams.ConditionText),
+                        _ => false
+                    };
+                }
+
+                if (filterParams.G != frmRecipeEditorBulkFilter.FlagAction.Ignore & testCond)
+                {
+                    recipe.IsGeneric = filterParams.G == frmRecipeEditorBulkFilter.FlagAction.Enable;
+                }
+
+                if (filterParams.V != frmRecipeEditorBulkFilter.FlagAction.Ignore & testCond)
+                {
+                    recipe.IsVirtual = filterParams.V == frmRecipeEditorBulkFilter.FlagAction.Enable;
+                }
+
+                if (filterParams.H != frmRecipeEditorBulkFilter.FlagAction.Ignore & testCond)
+                {
+                    recipe.IsHidden = filterParams.H == frmRecipeEditorBulkFilter.FlagAction.Enable;
+                }
+
+                lvDPA.Items[i].SubItems[5].Text = GetRecipeFlags(index);
+
+                var vp = (int)Math.Round((float)i / lvDPA.Items.Count * 100);
+                label17.Text = $"Updating tags... {vp}%";
+                progressBar1.Value = vp;
+                progressBar1.Text = $"Updating tags... {vp}%";
+            }
+
+            if (lvDPA.SelectedItems.Count > 0)
+            {
+                var selectedRecipeIdx = Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text);
+                cbIsGeneric.Checked = DatabaseAPI.Database.Recipes[selectedRecipeIdx].IsGeneric;
+                cbIsVirtual.Checked = DatabaseAPI.Database.Recipes[selectedRecipeIdx].IsVirtual;
+                cbIsHidden.Checked = DatabaseAPI.Database.Recipes[selectedRecipeIdx].IsHidden;
+            }
+            lvDPA.EndUpdate();
+            lvDPA.ResumeLayout();
+
+            label17.Visible = false;
+            progressBar1.Visible = false;
+            frmFilter.Dispose();
         }
     }
 }
