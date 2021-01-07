@@ -648,18 +648,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             return (int) Math.Max(iControl.Minimum, Math.Min(iControl.Maximum, iValue));
         }
 
-        private int RecipeID()
+        private int RecipeID(int item = 0)
         {
-            if (lvDPA.SelectedItems.Count <= 0)
-            {
-                return -1;
-            }
+            if (lvDPA.SelectedItems.Count <= 0) return -1;
 
             //var recipeItem = lvDPA.SelectedItems[0].Text;
             //var rIndex = Array.FindIndex(DatabaseAPI.Database.Recipes, 0, x => x.InternalName == recipeItem);
             //return lvDPA.SelectedIndices[0];
 
-            return Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text);
+            return Convert.ToInt32(lvDPA.SelectedItems[item].SubItems[1].Text);
         }
 
         private void SetSalvageStringFromIDX(int iRecipe, int iItem, int iIndex)
@@ -989,30 +986,64 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbIsGeneric_Click(object sender, EventArgs e)
         {
+            if (lvDPA.SelectedItems.Count == 0) return;
+            
             var control = (CheckBox) sender;
-            var state = control.Checked;
-            DatabaseAPI.Database.Recipes[RecipeID()].IsGeneric = state;
-            cbEnh.Visible = !state;
-            lblEnh.Visible = !state;
-            cbEnh.SelectedIndex = state ? -1 : cbEnh.SelectedIndex;
-            Label2.Visible = !state;
-            lvDPA.SelectedItems[0].SubItems[5].Text = GetRecipeFlags(RecipeID());
+            var state = control?.Checked == true;
+
+            lvDPA.SuspendLayout();
+            lvDPA.BeginUpdate();
+            for (var i = 0; i < lvDPA.SelectedItems.Count; i++)
+            {
+                var rId = RecipeID(i);
+                DatabaseAPI.Database.Recipes[rId].IsGeneric = state;
+                lvDPA.SelectedItems[i].SubItems[5].Text = GetRecipeFlags(rId);
+                if (lvDPA.SelectedItems.Count > 1) continue;
+                cbEnh.Visible = !state;
+                lblEnh.Visible = !state;
+                cbEnh.SelectedIndex = state ? -1 : cbEnh.SelectedIndex;
+                Label2.Visible = !state;
+            }
+            lvDPA.EndUpdate();
+            lvDPA.ResumeLayout();
         }
 
         private void cbIsVirtual_Click(object sender, EventArgs e)
         {
+            if (lvDPA.SelectedItems.Count == 0) return;
+            
             var control = (CheckBox) sender;
-            var state = control.Checked;
-            DatabaseAPI.Database.Recipes[RecipeID()].IsVirtual = state;
-            lvDPA.SelectedItems[0].SubItems[5].Text = GetRecipeFlags(RecipeID());
+            var state = control?.Checked == true;
+
+            lvDPA.SuspendLayout();
+            lvDPA.BeginUpdate();
+            for (var i = 0; i < lvDPA.SelectedItems.Count; i++)
+            {
+                var rId = RecipeID(i);
+                DatabaseAPI.Database.Recipes[rId].IsVirtual = state;
+                lvDPA.SelectedItems[i].SubItems[5].Text = GetRecipeFlags(rId);
+            }
+            lvDPA.EndUpdate();
+            lvDPA.ResumeLayout();
         }
 
         private void cbIsHidden_Click(object sender, EventArgs e)
         {
+            if (lvDPA.SelectedItems.Count == 0) return;
+            
             var control = (CheckBox) sender;
-            var state = control.Checked;
-            DatabaseAPI.Database.Recipes[RecipeID()].IsHidden = state;
-            lvDPA.SelectedItems[0].SubItems[5].Text = GetRecipeFlags(RecipeID());
+            var state = control?.Checked == true;
+
+            lvDPA.SuspendLayout();
+            lvDPA.BeginUpdate();
+            for (var i = 0; i < lvDPA.SelectedItems.Count; i++)
+            {
+                var rId = RecipeID(i);
+                DatabaseAPI.Database.Recipes[rId].IsHidden = state;
+                lvDPA.SelectedItems[i].SubItems[5].Text = GetRecipeFlags(rId);
+            }
+            lvDPA.EndUpdate();
+            lvDPA.ResumeLayout();
         }
 
         private void cbSal_Enter_UpdateSubRecipe(int idx)

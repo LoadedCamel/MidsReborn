@@ -1142,7 +1142,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             SetBarSingle(Enums.eBarType.Regeneration,
                 displayStats.HealthRegenPercent(false),
-                MidsContext.Character.Archetype.BaseRegen * 100,
+                100, //MidsContext.Character.Archetype.BaseRegen * 100,
                 displayStats.HealthRegenPercent(true));
 
             SetBarSingle(Enums.eBarType.MaxHPAbsorb,
@@ -1153,7 +1153,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             SetBarSingle(Enums.eBarType.EndRec,
                 displayStats.EnduranceRecoveryNumeric,
-                MidsContext.Character.Archetype.BaseRecovery,
+                MidsContext.Character.Archetype.BaseRecovery * displayStats.EnduranceMaxEnd / 60,
                 displayStats.EnduranceRecoveryNumericUncapped);
             SetBarSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
             SetBarSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd, 100);
@@ -1166,11 +1166,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 new[]
                 {
                     displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond,
-                        false), // Enums.eSpeedMeasure.FeetPerSecond
+                        false),
                     displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
                     displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
                     displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour,
-                        false) // Enums.eSpeedMeasure.MilesPerHour
+                        false)
                 },
                 new[]
                 {
