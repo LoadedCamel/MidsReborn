@@ -361,81 +361,62 @@ namespace Mids_Reborn.Forms.Controls
                     var num3 = MidsContext.Character.CurrentBuild.Powers[inToonHistory].SlotCount - 1;
                     for (var index1 = 0; index1 <= num3; ++index1)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh <=
-                            -1)
-                            continue;
-                        var num4 = DatabaseAPI.Database
-                            .Enhancements[
-                                MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh]
-                            .Effect.Length - 1;
+                        if (MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh <= -1) continue;
+
+                        var num4 = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh].Effect.Length - 1;
                         for (var index2 = 0; index2 <= num4; ++index2)
                         {
-                            var effect = DatabaseAPI.Database
-                                .Enhancements[
-                                    MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement
-                                        .Enh].Effect;
+                            var effect = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh].Effect;
                             var index3 = index2;
                             if (effect[index3].Mode != Enums.eEffMode.Enhancement)
                                 continue;
                             if (effect[index3].Enhance.ID == 12)
-                                numArray4[effect[index3].Enhance.SubID] += MidsContext.Character.CurrentBuild
-                                    .Powers[inToonHistory]
-                                    .Slots[index1].Enhancement.GetEnhancementEffect(Enums.eEnhance.Mez,
-                                        effect[index3].Enhance.SubID, 1f);
+                            {
+                                numArray4[effect[index3].Enhance.SubID] += MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.GetEnhancementEffect(Enums.eEnhance.Mez, effect[index3].Enhance.SubID, 1f);
+                            }
                             else
-                                switch (DatabaseAPI.Database
-                                    .Enhancements[
-                                        MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1]
-                                            .Enhancement.Enh]
-                                    .Effect[index2].BuffMode)
+                            {
+                                switch (DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh].Effect[index2].BuffMode)
                                 {
                                     case Enums.eBuffDebuff.BuffOnly:
-                                        numArray1[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
-                                            .Powers[inToonHistory]
-                                            .Slots[index1].Enhancement
-                                            .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
+                                        numArray1[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
                                         break;
                                     case Enums.eBuffDebuff.DeBuffOnly:
-                                        if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) &
-                                            (effect[index3].Enhance.ID != 11))
-                                            numArray2[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
-                                                .Powers[inToonHistory]
-                                                .Slots[index1].Enhancement
-                                                .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1,
-                                                    -1f);
+                                        if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) & (effect[index3].Enhance.ID != 11))
+                                        {
+                                            numArray2[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, -1f);
+                                        }
 
                                         break;
                                     default:
-                                        numArray3[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
-                                            .Powers[inToonHistory]
-                                            .Slots[index1].Enhancement
-                                            .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
+                                        numArray3[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
                                         break;
                                 }
+                            }
                         }
                     }
 
                     var num5 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var index1 = 0; index1 <= num5; ++index1)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[index1].Power == null ||
-                            !MidsContext.Character.CurrentBuild.Powers[index1].StatInclude)
+                        if (MidsContext.Character.CurrentBuild.Powers[index1].Power == null || !MidsContext.Character.CurrentBuild.Powers[index1].StatInclude || !MidsContext.Character.CurrentBuild.Powers[index1].ProcInclude)
                             continue;
                         IPower power1 = new Power(MidsContext.Character.CurrentBuild.Powers[index1].Power);
                         power1.AbsorbPetEffects();
                         power1.ApplyGrantPowerEffects();
                         foreach (var effect in power1.Effects)
                         {
-                            if ((power1.PowerType != Enums.ePowerType.GlobalBoost) &
-                                (!effect.Absorbed_Effect | (effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)))
+                            if ((power1.PowerType != Enums.ePowerType.GlobalBoost) & (!effect.Absorbed_Effect | (effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)))
                                 continue;
                             var power2 = power1;
                             if (effect.Absorbed_Effect & (effect.Absorbed_Power_nID > -1))
+                            {
                                 power2 = DatabaseAPI.Database.Power[effect.Absorbed_Power_nID];
+                            }
+
                             var eBuffDebuff = Enums.eBuffDebuff.Any;
                             var flag = false;
-                            foreach (var str1 in MidsContext.Character.CurrentBuild.Powers[inToonHistory].Power
-                                .BoostsAllowed)
+                            foreach (var str1 in MidsContext.Character.CurrentBuild.Powers[inToonHistory].Power.BoostsAllowed)
                             {
                                 if (power2.BoostsAllowed.Any(str2 => str1 == str2))
                                 {
@@ -498,10 +479,7 @@ namespace Mids_Reborn.Forms.Controls
                                         numArray4[(int)effect.MezType] += effect.Mag;
                                         break;
                                     default:
-                                        var index2 = effect.ETModifies != Enums.eEffectType.RechargeTime
-                                            ? Convert.ToInt32(Enum.Parse(typeof(Enums.eEnhance),
-                                                effect.ETModifies.ToString()))
-                                            : 14;
+                                        var index2 = effect.ETModifies != Enums.eEffectType.RechargeTime ? Convert.ToInt32(Enum.Parse(typeof(Enums.eEnhance), effect.ETModifies.ToString())) : 14;
                                         if (effect.IgnoreED)
                                         {
                                             afterED3[index2] += effect.Mag;
@@ -512,8 +490,7 @@ namespace Mids_Reborn.Forms.Controls
                                         break;
                                 }
                             }
-                            else if ((effect.EffectType == Enums.eEffectType.DamageBuff) &
-                                     (effect.DamageType == Enums.eDamage.Smashing))
+                            else if ((effect.EffectType == Enums.eEffectType.DamageBuff) & (effect.DamageType == Enums.eDamage.Smashing))
                             {
                                 if (effect.IgnoreED)
                                     foreach (var str in power2.BoostsAllowed)

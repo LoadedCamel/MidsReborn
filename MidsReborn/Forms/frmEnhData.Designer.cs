@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -55,7 +56,6 @@ namespace Mids_Reborn.Forms
             this.cbSet = new System.Windows.Forms.ComboBox();
             this.gbSet = new System.Windows.Forms.GroupBox();
             this.chkSuperior = new System.Windows.Forms.CheckBox();
-            this.pbSet = new System.Windows.Forms.PictureBox();
             this.chkUnique = new System.Windows.Forms.CheckBox();
             this.gbEffects = new System.Windows.Forms.GroupBox();
             this.btnDown = new System.Windows.Forms.Button();
@@ -98,15 +98,17 @@ namespace Mids_Reborn.Forms
             this.btnEditPowerData = new System.Windows.Forms.Button();
             this.StaticIndex = new System.Windows.Forms.TextBox();
             this.Label11 = new System.Windows.Forms.Label();
+            this.gbFlags = new System.Windows.Forms.GroupBox();
+            this.chkProc = new System.Windows.Forms.CheckBox();
             this.gbBasic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMinLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udMaxLevel)).BeginInit();
             this.gbType.SuspendLayout();
             this.gbSet.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbSet)).BeginInit();
             this.gbEffects.SuspendLayout();
             this.gbMod.SuspendLayout();
             this.gbClass.SuspendLayout();
+            this.gbFlags.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbBasic
@@ -363,39 +365,28 @@ namespace Mids_Reborn.Forms
             // 
             // gbSet
             // 
-            this.gbSet.Controls.Add(this.chkSuperior);
-            this.gbSet.Controls.Add(this.pbSet);
             this.gbSet.Controls.Add(this.cbSet);
-            this.gbSet.Controls.Add(this.chkUnique);
             this.gbSet.Location = new System.Drawing.Point(496, 8);
             this.gbSet.Name = "gbSet";
-            this.gbSet.Size = new System.Drawing.Size(184, 119);
+            this.gbSet.Size = new System.Drawing.Size(184, 52);
             this.gbSet.TabIndex = 14;
             this.gbSet.TabStop = false;
             this.gbSet.Text = "Invention Origin Set:";
             // 
             // chkSuperior
             // 
-            this.chkSuperior.Location = new System.Drawing.Point(60, 94);
+            this.chkSuperior.Location = new System.Drawing.Point(8, 38);
             this.chkSuperior.Name = "chkSuperior";
-            this.chkSuperior.Size = new System.Drawing.Size(84, 16);
+            this.chkSuperior.Size = new System.Drawing.Size(72, 19);
             this.chkSuperior.TabIndex = 21;
             this.chkSuperior.Text = "Superior";
             this.chkSuperior.CheckedChanged += new System.EventHandler(this.chkSuperior_CheckedChanged);
             // 
-            // pbSet
-            // 
-            this.pbSet.Location = new System.Drawing.Point(12, 52);
-            this.pbSet.Name = "pbSet";
-            this.pbSet.Size = new System.Drawing.Size(30, 30);
-            this.pbSet.TabIndex = 14;
-            this.pbSet.TabStop = false;
-            // 
             // chkUnique
             // 
-            this.chkUnique.Location = new System.Drawing.Point(60, 60);
+            this.chkUnique.Location = new System.Drawing.Point(8, 16);
             this.chkUnique.Name = "chkUnique";
-            this.chkUnique.Size = new System.Drawing.Size(84, 16);
+            this.chkUnique.Size = new System.Drawing.Size(64, 22);
             this.chkUnique.TabIndex = 20;
             this.chkUnique.Text = "Unique";
             this.chkUnique.CheckedChanged += new System.EventHandler(this.chkUnique_CheckedChanged);
@@ -741,7 +732,7 @@ namespace Mids_Reborn.Forms
             // cbMutEx
             // 
             this.cbMutEx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMutEx.Location = new System.Drawing.Point(504, 146);
+            this.cbMutEx.Location = new System.Drawing.Point(10, 80);
             this.cbMutEx.Name = "cbMutEx";
             this.cbMutEx.Size = new System.Drawing.Size(168, 22);
             this.cbMutEx.TabIndex = 21;
@@ -760,7 +751,7 @@ namespace Mids_Reborn.Forms
             // 
             // Label8
             // 
-            this.Label8.Location = new System.Drawing.Point(496, 130);
+            this.Label8.Location = new System.Drawing.Point(2, 64);
             this.Label8.Name = "Label8";
             this.Label8.Size = new System.Drawing.Size(80, 16);
             this.Label8.TabIndex = 22;
@@ -802,18 +793,43 @@ namespace Mids_Reborn.Forms
             this.Label11.TabIndex = 27;
             this.Label11.Text = "Static Index";
             // 
+            // gbFlags
+            // 
+            this.gbFlags.Controls.Add(this.chkProc);
+            this.gbFlags.Controls.Add(this.chkUnique);
+            this.gbFlags.Controls.Add(this.chkSuperior);
+            this.gbFlags.Controls.Add(this.cbMutEx);
+            this.gbFlags.Controls.Add(this.Label8);
+            this.gbFlags.Location = new System.Drawing.Point(496, 66);
+            this.gbFlags.Name = "gbFlags";
+            this.gbFlags.Size = new System.Drawing.Size(184, 111);
+            this.gbFlags.TabIndex = 28;
+            this.gbFlags.TabStop = false;
+            this.gbFlags.Text = "Enhancement Flags";
+            // 
+            // chkProc
+            // 
+            this.chkProc.AutoSize = true;
+            this.chkProc.Location = new System.Drawing.Point(96, 18);
+            this.chkProc.Name = "chkProc";
+            this.chkProc.Size = new System.Drawing.Size(48, 18);
+            this.chkProc.TabIndex = 22;
+            this.chkProc.Text = "Proc";
+            this.chkProc.UseVisualStyleBackColor = true;
+            this.chkProc.CheckedChanged += new EventHandler(chkProc_CheckedChanged);
+            // 
             // frmEnhData
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(686, 501);
+            this.Controls.Add(this.gbFlags);
             this.Controls.Add(this.Label11);
             this.Controls.Add(this.StaticIndex);
             this.Controls.Add(this.btnEditPowerData);
             this.Controls.Add(this.Label10);
             this.Controls.Add(this.cbRecipe);
-            this.Controls.Add(this.Label8);
             this.Controls.Add(this.btnNoImage);
             this.Controls.Add(this.gbClass);
             this.Controls.Add(this.btnCancel);
@@ -823,7 +839,6 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.gbBasic);
             this.Controls.Add(this.gbType);
             this.Controls.Add(this.btnImage);
-            this.Controls.Add(this.cbMutEx);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -838,12 +853,13 @@ namespace Mids_Reborn.Forms
             ((System.ComponentModel.ISupportInitialize)(this.udMaxLevel)).EndInit();
             this.gbType.ResumeLayout(false);
             this.gbSet.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbSet)).EndInit();
             this.gbEffects.ResumeLayout(false);
             this.gbEffects.PerformLayout();
             this.gbMod.ResumeLayout(false);
             this.gbMod.PerformLayout();
             this.gbClass.ResumeLayout(false);
+            this.gbFlags.ResumeLayout(false);
+            this.gbFlags.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -892,7 +908,6 @@ namespace Mids_Reborn.Forms
         Label lblSched;
         ListBox lstAvailable;
         ListBox lstSelected;
-        PictureBox pbSet;
         Panel pnlClass;
         Panel pnlClassList;
         RadioButton rbBoth;
@@ -917,5 +932,7 @@ namespace Mids_Reborn.Forms
         RadioButton typeSet;
         NumericUpDown udMaxLevel;
         NumericUpDown udMinLevel;
+        private GroupBox gbFlags;
+        private CheckBox chkProc;
     }
 }

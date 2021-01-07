@@ -465,6 +465,7 @@ namespace mrbControls
             };
             Pen pen2 = new Pen(Color.Black);
             Rectangle toggleRect = default;
+            Rectangle procRect = default;
             var style = !MidsContext.Config.RtFont.PowersBold ? FontStyle.Regular : FontStyle.Bold;
             var font = MidsContext.Config.RtFont.PowersBase > 0 ? new Font(_defaultFont.FontFamily, FontScale(MidsContext.Config.RtFont.PowersBase), style, GraphicsUnit.Point, 0) : new Font(_defaultFont.FontFamily, FontScale(8), style, GraphicsUnit.Point, 0);
             int slotChk = MidsContext.Character.SlotCheck(iSlot);
@@ -585,8 +586,9 @@ namespace mrbControls
                     graphics3.DrawImage(bitmap2, destRect2, srcX2, srcY2, width2, clipRect.Height, GraphicsUnit.Pixel);
                 }
                 // Toggle button on powers
-                if (iSlot.CanIncludeForStats())
+                if (iSlot.CanIncludeForStats() && !iSlot.HasProc())
                 {
+                    Graphics toggleGraphics = bxBuffer.Graphics;
                     toggleRect.Height = 15;
                     toggleRect.Width = toggleRect.Height;
                     toggleRect.Y = (int)Math.Round(powerRect.Top + checked(powerRect.Height - toggleRect.Height) / 2.0);
@@ -606,10 +608,81 @@ namespace mrbControls
                         brush2 = MakePathBrush(iRect2, iCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
                     }
 
-                    bxBuffer.Graphics.FillEllipse(brush2, toggleRect);
-                    bxBuffer.Graphics.DrawEllipse(pen2, toggleRect);
+                    toggleGraphics.FillEllipse(brush2, toggleRect);
+                    toggleGraphics.DrawEllipse(pen2, toggleRect);
                 }
-                //
+                if (iSlot.HasProc() && !iSlot.CanIncludeForStats())
+                {
+                    //draw proc toggle
+                    Graphics procGraphics = bxBuffer.Graphics;
+                    procRect.Height = 15;
+                    procRect.Width = procRect.Height;
+                    procRect.Y = (int)Math.Round(powerRect.Top + checked(powerRect.Height - procRect.Height) / 2.0);
+                    procRect.X = (int)Math.Round(powerRect.Right - (procRect.Width + checked(powerRect.Height - procRect.Height) / 2.0));
+                    procRect = ScaleDown(procRect);
+                    PathGradientBrush brush3;
+                    Rectangle pRect = procRect;
+                    PointF pCenter = new PointF(-0.25f, -0.33f);
+                    if (!iSlot.ProcInclude)
+                    {
+                        brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(251, 255, 97), Color.FromArgb(91, 91, 0));
+                    }
+                    else
+                    {
+                         brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                    }
+
+                    procGraphics.FillEllipse(brush3, procRect);
+                    procGraphics.DrawEllipse(pen2, procRect);
+                }
+                if (iSlot.HasProc() && iSlot.CanIncludeForStats())
+                {
+                    //draw power toggle
+                    Graphics toggleGraphics = bxBuffer.Graphics;
+                    toggleRect.Height = 15;
+                    toggleRect.Width = toggleRect.Height;
+                    toggleRect.Y = (int)Math.Round(powerRect.Top + checked(powerRect.Height - toggleRect.Height) / 2.0);
+                    toggleRect.X = (int)Math.Round(powerRect.Right - (toggleRect.Width + checked(powerRect.Height - toggleRect.Height) / 3.0));
+                    toggleRect = ScaleDown(toggleRect);
+                    PathGradientBrush brush2;
+                    if (iSlot.StatInclude)
+                    {
+                        Rectangle iRect = toggleRect;
+                        PointF iCenter = new PointF(-0.25f, -0.33f);
+                        brush2 = MakePathBrush(iRect, iCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0));
+                    }
+                    else
+                    {
+                        Rectangle iRect2 = toggleRect;
+                        PointF iCenter = new PointF(-0.25f, -0.33f);
+                        brush2 = MakePathBrush(iRect2, iCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                    }
+
+                    toggleGraphics.FillEllipse(brush2, toggleRect);
+                    toggleGraphics.DrawEllipse(pen2, toggleRect);
+
+                    //draw proc toggle
+                    Graphics procGraphics = bxBuffer.Graphics;
+                    procRect.Height = 15;
+                    procRect.Width = procRect.Height;
+                    procRect.Y = (int)Math.Round(powerRect.Top + checked(powerRect.Height - procRect.Height) / 2.0);
+                    procRect.X = (int)Math.Round(powerRect.Right - (procRect.Width + checked(powerRect.Height - procRect.Height) / 1.0));
+                    procRect = ScaleDown(procRect);
+                    PathGradientBrush brush3;
+                    Rectangle pRect = procRect;
+                    PointF pCenter = new PointF(-0.25f, -0.33f);
+                    if (!iSlot.ProcInclude)
+                    {
+                        brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(251, 255, 97), Color.FromArgb(91, 91, 0));
+                    }
+                    else
+                    {
+                        brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                    }
+
+                    procGraphics.FillEllipse(brush3, procRect);
+                    procGraphics.DrawEllipse(pen2, procRect);
+                }
                 SolidBrush solidBrush;
                 //if (!System.Diagnostics.Debugger.IsAttached || !this.IsInDesignMode() || !System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
                 var inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");

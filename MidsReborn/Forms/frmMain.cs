@@ -1235,9 +1235,7 @@ namespace Mids_Reborn.Forms
                         GraphicsUnit.Pixel, recolorIa);
                 }
 
-                if ((MidsContext.Config.CalcEnhLevel == Enums.eEnhRelative.None) |
-                    (slot.Level >= MidsContext.Config.ForceLevel) |
-                    ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !powerEntry.StatInclude))
+                if ((MidsContext.Config.CalcEnhLevel == Enums.eEnhRelative.None) | (slot.Level >= MidsContext.Config.ForceLevel) | ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !powerEntry.StatInclude))
                 {
                     rectangle2.Inflate(1, 1);
                     drawing.bxBuffer.Graphics.FillEllipse(solidBrush, rectangle2);
@@ -2133,12 +2131,14 @@ namespace Mids_Reborn.Forms
                 {
                     if (e.Enh > -1)
                     {
-                        if (!hasProc && power.HasProc() &&
-                            (Math.Abs(DatabaseAPI.Database.Enhancements[e.Enh].Probability) < float.Epsilon ||
-                             Math.Abs(DatabaseAPI.Database.Enhancements[e.Enh].Probability - 1.0) < float.Epsilon))
+                        if (!hasProc && power.HasProc() && (DatabaseAPI.Database.Enhancements[e.Enh].Probability) == 0 || DatabaseAPI.Database.Enhancements[e.Enh].Probability > 0)
+                        {
                             power.StatInclude = true;
+                        }
                         else if (!power.CanIncludeForStats())
+                        {
                             power.StatInclude = false;
+                        }
                     }
                     else if (!power.CanIncludeForStats())
                     {
@@ -3040,6 +3040,18 @@ namespace Mids_Reborn.Forms
                         }
                     }
 
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
+                        }
+                        else
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
+                        }
+                    }
+
                     EnhancementModified();
                     LastClickPlacedSlot = false;
                     pnlGFX.Update();
@@ -3047,7 +3059,7 @@ namespace Mids_Reborn.Forms
                 }
                 else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
                 {
-                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
+                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
                         {
@@ -3065,6 +3077,54 @@ namespace Mids_Reborn.Forms
                         }
 
                         MidsContext.Character.Validate();
+                    }
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
+                        }
+                        else
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
+                        }
+                    }
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = false;
+                        }
+                        else
+                        {
+                            var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
+                            if ((eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup))
+                            {
+                                MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
+                                MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
+                            }
+                        }
+
+                        MidsContext.Character.Validate();
+                    }
+
+                    EnhancementModified();
+                    LastClickPlacedSlot = false;
+                }
+                else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
+                {
+                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
+                        MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
+                        }
+                        else
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
+                        }
                     }
 
                     EnhancementModified();
@@ -3533,6 +3593,7 @@ namespace Mids_Reborn.Forms
                                 tp[finish].NIDPowerset = -1;
                                 tp[finish].IDXPower = -1;
                                 tp[finish].StatInclude = false;
+                                tp[finish].ProcInclude = false;
                                 tp[finish].VariableValue = 0;
                                 tp[finish].Slots = new SlotEntry[0];
                             }
@@ -4935,7 +4996,7 @@ namespace Mids_Reborn.Forms
             if (FlipActive)
                 doFlipStep();
         }
-
+        //
         private bool ToggleClicked(int hID, int iX, int iY)
         {
             var rectangle1 = new Rectangle();
@@ -4953,6 +5014,25 @@ namespace Mids_Reborn.Forms
             rectangle1.Y = (int)Math.Round(rectangle2.Top + (rectangle2.Height - rectangle1.Height) / 2.0);
             rectangle1.X =
                 (int)Math.Round(rectangle2.Right - (rectangle1.Width + (rectangle2.Height - rectangle1.Height) / 2.0));
+            return (iX > rectangle1.X) & (iX < rectangle1.Right) & (iY > rectangle1.Top) & (iY < rectangle1.Bottom);
+        }
+
+        private bool ProcToggleClicked(int hID, int iX, int iY)
+        {
+            var rectangle1 = new Rectangle();
+            if (hID < 0)
+                return false;
+            if (MidsContext.Character.CurrentBuild.Powers[hID].IDXPower < 0)
+                return false;
+            var rectangle2 = new Rectangle
+            {
+                Location = drawing.PowerPosition(MidsContext.Character.CurrentBuild.Powers[hID]),
+                Size = drawing.bxPower[0].Size
+            };
+            rectangle1.Height = 15;
+            rectangle1.Width = rectangle1.Height;
+            rectangle1.Y = (int)Math.Round(rectangle2.Top + (rectangle2.Height - rectangle1.Height) / 2.0);
+            rectangle1.X = (int)Math.Round(rectangle2.Right - (rectangle1.Width + (rectangle2.Height - rectangle1.Height) / 1.0));
             return (iX > rectangle1.X) & (iX < rectangle1.Right) & (iY > rectangle1.Top) & (iY < rectangle1.Bottom);
         }
 

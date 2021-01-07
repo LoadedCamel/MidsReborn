@@ -23984,6 +23984,7 @@
       "LongName": "Hecatomb: Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 555,
       "Name": "Chance of Damage(Negative)",
       "ShortName": "Dam%",
@@ -23994,6 +23995,7 @@
       "ImageIdx": 555,
       "nIDSet": 119,
       "UIDSet": "Hecatomb",
+      "IsProc": true,
       "Effect": [
         {
           "Mode": 1,
@@ -24266,6 +24268,7 @@
       "ImageIdx": 561,
       "nIDSet": 121,
       "UIDSet": "Apocalypse",
+      "IsProc": true,
       "Effect": [
         {
           "Mode": 1,
@@ -24813,6 +24816,7 @@
       "ImageIdx": 573,
       "nIDSet": 120,
       "UIDSet": "Armageddon",
+      "IsProc": true,
       "Effect": [
         {
           "Mode": 1,
@@ -33366,6 +33370,7 @@
       "LongName": "Obliteration: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 768,
       "Name": "Chance for Smashing Damage",
       "ShortName": "%Dam",
@@ -33376,6 +33381,7 @@
       "ImageIdx": 768,
       "nIDSet": 14,
       "UIDSet": "Obliteration",
+      "IsProc": true,
       "Effect": [
         {
           "Mode": 1,
@@ -57160,7 +57166,6 @@
       "LongName": "Superior Entomb: Recharge/Chance for +Absorb"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1222,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -57199,7 +57204,6 @@
       "LongName": "Sentinel's Ward: Accuracy/Damage"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1223,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -57238,7 +57242,6 @@
       "LongName": "Sentinel's Ward: Damage/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1224,
       "Name": "Accuracy/Damage/RechargeTime",
       "ShortName": "Acc/Dmg/Rchg",
@@ -57284,7 +57287,6 @@
       "LongName": "Sentinel's Ward: Accuracy/Damage/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1225,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -57330,7 +57332,6 @@
       "LongName": "Sentinel's Ward: Accuracy/Damage/Endurance"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1226,
       "Name": "Accuracy/Damage/Endurance/RechargeTime",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -57383,7 +57384,6 @@
       "LongName": "Sentinel's Ward: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1227,
       "Name": "RechargeTime/Chance for +Absorb",
       "ShortName": "Rchg/+Absord",
@@ -57415,7 +57415,6 @@
       "LongName": "Sentinel's Ward: RechargeTime/Chance for +Absorb"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1228,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -57455,7 +57454,6 @@
       "LongName": "Superior Sentinel's Ward: Accuracy/Damage"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1229,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -57495,7 +57493,6 @@
       "LongName": "Superior Sentinel's Ward: Damage/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1230,
       "Name": "Accuracy/Damage/RechargeTime",
       "ShortName": "Acc/Dmg/Rchg",
@@ -57542,7 +57539,6 @@
       "LongName": "Superior Sentinel's Ward: Accuracy/Damage/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1231,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -57589,7 +57585,6 @@
       "LongName": "Superior Sentinel's Ward: Accuracy/Damage/Endurance"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1232,
       "Name": "Accuracy/Damage/Endurance/RechargeTime",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -57643,7 +57638,6 @@
       "LongName": "Superior Sentinel's Ward: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1233,
       "Name": "RechargeTime/Chance for +Absorb",
       "ShortName": "Rchg/+Absorb",
@@ -57676,7 +57670,6 @@
       "LongName": "Superior Sentinel's Ward: RechargeTime/Chance for +Absorb"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1234,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -57715,7 +57708,6 @@
       "LongName": "Opportunity Strikes: Accuracy/Damage"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1235,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -57754,7 +57746,6 @@
       "LongName": "Opportunity Strikes: Damage/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1236,
       "Name": "Accuracy/Damage/RechargeTime",
       "ShortName": "Acc/Dmg/Rchg",
@@ -57800,7 +57791,6 @@
       "LongName": "Opportunity Strikes: Accuracy/Damage/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1237,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -57846,7 +57836,6 @@
       "LongName": "Opportunity Strikes: Accuracy/Damage/Endurance"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1238,
       "Name": "Accuracy/Damage/Endurance/RechargeTime",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -57899,7 +57888,6 @@
       "LongName": "Opportunity Strikes: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1239,
       "Name": "RechargeTime/Chance for Opportunity",
       "ShortName": "Rchg/+Opportunity",
@@ -57931,7 +57919,6 @@
       "LongName": "Opportunity Strikes: RechargeTime/Chance for Opportunity"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1240,
       "Name": "Accuracy/Damage",
       "ShortName": "Acc/Dmg",
@@ -57971,7 +57958,6 @@
       "LongName": "Superior Opportunity Strikes: Accuracy/Damage"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1241,
       "Name": "Damage/RechargeTime",
       "ShortName": "Dmg/Rchg",
@@ -58011,7 +57997,6 @@
       "LongName": "Superior Opportunity Strikes: Damage/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1242,
       "Name": "Accuracy/Damage/RechargeTime",
       "ShortName": "Acc/Dmg/Rchg",
@@ -58058,7 +58043,6 @@
       "LongName": "Superior Opportunity Strikes: Accuracy/Damage/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1243,
       "Name": "Accuracy/Damage/Endurance",
       "ShortName": "Acc/Dmg/EndRdx",
@@ -58105,7 +58089,6 @@
       "LongName": "Superior Opportunity Strikes: Accuracy/Damage/Endurance"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1244,
       "Name": "Accuracy/Damage/Endurance/RechargeTime",
       "ShortName": "Acc/Dmg/EndRdx/Rchg",
@@ -58159,7 +58142,6 @@
       "LongName": "Superior Opportunity Strikes: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1245,
       "Name": "RechargeTime/Chance for Opportunity",
       "ShortName": "Rchg/+Opportunity",

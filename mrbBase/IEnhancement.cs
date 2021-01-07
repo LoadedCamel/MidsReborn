@@ -58,6 +58,8 @@ namespace mrbBase
 
         string UID { get; set; }
 
+        bool IsProc { get; set; }
+
         bool Superior { get; set; }
 
         string LongName { get; }

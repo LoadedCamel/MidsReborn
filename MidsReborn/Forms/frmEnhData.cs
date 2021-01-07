@@ -379,7 +379,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void chkSuperior_CheckedChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -396,11 +395,17 @@ namespace Mids_Reborn.Forms
         }
 
         private void chkUnique_CheckedChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
             myEnh.Unique = chkUnique.Checked;
+        }
+
+        private void chkProc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myEnh.IsProc = chkProc.Checked;
         }
 
         private void DisplayAll()
@@ -418,6 +423,7 @@ namespace Mids_Reborn.Forms
             chkUnique.Checked = myEnh.Unique;
             cbMutEx.SelectedIndex = (int) myEnh.MutExID;
             chkSuperior.Checked = myEnh.Superior;
+            chkProc.Checked = myEnh.IsProc;
             switch (myEnh.TypeID)
             {
                 case Enums.eType.Normal:
@@ -562,6 +568,7 @@ namespace Mids_Reborn.Forms
         private void DisplaySet()
         {
             gbSet.Enabled = myEnh.TypeID == Enums.eType.SetO;
+            gbFlags.Enabled = myEnh.TypeID == Enums.eType.SetO;
             cbSet.SelectedIndex = myEnh.nIDSet + 1;
             DisplaySetImage();
         }
@@ -575,27 +582,16 @@ namespace Mids_Reborn.Forms
                 SetTypeIcons();
                 if (!string.IsNullOrWhiteSpace(DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image))
                 {
-                    using var extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() +
-                                                                   DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet]
-                                                                       .Image);
+                    using var extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image);
                     using var extendedBitmap2 = new ExtendedBitmap(30, 30);
-                    extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                        I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
-                    extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect,
-                        extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
-                    pbSet.Image = new Bitmap(extendedBitmap2.Bitmap);
+                    extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
+                    extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 }
                 else
                 {
                     using var extendedBitmap = new ExtendedBitmap(30, 30);
-                    extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect,
-                        I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
-                    pbSet.Image = new Bitmap(extendedBitmap.Bitmap);
+                    extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
                 }
-            }
-            else
-            {
-                pbSet.Image = new Bitmap(pbSet.Width, pbSet.Height);
             }
         }
 
