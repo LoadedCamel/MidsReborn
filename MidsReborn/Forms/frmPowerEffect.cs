@@ -56,10 +56,18 @@ namespace Mids_Reborn.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            UpdateFXText();
-            StoreSuppression();
-            DialogResult = DialogResult.OK;
-            Hide();
+            try
+            {
+                UpdateFXText();
+                StoreSuppression();
+                DialogResult = DialogResult.OK;
+                Hide();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
         }
 
         private void btnPaste_Click(object sender, EventArgs e)
@@ -248,7 +256,16 @@ namespace Mids_Reborn.Forms
             lvEffectType.Items.Clear();
             var index1 = -1;
             var names2 = Enum.GetNames(fx.EffectType.GetType());
-            var num2 = names2.Length - 1;
+            int num2;
+            if (myPower == null)
+            {
+                num2 = names2.Length - 2;
+            }
+            else
+            {
+                num2 = names2.Length - 1;
+            }
+
             for (var index2 = 0; index2 <= num2; ++index2)
             {
                 lvEffectType.Items.Add(names2[index2]);
@@ -380,67 +397,81 @@ namespace Mids_Reborn.Forms
         private void FillPowerAttribs()
         {
             // look at possibly using class to set modified and original values
-            var power = myPower;
+            if (myPower != null)
+            {
+                var power = myPower;
 
-            if (Math.Abs(myFX.AtrOrigAccuracy - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigAccuracy = power.Accuracy;
-                myFX.AtrModAccuracy = power.Accuracy;
-            }
-            if (Math.Abs(myFX.AtrOrigActivatePeriod - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigActivatePeriod = power.ActivatePeriod;
-                myFX.AtrModActivatePeriod = power.ActivatePeriod;
-            }
-            if (myFX.AtrOrigArc == -1)
-            {
-                myFX.AtrOrigArc = power.Arc;
-                myFX.AtrModArc = power.Arc;
-            }
-            if (Math.Abs(myFX.AtrOrigCastTime - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigCastTime = power.CastTime;
-                myFX.AtrModCastTime = power.CastTime;
-            }
-            if (myFX.AtrOrigEffectArea == Enums.eEffectArea.None)
-            {
-                myFX.AtrOrigEffectArea = power.EffectArea;
-                myFX.AtrModEffectArea = power.EffectArea;
-            }
-            if (Math.Abs(myFX.AtrOrigEnduranceCost - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigEnduranceCost = power.EndCost;
-                myFX.AtrModEnduranceCost = power.EndCost;
-            }
-            if (Math.Abs(myFX.AtrOrigInterruptTime - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigInterruptTime = power.InterruptTime;
-                myFX.AtrModInterruptTime = power.InterruptTime;
-            }
-            if (myFX.AtrOrigMaxTargets == -1)
-            {
-                myFX.AtrOrigMaxTargets = power.MaxTargets;
-                myFX.AtrModMaxTargets = power.MaxTargets;
-            }
-            if (Math.Abs(myFX.AtrOrigRadius - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigRadius = power.Radius;
-                myFX.AtrModRadius = power.Radius;
-            }
-            if (Math.Abs(myFX.AtrOrigRange - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigRange = power.Range;
-                myFX.AtrModRange = power.Range;
-            }
-            if (Math.Abs(myFX.AtrOrigRechargeTime - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigRechargeTime = power.RechargeTime;
-                myFX.AtrModRechargeTime = power.RechargeTime;
-            }
-            if (Math.Abs(myFX.AtrOrigSecondaryRange - (-1)) < float.Epsilon)
-            {
-                myFX.AtrOrigSecondaryRange = power.RangeSecondary;
-                myFX.AtrModSecondaryRange = power.RangeSecondary;
+                if (Math.Abs(myFX.AtrOrigAccuracy - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigAccuracy = power.Accuracy;
+                    myFX.AtrModAccuracy = power.Accuracy;
+                }
+
+                if (Math.Abs(myFX.AtrOrigActivatePeriod - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigActivatePeriod = power.ActivatePeriod;
+                    myFX.AtrModActivatePeriod = power.ActivatePeriod;
+                }
+
+                if (myFX.AtrOrigArc == -1)
+                {
+                    myFX.AtrOrigArc = power.Arc;
+                    myFX.AtrModArc = power.Arc;
+                }
+
+                if (Math.Abs(myFX.AtrOrigCastTime - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigCastTime = power.CastTime;
+                    myFX.AtrModCastTime = power.CastTime;
+                }
+
+                if (myFX.AtrOrigEffectArea == Enums.eEffectArea.None)
+                {
+                    myFX.AtrOrigEffectArea = power.EffectArea;
+                    myFX.AtrModEffectArea = power.EffectArea;
+                }
+
+                if (Math.Abs(myFX.AtrOrigEnduranceCost - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigEnduranceCost = power.EndCost;
+                    myFX.AtrModEnduranceCost = power.EndCost;
+                }
+
+                if (Math.Abs(myFX.AtrOrigInterruptTime - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigInterruptTime = power.InterruptTime;
+                    myFX.AtrModInterruptTime = power.InterruptTime;
+                }
+
+                if (myFX.AtrOrigMaxTargets == -1)
+                {
+                    myFX.AtrOrigMaxTargets = power.MaxTargets;
+                    myFX.AtrModMaxTargets = power.MaxTargets;
+                }
+
+                if (Math.Abs(myFX.AtrOrigRadius - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigRadius = power.Radius;
+                    myFX.AtrModRadius = power.Radius;
+                }
+
+                if (Math.Abs(myFX.AtrOrigRange - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigRange = power.Range;
+                    myFX.AtrModRange = power.Range;
+                }
+
+                if (Math.Abs(myFX.AtrOrigRechargeTime - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigRechargeTime = power.RechargeTime;
+                    myFX.AtrModRechargeTime = power.RechargeTime;
+                }
+
+                if (Math.Abs(myFX.AtrOrigSecondaryRange - (-1)) < float.Epsilon)
+                {
+                    myFX.AtrOrigSecondaryRange = power.RangeSecondary;
+                    myFX.AtrModSecondaryRange = power.RangeSecondary;
+                }
             }
 
             txtFXAccuracy.Text = myFX.AtrModAccuracy.ToString();

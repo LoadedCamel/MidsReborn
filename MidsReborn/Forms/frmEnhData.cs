@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
@@ -63,13 +65,25 @@ namespace Mids_Reborn.Forms
         private void btnAddFX_Click(object sender, EventArgs e)
 
         {
-            IEffect iFX = new Effect();
-            using var frmPowerEffect = new frmPowerEffect(iFX);
+            IEffect iFx = new Effect();
+            using var frmPowerEffect = new frmPowerEffect(iFx);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             var enh = myEnh;
             //var sEffectArray = (Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
-            var sEffectArray = new Enums.sEffect[myEnh.Effect.Length + 1];
+
+            var effects = enh.Effect.ToList();
+            effects.Add(new Enums.sEffect
+            {
+                Mode = Enums.eEffMode.FX,
+                Enhance = new Enums.sTwinID{ID = -1, SubID = -1}, 
+                Multiplier = 1f, 
+                Schedule = Enums.eSchedule.A, 
+                FX = (IEffect)frmPowerEffect.myFX.Clone()
+            });
+            effects[effects.Count - 1].FX.isEnhancementEffect = true;
+
+            /*var sEffectArray = new Enums.sEffect[myEnh.Effect.Length + 1];
             Array.Copy(enh.Effect, sEffectArray, myEnh.Effect.Length + 1);
             enh.Effect = sEffectArray;
             var effect = myEnh.Effect;
@@ -80,9 +94,12 @@ namespace Mids_Reborn.Forms
             effect[index].Multiplier = 1f;
             effect[index].Schedule = Enums.eSchedule.A;
             effect[index].FX = (IEffect) frmPowerEffect.myFX.Clone();
-            effect[index].FX.isEnhancementEffect = true;
+            effect[index].FX.isEnhancementEffect = true;*/
+            var sEffects = effects.ToArray();
+            enh.Effect = sEffects;
             ListSelectedEffects();
             lstSelected.SelectedIndex = lstSelected.Items.Count - 1;
+
         }
 
         private void btnAutoFill_Click(object sender, EventArgs e)

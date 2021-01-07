@@ -66,11 +66,8 @@ namespace Mids_Reborn
                 + formatCode[idFormatA].UnderlineOn == "";
             var str2 = MidsContext.Character.Alignment.ToString();
             var str3 = str1 +
-                       formatColor(
-                           formatBold(str2 + " Plan by Mids' Reborn : Hero Designer " + MidsContext.AppAssemblyVersion),
-                           ExportConfig.Element.Heading) + LineBreak() +
-                       formatColor(formatBold(@"https://github.com/Reborn-Team/Hero-Designer"),
-                           ExportConfig.Element.Heading) + LineBreak();
+                       formatColor(formatBold($"This {str2} build was built using Mids Reborn {MidsContext.AppAssemblyVersion}"), ExportConfig.Element.Heading) + LineBreak() + formatColor(formatBold(@"https://github.com/Reborn-Team/MidsReborn"),
+                                       ExportConfig.Element.Heading) + LineBreak();
             if (iDataLink != "" && !Plain)
                 str3 = str3 + LineBreak() +
                        formatColor(formatUnderline(formatBold(iDataLink)), ExportConfig.Element.Title) + LineBreak();
