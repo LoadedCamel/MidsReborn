@@ -16,7 +16,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmRecipeEdit : Form
     {
-        private bool NoUpdate;
+        private bool _noUpdate;
         private ListViewColumnSorter _lvColumnSorter;
         private int _noEnhancementIdx;
 
@@ -77,7 +77,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             Load += frmRecipeEdit_Load;
-            NoUpdate = true;
+            _noUpdate = true;
             InitializeComponent();
             //var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeEdit));
             Icon = Resources.reborn;
@@ -92,10 +92,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 recipe.InternalName,
                 Convert.ToString(index),
-                recipe.EnhIdx <= -1 ? "None" : recipe.Enhancement + " (" + Convert.ToString(recipe.EnhIdx) + ")",
+                recipe.EnhIdx <= -1 ? "None" : $"{recipe.Enhancement} ({recipe.EnhIdx})",
                 Enum.GetName(recipe.Rarity.GetType(), recipe.Rarity),
                 Convert.ToString(recipe.Item.Length),
-                $"{(recipe.IsGeneric ? "G" : " ")}{(recipe.IsVirtual ? "V" : " ")}{(recipe.IsHidden ? "H" : "")}"
+                GetRecipeFlags(index)
             }));
         }
 
@@ -192,7 +192,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnGuessCost_Click(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() < 0 || EntryID() < 0) return;
+            if (_noUpdate || RecipeID() < 0 || EntryID() < 0) return;
             DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].CraftCost =
                 GetCostByLevel(DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].Level);
             udCraft.Value = new decimal(DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].CraftCost);
@@ -330,7 +330,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbEnh_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() <= -1 || cbEnh.SelectedIndex <= -1) return;
+            if (_noUpdate || RecipeID() <= -1 || cbEnh.SelectedIndex <= -1) return;
             var recipe = DatabaseAPI.Database.Recipes[RecipeID()];
             recipe.EnhIdx = cbEnh.SelectedText.ToLower() == "none"
                 ? -1
@@ -359,14 +359,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbRarity_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() <= -1 || cbRarity.SelectedIndex <= -1) return;
+            if (_noUpdate || RecipeID() <= -1 || cbRarity.SelectedIndex <= -1) return;
             DatabaseAPI.Database.Recipes[RecipeID()].Rarity = (Recipe.RecipeRarity) cbRarity.SelectedIndex;
             UpdateListItem(RecipeID());
         }
 
         private void cbSalX_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() < 0 || EntryID() < 0) return;
+            if (_noUpdate || RecipeID() < 0 || EntryID() < 0) return;
             if (cbIsRecipe0.Checked)
             {
                 DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()].RecipeIdx[0] = cbSal0.SelectedIndex - 1;
@@ -563,9 +563,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbSal4.EndUpdate();
             _lvColumnSorter = new ListViewColumnSorter();
             lvDPA.ListViewItemSorter = _lvColumnSorter;
-            btnAutoMarkGeneric.Visible = MidsContext.Config.MasterMode;
-            btnMassUpdateTags.Visible = MidsContext.Config.MasterMode;
-            NoUpdate = false;
+            _noUpdate = false;
         }
 
         private int GetCostByLevel(int iLevelZB)
@@ -685,7 +683,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                NoUpdate = true;
+                _noUpdate = true;
                 var recipeEntry = DatabaseAPI.Database.Recipes[rIDX].Item[iIDX];
                 udLevel.Value = recipeEntry.Level + 1;
                 udLevel.Enabled = true;
@@ -717,7 +715,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 cbSal4.Enabled = true;
                 udSal4.Value = recipeEntry.Count[4];
                 udSal4.Enabled = true;
-                NoUpdate = false;
+                _noUpdate = false;
             }
         }
 
@@ -732,7 +730,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                NoUpdate = true;
+                _noUpdate = true;
                 txtRecipeName.Text = DatabaseAPI.Database.Recipes[rIndex].InternalName;
                 var enhIdx = -1;
                 try
@@ -784,26 +782,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
                 
                 if (lstItems.Items.Count > 0) lstItems.SelectedIndex = 0;
-                NoUpdate = false;
+                _noUpdate = false;
             }
         }
 
         private void txtExtern_TextChanged(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() <= -1) return;
+            if (_noUpdate || RecipeID() <= -1) return;
             DatabaseAPI.Database.Recipes[RecipeID()].ExternalName = txtExtern.Text;
         }
 
         private void txtRecipeName_TextChanged(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() <= -1) return;
+            if (_noUpdate || RecipeID() <= -1) return;
             DatabaseAPI.Database.Recipes[RecipeID()].InternalName = txtRecipeName.Text;
             UpdateListItem(RecipeID());
         }
 
         private void udCostX_Leave(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() < 0 || EntryID() < 0) return;
+            if (_noUpdate || RecipeID() < 0 || EntryID() < 0) return;
             var recipeItem = DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()];
             recipeItem.Level = MinMax(Convert.ToInt32(Regex.Replace(udLevel.Text, @"[\.\,]", "")), udLevel) - 1;
             recipeItem.BuyCost = MinMax(Convert.ToInt32(Regex.Replace(udBuy.Text, @"[\.\,]", "")), udBuy);
@@ -814,7 +812,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void udCostX_ValueChanged(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() < 0 || EntryID() < 0) return;
+            if (_noUpdate || RecipeID() < 0 || EntryID() < 0) return;
             var recipeItem = DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()];
             var level = Convert.ToInt32(udLevel.Value);
             recipeItem.Level = level - 1;
@@ -838,7 +836,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void udSalX_ValueChanged(object sender, EventArgs e)
         {
-            if (NoUpdate || RecipeID() < 0 || EntryID() < 0) return;
+            if (_noUpdate || RecipeID() < 0 || EntryID() < 0) return;
             var recipeItem = DatabaseAPI.Database.Recipes[RecipeID()].Item[EntryID()];
             recipeItem.Count[0] = Convert.ToInt32(udSal0.Value);
             recipeItem.Count[1] = Convert.ToInt32(udSal1.Value);
@@ -1135,9 +1133,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnAutoMarkGeneric_Click(object sender, EventArgs e)
         {
+            btnMassUpdateTags.Enabled = false;
+            btnAutoMarkGeneric.Enabled = false;
             label17.Text = "Updating tags... 0%";
-            label17.Visible = true;
-            progressBar1.Visible = true;
+            panel1.Visible = true;
+            label17.Refresh();
             
             lvDPA.SuspendLayout();
             lvDPA.BeginUpdate();
@@ -1151,6 +1151,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 
                 var vp = (int)Math.Round((float) i / lvDPA.Items.Count * 100);
                 label17.Text = $"Updating tags... {vp}%";
+                label17.Refresh();
                 progressBar1.Value = vp;
             }
 
@@ -1161,8 +1162,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvDPA.EndUpdate();
             lvDPA.ResumeLayout();
 
-            label17.Visible = false;
-            progressBar1.Visible = false;
+            panel1.Visible = false;
+            btnMassUpdateTags.Enabled = true;
+            btnAutoMarkGeneric.Enabled = true;
         }
 
         private void btnMassUpdateTags_Click(object sender, EventArgs e)
@@ -1170,12 +1172,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var frmFilter = new frmRecipeEditorBulkFilter();
             var ret = frmFilter.ShowDialog(this);
             if (ret != DialogResult.OK) return;
-            
+
+            btnMassUpdateTags.Enabled = false;
+            btnAutoMarkGeneric.Enabled = false;
             var filterParams = frmFilter.FilterResult;
 
             label17.Text = "Updating tags... 0%";
-            label17.Visible = true;
-            progressBar1.Visible = true;
+            panel1.Visible = true;
+            label17.Refresh();
 
             lvDPA.SuspendLayout();
             lvDPA.BeginUpdate();
@@ -1239,8 +1243,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 var vp = (int)Math.Round((float)i / lvDPA.Items.Count * 100);
                 label17.Text = $"Updating tags... {vp}%";
+                label17.Refresh();
                 progressBar1.Value = vp;
-                progressBar1.Text = $"Updating tags... {vp}%";
             }
 
             if (lvDPA.SelectedItems.Count > 0)
@@ -1253,8 +1257,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvDPA.EndUpdate();
             lvDPA.ResumeLayout();
 
-            label17.Visible = false;
-            progressBar1.Visible = false;
+            panel1.Visible = false;
+            btnMassUpdateTags.Enabled = true;
+            btnAutoMarkGeneric.Enabled = true;
             frmFilter.Dispose();
         }
     }
