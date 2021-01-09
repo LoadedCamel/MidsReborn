@@ -255,14 +255,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnRAdd_Click(object sender, EventArgs e)
         {
-            var recipe = new Recipe();
+            _noUpdate = true;
+            var recipe = new Recipe
+            {
+                EnhIdx = -1,
+                Enhancement = ""
+            };
             recipe.Item = recipe.Item.Append(new Recipe.RecipeEntry
             {
                 Level = 9
             }).ToArray();
             DatabaseAPI.Database.Recipes = DatabaseAPI.Database.Recipes.Append(recipe).ToArray();
             var rIndex = DatabaseAPI.Database.Recipes.Length - 1;
-            Debug.WriteLine($"New recipe index: {rIndex}");
             AddListItem(rIndex);
             UpdateListItem(rIndex);
             udStaticIndex.Value = rIndex;
@@ -271,8 +275,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbRarity.SelectedIndex = 0;
             cbEnh.SelectedIndex = _noEnhancementIdx;
             lblEnh.Visible = false;
-            
             cbEnh.Select();
+            _noUpdate = false;
+
+            Debug.WriteLine($"RAdd: rIndex: {rIndex}\r\nEnhIdx: {DatabaseAPI.Database.Recipes[rIndex].EnhIdx}\r\nEnhancement: '{DatabaseAPI.Database.Recipes[rIndex].Enhancement}'");
         }
 
         private void btnRDel_Click(object sender, EventArgs e)
@@ -341,7 +347,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_noUpdate || RecipeID() <= -1 || cbEnh.SelectedIndex <= -1) return;
             var recipe = DatabaseAPI.Database.Recipes[RecipeID()];
-            recipe.EnhIdx = cbEnh.SelectedText.ToLower() == "none"
+            recipe.EnhIdx = cbEnh.SelectedText.ToLower() == "none" | cbEnh.SelectedIndex == _noEnhancementIdx
                 ? -1
                 : DatabaseAPI.Database.Enhancements.TryFindIndex(e => e.UID == cbEnh.SelectedText);
             if (recipe.EnhIdx > -1)
@@ -362,6 +368,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 recipe.Enhancement = "";
             }
+
+            Debug.WriteLine($"cbEnh_cb: rIndex: {RecipeID()}\r\nrecipe.EnhIdx: {recipe.EnhIdx}");
 
             UpdateListItem(RecipeID());
         }
@@ -1139,12 +1147,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void udStaticIndex_ValueChanged(object sender, EventArgs e)
         {
+            if (_noUpdate) return;
+            if (lvDPA.SelectedItems.Count <= 0) return;
+
             if (sender is NumericUpDown ud)
             {
-                if (lvDPA.SelectedItems.Count > 0)
-                {
-                    lvDPA.SelectedItems[0].SubItems[1].Text = Convert.ToString(ud.Value, CultureInfo.InvariantCulture);
-                }
+                lvDPA.SelectedItems[0].SubItems[1].Text = Convert.ToString(ud.Value, CultureInfo.InvariantCulture);
             }
         }
 
