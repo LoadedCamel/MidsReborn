@@ -1489,13 +1489,10 @@ namespace Mids_Reborn.Forms
             var iPowers = new List<IPower>();
             var num1 = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length - 1;
             for (var index = 0; index <= num1; ++index)
-                iPowers.Add(
-                    DatabaseAPI.Database.Power[
-                        MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
+                iPowers.Add(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
             using var frmAccolade = new frmAccolade(this, iPowers)
             {
-                Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower]
-                    .DisplayName
+                Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower].DisplayName
             };
             frmAccolade.ShowDialog(this);
             EnhancementModified();
@@ -1576,9 +1573,6 @@ namespace Mids_Reborn.Forms
                 {
                     case "Temporary Powers":
                         MidsContext.Character.CurrentBuild.Powers[index].StatInclude = tempPowersButton.Checked;
-                        break;
-                    case "Accolades":
-                        MidsContext.Character.CurrentBuild.Powers[index].StatInclude = accoladeButton.Checked;
                         break;
                 }
             }
