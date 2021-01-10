@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace mrbBase
@@ -122,7 +123,7 @@ namespace mrbBase
             }
         }
 
-        public class RecipeEntry
+        public class RecipeEntry : ICloneable
         {
             public int BuyCost;
             public int BuyCostM;
@@ -165,6 +166,11 @@ namespace mrbBase
                     Recipe[index] = "";
                     RecipeIdx[index] = -1;
                 }
+            }
+
+            public object Clone()
+            {
+                return MemberwiseClone();
             }
         }
     }
