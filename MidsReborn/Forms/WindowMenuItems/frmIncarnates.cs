@@ -1,61 +1,31 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
-using mrbControls; //using Microsoft.VisualBasic;
-//using Microsoft.VisualBasic.CompilerServices;
+using mrbControls;
 
-namespace Mids_Reborn.Forms
+namespace Mids_Reborn.Forms.WindowMenuItems
 {
-    public partial class frmIncarnate : Form
+    public partial class frmIncarnates : Form
     {
         private readonly ImageButton[] buttonArray;
         private readonly frmMain myParent;
-        private ImageButton alphaBtn;
-
-        private ImageButton destinyBtn;
-
-        private ImageButton GenesisButton;
-
-        private ImageButton hybridBtn;
-
-        private ImageButton ibClose;
-
-        private ImageButton interfaceBtn;
-
-        private ImageButton judgementBtn;
-
-        private Label lblLock;
-
-        internal ListLabelV3 LLLeft;
-
-        internal ListLabelV3 LLRight;
-
+        private IPower[] myPowers;
         private bool Locked;
 
-        private ImageButton loreBtn;
-        private IPower[] myPowers;
-
-        private ImageButton OmegaButton;
-        private Panel Panel1;
-        private CustomPanel Panel2;
-
-        private ctlPopUp PopInfo;
-
-        private ImageButton StanceButton;
-
-        private ImageButton VitaeButton;
-
-        private VScrollBar VScrollBar1;
-
-        public frmIncarnate(ref frmMain iParent)
+        public frmIncarnates(ref frmMain iParent)
         {
             Load += frmIncarnate_Load;
             myPowers = Array.Empty<IPower>();
@@ -79,103 +49,17 @@ namespace Mids_Reborn.Forms
             interfaceBtn.ButtonClicked += interfaceBtn_ButtonClicked;
             judgementBtn.ButtonClicked += judgementBtn_ButtonClicked;
             lblLock.Click += lblLock_Click;
-
-            // llLeft events
-            LLLeft.ItemClick += llLeft_ItemClick;
-            LLLeft.MouseEnter += llLeft_MouseEnter;
-            LLLeft.ItemHover += llLeft_ItemHover;
-
-
-            // llRight events
-            LLRight.MouseEnter += llRight_MouseEnter;
-            LLRight.ItemHover += llRight_ItemHover;
-            LLRight.ItemClick += llRight_ItemClick;
-
             loreBtn.ButtonClicked += loreBtn_ButtonClicked;
-            Name = nameof(frmIncarnate);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmIncarnate));
             Icon = Resources.reborn;
             myParent = iParent;
             myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate).Powers;
             FormClosing += FrmIncarnate_FormClosing;
         }
-
         private void FrmIncarnate_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing) myParent.incarnateButton.Checked = false;
             if (DialogResult == DialogResult.Cancel) myParent.incarnateButton.Checked = false;
         }
-
-        private void alphaBtn_ButtonClicked()
-        {
-            var alphaBtn = this.alphaBtn;
-            SetPowerSet("Alpha", ref alphaBtn);
-            this.alphaBtn = alphaBtn;
-        }
-
-        private void ChangedScrollFrameContents()
-        {
-            VScrollBar1.Value = 0;
-            VScrollBar1.Maximum = (int) Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double) Panel1.Height));
-            VScrollBar1_Scroll(VScrollBar1, new ScrollEventArgs(ScrollEventType.EndScroll, 0));
-        }
-
-        private void destinyBtn_ButtonClicked()
-        {
-            var destinyBtn = this.destinyBtn;
-            SetPowerSet("Destiny", ref destinyBtn);
-            this.destinyBtn = destinyBtn;
-        }
-
-        private void FillLists()
-        {
-            LLLeft.SuspendRedraw = true;
-            LLRight.SuspendRedraw = true;
-            LLLeft.ClearItems();
-            LLRight.ClearItems();
-            var keys = new int[myPowers.Length - 1 + 1];
-            if (myPowers.Length < 2)
-            {
-                var num = myPowers.Length - 1;
-                for (var index = 0; index <= num; ++index)
-                    keys[index] = myPowers[index].StaticIndex;
-            }
-            else if (myPowers[0].DisplayLocation != myPowers[1].DisplayLocation)
-            {
-                var num = myPowers.Length - 1;
-                for (var index = 0; index <= num; ++index)
-                    keys[index] = myPowers[index].DisplayLocation;
-            }
-            else
-            {
-                var num = myPowers.Length - 1;
-                for (var index = 0; index <= num; ++index)
-                    keys[index] = myPowers[index].StaticIndex;
-            }
-
-            Array.Sort(keys, myPowers);
-            var num1 = myPowers.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-            {
-                var iState = !MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index]) ? myPowers[index].DisplayName != "Nothing" ? ListLabelV3.LLItemState.Enabled : ListLabelV3.LLItemState.Disabled : ListLabelV3.LLItemState.Selected;
-                var iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState) : new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV3.LLFontFlags.Bold);
-                Console.WriteLine(myPowers.Length);
-                if (index < myPowers.Length / 2)
-                {
-                    LLLeft.AddItem(iItem);
-                }
-                else
-                {
-                    LLRight.AddItem(iItem);
-                }
-            }
-
-            LLLeft.SuspendRedraw = false;
-            LLRight.SuspendRedraw = false;
-            LLLeft.Refresh();
-            LLRight.Refresh();
-        }
-
         private void frmIncarnate_Load(object sender, EventArgs e)
 
         {
@@ -198,12 +82,12 @@ namespace Mids_Reborn.Forms
 
             BackColor = myParent.BackColor;
             PopInfo.ForeColor = BackColor;
-            var llLeft = LLLeft;
-            UpdateLLColours(ref llLeft);
-            LLLeft = llLeft;
-            var llRight = LLRight;
-            UpdateLLColours(ref llRight);
-            LLRight = llRight;
+            var plLeft = PLLeft;
+            UpdatePLColors(ref plLeft);
+            //LLLeft = llLeft;
+            var plRight = PLRight;
+            UpdatePLColors(ref plRight);
+            //LLRight = llRight;
             ibClose.IA = myParent.Drawing.pImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
             ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
@@ -217,7 +101,53 @@ namespace Mids_Reborn.Forms
             ChangedScrollFrameContents();
             FillLists();
         }
+        private void FillLists()
+        {
+            PLLeft.SelectionMode = SelectionMode.None;
+            PLRight.SelectionMode = SelectionMode.None;
+            var leftBound = new BindingList<IPower>();
+            var rightBound = new BindingList<IPower>();
+            var powersLength = myPowers.Length;
+            for (var index = 0; index < powersLength / 2; index++)
+            {
+                leftBound.Add(myPowers[index]);
+            }
+            for (var index = powersLength / 2; index < powersLength; index++)
+            {
+                rightBound.Add(myPowers[index]);
+            }
+            //Assign Left
+            PLLeft.DisplayMember = "DisplayName";
+            PLLeft.ValueMember = null;
+            PLLeft.DataSource = leftBound;
+            //Assign Right
+            PLRight.DisplayMember = "DisplayName";
+            PLRight.ValueMember = null;
+            PLRight.DataSource = rightBound;
+            //Reset Selection Modes
+            PLLeft.SelectionMode = SelectionMode.One;
+            PLRight.SelectionMode = SelectionMode.One;
+        }
+        private void alphaBtn_ButtonClicked()
+        {
+            var alphaBtn = this.alphaBtn;
+            SetPowerSet("Alpha", ref alphaBtn);
+            this.alphaBtn = alphaBtn;
+        }
 
+        private void ChangedScrollFrameContents()
+        {
+            VScrollBar1.Value = 0;
+            VScrollBar1.Maximum = (int)Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double)ctlPanel1.Height));
+            VScrollBar1_Scroll(VScrollBar1, new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+        }
+
+        private void destinyBtn_ButtonClicked()
+        {
+            var destinyBtn = this.destinyBtn;
+            SetPowerSet("Destiny", ref destinyBtn);
+            this.destinyBtn = destinyBtn;
+        }
         private void GenesisButton_ButtonClicked()
         {
             var genesisButton = GenesisButton;
@@ -257,124 +187,7 @@ namespace Mids_Reborn.Forms
             Locked = false;
             lblLock.Visible = false;
         }
-
-        private void llLeft_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
-        {
-            if (Button == MouseButtons.Right)
-            {
-                Locked = false;
-                miniPowerInfo(Item.Index);
-                lblLock.Visible = true;
-                Locked = true;
-                return;
-            }
-
-            if (Item.ItemState == ListLabelV3.LLItemState.Disabled)
-                return;
-            var flag = !MidsContext.Character.CurrentBuild.PowerUsed(myPowers[Item.Index]);
-            var num1 = LLLeft.Items.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-            {
-                if (LLLeft.Items[index].ItemState == ListLabelV3.LLItemState.Selected)
-                    LLLeft.Items[index].ItemState = ListLabelV3.LLItemState.Enabled;
-                if (MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index]))
-                    MidsContext.Character.CurrentBuild.RemovePower(myPowers[index]);
-            }
-
-            var num2 = LLRight.Items.Length - 1;
-            for (var index = 0; index <= num2; ++index)
-            {
-                if (LLRight.Items[index].ItemState == ListLabelV3.LLItemState.Selected)
-                    LLRight.Items[index].ItemState = ListLabelV3.LLItemState.Enabled;
-                if (MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index + LLLeft.Items.Length]))
-                    MidsContext.Character.CurrentBuild.RemovePower(myPowers[index + LLLeft.Items.Length]);
-            }
-
-            if (flag)
-            {
-                MidsContext.Character.CurrentBuild.AddPower(myPowers[Item.Index], 49).StatInclude = true;
-                Item.ItemState = ListLabelV3.LLItemState.Selected;
-            }
-
-            LLLeft.Refresh();
-            LLRight.Refresh();
-            myParent.PowerModified(true);
-        }
-
-        private void llLeft_ItemHover(ListLabelV3.ListLabelItemV3 Item)
-        {
-            miniPowerInfo(Item.Index);
-        }
-
-        private void llLeft_MouseEnter(object sender, EventArgs e)
-        {
-            if (!ContainsFocus)
-                return;
-            Panel2.Focus();
-        }
-
-        private void llRight_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
-        {
-            var pIDX = Item.Index + LLLeft.Items.Length;
-            if (Button == MouseButtons.Right)
-            {
-                Locked = false;
-                miniPowerInfo(pIDX);
-                lblLock.Visible = true;
-                Locked = true;
-            }
-            else
-            {
-                if (Item.ItemState == ListLabelV3.LLItemState.Disabled)
-                    return;
-                var unused = !MidsContext.Character.CurrentBuild.PowerUsed(myPowers[pIDX]);
-                var hasChanges = false;
-                for (var index = 0; index <= LLLeft.Items.Length - 1; ++index)
-                {
-                    if (LLLeft.Items[index].ItemState == ListLabelV3.LLItemState.Selected)
-                        LLLeft.Items[index].ItemState = ListLabelV3.LLItemState.Enabled;
-                    if (!MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index]))
-                        continue;
-                    MidsContext.Character.CurrentBuild.RemovePower(myPowers[index]);
-                    hasChanges = true;
-                }
-
-                for (var index = 0; index <= LLRight.Items.Length - 1; ++index)
-                {
-                    if (LLRight.Items[index].ItemState == ListLabelV3.LLItemState.Selected)
-                        LLRight.Items[index].ItemState = ListLabelV3.LLItemState.Enabled;
-                    if (!MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index + LLLeft.Items.Length]))
-                        continue;
-                    MidsContext.Character.CurrentBuild.RemovePower(myPowers[index + LLLeft.Items.Length]);
-                    hasChanges = true;
-                }
-
-                if (unused)
-                {
-                    MidsContext.Character.CurrentBuild.AddPower(myPowers[pIDX], 49).StatInclude = true;
-                    Item.ItemState = ListLabelV3.LLItemState.Selected;
-                }
-
-                LLLeft.Refresh();
-                LLRight.Refresh();
-                myParent.PowerModified(unused || hasChanges);
-            }
-        }
-
-        private void llRight_ItemHover(ListLabelV3.ListLabelItemV3 Item)
-
-        {
-            miniPowerInfo(Item.Index + LLLeft.Items.Length);
-        }
-
-        private void llRight_MouseEnter(object sender, EventArgs e)
-
-        {
-            llLeft_MouseEnter(RuntimeHelpers.GetObjectValue(sender), e);
-        }
-
         private void loreBtn_ButtonClicked()
-
         {
             var loreBtn = this.loreBtn;
             SetPowerSet("Lore", ref loreBtn);
@@ -431,7 +244,7 @@ namespace Mids_Reborn.Forms
                                                                       power1.I9FXPresentP(Enums.eEffectType.Mez,
                                                                           Enums.eMez.Taunt)))
                     iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (MidsContext.Config.BaseAcc * (double) power1.Accuracy * 100.0)) + "%",
+                        Utilities.FixDP((float)(MidsContext.Config.BaseAcc * (double)power1.Accuracy * 100.0)) + "%",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 if (power1.RechargeTime > 0.0)
                     iPopup.Sections[index2].Add("Recharge:", PopUp.Colors.Title,
@@ -461,7 +274,7 @@ namespace Mids_Reborn.Forms
                 if (power2.Effects.Length > 0)
                 {
                     iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title);
-                    char[] chArray = {'^'};
+                    char[] chArray = { '^' };
                     var num1 = power2.Effects.Length - 1;
                     for (var index3 = 0; index3 <= num1; ++index3)
                     {
@@ -491,7 +304,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void OmegaButton_ButtonClicked()
-
         {
             var omegaButton = OmegaButton;
             SetPowerSet("Omega", ref omegaButton);
@@ -499,7 +311,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void PopInfo_MouseEnter(object sender, EventArgs e)
-
         {
             if (!ContainsFocus)
                 return;
@@ -523,7 +334,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void SetPowerSet(string Setname, ref ImageButton button)
-
         {
             foreach (var button1 in buttonArray)
                 button1.Checked = false;
@@ -533,38 +343,11 @@ namespace Mids_Reborn.Forms
         }
 
         private void StanceButton_ButtonClicked()
-
         {
             var stanceButton = StanceButton;
             SetPowerSet("Stance", ref stanceButton);
             StanceButton = stanceButton;
         }
-
-        private void UpdateLLColours(ref ListLabelV3 iList)
-        {
-            iList.UpdateTextColors(ListLabelV3.LLItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            iList.UpdateTextColors(ListLabelV3.LLItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(ListLabelV3.LLItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            iList.ScrollBarColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            iList.ScrollButtonColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-            iList.UpdateTextColors(ListLabelV3.LLItemState.Selected,
-                MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                    : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-            iList.UpdateTextColors(ListLabelV3.LLItemState.SelectedDisabled,
-                MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                    : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            iList.HoverColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerHighlightHero
-                : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-            iList.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
-        }
-
         private void VitaeButton_ButtonClicked()
         {
             var vitaeButton = VitaeButton;
@@ -574,12 +357,38 @@ namespace Mids_Reborn.Forms
 
         private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            if ((PopInfo.lHeight > (double) Panel1.Height) & (VScrollBar1.Maximum > VScrollBar1.LargeChange))
-                PopInfo.ScrollY = (float) (VScrollBar1.Value /
-                                           (double) (VScrollBar1.Maximum - VScrollBar1.LargeChange) *
-                                           (PopInfo.lHeight - (double) Panel1.Height));
+            if ((PopInfo.lHeight > (double)ctlPanel1.Height) & (VScrollBar1.Maximum > VScrollBar1.LargeChange))
+                PopInfo.ScrollY = (float)(VScrollBar1.Value /
+                                          (double)(VScrollBar1.Maximum - VScrollBar1.LargeChange) *
+                                          (PopInfo.lHeight - (double)ctlPanel1.Height));
             else
                 PopInfo.ScrollY = 0.0f;
+        }
+        private void UpdatePLColors(ref ctlPowerList iList)
+        {
+            iList.UpdateTextColors(ctlPowerList.ItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            iList.UpdateTextColors(ctlPowerList.ItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            iList.UpdateTextColors(ctlPowerList.ItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+            /*iList.ScrollBarColor = MidsContext.Character.IsHero()
+                ? MidsContext.Config.RtFont.ColorPowerTakenHero
+                : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+            iList.ScrollButtonColor = MidsContext.Character.IsHero()
+                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
+                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;*/
+            iList.UpdateTextColors(ctlPowerList.ItemState.Selected,
+                MidsContext.Character.IsHero()
+                    ? MidsContext.Config.RtFont.ColorPowerTakenHero
+                    : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+            iList.UpdateTextColors(ctlPowerList.ItemState.SelectedDisabled,
+                MidsContext.Character.IsHero()
+                    ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
+                    : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+            /*iList.HoverColor = MidsContext.Character.IsHero()
+                ? MidsContext.Config.RtFont.ColorPowerHighlightHero
+                : MidsContext.Config.RtFont.ColorPowerHighlightVillain;*/
+            iList.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+            iList.Refresh();
+            iList.Update();
         }
 
         public class CustomPanel : Panel
