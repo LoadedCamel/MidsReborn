@@ -31,12 +31,10 @@ namespace Mids_Reborn.UIv2
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.menuSlideTimer = new System.Windows.Forms.Timer(this.components);
             this.BGImage = new System.Windows.Forms.PictureBox();
             this.MainPanel = new mrbControls.ctlPanel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.button2 = new System.Windows.Forms.Button();
             this.Ancillary_Powers = new mrbControls.ctlPowerList();
             this.cbAncillary = new mrbControls.ctlCombo();
             this.label11 = new System.Windows.Forms.Label();
@@ -64,27 +62,14 @@ namespace Mids_Reborn.UIv2
             this.label3 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.SlidePanel = new mrbControls.ctlPanel();
-            this.MenuGrip = new FontAwesome.Sharp.IconButton();
-            this.menuPanel = new mrbControls.ctlPanel();
             this.TopPanel = new mrbControls.ctlPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.ExitPanel = new mrbControls.ctlPanel();
-            this.MinimizeButton = new FontAwesome.Sharp.IconButton();
-            this.CloseButton = new FontAwesome.Sharp.IconButton();
-            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.BGImage)).BeginInit();
             this.MainPanel.SuspendLayout();
-            this.SlidePanel.SuspendLayout();
             this.TopPanel.SuspendLayout();
-            this.ExitPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // menuSlideTimer
-            // 
-            this.menuSlideTimer.Interval = 1;
-            this.menuSlideTimer.Tick += new System.EventHandler(this.MenuSlideTimer_Tick);
             // 
             // BGImage
             // 
@@ -101,7 +86,6 @@ namespace Mids_Reborn.UIv2
             // 
             this.MainPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.MainPanel.Controls.Add(this.button2);
-            this.MainPanel.Controls.Add(this.tableLayoutPanel1);
             this.MainPanel.Controls.Add(this.Ancillary_Powers);
             this.MainPanel.Controls.Add(this.cbAncillary);
             this.MainPanel.Controls.Add(this.label11);
@@ -130,31 +114,19 @@ namespace Mids_Reborn.UIv2
             this.MainPanel.Controls.Add(this.textBox1);
             this.MainPanel.Controls.Add(this.label2);
             this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainPanel.Location = new System.Drawing.Point(50, 41);
+            this.MainPanel.Location = new System.Drawing.Point(0, 41);
             this.MainPanel.Name = "MainPanel";
-            this.MainPanel.Size = new System.Drawing.Size(1325, 976);
+            this.MainPanel.Size = new System.Drawing.Size(1375, 976);
             this.MainPanel.TabIndex = 3;
             // 
-            // tableLayoutPanel1
+            // button2
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(637, 14);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 8;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(676, 631);
-            this.tableLayoutPanel1.TabIndex = 34;
+            this.button2.Location = new System.Drawing.Point(457, 55);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 35;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // Ancillary_Powers
             // 
@@ -162,7 +134,6 @@ namespace Mids_Reborn.UIv2
             this.Ancillary_Powers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Ancillary_Powers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.Ancillary_Powers.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Ancillary_Powers.ForeColor = System.Drawing.Color.White;
             this.Ancillary_Powers.FormattingEnabled = true;
             this.Ancillary_Powers.ItemHeight = 16;
             this.Ancillary_Powers.Items.AddRange(new object[] {
@@ -211,7 +182,6 @@ namespace Mids_Reborn.UIv2
             this.Pool3_Powers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Pool3_Powers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.Pool3_Powers.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Pool3_Powers.ForeColor = System.Drawing.Color.White;
             this.Pool3_Powers.FormattingEnabled = true;
             this.Pool3_Powers.ItemHeight = 16;
             this.Pool3_Powers.Items.AddRange(new object[] {
@@ -260,7 +230,6 @@ namespace Mids_Reborn.UIv2
             this.Pool2_Powers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Pool2_Powers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.Pool2_Powers.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Pool2_Powers.ForeColor = System.Drawing.Color.White;
             this.Pool2_Powers.FormattingEnabled = true;
             this.Pool2_Powers.ItemHeight = 16;
             this.Pool2_Powers.Items.AddRange(new object[] {
@@ -309,7 +278,6 @@ namespace Mids_Reborn.UIv2
             this.Pool1_Powers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Pool1_Powers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.Pool1_Powers.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Pool1_Powers.ForeColor = System.Drawing.Color.White;
             this.Pool1_Powers.FormattingEnabled = true;
             this.Pool1_Powers.ItemHeight = 16;
             this.Pool1_Powers.Items.AddRange(new object[] {
@@ -358,7 +326,6 @@ namespace Mids_Reborn.UIv2
             this.Pool0_Powers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Pool0_Powers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.Pool0_Powers.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Pool0_Powers.ForeColor = System.Drawing.Color.White;
             this.Pool0_Powers.FormattingEnabled = true;
             this.Pool0_Powers.ItemHeight = 16;
             this.Pool0_Powers.Items.AddRange(new object[] {
@@ -407,7 +374,6 @@ namespace Mids_Reborn.UIv2
             this.Secondary_Powers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Secondary_Powers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.Secondary_Powers.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Secondary_Powers.ForeColor = System.Drawing.Color.White;
             this.Secondary_Powers.FormattingEnabled = true;
             this.Secondary_Powers.ItemHeight = 16;
             this.Secondary_Powers.Items.AddRange(new object[] {
@@ -433,7 +399,6 @@ namespace Mids_Reborn.UIv2
             this.Primary_Powers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Primary_Powers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.Primary_Powers.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Primary_Powers.ForeColor = System.Drawing.Color.White;
             this.Primary_Powers.FormattingEnabled = true;
             this.Primary_Powers.ItemHeight = 16;
             this.Primary_Powers.Items.AddRange(new object[] {
@@ -581,45 +546,6 @@ namespace Mids_Reborn.UIv2
             this.label2.TabIndex = 7;
             this.label2.Text = "Name:";
             // 
-            // SlidePanel
-            // 
-            this.SlidePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.SlidePanel.Controls.Add(this.MenuGrip);
-            this.SlidePanel.Controls.Add(this.menuPanel);
-            this.SlidePanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.SlidePanel.Location = new System.Drawing.Point(0, 41);
-            this.SlidePanel.Name = "SlidePanel";
-            this.SlidePanel.Size = new System.Drawing.Size(50, 976);
-            this.SlidePanel.TabIndex = 2;
-            // 
-            // MenuGrip
-            // 
-            this.MenuGrip.BackColor = System.Drawing.Color.Transparent;
-            this.MenuGrip.FlatAppearance.BorderSize = 0;
-            this.MenuGrip.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MenuGrip.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MenuGrip.IconChar = FontAwesome.Sharp.IconChar.Bars;
-            this.MenuGrip.IconColor = System.Drawing.Color.White;
-            this.MenuGrip.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.MenuGrip.IconSize = 32;
-            this.MenuGrip.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.MenuGrip.Location = new System.Drawing.Point(9, 6);
-            this.MenuGrip.Name = "MenuGrip";
-            this.MenuGrip.Size = new System.Drawing.Size(35, 38);
-            this.MenuGrip.TabIndex = 0;
-            this.MenuGrip.UseVisualStyleBackColor = false;
-            this.MenuGrip.Click += new System.EventHandler(this.MenuGrip_Click);
-            this.MenuGrip.MouseEnter += new System.EventHandler(this.MenuGrip_Enter);
-            this.MenuGrip.MouseLeave += new System.EventHandler(this.MenuGrip_Leave);
-            // 
-            // menuPanel
-            // 
-            this.menuPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.menuPanel.Location = new System.Drawing.Point(0, 0);
-            this.menuPanel.Name = "menuPanel";
-            this.menuPanel.Size = new System.Drawing.Size(350, 750);
-            this.menuPanel.TabIndex = 34;
-            // 
             // TopPanel
             // 
             this.TopPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -664,73 +590,25 @@ namespace Mids_Reborn.UIv2
             // ExitPanel
             // 
             this.ExitPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ExitPanel.Controls.Add(this.MinimizeButton);
-            this.ExitPanel.Controls.Add(this.CloseButton);
             this.ExitPanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.ExitPanel.Location = new System.Drawing.Point(1312, 0);
+            this.ExitPanel.Location = new System.Drawing.Point(1292, 0);
             this.ExitPanel.Name = "ExitPanel";
-            this.ExitPanel.Size = new System.Drawing.Size(63, 41);
+            this.ExitPanel.Size = new System.Drawing.Size(83, 41);
             this.ExitPanel.TabIndex = 0;
-            // 
-            // MinimizeButton
-            // 
-            this.MinimizeButton.FlatAppearance.BorderSize = 0;
-            this.MinimizeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MinimizeButton.IconChar = FontAwesome.Sharp.IconChar.WindowMinimize;
-            this.MinimizeButton.IconColor = System.Drawing.Color.White;
-            this.MinimizeButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.MinimizeButton.IconSize = 32;
-            this.MinimizeButton.Location = new System.Drawing.Point(3, 10);
-            this.MinimizeButton.Name = "MinimizeButton";
-            this.MinimizeButton.Size = new System.Drawing.Size(23, 23);
-            this.MinimizeButton.TabIndex = 2;
-            this.MinimizeButton.UseVisualStyleBackColor = true;
-            this.MinimizeButton.Click += new System.EventHandler(this.MinimizeButton_Click);
-            this.MinimizeButton.MouseEnter += new System.EventHandler(this.ButtonMouse_Enter);
-            this.MinimizeButton.MouseLeave += new System.EventHandler(this.ButtonMouse_Leave);
-            // 
-            // CloseButton
-            // 
-            this.CloseButton.FlatAppearance.BorderSize = 0;
-            this.CloseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CloseButton.IconChar = FontAwesome.Sharp.IconChar.WindowClose;
-            this.CloseButton.IconColor = System.Drawing.Color.White;
-            this.CloseButton.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.CloseButton.IconSize = 32;
-            this.CloseButton.Location = new System.Drawing.Point(32, 10);
-            this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(23, 23);
-            this.CloseButton.TabIndex = 0;
-            this.CloseButton.UseVisualStyleBackColor = true;
-            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
-            this.CloseButton.MouseEnter += new System.EventHandler(this.ButtonMouse_Enter);
-            this.CloseButton.MouseLeave += new System.EventHandler(this.ButtonMouse_Leave);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(457, 55);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 35;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1375, 1017);
             this.Controls.Add(this.MainPanel);
-            this.Controls.Add(this.SlidePanel);
             this.Controls.Add(this.TopPanel);
             this.Controls.Add(this.BGImage);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -738,24 +616,17 @@ namespace Mids_Reborn.UIv2
             ((System.ComponentModel.ISupportInitialize)(this.BGImage)).EndInit();
             this.MainPanel.ResumeLayout(false);
             this.MainPanel.PerformLayout();
-            this.SlidePanel.ResumeLayout(false);
             this.TopPanel.ResumeLayout(false);
             this.TopPanel.PerformLayout();
-            this.ExitPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Timer menuSlideTimer;
         private PictureBox BGImage;
         private ctlPanel TopPanel;
         private ctlPanel ExitPanel;
-        private ctlPanel SlidePanel;
         private ctlPanel MainPanel;
-        private FontAwesome.Sharp.IconButton CloseButton;
-        private FontAwesome.Sharp.IconButton MinimizeButton;
-        private FontAwesome.Sharp.IconButton MenuGrip;
         private Button button1;
         private Label label1;
         private TextBox textBox1;
@@ -785,8 +656,6 @@ namespace Mids_Reborn.UIv2
         private ctlPowerList Ancillary_Powers;
         private ctlCombo cbAncillary;
         private Label label11;
-        private ctlPanel menuPanel;
-        private TableLayoutPanel tableLayoutPanel1;
         private Button button2;
     }
 }

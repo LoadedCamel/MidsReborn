@@ -107,7 +107,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void alphaBtn_ButtonClicked()
-
         {
             var alphaBtn = this.alphaBtn;
             SetPowerSet("Alpha", ref alphaBtn);
@@ -115,7 +114,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void ChangedScrollFrameContents()
-
         {
             VScrollBar1.Value = 0;
             VScrollBar1.Maximum = (int) Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double) Panel1.Height));
@@ -123,7 +121,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void destinyBtn_ButtonClicked()
-
         {
             var destinyBtn = this.destinyBtn;
             SetPowerSet("Destiny", ref destinyBtn);
@@ -160,18 +157,17 @@ namespace Mids_Reborn.Forms
             var num1 = myPowers.Length - 1;
             for (var index = 0; index <= num1; ++index)
             {
-                var iState = !MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index])
-                    ? myPowers[index].DisplayName != "Nothing" ? ListLabelV3.LLItemState.Enabled :
-                    ListLabelV3.LLItemState.Disabled
-                    : ListLabelV3.LLItemState.Selected;
-                var iItem = !MidsContext.Config.RtFont.PairedBold
-                    ? new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState)
-                    : new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState, -1, -1, -1, "",
-                        ListLabelV3.LLFontFlags.Bold);
-                if (index >= myPowers.Length / 2.0)
-                    LLRight.AddItem(iItem);
-                else
+                var iState = !MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index]) ? myPowers[index].DisplayName != "Nothing" ? ListLabelV3.LLItemState.Enabled : ListLabelV3.LLItemState.Disabled : ListLabelV3.LLItemState.Selected;
+                var iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState) : new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV3.LLFontFlags.Bold);
+                Console.WriteLine(myPowers.Length);
+                if (index < myPowers.Length / 2)
+                {
                     LLLeft.AddItem(iItem);
+                }
+                else
+                {
+                    LLRight.AddItem(iItem);
+                }
             }
 
             LLLeft.SuspendRedraw = false;
@@ -223,7 +219,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void GenesisButton_ButtonClicked()
-
         {
             var genesisButton = GenesisButton;
             SetPowerSet("Genesis", ref genesisButton);
@@ -231,7 +226,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void hybridBtn_ButtonClicked()
-
         {
             var hybridBtn = this.hybridBtn;
             SetPowerSet("Hybrid", ref hybridBtn);
@@ -239,14 +233,12 @@ namespace Mids_Reborn.Forms
         }
 
         private void ibClose_ButtonClicked()
-
         {
             Close();
         }
 
         [DebuggerStepThrough]
         private void interfaceBtn_ButtonClicked()
-
         {
             var interfaceBtn = this.interfaceBtn;
             SetPowerSet("Interface", ref interfaceBtn);
@@ -254,7 +246,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void judgementBtn_ButtonClicked()
-
         {
             var judgementBtn = this.judgementBtn;
             SetPowerSet("Judgement", ref judgementBtn);
@@ -262,7 +253,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void lblLock_Click(object sender, EventArgs e)
-
         {
             Locked = false;
             lblLock.Visible = false;
@@ -576,7 +566,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void VitaeButton_ButtonClicked()
-
         {
             var vitaeButton = VitaeButton;
             SetPowerSet("Vitae", ref vitaeButton);
@@ -584,7 +573,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
-
         {
             if ((PopInfo.lHeight > (double) Panel1.Height) & (VScrollBar1.Maximum > VScrollBar1.LargeChange))
                 PopInfo.ScrollY = (float) (VScrollBar1.Value /

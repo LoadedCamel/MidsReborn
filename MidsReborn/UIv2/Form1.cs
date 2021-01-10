@@ -10,6 +10,7 @@ using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
+using mrbControls;
 
 namespace Mids_Reborn.UIv2
 {
@@ -22,22 +23,47 @@ namespace Mids_Reborn.UIv2
 
         private readonly int _panelWidth;
         private bool PanelHidden { get; set; }
+
+        private float OriginalWidth { get; set; }
+        private float OriginalHeight { get; set; }
+
         public Form1()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ResizeRedraw, true);
             ConfigData.Initialize(MyApplication.GetSerializer());
             Load += Form1_Load;
+            Resize += Form1_Resize;
             InitializeComponent();
-            menuPanel.Width = 0;
             _panelWidth = 350;
             PanelHidden = true;
         }
 
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            float widthRatio = ClientRectangle.Width / OriginalWidth;
+            float heightRatio = ClientRectangle.Height / OriginalHeight;
+            SizeF scale = new SizeF(widthRatio, heightRatio);
+            OriginalHeight = ClientRectangle.Height;
+            OriginalWidth = ClientRectangle.Width;
+
+            foreach (Control control in Controls)
+            {
+                control.Font = new Font(control.Font.FontFamily, control.Font.SizeInPoints * heightRatio * widthRatio);
+                control.Scale(scale);
+                foreach (Control child in control.Controls)
+                {
+                    child.Font = new Font(child.Font.FontFamily, child.Font.SizeInPoints * heightRatio * widthRatio);
+                    child.Scale(scale);
+                }
+            }
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             Loading = true;
             try
             {
+                OriginalWidth = ClientRectangle.Width;
+                OriginalHeight = ClientRectangle.Height;
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
@@ -69,28 +95,6 @@ namespace Mids_Reborn.UIv2
             }
             Loading = false;
             cbAT.SelectedItem = cbAT.Items[0];
-        }
-
-        private void MenuSlideTimer_Tick(object sender, EventArgs e)
-        {
-            if (PanelHidden)
-            {
-                menuPanel.Width += 10;
-                MenuGrip.Left += 0;
-                if (menuPanel.Width < _panelWidth) return;
-                menuSlideTimer.Stop();
-                PanelHidden = false;
-                Refresh();
-            }
-            else
-            {
-                menuPanel.Width -= 10;
-                MenuGrip.Left -= 0;
-                if (menuPanel.Width > 0) return;
-                menuSlideTimer.Stop();
-                PanelHidden = true;
-                Refresh();
-            }
         }
 
         private void ButtonMouse_Enter(object sender, EventArgs e)
@@ -151,11 +155,6 @@ namespace Mids_Reborn.UIv2
         private void MinimizeButton_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
-        }
-
-        private void MenuGrip_Click(object sender, EventArgs e)
-        {
-            menuSlideTimer.Start();
         }
 
         private int _movX;
@@ -300,9 +299,11 @@ namespace Mids_Reborn.UIv2
 
         public void FillPrimaryPowers(BindingList<IPower> primaryPowers)
         {
+            Primary_Powers.SelectionMode = SelectionMode.None;
             Primary_Powers.DisplayMember = "DisplayName";
             Primary_Powers.ValueMember = null;
             Primary_Powers.DataSource = primaryPowers;
+            Primary_Powers.SelectionMode = SelectionMode.MultiSimple;
         }
 
         public void FillSecondaryCombo(Archetype selectedArchetype)
@@ -351,7 +352,6 @@ namespace Mids_Reborn.UIv2
                     break;
                 case "Widow Teamwork":
                     selectedSec = DatabaseAPI.GetPowersetByName("Teamwork", Enums.ePowerSetType.Secondary);
-                    Console.WriteLine(selectedSec.SetName);
                     foreach (var power in selectedSec.Powers)
                         secondaryList.Add(power);
                     foreach (var power in selectedPowerset.Powers)
@@ -367,32 +367,49 @@ namespace Mids_Reborn.UIv2
 
         public void FillSecondaryPowers(BindingList<IPower> secondaryPowers)
         {
+            Secondary_Powers.SelectionMode = SelectionMode.None;
             Secondary_Powers.DisplayMember = "DisplayName";
             Secondary_Powers.ValueMember = null;
             Secondary_Powers.DataSource = secondaryPowers;
+            Secondary_Powers.SelectionMode = SelectionMode.MultiSimple;
         }
 
         public void FillAncillaryCombo(Archetype selectedArchetype)
         {
-            var powersets = selectedArchetype.Ancillary.Select(t => DatabaseAPI.Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t))).ToList();
-            cbAncillary.DisplayMember = "DisplayName";
-            cbAncillary.ValueMember = null;
-            cbAncillary.DataSource = powersets;
+            if (selectedArchetype.DisplayName != "Peacebringer" && selectedArchetype.DisplayName != "Warshade")
+            {
+                var powersets = selectedArchetype.Ancillary.Select(t => DatabaseAPI.Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t))).ToList();
+                cbAncillary.DisplayMember = "DisplayName";
+                cbAncillary.ValueMember = null;
+                cbAncillary.DataSource = powersets;
+            }
+            else
+            {
+                cbAncillary.DataSource = null;
+                cbAncillary.Items.Clear();
+            }
         }
 
         private void cbAncillary_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbAncillary.SelectedIndex < 0)
+            {
+                Ancillary_Powers.DataSource = new BindingList<string>();
+                Ancillary_Powers.Update();
+                Ancillary_Powers.Refresh();
                 return;
+            }
             var selectedPowerset = (Powerset)cbAncillary.Items[cbAncillary.SelectedIndex];
             FillAncillaryPowers(new BindingList<IPower>(selectedPowerset.Powers));
         }
 
         public void FillAncillaryPowers(BindingList<IPower> ancillaryPowers)
         {
+            Ancillary_Powers.SelectionMode = SelectionMode.None;
             Ancillary_Powers.DisplayMember = "DisplayName";
             Ancillary_Powers.ValueMember = null;
             Ancillary_Powers.DataSource = ancillaryPowers;
+            Ancillary_Powers.SelectionMode = SelectionMode.MultiSimple;
         }
 
         public void FillPool0Combo()
@@ -414,9 +431,11 @@ namespace Mids_Reborn.UIv2
 
         public void FillPool0Powers(BindingList<IPower> poolPowers)
         {
+            Pool0_Powers.SelectionMode = SelectionMode.None;
             Pool0_Powers.DisplayMember = "DisplayName";
             Pool0_Powers.ValueMember = null;
             Pool0_Powers.DataSource = poolPowers;
+            Pool0_Powers.SelectionMode = SelectionMode.MultiSimple;
         }
 
         public void FillPool1Combo()
@@ -438,9 +457,11 @@ namespace Mids_Reborn.UIv2
 
         public void FillPool1Powers(BindingList<IPower> poolPowers)
         {
+            Pool1_Powers.SelectionMode = SelectionMode.None;
             Pool1_Powers.DisplayMember = "DisplayName";
             Pool1_Powers.ValueMember = null;
             Pool1_Powers.DataSource = poolPowers;
+            Pool1_Powers.SelectionMode = SelectionMode.MultiSimple;
         }
         public void FillPool2Combo()
         {
@@ -461,9 +482,11 @@ namespace Mids_Reborn.UIv2
 
         public void FillPool2Powers(BindingList<IPower> poolPowers)
         {
+            Pool2_Powers.SelectionMode = SelectionMode.None;
             Pool2_Powers.DisplayMember = "DisplayName";
             Pool2_Powers.ValueMember = null;
             Pool2_Powers.DataSource = poolPowers;
+            Pool2_Powers.SelectionMode = SelectionMode.MultiSimple;
         }
         public void FillPool3Combo()
         {
@@ -484,9 +507,11 @@ namespace Mids_Reborn.UIv2
 
         public void FillPool3Powers(BindingList<IPower> poolPowers)
         {
+            Pool3_Powers.SelectionMode = SelectionMode.None;
             Pool3_Powers.DisplayMember = "DisplayName";
             Pool3_Powers.ValueMember = null;
             Pool3_Powers.DataSource = poolPowers;
+            Pool3_Powers.SelectionMode = SelectionMode.MultiSimple;
         }
 
         private void cbOrigin_SelectedIndexChanged(object sender, EventArgs e)

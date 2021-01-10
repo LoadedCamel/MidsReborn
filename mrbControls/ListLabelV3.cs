@@ -1219,9 +1219,7 @@ namespace mrbControls
                 Index = -1;
             }
 
-            public ListLabelItemV3(string iText, LLItemState iState, int inIDSet = -1, int iIDXPower = -1,
-                int inIDPower = -1,
-                string iStringTag = "", LLFontFlags iFont = LLFontFlags.Normal, LLTextAlign iAlign = LLTextAlign.Left)
+            public ListLabelItemV3(string iText, LLItemState iState, int inIDSet = -1, int iIDXPower = -1, int inIDPower = -1, string iStringTag = "", LLFontFlags iFont = LLFontFlags.Normal, LLTextAlign iAlign = LLTextAlign.Left)
             {
                 Text = "";
                 WrappedText = "";
