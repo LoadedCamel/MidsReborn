@@ -466,12 +466,10 @@ namespace mrbBase.Base.Data_Classes
                         if (!power.StatInclude)
                         {
                             power.Power.Active = false;
-                            //Console.WriteLine($"{powName} Acctive: {power.Power.Active}");
                         }
                         else if (power.StatInclude)
                         {
                             power.Power.Active = true;
-                            //Console.WriteLine($"{powName} Acctive: {power.Power.Active}");
                         }
 
                         break;
@@ -493,7 +491,7 @@ namespace mrbBase.Base.Data_Classes
 
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power == null || power.Power == null || !power.StatInclude) continue;
+                if (power?.Power == null || !power.StatInclude) continue;
                 switch (power.Power.PowerName.ToUpper())
                 {
                     case "TIME_CRAWL":
