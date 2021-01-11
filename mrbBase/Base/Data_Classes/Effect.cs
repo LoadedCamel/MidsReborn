@@ -2427,7 +2427,7 @@ namespace mrbBase.Base.Data_Classes
         }
         public bool CanInclude()
         {
-            if (MidsContext.Character == null | ActiveConditionals == null | ActiveConditionals?.Count == 0)
+            if (MidsContext.Character == null | (ActiveConditionals == null | ActiveConditionals?.Count == 0 && SpecialCase == Enums.eSpecialCase.None))
                 return true;
             #region SpecialCase Processing
             switch (SpecialCase)
@@ -2780,7 +2780,7 @@ namespace mrbBase.Base.Data_Classes
 
         public bool CanGrantPower()
         {
-            if (MidsContext.Character == null | ActiveConditionals == null | ActiveConditionals?.Count == 0)
+            if (MidsContext.Character == null | (ActiveConditionals == null | ActiveConditionals?.Count == 0 && SpecialCase == Enums.eSpecialCase.None))
                 return true;
             #region SpecialCase Processing
             switch (SpecialCase)
