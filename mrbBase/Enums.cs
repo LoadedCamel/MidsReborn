@@ -81,6 +81,84 @@ namespace mrbBase
             Pet
         }
 
+        public enum eAlphaOrder
+        {
+            Boost,
+            Core_Boost,
+            Radial_Boost,
+            Total_Core_Revamp,
+            Partial_Core_Revamp,
+            Total_Radial_Revamp,
+            Partial_Radial_Revamp,
+            Core_Paragon,
+            Radial_Paragon
+        }
+
+        public enum eJudgementOrder
+        {
+            Judgement,
+            Core_Judgement,
+            Radial_Judgement,
+            Total_Core_Judgement,
+            Partial_Core_Judgement,
+            Total_Radial_Judgement,
+            Partial_Radial_Judgement,
+            Core_Final_Judgement,
+            Radial_Final_Judgement
+        }
+
+        public enum eInterfaceOrder
+        {
+            Interface,
+            Core_Interface,
+            Radial_Interface,
+            Total_Core_Conversion,
+            Partial_Core_Conversion,
+            Total_Radial_Conversion,
+            Partial_Radial_Conversion,
+            Core_Flawless_Interface,
+            Radial_Flawless_Interface
+        }
+
+        public enum eLoreOrder
+        {
+            Ally,
+            Core_Ally,
+            Radial_Ally,
+            Total_Core_Improved_Ally,
+            Partial_Core_Improved_Ally,
+            Total_Radial_Improved_Ally,
+            Partial_Radial_Improved_Ally,
+            Core_Superior_Ally,
+            Radial_Superior_Ally
+        }
+
+        public enum eDestinyOrder
+        {
+            Invocation,
+            Core_Invocation,
+            Radial_Invocation,
+            Total_Core_Invocation,
+            Partial_Core_Invocation,
+            Total_Radial_Invocation,
+            Partial_Radial_Invocation,
+            Core_Epiphany,
+            Radial_Epiphany
+        }
+
+        public enum eHybridOrder
+        {
+            Genome,
+            Core_Genome,
+            Radial_Genome,
+            Total_Core_Graft,
+            Partial_Core_Graft,
+            Total_Radial_Graft,
+            Partial_Radial_Graft,
+            Core_Embodiment,
+            Radial_Embodiment
+        }
+
         public enum eCSVImport_Damage
         {
             None,
