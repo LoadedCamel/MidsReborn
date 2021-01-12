@@ -1207,10 +1207,31 @@ namespace mrbBase
         }
         #endregion
 
+        public static void CheckEhcBoosts()
+        {
+            foreach (var power in Database.Power)
+            {
+                if (power.GetPowerSet().SetType == Enums.ePowerSetType.Primary || power.GetPowerSet().SetType == Enums.ePowerSetType.Secondary || power.GetPowerSet().SetType == Enums.ePowerSetType.Pool || power.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary)
+                {
+                    var Boosts = new List<string>();
+                    if (power.BoostsAllowed.Length <= 0 && power.Enhancements.Length > 0)
+                    {
+                        foreach (var enh in power.Enhancements)
+                        {
+                            Boosts.Add(Enum.GetName(typeof(Enums.eBoosts), enh));
+                        }
+
+                        power.BoostsAllowed = Boosts.ToArray();
+                    }
+                }
+            }
+        }
+
         public static void SaveMainDatabase(ISerialize serializer)
         {
             //MergeDatabaseFile();
             //Task.Delay(1500);
+            CheckEhcBoosts();
             var path = Files.SelectDataFileSave(Files.MxdbFileDB);
 
             FileStream fileStream;

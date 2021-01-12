@@ -552,6 +552,47 @@ namespace mrbBase
             MyOwner = 134217728 // 0x08000000
         }
 
+        public enum eBoosts
+        {
+            None,
+            Accuracy_Boost,
+            Interrupt_Boost,
+            Confuse_Boost,
+            Damage_Boost,
+            Buff_Defense_Boost,
+            Debuff_Defense_Boost,
+            Recovery_Boost,
+            EnduranceDiscount_Boost,
+            Fear_Boost,
+            SpeedFlying_Boost,
+            Heal_Boost,
+            Hold_Boost,
+            Immobilized_Boost,
+            Intangible_Boost,
+            Jump_Boost,
+            Knockback_Boost,
+            Range_Boost,
+            Recharge_Boost,
+            Res_Damage_Boost,
+            SpeedRunning_Boost,
+            Sleep_Boost,
+            Slow_Boost,
+            Stunned_Boost,
+            Taunt_Boost,
+            Buff_ToHit_Boost,
+            Debuff_ToHit_Boost,
+            Magic_Boost,
+            Mutation_Boost,
+            Natural_Boost,
+            Science_Boost,
+            Technology_Boost,
+            Hamidon_Boost,
+            Incarnate_Lore_Boost,
+            Incarnate_Destiny_Boost,
+            Incarnate_Judgement_Boost,
+            Incarnate_Interface_Boost
+        }
+
         public enum eGridType
         {
             None,
