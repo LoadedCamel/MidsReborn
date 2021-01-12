@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/g2uaus540emwe3ox/branch/master?svg=true)](https://ci.appveyor.com/project/Crytilis/hero-designer/branch/crytilis-dev)
+[![Build status](https://ci.appveyor.com/api/projects/status/g2uaus540emwe3ox/branch/master?svg=true)](https://ci.appveyor.com/project/Crytilis/hero-designer/branch/dev)
 
 
 #### Active Development Team Members
