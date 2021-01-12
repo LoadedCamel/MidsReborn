@@ -1,6 +1,3 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/g2uaus540emwe3ox/branch/master?svg=true)](https://ci.appveyor.com/project/Crytilis/hero-designer/branch/dev)
-
-
 #### Active Development Team Members
 - Crytilis aka Metalios
 - Bopper
@@ -30,7 +27,7 @@ https://twitter.com/midsreborn
    * [Homebrew](https://brew.sh/)  
    * [Wine](https://www.winehq.org/)  
    * [Winetricks](https://brewformulas.org/Winetricks)  
-   * .NET 4.7.2 "Install with Winetricks"  
+   * .NET 4.8 "Install with Winetricks"  
    
    
 
@@ -38,7 +35,7 @@ https://twitter.com/midsreborn
 
    * [Wine](https://www.winehq.org/)  
    * [Winetricks](https://github.com/Winetricks/winetricks)  
-   * .NET 4.7.2 "Install with Winetricks"    
+   * .NET 4.8 "Install with Winetricks"    
 
 
 ### Notes
