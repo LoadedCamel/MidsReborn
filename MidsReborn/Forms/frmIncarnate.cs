@@ -325,9 +325,22 @@ namespace Mids_Reborn.Forms
             buttonArray[9] = OmegaButton;
             foreach (var button in buttonArray)
             {
-                button.IA = myParent.Drawing.pImageAttributes;
-                button.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
-                button.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+                if (button.Enabled)
+                {
+                    button.IA = myParent.Drawing.pImageAttributes;
+                    button.ImageOff = MidsContext.Character.IsHero()
+                        ? myParent.Drawing.bxPower[2].Bitmap
+                        : myParent.Drawing.bxPower[4].Bitmap;
+                    button.ImageOn = MidsContext.Character.IsHero()
+                        ? myParent.Drawing.bxPower[3].Bitmap
+                        : myParent.Drawing.bxPower[5].Bitmap;
+                }
+                else
+                {
+                    button.IA = myParent.Drawing.pImageAttributes;
+                    button.ImageOff = myParent.Drawing.bxPower[1].Bitmap;
+                    button.ImageOn = myParent.Drawing.bxPower[1].Bitmap;
+                }
             }
 
             BackColor = myParent.BackColor;
