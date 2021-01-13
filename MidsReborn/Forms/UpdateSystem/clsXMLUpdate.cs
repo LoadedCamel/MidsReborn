@@ -200,7 +200,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
         }
 
-        private enum UpdateType
+        public enum UpdateType
         {
             None,
             App,

@@ -5560,6 +5560,16 @@ namespace Mids_Reborn.Forms
             clsXMLUpdate.GoToGitHub();
         }
 
+        private void tsPatchNotes_Click(object sender, EventArgs e)
+        {
+            var patchNotes = new PatchNotes(this, false)
+            {
+                Type = clsXMLUpdate.UpdateType.None.ToString(),
+                Version = MidsContext.AppVersion.ToString()
+            };
+            patchNotes.ShowDialog();
+        }
+
         private void tsUpdateCheck_Click(object sender, EventArgs e)
         {
             clsXMLUpdate.CheckUpdate(this);

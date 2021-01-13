@@ -73,7 +73,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     {
                         builder.AppendFormat($"{result}\r\n");
                     }
-                    else if (result.Contains("## App") && !result.Contains($"[{Version}]"))
+                    else if (result.Contains($"## {Type}") && !result.Contains($"[{Version}]"))
                     {
                         break;
                     }
@@ -89,10 +89,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         private void closeUpdate_Click(object sender, EventArgs e)
         {
-            if (ReadNotes)
-            {
-                Close_Update(true);
-            }
+            Close_Update(ReadNotes);
         }
 
         private void Close_Update(bool update)

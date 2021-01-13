@@ -142,6 +142,7 @@ namespace Mids_Reborn.Forms
             this.HelpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsPatchNotes = new System.Windows.Forms.ToolStripMenuItem();
             this.tsBugCrytilis = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHCMRBForum = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
@@ -1191,6 +1192,7 @@ namespace Mids_Reborn.Forms
             this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsHelp,
+            this.tsPatchNotes,
             this.ToolStripSeparator10,
             this.tsBugCrytilis,
             this.tsHCMRBForum,
@@ -1208,6 +1210,13 @@ namespace Mids_Reborn.Forms
             // 
             this.tsHelp.Name = "tsHelp";
             this.tsHelp.Size = new System.Drawing.Size(266, 22);
+            //
+            // tsPatchNotes
+            //
+            this.tsPatchNotes.Name = "tsPatchNotes";
+            this.tsPatchNotes.Size = new System.Drawing.Size(266, 22);
+            this.tsPatchNotes.Text = "&View Patch Notes";
+            this.tsPatchNotes.Click += new System.EventHandler(this.tsPatchNotes_Click);
             // 
             // ToolStripSeparator10
             // 
@@ -2051,7 +2060,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsAdvFreshInstall;
         ToolStripMenuItem tsAdvResetTips;
         ToolStripMenuItem tsBugCrytilis;
-        //ToolStripMenuItem tsBugImaginary;
+        ToolStripMenuItem tsPatchNotes;
         ToolStripMenuItem tsClearAllEnh;
         ToolStripMenuItem tsConfig;
         ToolStripMenuItem tsKoFi;
