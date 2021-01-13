@@ -219,7 +219,7 @@ namespace Mids_Reborn.Forms
                 case "Interface":
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Cognitive"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Degenerative"));
-                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Diagmagnetic"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Diamagnetic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Gravitic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Paralytic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Preemptive"));
