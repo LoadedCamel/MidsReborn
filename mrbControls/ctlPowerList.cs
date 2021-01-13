@@ -15,7 +15,9 @@ namespace mrbControls
     public sealed partial class ctlPowerList : ListBox
     {
         public delegate void DrawPowerListItem(PowerListDrawItemEventArgs e);
+#pragma warning disable 67
         public event DrawPowerListItem DrawListItem;
+#pragma warning restore 67
 
         public Color SelectionColor { get; set; }
         public Color SelectionBackColor { get; set; } = Color.DarkOrange;

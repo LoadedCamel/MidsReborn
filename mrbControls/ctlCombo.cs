@@ -79,7 +79,6 @@ namespace mrbControls
                         comboImage = Image.FromFile(images.FirstOrDefault(i => i.Contains(primary.ImageName)) ?? throw new InvalidOperationException());
                         break;
                     case ComboBoxType.Secondary:
-                        string img = null;
                         imagesFolder = $"{Application.StartupPath}\\Images\\Powersets";
                         images = Directory.GetFiles(imagesFolder).ToList();
                         var secondary = (IPowerset)Items[e.Index];
