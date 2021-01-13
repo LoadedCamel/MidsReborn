@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -341,56 +342,58 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             string percentageSign;
             bool plusSignEnabled;
             string movementUnit;
-            
+            float valueMainBar = 0;
+            float valueBase = 0;
+            float valueOverCap = 0;
+
             switch (barGroup)
             {
                 case "Defense":
                     tooltipText =
-                        $"{trigger.ValueMainBar:##0.##}% {FormatVectorType(typeof(Enums.eDamage), vectorTypeIndex)} defense";
+                        $"{trigger.ValueMainBar:##0.###}% {FormatVectorType(typeof(Enums.eDamage), vectorTypeIndex)} defense";
                     break;
 
                 case "Resistance":
-                    tooltipText = trigger.ValueMainBar <= trigger.ValueOverCap
-                        ? $"{trigger.ValueMainBar:##0.##}% {FormatVectorType(typeof(Enums.eDamage), vectorTypeIndex)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
-                        : $"{trigger.ValueOverCap:##0.##}% {FormatVectorType(typeof(Enums.eDamage), vectorTypeIndex)} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)";
+                    tooltipText = trigger.ValueOverCap > trigger.ValueMainBar
+                        ? $"{trigger.ValueOverCap:##0.##}% {FormatVectorType(typeof(Enums.eDamage), vectorTypeIndex)} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
+                        : $"{trigger.ValueMainBar:##0.##}% {FormatVectorType(typeof(Enums.eDamage), vectorTypeIndex)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)";
                     break;
 
                 case "HP" when barIndex == (int) Enums.eBarType.MaxHPAbsorb:
-                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
-                                      ? $"{trigger.ValueMainBar:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap})"
-                                      : $"{trigger.ValueOverCap:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap}"
+                    tooltipText = (trigger.ValueOverCap > trigger.ValueMainBar
+                                      ? $"{trigger.ValueOverCap:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap} HP"
+                                      : $"{trigger.ValueMainBar:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap} HP)"
+                                      
                                   ) +
-                                  $"\r\nBase: {trigger.ValueBase:##0.##}" +
+                                  $"\r\nBase: {trigger.ValueBase:##0.##} HP" +
                                   (trigger.ValueOverlay1 != 0
                                       ? $"\r\nAbsorb: {trigger.ValueOverlay1:##0.##} ({(trigger.ValueOverlay1 / trigger.ValueBase * 100):##0.##}% of base HP)"
                                       : "");
                     break;
 
                 case "HP" when barIndex == (int)Enums.eBarType.Regeneration:
-                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
-                                      ? $"{trigger.ValueMainBar:##0.##}% {barTypesNames[barIndex]}"
-                                      : $"{trigger.ValueOverCap:##0.##}% {barTypesNames[barIndex]}, capped at {trigger.ValueMainBar:##0.##}%"
+                    tooltipText = (trigger.ValueOverCap > trigger.ValueMainBar
+                                      ? $"{trigger.ValueOverCap:##0.##}% {barTypesNames[barIndex]}, capped at {trigger.ValueMainBar:##0.##}%"
+                                      : $"{trigger.ValueMainBar:##0.##}% {barTypesNames[barIndex]}"
                                   ) +
                                   $" ({MidsContext.Character.DisplayStats.HealthRegenHPPerSec:##0.##} HP/s)" +
                                   (trigger.ValueBase > 0 ? $"\r\nBase: {trigger.ValueBase:##0.##}%" : "");
                     break;
 
                 case "Endurance" when barIndex == (int) Enums.eBarType.EndRec:
-                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
-                                      ? $"{trigger.ValueMainBar:##0.##}/s End. ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap})"
-                                      : $"{trigger.ValueOverCap:##0.##}/s End., capped at {MidsContext.Character.Archetype.RecoveryCap}"
+                    tooltipText = (trigger.ValueOverCap > trigger.ValueMainBar
+                                      ? $"{trigger.ValueOverCap:##0.##}/s End., capped at {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%"
+                                      : $"{trigger.ValueMainBar:##0.##}/s End. ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%)"
                                   ) +
                                   $"\r\nBase: {trigger.ValueBase:##0.##}/s";
                     break;
 
                 case "Endurance" when barIndex == (int) Enums.eBarType.EndUse:
-                    tooltipText =
-                        $"{trigger.ValueMainBar:##0.##}/s End. (Net gain: {displayStats.EnduranceRecoveryNet:##0.##}/s)";
+                    tooltipText = $"{trigger.ValueMainBar:##0.##}/s End. (Net gain: {displayStats.EnduranceRecoveryNet:##0.##}/s)";
                     break;
 
                 case "Endurance" when barIndex == (int) Enums.eBarType.MaxEnd:
-                    tooltipText =
-                        $"{trigger.ValueMainBar:##0.##} Maximum Endurance (base: {trigger.ValueBase:##0.##})";
+                    tooltipText = $"{trigger.ValueMainBar:##0.##} Maximum Endurance (base: {trigger.ValueBase:##0.##})";
                     break;
 
                 case "Movement":
@@ -398,9 +401,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     movementUnit = lv.FormatType == 5
                         ? clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat)
                         : clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
-                    float valueMainBar = 0;
-                    float valueBase = 0;
-                    float valueOverCap = 0;
+                    valueMainBar = 0;
+                    valueBase = 0;
+                    valueOverCap = 0;
                     switch (barIndex)
                     {
                         case (int)Enums.eBarType.RunSpeed:
@@ -450,8 +453,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     break;
 
                 case "Debuff Resistance":
-                    tooltipText =
-                        $"{trigger.ValueMainBar:##0.##}% {UcFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eEffectType), vectorTypeIndex)}";
+                    tooltipText = trigger.ValueOverCap > trigger.ValueMainBar
+                        ? $"{trigger.ValueOverCap:##0.##}% {UcFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eEffectType), vectorTypeIndex)}, capped at {trigger.ValueMainBar:##0.##}%"
+                        : $"{trigger.ValueMainBar:##0.##}% {UcFirst(trigger.Group)} to {FormatVectorType(typeof(Enums.eEffectType), vectorTypeIndex)}";
                     break;
 
                 // Triple bar main + base + overcap
@@ -460,12 +464,39 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     lv = FetchLv(barIndex);
                     percentageSign = lv.FormatType == 0 || lv.FormatType == 7 ? "%" : "";
                     plusSignEnabled = lv.FormatType == 2 || lv.FormatType == 7;
-                    tooltipText = (trigger.ValueMainBar <= trigger.ValueOverCap
-                                      ? $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}"
-                                      : $"{(plusSignEnabled && trigger.ValueOverCap > 0 ? "+" : "")}{trigger.ValueOverCap:##0.##}{percentageSign} {barTypesNames[barIndex]}, capped at {(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign}"
+                    movementUnit = lv.FormatType switch
+                    {
+                        5 => $" {clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat)}",
+                        6 => $" {clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat)}",
+                        _ => ""
+                    };
+                    switch (barIndex)
+                    {
+                        case (int)Enums.eBarType.StealthPvE:
+                            valueMainBar = displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat);
+                            valueBase = 0;
+                            valueOverCap = valueMainBar;
+                            break;
+
+                        case (int)Enums.eBarType.StealthPvP:
+                            valueMainBar = displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat);
+                            valueBase = 0;
+                            valueOverCap = valueMainBar;
+                            break;
+
+                        case (int)Enums.eBarType.Perception:
+                            valueMainBar = displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat);
+                            valueBase = displayStats.Distance(Statistics.BasePerception, MidsContext.Config.SpeedFormat);
+                            valueOverCap = displayStats.Distance(displayStats.Perception(true), MidsContext.Config.SpeedFormat);
+                            break;
+                    }
+
+                    tooltipText = (valueOverCap > valueMainBar
+                                      ? $"{(plusSignEnabled && valueOverCap > 0 ? "+" : "")}{valueOverCap:##0.##}{percentageSign}{movementUnit} {barTypesNames[barIndex]}, capped at {(plusSignEnabled && valueMainBar > 0 ? "+" : "")}{valueMainBar:##0.##}{percentageSign}"
+                                      : $"{(plusSignEnabled && valueMainBar > 0 ? "+" : "")}{valueMainBar:##0.##}{percentageSign}{movementUnit} {barTypesNames[barIndex]}"
                                   ) +
-                                  (trigger.ValueBase > 0
-                                      ? $"\r\nBase: {(plusSignEnabled && trigger.ValueBase > 0 ? "+" : "")}{trigger.ValueBase:##0.##}{percentageSign}"
+                                  (valueBase > 0
+                                      ? $"\r\nBase: {(plusSignEnabled && valueBase > 0 ? "+" : "")}{valueBase:##0.##}{percentageSign}{movementUnit}"
                                       : "");
                     break;
 
@@ -475,10 +506,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     lv = FetchLv(barIndex);
                     percentageSign = lv.FormatType == 0 || lv.FormatType == 7 ? "%" : "";
                     plusSignEnabled = lv.FormatType == 2 || lv.FormatType == 7;
-                    tooltipText = trigger.ValueMainBar <= trigger.ValueOverCap
-                        ? $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}"
-                        : $"{(plusSignEnabled && trigger.ValueOverCap > 0 ? "+" : "")}{trigger.ValueOverCap:##0.##}{percentageSign} {barTypesNames[barIndex]}, capped at {(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign}";
-
+                    tooltipText = trigger.ValueOverCap > trigger.ValueMainBar
+                        ? $"{(plusSignEnabled && trigger.ValueOverCap > 0 ? "+" : "")}{trigger.ValueOverCap:##0.##}{percentageSign} {barTypesNames[barIndex]}, capped at {(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign}"
+                        : $"{(plusSignEnabled && trigger.ValueMainBar > 0 ? "+" : "")}{trigger.ValueMainBar:##0.##}{percentageSign} {barTypesNames[barIndex]}";
                     break;
 
                 // Dual bar main + base
@@ -1126,6 +1156,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             #region Bars setup
 
+            Debug.WriteLine($"SetBarsBulk: {string.Join(", ", DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray())}");
+
             SetBarsBulk(
                 barsList,
                 "Defense",
@@ -1143,18 +1175,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetBarSingle(Enums.eBarType.Regeneration,
                 displayStats.HealthRegenPercent(false),
                 100, //MidsContext.Character.Archetype.BaseRegen * 100,
-                displayStats.HealthRegenPercent(true));
+                displayStats.HealthRegenPercent(true)
+            );
 
             SetBarSingle(Enums.eBarType.MaxHPAbsorb,
                 displayStats.HealthHitpointsNumeric(false),
                 MidsContext.Character.Archetype.Hitpoints,
                 displayStats.HealthHitpointsNumeric(true),
-                Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints));
+                Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints)
+            );
 
             SetBarSingle(Enums.eBarType.EndRec,
                 displayStats.EnduranceRecoveryNumeric,
                 MidsContext.Character.Archetype.BaseRecovery * displayStats.EnduranceMaxEnd / 60,
-                displayStats.EnduranceRecoveryNumericUncapped);
+                displayStats.EnduranceRecoveryNumericUncapped
+            );
             SetBarSingle(Enums.eBarType.EndUse, displayStats.EnduranceUsage);
             SetBarSingle(Enums.eBarType.MaxEnd, displayStats.EnduranceMaxEnd, 100);
 
@@ -1187,7 +1222,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, true),
                     displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
                     displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, true)
-                });
+                }
+            );
 
             ///////////////////////////////
 
@@ -1211,7 +1247,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     MidsContext.Character.Totals.StealthPvE,
                     MidsContext.Character.Totals.StealthPvP,
                     displayStats.Perception(true)
-                });
+                }
+            );
 
             ///////////////////////////////
 
@@ -1220,8 +1257,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetBarSingle(Enums.eBarType.Accuracy, displayStats.BuffAccuracy);
             SetBarSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true));
             SetBarSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
-            SetBarSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel,
-                MidsContext.Character.Archetype.BaseThreat * 100);
+            SetBarSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel, MidsContext.Character.Archetype.BaseThreat * 100);
             SetBarSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
 
             ///////////////////////////////
@@ -1229,19 +1265,33 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetBarsBulk(
                 barsList,
                 "Status Protection",
-                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray());
+                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray()
+            );
 
             SetBarsBulk(
                 barsList,
                 "Status Resistance",
-                MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
+                MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray()
+            );
 
             ///////////////////////////////
+
+            var cappedDebuffRes = DebuffEffectsList.Select(e => Math.Min(
+                    e == Enums.eEffectType.Defense
+                        ? Statistics.MaxDefenseDebuffRes
+                        : Statistics.MaxGenericDebuffRes,
+                    MidsContext.Character.Totals.DebuffRes[(int) e]))
+                .ToArray();
+
+            var uncappedDebuffRes = DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray();
 
             SetBarsBulk(
                 barsList,
                 "Debuff Resistance",
-                DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray());
+                cappedDebuffRes,
+                uncappedDebuffRes,
+                false
+            );
 
             #endregion
 
@@ -1276,7 +1326,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     displayStats.MovementJumpSpeed(MidsContext.Config.SpeedFormat, false),
                     displayStats.MovementJumpHeight(MidsContext.Config.SpeedFormat),
                     displayStats.MovementFlySpeed(MidsContext.Config.SpeedFormat, false)
-                });
+                }
+            );
 
             ///////////////////////////////
 
@@ -1288,7 +1339,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     displayStats.Distance(MidsContext.Character.Totals.StealthPvE, MidsContext.Config.SpeedFormat),
                     displayStats.Distance(MidsContext.Character.Totals.StealthPvP, MidsContext.Config.SpeedFormat),
                     displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat)
-                });
+                }
+            );
 
             ///////////////////////////////
 
@@ -1305,19 +1357,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetLvsBulk(
                 lvList,
                 "Status Protection",
-                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray());
+                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray()
+            );
 
             SetLvsBulk(
                 lvList,
                 "Status Resistance",
-                MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray());
+                MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToArray()
+            );
 
             ///////////////////////////////
 
             SetLvsBulk(
                 lvList,
                 "Debuff Resistance",
-                DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToArray());
+                DebuffEffectsList.Select(e => Math.Min(
+                        e == Enums.eEffectType.Defense
+                            ? Statistics.MaxDefenseDebuffRes
+                            : Statistics.MaxGenericDebuffRes,
+                        MidsContext.Character.Totals.DebuffRes[(int)e]))
+                    .ToArray()
+            );
 
             #endregion
 

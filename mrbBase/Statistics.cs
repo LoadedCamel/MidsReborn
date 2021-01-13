@@ -16,6 +16,8 @@ namespace mrbBase
         public const float BaseFlySpeed = 31.5f;
         internal const float BaseMagic = 1.666667f;
         public const float BasePerception = 500f;
+        public const float MaxDefenseDebuffRes = 95f;
+        public const float MaxGenericDebuffRes = 100f; // All but defense that has a specific value
         private readonly Character _character;
 
         internal Statistics(Character character)
