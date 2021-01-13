@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using mrbBase;
@@ -107,7 +110,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void alphaBtn_ButtonClicked()
-
         {
             var alphaBtn = this.alphaBtn;
             SetPowerSet("Alpha", ref alphaBtn);
@@ -115,7 +117,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void ChangedScrollFrameContents()
-
         {
             VScrollBar1.Value = 0;
             VScrollBar1.Maximum = (int) Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double) Panel1.Height));
@@ -123,20 +124,151 @@ namespace Mids_Reborn.Forms
         }
 
         private void destinyBtn_ButtonClicked()
-
         {
             var destinyBtn = this.destinyBtn;
             SetPowerSet("Destiny", ref destinyBtn);
             this.destinyBtn = destinyBtn;
         }
 
-        private void FillLists()
+        private List<IPower> ParseIncarnate(List<IPower> powerList, string order, string name)
         {
+            var pairList = new List<KeyValuePair<int, IPower>>();
+            var tList = powerList.FindAll(x => x.DisplayName.Contains(name));
+            var outList = new List<IPower>();
+            int pos = 0;
+            foreach (var power in tList)
+            {
+                string[] nSplit = power.DisplayName.Split();
+                var value = power.DisplayName.Replace($"{nSplit[0]} ", "");
+                switch (order)
+                {
+                    case "Alpha":
+                        pos = (int)Enum.Parse(typeof(Enums.eAlphaOrder), value.Replace(" ", "_"));
+                        break;
+                    case "Judgement":
+                        pos = (int)Enum.Parse(typeof(Enums.eJudgementOrder), value.Replace(" ", "_"));
+                        break;
+                    case "Interface":
+                        pos = (int)Enum.Parse(typeof(Enums.eInterfaceOrder), value.Replace(" ", "_"));
+                        break;
+                    case "Lore":
+                        switch (name)
+                        {
+                            case "Banished Pantheon":
+                                value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", "");
+                                break;
+                            case "Knives of Vengeance":
+                                value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} {nSplit[2]} ", "");
+                                break;
+                            case "Polar Lights":
+                                value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", "");
+                                break;
+                            case "Robotic Drones":
+                                value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", "");
+                                break;
+                            case "Storm Elemental":
+                                value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", "");
+                                break;
+                            case "Talons of Vengeance":
+                                value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} {nSplit[2]} ", "");
+                                break;
+                        }
+                        pos = (int)Enum.Parse(typeof(Enums.eLoreOrder), value.Replace(" ", "_"));
+                        break;
+                    case "Destiny":
+                        pos = (int)Enum.Parse(typeof(Enums.eDestinyOrder), value.Replace(" ", "_"));
+                        break;
+                    case "Hybrid":
+                        pos = (int)Enum.Parse(typeof(Enums.eHybridOrder), value.Replace(" ", "_"));
+                        break;
+                }
+                pairList.Add(new KeyValuePair<int, IPower>(pos, power));
+            }
+
+            var oList = pairList.OrderBy(x => x.Key);
+            foreach (var power in oList)
+            {
+                outList.Add(power.Value);
+            }
+
+            return outList;
+        }
+
+        private void FillLists(string setName)
+        {
+            var newPowerList = new List<IPower>();
+            switch (setName)
+            {
+                case "Alpha":
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Agility"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Cardiac"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Intuition"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Musculature"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Nerve"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Resilient"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Spiritual"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Vigor"));
+                    break;
+                case "Judgement":
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Cryonic"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Ion"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Pyronic"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Void"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Vorpal"));
+                    break;
+                case "Interface":
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Cognitive"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Degenerative"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Diagmagnetic"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Gravitic"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Paralytic"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Preemptive"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Reactive"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Spectral"));
+                    break;
+                case "Lore":
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Arachnos"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Banished Pantheon"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Carnival"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Cimeroran"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Clockwork"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "IDF"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Knives of Vengeance"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Longbow"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Nemesis"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Phantoms"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Polar Lights"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Rikti"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Robotic Drones"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Rularuu"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Seers"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Storm Elemental"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Talons of Vengeance"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Tsoo"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Vanguard"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Warworks"));
+                    break;
+                case "Destiny":
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Ageless"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Barrier"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Clarion"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Incandescence"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Rebirth"));
+                    break;
+                case "Hybrid":
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Assault"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Control"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Melee"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Support"));
+                    break;
+            }
+
+            myPowers = newPowerList.ToArray();
             LLLeft.SuspendRedraw = true;
             LLRight.SuspendRedraw = true;
             LLLeft.ClearItems();
             LLRight.ClearItems();
-            var keys = new int[myPowers.Length - 1 + 1];
+            /*var keys = new int[myPowers.Length - 1 + 1];
             if (myPowers.Length < 2)
             {
                 var num = myPowers.Length - 1;
@@ -156,22 +288,20 @@ namespace Mids_Reborn.Forms
                     keys[index] = myPowers[index].StaticIndex;
             }
 
-            Array.Sort(keys, myPowers);
+            Array.Sort(keys, myPowers);*/
             var num1 = myPowers.Length - 1;
             for (var index = 0; index <= num1; ++index)
             {
-                var iState = !MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index])
-                    ? myPowers[index].DisplayName != "Nothing" ? ListLabelV3.LLItemState.Enabled :
-                    ListLabelV3.LLItemState.Disabled
-                    : ListLabelV3.LLItemState.Selected;
-                var iItem = !MidsContext.Config.RtFont.PairedBold
-                    ? new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState)
-                    : new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState, -1, -1, -1, "",
-                        ListLabelV3.LLFontFlags.Bold);
-                if (index >= myPowers.Length / 2.0)
-                    LLRight.AddItem(iItem);
-                else
+                var iState = !MidsContext.Character.CurrentBuild.PowerUsed(myPowers[index]) ? myPowers[index].DisplayName != "Nothing" ? ListLabelV3.LLItemState.Enabled : ListLabelV3.LLItemState.Disabled : ListLabelV3.LLItemState.Selected;
+                var iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState) : new ListLabelV3.ListLabelItemV3(myPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabelV3.LLFontFlags.Bold);
+                if (index < myPowers.Length / 2)
+                {
                     LLLeft.AddItem(iItem);
+                }
+                else
+                {
+                    LLRight.AddItem(iItem);
+                }
             }
 
             LLLeft.SuspendRedraw = false;
@@ -195,9 +325,22 @@ namespace Mids_Reborn.Forms
             buttonArray[9] = OmegaButton;
             foreach (var button in buttonArray)
             {
-                button.IA = myParent.Drawing.pImageAttributes;
-                button.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[2].Bitmap : myParent.Drawing.bxPower[4].Bitmap;
-                button.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+                if (button.Enabled)
+                {
+                    button.IA = myParent.Drawing.pImageAttributes;
+                    button.ImageOff = MidsContext.Character.IsHero()
+                        ? myParent.Drawing.bxPower[2].Bitmap
+                        : myParent.Drawing.bxPower[4].Bitmap;
+                    button.ImageOn = MidsContext.Character.IsHero()
+                        ? myParent.Drawing.bxPower[3].Bitmap
+                        : myParent.Drawing.bxPower[5].Bitmap;
+                }
+                else
+                {
+                    button.IA = myParent.Drawing.pImageAttributes;
+                    button.ImageOff = myParent.Drawing.bxPower[1].Bitmap;
+                    button.ImageOn = myParent.Drawing.bxPower[1].Bitmap;
+                }
             }
 
             BackColor = myParent.BackColor;
@@ -219,11 +362,10 @@ namespace Mids_Reborn.Forms
                     PopUp.Colors.Text, 0.9f);
             PopInfo.SetPopup(iPopup);
             ChangedScrollFrameContents();
-            FillLists();
+            FillLists("Alpha");
         }
 
         private void GenesisButton_ButtonClicked()
-
         {
             var genesisButton = GenesisButton;
             SetPowerSet("Genesis", ref genesisButton);
@@ -231,7 +373,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void hybridBtn_ButtonClicked()
-
         {
             var hybridBtn = this.hybridBtn;
             SetPowerSet("Hybrid", ref hybridBtn);
@@ -239,14 +380,12 @@ namespace Mids_Reborn.Forms
         }
 
         private void ibClose_ButtonClicked()
-
         {
             Close();
         }
 
         [DebuggerStepThrough]
         private void interfaceBtn_ButtonClicked()
-
         {
             var interfaceBtn = this.interfaceBtn;
             SetPowerSet("Interface", ref interfaceBtn);
@@ -254,7 +393,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void judgementBtn_ButtonClicked()
-
         {
             var judgementBtn = this.judgementBtn;
             SetPowerSet("Judgement", ref judgementBtn);
@@ -262,7 +400,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void lblLock_Click(object sender, EventArgs e)
-
         {
             Locked = false;
             lblLock.Visible = false;
@@ -539,7 +676,7 @@ namespace Mids_Reborn.Forms
                 button1.Checked = false;
             button.Checked = true;
             myPowers = DatabaseAPI.GetPowersetByID(Setname, Enums.ePowerSetType.Incarnate).Powers;
-            FillLists();
+            FillLists(Setname);
         }
 
         private void StanceButton_ButtonClicked()
@@ -576,7 +713,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void VitaeButton_ButtonClicked()
-
         {
             var vitaeButton = VitaeButton;
             SetPowerSet("Vitae", ref vitaeButton);
@@ -584,7 +720,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
-
         {
             if ((PopInfo.lHeight > (double) Panel1.Height) & (VScrollBar1.Maximum > VScrollBar1.LargeChange))
                 PopInfo.ScrollY = (float) (VScrollBar1.Value /

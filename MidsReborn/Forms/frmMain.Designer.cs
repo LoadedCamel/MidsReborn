@@ -142,6 +142,7 @@ namespace Mids_Reborn.Forms
             this.HelpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsPatchNotes = new System.Windows.Forms.ToolStripMenuItem();
             this.tsBugCrytilis = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHCMRBForum = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
@@ -202,6 +203,7 @@ namespace Mids_Reborn.Forms
             this.ibTotals = new ImageButton();
             this.ibSlotLevels = new ImageButton();
             this.ibTeam = new ImageButton();
+            this.ibMode = new ImageButton();
             this.ibSets = new ImageButton();
             this.ibAccolade = new ImageButton();
             this.MenuBar.SuspendLayout();
@@ -224,6 +226,7 @@ namespace Mids_Reborn.Forms
             // cbAT
             // 
             this.cbAT.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cbAT.ForeColor = System.Drawing.Color.Black;
             this.cbAT.DisplayMember = "DisplayName";
             this.cbAT.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbAT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1065,6 +1068,7 @@ namespace Mids_Reborn.Forms
             this.tsViewIOLevels,
             this.tsViewRelative,
             this.tsViewSlotLevels,
+            this.tsViewRelativeAsSigns,
             this.ToolStripSeparator2,
             this.tsViewActualDamage_New,
             this.tsViewDPS_New,
@@ -1188,6 +1192,7 @@ namespace Mids_Reborn.Forms
             this.HelpToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.HelpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsHelp,
+            this.tsPatchNotes,
             this.ToolStripSeparator10,
             this.tsBugCrytilis,
             this.tsHCMRBForum,
@@ -1205,6 +1210,13 @@ namespace Mids_Reborn.Forms
             // 
             this.tsHelp.Name = "tsHelp";
             this.tsHelp.Size = new System.Drawing.Size(266, 22);
+            //
+            // tsPatchNotes
+            //
+            this.tsPatchNotes.Name = "tsPatchNotes";
+            this.tsPatchNotes.Size = new System.Drawing.Size(266, 22);
+            this.tsPatchNotes.Text = "&View Patch Notes";
+            this.tsPatchNotes.Click += new System.EventHandler(this.tsPatchNotes_Click);
             // 
             // ToolStripSeparator10
             // 
@@ -1432,6 +1444,7 @@ namespace Mids_Reborn.Forms
             // topPanel
             // 
             this.topPanel.Controls.Add(this.lblHero);
+            this.topPanel.Controls.Add(this.ibTeam);
             this.topPanel.Controls.Add(this.heroVillain);
             this.topPanel.Controls.Add(this.petsButton);
             this.topPanel.Controls.Add(this.tempPowersButton);
@@ -1775,8 +1788,8 @@ namespace Mids_Reborn.Forms
             this.llPool3.Location = new System.Drawing.Point(328, 530);
             this.llPool3.MaxHeight = 500;
             this.llPool3.Name = "llPool3";
-            this.llPool3.PaddingX = 1;
-            this.llPool3.PaddingY = 1;
+            this.llPool3.PaddingX = 2;
+            this.llPool3.PaddingY = 2;
             this.llPool3.Scrollable = true;
             this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool3.ScrollBarWidth = 8;
@@ -1800,8 +1813,8 @@ namespace Mids_Reborn.Forms
             this.llPool2.Location = new System.Drawing.Point(328, 422);
             this.llPool2.MaxHeight = 500;
             this.llPool2.Name = "llPool2";
-            this.llPool2.PaddingX = 1;
-            this.llPool2.PaddingY = 1;
+            this.llPool2.PaddingX = 2;
+            this.llPool2.PaddingY = 2;
             this.llPool2.Scrollable = true;
             this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool2.ScrollBarWidth = 8;
@@ -1911,12 +1924,13 @@ namespace Mids_Reborn.Forms
             this.ibSlotLevels.Toggle = true;
             this.ibSlotLevels.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibSlotLevels_ButtonClicked);
             // 
-            // ibMode
+            // ibTeam
             // 
+            this.ibTeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ibTeam.Checked = false;
             this.ibTeam.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.ibTeam.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibTeam.Location = new System.Drawing.Point(244, 80);
+            this.ibTeam.Location = new System.Drawing.Point(602, 3);
             this.ibTeam.Name = "ibTeam";
             this.ibTeam.Size = new System.Drawing.Size(105, 22);
             this.ibTeam.TabIndex = 100;
@@ -1924,6 +1938,20 @@ namespace Mids_Reborn.Forms
             this.ibTeam.TextOn = "Alt Text";
             this.ibTeam.Toggle = false;
             this.ibTeam.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibTeam_ButtonClicked);
+            // 
+            // ibMode
+            // 
+            this.ibMode.Checked = false;
+            this.ibMode.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibMode.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.ibMode.Location = new System.Drawing.Point(244, 80);
+            this.ibMode.Name = "ibTeam";
+            this.ibMode.Size = new System.Drawing.Size(105, 22);
+            this.ibMode.TabIndex = 122;
+            this.ibMode.TextOff = "Normal";
+            this.ibMode.TextOn = "Respec";
+            this.ibMode.Toggle = false;
+            this.ibMode.ButtonClicked += new ImageButton.ButtonClickedEventHandler(this.ibMode_ButtonClicked);
             // 
             // ibSets
             // 
@@ -1963,7 +1991,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.lblLockedSecondary);
             this.Controls.Add(this.ibTotals);
             this.Controls.Add(this.ibSlotLevels);
-            this.Controls.Add(this.ibTeam);
+            this.Controls.Add(this.ibMode);
             this.Controls.Add(this.ibSets);
             this.Controls.Add(this.pbDynMode);
             this.Controls.Add(this.topPanel);
@@ -2032,7 +2060,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsAdvFreshInstall;
         ToolStripMenuItem tsAdvResetTips;
         ToolStripMenuItem tsBugCrytilis;
-        //ToolStripMenuItem tsBugImaginary;
+        ToolStripMenuItem tsPatchNotes;
         ToolStripMenuItem tsClearAllEnh;
         ToolStripMenuItem tsConfig;
         ToolStripMenuItem tsKoFi;
@@ -2124,6 +2152,7 @@ namespace Mids_Reborn.Forms
         ctlPopUp I9Popup;
         ImageButton ibAccolade;
         ImageButton ibTeam;
+        ImageButton ibMode;
         ImageButton ibPopup;
         ImageButton ibPvX;
         ImageButton ibRecipe;
@@ -2163,8 +2192,8 @@ namespace Mids_Reborn.Forms
         MenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
         PictureBox pbDynMode;
-        PictureBox pnlGFX;
-        FlowLayoutPanel pnlGFXFlow;
+        public PictureBox pnlGFX;
+        public FlowLayoutPanel pnlGFXFlow;
         ToolStripMenuItem SetAllIOsToDefault35ToolStripMenuItem;
         ToolStripMenuItem SlotsToolStripMenuItem;
         ToolStripMenuItem TemporaryPowersWindowToolStripMenuItem;

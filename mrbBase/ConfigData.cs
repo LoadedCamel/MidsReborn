@@ -128,7 +128,7 @@ namespace mrbBase
         public bool DiscordAuthorized { get; set; }
         public int Registered { get; set; } = 0;
         public bool DisableDesaturateInherent { get; set; }
-        public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Dynamic;
+        public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Normal;
         public Enums.dmItem BuildOption { get; set; } = Enums.dmItem.Slot;
         public bool DisableShowPopup { get; set; }
         public bool DisableAlphaPopup { get; set; }
@@ -356,6 +356,10 @@ namespace mrbBase
                     RtFont.ColorWarning = reader.ReadRGB();
                     RtFont.ColorPlName = reader.ReadRGB();
                     RtFont.ColorPlSpecial = reader.ReadRGB();
+                    RtFont.PowersSelectBase = reader.ReadSingle();
+                    RtFont.PowersSelectBold = reader.ReadBoolean();
+                    RtFont.PowersBase = reader.ReadSingle();
+                    RtFont.PowersBold = reader.ReadBoolean();
                 }
 
                 if (version >= 1.22000002861023)
@@ -641,6 +645,10 @@ namespace mrbBase
             public List<Color> ColorList { get; set; }
             public bool PairedBold { get; set; }
             public float PairedBase { get; set; }
+            public bool PowersSelectBold { get; set; }
+            public float PowersSelectBase { get; set; }
+            public bool PowersBold { get; set; }
+            public float PowersBase { get; set; }
 
             public void Assign(FontSettings iFs)
             {
@@ -667,6 +675,10 @@ namespace mrbBase
                 ColorList = iFs.ColorList;
                 PairedBold = iFs.PairedBold;
                 PairedBase = iFs.PairedBase;
+                PowersSelectBase = iFs.PowersSelectBase;
+                PowersSelectBold = iFs.PowersSelectBold;
+                PowersBase = iFs.PowersBase;
+                PowersBold = iFs.PowersBold;
             }
 
             public void SetDefault()
@@ -698,6 +710,10 @@ namespace mrbBase
                 };
                 PairedBase = 8.25f;
                 PairedBold = false;
+                PowersSelectBase = 8.25f;
+                PowersSelectBold = false;
+                PowersBase = 9.25f;
+                PowersBold = true;
             }
         }
     }

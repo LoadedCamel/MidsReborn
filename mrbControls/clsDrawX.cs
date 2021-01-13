@@ -23,19 +23,54 @@ namespace mrbControls
 
         private const string NewSlotName = "Newslot.png";
 
+        // Horizontal space between power slots
         private const int PaddingX = 15;
 
+        // Vertical space between power slots
         private const int PaddingY = 25;
 
+        // Vertical offset for enhancement slots
         public const int OffsetY = 23;
 
-        private const int EnhOffsetX = 30;
+        // Horizontal offset for enhancement slots
+        private const int OffsetX = 30;
 
         private const int OffsetInherent = 10;
 
-        private const int vcPowers = 24;
+        // Same size as target drawing area
+        private Size szBuffer;
 
-        private const int icoOffset = 32;
+        // Size of a power slot
+        public Size SzPower { get; }
+
+        // Size of an enhancement slot
+        public Size szSlot;
+
+        // Surface to draw on before combining to display
+        public ExtendedBitmap bxBuffer;
+
+        // List of disabled, empty, filled, waiting
+        public readonly List<ExtendedBitmap> bxPower;
+
+        // The unplaced enhancement slot image
+        private readonly ExtendedBitmap bxNewSlot;
+
+        // Graphics object of target drawing surface (The panel)
+        private Graphics gTarget;
+
+
+        // Column variables
+        private const int vcPowers = 24;
+        private int vcCols;
+        private int vcRowsPowers;
+
+        // Recoloring variables
+        private ColorMatrix pColorMatrix;
+        public ImageAttributes pImageAttributes;
+
+        // Scaling variables
+        private float ScaleValue;
+        public bool Scaling { get; private set; }
 
         public static readonly float[][] heroMatrix =
         {
@@ -60,7 +95,6 @@ namespace mrbControls
                 0f, 0f, 0f, 0f, 1f
             }
         };
-
         private static readonly float[][] villainMatrix =
         {
             new[]
@@ -84,41 +118,15 @@ namespace mrbControls
                 0, 0, 0, 0, 1f
             }
         };
-
-        private readonly ExtendedBitmap bxNewSlot;
-
-        //public readonly ExtendedBitmap[] bxPower;
-        public readonly List<ExtendedBitmap> bxPower;
-
+        private const int icoOffset = 32;
         private Color BackColor;
-
-        public ExtendedBitmap bxBuffer;
-
         private Control cTarget;
-
-        private Font DefaultFont;
-
-        private Graphics gTarget;
-
+        private Font _defaultFont;
         public int Highlight;
-
         public Enums.eInterfaceMode InterfaceMode;
-
-        private ColorMatrix pColorMatrix;
-
-        public ImageAttributes pImageAttributes;
-
+        
         //bool VillainColor;
-
-        private float ScaleValue;
-
-        private Size szBuffer;
-
-        public Size szSlot;
-
-        private int vcCols;
-        private int vcRowsPowers;
-
+        
         public clsDrawX(Control iTarget)
         {
             InterfaceMode = 0;
@@ -173,7 +181,7 @@ namespace mrbControls
                 gTarget.PageUnit = GraphicsUnit.Pixel;
                 cTarget = iTarget;
                 //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-                DefaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+                _defaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
                 BackColor = iTarget.BackColor;
                 if (szBuffer.Height < cTarget.Height)
                 {
@@ -182,16 +190,9 @@ namespace mrbControls
             }
         }
 
-        // Token: 0x1700000A RID: 10
-        // (get) Token: 0x0600001B RID: 27 RVA: 0x000022E0 File Offset: 0x000004E0
-        public bool EpicColumns => MidsContext.Character != null && MidsContext.Character.Archetype != null &&
-                                   MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic;
+        public bool EpicColumns => MidsContext.Character != null && MidsContext.Character.Archetype != null && MidsContext.Character.Archetype.ClassType == Enums.eClassType.HeroEpic;
 
-        // Token: 0x1700000B RID: 11
-        // (get) Token: 0x0600001C RID: 28 RVA: 0x0000231C File Offset: 0x0000051C
-        public bool Scaling { get; private set; }
-
-        public int Columns
+       public int Columns
         {
             set
             {
@@ -215,8 +216,6 @@ namespace mrbControls
             }
         }
 
-        public Size SzPower { get; }
-
         public void ReInit(Control iTarget)
         {
             gTarget = iTarget.CreateGraphics();
@@ -229,7 +228,7 @@ namespace mrbControls
             gTarget.PageUnit = GraphicsUnit.Pixel;
             cTarget = iTarget;
             //DefaultFont = new Font(iTarget.Font.FontFamily, iTarget.Font.Size, FontStyle.Bold, iTarget.Font.Unit);
-            DefaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            _defaultFont = new Font("Arial", 12.5f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             BackColor = iTarget.BackColor;
         }
 
@@ -299,7 +298,7 @@ namespace mrbControls
         {
             checked
             {
-                for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
+                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
                     if (MidsContext.Character.CanPlaceSlot & (Highlight == i))
                     {
                         var currentBuild = MidsContext.Character.CurrentBuild;
@@ -348,27 +347,22 @@ namespace mrbControls
         {
             unchecked
             {
-                Enums.eType enhType = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID;
+                var enhType = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID;
                 if (enhType == Enums.eType.SetO || enhType == Enums.eType.InventO)
                 {
                     var iValue2 = rect;
                     iValue2.Y -= 5f;
-                    iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                    string relativeLevelNumeric;
-                    string enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
-                    bool catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh);
+                    iValue2.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
+                    var relativeLevelNumeric = "";
+                    var enhInternalName = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].UID;
+                    var catalystSet = DatabaseAPI.EnhHasCatalyst(enhInternalName) || DatabaseAPI.EnhIsNaturallyAttuned(slot.Enhancement.Enh);
                     // Catalysed enhancements take character level no matter what.
                     // Game does not allow boosters over enhancement catalysts.
-                    // [Zed] Note: I am not sure yet if catalysed enhancements are considered having the level of the user.
-                    // Meaning a max level 30 IO --MAY-- have the stats of a level 50 one, even if it doesn't exist.
-                    if (catalystSet || slot.Enhancement.RelativeLevel <= Enums.eEnhRelative.Even)
-                    {
-                        relativeLevelNumeric = string.Empty;
-                    }
-                    else
+                    if (!catalystSet & slot.Enhancement.RelativeLevel > Enums.eEnhRelative.Even & MidsContext.Config.ShowEnhRel)
                     {
                         relativeLevelNumeric = Enums.GetRelativeString(slot.Enhancement.RelativeLevel, false);
                     }
+
                     // If enhancement has boosters, need to stretch the level drawing zone a little,
                     // or relative level doesn't fit in.
                     if (!string.IsNullOrEmpty(relativeLevelNumeric))
@@ -393,7 +387,7 @@ namespace mrbControls
                 {
                     var iValue2 = rect;
                     iValue2.Y -= 5f;
-                    iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
+                    iValue2.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
                     Color color;
 
                     if (slot.Enhancement.RelativeLevel == 0)
@@ -449,9 +443,9 @@ namespace mrbControls
 
                     if (!string.IsNullOrEmpty(relativeString))
                     {
-                        RectangleF bounds2 = ScaleDown(iValue2);
-                        Color outline2 = Color.FromArgb(128, 0, 0, 0);
-                        float outlineSpace2 = 1f;
+                        var bounds2 = ScaleDown(iValue2);
+                        var outline2 = Color.FromArgb(128, 0, 0, 0);
+                        var outlineSpace2 = 1f;
 
                         DrawOutlineText(relativeString, bounds2, color, outline2, font, outlineSpace2, g);
                     }
@@ -461,7 +455,6 @@ namespace mrbControls
 
         public Point DrawPowerSlot(ref PowerEntry iSlot, bool singleDraw = false)
         {
-
             Pen pen = new Pen(Color.FromArgb(128, 0, 0, 0), 1f);
             string text = string.Empty;
             string text2 = string.Empty;
@@ -471,24 +464,25 @@ namespace mrbControls
                 Trimming = StringTrimming.None
             };
             Pen pen2 = new Pen(Color.Black);
-            Rectangle rectangle = default;
-            //Font font = new Font(DefaultFont.FontFamily, FontScale(DefaultFont.SizeInPoints), DefaultFont.Style, GraphicsUnit.Point);
-            Font font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            Rectangle toggleRect = default;
+            Rectangle procRect = default;
+            var style = !MidsContext.Config.RtFont.PowersBold ? FontStyle.Regular : FontStyle.Bold;
+            var font = MidsContext.Config.RtFont.PowersBase > 0 ? new Font(_defaultFont.FontFamily, FontScale(MidsContext.Config.RtFont.PowersBase), style, GraphicsUnit.Point, 0) : new Font(_defaultFont.FontFamily, FontScale(8), style, GraphicsUnit.Point, 0);
             int slotChk = MidsContext.Character.SlotCheck(iSlot);
             Enums.ePowerState ePowerState = iSlot.State;
             bool canPlaceSlot = MidsContext.Character.CanPlaceSlot;
             bool drawNewSlot = iSlot.Power != null && (iSlot.State != Enums.ePowerState.Empty && canPlaceSlot) && iSlot.Slots.Length < 6 && singleDraw && iSlot.Power.Slottable & InterfaceMode != Enums.eInterfaceMode.PowerToggle;
-            Point result = PowerPosition(iSlot);
-            Point point = default;
+            Point location = PowerPosition(iSlot);
+            Point slotLocation = default;
             checked
             {
                 //Position of enhancements drawing
-                point.X = (int)Math.Round(result.X - EnhOffsetX + checked(SzPower.Width - szSlot.Width * 6) / 2.0);
-                point.Y = result.Y + OffsetY;
+                slotLocation.X = (int)Math.Round(location.X - OffsetX + checked(SzPower.Width - szSlot.Width * 6) / 2.0);
+                slotLocation.Y = location.Y + OffsetY;
                 //
                 Graphics graphics = bxBuffer.Graphics;
                 Brush brush = new SolidBrush(BackColor);
-                Rectangle clipRect = new Rectangle(point.X, point.Y, SzPower.Width, SzPower.Height);
+                Rectangle clipRect = new Rectangle(slotLocation.X, slotLocation.Y, SzPower.Width, SzPower.Height);
                 graphics.FillRectangle(brush, ScaleDown(clipRect));
                 var toggling = InterfaceMode == Enums.eInterfaceMode.PowerToggle;
                 if (!toggling)
@@ -550,7 +544,7 @@ namespace mrbControls
                     imageAttr = GreySlot(grey);
                 }
                 // Power position/sizing?
-                Rectangle iValue = new Rectangle(result.X, result.Y, bxPower[(int)ePowerState].Size.Width, bxPower[(int)ePowerState].Size.Height);
+                Rectangle powerRect = new Rectangle(location.X, location.Y, bxPower[(int)ePowerState].Size.Width, bxPower[(int)ePowerState].Size.Height);
                 //
                 if (ePowerState == Enums.ePowerState.Used || toggling)
                 {
@@ -561,7 +555,7 @@ namespace mrbControls
 
                     Graphics graphics2 = bxBuffer.Graphics;
                     Image bitmap = !MidsContext.Character.IsHero() ? bxPower[4].Bitmap : bxPower[2].Bitmap;
-                    Rectangle destRect = ScaleDown(iValue);
+                    Rectangle destRect = ScaleDown(powerRect);
                     int srcX = 0;
                     int srcY = 0;
                     int width = bxPower[(int)ePowerState].ClipRect.Width;
@@ -573,7 +567,7 @@ namespace mrbControls
                     Graphics graphics3 = bxBuffer.Graphics;
                     Image bitmap2 = !MidsContext.Character.IsHero() ? bxPower[5].Bitmap : bxPower[3].Bitmap;
                     //Image bitmap2 = bxPower[(int)ePowerState].Bitmap;
-                    Rectangle destRect2 = ScaleDown(iValue);
+                    Rectangle destRect2 = ScaleDown(powerRect);
                     int srcX2 = 0;
                     int srcY2 = 0;
                     int width2 = bxPower[(int)ePowerState].ClipRect.Width;
@@ -584,7 +578,7 @@ namespace mrbControls
                 {
                     Graphics graphics3 = bxBuffer.Graphics;
                     Image bitmap2 = bxPower[(int)ePowerState].Bitmap;
-                    Rectangle destRect2 = ScaleDown(iValue);
+                    Rectangle destRect2 = ScaleDown(powerRect);
                     int srcX2 = 0;
                     int srcY2 = 0;
                     int width2 = bxPower[(int)ePowerState].ClipRect.Width;
@@ -592,31 +586,103 @@ namespace mrbControls
                     graphics3.DrawImage(bitmap2, destRect2, srcX2, srcY2, width2, clipRect.Height, GraphicsUnit.Pixel);
                 }
                 // Toggle button on powers
-                if (iSlot.CanIncludeForStats())
+                if (iSlot.CanIncludeForStats() && !iSlot.HasProc())
                 {
-                    rectangle.Height = 15;
-                    rectangle.Width = rectangle.Height;
-                    rectangle.Y = (int)Math.Round(iValue.Top + checked(iValue.Height - rectangle.Height) / 2.0);
-                    rectangle.X = (int)Math.Round(iValue.Right - (rectangle.Width + checked(iValue.Height - rectangle.Height) / 2.0));
-                    rectangle = ScaleDown(rectangle);
+                    Graphics toggleGraphics = bxBuffer.Graphics;
+                    toggleRect.Height = 15;
+                    toggleRect.Width = toggleRect.Height;
+                    toggleRect.Y = (int)Math.Round(powerRect.Top + checked(powerRect.Height - toggleRect.Height) / 2.0);
+                    toggleRect.X = (int)Math.Round(powerRect.Right - (toggleRect.Width + checked(powerRect.Height - toggleRect.Height) / 2.0));
+                    toggleRect = ScaleDown(toggleRect);
                     PathGradientBrush brush2;
                     if (iSlot.StatInclude)
                     {
-                        Rectangle iRect = rectangle;
+                        Rectangle iRect = toggleRect;
                         PointF iCenter = new PointF(-0.25f, -0.33f);
                         brush2 = MakePathBrush(iRect, iCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0));
                     }
                     else
                     {
-                        Rectangle iRect2 = rectangle;
+                        Rectangle iRect2 = toggleRect;
                         PointF iCenter = new PointF(-0.25f, -0.33f);
                         brush2 = MakePathBrush(iRect2, iCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
                     }
 
-                    bxBuffer.Graphics.FillEllipse(brush2, rectangle);
-                    bxBuffer.Graphics.DrawEllipse(pen2, rectangle);
+                    toggleGraphics.FillEllipse(brush2, toggleRect);
+                    toggleGraphics.DrawEllipse(pen2, toggleRect);
                 }
-                //
+                if (iSlot.HasProc() && !iSlot.CanIncludeForStats())
+                {
+                    //draw proc toggle
+                    Graphics procGraphics = bxBuffer.Graphics;
+                    procRect.Height = 15;
+                    procRect.Width = procRect.Height;
+                    procRect.Y = (int)Math.Round(powerRect.Top + checked(powerRect.Height - procRect.Height) / 2.0);
+                    procRect.X = (int)Math.Round(powerRect.Right - (procRect.Width + checked(powerRect.Height - procRect.Height) / 2.0));
+                    procRect = ScaleDown(procRect);
+                    PathGradientBrush brush3;
+                    Rectangle pRect = procRect;
+                    PointF pCenter = new PointF(-0.25f, -0.33f);
+                    if (!iSlot.ProcInclude)
+                    {
+                        brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(251, 255, 97), Color.FromArgb(91, 91, 0));
+                    }
+                    else
+                    {
+                         brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                    }
+
+                    procGraphics.FillEllipse(brush3, procRect);
+                    procGraphics.DrawEllipse(pen2, procRect);
+                }
+                if (iSlot.HasProc() && iSlot.CanIncludeForStats())
+                {
+                    //draw power toggle
+                    Graphics toggleGraphics = bxBuffer.Graphics;
+                    toggleRect.Height = 15;
+                    toggleRect.Width = toggleRect.Height;
+                    toggleRect.Y = (int)Math.Round(powerRect.Top + checked(powerRect.Height - toggleRect.Height) / 2.0);
+                    toggleRect.X = (int)Math.Round(powerRect.Right - (toggleRect.Width + checked(powerRect.Height - toggleRect.Height) / 3.0));
+                    toggleRect = ScaleDown(toggleRect);
+                    PathGradientBrush brush2;
+                    if (iSlot.StatInclude)
+                    {
+                        Rectangle iRect = toggleRect;
+                        PointF iCenter = new PointF(-0.25f, -0.33f);
+                        brush2 = MakePathBrush(iRect, iCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0));
+                    }
+                    else
+                    {
+                        Rectangle iRect2 = toggleRect;
+                        PointF iCenter = new PointF(-0.25f, -0.33f);
+                        brush2 = MakePathBrush(iRect2, iCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                    }
+
+                    toggleGraphics.FillEllipse(brush2, toggleRect);
+                    toggleGraphics.DrawEllipse(pen2, toggleRect);
+
+                    //draw proc toggle
+                    Graphics procGraphics = bxBuffer.Graphics;
+                    procRect.Height = 15;
+                    procRect.Width = procRect.Height;
+                    procRect.Y = (int)Math.Round(powerRect.Top + checked(powerRect.Height - procRect.Height) / 2.0);
+                    procRect.X = (int)Math.Round(powerRect.Right - (procRect.Width + checked(powerRect.Height - procRect.Height) / 1.0));
+                    procRect = ScaleDown(procRect);
+                    PathGradientBrush brush3;
+                    Rectangle pRect = procRect;
+                    PointF pCenter = new PointF(-0.25f, -0.33f);
+                    if (!iSlot.ProcInclude)
+                    {
+                        brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(251, 255, 97), Color.FromArgb(91, 91, 0));
+                    }
+                    else
+                    {
+                        brush3 = MakePathBrush(pRect, pCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                    }
+
+                    procGraphics.FillEllipse(brush3, procRect);
+                    procGraphics.DrawEllipse(pen2, procRect);
+                }
                 SolidBrush solidBrush;
                 //if (!System.Diagnostics.Debugger.IsAttached || !this.IsInDesignMode() || !System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
                 var inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");
@@ -624,12 +690,12 @@ namespace mrbControls
                 {
                     var slot = iSlot.Slots[i];
                     // Enhancment spacing and position?
-                    rectangleF.X = point.X + (szSlot.Width + 2) * i;
-                    rectangleF.Y = point.Y;
+                    rectangleF.X = slotLocation.X + (szSlot.Width + 2) * i;
+                    rectangleF.Y = slotLocation.Y;
                     //
                     if (slot.Enhancement.Enh < 0)
                     {
-                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, szSlot.Width, szSlot.Height); // New slot rectangle
+                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height); // New slot rectangle
                         bxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect2), 0, 0, szSlot.Width, szSlot.Height, GraphicsUnit.Pixel, pImageAttributes);
                         if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
                             (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
@@ -645,7 +711,7 @@ namespace mrbControls
                         if (inDesigner) continue;
                         IEnhancement enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                         Graphics graphics6 = bxBuffer.Graphics;
-                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), point.Y, szSlot.Width, szSlot.Height);
+                        Rectangle clipRect2 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, szSlot.Width, szSlot.Height);
                         I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect2), enhancement.ImageIdx, I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
                         if (slot.Enhancement.RelativeLevel == 0 | slot.Level >= MidsContext.Config.ForceLevel |
                             (InterfaceMode == Enums.eInterfaceMode.PowerToggle & !iSlot.StatInclude) |
@@ -664,21 +730,21 @@ namespace mrbControls
 
                     if (!MidsContext.Config.ShowSlotLevels) continue;
 
-                    RectangleF iValue2 = rectangleF;
+                    RectangleF powerTextRect = rectangleF;
                     unchecked
                     {
                         //Positioning of slot level text
-                        iValue2.Y += iValue2.Height + 12;
-                        iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                        iValue2.Y -= iValue2.Height;
-                        iValue2.X += iValue2.Width;
-                        iValue2.X -= iValue2.Width - 1;
+                        powerTextRect.Y += powerTextRect.Height + 12;
+                        powerTextRect.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
+                        powerTextRect.Y -= powerTextRect.Height;
+                        powerTextRect.X += powerTextRect.Width;
+                        powerTextRect.X -= powerTextRect.Width - 1;
                     }
 
                     Graphics graphics5 = bxBuffer.Graphics;
                     DrawOutlineText(
                         iStr: Convert.ToString(slot.Level + 1),
-                        bounds: ScaleDown(iValue2),
+                        bounds: ScaleDown(powerTextRect),
                         textColor: Color.FromArgb(0, 255, 0),
                         outlineColor: Color.FromArgb(192, 0, 0, 0),
                         bFont: font,
@@ -688,21 +754,20 @@ namespace mrbControls
                 //Draws the new slot hover
                 if (slotChk > -1 && (ePowerState != Enums.ePowerState.Empty && drawNewSlot))
                 {
-                    Rectangle clipRect2 = new Rectangle(point.X + (szSlot.Width + 2) * (iSlot.Slots.Length), point.Y, szSlot.Width, szSlot.Height);
-                    RectangleF iValue2 = clipRect2;
-                    bxBuffer.Graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(iValue2));
-                    iValue2.Height = DefaultFont.GetHeight(bxBuffer.Graphics);
-                    iValue2.Y += (szSlot.Height - iValue2.Height) / 2f;
-                    DrawOutlineText(Convert.ToString(slotChk + 1), ScaleDown(iValue2),
+                    RectangleF slotHoverRect = new RectangleF(slotLocation.X + (szSlot.Width + 2) * (iSlot.Slots.Length), slotLocation.Y, szSlot.Width, szSlot.Height);
+                    bxBuffer.Graphics.DrawImage(bxNewSlot.Bitmap, ScaleDown(slotHoverRect));
+                    slotHoverRect.Height = _defaultFont.GetHeight(bxBuffer.Graphics);
+                    slotHoverRect.Y += (szSlot.Height - slotHoverRect.Height) / 2f;
+                    DrawOutlineText(Convert.ToString(slotChk + 1), ScaleDown(slotHoverRect),
                         Color.FromArgb(0, 255, 255), Color.FromArgb(192, 0, 0, 0), font, 1f, bxBuffer.Graphics);
                 }
                 //Power name text positioning
                 solidBrush = new SolidBrush(Color.White);
                 stringFormat = new StringFormat();
-                rectangleF.X = result.X + 10;
-                rectangleF.Y = result.Y + 4;
+                rectangleF.X = location.X + 10;
+                rectangleF.Y = location.Y + 4;
                 rectangleF.Width = SzPower.Width;
-                rectangleF.Height = DefaultFont.GetHeight() * 2f;
+                rectangleF.Height = _defaultFont.GetHeight() * 2f;
                 Enums.ePowerState ePowerState2 = iSlot.State;
                 if (ePowerState2 == Enums.ePowerState.Empty & ePowerState == Enums.ePowerState.Open)
                 {
@@ -785,7 +850,7 @@ namespace mrbControls
                     bxBuffer.Graphics.DrawString(text, font, solidBrush, ScaleDown(rectangleF), stringFormat);
                 }
 
-                return result;
+                return location;
             }
         }
 
@@ -975,9 +1040,7 @@ namespace mrbControls
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset > -1)
                         {
-                            if (DatabaseAPI.Database
-                                .Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset]
-                                .Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable)
+                            if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable)
                                 isValid = true;
                         }
                         else
@@ -1073,31 +1136,42 @@ namespace mrbControls
 
         public void SetScaling(Size iSize)
         {
-            var scaleEnabled = Scaling;
-            var scaleValue = ScaleValue;
+            var origScaling = Scaling;
+            var origScaleValue = ScaleValue;
             if ((iSize.Width < 10) | (iSize.Height < 10))
                 return;
             var drawingArea = GetDrawingArea();
             if ((drawingArea.Width > iSize.Width) | (drawingArea.Height > iSize.Height))
             {
+                // Enable scaling
                 Scaling = true;
-                ScaleValue = (double) drawingArea.Width / iSize.Width > drawingArea.Height / (double) iSize.Height
-                    ? (float) (drawingArea.Width / (double) iSize.Width)
-                    : (float) (drawingArea.Height / (double) iSize.Height);
+                if ((double) drawingArea.Width / iSize.Width > drawingArea.Height / (double) iSize.Height)
+                {
+                    // Shrink to fit width
+                    ScaleValue = (float) (drawingArea.Width / (double) iSize.Width);
+                }
+                else
+                {
+                    // Fit height
+                    ScaleValue = (float) (drawingArea.Height / (double) iSize.Height);
+                }
+
                 ResetTarget();
                 bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
                 bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                 bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
-                if (!(Math.Abs(ScaleValue - scaleValue) > float.Epsilon))
-                    return;
-                FullRedraw();
-                bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-                bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
+
+                if (ScaleValue != origScaleValue)
+                {
+                    FullRedraw();
+                    bxBuffer.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+                    bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    bxBuffer.Graphics.CompositingMode = CompositingMode.SourceOver;
+                }
             }
             else
             {
@@ -1105,14 +1179,16 @@ namespace mrbControls
                 ScaleValue = 1f;
                 ResetTarget();
                 Scaling = false;
-                if ((scaleEnabled != Scaling) | (Math.Abs(scaleValue - ScaleValue) > float.Epsilon)) FullRedraw();
+                if (origScaling != Scaling | origScaleValue != ScaleValue)
+                {
+                    FullRedraw();
+                }
             }
         }
 
         private void ResetTarget()
         {
-            bxBuffer.Graphics.TextRenderingHint =
-                ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.ClearTypeGridFit;
+            bxBuffer.Graphics.TextRenderingHint = ScaleValue > 1.125 ? TextRenderingHint.SystemDefault : TextRenderingHint.ClearTypeGridFit;
             gTarget.Dispose();
             gTarget = cTarget.CreateGraphics();
             gTarget.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -1124,6 +1200,8 @@ namespace mrbControls
 
         public int ScaleDown(int iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             int result;
             if (!Scaling)
             {
@@ -1140,6 +1218,8 @@ namespace mrbControls
 
         public int ScaleUp(int iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             int result;
             if (!Scaling)
             {
@@ -1156,6 +1236,8 @@ namespace mrbControls
 
         private float ScaleDown(float iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             float result;
             if (!Scaling)
             {
@@ -1172,6 +1254,8 @@ namespace mrbControls
 
         public Rectangle ScaleDown(Rectangle iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             checked
             {
                 Rectangle result;
@@ -1194,6 +1278,8 @@ namespace mrbControls
 
         private RectangleF ScaleDown(RectangleF iValue)
         {
+            // Take a full size value and convert it to a scaled value
+            // for co-ordinates, etc.
             checked
             {
                 if (!Scaling)
@@ -1324,6 +1410,7 @@ namespace mrbControls
 
         public Rectangle PowerBoundsUnScaled(int hIdx)
         {
+            // Returns unscaled bounds
             var rectangle = new Rectangle(0, 0, 1, 1);
             checked
             {
@@ -2116,6 +2203,7 @@ namespace mrbControls
             var powerIdx = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry);
             checked
             {
+                // Assume that this is a copy and not the actual powerEntry item
                 if (powerIdx == -1)
                 {
                     const int num2 = 0;
@@ -2138,9 +2226,15 @@ namespace mrbControls
                 if (!powerEntry.Chosen)
                 {
                     if (displayLocation == -1 && powerEntry.Power != null)
+                    {
                         displayLocation = powerEntry.Power.DisplayLocation;
+                    }
 
-                    if (displayLocation <= -1) return CRtoXY(iCol, iRow);
+                    if (displayLocation <= -1)
+                    {
+                        return CRtoXY(iCol, iRow);
+                    }
+
                     iRow = vcRowsPowers;
                     for (var i = 0; i <= inherentGrid.Length - 1; i++)
                     {
@@ -2193,6 +2287,8 @@ namespace mrbControls
 
         private Point CRtoXY(int iCol, int iRow)
         {
+            // Convert a column/row location to the top left XY co-ord of a power entry
+            // 3 Columns, 15 Rows
             var result = new Point(0, 0);
             checked
             {

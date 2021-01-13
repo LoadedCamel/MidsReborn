@@ -206,7 +206,7 @@ namespace Mids_Reborn
         public static bool InterpretForumPost(string iPost)
         {
             var buildMode = MidsContext.Config.BuildMode;
-            MidsContext.Config.BuildMode = Enums.dmModes.Dynamic;
+            MidsContext.Config.BuildMode = Enums.dmModes.Normal;
             try
             {
                 iPost = PowerNameFix(iPost);

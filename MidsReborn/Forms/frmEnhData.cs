@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
@@ -63,13 +65,25 @@ namespace Mids_Reborn.Forms
         private void btnAddFX_Click(object sender, EventArgs e)
 
         {
-            IEffect iFX = new Effect();
-            using var frmPowerEffect = new frmPowerEffect(iFX);
+            IEffect iFx = new Effect();
+            using var frmPowerEffect = new frmPowerEffect(iFx);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
             var enh = myEnh;
             //var sEffectArray = (Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
-            var sEffectArray = new Enums.sEffect[myEnh.Effect.Length + 1];
+
+            var effects = enh.Effect.ToList();
+            effects.Add(new Enums.sEffect
+            {
+                Mode = Enums.eEffMode.FX,
+                Enhance = new Enums.sTwinID{ID = -1, SubID = -1}, 
+                Multiplier = 1f, 
+                Schedule = Enums.eSchedule.A, 
+                FX = (IEffect)frmPowerEffect.myFX.Clone()
+            });
+            effects[effects.Count - 1].FX.isEnhancementEffect = true;
+
+            /*var sEffectArray = new Enums.sEffect[myEnh.Effect.Length + 1];
             Array.Copy(enh.Effect, sEffectArray, myEnh.Effect.Length + 1);
             enh.Effect = sEffectArray;
             var effect = myEnh.Effect;
@@ -80,9 +94,12 @@ namespace Mids_Reborn.Forms
             effect[index].Multiplier = 1f;
             effect[index].Schedule = Enums.eSchedule.A;
             effect[index].FX = (IEffect) frmPowerEffect.myFX.Clone();
-            effect[index].FX.isEnhancementEffect = true;
+            effect[index].FX.isEnhancementEffect = true;*/
+            var sEffects = effects.ToArray();
+            enh.Effect = sEffects;
             ListSelectedEffects();
             lstSelected.SelectedIndex = lstSelected.Items.Count - 1;
+
         }
 
         private void btnAutoFill_Click(object sender, EventArgs e)
@@ -379,7 +396,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void chkSuperior_CheckedChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
@@ -396,11 +412,17 @@ namespace Mids_Reborn.Forms
         }
 
         private void chkUnique_CheckedChanged(object sender, EventArgs e)
-
         {
             if (Loading)
                 return;
             myEnh.Unique = chkUnique.Checked;
+        }
+
+        private void chkProc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myEnh.IsProc = chkProc.Checked;
         }
 
         private void DisplayAll()
@@ -418,6 +440,7 @@ namespace Mids_Reborn.Forms
             chkUnique.Checked = myEnh.Unique;
             cbMutEx.SelectedIndex = (int) myEnh.MutExID;
             chkSuperior.Checked = myEnh.Superior;
+            chkProc.Checked = myEnh.IsProc;
             switch (myEnh.TypeID)
             {
                 case Enums.eType.Normal:
@@ -562,6 +585,7 @@ namespace Mids_Reborn.Forms
         private void DisplaySet()
         {
             gbSet.Enabled = myEnh.TypeID == Enums.eType.SetO;
+            gbFlags.Enabled = myEnh.TypeID == Enums.eType.SetO;
             cbSet.SelectedIndex = myEnh.nIDSet + 1;
             DisplaySetImage();
         }
@@ -575,27 +599,16 @@ namespace Mids_Reborn.Forms
                 SetTypeIcons();
                 if (!string.IsNullOrWhiteSpace(DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image))
                 {
-                    using var extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() +
-                                                                   DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet]
-                                                                       .Image);
+                    using var extendedBitmap1 = new ExtendedBitmap(I9Gfx.GetEnhancementsPath() + DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].Image);
                     using var extendedBitmap2 = new ExtendedBitmap(30, 30);
-                    extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                        I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
-                    extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect,
-                        extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
-                    pbSet.Image = new Bitmap(extendedBitmap2.Bitmap);
+                    extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
+                    extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 }
                 else
                 {
                     using var extendedBitmap = new ExtendedBitmap(30, 30);
-                    extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect,
-                        I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
-                    pbSet.Image = new Bitmap(extendedBitmap.Bitmap);
+                    extendedBitmap.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap.ClipRect, I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
                 }
-            }
-            else
-            {
-                pbSet.Image = new Bitmap(pbSet.Width, pbSet.Height);
             }
         }
 

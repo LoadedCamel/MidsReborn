@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -127,18 +128,11 @@ namespace Mids_Reborn
                 var i = -1;
                 switch (MidsContext.Config.BuildMode)
                 {
-                    case Enums.dmModes.LevelUp:
-                    {
-                        i = GetFirstAvailablePowerIndex(DatabaseAPI.Database.Power[powerID].Level - 1);
-                        if (i < 0)
-                            message = "You cannot place any additional powers unless you first remove one.";
-                        else if (CurrentBuild.Powers[i].Level > Level)
-                            i = -1;
-                        else if (!TestPower(powerID))
-                            i = -1;
+                    case Enums.dmModes.Normal:
+                        i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel,
+                            DatabaseAPI.Database.Power[powerID].Level - 1));
                         break;
-                    }
-                    case Enums.dmModes.Dynamic:
+                    case Enums.dmModes.Respec:
                         i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel,
                             DatabaseAPI.Database.Power[powerID].Level - 1));
                         break;
@@ -434,9 +428,17 @@ namespace Mids_Reborn
                         {
                             if (!(effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)))
                                 nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
+                            
                         }
                         else if (!enhancementPass)
                         {
+                            // Zed: force absorb to be flat value.
+                            // E.g. Bio Armor Parasitic Aura and Ablative Carapace use percentages.
+                            // Particle shielding does not.
+                            if (index1 == (int)Enums.eStatType.Absorb & effect.DisplayPercentage)
+                            {
+                                shortFx.Value[shortFxIdx] = shortFx.Value[shortFxIdx] * MidsContext.Character.Totals.HPMax; // MidsContext.Character.Archetype.Hitpoints
+                            }
                             nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
                         }
                     }
@@ -541,8 +543,10 @@ namespace Mids_Reborn
             TotalsCapped.HPRegen = Math.Min(TotalsCapped.HPRegen, Archetype.RegenCap - 1f);
             TotalsCapped.EndRec = Math.Min(TotalsCapped.EndRec, Archetype.RecoveryCap - 1f);
             var num11 = TotalsCapped.Res.Length - 1;
-            for (var index = 0; index <= num11; ++index)
+            for (var index = 0; index < num11; index++)
+            {
                 TotalsCapped.Res[index] = Math.Min(TotalsCapped.Res[index], Archetype.ResCap);
+            }
             if (Archetype.HPCap > 0.0)
             {
                 TotalsCapped.HPMax = Math.Min(TotalsCapped.HPMax, Archetype.HPCap);
@@ -594,10 +598,8 @@ namespace Mids_Reborn
             {
                 if (CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh <= -1)
                     continue;
-                var hasPower = DatabaseAPI.Database
-                    .Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].Effect
-                    .Any(e => e.Mode == Enums.eEffMode.FX);
-                if (!hasPower)
+                var hasPower = DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].Effect.Any(e => e.Mode == Enums.eEffMode.FX);
+                if (!hasPower || (CurrentBuild.Powers[iIndex].ProcInclude && DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].IsProc))
                     continue;
                 var enhIndex = CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh;
                 var enh = DatabaseAPI.Database.Enhancements[enhIndex];
@@ -1644,7 +1646,7 @@ namespace Mids_Reborn
             // why are these two being saved then set back later, is something mutating them?
             var buildMode = MidsContext.Config.BuildMode;
             var buildOption = MidsContext.Config.BuildOption;
-            MidsContext.Config.BuildMode = Enums.dmModes.Dynamic;
+            MidsContext.Config.BuildMode = Enums.dmModes.Normal;
             MidsContext.Config.BuildOption = Enums.dmItem.Slot;
             var ret = IoGrab2(iStream);
             Name = ret[0];
@@ -2020,43 +2022,34 @@ namespace Mids_Reborn
 
             for (var index1 = 0; index1 <= CurrentBuild.Powers[hIDX].SlotCount - 1; ++index1)
             {
-                if (CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh <= -1)
-                    continue;
-                for (var index2 = 0;
-                    index2 <= DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh]
-                        .Effect.Length - 1;
-                    ++index2)
+                if (CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh <= -1) continue;
+                for (var index2 = 0; index2 <= DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect.Length - 1; ++index2)
                 {
-                    var effect = DatabaseAPI.Database
-                        .Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect;
+                    var effect = DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect;
                     var index3 = index2;
-                    if (effect[index3].Mode != Enums.eEffMode.Enhancement)
-                        continue;
+                    if (effect[index3].Mode != Enums.eEffMode.Enhancement) continue;
                     if (effect[index3].Enhance.ID == 12)
-                        nMez[effect[index3].Enhance.SubID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement
-                            .GetEnhancementEffect(Enums.eEnhance.Mez, effect[index3].Enhance.SubID, 1f);
+                    {
+                        nMez[effect[index3].Enhance.SubID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.GetEnhancementEffect(Enums.eEnhance.Mez, effect[index3].Enhance.SubID, 1f);
+                    }
                     else
-                        switch (DatabaseAPI.Database
-                            .Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect[index2]
-                            .BuffMode)
+                    {
+                        switch (DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.Enh].Effect[index2].BuffMode)
                         {
                             case Enums.eBuffDebuff.BuffOnly:
-                                nBuff[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement
-                                    .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
+                                nBuff[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
                                 break;
                             case Enums.eBuffDebuff.DeBuffOnly:
-                                if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) &
-                                    (effect[index3].Enhance.ID != 11))
-                                    nDebuff[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1]
-                                        .Enhancement
-                                        .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, -1f);
-
+                                if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) & (effect[index3].Enhance.ID != 11))
+                                {
+                                    nDebuff[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, -1f);
+                                }
                                 break;
                             default:
-                                nAny[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement
-                                    .GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
+                                nAny[effect[index3].Enhance.ID] += CurrentBuild.Powers[hIDX].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance) effect[index3].Enhance.ID, -1, 1f);
                                 break;
                         }
+                    }
                 }
             }
 
@@ -2260,7 +2253,9 @@ namespace Mids_Reborn
             var inToonHistory = CurrentBuild.FindInToonHistory(nIDPower);
             var flag1 = inToonHistory > -1;
             var num1 = Level;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic && RequestedLevel > -1)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal && RequestedLevel > -1)
+                num1 = RequestedLevel;
+            else if (MidsContext.Config.BuildMode == Enums.dmModes.Respec && RequestedLevel > -1)
                 num1 = RequestedLevel;
             var nLevel = num1;
             if (flag1)

@@ -8,10 +8,10 @@ namespace mrbBase.Base.Master_Classes
         public const string AppName = "Mids' Reborn";
         private const int AppMajorVersion = 3;
         private const int AppMinorVersion = 0;
-        private const int AppBuildVersion = 0;
-        private const int AppRevisionVersion = 0;
-        public const string AppAssemblyVersion = "3.0.0.0";
-        public const string AppVersionStatus = "(Release Canidate)";
+        private const int AppBuildVersion = 2;
+        private const int AppRevisionVersion = 18;
+        public const string AppAssemblyVersion = "3.0.2.18";
+        public const string AppVersionStatus = "";
 
         public const string Title = "Mids' Reborn";
         public const string AssemblyName = "MidsReborn.exe";
@@ -25,6 +25,7 @@ namespace mrbBase.Base.Master_Classes
 
         public static Archetype Archetype;
         public static Character Character;
+        public static Build Build;
 
         public static ConfigData Config => ConfigData.Current;
 

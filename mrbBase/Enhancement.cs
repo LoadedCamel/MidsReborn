@@ -33,6 +33,7 @@ namespace mrbBase
             RecipeName = string.Empty;
             RecipeIDX = -1;
             UID = string.Empty;
+            IsProc = false;
         }
 
         public Enhancement(IEnhancement iEnh)
@@ -71,6 +72,7 @@ namespace mrbBase
             }
 
             UID = iEnh.UID;
+            IsProc = iEnh.IsProc;
             RecipeName = iEnh.RecipeName;
             RecipeIDX = iEnh.RecipeIDX;
             Superior = iEnh.Superior;
@@ -125,6 +127,7 @@ namespace mrbBase
             UID = reader.ReadString();
             RecipeName = reader.ReadString();
             Superior = reader.ReadBoolean();
+            IsProc = reader.ReadBoolean();
         }
 
         public bool IsModified { get; set; }
@@ -152,6 +155,8 @@ namespace mrbBase
         public int nIDSet { get; set; }
 
         public string UIDSet { get; set; }
+
+        public bool IsProc { get; set; }
 
         public IPower GetPower()
         {
@@ -317,6 +322,7 @@ namespace mrbBase
             writer.Write(UID);
             writer.Write(RecipeName);
             writer.Write(Superior);
+            writer.Write(IsProc);
         }
 
         public int CheckAndFixIOLevel(int level)

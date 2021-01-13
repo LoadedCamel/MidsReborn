@@ -157,7 +157,7 @@ namespace Mids_Reborn.Forms
                 sw.WriteLine(text);
                 MessageBox.Show(@"Copied to clipboard and saved in StaticIndexes.txt");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show(@"Copied to clipboard only");
             }

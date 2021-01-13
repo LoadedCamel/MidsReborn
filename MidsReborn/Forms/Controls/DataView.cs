@@ -361,81 +361,62 @@ namespace Mids_Reborn.Forms.Controls
                     var num3 = MidsContext.Character.CurrentBuild.Powers[inToonHistory].SlotCount - 1;
                     for (var index1 = 0; index1 <= num3; ++index1)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh <=
-                            -1)
-                            continue;
-                        var num4 = DatabaseAPI.Database
-                            .Enhancements[
-                                MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh]
-                            .Effect.Length - 1;
+                        if (MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh <= -1) continue;
+
+                        var num4 = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh].Effect.Length - 1;
                         for (var index2 = 0; index2 <= num4; ++index2)
                         {
-                            var effect = DatabaseAPI.Database
-                                .Enhancements[
-                                    MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement
-                                        .Enh].Effect;
+                            var effect = DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh].Effect;
                             var index3 = index2;
                             if (effect[index3].Mode != Enums.eEffMode.Enhancement)
                                 continue;
                             if (effect[index3].Enhance.ID == 12)
-                                numArray4[effect[index3].Enhance.SubID] += MidsContext.Character.CurrentBuild
-                                    .Powers[inToonHistory]
-                                    .Slots[index1].Enhancement.GetEnhancementEffect(Enums.eEnhance.Mez,
-                                        effect[index3].Enhance.SubID, 1f);
+                            {
+                                numArray4[effect[index3].Enhance.SubID] += MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.GetEnhancementEffect(Enums.eEnhance.Mez, effect[index3].Enhance.SubID, 1f);
+                            }
                             else
-                                switch (DatabaseAPI.Database
-                                    .Enhancements[
-                                        MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1]
-                                            .Enhancement.Enh]
-                                    .Effect[index2].BuffMode)
+                            {
+                                switch (DatabaseAPI.Database.Enhancements[MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.Enh].Effect[index2].BuffMode)
                                 {
                                     case Enums.eBuffDebuff.BuffOnly:
-                                        numArray1[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
-                                            .Powers[inToonHistory]
-                                            .Slots[index1].Enhancement
-                                            .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
+                                        numArray1[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
                                         break;
                                     case Enums.eBuffDebuff.DeBuffOnly:
-                                        if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) &
-                                            (effect[index3].Enhance.ID != 11))
-                                            numArray2[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
-                                                .Powers[inToonHistory]
-                                                .Slots[index1].Enhancement
-                                                .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1,
-                                                    -1f);
+                                        if ((effect[index3].Enhance.ID != 6) & (effect[index3].Enhance.ID != 19) & (effect[index3].Enhance.ID != 11))
+                                        {
+                                            numArray2[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, -1f);
+                                        }
 
                                         break;
                                     default:
-                                        numArray3[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild
-                                            .Powers[inToonHistory]
-                                            .Slots[index1].Enhancement
-                                            .GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
+                                        numArray3[effect[index3].Enhance.ID] += MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[index1].Enhancement.GetEnhancementEffect((Enums.eEnhance)effect[index3].Enhance.ID, -1, 1f);
                                         break;
                                 }
+                            }
                         }
                     }
 
                     var num5 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var index1 = 0; index1 <= num5; ++index1)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[index1].Power == null ||
-                            !MidsContext.Character.CurrentBuild.Powers[index1].StatInclude)
+                        if (MidsContext.Character.CurrentBuild.Powers[index1].Power == null || !MidsContext.Character.CurrentBuild.Powers[index1].StatInclude || !MidsContext.Character.CurrentBuild.Powers[index1].ProcInclude)
                             continue;
                         IPower power1 = new Power(MidsContext.Character.CurrentBuild.Powers[index1].Power);
                         power1.AbsorbPetEffects();
                         power1.ApplyGrantPowerEffects();
                         foreach (var effect in power1.Effects)
                         {
-                            if ((power1.PowerType != Enums.ePowerType.GlobalBoost) &
-                                (!effect.Absorbed_Effect | (effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)))
+                            if ((power1.PowerType != Enums.ePowerType.GlobalBoost) & (!effect.Absorbed_Effect | (effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)))
                                 continue;
                             var power2 = power1;
                             if (effect.Absorbed_Effect & (effect.Absorbed_Power_nID > -1))
+                            {
                                 power2 = DatabaseAPI.Database.Power[effect.Absorbed_Power_nID];
+                            }
+
                             var eBuffDebuff = Enums.eBuffDebuff.Any;
                             var flag = false;
-                            foreach (var str1 in MidsContext.Character.CurrentBuild.Powers[inToonHistory].Power
-                                .BoostsAllowed)
+                            foreach (var str1 in MidsContext.Character.CurrentBuild.Powers[inToonHistory].Power.BoostsAllowed)
                             {
                                 if (power2.BoostsAllowed.Any(str2 => str1 == str2))
                                 {
@@ -498,10 +479,7 @@ namespace Mids_Reborn.Forms.Controls
                                         numArray4[(int)effect.MezType] += effect.Mag;
                                         break;
                                     default:
-                                        var index2 = effect.ETModifies != Enums.eEffectType.RechargeTime
-                                            ? Convert.ToInt32(Enum.Parse(typeof(Enums.eEnhance),
-                                                effect.ETModifies.ToString()))
-                                            : 14;
+                                        var index2 = effect.ETModifies != Enums.eEffectType.RechargeTime ? Convert.ToInt32(Enum.Parse(typeof(Enums.eEnhance), effect.ETModifies.ToString())) : 14;
                                         if (effect.IgnoreED)
                                         {
                                             afterED3[index2] += effect.Mag;
@@ -512,8 +490,7 @@ namespace Mids_Reborn.Forms.Controls
                                         break;
                                 }
                             }
-                            else if ((effect.EffectType == Enums.eEffectType.DamageBuff) &
-                                     (effect.DamageType == Enums.eDamage.Smashing))
+                            else if ((effect.EffectType == Enums.eEffectType.DamageBuff) & (effect.DamageType == Enums.eDamage.Smashing))
                             {
                                 if (effect.IgnoreED)
                                     foreach (var str in power2.BoostsAllowed)
@@ -2683,8 +2660,7 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.HitPoints:
                         shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
-                        Tag2
-                            .Assign(shortFx);
+                        Tag2.Assign(shortFx);
                         shortFx.Sum = (float)(shortFx.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         s2.Sum = (float)(s2.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         Suffix = "%";
@@ -2692,8 +2668,7 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Heal:
                         shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
                         s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
-                        Tag2
-                            .Assign(shortFx);
+                        Tag2.Assign(shortFx);
                         shortFx.Sum = (float)(shortFx.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         s2.Sum = (float)(s2.Sum / (double)MidsContext.Archetype.Hitpoints * 100.0);
                         Suffix = "%";
@@ -2701,74 +2676,63 @@ namespace Mids_Reborn.Forms.Controls
                     case Enums.eEffectType.Absorb:
                         shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget));
                         s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Absorb, false, onlySelf, onlyTarget));
-                        Tag2
-                            .Assign(shortFx);
+                        Tag2.Assign(shortFx);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Endurance:
                         shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget));
                         s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Endurance, false, onlySelf, onlyTarget));
-                        Tag2
-                            .Assign(shortFx);
+                        Tag2.Assign(shortFx);
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Regeneration:
                         shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf,
                             onlyTarget));
                         s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.Regeneration, false, onlySelf, onlyTarget));
-                        Tag2
-                            .Assign(shortFx);
+                        Tag2.Assign(shortFx);
                         Suffix = "%";
                         break;
                     default:
+                        if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Mez) &
+                            ((pBase.Effects[Index[ID]].MezType == Enums.eMez.Taunt) |
+                             (pBase.Effects[Index[ID]].MezType == Enums.eMez.Placate)))
                         {
-                            if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Mez) &
-                                ((pBase.Effects[Index[ID]].MezType == Enums.eMez.Taunt) |
-                                 (pBase.Effects[Index[ID]].MezType == Enums.eMez.Placate)))
-                            {
-                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
-                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Duration);
-                                Tag2
-                                    .Assign(shortFx);
-                                Suffix = "s";
-                            }
-                            else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying)
-                            {
-                                shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf,
-                                    onlyTarget));
-                                s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf, onlyTarget));
-                                Tag2
-                                    .Assign(shortFx);
-                            }
-                            else if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff) |
-                                     (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense) |
-                                     (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance) |
-                                     (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect) |
-                                     (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement))
-                            {
-                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
-                                Tag2
-                                    .Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf,
-                                        onlyTarget));
-                            }
-                            else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
-                            {
-                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
-                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Absorbed_Duration);
-                                Tag2
-                                    .Assign(shortFx);
-                            }
-                            else
-                            {
-                                shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                                s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
-                                Tag2
-                                    .Assign(shortFx);
-                            }
-
-                            break;
+                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Duration);
+                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Duration);
+                            Tag2.Assign(shortFx);
+                            Suffix = "s";
                         }
+                        else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SpeedFlying)
+                        {
+                            shortFx.Assign(pBase.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf,
+                                onlyTarget));
+                            s2.Assign(pEnh.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, onlySelf, onlyTarget));
+                            Tag2.Assign(shortFx);
+                        }
+                        else if ((pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.DamageBuff) |
+                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Defense) |
+                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Resistance) |
+                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.ResEffect) |
+                                 (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Enhancement))
+                        {
+                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
+                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                            Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget));
+                        }
+                        else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
+                        {
+                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Absorbed_Duration);
+                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Absorbed_Duration);
+                            Tag2.Assign(shortFx);
+                        }
+                        else
+                        {
+                            shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
+                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                            Tag2.Assign(shortFx);
+                        }
+
+                        break;
                 }
 
                 if (pBase.Effects[Index[ID]].DisplayPercentage)
@@ -2787,7 +2751,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var num1 = shortFx.Index.Length - 1;
-            for (var index = 0; index <= num1; ++index)
+            for (var index = 0; index < num1; index++)
             {
                 if (shortFx.Index[index] <= -1 || !pBase.Effects[shortFx.Index[index]].DisplayPercentage)
                     continue;
@@ -2797,7 +2761,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var num2 = s2.Index.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < num2; index++)
             {
                 if (s2.Index[index] <= -1 || !pBase.Effects[s2.Index[index]].DisplayPercentage)
                     continue;
@@ -3334,26 +3298,22 @@ namespace Mids_Reborn.Forms.Controls
 
         public void SetFontData()
         {
-            info_DataList.Font = new Font(info_DataList.Font.FontFamily, MidsContext.Config.RtFont.PairedBase,
-                FontStyle.Regular);
-            //fx_List1.Font = new Font(fx_List1.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Regular);
-            fx_List1.Font = new Font("Arial", 10f, FontStyle.Regular, GraphicsUnit.Pixel, 1);
-            fx_List2.Font = new Font(fx_List2.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Regular);
-            fx_List3.Font = new Font(fx_List3.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Regular);
-            total_Misc.Font = new Font(total_Misc.Font.FontFamily, MidsContext.Config.RtFont.PairedBase,
-                FontStyle.Regular);
-            enhListing.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase,
-                FontStyle.Regular);
-            pnlEnhActive.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase,
-                FontStyle.Bold);
+            var style = !MidsContext.Config.RtFont.PairedBold ? FontStyle.Regular : FontStyle.Bold;
+            info_DataList.Font = new Font(info_DataList.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            fx_List1.Font = new Font(fx_List1.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            fx_List2.Font = new Font(fx_List2.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            fx_List3.Font = new Font(fx_List3.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            total_Misc.Font = new Font(total_Misc.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            enhListing.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
+            pnlEnhActive.Font = new Font(enhListing.Font.FontFamily, MidsContext.Config.RtFont.PairedBase);
             info_DataList.ForceBold = MidsContext.Config.RtFont.PairedBold;
             fx_List1.ForceBold = MidsContext.Config.RtFont.PairedBold;
             fx_List2.ForceBold = MidsContext.Config.RtFont.PairedBold;
             fx_List3.ForceBold = MidsContext.Config.RtFont.PairedBold;
             total_Misc.ForceBold = MidsContext.Config.RtFont.PairedBold;
             enhListing.ForceBold = MidsContext.Config.RtFont.PairedBold;
-            //gDef1.Font = new Font(gDef1.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold);
-            gDef1.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
+            gDef1.Font = new Font(gDef1.Font.FontFamily, 8.25f, style);
+            //gDef1.Font = new Font("Arial", 10f, FontStyle.Bold, GraphicsUnit.Pixel);
             gDef2.Font = gDef1.Font;
             gRes1.Font = gDef1.Font;
             gRes2.Font = gDef1.Font;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -600,9 +601,11 @@ namespace Mids_Reborn
             return listPowers;
         }
 
+/*
         public List<string> GetPowerSets()
         {
             return PowerSets;
         }
+*/
     }
 }

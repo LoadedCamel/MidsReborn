@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Forms;
+using Mids_Reborn.UIv2;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn
@@ -17,39 +19,49 @@ namespace Mids_Reborn
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzczMTM1QDMxMzgyZTM0MmUzME9URGZHeHFrdFFwZlhxQnZITjlreGZGek96bldQRGpPSmFDd3VWQ1lBaUU9");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            try
+            MidsContext.AssertVersioning();
+            if (Debugger.IsAttached || Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
-                MidsContext.AssertVersioning();
                 using frmMain f = new frmMain();
+                using Form1 f1 = new Form1();
                 Application.Run(f);
             }
-            catch (Exception ex)
+            else
             {
-                var exTarget = ex;
-                while (exTarget?.InnerException != null)
+                try
                 {
-                    exTarget = ex.InnerException;
+                    using frmMain f = new frmMain();
+                    using Form1 f1 = new Form1();
+                    Application.Run(f);
                 }
-
-                if (exTarget != null)
+                catch (Exception ex)
                 {
-                    // Zed: add extra info here.
-                    string[] args = Environment.GetCommandLineArgs();
-                    if (args.Skip(1).Contains("-debug"))
+                    var exTarget = ex;
+                    while (exTarget?.InnerException != null)
                     {
-                        MessageBox.Show(
-                            "Error: " + exTarget.Message + "\n" +
-                            "Stack Trace: " + exTarget.StackTrace + "\n" +
-                            "Exception type: " + exTarget.GetType().Name,
-                            "Error [Debug mode enabled]", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else
-                    {
-                        MessageBox.Show($"Error (Program.cs): {exTarget.Message}\r\n{exTarget.StackTrace}", exTarget.GetType().Name, MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                        exTarget = ex.InnerException;
                     }
 
-                    throw;
+                    if (exTarget != null)
+                    {
+                        // Zed: add extra info here.
+                        var args = Environment.GetCommandLineArgs();
+                        if (args.Skip(1).Contains("-debug"))
+                        {
+                            MessageBox.Show(
+                                $"Error: {exTarget.Message}\r\nException type: {exTarget.GetType().Name}\r\nStack Trace:\r\n{exTarget.StackTrace}",
+                                $"Error [Debug mode] [Mids Reborn v{Application.ProductVersion}]", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Error: {exTarget.Message}\r\n{exTarget.StackTrace}",
+                                exTarget.GetType().Name,
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                        throw;
+                    }
                 }
             }
         }

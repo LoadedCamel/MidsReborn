@@ -33,7 +33,7 @@ namespace mrbControls
 
         // https://stackoverflow.com/a/34299931
         // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
-        protected override Size DefaultSize => new Size(277, 13);
+        protected override Size DefaultSize => new(277, 13);
         public new static Color DefaultBackColor => Color.Transparent;
 
         public void SuspendUpdate()
@@ -68,11 +68,11 @@ namespace mrbControls
 
         private void SetHighlightColors()
         {
-            HLSColor p1Color = HLSColor.FromRgb(panel1.BackColor);
-            HLSColor p2Color = HLSColor.FromRgb(panel2.BackColor);
-            HLSColor p3Color = HLSColor.FromRgb(panel3.BackColor);
-            HLSColor p4Color = HLSColor.FromRgb(panel4.BackColor);
-            HLSColor p5Color = HLSColor.FromRgb(panel5.BackColor);
+            var p1Color = HLSColor.FromRgb(panel1.BackColor);
+            var p2Color = HLSColor.FromRgb(panel2.BackColor);
+            var p3Color = HLSColor.FromRgb(panel3.BackColor);
+            var p4Color = HLSColor.FromRgb(panel4.BackColor);
+            var p5Color = HLSColor.FromRgb(panel5.BackColor);
 
             _NormalColors = new[]
             {
@@ -354,7 +354,7 @@ namespace mrbControls
         #region CalcSubBarsDimensions() overloads
         private SubBarsDimensions CalcSubBarsDimensions(float value)
         {
-            SubBarsDimensions dim = new SubBarsDimensions()
+            var dim = new SubBarsDimensions()
             {
                 P3Width = Value2Pixels(value)
             };
@@ -364,7 +364,7 @@ namespace mrbControls
 
         private SubBarsDimensions CalcSubBarsDimensions(float mainValue, float auxValue)
         {
-            SubBarsDimensions dim = new SubBarsDimensions();
+            var dim = new SubBarsDimensions();
             if (_EnableOverCap)
             {
                 // auxValue: overCapValue
@@ -380,7 +380,7 @@ namespace mrbControls
                     dim.P1Width = Value2Pixels(mainValue);
                     dim.P3Width = Value2Pixels(mainValue - auxValue);
                     dim.P3Pos = Value2Pixels(auxValue);
-                    int offset = dim.P3Pos - dim.P1Width;
+                    var offset = dim.P3Pos - dim.P1Width;
                     dim.P3Pos -= offset;
                     dim.P3Width += offset;
                 }
@@ -394,7 +394,7 @@ namespace mrbControls
                 {
                     dim.P3Width = Value2Pixels(mainValue - auxValue);
                     dim.P3Pos = Value2Pixels(auxValue);
-                    int offset = dim.P3Pos - dim.P2Width + 1;
+                    var offset = dim.P3Pos - dim.P2Width + 1;
                     dim.P3Pos -= offset;
                     dim.P3Width += offset;
                 }
@@ -410,7 +410,7 @@ namespace mrbControls
 
         private SubBarsDimensions CalcSubBarsDimensions(float mainValue, float baseValue, float uncappedValue)
         {
-            SubBarsDimensions dim = new SubBarsDimensions
+            var dim = new SubBarsDimensions
             {
                 P3Pos = 0, P1Width = Value2Pixels(uncappedValue), P2Width = Value2Pixels(baseValue)
             };
@@ -424,7 +424,7 @@ namespace mrbControls
             {
                 dim.P3Width = Value2Pixels(mainValue - uncappedValue);
                 dim.P3Pos = Value2Pixels(uncappedValue);
-                int offset = dim.P3Pos - dim.P1Width + 1;
+                var offset = dim.P3Pos - dim.P1Width + 1;
                 dim.P3Pos -= offset;
                 dim.P3Width += offset;
             }
@@ -433,7 +433,7 @@ namespace mrbControls
             {
                 dim.P3Width = Value2Pixels(mainValue - baseValue);
                 dim.P3Pos = Value2Pixels(baseValue);
-                int offset = dim.P3Pos - dim.P2Width + 1;
+                var offset = dim.P3Pos - dim.P2Width + 1;
                 dim.P3Pos -= offset;
                 dim.P3Width += offset;
             }
@@ -443,7 +443,7 @@ namespace mrbControls
 
         private SubBarsDimensions CalcSubBarsDimensions(float mainValue, float baseValue, float uncappedValue, float overlay1Value)
         {
-            SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue);
+            var dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue);
             dim.P4Width = Value2Pixels(overlay1Value);
 
             return dim;
@@ -451,7 +451,7 @@ namespace mrbControls
 
         private SubBarsDimensions CalcSubBarsDimensions(float mainValue, float baseValue, float uncappedValue, float overlay1Value, float overlay2Value)
         {
-            SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value);
+            var dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value);
             dim.P5Width = Value2Pixels(overlay2Value);
 
             return dim;
@@ -483,13 +483,13 @@ namespace mrbControls
 
         public void SetValues(float value)
         {
-            SubBarsDimensions dim = CalcSubBarsDimensions(value);
+            var dim = CalcSubBarsDimensions(value);
             panel3.Width = dim.P3Width;
         }
 
         public void SetValues(float mainValue, float auxValue)
         {
-            SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, auxValue);
+            var dim = CalcSubBarsDimensions(mainValue, auxValue);
             if (_EnableOverCap)
             {
                 panel1.Width = dim.P1Width;
@@ -507,7 +507,7 @@ namespace mrbControls
 
         public void SetValues(float mainValue, float baseValue, float uncappedValue)
         {
-            SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue);
+            var dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue);
             panel1.Width = dim.P1Width;
             panel2.Width = dim.P2Width;
             panel3.Width = dim.P3Width;
@@ -516,7 +516,7 @@ namespace mrbControls
 
         public void SetValues(float mainValue, float baseValue, float uncappedValue, float overlay1Value)
         {
-            SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value);
+            var dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value);
             panel1.Width = dim.P1Width;
             panel2.Width = dim.P2Width;
             panel3.Width = dim.P3Width;
@@ -526,7 +526,7 @@ namespace mrbControls
 
         public void SetValues(float mainValue, float baseValue, float uncappedValue, float overlay1Value, float overlay2Value)
         {
-            SubBarsDimensions dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value, overlay2Value);
+            var dim = CalcSubBarsDimensions(mainValue, baseValue, uncappedValue, overlay1Value, overlay2Value);
             panel1.Width = dim.P1Width;
             panel2.Width = dim.P2Width;
             panel3.Width = dim.P3Width;
@@ -630,20 +630,20 @@ namespace mrbControls
                 double l;
 
                 // Convert RGB to a 0.0 to 1.0 range.
-                double doubleR = c.R / 255d;
-                double doubleG = c.G / 255d;
-                double doubleB = c.B / 255d;
+                var doubleR = c.R / 255d;
+                var doubleG = c.G / 255d;
+                var doubleB = c.B / 255d;
 
                 // Get the maximum and minimum RGB components.
-                double max = doubleR;
+                var max = doubleR;
                 if (max < doubleG) max = doubleG;
                 if (max < doubleB) max = doubleB;
 
-                double min = doubleR;
+                var min = doubleR;
                 if (min > doubleG) min = doubleG;
                 if (min > doubleB) min = doubleB;
 
-                double diff = max - min;
+                var diff = max - min;
                 l = (max + min) / 2;
                 if (Math.Abs(diff) < double.Epsilon) //0.00001
                 {
@@ -654,9 +654,9 @@ namespace mrbControls
                 {
                     s = l <= 0.5 ? diff / (max + min) : diff / (2 - max - min);
 
-                    double rDist = (max - doubleR) / diff;
-                    double gDist = (max - doubleG) / diff;
-                    double bDist = (max - doubleB) / diff;
+                    var rDist = (max - doubleR) / diff;
+                    var gDist = (max - doubleG) / diff;
+                    var bDist = (max - doubleB) / diff;
 
                     if (Math.Abs(doubleR - max) < double.Epsilon)
                     {
@@ -691,7 +691,7 @@ namespace mrbControls
                 if (L <= 0.5) p2 = L * (1 + S);
                 else p2 = L + S - L * S;
 
-                double p1 = 2 * L - p2;
+                var p1 = 2 * L - p2;
                 double doubleR, doubleG, doubleB;
                 if (S == 0)
                 {
@@ -730,7 +730,7 @@ namespace mrbControls
                     p2 = l + s - l * s;
                 }
 
-                double p1 = 2 * l - p2;
+                var p1 = 2 * l - p2;
                 double doubleR, doubleG, doubleB;
                 if (s == 0)
                 {

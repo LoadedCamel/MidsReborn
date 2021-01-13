@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -112,6 +114,7 @@ namespace mrbControls
             FontChanged += ListLabelV3_FontChanged;
             Load += ListLabelV3_Load;
             MouseDown += ListLabelV3_MouseDown;
+            MouseWheel += ListLabelV3_MouseWheel;
             bxBuffer = null;
             Items = new ListLabelItemV3[0];
             Colors = new[]
@@ -359,15 +362,7 @@ namespace mrbControls
 
         private int GetRealTotalHeight()
         {
-            var num = 0;
-            var num2 = 0;
-            checked
-            {
-                var num3 = Items.Length - 1;
-                for (var i = num2; i <= num3; i++) num += Items[i].ItemHeight;
-
-                return num;
-            }
+            return Items.Sum(e => e.ItemHeight);
         }
 
         private void FillDefaultItems()
@@ -433,19 +428,28 @@ namespace mrbControls
         {
             checked
             {
-                if (Items.Length == 0)
-                    return;
+                if (Items.Length == 0) return;
                 InitBuffer();
                 if (AutoSize)
                 {
                     if (AutoSizeMode == AutoSizeMode.GrowAndShrink)
+                    {
                         Height = DesiredHeight;
+                    }
                     else if (DesiredHeight > SizeNormal.Height)
+                    {
                         Height = DesiredHeight;
+                    }
                     else
+                    {
                         Height = SizeNormal.Height;
+                    }
                 }
-
+                else if (Name == "llAncillary" | Name.StartsWith("llPool"))
+                {
+                    Height = 18 * Items.Length;
+                }
+                
                 var bRect = new Rectangle(xPadding, 0, Width - xPadding * 2, Height);
                 RecalcLines(bRect);
                 if ((ScrollSteps > 0) | isExpanded)
@@ -454,10 +458,8 @@ namespace mrbControls
                     RecalcLines(bRect);
                 }
 
-                if (expanded || ScrollSteps <= 0)
-                    return;
-                var num = 0;
-                if (canExpand) num = ScrollWidth + yPadding;
+                if (expanded || ScrollSteps <= 0) return;
+                var num = (canExpand) ? ScrollWidth + yPadding : 0;
 
                 bRect = new Rectangle(xPadding, 0, Width - (xPadding * 2 + ScrollWidth), Height - num);
                 RecalcLines(bRect);
@@ -468,11 +470,9 @@ namespace mrbControls
         {
             TextArea = bRect;
             SetLineHeight();
-            var num = 0;
             checked
             {
-                var num2 = Items.Length - 1;
-                for (var i = num; i <= num2; i++) WrapString(i);
+                for (var i = 0; i < Items.Length; i++) WrapString(i);
 
                 GetTotalLineCount();
                 GetScrollSteps();
@@ -483,8 +483,7 @@ namespace mrbControls
         {
             checked
             {
-                if (Operators.CompareString(Items[Index].Text, "", false) == 0)
-                    return;
+                if (Operators.CompareString(Items[Index].Text, "", false) == 0) return;
                 InitBuffer();
                 var num = 1;
                 if (Items[Index].Text.Contains(" "))
@@ -492,31 +491,23 @@ namespace mrbControls
                     var array = Items[Index].Text.Split(" ".ToCharArray());
                     var stringFormat = new StringFormat(StringFormatFlags.NoWrap);
                     var font = new Font(Font, (FontStyle) Items[Index].FontFlags);
-                    var str = "";
-                    if (Items[Index].ItemState == LLItemState.Heading) str = "~  ~";
+                    var str = (Items[Index].ItemState == LLItemState.Heading) ? "~  ~" : "";
 
                     var text = array[0];
-                    var num2 = 1;
-                    var num3 = array.Length - 1;
-                    for (var i = num2; i <= num3; i++)
+                    for (var i = 1; i < array.Length; i++)
                     {
                         var graphics = bxBuffer.Graphics;
-                        var text2 = text + " " + array[i] + str;
+                        var text2 = $"{text} {array[i]}{str}";
                         var font2 = font;
                         var layoutArea = new SizeF(1024f, Height);
-                        if (Math.Ceiling(graphics.MeasureString(text2, font2, layoutArea, stringFormat).Width) >
-                            TextArea.Width)
+                        if (Math.Ceiling(graphics.MeasureString(text2, font2, layoutArea, stringFormat).Width) > TextArea.Width)
                         {
-                            if (Items[Index].ItemState == LLItemState.Heading)
-                                text = text + " ~\r\n~ " + array[i];
-                            else
-                                text = text + "\r\n " + array[i];
-
+                            text = Items[Index].ItemState == LLItemState.Heading ? $"{text} ~\r\n~ {array[i]}" : $"{text}\r\n {array[i]}";
                             num++;
                         }
                         else
                         {
-                            text = text + " " + array[i];
+                            text = $"{text} {array[i]}";
                         }
                     }
 
@@ -528,7 +519,9 @@ namespace mrbControls
                 }
 
                 if (Items[Index].ItemState == LLItemState.Heading)
-                    Items[Index].WrappedText = "~ " + Items[Index].WrappedText + " ~";
+                {
+                    Items[Index].WrappedText = $"~ {Items[Index].WrappedText} ~";
+                }
 
                 Items[Index].LineCount = num;
                 Items[Index].ItemHeight = num * (ActualLineHeight - yPadding * 2) + yPadding * 2;
@@ -537,11 +530,9 @@ namespace mrbControls
 
         private void InitBuffer()
         {
-            if (DisableRedraw)
-                return;
-            if (((Width == 0) | (Height == 0)) & (bxBuffer == null))
-                return;
-            if (bxBuffer == null) bxBuffer = new ExtendedBitmap(Width, Height);
+            if (DisableRedraw) return;
+            if (((Width == 0) | (Height == 0)) & (bxBuffer == null)) return;
+            bxBuffer ??= new ExtendedBitmap(Width, Height);
 
             if ((bxBuffer.Size.Width != Width) | (bxBuffer.Size.Height != Height))
             {
@@ -557,24 +548,22 @@ namespace mrbControls
             bxBuffer.Graphics.TextContrast = 0;
         }
 
-        private int GetItemAtY(int Y)
+        private int GetItemAtY(int y)
         {
             var num = 0;
             checked
             {
                 int result;
-                if (Y > Height)
+                if (y > Height)
                 {
                     result = -1;
                 }
                 else
                 {
-                    var scrollOffset = ScrollOffset;
-                    var num2 = Items.Length - 1;
-                    for (var i = scrollOffset; i <= num2; i++)
+                    for (var i = ScrollOffset; i < Items.Length; i++)
                     {
                         num += Items[i].ItemHeight;
-                        if (Y < num) return i;
+                        if (y < num) return i;
                     }
 
                     result = -1;
@@ -584,28 +573,28 @@ namespace mrbControls
             }
         }
 
-        private eMouseTarget GetMouseTarget(int X, int Y)
+        private eMouseTarget GetMouseTarget(int x, int y)
         {
             checked
             {
                 eMouseTarget result;
-                if ((X >= TextArea.Left) & (X <= TextArea.Right) & (Y <= TextArea.Bottom))
+                if ((x >= TextArea.Left) & (x <= TextArea.Right) & (y <= TextArea.Bottom))
                 {
                     result = eMouseTarget.Item;
                 }
-                else if ((X >= TextArea.Left) & (X <= TextArea.Right) & (Y > TextArea.Bottom))
+                else if ((x >= TextArea.Left) & (x <= TextArea.Right) & (y > TextArea.Bottom))
                 {
                     result = eMouseTarget.ExpandButton;
                 }
-                else if ((X > TextArea.Right) & (Y <= ScrollWidth + yPadding))
+                else if ((x > TextArea.Right) & (y <= ScrollWidth + yPadding))
                 {
                     result = eMouseTarget.UpButton;
                 }
-                else if ((X > TextArea.Right) & (Y >= Height - (ScrollWidth + yPadding)))
+                else if ((x > TextArea.Right) & (y >= Height - (ScrollWidth + yPadding)))
                 {
                     result = eMouseTarget.DownButton;
                 }
-                else if (!((X > TextArea.Right) & (ScrollSteps > 0)))
+                else if (!((x > TextArea.Right) & (ScrollSteps > 0)))
                 {
                     result = eMouseTarget.None;
                 }
@@ -615,15 +604,29 @@ namespace mrbControls
                     var num2 = (int) Math.Round(checked(ScrollWidth + yPadding * 2) +
                                                 num / (double) ScrollSteps * ScrollOffset);
                     var num3 = (int) Math.Round(num / (double) ScrollSteps);
-                    if (Y < num2)
+                    if (y < num2)
                         result = eMouseTarget.ScrollBarUp;
-                    else if (Y > num2 + num3)
+                    else if (y > num2 + num3)
                         result = eMouseTarget.ScrollBarDown;
                     else
                         result = eMouseTarget.ScrollBlock;
                 }
 
                 return result;
+            }
+        }
+
+        private void ListLabelV3_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if ((e.Delta > 0) & (ScrollSteps > 0) & (ScrollOffset > 0))
+            {
+                ScrollOffset--;
+                Draw();
+            }
+            else if ((e.Delta < 0) & (ScrollOffset + 1 < ScrollSteps))
+            {
+                ScrollOffset++;
+                Draw();
             }
         }
 
@@ -658,9 +661,7 @@ namespace mrbControls
                             if (itemAtY > -1)
                             {
                                 var num2 = 0;
-                                var scrollOffset = ScrollOffset;
-                                var num3 = itemAtY - 1;
-                                for (var i = scrollOffset; i <= num3; i++) num2 += Items[i].ItemHeight;
+                                for (var i = ScrollOffset; i < itemAtY; i++) num2 += Items[i].ItemHeight;
 
                                 if (((num2 + Items[itemAtY].ItemHeight >= e.Y) &
                                      (num2 + Items[itemAtY].ItemHeight <= TextArea.Height)) |
@@ -760,8 +761,8 @@ namespace mrbControls
 
         private void RecomputeExpand()
         {
-            if (!isExpanded)
-                return;
+            if (!isExpanded) return;
+            
             var num = expandMaxY;
             Recalculate(true);
             var num2 = checked(GetRealTotalHeight() + ScrollWidth + yPadding * 3);
@@ -808,9 +809,7 @@ namespace mrbControls
                             }
 
                             var num = 0;
-                            var scrollOffset = ScrollOffset;
-                            var num2 = itemAtY - 1;
-                            for (var i = scrollOffset; i <= num2; i++) num += Items[i].ItemHeight;
+                            for (var i = ScrollOffset; i < itemAtY ; i++) num += Items[i].ItemHeight;
 
                             if (!(((num + Items[itemAtY].ItemHeight >= e.Y) &
                                    (num + Items[itemAtY].ItemHeight <= TextArea.Height)) |
@@ -935,17 +934,12 @@ namespace mrbControls
         {
             checked
             {
-                if (DisableRedraw)
-                    return;
-                if (!Visible)
-                    return;
+                if (DisableRedraw) return;
+                if (!Visible) return;
                 InitBuffer();
-                if ((Width == 0) | (Height == 0))
-                    return;
+                if ((Width == 0) | (Height == 0)) return;
                 bxBuffer.Graphics.Clear(isExpanded ? Color.Black : BackColor);
-                var scrollOffset = ScrollOffset;
-                var num = Items.Length - 1;
-                for (var i = scrollOffset; i <= num; i++) DrawItem(i);
+                for (var i = ScrollOffset; i < Items.Length; i++) DrawItem(i);
 
                 DrawScrollBar();
                 DrawExpandButton();
@@ -958,16 +952,11 @@ namespace mrbControls
         {
             checked
             {
-                if (Index < 0)
-                    return;
-                if (Index < ScrollOffset)
-                    return;
-                if (Index > Items.Length - 1)
-                    return;
+                if (Index < 0) return;
+                if (Index < ScrollOffset) return;
+                if (Index > Items.Length - 1)  return;
                 var num = 0;
-                var scrollOffset = ScrollOffset;
-                var num2 = Index - 1;
-                for (var i = scrollOffset; i <= num2; i++)
+                for (var i = ScrollOffset; i < Index; i++)
                 {
                     num += Items[i].ItemHeight;
                     if (num > Height) return;
@@ -1060,15 +1049,7 @@ namespace mrbControls
 
         private int GetTotalLineCount()
         {
-            var num = 0;
-            var num2 = 0;
-            checked
-            {
-                var num3 = Items.Length - 1;
-                for (var i = num2; i <= num3; i++) num += Items[i].LineCount;
-
-                return num;
-            }
+            return Items.Sum(e => e.LineCount);
         }
 
         private int GetScrollSteps()
@@ -1083,18 +1064,15 @@ namespace mrbControls
 
                 var num = 0;
                 var wrapCount = 0;
-                var num3 = 0;
-                var num4 = Items.Length - 1;
-                for (var i = num3; i <= num4; i++)
+                foreach (var e in Items)
                 {
-                    num += Items[i].LineCount;
+                    num += e.LineCount;
                     if (num > VisibleLineCount) wrapCount++;
                 }
 
+                // Zed: add an extra scroll step to ensure the last element is always visible
                 if (wrapCount > 0) wrapCount++;
-
-                ScrollSteps = wrapCount;
-                if (ScrollSteps <= 1) ScrollSteps = 0;
+                ScrollSteps = (wrapCount <= 1) ? 0 : wrapCount + 1;
 
                 return ScrollSteps;
             }
@@ -1241,9 +1219,7 @@ namespace mrbControls
                 Index = -1;
             }
 
-            public ListLabelItemV3(string iText, LLItemState iState, int inIDSet = -1, int iIDXPower = -1,
-                int inIDPower = -1,
-                string iStringTag = "", LLFontFlags iFont = LLFontFlags.Normal, LLTextAlign iAlign = LLTextAlign.Left)
+            public ListLabelItemV3(string iText, LLItemState iState, int inIDSet = -1, int iIDXPower = -1, int inIDPower = -1, string iStringTag = "", LLFontFlags iFont = LLFontFlags.Normal, LLTextAlign iAlign = LLTextAlign.Left)
             {
                 Text = "";
                 WrappedText = "";

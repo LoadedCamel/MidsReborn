@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,6 +20,42 @@ namespace mrbBase
 {
     public static class DatabaseAPI
     {
+        //Naming Conventions:
+        //   UID     =   Unique name in the form of [[[string].[string]].[string]]
+        //   PowerIndex     =   Numeric index within a given array which is matched to a UID
+        //   IDX     =   Special Case: Index of Power within a Powerset's Power array
+
+        //Every UID find function should have a corresponding PowerIndex find function
+
+        //Find functions.
+        //The nID_From_UID and UID_From_nID functions are for initial matching
+        //UIDs() Array functions perform Text-UID searches and are for database editing. They are slow.
+        //nIDs() Array functions perform Index lookup and are for fast lookup by regular code. They are faster.
+
+        //Matching functions
+        //nID_From_UID_
+        //   Class
+        //   Group
+        //   Set
+        //   Power
+
+        //UID_From_nID_
+        //   Class
+        //   Group
+        //   Set
+        //   Power
+
+        //All the nIDs functions expect the full matching Lookup-on-Load process to have been run
+        //The UIDs functions can run without Lookup-on-Load as they do their own matching
+
+        //nIDs_Sets(nIDGroup, nIDClass ,nType)   -   Expects numeric arguments
+        //nIDs_Sets(UIDGroup, UIDClass, nType)   -   Performs nID_From_UID on arguments and passes to the PowerIndex version - Slow
+        //UIDs_Sets(UIDGroup, UIDClass, nType)   -   Text-UID lookup only (for database editor)
+
+        //nIDs_Powers(nIDSet)    -   Expects numeric arguments
+        //nIDs_Powers(UIDSet)    -   Performs nID_From_UID on arguments and passes to the PowerIndex version - Slow
+        //UIDPowers(UIDSet)    -   Text-UID lookup only (for database editor)
+
         public const int HeroAccolades = 3257;
         public const int VillainAccolades = 3258;
         public const int TempPowers = 3259;
@@ -72,6 +109,7 @@ namespace mrbBase
             }
         }
 
+        //Modifier Table
         public static int NidFromUidAttribMod(string uID)
         {
             if (string.IsNullOrEmpty(uID))
@@ -95,6 +133,7 @@ namespace mrbBase
             return -1;
         }
 
+        //Class/Archetype
         public static int NidFromUidClass(string uidClass)
         {
             if (string.IsNullOrEmpty(uidClass))
@@ -121,6 +160,7 @@ namespace mrbBase
                 .TryFindIndex(o => string.Equals(o, uidOrigin, StringComparison.OrdinalIgnoreCase));
         }
 
+        //Powerset Groups
         private static void FillGroupArray()
         {
             Database.PowersetGroups = new Dictionary<string, PowersetGroup>();
@@ -139,6 +179,7 @@ namespace mrbBase
             }
         }
 
+        //Powersets
         public static int NidFromUidPowerset(string uidPowerset)
         {
             return GetPowersetByName(uidPowerset)?.nID ?? -1;
@@ -162,7 +203,7 @@ namespace mrbBase
                 se => string.Equals(se.UID, uidEntity, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static int[] NidSets(PowersetGroup group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
+        private static int[] NidSets(PowersetGroup? group, int nIDClass, Enums.ePowerSetType nType) // clsI12Lookup.vb
         {
             if ((nType == Enums.ePowerSetType.Inherent || nType == Enums.ePowerSetType.Pool) && nIDClass > -1 &&
                 !Database.Classes[nIDClass].Playable)
@@ -205,9 +246,9 @@ namespace mrbBase
 
         public static int[] NidPowers(int nIDPowerset, int nIDClass = -1)
         {
+            //Returns indexes from the POWER array, Not the index within the powerset
             if (nIDPowerset < 0 || nIDPowerset > Database.Powersets.Length - 1)
             {
-                //return Enumerable.Range(0, Database.Powersets.Length).ToArray();
                 var array = new int[Database.Power.Length];
                 for (var index = 0; index < Database.Power.Length; ++index)
                     array[index] = index;
@@ -239,19 +280,25 @@ namespace mrbBase
 
         private static int[] NidPowersAtLevel(int iLevel, int nIDPowerset)
         {
-            return nIDPowerset < 0
-                ? Array.Empty<int>()
-                : Database.Powersets[nIDPowerset].Powers.Where(pow => pow.Level - 1 == iLevel).Select(pow => pow.PowerIndex)
-                    .ToArray();
+            //Accepts a zero-based level and a powerset PowerIndex, and returns an array of indexes
+            //with the powerset's power array
+            return nIDPowerset < 0 ? Array.Empty<int>() : Database.Powersets[nIDPowerset].Powers.Where(pow => pow.Level - 1 == iLevel).Select(pow => pow.PowerIndex).ToArray();
         }
 
         public static int[] NidPowersAtLevelBranch(int iLevel, int nIDPowerset)
         {
+            //ZERO-based level
             if (nIDPowerset < 0)
+            {
                 return Array.Empty<int>();
-            if (Database.Powersets[nIDPowerset].nIDTrunkSet < 0)
-                return NidPowersAtLevel(iLevel, nIDPowerset);
+            }
 
+            if (Database.Powersets[nIDPowerset].nIDTrunkSet < 0)
+            {
+                //Regular set
+                return NidPowersAtLevel(iLevel, nIDPowerset);
+            }
+            //Branching powerset
             var powerset1 = NidPowersAtLevel(iLevel, nIDPowerset);
             var powerset2 = NidPowersAtLevel(iLevel, Database.Powersets[nIDPowerset].nIDTrunkSet);
             return powerset2.Concat(powerset1).ToArray();
@@ -368,6 +415,7 @@ namespace mrbBase
 
         public static IPowerset? GetPowersetByName(string iName)
         {
+            //Returns the index of the named set belonging to a named archetype (IE. Invulnerability, Tanker, or Invulnerability, Scrapper)
             var strArray = iName.Split('.');
             if (strArray.Length < 2)
                 return null;
@@ -381,7 +429,7 @@ namespace mrbBase
             return powersetGroup.Powersets.ContainsKey(iName) ? powersetGroup.Powersets[iName] : null;
         }
 
-        public static IPowerset GetPowersetByName(string iName, string iArchetype)
+        public static IPowerset? GetPowersetByName(string iName, string iArchetype)
         {
             var idx = GetArchetypeByName(iArchetype).Idx;
             foreach (var powerset1 in Database.Powersets)
@@ -413,12 +461,18 @@ namespace mrbBase
         //Pine
         public static IPowerset GetPowersetByName(string iName, Enums.ePowerSetType iSet)
         {
+            //Returns the index of the named set of a given type
+            //(IE, you can request Invulnerability from Primary (type 0), which is a tank set
+            // or you can request Secondary (Type 1) which is the scrapper version)
             return Database.Powersets.FirstOrDefault(powerset =>
                 iSet == powerset.SetType && string.Equals(iName, powerset.DisplayName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static IPowerset GetPowersetByID(string iName, Enums.ePowerSetType iSet)
         {
+            //Returns a powerset by its SetName property, not the DisplayName property.
+            //(IE, you can request Invulnerability from Primary (type 0), which is a tank set
+            // or you can request Secondary (Type 1) which is the scrapper version)
             return Database.Powersets.FirstOrDefault(ps =>
                 iSet == ps.SetType && string.Equals(iName, ps.SetName, StringComparison.OrdinalIgnoreCase));
         }
@@ -784,13 +838,16 @@ namespace mrbBase
 
         public static int GetEnhancementByName(string iName)
         {
+            //takes the ShortName (example: ResDam) and returns the index in the enhancement array
             return Database.Enhancements.TryFindIndex(enh =>
                 string.Equals(enh.ShortName, iName, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(enh.Name, iName, StringComparison.OrdinalIgnoreCase));
+                string.Equals(enh.Name, iName, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(enh.LongName, iName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int GetEnhancementByName(string iName, Enums.eType iType)
         {
+            //takes the ShortName (example: ResDam) and returns the index in the enhancement array
             return Database.Enhancements.TryFindIndex(enh =>
                 enh.TypeID == iType && string.Equals(enh.ShortName, iName, StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(enh.Name, iName, StringComparison.OrdinalIgnoreCase));
@@ -798,6 +855,7 @@ namespace mrbBase
 
         public static int GetEnhancementByName(string iName, string iSet)
         {
+            //takes the ShortName (example: ResDam) and returns the index in the enhancement array
             foreach (var enhancementSet in Database.EnhancementSets)
             {
                 if (!string.Equals(enhancementSet.ShortName, iSet, StringComparison.OrdinalIgnoreCase))
@@ -902,6 +960,7 @@ namespace mrbBase
 
         public static int NidFromUidRecipe(string uidRecipe, ref int subIndex)
         {
+            //Returns recipe index, and sets SubIndex for the extra int value
             var isSub = (subIndex > -1) & uidRecipe.Contains("_");
             subIndex = -1;
             var uid = isSub ? uidRecipe.Substring(0, uidRecipe.LastIndexOf("_", StringComparison.Ordinal)) : uidRecipe;
@@ -935,6 +994,11 @@ namespace mrbBase
             return -1;
         }
 
+        /// <summary>
+        /// Fully qualified name is Group.Set.Name. Group is always 'Boosts'. Set is always the same as Name.
+        /// </summary>
+        /// <param name="uidEnh"></param>
+        /// <returns></returns>
         public static int NidFromUidEnhExtended(string uidEnh)
         {
             if (!uidEnh.StartsWith("BOOSTS", true, CultureInfo.CurrentCulture))
@@ -1143,10 +1207,31 @@ namespace mrbBase
         }
         #endregion
 
+        public static void CheckEhcBoosts()
+        {
+            foreach (var power in Database.Power)
+            {
+                if (power.GetPowerSet().SetType == Enums.ePowerSetType.Primary || power.GetPowerSet().SetType == Enums.ePowerSetType.Secondary || power.GetPowerSet().SetType == Enums.ePowerSetType.Pool || power.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary)
+                {
+                    var Boosts = new List<string>();
+                    if (power.BoostsAllowed.Length <= 0 && power.Enhancements.Length > 0)
+                    {
+                        foreach (var enh in power.Enhancements)
+                        {
+                            Boosts.Add(Enum.GetName(typeof(Enums.eBoosts), enh));
+                        }
+
+                        power.BoostsAllowed = Boosts.ToArray();
+                    }
+                }
+            }
+        }
+
         public static void SaveMainDatabase(ISerialize serializer)
         {
             //MergeDatabaseFile();
             //Task.Delay(1500);
+            CheckEhcBoosts();
             var path = Files.SelectDataFileSave(Files.MxdbFileDB);
 
             FileStream fileStream;
@@ -1439,7 +1524,16 @@ namespace mrbBase
 
         public static bool LoadLevelsDatabase()
         {
-            var path = Files.SelectDataFileLoad("Levels.mhd");
+            var path = string.Empty;
+            switch (MidsContext.Config.BuildMode)
+            {
+                case Enums.dmModes.Normal:
+                    path = Files.SelectDataFileLoad("NLevels.mhd");
+                    break;
+                case Enums.dmModes.Respec:
+                    path = Files.SelectDataFileLoad("RLevels.mhd");
+                    break;
+            }
             Database.Levels = new LevelMap[0];
             StreamReader iStream;
             try
@@ -2158,6 +2252,9 @@ namespace mrbBase
 
         public static float GetModifier(IEffect iEffect)
         {
+            //Currently expects a zero-based level.
+
+            //This value is returned as a modifier if a value is out of bounds
             var iClass = 0;
             var iLevel = MidsContext.MathLevelBase;
             var effPower = iEffect.GetPower();
@@ -2175,6 +2272,8 @@ namespace mrbBase
 
             if (MidsContext.MathLevelExemp > -1 && MidsContext.MathLevelExemp < MidsContext.MathLevelBase)
                 iLevel = MidsContext.MathLevelExemp;
+
+            //Everything seems to be valid, return the modifier
             return GetModifier(iClass, iEffect.nModifierTable, iLevel);
         }
 
@@ -2215,7 +2314,7 @@ namespace mrbBase
             return num;
         }
 
-        public static void MatchAllIDs(IMessager iFrm = null)
+        public static void MatchAllIDs(IMessager? iFrm = null)
         {
             UpdateMessage(iFrm, "Matching Group IDs...");
             FillGroupArray();
@@ -2235,7 +2334,7 @@ namespace mrbBase
             MatchSummonIDs();
         }
 
-        private static void UpdateMessage(IMessager iFrm, string iMsg)
+        private static void UpdateMessage(IMessager? iFrm, string iMsg)
 
         {
             iFrm?.SetMessage(iMsg);
@@ -2574,10 +2673,10 @@ namespace mrbBase
         public override Boolean CanConvert(Type objectType)
             => objectType == typeof(TAbstract);
 
-        public override Object ReadJson(JsonReader reader, Type type, Object value, JsonSerializer jser)
+        public override Object? ReadJson(JsonReader reader, Type type, Object? value, JsonSerializer jser)
             => jser.Deserialize<TReal>(reader);
 
-        public override void WriteJson(JsonWriter writer, Object value, JsonSerializer jser)
+        public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer jser)
             => jser.Serialize(writer, value);
     }
 }

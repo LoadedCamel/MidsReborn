@@ -9,13 +9,6 @@ using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
 {
-    public class PowerEnhancements
-    {
-        public string PowerName { get; set; }
-        public string EnhancementSet { get; set; }
-        public int EnhancementSlot { get; set; }
-    }
-
     public class Character
     {
         public static List<string> gridEntries = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
@@ -33,10 +26,11 @@ namespace mrbBase.Base.Data_Classes
             TotalsCapped = new TotalStatistics();
             DisplayStats = new Statistics(this);
             Builds = new[] { new Build(this, DatabaseAPI.Database.Levels) };
+            PEnhancementsList = new List<string>();
             Reset();
         }
 
-        public List<PowerEnhancements> powerEnhancements { get; private set; }
+        public List<string> PEnhancementsList { get; set; }
 
         public string setName { get; set; }
 
@@ -49,7 +43,7 @@ namespace mrbBase.Base.Data_Classes
                 if (LevelCache > -1) return LevelCache;
 
                 int num2;
-                if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+                if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
                 {
                     num2 = CurrentBuild.GetMaxLevel();
                 }
@@ -206,17 +200,15 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+                if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
                 {
-                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 &&
-                        MidsContext.Config.BuildOption != Enums.dmItem.Power)
+                    if (CurrentBuild.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
                         return true;
                 }
-                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) &&
-                         DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
+                /*else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
                 {
                     return true;
-                }
+                }*/
 
                 return false;
             }
@@ -415,124 +407,15 @@ namespace mrbBase.Base.Data_Classes
             Totals.Init();
             TotalsCapped.Init();
             RequestedLevel = -1;
+            PEnhancementsList = new List<string>();
         }
 
-        public bool ValidateConditional(IPower power)
-        {
-            foreach (var effect in power.Effects)
-            {
-                var getCondition = new Regex("(:.*)");
-                var getConditionItem = new Regex("(.*:)");
-                foreach (var cVp in effect.ActiveConditionals)
-                {
-                    var condition = getCondition.Replace(cVp.Key, "");
-                    var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                    var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                    var cVal = cVp.Value.Split(' ');
-                    switch (condition)
-                    {
-                        case "Active":
-                            if (conditionPower != null)
-                            {
-                                cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
-                            }
 
-                            break;
-                        case "Taken":
-                            if (conditionPower != null)
-                            {
-                                cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
-                                    .Equals(Convert.ToBoolean(cVp.Value));
-                            }
-
-                            break;
-                        case "Stacks":
-                            if (conditionPower != null)
-                            {
-                                switch (cVal[0])
-                                {
-                                    case "=":
-
-                                        cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
-
-                                        break;
-                                    case ">":
-                                        cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
-
-                                        break;
-                                    case "<":
-                                        cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
-
-                                        break;
-                                }
-                            }
-
-                            break;
-                        case "Team":
-                            switch (cVal[0])
-                            {
-                                case "=":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
-                                        .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                                case ">":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                        MidsContext.Config.TeamMembers[conditionItemName] >
-                                        Convert.ToInt32(cVal[1]))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                                case "<":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                        MidsContext.Config.TeamMembers[conditionItemName] <
-                                        Convert.ToInt32(cVal[1]))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                            }
-
-                            break;
-                    }
-                }
-
-                var validCount = effect.ActiveConditionals.Count(b => b.Validated);
-                var invalidCount = effect.ActiveConditionals.Count(b => !b.Validated);
-                if (effect.ActiveConditionals.Count > 0)
-                {
-                    effect.Validated = validCount == effect.ActiveConditionals.Count;
-                    if (effect.Validated)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
+        /// <summary>
+        /// Call this function when a power is enabled/disabled, added, or removed, including when the archetype is changed.
+        /// </summary>
         private void RefreshActiveSpecial()
         {
-            powerEnhancements = new List<PowerEnhancements>();
             ActiveComboLevel = 0;
             AcceleratedActive = false;
             DelayedActive = false;
@@ -566,6 +449,7 @@ namespace mrbBase.Base.Data_Classes
             FastSnipe = false;
             NotFastSnipe = true;
             inherentPowers = new List<IPower>();
+            PEnhancementsList = new List<string>();
 
             foreach (var power in CurrentBuild.Powers)
             {
@@ -583,22 +467,31 @@ namespace mrbBase.Base.Data_Classes
                         {
                             power.Power.Active = false;
                         }
-                        else if (power.StatInclude && !power.HasProc())
+                        else if (power.StatInclude)
                         {
                             power.Power.Active = true;
                         }
 
                         break;
                 }
-                /*foreach (var effect in power.Power.Effects)
+
+                for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
                 {
-                    effect.UpdateAttrib();
-                }*/
+                    var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
+                    if (pSlotEnh != -1)
+                    {
+                        var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
+                        if (!PEnhancementsList.Contains(enhancement.UID))
+                        {
+                            PEnhancementsList.Add(enhancement.UID);
+                        }
+                    }
+                }
             }
 
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power == null || power.Power == null || !power.StatInclude) continue;
+                if (power?.Power == null || !power.StatInclude) continue;
                 switch (power.Power.PowerName.ToUpper())
                 {
                     case "TIME_CRAWL":
@@ -779,6 +672,22 @@ namespace mrbBase.Base.Data_Classes
                             displayIndex = 7;
                             power.Power.DisplayLocation = displayIndex;
                             break;
+                        case Enums.eGridType.Powerset when powName.Equals("Shadow_Step"):
+                            displayIndex = 8;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
+                        case Enums.eGridType.Powerset when powName.Equals("Shadow_Recall"):
+                            displayIndex = 9;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
+                        case Enums.eGridType.Powerset when powName.Equals("Combat_Flight"):
+                            displayIndex = 8;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
+                        case Enums.eGridType.Powerset when powName.Equals("Energy_Flight"):
+                            displayIndex = 9;
+                            power.Power.DisplayLocation = displayIndex;
+                            break;
                         default:
                             displayIndex = inherentPowers.Count - 1;
                             if (displayIndex > 7 && displayIndex < 59)
@@ -789,44 +698,7 @@ namespace mrbBase.Base.Data_Classes
                             break;
                     }
                 }
-
-                for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
-                {
-                    var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
-                    if (pSlotEnh > -1)
-                    {
-                        var enhancement = DatabaseAPI.Database.Enhancements[pSlotEnh];
-                        powerEnhancements.Add(new PowerEnhancements
-                        {
-                            PowerName = power.Name,
-                            EnhancementSet = GetEnhSetName(enhancement.LongName),
-                            EnhancementSlot = slotIndex
-                        });
-                    }
-                    else
-                    {
-                        var index = slotIndex;
-                        var toRem = powerEnhancements.FindIndex(x =>
-                            x.PowerName.Equals(power.Name) && x.EnhancementSlot == index);
-                        if (toRem != -1) powerEnhancements.RemoveAt(toRem);
-                    }
-                }
             }
-        }
-
-        private string GetEnhSetName(string longName)
-        {
-            var enhSet = string.Empty;
-            var setCount = DatabaseAPI.Database.EnhancementSets.Count;
-            for (var setIndex = 0; setIndex < setCount; setIndex++)
-                foreach (var enh in DatabaseAPI.Database.EnhancementSets[setIndex].Enhancements)
-                {
-                    var enhancement = DatabaseAPI.Database.Enhancements[enh];
-                    if (enhancement.LongName == longName)
-                        enhSet = DatabaseAPI.Database.EnhancementSets[setIndex].DisplayName;
-                }
-
-            return enhSet;
         }
 
         public void Validate()
@@ -836,10 +708,19 @@ namespace mrbBase.Base.Data_Classes
             RefreshActiveSpecial();
         }
 
+        /// <summary>
+        /// Returns true if there is a clash between two chosen powersets.
+        /// </summary>
+        /// <param name="nIDPower"></param>
+        /// <returns></returns>
         protected bool PowersetMutexClash(int nIDPower)
         {
+            //Returns true if there's a clash.
             var powerSetId = DatabaseAPI.Database.Power[nIDPower].PowerSetID;
+
             Enums.PowersetType powersetType;
+
+            //Only check the one set (ie, if power is in primary, we check secondary)
             switch (DatabaseAPI.Database.Powersets[powerSetId].SetType)
             {
                 case Enums.ePowerSetType.Primary:
@@ -858,11 +739,23 @@ namespace mrbBase.Base.Data_Classes
             if (powersetType == Enums.PowersetType.None)
                 return false;
             for (var index = 0; index <= DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets.Length - 1; ++index)
+            {
                 if (DatabaseAPI.Database.Powersets[powerSetId].nIDMutexSets[index] == Powersets[(int)powersetType].nID)
+                {
+                    // Powerset combination is denied
                     return true;
+                }
+            }
+
             for (var index = 0; index <= Powersets[(int)powersetType].nIDMutexSets.Length - 1; ++index)
+            {
                 if (Powersets[(int)powersetType].nIDMutexSets[index] == powerSetId)
+                {
+                    // Powerset combination is denied
                     return true;
+                }
+            }
+
             return false;
         }
 
@@ -1092,11 +985,16 @@ namespace mrbBase.Base.Data_Classes
         private int GetFirstAvailableSlotLevel(int iLevel = 0)
         {
             if (iLevel < 0)
+            {
                 iLevel = 0;
+            }
+
             for (var level = iLevel; level < DatabaseAPI.Database.Levels.Length; ++level)
-                if (DatabaseAPI.Database.Levels[level].Slots > 0 &&
-                    DatabaseAPI.Database.Levels[level].Slots - CurrentBuild.SlotsPlacedAtLevel(level) > 0)
+            {
+                if (DatabaseAPI.Database.Levels[level].Slots > 0 && DatabaseAPI.Database.Levels[level].Slots - CurrentBuild.SlotsPlacedAtLevel(level) > 0)
                     return level;
+            }
+
             return -1;
         }
 
@@ -1104,15 +1002,19 @@ namespace mrbBase.Base.Data_Classes
         {
             if (power.Power == null || !CanPlaceSlot || power.SlotCount > 5)
                 return -1;
-            if (!DatabaseAPI.Database.Power[power.NIDPower].Slottable) return -1;
+            if (!DatabaseAPI.Database.Power[power.NIDPower].Slottable)
+            {
+                return -1;
+            }
 
             var iLevel = power.Level;
             if (DatabaseAPI.Database.Power[power.NIDPower].AllowFrontLoading)
+            {
                 iLevel = 0;
+            }
+
             var firstAvailable = GetFirstAvailableSlotLevel(iLevel);
-            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp &&
-                firstAvailable > CurrentBuild.GetMaxLevel() + 1)
-                firstAvailable = -1;
+
             return firstAvailable;
         }
 

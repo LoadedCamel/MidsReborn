@@ -6,7 +6,7 @@
     <ProjectGuid>{27BD82DA-4B3E-4D6B-BAEA-BE59A28A96EB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Mids_Reborn</RootNamespace>
-    <AssemblyName>Mids Reborn</AssemblyName>
+    <AssemblyName>MidsReborn</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>latest</LangVersion>
     <FileAlignment>512</FileAlignment>
@@ -31,7 +31,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
@@ -76,12 +76,18 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>mrbasign.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
     <Compile Include="clsShoppingCheckList.cs" />
     <Compile Include="clsGenFreebies.cs" />
     <Compile Include="clsOAuth.cs" />
-    <Compile Include="clsZip.cs" />
+    <Compile Include="Forms\UpdateSystem\clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
     <Compile Include="FileAssociation.cs" />
     <Compile Include="Forms\Controls\DataView.cs">
@@ -99,11 +105,41 @@
     <Compile Include="Forms\Controls\InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\UpdateSystem\UpdateQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\UpdateQuery.Designer.cs">
+      <DependentUpon>UpdateQuery.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmProgress.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmProgress.Designer.cs">
       <DependentUpon>frmProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\PatchNotes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\PatchNotes.Designer.cs">
+      <DependentUpon>PatchNotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\Updater.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\Updater.Designer.cs">
+      <DependentUpon>Updater.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmIncarnates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmIncarnates.Designer.cs">
+      <DependentUpon>frmIncarnates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmRecipeEditorBulkFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WindowMenuItems\frmRecipeEditorBulkFilter.Designer.cs">
+      <DependentUpon>frmRecipeEditorBulkFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmTotalsV2.cs">
       <SubType>Form</SubType>
@@ -209,9 +245,6 @@
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmTemp.Designer.cs">
       <DependentUpon>frmTemp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\WindowMenuItems\frmTotals.Designer.cs">
-      <DependentUpon>frmTotals.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmSetViewer.Designer.cs">
       <DependentUpon>frmSetViewer.cs</DependentUpon>
@@ -363,6 +396,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UIv2\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIv2\Form1.designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowersControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UIv2\v2Controls\PowersControl.Designer.cs">
+      <DependentUpon>PowersControl.cs</DependentUpon>
+    </Compile>
     <Content Include="Images\Classes\1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -445,6 +490,22 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\GlobalMods.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Forms\WindowMenuItems\frmIncarnates.resx">
+      <DependentUpon>frmIncarnates.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WindowMenuItems\frmRecipeEditorBulkFilter.resx">
+      <DependentUpon>frmRecipeEditorBulkFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIv2\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Data\NLevels.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Images\defaultAvatar.png" />
@@ -1804,9 +1865,6 @@
     <Content Include="Images\Powersets\Presence.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Powersets\PreventiveMedicine.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Images\Powersets\PrimalForcesMastery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1861,7 +1919,13 @@
     <Content Include="Images\Powersets\ShieldDef.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Powersets\ShockTherapy.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Powersets\SonicAttack.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Powersets\SonicManipulation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Powersets\SonicResonance.png">
@@ -2146,6 +2210,7 @@
     <Content Include="Images\Unknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="mrbasign.pfx" />
     <None Include="Resources\enhData.png" />
     <None Include="Resources\PictureBox1.Image.png" />
     <None Include="Resources\pbTitle.Image.png" />
@@ -2172,6 +2237,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Controls\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\UpdateQuery.resx">
+      <DependentUpon>UpdateQuery.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmProgress.resx">
       <DependentUpon>frmProgress.cs</DependentUpon>
@@ -2218,6 +2286,12 @@
     <EmbeddedResource Include="Forms\OptionsMenuItems\frmAttribModImporter.resx">
       <DependentUpon>frmAttribModImporter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
+      <DependentUpon>PatchNotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\Updater.resx">
+      <DependentUpon>Updater.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmPrestige.resx">
       <DependentUpon>frmPrestige.cs</DependentUpon>
     </EmbeddedResource>
@@ -2253,7 +2327,7 @@
     <Compile Include="clsOutput.cs" />
     <Compile Include="clsToonX.cs" />
     <Compile Include="clsUniversalImport.cs" />
-    <Compile Include="clsXMLUpdate.cs" />
+    <Compile Include="Forms\UpdateSystem\clsXMLUpdate.cs" />
     <Compile Include="Forms\WindowMenuItems\frmAccolade.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2393,9 +2467,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmStats.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\WindowMenuItems\frmTotals.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmTweakMatching.cs">
@@ -2552,9 +2623,6 @@
     <EmbeddedResource Include="Forms\frmStats.resx">
       <DependentUpon>frmStats.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WindowMenuItems\frmTotals.resx">
-      <DependentUpon>frmTotals.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmTweakMatching.resx">
       <DependentUpon>frmTweakMatching.cs</DependentUpon>
     </EmbeddedResource>
@@ -2613,9 +2681,6 @@
     <Content Include="Data\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Levels.mhd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Data\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2634,6 +2699,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CircularProgressBar">
+      <Version>2.8.0.16</Version>
+    </PackageReference>
     <PackageReference Include="FastDeepCloner">
       <Version>1.3.5</Version>
     </PackageReference>
@@ -2649,7 +2717,13 @@
     <PackageReference Include="RestSharp">
       <Version>106.11.7</Version>
     </PackageReference>
-    <PackageReference Include="Syncfusion.Shared.Windows">
+    <PackageReference Include="Syncfusion.Grid.Windows">
+      <Version>18.4.0.31</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Licensing">
+      <Version>18.4.0.31</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Shared.Base">
       <Version>18.4.0.31</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Tools.Windows">

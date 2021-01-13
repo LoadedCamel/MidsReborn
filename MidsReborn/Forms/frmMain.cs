@@ -16,6 +16,7 @@ using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
+using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using Mids_Reborn.My;
 using mrbBase;
@@ -82,7 +83,7 @@ namespace Mids_Reborn.Forms
             InitializeComponent();
             Application.EnableVisualStyles();
             foreach (var backup in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.bak")) File.Delete(backup);
-            if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate();
+            if (MidsContext.Config.CheckForUpdates) clsXMLUpdate.CheckUpdate(this);
 
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
@@ -329,11 +330,12 @@ namespace Mids_Reborn.Forms
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
                 Size = new Size(width1, height1);
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
+                tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 tsViewRelativeAsSigns.Checked = MidsContext.Config.ShowRelSymbols;
                 tsViewSelected();
-                tsIODefault.Text = "Default (" + (MidsContext.Config.I9.DefaultIOLevel + 1) + ")";
+                tsIODefault.Text = $"Default ({MidsContext.Config.I9.DefaultIOLevel + 1})";
                 SetDamageMenuCheckMarks();
                 //Procat: Removed during performance optimization.
                 //ReArrange(true);
@@ -344,6 +346,7 @@ namespace Mids_Reborn.Forms
                 NoUpdate = false;
                 tsViewSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
                 ibSlotLevels.Checked = MidsContext.Config.ShowSlotLevels;
+                UpdateModeInfo();
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 ibPopup.Checked = !MidsContext.Config.DisableShowPopup;
                 ibRecipe.Checked = MidsContext.Config.PopupRecipes;
@@ -357,7 +360,7 @@ namespace Mids_Reborn.Forms
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
                 Refresh();
-                Refresh();
+                //Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
@@ -394,6 +397,31 @@ namespace Mids_Reborn.Forms
         }
 
         //void accoladeButton_ButtonClicked() => PowerModified(markModified: false);
+
+        private void ibMode_ButtonClicked()
+        {
+            if (MainModule.MidsController.Toon == null)
+                return;
+            MidsContext.Config.BuildMode = MidsContext.Config.BuildMode != Enums.dmModes.Normal ? Enums.dmModes.Normal : Enums.dmModes.Respec;
+            if (!DatabaseAPI.LoadLevelsDatabase()) return;
+            MidsContext.Character.ResetLevel();
+            PowerModified(markModified: false);
+            UpdateDMBuffer();
+            pbDynMode.Refresh();
+        }
+
+        private void UpdateModeInfo()
+        {
+            switch (MidsContext.Config.BuildMode)
+            {
+                case Enums.dmModes.Normal:
+                    ibMode.TextOff = "Normal";
+                    break;
+                case Enums.dmModes.Respec:
+                    ibMode.TextOff = "Respec";
+                    break;
+            }
+        }
 
         private void accoladeButton_ButtonClicked()
         {
@@ -472,10 +500,9 @@ namespace Mids_Reborn.Forms
                         Powerset.nIDTrunkSet,
                         -1, -1, "", ListLabelV3.LLFontFlags.Bold, ListLabelV3.LLTextAlign.Center);
                     llPower.AddItem(iItem1);
-                    for (var iIDXPower = 0; iIDXPower <= powerset.Powers.Length - 1; ++iIDXPower)
+                    for (var iIDXPower = 0; iIDXPower < powerset.Powers.Length; iIDXPower++)
                     {
-                        if (powerset.Powers[iIDXPower].Level <= 0)
-                            continue;
+                        if (powerset.Powers[iIDXPower].Level <= 0) continue;
                         message = "";
                         var iItem2 = new ListLabelV3.ListLabelItemV3(powerset.Powers[iIDXPower].DisplayName,
                             MainModule.MidsController.Toon.PowerState(powerset.Powers[iIDXPower].PowerIndex,
@@ -497,15 +524,13 @@ namespace Mids_Reborn.Forms
                 }
 
                 if (Powerset.Powers != null)
-                    for (var iIDXPower = 0; iIDXPower <= Powerset.Powers.Length - 1; ++iIDXPower)
+                    for (var iIDXPower = 0; iIDXPower < Powerset.Powers.Length; iIDXPower++)
                     {
                         if (Powerset.Powers[iIDXPower].Level <= 0 || !Powerset.Powers[iIDXPower]
                             .AllowedForClass(MidsContext.Character.Archetype.Idx))
                             continue;
                         message = "";
-                        var targetPs =
-                            MainModule.MidsController.Toon.PowerState(Powerset.Powers[iIDXPower].PowerIndex,
-                                ref message);
+                        var targetPs = MainModule.MidsController.Toon.PowerState(Powerset.Powers[iIDXPower].PowerIndex, ref message);
                         var power = Powerset.Powers[iIDXPower];
                         var iItem = new ListLabelV3.ListLabelItemV3(
                             Powerset.Powers[iIDXPower].DisplayName,
@@ -516,8 +541,7 @@ namespace Mids_Reborn.Forms
                         {
                             Bold = MidsContext.Config.RtFont.PairedBold
                         };
-                        if (iItem.ItemState == ListLabelV3.LLItemState.Invalid)
-                            iItem.Italic = true;
+                        if (iItem.ItemState == ListLabelV3.LLItemState.Invalid) iItem.Italic = true;
                         llPower.AddItem(iItem);
                     }
 
@@ -565,7 +589,7 @@ namespace Mids_Reborn.Forms
                 return;
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.DrawBackground();
-            using var solidBrush = new SolidBrush(SystemColors.ControlText);
+            using var solidBrush = new SolidBrush(Color.Black);
             if (e.Index > -1)
             {
                 var cbAT = new ComboBoxT<Archetype>(this.cbAT);
@@ -1103,13 +1127,14 @@ namespace Mids_Reborn.Forms
             var str2 = "";
             var ch = MidsContext.Character;
             var level = ch.Level;
-            if (!((ch.CurrentBuild.TotalSlotsAvailable - ch.CurrentBuild.SlotsPlaced < 1) &
-                  (ch.CurrentBuild.LastPower + 1 - ch.CurrentBuild.PowersPlaced < 1)) && ch.Level > 0)
+            if (!((ch.CurrentBuild.TotalSlotsAvailable - ch.CurrentBuild.SlotsPlaced < 1) & (ch.CurrentBuild.LastPower + 1 - ch.CurrentBuild.PowersPlaced < 1)) && ch.Level > 0)
+            {
                 str1 = " (Placing " + (ch.Level + 1) + ")";
+            }
+
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
             var str3 = ch.Name + ": ";
-            if ((MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) & (str1 != ""))
-                str3 = str3 + "Level " + level + str1 + " ";
+
             var str4 = str3 + ch.Archetype.Origin[ch.Origin] + " " + ch.Archetype.DisplayName;
             if (MainModule.MidsController.Toon.Locked)
                 str4 = str4 + " (" + ch.Powersets[0].DisplayName + " / " + ch.Powersets[1].DisplayName + ")" + str2;
@@ -1138,6 +1163,7 @@ namespace Mids_Reborn.Forms
             using var solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             var num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;
+            var slotId = -1;
             for (var i = 0; i <= num1; ++i)
             {
                 point1.X = (int)Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.szSlot.Width * 6) / 2.0);
@@ -1146,6 +1172,7 @@ namespace Mids_Reborn.Forms
                 var num2 = 1f;
                 var powerEntry = MidsContext.Character.CurrentBuild.Powers[FlipPowerID];
                 var slot = powerEntry.Slots[i];
+                slotId = i;
                 if (FlipSlotState[i] < 0)
                 {
                     index = slot.FlippedEnhancement.Enh;
@@ -1208,9 +1235,7 @@ namespace Mids_Reborn.Forms
                         GraphicsUnit.Pixel, recolorIa);
                 }
 
-                if ((MidsContext.Config.CalcEnhLevel == Enums.eEnhRelative.None) |
-                    (slot.Level >= MidsContext.Config.ForceLevel) |
-                    ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !powerEntry.StatInclude))
+                if ((MidsContext.Config.CalcEnhLevel == Enums.eEnhRelative.None) | (slot.Level >= MidsContext.Config.ForceLevel) | ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & !powerEntry.StatInclude))
                 {
                     rectangle2.Inflate(1, 1);
                     drawing.bxBuffer.Graphics.FillEllipse(solidBrush, rectangle2);
@@ -1284,10 +1309,8 @@ namespace Mids_Reborn.Forms
 
         public void DoRedraw()
         {
-            if (drawing == null)
-            {
-                return;
-            }
+            if (drawing == null) return;
+            
             NoResizeEvent = true;
             var width = pnlGFXFlow.Width;
             var scale = 1.0;
@@ -1297,8 +1320,8 @@ namespace Mids_Reborn.Forms
             {
                 scale = flowWidth / (double)drawingArea.Width;
             }
-
-            pnlGFX.Width = flowWidth - 10;
+            // Prevent horizontal scrollbar to appear
+            pnlGFX.Width = flowWidth - 26; // - 10;
             pnlGFX.Height = (int)Math.Round(drawingArea.Height * scale);
             pnlGFX.Update();
             pnlGFXFlow.Update();
@@ -1306,37 +1329,38 @@ namespace Mids_Reborn.Forms
             drawing.FullRedraw();
         }
 
-        private void DoResize()
+        private void DoResize(bool forceResize = false)
         {
             //lblHero.Width = ibRecipe.Left - 4;
-            if (NoResizeEvent || drawing == null) return;
+            if (drawing == null) return;
 
-            var clientWidth = ClientSize.Width - pnlGFXFlow.Left; // num1
-            var clientHeight = ClientSize.Height - pnlGFXFlow.Top; // num2
+            var prevDrawingWidth = pnlGFX.Width;
+            var clientWidth = ClientSize.Width - pnlGFXFlow.Left;
+            var clientHeight = ClientSize.Height - pnlGFXFlow.Top;
             pnlGFXFlow.Width = clientWidth;
             pnlGFXFlow.Height = clientHeight;
-            var scale = 1.0;
             var drawingArea = drawing.GetDrawingArea();
-            var drawingWidth = pnlGFXFlow.Width - 30; // num5
-            if (drawingWidth < drawingArea.Width)
-                scale = drawingWidth / (double)drawingArea.Width;
+            var drawingWidth = pnlGFXFlow.Width - 30;
+            // Zed: fix for drawing area turning black if scale is >= 1
+            var prevScale = prevDrawingWidth / (double)drawingArea.Width;
+            var scale = drawingWidth / (double)drawingArea.Width;
+            NoResizeEvent = prevScale >= 1 & scale >= 1;
+            if (NoResizeEvent & !forceResize) return;
+            scale = Math.Min(scale, 1);
             var drawingHeight = (int)Math.Round(drawingArea.Height * scale);
             pnlGFX.Width = drawingWidth;
             pnlGFX.Height = drawingHeight;
+
             drawing.bxBuffer.Size = pnlGFX.Size;
             Control pnlGfx = pnlGFX;
             drawing.ReInit(pnlGfx);
             pnlGFX = (PictureBox)pnlGfx;
             pnlGFX.Image = drawing.bxBuffer.Bitmap;
-            pnlGFX.Update();
-            pnlGFX.Refresh();
-
-            NoResizeEvent = true;
-            drawing.SetScaling(scale < 1.0 ? pnlGFX.Size : drawing.bxBuffer.Size);
-            NoResizeEvent = false;
+            drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.bxBuffer.Size);
             ReArrange(false);
             pnlGFX.Update();
             pnlGFX.Refresh();
+            NoResizeEvent = true;
         }
 
         private bool doSave()
@@ -1465,13 +1489,10 @@ namespace Mids_Reborn.Forms
             var iPowers = new List<IPower>();
             var num1 = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length - 1;
             for (var index = 0; index <= num1; ++index)
-                iPowers.Add(
-                    DatabaseAPI.Database.Power[
-                        MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
+                iPowers.Add(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
             using var frmAccolade = new frmAccolade(this, iPowers)
             {
-                Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower]
-                    .DisplayName
+                Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower].DisplayName
             };
             frmAccolade.ShowDialog(this);
             EnhancementModified();
@@ -1552,9 +1573,6 @@ namespace Mids_Reborn.Forms
                 {
                     case "Temporary Powers":
                         MidsContext.Character.CurrentBuild.Powers[index].StatInclude = tempPowersButton.Checked;
-                        break;
-                    case "Accolades":
-                        MidsContext.Character.CurrentBuild.Powers[index].StatInclude = accoladeButton.Checked;
                         break;
                 }
             }
@@ -1972,19 +1990,30 @@ namespace Mids_Reborn.Forms
 
         private int GetFirstValidSetEnh(int slotIndex, int hID)
         {
-            if (LastEnhPlaced == null || LastEnhPlaced.Enh < 0 ||
-                DatabaseAPI.Database.Enhancements[LastEnhPlaced.Enh].TypeID != Enums.eType.SetO)
+            if (LastEnhPlaced == null || LastEnhPlaced.Enh < 0 || DatabaseAPI.Database.Enhancements[LastEnhPlaced.Enh].TypeID != Enums.eType.SetO)
+            {
                 return -1;
+            }
+
             var nIdSet = DatabaseAPI.Database.Enhancements[LastEnhPlaced.Enh].nIDSet;
             if (nIdSet < 0)
+            {
                 return -1;
+            }
+
             if (MidsContext.Character.CurrentBuild.EnhancementTest(slotIndex, hID, LastEnhPlaced.Enh, true))
+            {
                 return LastEnhPlaced.Enh;
+            }
+
             var num = DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements.Length - 1;
             for (var index = 0; index <= num; ++index)
-                if (MidsContext.Character.CurrentBuild.EnhancementTest(slotIndex, hID,
-                    DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements[index], true))
+            {
+                if (MidsContext.Character.CurrentBuild.EnhancementTest(slotIndex, hID, DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements[index], true))
+                {
                     return DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements[index];
+                }
+            }
 
             return -1;
         }
@@ -2074,23 +2103,36 @@ namespace Mids_Reborn.Forms
             var enhChanged = false;
             if (MidsContext.Character.CurrentBuild.EnhancementTest(EnhancingSlot, EnhancingPower, e.Enh) | (e.Enh < 0))
             {
+                //Code below triggers after an enhancement is added
                 var power = MidsContext.Character.CurrentBuild.Powers[EnhancingPower];
                 if (e.Enh != power.Slots[EnhancingSlot].Enhancement.Enh)
+                {
                     enhChanged = true;
+                }
+
                 var hasProc = power.HasProc();
                 power.Slots[EnhancingSlot].Enhancement = (I9Slot)e.Clone();
                 if (e.Enh > -1)
+                {
                     LastEnhPlaced = (I9Slot)e.Clone();
+                }
+                else
+                {
+                    MidsContext.Character.PEnhancementsList.Clear();
+                }
+
                 if (enhChanged)
                 {
                     if (e.Enh > -1)
                     {
-                        if (!hasProc && power.HasProc() &&
-                            (Math.Abs(DatabaseAPI.Database.Enhancements[e.Enh].Probability) < float.Epsilon ||
-                             Math.Abs(DatabaseAPI.Database.Enhancements[e.Enh].Probability - 1.0) < float.Epsilon))
+                        if (!hasProc && power.HasProc() && (DatabaseAPI.Database.Enhancements[e.Enh].Probability) == 0 || DatabaseAPI.Database.Enhancements[e.Enh].Probability > 0)
+                        {
                             power.StatInclude = true;
+                        }
                         else if (!power.CanIncludeForStats())
+                        {
                             power.StatInclude = false;
+                        }
                     }
                     else if (!power.CanIncludeForStats())
                     {
@@ -2727,7 +2769,7 @@ namespace Mids_Reborn.Forms
 
         private void pbDynMode_Click(object sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Config.BuildMode != Enums.dmModes.Dynamic)
+            if (MainModule.MidsController.Toon == null)
                 return;
             MidsContext.Config.BuildOption = MidsContext.Config.BuildOption == Enums.dmItem.Power
                 ? Enums.dmItem.Slot
@@ -2846,11 +2888,12 @@ namespace Mids_Reborn.Forms
                 return;
             MainModule.MidsController.Toon.BuildSlot(dragStartPower, dragStartSlot);
             // no idea what pnlGFX_MouseDoubleClick represents, marking modified as it would have before the added arg
-            var powerEntryArray = DeepCopyPowerList();
+            /*var powerEntryArray = DeepCopyPowerList();
             RearrangeAllSlotsInBuild(powerEntryArray, true);
             ShallowCopyPowerList(powerEntryArray);
             PowerModified(false);
-            DoRedraw();
+            DoRedraw();*/
+            PowerModified(true);
             FileModified = true;
             DoneDblClick = true;
             LastClickPlacedSlot = false;
@@ -2973,8 +3016,7 @@ namespace Mids_Reborn.Forms
                 var flag = MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower < 0;
                 /*if (e.Button == MouseButtons.Left & ModifierKeys == (Keys.Shift | Keys.Control) && EditAccoladesOrTemps(hIDPower))
                     return;*/
-                if ((e.Button == MouseButtons.Left) & (ModifierKeys == (Keys.Shift | Keys.Control)) &&
-                    EditAccoladesOrTemps(hIDPower))
+                if ((e.Button == MouseButtons.Left) & (ModifierKeys == (Keys.Shift | Keys.Control)) && EditAccoladesOrTemps(hIDPower))
                     return;
                 if ((drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle) & (e.Button == MouseButtons.Left))
                 {
@@ -2992,6 +3034,18 @@ namespace Mids_Reborn.Forms
                         }
                     }
 
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
+                        }
+                        else
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
+                        }
+                    }
+
                     EnhancementModified();
                     LastClickPlacedSlot = false;
                     pnlGFX.Update();
@@ -2999,7 +3053,37 @@ namespace Mids_Reborn.Forms
                 }
                 else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
                 {
-                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
+                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = false;
+                        }
+                        else
+                        {
+                            var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
+                            if ((eMutex == Enums.eMutex.NoConflict) | (eMutex == Enums.eMutex.NoGroup))
+                            {
+                                MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
+                                MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
+                            }
+                        }
+
+                        MidsContext.Character.Validate();
+                    }
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
+                        }
+                        else
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
+                        }
+                    }
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
                         {
@@ -3022,6 +3106,24 @@ namespace Mids_Reborn.Forms
                     EnhancementModified();
                     LastClickPlacedSlot = false;
                 }
+                else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
+                {
+                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
+                        MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
+                        }
+                        else
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
+                        }
+                    }
+
+                    EnhancementModified();
+                    LastClickPlacedSlot = false;
+                }
                 else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Alt))
                 {
                     MainModule.MidsController.Toon.BuildPower(
@@ -3032,13 +3134,6 @@ namespace Mids_Reborn.Forms
                 }
                 else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Shift) & (slotID > -1))
                 {
-                    if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
-                    {
-                        MainModule.MidsController.Toon.RequestedLevel =
-                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
-                        MidsContext.Character.ResetLevel();
-                    }
-
                     MainModule.MidsController.Toon.BuildSlot(hIDPower, slotID);
                     PowerModified(true);
                     LastClickPlacedSlot = false;
@@ -3047,12 +3142,21 @@ namespace Mids_Reborn.Forms
                 {
                     if ((e.Button == MouseButtons.Left) & !EnhPickerActive)
                     {
-                        if ((MidsContext.Config.BuildMode == Enums.dmModes.Dynamic) & flag)
+                        if ((MidsContext.Config.BuildMode == Enums.dmModes.Normal) & flag)
                         {
                             if (true & (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1))
                             {
-                                MainModule.MidsController.Toon.RequestedLevel =
-                                    MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                UpdatePowerLists();
+                                DoRedraw();
+                                return;
+                            }
+                        }
+                        else if ((MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
+                        {
+                            if (true & (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1))
+                            {
+                                MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
                                 UpdatePowerLists();
                                 DoRedraw();
                                 return;
@@ -3063,11 +3167,12 @@ namespace Mids_Reborn.Forms
                             if (MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
                             {
                                 // adding a slot by itself doesn't really change the build substantially without an enh going into it
-                                var powerEntryArray = DeepCopyPowerList();
+                                /*var powerEntryArray = DeepCopyPowerList();
                                 RearrangeAllSlotsInBuild(powerEntryArray, true);
                                 ShallowCopyPowerList(powerEntryArray);
                                 PowerModified(false);
-                                DoRedraw();
+                                DoRedraw();*/
+                                PowerModified(false);
                                 LastClickPlacedSlot = true;
                                 /* Disabled until can find why it is not saving
                                         MidsContext.Config.Tips.Show(Tips.TipType.FirstEnh);*/
@@ -3102,11 +3207,7 @@ namespace Mids_Reborn.Forms
                                 ref drawing, enhancements);
 
 
-                        var point = new Point(
-                            (int)Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X -
-                                             I9Picker.Width / 2.0),
-                            (int)Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y -
-                                             I9Picker.Height / 2.0));
+                        var point = new Point((int)Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X - I9Picker.Width / 2.0), (int)Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y - I9Picker.Height / 2.0));
                         if (point.Y < MenuBar.Height)
                             point.Y = MenuBar.Height;
                         Size clientSize;
@@ -3134,6 +3235,7 @@ namespace Mids_Reborn.Forms
                     }
                     else if ((e.Button == MouseButtons.Right) & (ModifierKeys == Keys.Shift))
                     {
+                        //MidsContext.Character.PEnhancementsList.Clear();
                         StartFlip(hIDPower);
                     }
                     else if (e.Button == MouseButtons.Right)
@@ -3158,10 +3260,9 @@ namespace Mids_Reborn.Forms
             fixStatIncludes();
             if (markModified)
                 FileModified = true;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
             {
-                index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon
-                    .RequestedLevel);
+                index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
                 if (index < 0)
                     index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
             }
@@ -3191,7 +3292,7 @@ namespace Mids_Reborn.Forms
             Application.DoEvents();
             UpdateControls();
             RefreshInfo();
-            //UpdateDynamicModeInfo();
+            UpdateModeInfo();
             pbDynMode.Refresh();
         }
 
@@ -3486,6 +3587,7 @@ namespace Mids_Reborn.Forms
                                 tp[finish].NIDPowerset = -1;
                                 tp[finish].IDXPower = -1;
                                 tp[finish].StatInclude = false;
+                                tp[finish].ProcInclude = false;
                                 tp[finish].VariableValue = 0;
                                 tp[finish].Slots = new SlotEntry[0];
                             }
@@ -4097,11 +4199,11 @@ namespace Mids_Reborn.Forms
                 ++index3;
             }
 
-            var numArray2 = fakeInitialize(3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23,
+            var slotLevels = fakeInitialize(3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23,
                 23, 25, 25, 27, 27,
                 29, 29, 31, 31, 31, 33, 33, 33, 34, 34, 34, 36, 36, 36, 37, 37, 37, 39, 39, 39, 40, 40, 40, 42, 42, 42,
                 43, 43, 43, 45, 45, 45,
-                46, 46, 46, 47, 47, 48, 48, 48, 49, 49, 50, 50, 50);
+                46, 46, 46, 48, 48, 48, 50, 50, 50);
             var flag1 = false;
             var index6 = 0;
             var num5 = tp.Length - 1;
@@ -4110,23 +4212,23 @@ namespace Mids_Reborn.Forms
                 var num3 = tp[numArray1[index2]].SlotCount - 1;
                 for (var index4 = 1; index4 <= num3; ++index4)
                 {
-                    if (index6 == numArray2.Length)
+                    if (index6 == slotLevels.Length)
                         flag1 = true;
                     tp[numArray1[index2]].Slots[index4].Level = 50;
                     if (flag1)
                         continue;
                     if (tp[numArray1[index2]].NIDPower == -1 ||
                         !DatabaseAPI.Database.Power[tp[numArray1[index2]].NIDPower].AllowFrontLoading)
-                        while (numArray2[index6] <= tp[numArray1[index2]].Level)
+                        while (slotLevels[index6] <= tp[numArray1[index2]].Level)
                         {
                             ++index6;
-                            if (index6 != numArray2.Length)
+                            if (index6 != slotLevels.Length)
                                 continue;
                             flag1 = true;
                             break;
                         }
 
-                    tp[numArray1[index2]].Slots[index4].Level = numArray2[index6] - 1;
+                    tp[numArray1[index2]].Slots[index4].Level = slotLevels[index6] - 1;
                     ++index6;
                 }
             }
@@ -4247,7 +4349,7 @@ namespace Mids_Reborn.Forms
             pnlGFXFlow.HorizontalScroll.Maximum = 0;
             pnlGFXFlow.AutoScroll = true;
             CenterToScreen();
-            PerformAutoScale();
+            //PerformAutoScale();
         }
 
         private void SetDamageMenuCheckMarks()
@@ -4369,7 +4471,7 @@ namespace Mids_Reborn.Forms
                     Width = 1071;
                     break;
                 case 3:
-                    Width = 1318;
+                    Width = 1280;
                     break;
                 case 4:
                     Width = 1588;
@@ -4524,10 +4626,10 @@ namespace Mids_Reborn.Forms
 
             if (MidsContext.Config.MasterMode)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0","")} {MidsContext.AppVersionStatus} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
             }
             else
-                //this.Text = str2 + " v" + MidsContext.AppAssemblyVersion + " (Database Issue: " + DatabaseAPI.Database.Issue + " - Updated: " + DatabaseAPI.Database.Date.ToString("dd/MM/yy") + ")";
+            //this.Text = str2 + " v" + MidsContext.AppAssemblyVersion + " (Database Issue: " + DatabaseAPI.Database.Issue + " - Updated: " + DatabaseAPI.Database.Date.ToString("dd/MM/yy") + ")";
             {
                 Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
             }
@@ -4888,7 +4990,7 @@ namespace Mids_Reborn.Forms
             if (FlipActive)
                 doFlipStep();
         }
-
+        //
         private bool ToggleClicked(int hID, int iX, int iY)
         {
             var rectangle1 = new Rectangle();
@@ -4906,6 +5008,25 @@ namespace Mids_Reborn.Forms
             rectangle1.Y = (int)Math.Round(rectangle2.Top + (rectangle2.Height - rectangle1.Height) / 2.0);
             rectangle1.X =
                 (int)Math.Round(rectangle2.Right - (rectangle1.Width + (rectangle2.Height - rectangle1.Height) / 2.0));
+            return (iX > rectangle1.X) & (iX < rectangle1.Right) & (iY > rectangle1.Top) & (iY < rectangle1.Bottom);
+        }
+
+        private bool ProcToggleClicked(int hID, int iX, int iY)
+        {
+            var rectangle1 = new Rectangle();
+            if (hID < 0)
+                return false;
+            if (MidsContext.Character.CurrentBuild.Powers[hID].IDXPower < 0)
+                return false;
+            var rectangle2 = new Rectangle
+            {
+                Location = drawing.PowerPosition(MidsContext.Character.CurrentBuild.Powers[hID]),
+                Size = drawing.bxPower[0].Size
+            };
+            rectangle1.Height = 15;
+            rectangle1.Width = rectangle1.Height;
+            rectangle1.Y = (int)Math.Round(rectangle2.Top + (rectangle2.Height - rectangle1.Height) / 2.0);
+            rectangle1.X = (int)Math.Round(rectangle2.Right - (rectangle1.Width + (rectangle2.Height - rectangle1.Height) / 1.0));
             return (iX > rectangle1.X) & (iX < rectangle1.Right) & (iY > rectangle1.Top) & (iY < rectangle1.Bottom);
         }
 
@@ -5268,8 +5389,10 @@ namespace Mids_Reborn.Forms
 
         private void tsFilePrint_Click(object sender, EventArgs e)
         {
-            using var frmPrint = new frmPrint();
-            frmPrint.Show();
+            // Fix for issue #42
+            // //using var frmPrint = new frmPrint();
+            //frmPrint.Show();
+            new frmPrint().Show();
         }
 
         private void tsFileQuit_Click(object sender, EventArgs e)
@@ -5437,16 +5560,19 @@ namespace Mids_Reborn.Forms
             clsXMLUpdate.GoToGitHub();
         }
 
-        private void AutoUpdater_ApplicationExitEvent()
+        private void tsPatchNotes_Click(object sender, EventArgs e)
         {
-            Text = @"Closing application...";
-            Thread.Sleep(5000);
-            Application.Exit();
+            var patchNotes = new PatchNotes(this, false)
+            {
+                Type = clsXMLUpdate.UpdateType.None.ToString(),
+                Version = MidsContext.AppVersion.ToString()
+            };
+            patchNotes.ShowDialog();
         }
 
         private void tsUpdateCheck_Click(object sender, EventArgs e)
         {
-            clsXMLUpdate.CheckUpdate();
+            clsXMLUpdate.CheckUpdate(this);
         }
 
         /*private void ForceReinstall()
@@ -5660,8 +5786,9 @@ namespace Mids_Reborn.Forms
             I9Popup.BackColor = Color.Black;
             I9Popup.ForeColor = I9Picker.ForeColor;
             myDataView.BackColor = BackColor;
-            //var font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
-            using var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            /*var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
+            using var font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);*/
+            //using var font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             var toColor = new Control[]
             {
                 llPrimary, llSecondary, llPool0, llPool1, llPool2, llPool3, llAncillary, lblName, lblAT, lblOrigin,
@@ -5673,7 +5800,7 @@ namespace Mids_Reborn.Forms
                 if (!(colorItem is ListLabelV3 ll))
                     continue;
                 UpdateLLColors(ll);
-                ll.Font = font;
+                //ll.Font = font;
             }
 
             var toOtherColor = new Control[]
@@ -5686,7 +5813,7 @@ namespace Mids_Reborn.Forms
             {
                 ibSets, ibPvX, incarnateButton, tempPowersButton, petsButton, accoladeButton, heroVillain,
                 prestigeButton, ibTotals, ibTeam, ibSlotLevels,
-                ibPopup, ibRecipe, ibAccolade
+                ibPopup, ibRecipe, ibAccolade, ibMode
             };
             foreach (var ib in ibs)
             {
@@ -5734,8 +5861,7 @@ namespace Mids_Reborn.Forms
 
         private void UpdateControls(bool ForceComplete = false)
         {
-            if (loading)
-                return;
+            if (loading) return;
 
             NoUpdate = true;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
@@ -5832,26 +5958,34 @@ namespace Mids_Reborn.Forms
             llPrimary.PaddingY = 2;
             llSecondary.PaddingY = 2;
             FixPrimarySecondaryHeight();
-            //llPrimary.Font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold, GraphicsUnit.Point);
-            llPrimary.Font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+            foreach (var llControl in Controls.OfType<ListLabelV3>())
+            {
+                var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
+                llControl.Font = new Font(llControl.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
+                foreach (var e in llControl.Items)
+                {
+                    e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+                }
+            }
+
+            /*llPrimary.Font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, FontStyle.Bold, GraphicsUnit.Point);
+            //llPrimary.Font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
             llSecondary.Font = llPrimary.Font;
-            var num1 = llPrimary.Items.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-                llPrimary.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
-            var num2 = llSecondary.Items.Length - 1;
-            for (var index = 0; index <= num2; ++index)
-                llSecondary.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
+            foreach (var e in llPrimary.Items)
+            {
+                e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+            }
+
+            foreach (var e in llSecondary.Items)
+            {
+                e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+            }*/
             heroVillain.Checked = !MidsContext.Character.IsHero();
             dvAnchored.SetLocation(new Point(llPrimary.Left, llPrimary.Top + raGreater(llPrimary.SizeNormal.Height, llSecondary.SizeNormal.Height) + 5), ForceComplete);
             llPrimary.SuspendRedraw = false;
             llSecondary.SuspendRedraw = false;
             if (myDataView != null && (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
                 dvAnchored_TabChanged(myDataView.TabPageIndex);
-            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
-            {
-                UpdateDMBuffer();
-                pbDynMode.Refresh();
-            }
 
             DoResize();
             NoUpdate = false;
@@ -5865,7 +5999,7 @@ namespace Mids_Reborn.Forms
                 dmBuffer = new ExtendedBitmap(pbDynMode.Width, pbDynMode.Height);
             Enums.ePowerState ePowerState;
             string iStr;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
             {
                 if (MidsContext.Config.BuildOption == Enums.dmItem.Slot)
                 {
@@ -5894,8 +6028,6 @@ namespace Mids_Reborn.Forms
 
             if (MainModule.MidsController.Toon.Complete)
             {
-                if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
-                    ePowerState = Enums.ePowerState.Used;
                 iStr = "Complete";
             }
 
@@ -6024,19 +6156,17 @@ namespace Mids_Reborn.Forms
         {
             llPower.SuspendRedraw = true;
             if (llPower.Items.Length == 0)
-                llPower.AddItem(new ListLabelV3.ListLabelItemV3("Nothing", ListLabelV3.LLItemState.Disabled, -1, -1, -1,
-                    string.Empty));
-            var num = llPower.Items.Length - 1;
-            for (var index = 0; index <= num; ++index)
             {
-                var ListLabelItemV3 = llPower.Items[index];
-                if (!((ListLabelItemV3.nIDSet > -1) & (ListLabelItemV3.IDXPower > -1)))
-                    continue;
-                var message = string.Empty;
-                ListLabelItemV3.ItemState =
-                    MainModule.MidsController.Toon.PowerState(ListLabelItemV3.nIDPower, ref message);
-                ListLabelItemV3.Italic = ListLabelItemV3.ItemState == ListLabelV3.LLItemState.Invalid;
-                ListLabelItemV3.Bold = MidsContext.Config.RtFont.PairedBold;
+                llPower.AddItem(new ListLabelV3.ListLabelItemV3("Nothing", ListLabelV3.LLItemState.Disabled, -1, -1, -1, ""));
+            }
+            
+            foreach (var listLabelItemV3 in llPower.Items)
+            {
+                if (!((listLabelItemV3.nIDSet > -1) & (listLabelItemV3.IDXPower > -1))) continue;
+                var message = "";
+                listLabelItemV3.ItemState = MainModule.MidsController.Toon.PowerState(listLabelItemV3.nIDPower, ref message);
+                listLabelItemV3.Italic = listLabelItemV3.ItemState == ListLabelV3.LLItemState.Invalid;
+                listLabelItemV3.Bold = MidsContext.Config.RtFont.PairedBold;
             }
 
             llPower.SuspendRedraw = false;
@@ -6234,7 +6364,7 @@ namespace Mids_Reborn.Forms
             SetTitleBar();
 
             var idx = -1;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal || MidsContext.Config.BuildMode == Enums.dmModes.Respec)
             {
                 idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon
                     .RequestedLevel);
@@ -6278,7 +6408,7 @@ namespace Mids_Reborn.Forms
             MainModule.MidsController.Toon.Complete = !sl.IsValidNext();
             fixStatIncludes();
             FileModified = false;
-            if (MidsContext.Config.BuildMode == Enums.dmModes.Dynamic)
+            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal)
             {
                 index = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
                 if (index < 0)
