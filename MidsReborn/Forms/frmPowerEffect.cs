@@ -556,28 +556,32 @@ namespace Mids_Reborn.Forms
                 tableLayoutPanel1.Enabled = false;
                 tableLayoutPanel2.Enabled = false;
                 tableLayoutPanel3.Enabled = false;
-                tableLayoutPanel4.Enabled = false;
                 tableLayoutPanel5.Enabled = false;
-                tableLayoutPanel1.Visible = false;
-                tableLayoutPanel2.Visible = false;
-                tableLayoutPanel3.Visible = false;
-                tableLayoutPanel4.Visible = false;
-                tableLayoutPanel5.Visible = false;
                 tpPowerAttribs.Visible = true;
+
+                //Old tableLayoutPanel4 contents
+                chkStack.Enabled = false;
+                chkFXBuffable.Enabled = false;
+                IgnoreED.Enabled = false;
+                chkFXResistable.Enabled = false;
+                chkNearGround.Enabled = false;
+                chkCancelOnMiss.Enabled = false;
             }
             else
             {
                 tableLayoutPanel1.Enabled = true;
                 tableLayoutPanel2.Enabled = true;
                 tableLayoutPanel3.Enabled = true;
-                tableLayoutPanel4.Enabled = true;
                 tableLayoutPanel5.Enabled = true;
-                tableLayoutPanel1.Visible = true;
-                tableLayoutPanel2.Visible = true;
-                tableLayoutPanel3.Visible = true;
-                tableLayoutPanel4.Visible = true;
-                tableLayoutPanel5.Visible = true;
                 tpPowerAttribs.Visible = false;
+
+                //Old tableLayoutPanel4 contents
+                chkStack.Enabled = true;
+                chkFXBuffable.Enabled = true;
+                IgnoreED.Enabled = true;
+                chkFXResistable.Enabled = true;
+                chkNearGround.Enabled = true;
+                chkCancelOnMiss.Enabled = true;
             }
             UpdateEffectSubAttribList();
             UpdateFXText();
