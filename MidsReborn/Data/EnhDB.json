@@ -12494,6 +12494,7 @@
       "LongName": "Aegis: Psionic/Status Resistance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 310,
       "Name": "Heal/Endurance",
       "ShortName": "Heal/EndRdx",
@@ -12538,7 +12539,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -12587,6 +12588,7 @@
       "LongName": "Triage: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 312,
       "Name": "Heal/Recharge",
       "ShortName": "Heal/Rchg",
@@ -12631,7 +12633,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -12644,6 +12646,7 @@
       "LongName": "Triage: Heal/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 313,
       "Name": "Heal/Endurance/Recharge",
       "ShortName": "Heal/EndRdx/Rchg",
@@ -12695,7 +12698,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -12708,6 +12711,7 @@
       "LongName": "Triage: Heal/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 314,
       "Name": "Heal/Endurance",
       "ShortName": "Heal/EndRdx",
@@ -12752,7 +12756,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -12801,6 +12805,7 @@
       "LongName": "Regenerative Tissue: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 316,
       "Name": "Heal/Recharge",
       "ShortName": "Heal/Rchg",
@@ -12845,7 +12850,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -12858,6 +12863,7 @@
       "LongName": "Regenerative Tissue: Heal/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 317,
       "Name": "Heal/Endurance/Recharge",
       "ShortName": "Heal/EndRdx/Rchg",
@@ -12909,7 +12915,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -13004,6 +13010,7 @@
       "LongName": "Regenerative Tissue: +Regeneration"
     },
     {
+      "IsModified": true,
       "StaticIndex": 319,
       "Name": "Heal/Endurance",
       "ShortName": "Heal/EndRdx",
@@ -13048,7 +13055,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -13097,6 +13104,7 @@
       "LongName": "Harmonized Healing: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 321,
       "Name": "Heal/Recharge",
       "ShortName": "Heal/Rchg",
@@ -13141,7 +13149,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -13154,6 +13162,7 @@
       "LongName": "Harmonized Healing: Heal/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 322,
       "Name": "Heal/Endurance/Recharge",
       "ShortName": "Heal/EndRdx/Rchg",
@@ -13205,7 +13214,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -13297,6 +13306,7 @@
       "LongName": "Harmonized Healing: Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 325,
       "Name": "Heal/Endurance",
       "ShortName": "Heal/EndRdx",
@@ -13341,7 +13351,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -13390,6 +13400,7 @@
       "LongName": "Miracle: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 327,
       "Name": "Heal/Recharge",
       "ShortName": "Heal/Rchg",
@@ -13434,7 +13445,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -13447,6 +13458,7 @@
       "LongName": "Miracle: Heal/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 328,
       "Name": "Heal/Endurance/Recharge",
       "ShortName": "Heal/EndRdx/Rchg",
@@ -13498,7 +13510,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -13643,6 +13655,7 @@
       "LongName": "Miracle: +Recovery"
     },
     {
+      "IsModified": true,
       "StaticIndex": 331,
       "Name": "Heal/Endurance",
       "ShortName": "Heal/EndRdx",
@@ -13687,7 +13700,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -13736,6 +13749,7 @@
       "LongName": "Doctored Wounds: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 333,
       "Name": "Heal/Recharge",
       "ShortName": "Heal/Rchg",
@@ -13780,7 +13794,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -13793,6 +13807,7 @@
       "LongName": "Doctored Wounds: Heal/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 334,
       "Name": "Heal/Endurance/Recharge",
       "ShortName": "Heal/EndRdx/Rchg",
@@ -13844,7 +13859,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -13936,6 +13951,7 @@
       "LongName": "Doctored Wounds: Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 337,
       "Name": "Heal/Endurance",
       "ShortName": "Heal/EndRdx",
@@ -13980,7 +13996,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -14029,6 +14045,7 @@
       "LongName": "Numina's Convalesence: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 339,
       "Name": "Heal/Recharge",
       "ShortName": "Heal/Rchg",
@@ -14073,7 +14090,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -14086,6 +14103,7 @@
       "LongName": "Numina's Convalesence: Heal/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 340,
       "Name": "Heal/Endurance/Recharge",
       "ShortName": "Heal/EndRdx/Rchg",
@@ -14137,7 +14155,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -34098,6 +34116,7 @@
       "LongName": "Theft of Essence: Healing"
     },
     {
+      "IsModified": true,
       "StaticIndex": 782,
       "Name": "Healing/Recharge",
       "ShortName": "Heal/Rchg",
@@ -34142,7 +34161,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -34155,6 +34174,7 @@
       "LongName": "Theft of Essence: Healing/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 783,
       "Name": "Accuracy/Healing",
       "ShortName": "Acc/Heal",
@@ -34199,7 +34219,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -34212,6 +34232,7 @@
       "LongName": "Theft of Essence: Accuracy/Healing"
     },
     {
+      "IsModified": true,
       "StaticIndex": 784,
       "Name": "Accuracy/Endurance/Healing",
       "ShortName": "Acc/EndRdx/Heal",
@@ -34263,7 +34284,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -34450,6 +34471,7 @@
       "LongName": "Touch of the Nictus: Healing/Absorb"
     },
     {
+      "IsModified": true,
       "StaticIndex": 788,
       "Name": "Healing/Absorb/Recharge",
       "ShortName": "Heal/HP/Regen/Rchg",
@@ -34494,7 +34516,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -34507,6 +34529,7 @@
       "LongName": "Touch of the Nictus: Healing/Absorb/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 789,
       "Name": "Accuracy/Healing/Absorb",
       "ShortName": "Acc/Heal",
@@ -34551,7 +34574,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -34564,6 +34587,7 @@
       "LongName": "Touch of the Nictus: Accuracy/Healing/Absorb"
     },
     {
+      "IsModified": true,
       "StaticIndex": 790,
       "Name": "Accuracy/Endurance/Healing/Absorb",
       "ShortName": "Acc/EndRdx/Heal/HP/Regen",
@@ -34615,7 +34639,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -34896,6 +34920,7 @@
       "Schedule": -1
     },
     {
+      "IsModified": true,
       "StaticIndex": 796,
       "Name": "Heal/Endurance",
       "ShortName": "Heal/EndRedux",
@@ -34940,7 +34965,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -34989,6 +35014,7 @@
       "LongName": "Panacea: Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 798,
       "Name": "Heal/Recharge",
       "ShortName": "Heal/Rchg",
@@ -35033,7 +35059,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -35046,6 +35072,7 @@
       "LongName": "Panacea: Heal/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 799,
       "Name": "Heal/Endurance/Recharge",
       "ShortName": "Heal/EndRedux/Rchg",
@@ -35097,7 +35124,7 @@
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -46113,6 +46140,7 @@
       "LongName": "Preventive Medicine: Heal"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1001,
       "Name": "Heal/Endurance",
       "ShortName": "Heal/EndRdx",
@@ -46143,21 +46171,21 @@
             "ID": 8,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         },
         {
           "Enhance": {
             "ID": 17,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         },
         {
           "Enhance": {
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -46206,6 +46234,7 @@
       "LongName": "Preventive Medicine: Endurance/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1003,
       "Name": "Heal/RechargeTime",
       "ShortName": "Heal/Rchg",
@@ -46236,21 +46265,21 @@
             "ID": 8,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         },
         {
           "Enhance": {
             "ID": 17,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         },
         {
           "Enhance": {
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.625
         }
       ],
       "EffectChance": 1.0,
@@ -46263,6 +46292,7 @@
       "LongName": "Preventive Medicine: Heal/RechargeTime"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1004,
       "Name": "Heal/RechargeTime/Endurance",
       "ShortName": "Heal/Rchg/EndRdx",
@@ -46300,21 +46330,21 @@
             "ID": 8,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         },
         {
           "Enhance": {
             "ID": 17,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         },
         {
           "Enhance": {
             "ID": 22,
             "SubID": -1
           },
-          "Multiplier": 1.0
+          "Multiplier": 0.5
         }
       ],
       "EffectChance": 1.0,
@@ -57811,7 +57841,6 @@
       "LongName": "Superior Sentinel's Ward: Accuracy/Damage/Endurance/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1233,
       "Name": "RechargeTime/Chance for +Absorb",
       "ShortName": "Rchg/+Absorb",
