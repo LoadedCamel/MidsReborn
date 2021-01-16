@@ -694,6 +694,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             info_DataList.AddItem(FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s"));
+
             info_DataList.AddItem(FastItem(ShortStr("Range", "Range"), pBase.Range, pEnh.Range, string.Empty));
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItem("Arc", pBase.Arc, pEnh.Arc, "°")
@@ -707,29 +708,15 @@ namespace Mids_Reborn.Forms.Controls
                 : FastItem(ShortStr("Interrupt", "Intrpt"), pBase.InterruptTime, pEnh.InterruptTime, "s",
                     "After activating this power, it can be interrupted for this amount of time."));
             var num3 = 2;
-            if (num3 > 1 && durationEffectId > -1 &&
-                (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez) &
-                (pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt))
+            if (num3 > 1 && durationEffectId > -1 && (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez) & (pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt))
             {
-                if (pBase.Effects[durationEffectId].SpecialCase != Enums.eSpecialCase.None)
-                {
-                    info_DataList.AddItem(new ctlPairedList.ItemPair("Effect:",
-                        Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
-                        pBase.Effects[durationEffectId].Probability < 1.0,
-                        pBase.Effects[durationEffectId].SpecialCase != Enums.eSpecialCase.None,
-                        durationEffectId));
-                }
-                else
-                {
-                    info_DataList.AddItem(new ctlPairedList.ItemPair("Effect:",
-                        Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
-                        pBase.Effects[durationEffectId].Probability < 1.0,
-                        pBase.Effects[durationEffectId].ActiveConditionals.Count > 0,
-                        durationEffectId));
-                }
+                info_DataList.AddItem(new ctlPairedList.ItemPair("Effect:",
+                    Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
+                    pBase.Effects[durationEffectId].Probability < 1.0,
+                    pBase.Effects[durationEffectId].CanInclude(),
+                    durationEffectId));
 
-                var iAlternate =
-                    Math.Abs(pBase.Effects[durationEffectId].Mag - (double)pEnh.Effects[durationEffectId].Mag) > float.Epsilon;
+                var iAlternate = Math.Abs(pBase.Effects[durationEffectId].Mag - (double)pEnh.Effects[durationEffectId].Mag) > float.Epsilon;
 
                 info_DataList.AddItem(new ctlPairedList.ItemPair("Mag:",
                     Convert.ToString(pEnh.Effects[durationEffectId].Mag, CultureInfo.InvariantCulture), iAlternate,
@@ -2500,16 +2487,7 @@ namespace Mids_Reborn.Forms.Controls
             return itemPair;
         }
 
-        private static ctlPairedList.ItemPair FastItem(
-            string Title,
-            float s1,
-            float s2,
-            string Suffix,
-            bool SkipBase = false,
-            bool AlwaysShow = false,
-            bool isChance = false,
-            bool isSpecial = false,
-            int TagID = -1,
+        private static ctlPairedList.ItemPair FastItem(string Title, float s1, float s2, string Suffix, bool SkipBase = false, bool AlwaysShow = false, bool isChance = false, bool isSpecial = false,            int TagID = -1,
             int maxDecimal = -1)
         {
             var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + Suffix : Utilities.FixDP(s2, maxDecimal) + Suffix;
