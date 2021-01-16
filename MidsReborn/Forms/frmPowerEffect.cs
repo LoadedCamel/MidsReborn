@@ -1158,8 +1158,10 @@ namespace Mids_Reborn.Forms
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
+                        var pType = power.PowerType;
+                        var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle || (pType == Enums.ePowerType.Click && power.ClickBuff);
                         var isUsable = !eArray.Contains((int)pSetType);
-                        if (isUsable)
+                        if (isUsable || isType)
                         {
                             var pItem = new Regex("[_]");
                             var pStrings = pItem.Replace(power.FullName, " ").Split('.');
