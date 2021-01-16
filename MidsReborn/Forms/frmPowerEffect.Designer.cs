@@ -32,9 +32,9 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Equal To");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Greater Than");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Equal To");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Greater Than");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Less Than");
             this.btnPaste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.chkStack = new System.Windows.Forms.CheckBox();
@@ -136,6 +136,7 @@ namespace Mids_Reborn.Forms
             this.txtFXRadius = new System.Windows.Forms.TextBox();
             this.txtFXArc = new System.Windows.Forms.TextBox();
             this.txtFXMaxTargets = new System.Windows.Forms.TextBox();
+            this.chkCancelOnMiss = new System.Windows.Forms.CheckBox();
             this.GroupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -389,9 +390,9 @@ namespace Mids_Reborn.Forms
             this.lvConditionalOp.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvConditionalOp.HideSelection = false;
             this.lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3});
+            listViewItem7,
+            listViewItem8,
+            listViewItem9});
             this.lvConditionalOp.Location = new System.Drawing.Point(460, 14);
             this.lvConditionalOp.LostFocusItem = -1;
             this.lvConditionalOp.MultiSelect = false;
@@ -693,6 +694,7 @@ namespace Mids_Reborn.Forms
             this.chkNearGround.TabIndex = 139;
             this.chkNearGround.Text = "Target must be Near Ground";
             this.chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkNearGround.CheckedChanged += new System.EventHandler(this.chkNearGround_CheckedChanged);
             // 
             // lblAffectsCaster
             // 
@@ -967,14 +969,15 @@ namespace Mids_Reborn.Forms
             // 
             this.tableLayoutPanel4.ColumnCount = 1;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.chkCancelOnMiss, 0, 5);
             this.tableLayoutPanel4.Controls.Add(this.chkStack, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.chkFXBuffable, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.IgnoreED, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.chkFXResistable, 0, 3);
             this.tableLayoutPanel4.Controls.Add(this.chkNearGround, 0, 4);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(12, 596);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(12, 589);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 6;
+            this.tableLayoutPanel4.RowCount = 7;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -982,7 +985,8 @@ namespace Mids_Reborn.Forms
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(228, 136);
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(228, 162);
             this.tableLayoutPanel4.TabIndex = 164;
             // 
             // tableLayoutPanel5
@@ -1346,6 +1350,18 @@ namespace Mids_Reborn.Forms
             this.txtFXMaxTargets.Text = "0";
             this.txtFXMaxTargets.TextChanged += new System.EventHandler(this.txtFXMaxTargets_TextChanged);
             // 
+            // chkCancelOnMiss
+            // 
+            this.chkCancelOnMiss.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkCancelOnMiss.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkCancelOnMiss.Location = new System.Drawing.Point(3, 139);
+            this.chkCancelOnMiss.Name = "chkCancelOnMiss";
+            this.chkCancelOnMiss.Size = new System.Drawing.Size(222, 14);
+            this.chkCancelOnMiss.TabIndex = 152;
+            this.chkCancelOnMiss.Text = "Cancel on Miss";
+            this.chkCancelOnMiss.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkCancelOnMiss.CheckedChanged += new System.EventHandler(this.chkCancelOnMiss_CheckedChanged);
+            // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1498,5 +1514,6 @@ namespace Mids_Reborn.Forms
         private ctlListViewColored lvConditionalBool;
         private ctlListViewColored lvConditionalOp;
         private ColumnHeader columnHeader8;
+        private CheckBox chkCancelOnMiss;
     }
 }

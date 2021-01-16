@@ -177,6 +177,22 @@ namespace Mids_Reborn.Forms
             UpdateFXText();
         }
 
+        private void chkNearGround_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.NearGround = chkNearGround.Checked;
+            UpdateFXText();
+        }
+
+        private void chkCancelOnMiss_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.CancelOnMiss = chkCancelOnMiss.Checked;
+            UpdateFXText();
+        }
+
         private void chkVariable_CheckedChanged(object sender, EventArgs e)
         {
             if (Loading)
@@ -230,6 +246,7 @@ namespace Mids_Reborn.Forms
             chkFXBuffable.Checked = !fx.Buffable;
             chkFXResistable.Checked = !fx.Resistible;
             chkNearGround.Checked = fx.NearGround;
+            chkCancelOnMiss.Checked = fx.CancelOnMiss;
             IgnoreED.Checked = fx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int)fx.SpecialCase;
             if (fx.SpecialCase != Enums.eSpecialCase.None)

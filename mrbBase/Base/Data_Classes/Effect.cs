@@ -856,6 +856,7 @@ namespace mrbBase.Base.Data_Classes
             string sEnh = string.Empty;
             string sSuppressShort = string.Empty;
             string sConditional = string.Empty;
+            string sNearGround = string.Empty;
 
             if (power != null && power.VariableEnabled && VariableModified)
             {
@@ -917,8 +918,12 @@ namespace mrbBase.Base.Data_Classes
 
                     if (CancelOnMiss)
                     {
-                        sChance += ", CancelOnMiss";
+                        sChance += ", Cancels on Miss";
                     }
+                }
+                else if (CancelOnMiss)
+                {
+                    sChance += ", Cancels on Miss";
                 }
             }
 
@@ -930,6 +935,11 @@ namespace mrbBase.Base.Data_Classes
                     sResist = "Non-resistible";
                     resistPresent = true;
                 }
+            }
+
+            if (NearGround)
+            {
+                sNearGround = " (Must be near ground)";
             }
 
             switch (PvMode)
@@ -1387,16 +1397,16 @@ namespace mrbBase.Base.Data_Classes
                 sExtra2 = " (" + sExtra2 + ")";
             }
 
+            sExtra = BuildCs(sNearGround, sExtra);
+
             if (sExtra.Equals(" ()")) { sExtra = ""; }
 
             if (sConditional != "")
             {
                 return sEnh + sBuild + sExtra2 + sBuff + sVariable + sStack + sSuppress;
             }
-            else
-            {
-                return sEnh + sBuild + sExtra + sBuff + sVariable + sStack + sSuppress;
-            }
+
+            return sEnh + sBuild + sExtra + sBuff + sVariable + sStack + sSuppress;
         }
 
 
