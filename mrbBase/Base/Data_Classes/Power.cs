@@ -2567,13 +2567,33 @@ namespace mrbBase.Base.Data_Classes
 
             var iDamage = new bool[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
             for (var index = 0; index <= iSfx.Index.Length - 1; ++index)
+            {
                 iDamage[(int) iPower.Effects[iSfx.Index[index]].DamageType] = true;
-            newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) |
-                         (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity))
+            }
+
+            newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) | (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity))
                 ? Enums.GetGroupedDamage(iDamage, shortForm)
                 : Enums.GetGroupedDefense(iDamage, shortForm);
             return str.Replace("%VALUE%", newValue);
         }
+        /*public static List<string> SplitFXGroupTipL(ref Enums.ShortFX iSfx, ref IPower iPower, bool shortForm)
+        {
+            var str = iPower.Effects[iSfx.Index[0]].BuildEffectString(false, string.Empty, false, true);
+            var newValue = string.Empty;
+            //if (!iPower.Effects[iSfx.Index[0]].isDamage())
+            //{
+            //    return str.Replace("%VALUE%", newValue);
+            //}
+
+            var iDamage = new bool[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
+            for (var index = 0; index <= iSfx.Index.Length - 1; ++index)
+            {
+                iDamage[(int)iPower.Effects[iSfx.Index[index]].DamageType] = true;
+            }
+
+            newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) | (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity)) ? Enums.GetGroupedDamage(iDamage, shortForm) : Enums.GetGroupedDefense(iDamage, shortForm);
+            return str.Replace("%VALUE%", newValue);
+        }*/
 
         private Requirement ImportRequirementString(string iReq)
 

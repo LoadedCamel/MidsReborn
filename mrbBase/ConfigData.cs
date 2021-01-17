@@ -684,7 +684,7 @@ namespace mrbBase
             public void SetDefault()
             {
                 RTFBase = 16;
-                RTFBold = false;
+                RTFBold = true;
                 ColorBackgroundHero = Color.FromArgb(0, 0, 32);
                 ColorBackgroundVillain = Color.FromArgb(32, 0, 0);
                 ColorEnhancement = Color.FromArgb(0, byte.MaxValue, 0);
@@ -708,7 +708,7 @@ namespace mrbBase
                     ColorPowerTakenHero, ColorPowerTakenDarkHero, ColorPowerHighlightHero, ColorPowerTakenVillain,
                     ColorPowerTakenDarkVillain, ColorPowerHighlightVillain
                 };
-                PairedBase = 8.25f;
+                PairedBase = 10.25f;
                 PairedBold = false;
                 PowersSelectBase = 8.25f;
                 PowersSelectBold = false;
