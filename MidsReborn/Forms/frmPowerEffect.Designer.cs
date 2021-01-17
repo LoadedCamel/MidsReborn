@@ -32,9 +32,9 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Equal To");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Greater Than");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Equal To");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Greater Than");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Less Than");
             this.btnPaste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.GroupBox3 = new System.Windows.Forms.GroupBox();
@@ -352,9 +352,9 @@ namespace Mids_Reborn.Forms
             this.lvConditionalOp.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvConditionalOp.HideSelection = false;
             this.lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3});
+            listViewItem4,
+            listViewItem5,
+            listViewItem6});
             this.lvConditionalOp.Location = new System.Drawing.Point(460, 14);
             this.lvConditionalOp.LostFocusItem = -1;
             this.lvConditionalOp.MultiSelect = false;
@@ -1274,6 +1274,7 @@ namespace Mids_Reborn.Forms
             this.chkCancelOnMiss.TabIndex = 174;
             this.chkCancelOnMiss.Text = "Cancel on Miss";
             this.chkCancelOnMiss.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkCancelOnMiss.CheckedChanged += new System.EventHandler(this.chkCancelOnMiss_CheckedChanged);
             // 
             // chkStack
             // 
@@ -1284,6 +1285,7 @@ namespace Mids_Reborn.Forms
             this.chkStack.TabIndex = 171;
             this.chkStack.Text = "Effect Can Stack";
             this.chkStack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkStack.CheckedChanged += new System.EventHandler(this.chkFxNoStack_CheckedChanged);
             // 
             // chkFXBuffable
             // 
@@ -1294,6 +1296,7 @@ namespace Mids_Reborn.Forms
             this.chkFXBuffable.TabIndex = 169;
             this.chkFXBuffable.Text = "Ignore Buffs / Enhancements";
             this.chkFXBuffable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkFXBuffable.CheckedChanged += new System.EventHandler(this.chkFXBuffable_CheckedChanged);
             // 
             // IgnoreED
             // 
@@ -1304,6 +1307,7 @@ namespace Mids_Reborn.Forms
             this.IgnoreED.TabIndex = 173;
             this.IgnoreED.Text = "Ignore ED";
             this.IgnoreED.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.IgnoreED.CheckedChanged += new System.EventHandler(this.IgnoreED_CheckedChanged);
             // 
             // chkFXResistable
             // 
@@ -1314,6 +1318,7 @@ namespace Mids_Reborn.Forms
             this.chkFXResistable.TabIndex = 170;
             this.chkFXResistable.Text = "Effect is Unresistible";
             this.chkFXResistable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkFXResistable.CheckedChanged += new System.EventHandler(this.chkFXResistible_CheckedChanged);
             // 
             // chkNearGround
             // 
@@ -1324,6 +1329,7 @@ namespace Mids_Reborn.Forms
             this.chkNearGround.TabIndex = 172;
             this.chkNearGround.Text = "Target must be Near Ground";
             this.chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkNearGround.CheckedChanged += new System.EventHandler(this.chkNearGround_CheckedChanged);
             // 
             // frmPowerEffect
             // 

@@ -169,7 +169,7 @@ namespace Mids_Reborn.Forms
             UpdateFXText();
         }
 
-        private void chkFXResistable_CheckedChanged(object sender, EventArgs e)
+        private void chkFXResistible_CheckedChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
