@@ -1,6 +1,7 @@
-﻿namespace mrbControls
+﻿
+namespace mrbControls
 {
-    partial class ctlPairedListNew
+    partial class PairedList
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,9 +29,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.components = new System.ComponentModel.Container();
+            this.myTip = new System.Windows.Forms.ToolTip(this.components);
+            this.SuspendLayout();
+            // 
+            // PairedList
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Name = "PairedList";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.ToolTip myTip;
     }
 }

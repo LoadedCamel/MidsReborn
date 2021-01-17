@@ -35,38 +35,38 @@ namespace Mids_Reborn.Forms.Controls
             this.components = new System.ComponentModel.Container();
             this.pnlTabs = new System.Windows.Forms.Panel();
             this.pnlInfo = new System.Windows.Forms.Panel();
-            this.PowerScaler = new ctlMultiGraph();
+            this.PowerScaler = new mrbControls.ctlMultiGraph();
             this.info_txtSmall = new System.Windows.Forms.RichTextBox();
             this.lblDmg = new System.Windows.Forms.Label();
-            this.Info_Damage = new ctlDamageDisplay();
-            this.info_DataList = new ctlPairedList();
+            this.Info_Damage = new mrbControls.ctlDamageDisplay();
+            this.info_DataList = new mrbControls.PairedList();
             this.Info_txtLarge = new System.Windows.Forms.RichTextBox();
-            this.info_Title = new GFXLabel();
+            this.info_Title = new mrbControls.GFXLabel();
             this.pnlFX = new System.Windows.Forms.Panel();
-            this.fx_Title = new GFXLabel();
+            this.fx_Title = new mrbControls.GFXLabel();
             this.fx_LblHead3 = new System.Windows.Forms.Label();
-            this.fx_List3 = new ctlPairedList();
+            this.fx_List3 = new mrbControls.PairedList();
             this.fx_lblHead2 = new System.Windows.Forms.Label();
             this.fx_lblHead1 = new System.Windows.Forms.Label();
-            this.fx_List2 = new ctlPairedList();
-            this.fx_List1 = new ctlPairedList();
+            this.fx_List2 = new mrbControls.PairedList();
+            this.fx_List1 = new mrbControls.PairedList();
             this.pnlTotal = new System.Windows.Forms.Panel();
             this.lblTotal = new System.Windows.Forms.Label();
-            this.gRes2 = new ctlMultiGraph();
-            this.gRes1 = new ctlMultiGraph();
-            this.gDef2 = new ctlMultiGraph();
-            this.gDef1 = new ctlMultiGraph();
-            this.total_Title = new GFXLabel();
+            this.gRes2 = new mrbControls.ctlMultiGraph();
+            this.gRes1 = new mrbControls.ctlMultiGraph();
+            this.gDef2 = new mrbControls.ctlMultiGraph();
+            this.gDef1 = new mrbControls.ctlMultiGraph();
+            this.total_Title = new mrbControls.GFXLabel();
             this.total_lblMisc = new System.Windows.Forms.Label();
-            this.total_Misc = new ctlPairedList();
+            this.total_Misc = new mrbControls.PairedList();
             this.total_lblRes = new System.Windows.Forms.Label();
             this.total_lblDef = new System.Windows.Forms.Label();
             this.pnlEnh = new System.Windows.Forms.Panel();
             this.pnlEnhInactive = new System.Windows.Forms.Panel();
             this.pnlEnhActive = new System.Windows.Forms.Panel();
-            this.enhNameDisp = new GFXLabel();
-            this.enhListing = new ctlPairedList();
-            this.Enh_Title = new GFXLabel();
+            this.enhNameDisp = new mrbControls.GFXLabel();
+            this.enhListing = new mrbControls.PairedList();
+            this.Enh_Title = new mrbControls.GFXLabel();
             this.dbTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblFloat = new System.Windows.Forms.Label();
             this.lblShrink = new System.Windows.Forms.Label();
@@ -132,10 +132,10 @@ namespace Mids_Reborn.Forms.Controls
             this.PowerScaler.ScaleIndex = 8;
             this.PowerScaler.ShowScale = false;
             this.PowerScaler.Size = new System.Drawing.Size(292, 15);
-            this.PowerScaler.Style = Enums.GraphStyle.baseOnly;
+            this.PowerScaler.Style = mrbBase.Enums.GraphStyle.baseOnly;
             this.PowerScaler.TabIndex = 71;
             this.PowerScaler.TextWidth = 80;
-            this.PowerScaler.BarClick += new ctlMultiGraph.BarClickEventHandler(this.PowerScaler_BarClick);
+            this.PowerScaler.BarClick += new mrbControls.ctlMultiGraph.BarClickEventHandler(this.PowerScaler_BarClick);
             // 
             // info_txtSmall
             // 
@@ -172,7 +172,7 @@ namespace Mids_Reborn.Forms.Controls
             this.Info_Damage.ColorEnhEnd = System.Drawing.Color.Yellow;
             this.Info_Damage.ColorEnhStart = System.Drawing.Color.Yellow;
             this.Info_Damage.Font = new System.Drawing.Font("Arial", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.Info_Damage.GraphType = Enums.eDDGraph.Enhanced;
+            this.Info_Damage.GraphType = mrbBase.Enums.eDDGraph.Enhanced;
             this.Info_Damage.Location = new System.Drawing.Point(2, 284);
             this.Info_Damage.Name = "Info_Damage";
             this.Info_Damage.nBaseVal = 100F;
@@ -183,9 +183,9 @@ namespace Mids_Reborn.Forms.Controls
             this.Info_Damage.PaddingH = 1;
             this.Info_Damage.PaddingV = 1;
             this.Info_Damage.Size = new System.Drawing.Size(295, 110);
-            this.Info_Damage.Style = Enums.eDDStyle.Text;
+            this.Info_Damage.Style = mrbBase.Enums.eDDStyle.Text;
             this.Info_Damage.TabIndex = 20;
-            this.Info_Damage.TextAlign = Enums.eDDAlign.Left;
+            this.Info_Damage.TextAlign = mrbBase.Enums.eDDAlign.Left;
             this.Info_Damage.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             // 
             // info_DataList
@@ -207,7 +207,7 @@ namespace Mids_Reborn.Forms.Controls
             this.info_DataList.Size = new System.Drawing.Size(292, 104);
             this.info_DataList.TabIndex = 19;
             this.info_DataList.ValueWidth = 55;
-            this.info_DataList.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.info_DataList.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // Info_txtLarge
             // 
@@ -269,7 +269,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             this.fx_LblHead3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fx_LblHead3.ForeColor = System.Drawing.Color.White;
-            this.fx_LblHead3.Location = new System.Drawing.Point(4, 228);
+            this.fx_LblHead3.Location = new System.Drawing.Point(4, 249);
             this.fx_LblHead3.Name = "fx_LblHead3";
             this.fx_LblHead3.Size = new System.Drawing.Size(292, 16);
             this.fx_LblHead3.TabIndex = 28;
@@ -289,19 +289,19 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List3.ItemColorAlt = System.Drawing.Color.Lime;
             this.fx_List3.ItemColorSpecCase = System.Drawing.Color.Red;
             this.fx_List3.ItemColorSpecial = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.fx_List3.Location = new System.Drawing.Point(4, 244);
+            this.fx_List3.Location = new System.Drawing.Point(4, 265);
             this.fx_List3.Name = "fx_List3";
             this.fx_List3.NameColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.fx_List3.Size = new System.Drawing.Size(292, 72);
+            this.fx_List3.Size = new System.Drawing.Size(292, 86);
             this.fx_List3.TabIndex = 27;
             this.fx_List3.ValueWidth = 55;
-            this.fx_List3.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List3.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // fx_lblHead2
             // 
             this.fx_lblHead2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fx_lblHead2.ForeColor = System.Drawing.Color.White;
-            this.fx_lblHead2.Location = new System.Drawing.Point(4, 136);
+            this.fx_lblHead2.Location = new System.Drawing.Point(4, 146);
             this.fx_lblHead2.Name = "fx_lblHead2";
             this.fx_lblHead2.Size = new System.Drawing.Size(292, 16);
             this.fx_lblHead2.TabIndex = 26;
@@ -332,13 +332,13 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List2.ItemColorAlt = System.Drawing.Color.Lime;
             this.fx_List2.ItemColorSpecCase = System.Drawing.Color.Red;
             this.fx_List2.ItemColorSpecial = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.fx_List2.Location = new System.Drawing.Point(4, 152);
+            this.fx_List2.Location = new System.Drawing.Point(4, 162);
             this.fx_List2.Name = "fx_List2";
             this.fx_List2.NameColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.fx_List2.Size = new System.Drawing.Size(292, 72);
+            this.fx_List2.Size = new System.Drawing.Size(292, 84);
             this.fx_List2.TabIndex = 24;
             this.fx_List2.ValueWidth = 55;
-            this.fx_List2.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List2.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // fx_List1
             // 
@@ -356,10 +356,10 @@ namespace Mids_Reborn.Forms.Controls
             this.fx_List1.Location = new System.Drawing.Point(4, 40);
             this.fx_List1.Name = "fx_List1";
             this.fx_List1.NameColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.fx_List1.Size = new System.Drawing.Size(292, 92);
+            this.fx_List1.Size = new System.Drawing.Size(292, 110);
             this.fx_List1.TabIndex = 23;
             this.fx_List1.ValueWidth = 60;
-            this.fx_List1.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.fx_List1.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // pnlTotal
             // 
@@ -420,7 +420,7 @@ namespace Mids_Reborn.Forms.Controls
             this.gRes2.ScaleIndex = 8;
             this.gRes2.ShowScale = false;
             this.gRes2.Size = new System.Drawing.Size(146, 72);
-            this.gRes2.Style = Enums.GraphStyle.Stacked;
+            this.gRes2.Style = mrbBase.Enums.GraphStyle.Stacked;
             this.gRes2.TabIndex = 74;
             this.gRes2.TextWidth = 100;
             // 
@@ -454,7 +454,7 @@ namespace Mids_Reborn.Forms.Controls
             this.gRes1.ScaleIndex = 8;
             this.gRes1.ShowScale = false;
             this.gRes1.Size = new System.Drawing.Size(146, 72);
-            this.gRes1.Style = Enums.GraphStyle.Stacked;
+            this.gRes1.Style = mrbBase.Enums.GraphStyle.Stacked;
             this.gRes1.TabIndex = 73;
             this.gRes1.TextWidth = 100;
             // 
@@ -488,7 +488,7 @@ namespace Mids_Reborn.Forms.Controls
             this.gDef2.ScaleIndex = 8;
             this.gDef2.ShowScale = false;
             this.gDef2.Size = new System.Drawing.Size(146, 92);
-            this.gDef2.Style = Enums.GraphStyle.baseOnly;
+            this.gDef2.Style = mrbBase.Enums.GraphStyle.baseOnly;
             this.gDef2.TabIndex = 72;
             this.gDef2.TextWidth = 100;
             // 
@@ -522,7 +522,7 @@ namespace Mids_Reborn.Forms.Controls
             this.gDef1.ScaleIndex = 8;
             this.gDef1.ShowScale = false;
             this.gDef1.Size = new System.Drawing.Size(146, 92);
-            this.gDef1.Style = Enums.GraphStyle.baseOnly;
+            this.gDef1.Style = mrbBase.Enums.GraphStyle.baseOnly;
             this.gDef1.TabIndex = 71;
             this.gDef1.TextWidth = 100;
             // 
@@ -570,7 +570,7 @@ namespace Mids_Reborn.Forms.Controls
             this.total_Misc.Size = new System.Drawing.Size(292, 60);
             this.total_Misc.TabIndex = 27;
             this.total_Misc.ValueWidth = 55;
-            this.total_Misc.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.total_Misc.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // total_lblRes
             // 
@@ -662,7 +662,7 @@ namespace Mids_Reborn.Forms.Controls
             this.enhListing.Size = new System.Drawing.Size(292, 192);
             this.enhListing.TabIndex = 71;
             this.enhListing.ValueWidth = 65;
-            this.enhListing.ItemHover += new ctlPairedList.ItemHoverEventHandler(this.PairedList_Hover);
+            this.enhListing.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);
             // 
             // Enh_Title
             // 
@@ -761,20 +761,20 @@ namespace Mids_Reborn.Forms.Controls
 
         private ToolTip dbTip;
         private GFXLabel Enh_Title;
-        private ctlPairedList enhListing;
+        private PairedList enhListing;
         private GFXLabel enhNameDisp;
         private Label fx_lblHead1;
         private Label fx_lblHead2;
         private Label fx_LblHead3;
-        private ctlPairedList fx_List1;
-        private ctlPairedList fx_List2;
-        private ctlPairedList fx_List3;
+        private PairedList fx_List1;
+        private PairedList fx_List2;
+        private PairedList fx_List3;
         private GFXLabel fx_Title;
         private ctlMultiGraph gDef1;
         private ctlMultiGraph gDef2;
         private ctlMultiGraph gRes1;
         private ctlMultiGraph gRes2;
-        private ctlPairedList info_DataList;
+        private PairedList info_DataList;
         private GFXLabel info_Title;
         private RichTextBox info_txtSmall;
         private Label lblDmg;
@@ -793,7 +793,7 @@ namespace Mids_Reborn.Forms.Controls
         private Label total_lblDef;
         private Label total_lblMisc;
         private Label total_lblRes;
-        private ctlPairedList total_Misc;
+        private PairedList total_Misc;
         private GFXLabel total_Title;
         
         internal ctlDamageDisplay Info_Damage;
