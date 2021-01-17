@@ -455,6 +455,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             csPopulateList();
             fcPopulateList();
             PopulateSuppression();
+            var associatedProgram = FileAssociation.CheckdAssociatedProgram();
+            var regAssociations = FileAssociation.CheckAssociations();
+            if (!regAssociations)
+            {
+                lblAssocStatus.Text = "Status: settings missing";
+            }
+            else if (!string.Equals(associatedProgram, Application.ExecutablePath, StringComparison.InvariantCultureIgnoreCase))
+            {
+                lblAssocStatus.Text = "Status: .MXD set to a different program";
+            }
+            else
+            {
+                lblAssocStatus.Text = "Status: Ok";
+            }
         }
 
         private void listScenarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -792,11 +806,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 
         private void btnFileAssoc_Click(object sender, EventArgs e)
         {
-            FileAssociation.AddToOpenResult result = FileAssociation.AddToOpenWithLists(Application.ExecutablePath);
-            if (result != FileAssociation.AddToOpenResult.Success)
+            var assocStatus = FileAssociation.CheckAssociations();
+            var ret = FileAssociation.SetAssociations();
+            if (ret)
             {
-                MessageBox.Show("Error setting file associations: unauthorized registry access.", "Oh snap",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("File associations updated. Enjoy!", "Woop", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Could not update file associations.", "Boo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

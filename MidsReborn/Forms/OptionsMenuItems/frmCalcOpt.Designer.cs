@@ -42,6 +42,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.chkNoTips = new System.Windows.Forms.CheckBox();
             this.chkMiddle = new System.Windows.Forms.CheckBox();
             this.GroupBox17 = new System.Windows.Forms.GroupBox();
+            this.chkPowersBold = new System.Windows.Forms.CheckBox();
+            this.chkPowSelBold = new System.Windows.Forms.CheckBox();
+            this.udPowersSize = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.udPowSelectSize = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
             this.chkShowAlphaPopup = new System.Windows.Forms.CheckBox();
             this.chkHighVis = new System.Windows.Forms.CheckBox();
             this.Label36 = new System.Windows.Forms.Label();
@@ -179,16 +185,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.label17 = new System.Windows.Forms.Label();
-            this.udPowSelectSize = new System.Windows.Forms.NumericUpDown();
-            this.label18 = new System.Windows.Forms.Label();
-            this.udPowersSize = new System.Windows.Forms.NumericUpDown();
-            this.chkPowSelBold = new System.Windows.Forms.CheckBox();
-            this.chkPowersBold = new System.Windows.Forms.CheckBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.groupBox18.SuspendLayout();
             this.GroupBox17.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udPowersSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udPowSelectSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udStatSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udRTFSize)).BeginInit();
             this.GroupBox5.SuspendLayout();
@@ -219,8 +221,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage1.SuspendLayout();
             this.GroupBox9.SuspendLayout();
             this.GroupBox7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udPowSelectSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udPowersSize)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOK
@@ -350,6 +350,88 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox17.TabIndex = 76;
             this.GroupBox17.TabStop = false;
             this.GroupBox17.Text = "Font Size/Colors:";
+            // 
+            // chkPowersBold
+            // 
+            this.chkPowersBold.AutoSize = true;
+            this.chkPowersBold.Location = new System.Drawing.Point(173, 101);
+            this.chkPowersBold.Name = "chkPowersBold";
+            this.chkPowersBold.Size = new System.Drawing.Size(15, 14);
+            this.chkPowersBold.TabIndex = 85;
+            this.chkPowersBold.UseVisualStyleBackColor = true;
+            // 
+            // chkPowSelBold
+            // 
+            this.chkPowSelBold.AutoSize = true;
+            this.chkPowSelBold.Location = new System.Drawing.Point(173, 76);
+            this.chkPowSelBold.Name = "chkPowSelBold";
+            this.chkPowSelBold.Size = new System.Drawing.Size(15, 14);
+            this.chkPowSelBold.TabIndex = 84;
+            this.chkPowSelBold.UseVisualStyleBackColor = true;
+            // 
+            // udPowersSize
+            // 
+            this.udPowersSize.DecimalPlaces = 2;
+            this.udPowersSize.Location = new System.Drawing.Point(108, 98);
+            this.udPowersSize.Maximum = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
+            this.udPowersSize.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.udPowersSize.Name = "udPowersSize";
+            this.udPowersSize.Size = new System.Drawing.Size(52, 20);
+            this.udPowersSize.TabIndex = 83;
+            this.udPowersSize.Value = new decimal(new int[] {
+            825,
+            0,
+            0,
+            131072});
+            // 
+            // label18
+            // 
+            this.label18.Location = new System.Drawing.Point(29, 98);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(78, 20);
+            this.label18.TabIndex = 82;
+            this.label18.Text = "Powers:";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udPowSelectSize
+            // 
+            this.udPowSelectSize.DecimalPlaces = 2;
+            this.udPowSelectSize.Location = new System.Drawing.Point(108, 73);
+            this.udPowSelectSize.Maximum = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
+            this.udPowSelectSize.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.udPowSelectSize.Name = "udPowSelectSize";
+            this.udPowSelectSize.Size = new System.Drawing.Size(52, 20);
+            this.udPowSelectSize.TabIndex = 81;
+            this.udPowSelectSize.Value = new decimal(new int[] {
+            825,
+            0,
+            0,
+            131072});
+            // 
+            // label17
+            // 
+            this.label17.Location = new System.Drawing.Point(11, 73);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(96, 20);
+            this.label17.TabIndex = 80;
+            this.label17.Text = "Power Selections:";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // chkShowAlphaPopup
             // 
@@ -1578,7 +1660,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // lblAssocStatus
             // 
             this.lblAssocStatus.AutoSize = true;
-            this.lblAssocStatus.Location = new System.Drawing.Point(577, 224);
+            this.lblAssocStatus.Location = new System.Drawing.Point(548, 224);
             this.lblAssocStatus.Name = "lblAssocStatus";
             this.lblAssocStatus.Size = new System.Drawing.Size(52, 14);
             this.lblAssocStatus.TabIndex = 70;
@@ -1589,10 +1671,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.lblFileAssoc.AutoSize = true;
             this.lblFileAssoc.Location = new System.Drawing.Point(5, 220);
             this.lblFileAssoc.Name = "lblFileAssoc";
-            this.lblFileAssoc.Size = new System.Drawing.Size(356, 28);
+            this.lblFileAssoc.Size = new System.Drawing.Size(343, 28);
             this.lblFileAssoc.TabIndex = 69;
-            this.lblFileAssoc.Text = "Click this button if you want to associate .MHD and .MXD files\r\nwith HeroDesigner" +
-    ", so they can be directly opened from the file explorer.";
+            this.lblFileAssoc.Text = "Click this button if you want to associate .MXD files with Mids Reborn,\r\nso they " +
+    "can be directly opened from the file explorer.";
             // 
             // btnFileAssoc
             // 
@@ -1850,88 +1932,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.cPicker.FullOpen = true;
             // 
-            // label17
-            // 
-            this.label17.Location = new System.Drawing.Point(11, 73);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(96, 20);
-            this.label17.TabIndex = 80;
-            this.label17.Text = "Power Selections:";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // udPowSelectSize
-            // 
-            this.udPowSelectSize.DecimalPlaces = 2;
-            this.udPowSelectSize.Location = new System.Drawing.Point(108, 73);
-            this.udPowSelectSize.Maximum = new decimal(new int[] {
-            14,
-            0,
-            0,
-            0});
-            this.udPowSelectSize.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.udPowSelectSize.Name = "udPowSelectSize";
-            this.udPowSelectSize.Size = new System.Drawing.Size(52, 20);
-            this.udPowSelectSize.TabIndex = 81;
-            this.udPowSelectSize.Value = new decimal(new int[] {
-            825,
-            0,
-            0,
-            131072});
-            // 
-            // label18
-            // 
-            this.label18.Location = new System.Drawing.Point(29, 98);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(78, 20);
-            this.label18.TabIndex = 82;
-            this.label18.Text = "Powers:";
-            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // udPowersSize
-            // 
-            this.udPowersSize.DecimalPlaces = 2;
-            this.udPowersSize.Location = new System.Drawing.Point(108, 98);
-            this.udPowersSize.Maximum = new decimal(new int[] {
-            14,
-            0,
-            0,
-            0});
-            this.udPowersSize.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.udPowersSize.Name = "udPowersSize";
-            this.udPowersSize.Size = new System.Drawing.Size(52, 20);
-            this.udPowersSize.TabIndex = 83;
-            this.udPowersSize.Value = new decimal(new int[] {
-            825,
-            0,
-            0,
-            131072});
-            // 
-            // chkPowSelBold
-            // 
-            this.chkPowSelBold.AutoSize = true;
-            this.chkPowSelBold.Location = new System.Drawing.Point(173, 76);
-            this.chkPowSelBold.Name = "chkPowSelBold";
-            this.chkPowSelBold.Size = new System.Drawing.Size(15, 14);
-            this.chkPowSelBold.TabIndex = 84;
-            this.chkPowSelBold.UseVisualStyleBackColor = true;
-            // 
-            // chkPowersBold
-            // 
-            this.chkPowersBold.AutoSize = true;
-            this.chkPowersBold.Location = new System.Drawing.Point(173, 101);
-            this.chkPowersBold.Name = "chkPowersBold";
-            this.chkPowersBold.Size = new System.Drawing.Size(15, 14);
-            this.chkPowersBold.TabIndex = 85;
-            this.chkPowersBold.UseVisualStyleBackColor = true;
-            // 
             // frmCalcOpt
             // 
             this.AcceptButton = this.btnOK;
@@ -1958,6 +1958,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.groupBox18.PerformLayout();
             this.GroupBox17.ResumeLayout(false);
             this.GroupBox17.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udPowersSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udPowSelectSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udStatSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udRTFSize)).EndInit();
             this.GroupBox5.ResumeLayout(false);
@@ -1993,8 +1995,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage1.PerformLayout();
             this.GroupBox9.ResumeLayout(false);
             this.GroupBox7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.udPowSelectSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.udPowersSize)).EndInit();
             this.ResumeLayout(false);
 
         }
