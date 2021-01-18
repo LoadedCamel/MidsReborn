@@ -331,7 +331,7 @@ namespace Mids_Reborn
                         switch (effect.EffectType)
                         {
                             case Enums.eEffectType.Mez:
-                                if (effect.GetPower().DisplayName.Contains("Steadfast") || !DatabaseAPI.Database.Power[pIdx].HasProcSlotted)
+                                if (effect.GetPower().DisplayName.Contains("Knockback Protection") || !DatabaseAPI.Database.Power[pIdx].HasProcSlotted)
                                     nBuffs.StatusProtection[(int) effect.MezType] += shortFx.Value[shortFxIdx];
                                 break;
                             case Enums.eEffectType.MezResist:
