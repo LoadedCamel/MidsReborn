@@ -4783,13 +4783,21 @@ namespace Mids_Reborn.Forms
                 var PowerListing = false;
                 var bounds = I9Popup.Bounds;
                 if ((hIDX < 0) & (pIDX > -1))
+                {
                     hIDX = MidsContext.Character.CurrentBuild.FindInToonHistory(pIDX);
+                }
+
                 PowerEntry powerEntry = null;
                 if (hIDX > -1)
+                {
                     powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDX];
-                if (!((I9Popup.hIDX != hIDX) | (I9Popup.eIDX != sIDX) | (I9Popup.pIDX != pIDX) |
-                      (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
+                }
+
+                if (!((I9Popup.hIDX != hIDX) | (I9Popup.eIDX != sIDX) | (I9Popup.pIDX != pIDX) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
+                {
                     return;
+                }
+
                 var rectangle = new Rectangle();
                 if ((hIDX > -1) & (sIDX < 0) & (pIDX < 0) & (eSlot == null) & (setIDX < 0))
                 {
@@ -4797,7 +4805,7 @@ namespace Mids_Reborn.Forms
                     var e1 = new Point(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                     if (drawing.WithinPowerBar(rectangle, e1))
                     {
-                        if (powerEntry != null && powerEntry.NIDPower > 0)
+                        if (powerEntry != null && powerEntry.NIDPower > -1)
                             iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIDX, powerEntry.NIDPower);
                         flag = true;
                     }
