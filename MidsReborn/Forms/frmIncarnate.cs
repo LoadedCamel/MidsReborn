@@ -212,6 +212,7 @@ namespace Mids_Reborn.Forms
                 case "Judgement":
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Cryonic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Ion"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Mighty"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Pyronic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Void"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Vorpal"));

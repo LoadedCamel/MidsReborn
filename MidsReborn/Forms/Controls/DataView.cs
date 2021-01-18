@@ -701,9 +701,7 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItem("Arc", pBase.Arc, pEnh.Arc, "°")
                 : FastItem("Radius", pBase.Radius, pEnh.Radius, string.Empty));
-            info_DataList.AddItem(
-                FastItem(ShortStr("Cast Time", "Cast"), pBase.CastTime, pEnh.CastTime, "s", false, true, false, false,
-                    -1, 3));
+            info_DataList.AddItem(FastItem(ShortStr("Cast Time", "Cast"), pBase.CastTime, pEnh.CastTime, "s", $"CastTime: {pEnh.CastTimeReal}\r\nArcana CastTime: {(float)(Math.Ceiling(pEnh.CastTimeReal / 0.132f) + 1.0) * 0.132f}", false, true, false, false, 3));
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, pEnh.ActivatePeriod, "s",
                     "The effects of this toggle power are applied at this interval.")
@@ -2525,6 +2523,34 @@ namespace Mids_Reborn.Forms.Controls
             return itemPair;
         }
 
+        private static PairedList.ItemPair FastItem(string Title, float s1, float s2, string Suffix, string tip, bool SkipBase = false, bool AlwaysShow = false, bool isChance = false, bool isSpecial = false, int maxDecimal = -1)
+        {
+            var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + Suffix : Utilities.FixDP(s2, maxDecimal) + Suffix;
+            PairedList.ItemPair itemPair;
+            if ((Math.Abs(s1) < float.Epsilon) & !AlwaysShow)
+            {
+                itemPair = new PairedList.ItemPair(string.Empty, string.Empty, false);
+            }
+            else
+            {
+                bool iAlternate;
+                if (Math.Abs(s1 - (double)s2) > float.Epsilon)
+                {
+                    if (!SkipBase)
+                        iValue = iValue + " (" + Utilities.FixDP(s1) + ")";
+                    iAlternate = true;
+                }
+                else
+                {
+                    iAlternate = false;
+                }
+
+                itemPair = new PairedList.ItemPair(Title + ":", iValue, iAlternate, isChance, isSpecial, tip);
+            }
+
+            return itemPair;
+        }
+
         public void FlipStage(
             int Index,
             int Enh1,
@@ -2858,7 +2884,8 @@ namespace Mids_Reborn.Forms.Controls
                 break;
             }
 
-            var iTip = GetToolTip(shortFx);
+            string iTip;
+            iTip = GetToolTip(s2);
             return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip);//
         }
 
