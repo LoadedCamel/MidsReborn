@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -185,6 +186,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
+            this.chkOldStyle = new System.Windows.Forms.CheckBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.groupBox18.SuspendLayout();
@@ -277,6 +279,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // groupBox18
             // 
+            this.groupBox18.Controls.Add(this.chkOldStyle);
             this.groupBox18.Controls.Add(this.cbTotalsWindowTitleOpt);
             this.groupBox18.Controls.Add(this.label2);
             this.groupBox18.Location = new System.Drawing.Point(196, 120);
@@ -292,18 +295,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.cbTotalsWindowTitleOpt.FormattingEnabled = true;
             this.cbTotalsWindowTitleOpt.Items.AddRange(new object[] {
             "Generic - Totals for Self",
-            "Character name (if set) + Archetype + Powersets",
-            "Build file name (if set) + Archetype + Powersets",
-            "Character name (if set) + Build file name (fallback to generic if none)"});
-            this.cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(186, 14);
+            "Character name + Archetype + Powersets",
+            "Build file name + Archetype + Powersets",
+            "Character name + Build file name (fallback to generic if none)"});
+            this.cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(221, 16);
             this.cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
-            this.cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(268, 22);
+            this.cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(318, 22);
             this.cbTotalsWindowTitleOpt.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(95, 19);
+            this.label2.Location = new System.Drawing.Point(130, 19);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(85, 14);
             this.label2.TabIndex = 0;
@@ -1932,6 +1935,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.cPicker.FullOpen = true;
             // 
+            // chkOldStyle
+            // 
+            this.chkOldStyle.Location = new System.Drawing.Point(11, 18);
+            this.chkOldStyle.Name = "chkOldStyle";
+            this.chkOldStyle.Size = new System.Drawing.Size(88, 18);
+            this.chkOldStyle.TabIndex = 80;
+            this.chkOldStyle.Text = "Use old style";
+            this.chkOldStyle.CheckedChanged += new EventHandler(chkOldStyle_CheckedChanged);
+            // 
             // frmCalcOpt
             // 
             this.AcceptButton = this.btnOK;
@@ -2155,5 +2167,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private CheckBox chkPowSelBold;
         private NumericUpDown udPowersSize;
         private Label label18;
+        private CheckBox chkOldStyle;
     }
 }

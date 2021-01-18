@@ -580,7 +580,8 @@ namespace Mids_Reborn.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
-            frmTotalsV2.SetTitle(fTotals);
+            if (!MidsContext.Config.UseOldTotalsWindow)
+                frmTotalsV2.SetTitle(fTotals2);
         }
 
         private void cbAT_DrawItem(object sender, DrawItemEventArgs e)
@@ -630,7 +631,8 @@ namespace Mids_Reborn.Forms
             //PerformAutoScale();
             SetAncilPoolHeight();
             GetBestDamageValues();
-            frmTotalsV2.SetTitle(fTotals);
+            if (!MidsContext.Config.UseOldTotalsWindow)
+                frmTotalsV2.SetTitle(fTotals2);
         }
 
         private static void cbDrawItem(
@@ -835,7 +837,8 @@ namespace Mids_Reborn.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
-            frmTotalsV2.SetTitle(fTotals);
+            if (!MidsContext.Config.UseOldTotalsWindow)
+                frmTotalsV2.SetTitle(fTotals2);
         }
 
         private void cbSecondary_DrawItem(object sender, DrawItemEventArgs e)
@@ -868,7 +871,8 @@ namespace Mids_Reborn.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
-            frmTotalsV2.SetTitle(fTotals);
+            if (!MidsContext.Config.UseOldTotalsWindow)
+                frmTotalsV2.SetTitle(fTotals2);
         }
 
         private void ChangeSets()
@@ -1760,11 +1764,23 @@ namespace Mids_Reborn.Forms
                         fGraphCompare.TopMost = false;
                 }
 
-                if (fTotals != null)
+                if (MidsContext.Config.UseOldTotalsWindow)
                 {
-                    top_fTotals = fTotals.TopMost;
-                    if (fTotals.TopMost)
-                        fTotals.TopMost = false;
+                    if (fTotals != null)
+                    {
+                        top_fTotals = fTotals.TopMost;
+                        if (fTotals.TopMost)
+                            fTotals.TopMost = false;
+                    }
+                }
+                else
+                {
+                    if (fTotals2 != null)
+                    {
+                        top_fTotals = fTotals2.TopMost;
+                        if (fTotals2.TopMost)
+                            fTotals2.TopMost = false;
+                    }
                 }
 
                 if (fRecipe != null)
@@ -1811,11 +1827,23 @@ namespace Mids_Reborn.Forms
                         fGraphCompare.BringToFront();
                 }
 
-                if (fTotals != null && fTotals.TopMost != top_fTotals)
+                if (MidsContext.Config.UseOldTotalsWindow)
                 {
-                    fTotals.TopMost = top_fTotals;
-                    if (fTotals.TopMost)
-                        fTotals.BringToFront();
+                    if (fTotals != null && fTotals.TopMost != top_fTotals)
+                    {
+                        fTotals.TopMost = top_fTotals;
+                        if (fTotals.TopMost)
+                            fTotals.BringToFront();
+                    }
+                }
+                else
+                {
+                    if (fTotals2 != null && fTotals2.TopMost != top_fTotals)
+                    {
+                        fTotals2.TopMost = top_fTotals;
+                        if (fTotals2.TopMost)
+                            fTotals2.BringToFront();
+                    }
                 }
 
                 if (fRecipe != null && fRecipe.TopMost != top_fRecipe)
@@ -1840,31 +1868,59 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        internal void FloatTotals(bool show)
+        internal void FloatTotals(bool show, bool useOld)
         {
-            if (show)
+            if (!useOld)
             {
-                if (fTotals == null)
+                if (show)
                 {
-                    var iParent = this;
-                    fTotals = new frmTotalsV2(ref iParent);
-                }
+                    if (fTotals2 == null)
+                    {
+                        var iParent = this;
+                        fTotals2 = new frmTotalsV2(ref iParent);
+                    }
 
-                DoRedraw();
-                fTotals.SetLocation();
-                fTotals.Show();
-                fTotals.BringToFront();
-                fTotals.UpdateData();
-                frmTotalsV2.SetTitle(fTotals);
-                fTotals.Activate();
+                    DoRedraw();
+                    fTotals2.SetLocation();
+                    fTotals2.Show();
+                    fTotals2.BringToFront();
+                    fTotals2.UpdateData();
+                    frmTotalsV2.SetTitle(fTotals2);
+                    fTotals2.Activate();
+                }
+                else
+                {
+                    if (fTotals2 == null)
+                        return;
+                    fTotals2.Hide();
+                    fTotals2.Dispose();
+                    fTotals2 = null;
+                }
             }
             else
             {
-                if (fTotals == null)
-                    return;
-                fTotals.Hide();
-                fTotals.Dispose();
-                fTotals = null;
+                if (show)
+                {
+                    if (fTotals == null)
+                    {
+                        var iParent = this;
+                        fTotals = new frmTotals(ref iParent);
+                    }
+                    DoRedraw();
+                    fTotals.SetLocation();
+                    fTotals.Show();
+                    fTotals.BringToFront();
+                    fTotals.UpdateData();
+                    fTotals.Activate();
+                }
+                else
+                {
+                    if (fTotals == null)
+                        return;
+                    fTotals.Hide();
+                    fTotals.Dispose();
+                    fTotals = null;
+                }
             }
         }
 
@@ -1873,6 +1929,7 @@ namespace Mids_Reborn.Forms
             fSets?.UpdateData();
             fGraphStats?.UpdateData(newData);
             fTotals?.UpdateData();
+            fTotals2?.UpdateData();
             fGraphCompare?.UpdateData();
             fRecipe?.UpdateData();
             fDPSCalc?.UpdateData();
@@ -1950,7 +2007,7 @@ namespace Mids_Reborn.Forms
             if (drawing != null)
                 DoRedraw();
             UpdateColors();
-            frmTotalsV2.SetTitle(fTotals);
+            frmTotalsV2.SetTitle(fTotals2);
         }
 
         private void GetBestDamageValues()
@@ -2239,7 +2296,7 @@ namespace Mids_Reborn.Forms
 
         private void ibTotals_ButtonClicked()
         {
-            FloatTotals(true);
+            FloatTotals(true, MidsContext.Config.UseOldTotalsWindow);
         }
 
         private void incarnateButton_ButtonClicked()
@@ -2505,7 +2562,7 @@ namespace Mids_Reborn.Forms
             {
                 case MouseButtons.Left:
                     PowerPicked(Item.nIDSet, Item.nIDPower);
-                    frmTotalsV2.SetTitle(fTotals);
+                    frmTotalsV2.SetTitle(fTotals2);
                     break;
                 case MouseButtons.Right:
                     Info_Power(Item.nIDPower, -1, false, true);
@@ -3108,8 +3165,7 @@ namespace Mids_Reborn.Forms
                 }
                 else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
                 {
-                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
-                        MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
                         {
@@ -5748,7 +5804,7 @@ namespace Mids_Reborn.Forms
 
         private void tsViewTotals_Click(object sender, EventArgs e)
         {
-            FloatTotals(true);
+            FloatTotals(true, MidsContext.Config.UseOldTotalsWindow);
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
@@ -5756,7 +5812,7 @@ namespace Mids_Reborn.Forms
             if (NoUpdate)
                 return;
             MidsContext.Character.Name = txtName.Text;
-            frmTotalsV2.SetTitle(fTotals);
+            frmTotalsV2.SetTitle(fTotals2);
             DisplayName();
         }
 
@@ -6495,7 +6551,8 @@ namespace Mids_Reborn.Forms
         private frmSetFind fSetFinder;
         private frmSetViewer fSets;
         private frmTemp fTemp;
-        private frmTotalsV2 fTotals = null;
+        private frmTotalsV2 fTotals2;
+        private frmTotals fTotals;
         private bool HasSentBack;
         private bool HasSentForwards;
         private bool LastClickPlacedSlot;

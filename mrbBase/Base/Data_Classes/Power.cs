@@ -521,6 +521,8 @@ namespace mrbBase.Base.Data_Classes
 
         public bool BoostUsePlayerLevel { get; set; }
 
+        public bool HasProcSlotted { get; set; }
+
         public string FullSetName
         {
             get
@@ -680,7 +682,7 @@ namespace mrbBase.Base.Data_Classes
             var num1 = 0.0f;
             foreach (var effect in Effects)
             {
-                if (effect.EffectType != Enums.eEffectType.Damage || MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) || effect.EffectClass == Enums.eEffectClass.Ignored || effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self || !(effect.Probability > 0.0) || !effect.CanInclude() || !effect.PvXInclude())
+                if (effect.EffectType != Enums.eEffectType.Damage || MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) || (effect.EffectClass == Enums.eEffectClass.Ignored || effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self) || (!(effect.Probability > 0.0) || !effect.CanInclude()) || !effect.PvXInclude())
                 {
                     continue;
                 }
@@ -1381,7 +1383,7 @@ namespace mrbBase.Base.Data_Classes
             for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
                 if (!Effects[iIndex].PvXInclude() || !(Effects[iIndex].Probability > 0.0) ||
-                    Effects[iIndex].ETModifies != iEffect || !Effects[iIndex].CanInclude() ||
+                    (Effects[iIndex].ETModifies != iEffect || !Effects[iIndex].CanInclude()) ||
                     Effects[iIndex].EffectType != Enums.eEffectType.Enhancement &&
                     Effects[iIndex].EffectType != Enums.eEffectType.DamageBuff ||
                     Effects[iIndex].Absorbed_Effect &&
@@ -1439,7 +1441,7 @@ namespace mrbBase.Base.Data_Classes
                     Effects[iIndex].EffectType != iEffect ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Special ||
-                    !(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude() ||
+                    (!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude()) ||
                     !Effects[iIndex].PvXInclude())
                 {
                     continue;
@@ -2307,8 +2309,7 @@ namespace mrbBase.Base.Data_Classes
                         Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
                         if (Effects[array1[index1]].Probability < 1.0)
                         {
-                            Effects[index2].Probability =
-                                Effects[array1[index1]].Probability * Effects[index2].Probability;
+                            Effects[index2].Probability = Effects[array1[index1]].Probability * Effects[index2].Probability;
                         }
                     }
                 }
@@ -2392,7 +2393,7 @@ namespace mrbBase.Base.Data_Classes
                 var effect = Effects[t];
                 var nSummon1 = effect.nSummon;
                 var stacking = 1;
-                if (VariableEnabled && effect.VariableModified && hIdx > -1 && MidsContext.Character != null &&
+                if (VariableEnabled && effect.VariableModified && (hIdx > -1 && MidsContext.Character != null) &&
                     MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
                 {
                     stacking = MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue;

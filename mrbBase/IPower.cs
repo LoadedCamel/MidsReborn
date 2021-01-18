@@ -6,6 +6,7 @@ namespace mrbBase
 {
     public interface IPower : IComparable
     {
+        bool HasProcSlotted { get; set; }
         string FullSetName { get; }
 
         float CastTime { get; set; }

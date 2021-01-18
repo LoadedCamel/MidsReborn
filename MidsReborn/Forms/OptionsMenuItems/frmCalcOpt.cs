@@ -512,6 +512,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             rbGraphSimple.Enabled = chkEnableDmgGraph.Checked;
         }
 
+        private void chkOldStyle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkOldStyle.Checked)
+            {
+                label2.Enabled = false;
+                cbTotalsWindowTitleOpt.Enabled = false;
+            }
+            else
+            {
+                label2.Enabled = true;
+                cbTotalsWindowTitleOpt.Enabled = true;
+            }
+        }
+
         private void PopulateSuppression()
         {
             clbSuppression.BeginUpdate();
@@ -585,6 +599,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             } while (index <= 19);
 
             cbTotalsWindowTitleOpt.SelectedIndex = (int)config.TotalsWindowTitleStyle;
+            chkOldStyle.Checked = config.UseOldTotalsWindow;
         }
 
         private void setupScenarios()
@@ -796,6 +811,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
             config.UpdatePath = cbUpdateURL.Text;
             config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle) cbTotalsWindowTitleOpt.SelectedIndex;
+            config.UseOldTotalsWindow = chkOldStyle.Checked;
             var index = 0;
             do
             {

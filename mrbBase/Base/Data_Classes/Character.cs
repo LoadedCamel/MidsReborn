@@ -455,6 +455,14 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (power?.Power == null) continue;
                 var powName = power.Power.PowerName;
+                if (power.HasProc())
+                {
+                    power.Power.HasProcSlotted = true;
+                }
+                else if (!power.HasProc())
+                {
+                    power.Power.HasProcSlotted = false;
+                }
                 switch (powName)
                 {
                     default:

@@ -102,6 +102,7 @@ namespace mrbBase
             set => _lastSize = value;
         }
 
+        public bool UseOldTotalsWindow { get; set; }
         public float BaseAcc { get; set; } = 0.75f;
         public bool DoNotUpdateFileAssociation { get; set; }
         public int ExempHigh { get; set; } = 50;

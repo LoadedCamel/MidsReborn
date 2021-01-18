@@ -88,7 +88,6 @@ namespace mrbBase
             ProcInclude = false;
         }
 
-        // public fields are bad, mkay? O_o
         public int Level { get; set; }
         public int NIDPowerset { get; set; }
         public int IDXPower { get; set; }

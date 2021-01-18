@@ -227,8 +227,7 @@ namespace Mids_Reborn.Forms
 
                 var num2 = DatabaseAPI.Database.Power[index1].Effects.Length - 1;
                 for (var index2 = 0; index2 <= num2; ++index2)
-                    DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName =
-                        DatabaseAPI.Database.Power[index1].FullName;
+                    DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
                 var strArray =
                     DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
                 var str1 = "";
@@ -293,7 +292,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnOK_Click(object sender, EventArgs e)
-
         {
             DialogResult = DialogResult.OK;
             Hide();
@@ -685,9 +683,10 @@ namespace Mids_Reborn.Forms
                     {
                         var effect = myEnh.Effect;
                         var index2 = index1;
-                        if ((effect[index2].Mode == Enums.eEffMode.Enhancement) &
-                            (effect[index2].Enhance.SubID == num1))
+                        if ((effect[index2].Mode == Enums.eEffMode.Enhancement) & (effect[index2].Enhance.SubID == num1))
+                        {
                             flag = false;
+                        }
                     }
                 }
 
@@ -748,7 +747,7 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                IEnhancement enh = this.myEnh;
+                IEnhancement enh = myEnh;
                 Enums.sEffect[] sEffectArray = (Enums.sEffect[])Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
                 enh.Effect = sEffectArray;
                 Enums.sEffect[] effect = myEnh.Effect;
