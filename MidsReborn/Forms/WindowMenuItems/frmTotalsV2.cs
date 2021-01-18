@@ -868,7 +868,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _myParent.FloatTotals(false);
+            _myParent.FloatTotals(false, false);
         }
 
         private void frmTotalsV2_Move(object sender, EventArgs e)
