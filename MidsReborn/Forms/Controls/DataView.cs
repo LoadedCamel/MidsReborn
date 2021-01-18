@@ -406,7 +406,7 @@ namespace Mids_Reborn.Forms.Controls
                     var num5 = MidsContext.Character.CurrentBuild.Powers.Count - 1;
                     for (var index1 = 0; index1 <= num5; ++index1)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[index1].Power == null || !MidsContext.Character.CurrentBuild.Powers[index1].StatInclude || !MidsContext.Character.CurrentBuild.Powers[index1].ProcInclude)
+                        if (MidsContext.Character.CurrentBuild.Powers[index1].Power == null || !MidsContext.Character.CurrentBuild.Powers[index1].StatInclude)
                             continue;
                         IPower power1 = new Power(MidsContext.Character.CurrentBuild.Powers[index1].Power);
                         power1.AbsorbPetEffects();
