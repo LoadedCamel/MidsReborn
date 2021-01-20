@@ -329,6 +329,7 @@ namespace Mids_Reborn.Forms
                 else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
                 Size = new Size(width1, height1);
+                poolsPanel.Height = Math.Max(32, height1 - 162);
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
@@ -6051,6 +6052,7 @@ namespace Mids_Reborn.Forms
             if (myDataView != null && (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
                 dvAnchored_TabChanged(myDataView.TabPageIndex);
 
+            poolsPanel.Height = Math.Max(32, Height - 162);
             DoResize();
             NoUpdate = false;
         }
