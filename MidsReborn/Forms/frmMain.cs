@@ -329,7 +329,7 @@ namespace Mids_Reborn.Forms
                 else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
                 Size = new Size(width1, height1);
-                poolsPanel.Height = Math.Max(32, height1 - 162);
+                UpdatePoolsPanelSize();
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
@@ -1966,7 +1966,6 @@ namespace Mids_Reborn.Forms
                 frmMain_Resize(RuntimeHelpers.GetObjectValue(sender), e);
             }
             LastState = WindowState;
-
         }
 
         private void frmMain_MouseWheel(object sender, MouseEventArgs e)
@@ -1976,6 +1975,7 @@ namespace Mids_Reborn.Forms
 
         private void frmMain_Resize(object sender, EventArgs e)
         {
+            UpdatePoolsPanelSize();
             if (dvAnchored != null)
             {
                 dvAnchored.SetScreenBounds(ClientRectangle);
@@ -5924,6 +5924,13 @@ namespace Mids_Reborn.Forms
             pbDynMode.Refresh();
         }
 
+        private void UpdatePoolsPanelSize()
+        {
+            if (loading) return;
+
+            poolsPanel.Height = Math.Max(32, Height - poolsPanel.Location.Y - MenuBar.Height - 16);
+        }
+
         private void UpdateControls(bool ForceComplete = false)
         {
             if (loading) return;
@@ -6023,7 +6030,8 @@ namespace Mids_Reborn.Forms
             llPrimary.PaddingY = 2;
             llSecondary.PaddingY = 2;
             FixPrimarySecondaryHeight();
-            foreach (var llControl in Controls.OfType<ListLabelV3>())
+            foreach (var llControl in Controls.OfType<ListLabelV3>().Concat(poolsPanel.Controls.OfType<ListLabelV3>()))
+            //foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
                 var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
                 llControl.Font = new Font(llControl.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
@@ -6052,7 +6060,6 @@ namespace Mids_Reborn.Forms
             if (myDataView != null && (drawing.InterfaceMode == Enums.eInterfaceMode.Normal) & (myDataView.TabPageIndex == 2))
                 dvAnchored_TabChanged(myDataView.TabPageIndex);
 
-            poolsPanel.Height = Math.Max(32, Height - 162);
             DoResize();
             NoUpdate = false;
         }

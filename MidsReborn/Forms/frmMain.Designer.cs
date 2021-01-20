@@ -1686,7 +1686,7 @@ namespace Mids_Reborn.Forms
             // llPool0
             // 
             this.llPool0.Expandable = false;
-            this.llPool0.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool0.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool0.HighVis = true;
             this.llPool0.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPool0.Location = new System.Drawing.Point(0, 45); // 328, 206
@@ -1698,8 +1698,8 @@ namespace Mids_Reborn.Forms
             this.llPool0.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool0.ScrollBarWidth = 11;
             this.llPool0.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool0.Size = new System.Drawing.Size(136, 69);
-            this.llPool0.SizeNormal = new System.Drawing.Size(136, 69);
+            this.llPool0.Size = new System.Drawing.Size(138, 69);
+            this.llPool0.SizeNormal = new System.Drawing.Size(138, 69);
             this.llPool0.SuspendRedraw = false;
             this.llPool0.TabIndex = 34;
             this.llPool0.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool0_ItemHover);
@@ -1710,7 +1710,7 @@ namespace Mids_Reborn.Forms
             // llPool1
             // 
             this.llPool1.Expandable = false;
-            this.llPool1.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool1.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool1.ForeColor = System.Drawing.Color.Yellow;
             this.llPool1.HighVis = true;
             this.llPool1.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -1723,8 +1723,8 @@ namespace Mids_Reborn.Forms
             this.llPool1.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool1.ScrollBarWidth = 8;
             this.llPool1.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool1.Size = new System.Drawing.Size(136, 69);
-            this.llPool1.SizeNormal = new System.Drawing.Size(136, 69);
+            this.llPool1.Size = new System.Drawing.Size(138, 69);
+            this.llPool1.SizeNormal = new System.Drawing.Size(138, 69);
             this.llPool1.SuspendRedraw = false;
             this.llPool1.TabIndex = 35;
             this.llPool1.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool1_ItemHover);
@@ -1783,7 +1783,7 @@ namespace Mids_Reborn.Forms
             // llPool3
             // 
             this.llPool3.Expandable = false;
-            this.llPool3.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool3.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool3.ForeColor = System.Drawing.Color.Yellow;
             this.llPool3.HighVis = true;
             this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -1796,8 +1796,8 @@ namespace Mids_Reborn.Forms
             this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool3.ScrollBarWidth = 8;
             this.llPool3.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool3.Size = new System.Drawing.Size(136, 69);
-            this.llPool3.SizeNormal = new System.Drawing.Size(136, 69);
+            this.llPool3.Size = new System.Drawing.Size(138, 69);
+            this.llPool3.SizeNormal = new System.Drawing.Size(138, 69);
             this.llPool3.SuspendRedraw = false;
             this.llPool3.TabIndex = 37;
             this.llPool3.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool3_ItemHover);
@@ -1808,7 +1808,7 @@ namespace Mids_Reborn.Forms
             // llPool2
             // 
             this.llPool2.Expandable = false;
-            this.llPool2.Font = new System.Drawing.Font("Arial", 8.25f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.llPool2.Font = new System.Drawing.Font("Arial", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
             this.llPool2.ForeColor = System.Drawing.Color.Yellow;
             this.llPool2.HighVis = true;
             this.llPool2.HoverColor = System.Drawing.Color.WhiteSmoke;
@@ -1821,8 +1821,8 @@ namespace Mids_Reborn.Forms
             this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool2.ScrollBarWidth = 8;
             this.llPool2.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool2.Size = new System.Drawing.Size(136, 69);
-            this.llPool2.SizeNormal = new System.Drawing.Size(136, 69);
+            this.llPool2.Size = new System.Drawing.Size(138, 69);
+            this.llPool2.SizeNormal = new System.Drawing.Size(138, 69);
             this.llPool2.SuspendRedraw = false;
             this.llPool2.TabIndex = 36;
             this.llPool2.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool2_ItemHover);
@@ -1985,15 +1985,14 @@ namespace Mids_Reborn.Forms
             // poolsPanel
             //
             this.poolsPanel.AutoScroll = true;
-            this.poolsPanel.Location = new System.Drawing.Point(318, 161); // 318, 161
+            this.poolsPanel.Location = new System.Drawing.Point(322, 161); // 318, 161
             this.poolsPanel.Name = "poolsPanel";
-            this.poolsPanel.Size = new System.Drawing.Size(162, 726);
+            this.poolsPanel.Size = new System.Drawing.Size(158, 726); // 162, 726
             this.poolsPanel.TabIndex = 0;
             this.poolsPanel.BorderStyle = BorderStyle.None;
             this.poolsPanel.HorizontalScroll.Enabled = false;
             this.poolsPanel.VerticalScroll.Enabled = true;
             this.poolsPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            //this.poolsPanel.BackColor = System.Drawing.Color.FromArgb(0, 0x60, 0x90);
 
             this.poolsPanel.Controls.Add(this.lblLocked0);
             this.poolsPanel.Controls.Add(this.lblLocked1);
