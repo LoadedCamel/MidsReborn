@@ -20,6 +20,8 @@ namespace mrbControls
 
         public delegate void ItemHoverEventHandler(ListLabelItemV3 Item);
 
+        public delegate void ItemHoverEventHandler2(object sender, ListLabelItemV3 Item);
+
         public enum LLFontFlags
         {
             Normal = 0,
@@ -108,6 +110,7 @@ namespace mrbControls
         {
             MouseLeave += ListLabelV3_MouseLeave;
             MouseMove += ListLabelV3_MouseMove;
+            MouseMove += ListLabelV3_MouseMove2;
             MouseUp += ListLabelV3_MouseUp;
             Paint += ListLabelV3_Paint;
             Resize += ListLabelV3_Resize;
@@ -357,6 +360,7 @@ namespace mrbControls
 
         public event ItemClickEventHandler ItemClick;
         public event ItemHoverEventHandler ItemHover;
+        public event ItemHoverEventHandler2 ItemHover2;
         public event EmptyHoverEventHandler EmptyHover;
         public event ExpandChangedEventHandler ExpandChanged;
 
@@ -784,6 +788,106 @@ namespace mrbControls
             EmptyHover?.Invoke();
         }
 
+        private void ListLabelV3_MouseMove2(object sender, MouseEventArgs e)
+        {
+            var cursor = System.Windows.Forms.Cursors.Default;
+            var mouseTarget = GetMouseTarget(e.X, e.Y);
+            var flag = false;
+            checked
+            {
+                if (!DragMode)
+                {
+                    EmptyHoverEventHandler emptyHoverEvent;
+                    switch (mouseTarget)
+                    {
+                        case eMouseTarget.Item:
+                            {
+                                var itemAtY = GetItemAtY(e.Y);
+                                if (itemAtY <= -1)
+                                {
+                                    if (HoverID != -1) flag = true;
+
+                                    HoverID = -1;
+                                    EmptyHover?.Invoke();
+                                    goto IL_3EA;
+                                }
+
+                                var num = 0;
+                                for (var i = ScrollOffset; i < itemAtY; i++) num += Items[i].ItemHeight;
+
+                                if (!(((num + Items[itemAtY].ItemHeight >= e.Y) &
+                                       (num + Items[itemAtY].ItemHeight <= TextArea.Height)) |
+                                      ((Items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
+                                       (num + ActualLineHeight <= TextArea.Height))))
+                                {
+                                    if (HoverID != -1) flag = true;
+
+                                    HoverID = -1;
+                                    EmptyHover?.Invoke();
+                                    goto IL_3EA;
+                                }
+
+                                cursor = Cursors[(int)Items[itemAtY].ItemState];
+                                HoverID = itemAtY;
+                                Draw();
+                                ItemHover2?.Invoke(sender, Items[itemAtY]);
+                                goto IL_3EA;
+                            }
+                        case eMouseTarget.UpButton:
+                            if (LastMouseMovetarget != mouseTarget) Draw();
+
+                            emptyHoverEvent = EmptyHover;
+                            emptyHoverEvent?.Invoke();
+                            goto IL_3EA;
+                        case eMouseTarget.DownButton:
+                            if (LastMouseMovetarget != mouseTarget) Draw();
+
+                            emptyHoverEvent = EmptyHover;
+                            emptyHoverEvent?.Invoke();
+                            goto IL_3EA;
+                        case eMouseTarget.ExpandButton:
+                            HoverID = -1;
+                            emptyHoverEvent = EmptyHover;
+                            emptyHoverEvent?.Invoke();
+                            goto IL_3EA;
+                    }
+
+                    emptyHoverEvent = EmptyHover;
+                    emptyHoverEvent?.Invoke();
+                }
+                else if (e.Button == MouseButtons.None)
+                {
+                    DragMode = false;
+                }
+                else
+                {
+                    cursor = System.Windows.Forms.Cursors.SizeNS;
+                    var num3 = Height - (yPadding + ScrollWidth) * 2 - yPadding * 2;
+                    var num4 = (int)Math.Round(checked(ScrollWidth + yPadding * 2) +
+                                                num3 / (double)ScrollSteps * ScrollOffset);
+                    var num5 = (int)Math.Round(num3 / (double)ScrollSteps);
+                    if ((e.Y < num4) & (ScrollOffset > 0))
+                    {
+                        ScrollOffset--;
+                        Draw();
+                    }
+                    else if ((e.Y > num4 + num5) & (ScrollOffset + 1 < ScrollSteps))
+                    {
+                        ScrollOffset++;
+                        Draw();
+                    }
+
+                    var emptyHoverEvent = EmptyHover;
+                    emptyHoverEvent?.Invoke();
+                }
+
+                IL_3EA:
+                if (flag) Draw();
+
+                Cursor = cursor;
+                LastMouseMovetarget = mouseTarget;
+            }
+        }
         private void ListLabelV3_MouseMove(object sender, MouseEventArgs e)
         {
             var cursor = System.Windows.Forms.Cursors.Default;

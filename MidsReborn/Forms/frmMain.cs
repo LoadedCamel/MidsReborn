@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -569,10 +570,8 @@ namespace Mids_Reborn.Forms
         {
             if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[7] == null)
                 return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[7].nID, MidsContext.Character.Archetype.Idx, cbAncillary.Bounds,
-                ExtraString);
+            var ExtraString = "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
+            ShowPopup(MidsContext.Character.Powersets[7].nID, MidsContext.Character.Archetype.Idx, new Rectangle(cbAncillary.Left, cbAncillary.Top, cbAncillary.Width, cbAncillary.Height), ExtraString);
         }
 
         private void cbAncillery_SelectedIndexChanged(object sender, EventArgs e)
@@ -729,10 +728,9 @@ namespace Mids_Reborn.Forms
         {
             if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[3] == null)
                 return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[3].nID, MidsContext.Character.Archetype.Idx, cbPool0.Bounds,
-                ExtraString);
+            var rBounds = new Rectangle(poolsPanel.Left + cbPool0.Left, poolsPanel.Top + cbPool0.Bottom, cbPool0.Width, cbPool0.Height);
+            var ExtraString = "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
+            ShowPopup(MidsContext.Character.Powersets[3].nID, MidsContext.Character.Archetype.Idx, rBounds, ExtraString);
         }
 
         private void cbPool0_SelectedIndexChanged(object sender, EventArgs e)
@@ -752,8 +750,53 @@ namespace Mids_Reborn.Forms
         {
             if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[4] == null)
                 return;
-            ShowPopup(MidsContext.Character.Powersets[4].nID, MidsContext.Character.Archetype.Idx, cbPool1.Bounds,
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.");
+            var xLoc = poolsPanel.Left + cbPool1.Left;
+            var yLoc = poolsPanel.Top + cbPool1.Bottom - cbPool1.Height;
+            var rBounds = new Rectangle(xLoc, yLoc, cbPool1.Width, cbPool1.Height);
+            var ExtraString = "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
+            ShowPopup(MidsContext.Character.Powersets[4].nID, MidsContext.Character.Archetype.Idx, rBounds, ExtraString);
+        }
+
+        private void cbPools_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (MainModule.MidsController.Toon == null) return;
+            var combo = (ComboBox) sender;
+            var loc = new Point(poolsPanel.Left + combo.Left, poolsPanel.Top + combo.Bottom - combo.Height);
+            var rBounds = new Rectangle(loc.X, loc.Y, combo.Width, combo.Height);
+            var ExtraString = "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
+            int nId = -1;
+            switch (combo.Name)
+            {
+                case "cbPool0":
+                    nId = MidsContext.Character.Powersets[3].nID;
+                    break;
+                case "cbPool1":
+                    nId = MidsContext.Character.Powersets[4].nID;
+                    break;
+                case "cbPool2":
+                    nId = MidsContext.Character.Powersets[5].nID;
+                    break;
+                case "cbPool3":
+                    nId = MidsContext.Character.Powersets[6].nID;
+                    break;
+                case "cbAncillary":
+                    loc = new Point(poolsPanel.Left + combo.Left, poolsPanel.Top + combo.Bottom - combo.Height);
+                    rBounds = new Rectangle(loc.X, loc.Y, combo.Width, combo.Height);
+                    nId = MidsContext.Character.Powersets[7].nID;
+                    break;
+            }
+            ShowPopup(nId, MidsContext.Character.Archetype.Idx, rBounds, ExtraString);
+        }
+        private void llPools_ItemHover(object sender, ListLabelV3.ListLabelItemV3 Item)
+        {
+            if (MainModule.MidsController.Toon == null) return;
+            var llbl = (ListLabelV3)sender;
+            var loc = new Point(poolsPanel.Left + llbl.Left, poolsPanel.Top + llbl.Bottom - llbl.Height);
+            var rBounds = new Rectangle(loc.X, loc.Y, llbl.Width, llbl.Height);
+            LastIndex = -1;
+            LastEnhIndex = -1;
+            Info_Power(Item.nIDPower);
+            ShowPopup(-1, Item.nIDPower, -1, new Point(), rBounds);
         }
 
         private void cbPool1_SelectedIndexChanged(object sender, EventArgs e)
