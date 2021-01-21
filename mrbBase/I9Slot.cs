@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 using mrbBase.Base.Data_Classes;
 
@@ -158,24 +159,28 @@ namespace mrbBase
                         {
                             var scheduleMult = GetScheduleMult(enhancement.TypeID, sEffect.Schedule);
                             if (sEffect.Multiplier > 0.0)
+                            {
                                 scheduleMult *= sEffect.Multiplier;
+                            }
+
                             if (stringBuilder.Length > 0)
+                            {
                                 stringBuilder.Append(", ");
+                            }
+
                             switch (enhancement.TypeID)
                             {
                                 case Enums.eType.Normal:
                                     var relativeString1 = Enums.GetRelativeString(RelativeLevel, false);
                                     if (!string.IsNullOrEmpty(relativeString1) & (relativeString1 != "X"))
                                     {
-                                        stringBuilder.Append(relativeString1 + " " +
-                                                             DatabaseAPI.Database.EnhGradeStringLong[(int) Grade] + " - ");
+                                        stringBuilder.Append(relativeString1 + " " + DatabaseAPI.Database.EnhGradeStringLong[(int) Grade] + " - ");
                                         break;
                                     }
 
                                     if (relativeString1 == "X")
                                     {
-                                        stringBuilder.Append("Disabled " +
-                                                             DatabaseAPI.Database.EnhGradeStringLong[(int) Grade] + " - ");
+                                        stringBuilder.Append("Disabled " + DatabaseAPI.Database.EnhGradeStringLong[(int) Grade] + " - ");
                                         break;
                                     }
 
@@ -201,8 +206,7 @@ namespace mrbBase
 
                             stringBuilder.Append("Schedule: ");
                             stringBuilder.Append(sEffect.Schedule.ToString());
-                            stringBuilder.AppendFormat(" ({0}%)",
-                                (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo));
+                            stringBuilder.AppendFormat(" ({0}%)", (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo));
                             str2 = stringBuilder.ToString();
                         }
                         else if (!flag)
@@ -262,7 +266,10 @@ namespace mrbBase
                             {
                                 var scheduleMult = GetScheduleMult(enhancement.TypeID, sEffect.Schedule);
                                 if (sEffect.Multiplier > 0.0)
+                                {
                                     scheduleMult *= sEffect.Multiplier;
+                                }
+
                                 var id = (Enums.eEnhance) sEffect.Enhance.ID;
                                 string str2;
                                 if (id == Enums.eEnhance.Mez)
@@ -383,7 +390,7 @@ namespace mrbBase
                             {
                                 if (stringBuilder.Length > 0)
                                     stringBuilder.Append("\n");
-                                stringBuilder.Append(power.Effects[index1].BuildEffectString(true));
+                                stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false,true));
                             }
 
                         str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");

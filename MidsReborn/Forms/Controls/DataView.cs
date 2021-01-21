@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Web.Profile;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Microsoft.VisualBasic;
@@ -624,9 +625,10 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            foreach (var effect in pBase.Effects)
+            foreach (var effect in pEnh.Effects)
             {
                 effect.UpdateAttrib();
+                SetDamageTip();
             }
             info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, Suffix1,
                 Tip1));
@@ -638,8 +640,7 @@ namespace Mids_Reborn.Forms.Controls
                 if (pBase.Effects[index].RequiresToHitCheck)
                     flag2 = true;
 
-            if ((pBase.EntitiesAutoHit == Enums.eEntity.None) | flag2 | flag1 |
-                ((pBase.Range > 20.0) & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
+            if ((pBase.EntitiesAutoHit == Enums.eEntity.None) | flag2 | flag1 | ((pBase.Range > 20.0) & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
             {
                 var accuracy1 = pBase.Accuracy;
                 var accuracy2 = pEnh.Accuracy;
@@ -701,7 +702,7 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItem("Arc", pBase.Arc, pEnh.Arc, "°")
                 : FastItem("Radius", pBase.Radius, pEnh.Radius, string.Empty));
-            info_DataList.AddItem(FastItem(ShortStr("Cast Time", "Cast"), pBase.CastTime, pEnh.CastTime, "s", $"CastTime: {pEnh.CastTimeReal}\r\nArcana CastTime: {(float)(Math.Ceiling(pEnh.CastTimeReal / 0.132f) + 1.0) * 0.132f}", false, true, false, false, 3));
+            info_DataList.AddItem(FastItem(ShortStr("Cast Time", "Cast"), pBase.CastTime, pEnh.CastTime, "s", $"CastTime (Base): {pBase.CastTime}\r\nCastTime (Enhanced): {pEnh.CastTime}\r\nArcana CastTime: {(float)(Math.Ceiling(pEnh.CastTime / 0.132f) + 1.0) * 0.132f}", false, true, false, false, 3));
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, pEnh.ActivatePeriod, "s",
                     "The effects of this toggle power are applied at this interval.")
@@ -818,7 +819,7 @@ namespace Mids_Reborn.Forms.Controls
             if (MidsContext.Config.DataDamageGraphPercentageOnly)
                 str1 += " (% only)";
             var damageValue1 = pBase.FXGetDamageValue();
-            if ((pBase.NIDSubPower.Length > 0) & (Math.Abs(damageValue1) < float.Epsilon))
+            if (pBase.NIDSubPower.Length > 0 & damageValue1 == 0.0)
             {
                 lblDmg.Text = string.Empty;
                 Info_Damage.nBaseVal = 0.0f;
@@ -834,10 +835,15 @@ namespace Mids_Reborn.Forms.Controls
                 Info_Damage.nBaseVal = damageValue1;
                 Info_Damage.nMaxEnhVal = num2;
                 Info_Damage.nEnhVal = damageValue2;
-                if (Math.Abs(damageValue2 - (double)damageValue1) > float.Epsilon)
+                
+                if (damageValue2 != damageValue1)
+                {
                     Info_Damage.Text = pEnh.FXGetDamageString() + " (" + Utilities.FixDP(damageValue1) + ")";
+                }
                 else
+                {
                     Info_Damage.Text = pBase.FXGetDamageString();
+                }
             }
 
             SetPowerScaler();
@@ -2551,14 +2557,7 @@ namespace Mids_Reborn.Forms.Controls
             return itemPair;
         }
 
-        public void FlipStage(
-            int Index,
-            int Enh1,
-            int Enh2,
-            float State,
-            int PowerID,
-            Enums.eEnhGrade Grade1,
-            Enums.eEnhGrade Grade2)
+        public void FlipStage(int Index, int Enh1, int Enh2, float State, int PowerID, Enums.eEnhGrade Grade1, Enums.eEnhGrade Grade2)
         {
             using var solidBrush1 = new SolidBrush(enhListing.BackColor);
             if (pBase == null)
@@ -3249,27 +3248,32 @@ namespace Mids_Reborn.Forms.Controls
                 iTip += "\r\nThis power deals different damage in PvP and PvE modes.";
             }
 
-            if (!((pBase.PowerType == Enums.ePowerType.Toggle) & (num1 == -1) & (num2 == -1)) &&
-                (pBase.PowerType == Enums.ePowerType.Toggle) & (num2 > -1) && !string.IsNullOrEmpty(iTip))
-                iTip = "Applied every " + Convert.ToString(pBase.ActivatePeriod, CultureInfo.InvariantCulture) +
-                       "s:\r\n" + iTip;
+            if (!((pBase.PowerType == Enums.ePowerType.Toggle) & (num1 == -1) & (num2 == -1)) && (pBase.PowerType == Enums.ePowerType.Toggle) & (num2 > -1) && !string.IsNullOrEmpty(iTip))
+            {
+                iTip = "Applied every " + Convert.ToString(pBase.ActivatePeriod, CultureInfo.InvariantCulture) + "s:\r\n" + iTip;
+            }
+
             Info_Damage.SetTip(iTip);
         }
 
-        public void SetData(
-            IPower iBase,
-            IPower iEnhanced,
-            bool noLevel = false,
-            bool Locked = false,
+        public void SetData(IPower iBase, IPower iEnhanced, bool noLevel = false, bool Locked = false,
             int iHistoryIDX = -1)
         {
             if (iBase == null)
                 return;
             Lock = Locked;
             pBase = new Power(iBase);
-            pEnh = iEnhanced != null
-                ? iEnhanced.Effects.Length == iBase.Effects.Length ? new Power(iEnhanced) : new Power(iBase)
-                : new Power(iBase);
+            if (iEnhanced != null)
+                if (iEnhanced.Effects.Length == iBase.Effects.Length)
+                {
+                    pEnh = new Power(iEnhanced);
+                }
+                else
+                {
+                    pEnh = new Power(iBase);
+                }
+            else
+                pEnh = new Power(iBase);
             HistoryIDX = iHistoryIDX;
             SetDamageTip();
             DisplayData(noLevel);
