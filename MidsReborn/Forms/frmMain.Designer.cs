@@ -1680,7 +1680,7 @@ namespace Mids_Reborn.Forms
             this.llAncillary.SizeNormal = new System.Drawing.Size(138, 69);
             this.llAncillary.SuspendRedraw = false;
             this.llAncillary.TabIndex = 110;
-            this.llAncillary.ItemHover2 += new ListLabelV3.ItemHoverEventHandler2(llPools_ItemHover);
+            this.llAncillary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llAncillary_ItemHover);
             this.llAncillary.ItemClick += new ListLabelV3.ItemClickEventHandler(llAncillary_ItemClick);
             this.llAncillary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
@@ -1703,7 +1703,7 @@ namespace Mids_Reborn.Forms
             this.llPool0.SizeNormal = new System.Drawing.Size(138, 69);
             this.llPool0.SuspendRedraw = false;
             this.llPool0.TabIndex = 34;
-            this.llPool0.ItemHover2 += new ListLabelV3.ItemHoverEventHandler2(llPools_ItemHover);
+            this.llPool0.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool0_ItemHover);
             this.llPool0.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool0_ItemClick);
             //this.llPool0.MouseLeave += new System.EventHandler(llALL_MouseLeave);
             this.llPool0.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
@@ -1728,7 +1728,7 @@ namespace Mids_Reborn.Forms
             this.llPool1.SizeNormal = new System.Drawing.Size(138, 69);
             this.llPool1.SuspendRedraw = false;
             this.llPool1.TabIndex = 35;
-            this.llPool1.ItemHover2 += new ListLabelV3.ItemHoverEventHandler2(llPools_ItemHover);
+            this.llPool1.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool1_ItemHover);
             this.llPool1.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool1_ItemClick);
             //this.llPool1.MouseLeave += new System.EventHandler(llALL_MouseLeave);
             this.llPool1.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
@@ -1801,7 +1801,7 @@ namespace Mids_Reborn.Forms
             this.llPool3.SizeNormal = new System.Drawing.Size(138, 69);
             this.llPool3.SuspendRedraw = false;
             this.llPool3.TabIndex = 37;
-            this.llPool3.ItemHover2 += new ListLabelV3.ItemHoverEventHandler2(llPools_ItemHover);
+            this.llPool3.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool3_ItemHover);
             this.llPool3.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool3_ItemClick);
             //this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
             this.llPool3.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
@@ -1826,7 +1826,7 @@ namespace Mids_Reborn.Forms
             this.llPool2.SizeNormal = new System.Drawing.Size(138, 69);
             this.llPool2.SuspendRedraw = false;
             this.llPool2.TabIndex = 36;
-            this.llPool2.ItemHover2 += new ListLabelV3.ItemHoverEventHandler2(llPools_ItemHover);
+            this.llPool2.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool2_ItemHover);
             this.llPool2.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool2_ItemClick);
             //this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
             this.llPool2.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
