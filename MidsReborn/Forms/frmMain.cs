@@ -8,11 +8,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
@@ -330,7 +330,6 @@ namespace Mids_Reborn.Forms
                 else if (Screen.PrimaryScreen.WorkingArea.Height <= MidsContext.Config.LastSize.Height)
                     height1 = Screen.PrimaryScreen.WorkingArea.Height - (Size.Height - ClientSize.Height);
                 Size = new Size(width1, height1);
-                UpdatePoolsPanelSize();
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSOLevels;
@@ -377,6 +376,7 @@ namespace Mids_Reborn.Forms
                 loading = false;
                 UpdateControls(true);
                 CenterToScreen();
+                UpdatePoolsPanelSize();
                 if (this.IsInDesignMode())
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
@@ -571,11 +571,13 @@ namespace Mids_Reborn.Forms
             if (MainModule.MidsController.Toon == null) return;
             
             var combo = (ComboBox) sender;
-            var loc = combo.Name == "cbAncillary"
-                ? new Point(poolsPanel.Location.X + combo.Bounds.X, poolsPanel.Location.Y + combo.Location.Y)
-                : new Point(poolsPanel.Location.X + combo.Bounds.X, poolsPanel.Location.Y + combo.Location.Y);
-            var rBounds = new Rectangle(loc.X, loc.Y, 0, 0);
-            var extraString = "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
+            var rBounds = new Rectangle(
+                poolsPanel.Location.X + combo.Bounds.X + 1,
+                poolsPanel.Location.Y + combo.Location.Y - (combo.Name == "cbAncillary" ? 0 : combo.Height) + lblPool1.Height + 5,
+                combo.Width,
+                combo.Height
+            );
+            const string extraString = "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
             var nId = combo.Name switch
             {
                 "cbPool0" => MidsContext.Character.Powersets[3].nID,
@@ -585,7 +587,11 @@ namespace Mids_Reborn.Forms
                 "cbAncillary" => MidsContext.Character.Powersets[7].nID,
                 _ => -1
             };
-            ShowPopup(nId, MidsContext.Character.Archetype.Idx, rBounds, extraString);
+
+            var vAlign = combo.Name == "cbAncillary"
+                ? VerticalAlignment.Bottom
+                : VerticalAlignment.Top;
+            ShowPopup(nId, MidsContext.Character.Archetype.Idx, rBounds, extraString, vAlign);
         }
 
         private void cbAncillery_SelectedIndexChanged(object sender, EventArgs e)
@@ -4704,7 +4710,10 @@ namespace Mids_Reborn.Forms
             FloatingDataForm = null;
         }
 
-        private void ShowPopup(int nIDPowerset, int nIDClass, Rectangle rBounds, string ExtraString = "")
+        private void ShowPopup(int nIDPowerset, int nIDClass,
+            Rectangle rBounds,
+            string extraString = "",
+            VerticalAlignment vAlign = VerticalAlignment.Top)
         {
             if (MidsContext.Config.DisableShowPopup)
             {
@@ -4712,6 +4721,8 @@ namespace Mids_Reborn.Forms
             }
             else
             {
+                if (vAlign == VerticalAlignment.Center) vAlign = VerticalAlignment.Bottom;
+
                 var bounds = I9Popup.Bounds;
                 RedrawUnderPopup(bounds);
                 if (!((nIDPowerset > -1) | (nIDClass > -1))) return;
@@ -4719,27 +4730,16 @@ namespace Mids_Reborn.Forms
                 {
                     var iPopup = nIDPowerset <= -1
                         ? MidsContext.Character.Archetype.PopInfo()
-                        : MainModule.MidsController.Toon.PopPowersetInfo(nIDPowerset, ExtraString);
-                    if (iPopup.Sections != null) //(true & (iPopup.Sections != null))
+                        : MainModule.MidsController.Toon.PopPowersetInfo(nIDPowerset, extraString);
+                    if (iPopup.Sections != null)
                     {
-                        //Debug.WriteLine($"Setting popup location: ({rBounds.X}, {rBounds.Y}), {rBounds.Width}x{rBounds.Height} - nIDPowrset: {nIDPowerset}, nIDClass: {nIDClass}, I9Popup.Size: {I9Popup.Size.Width}x{I9Popup.Size.Height}");
-                        if (I9Popup.Location.Y + I9Popup.Size.Height >= rBounds.Y)
-                        {
-                            // Popup can be relocated without the need to be resized
-                            if (rBounds.Y - I9Popup.Size.Height - 1 >= MenuBar.Height)
-                            {
-                                I9Popup.Location = new Point(I9Popup.Location.X, rBounds.Y - I9Popup.Size.Height - 1);
-                                rBounds.Y = rBounds.Y - I9Popup.Size.Height - 1;
-                            }
-                            else
-                            {
-                                I9Popup.Size = new Size(I9Popup.Size.Width, I9Popup.Size.Height + 200); // ???
-                                I9Popup.Location = new Point(I9Popup.Location.X, MenuBar.Height);
-                                rBounds.Y = MenuBar.Height;
-                                RedrawUnderPopup(I9Popup.Bounds);
-                            }
-                        }
                         I9Popup.SetPopup(iPopup);
+                        if (vAlign == VerticalAlignment.Bottom)
+                        {
+                            I9Popup.Location = new Point(I9Popup.Location.X, I9Popup.Location.Y - I9Popup.Height);
+                            rBounds.Y -= I9Popup.Height;
+                        }
+
                         PopUpVisible = true;
                         SetPopupLocation(rBounds, false, true);
                     }
@@ -5926,9 +5926,7 @@ namespace Mids_Reborn.Forms
 
         private void UpdatePoolsPanelSize()
         {
-            if (loading) return;
-
-            poolsPanel.Height = Math.Max(32, Height - poolsPanel.Location.Y - MenuBar.Height - 16);
+            poolsPanel.Height = Math.Max(32, Size.Height - poolsPanel.Location.Y - 39); // 16 + 22 + 1
         }
 
         private void UpdateControls(bool ForceComplete = false)
