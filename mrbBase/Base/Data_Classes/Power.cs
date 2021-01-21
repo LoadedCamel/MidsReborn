@@ -336,7 +336,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
         public float CastTimeReal { get; set; }
-
+        
         public float ToggleCost
             => !((PowerType == Enums.ePowerType.Toggle) & (ActivatePeriod > 0.0)) ? EndCost : EndCost / ActivatePeriod;
 
@@ -700,12 +700,9 @@ namespace mrbBase.Base.Data_Classes
 
                 if (effect.Ticks > 1)
                 {
-                    if (effect.CancelOnMiss &&
-                        MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average &&
-                        effect.Probability < 1.0)
+                    if (effect.CancelOnMiss && MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average && effect.Probability < 1.0)
                     {
-                        num2 *=
-                            (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
+                        num2 *= (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
                     }
                     else
                     {
@@ -769,15 +766,15 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var num1 = effect.Mag;
+                var effectMag = effect.Mag;
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
-                    num1 *= effect.Probability;
+                    effectMag *= effect.Probability;
                 }
 
                 if (PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
                 {
-                    num1 = (float) (num1 * (double) ActivatePeriod / 10.0);
+                    effectMag = (float) (effectMag * (double) ActivatePeriod / 10.0);
                 }
 
                 switch (MidsContext.Config.DamageMath.ReturnValue)
@@ -785,26 +782,26 @@ namespace mrbBase.Base.Data_Classes
                     case ConfigData.EDamageReturn.DPS:
                         if (PowerType == Enums.ePowerType.Toggle && ActivatePeriod > 0.0)
                         {
-                            num1 /= ActivatePeriod;
+                            effectMag /= ActivatePeriod;
                             break;
                         }
 
                         if (RechargeTime + (double) CastTime > 0.0)
                         {
-                            num1 /= RechargeTime + CastTime;
+                            effectMag /= RechargeTime + CastTime;
                         }
 
                         break;
                     case ConfigData.EDamageReturn.DPA:
                         if (PowerType == Enums.ePowerType.Toggle && ActivatePeriod > 0.0)
                         {
-                            num1 /= ActivatePeriod;
+                            effectMag /= ActivatePeriod;
                             break;
                         }
 
                         if (CastTime > 0.0)
                         {
-                            num1 /= CastTime;
+                            effectMag /= CastTime;
                         }
 
                         break;
@@ -816,26 +813,30 @@ namespace mrbBase.Base.Data_Classes
 
                 if (effect.Ticks != 0)
                 {
-                    var num2 =
-                        !effect.CancelOnMiss ||
-                        MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average ||
-                        (double) effect.Probability >= 1.0
-                            ? effect.Ticks
-                            : (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
+                    float num2;
+                    if (!effect.CancelOnMiss || MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average || effect.Probability >= 1.0)
+                    {
+                        num2 = effect.Ticks;
+                    }
+                    else
+                    {
+                        num2 = (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
+                    }
+
                     var index = 0;
                     if (Math.Abs(numArray2[(int) effect.DamageType, 0] - 0.0f) > 0.01)
                     {
                         index = 1;
                     }
 
-                    numArray2[(int) effect.DamageType, index] = num1;
+                    numArray2[(int) effect.DamageType, index] = effectMag;
                     numArray3[(int) effect.DamageType, index] = num2;
-                    iNum += num1 * num2;
+                    iNum += effectMag * num2;
                 }
                 else
                 {
-                    iNum += num1;
-                    numArray1[(int) effect.DamageType] += num1;
+                    iNum += effectMag;
+                    numArray1[(int) effect.DamageType] += effectMag;
                 }
             }
 
@@ -883,6 +884,7 @@ namespace mrbBase.Base.Data_Classes
 
                 str1 = str1 + " = " + Utilities.FixDP(iNum);
             }
+            
             return str1;
         }
 
@@ -1767,13 +1769,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
         
-        public bool GetEffectStringGrouped(
-            int idEffect,
-            ref string returnString,
-            ref int[] returnMask,
-            bool shortForm,
-            bool simple,
-            bool noMag = false)
+        public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false)
         {
             bool flag;
             if ((idEffect < 0) | (idEffect > Effects.Length - 1))
@@ -2050,6 +2046,7 @@ namespace mrbBase.Base.Data_Classes
                     if (Effects.Length == 4)
                     {
                         for (var index = 0; index <= Effects.Length - 1; ++index)
+                        {
                             if (Effects[index].EffectType == Enums.eEffectType.Enhancement &&
                                 (Effects[index].ETModifies == Enums.eEffectType.SpeedRunning) |
                                 (Effects[index].ETModifies == Enums.eEffectType.SpeedFlying) |
@@ -2058,16 +2055,21 @@ namespace mrbBase.Base.Data_Classes
                             {
                                 ++num;
                             }
+                        }
 
                         if (num == Effects.Length)
                         {
                             array = new int[Effects.Length];
                             for (var index = 0; index <= array.Length - 1; ++index)
+                            {
                                 array[index] = index;
+                            }
+
                             effect.ETModifies = Enums.eEffectType.Slow;
-                            str = shortForm
-                                ? effect.BuildEffectStringShort(noMag, simple)
-                                : effect.BuildEffectString(simple);
+                            if (shortForm)
+                                str = effect.BuildEffectStringShort(noMag, simple);
+                            else
+                                str = effect.BuildEffectString(simple);
                             if (BuffMode != Enums.eBuffMode.Debuff)
                             {
                                 str = str.Replace("Slow", "Movement");

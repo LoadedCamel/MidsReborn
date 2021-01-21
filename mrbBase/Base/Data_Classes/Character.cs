@@ -863,10 +863,7 @@ namespace mrbBase.Base.Data_Classes
                                 Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
                                 _ => iColor
                             };
-                        popupData1.Sections[index1]
-                            .Add(
-                                DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " +
-                                enhancement.Name, iColor, 1.25f);
+                        popupData1.Sections[index1].Add(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " + enhancement.Name, iColor, 1.25f);
                         break;
                 }
 

@@ -271,26 +271,33 @@ namespace mrbBase.Base.Data_Classes
                     var num2 = (float)(power.AoEModifier * 0.75 + 0.25);
                     var procsPerMinute = ProcsPerMinute;
                     var Global_Recharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
-                    var rechargeval = power.BaseRechargeTime /
-                                      (power.BaseRechargeTime / power.RechargeTime - Global_Recharge);
-                    if (power.PowerType == Enums.ePowerType.Click)
-                        num1 = Math.Min(
-                            Math.Max(procsPerMinute * (rechargeval + power.CastTimeReal) / (60f * num2),
-                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                    else
-                        num1 = Math.Min(
-                            Math.Max(procsPerMinute * 10 / (60f * num2),
-                                (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                    var rechargeval = power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - Global_Recharge);
+                    switch (power.PowerType)
+                    {
+                        case Enums.ePowerType.Click:
+                            num1 = Math.Min(Math.Max(procsPerMinute * (rechargeval + power.CastTime) / (60f * num2), (float) (0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                            break;
+                        default:
+                            num1 = Math.Min(Math.Max(procsPerMinute * 10 / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
+                            break;
+                    }
                 }
 
-                //num1 = Math.Min(Math.Max((power.PowerType != Enums.ePowerType.Click ? procsPerMinute * 10 : procsPerMinute * (rechargeval + power.CastTimeReal)) / (60f * num2), (float)(0.0500000007450581 + 0.0149999996647239 * ProcsPerMinute)), 0.9f);
-                if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) &&
-                    MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
+                if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
+                {
                     num1 += MidsContext.Character.ModifyEffects[EffectId];
+                }
+
                 if (num1 > 1.0)
+                {
                     num1 = 1f;
+                }
+
                 if (num1 < 0.0)
+                {
                     num1 = 0.0f;
+                }
+
                 return num1;
             }
             set => BaseProbability = value;
@@ -834,7 +841,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
 
-        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false)
+        public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false)
         {
             string sBuild = string.Empty;
 
@@ -893,13 +900,15 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (BaseProbability < 1)
                 {
-                    if (BaseProbability >= 0.975f)
+                    if (BaseProbability >= 0.975f && !fromPopup)
                     {
-                        sChance = (BaseProbability * 100).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
+                        sChance = (BaseProbability * 100f).ToString("#0" +
+                                                                    NumberFormatInfo.CurrentInfo
+                                                                        .NumberDecimalSeparator + "0") + "% chance";
                     }
                     else
                     {
-                        sChance = (BaseProbability * 100).ToString("#0") + "% chance";
+                        sChance = (BaseProbability * 100f).ToString("#0") + "% chance";
                     }
                 }
             }
@@ -909,22 +918,26 @@ namespace mrbBase.Base.Data_Classes
                 {
                     if (Probability >= 0.975f)
                     {
-                        sChance = (Probability * 100).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
+                        sChance = (Probability * 100f).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
                     }
                     else
                     {
-                        sChance = (Probability * 100).ToString("#0") + "% chance";
+                        sChance = (Probability * 100f).ToString("#0") + "% chance";
                     }
 
                     if (CancelOnMiss)
                     {
                         sChance += ", Cancels on Miss";
                     }
+                    if (ProcsPerMinute > 0 && fromPopup)
+                    {
+                        sChance = $"{ProcsPerMinute} PPM";
+                    }
                 }
-                else if (CancelOnMiss)
-                {
-                    sChance += ", Cancels on Miss";
-                }
+                //else if (CancelOnMiss)
+                //{
+                //    sChance += ", Cancels on Miss";
+                //}
             }
 
             bool resistPresent = false;
@@ -1132,7 +1145,10 @@ namespace mrbBase.Base.Data_Classes
                         {
                             sSubEffect = "(" + sSubEffect + ")";
                             if (DamageType == Enums.eDamage.None)
+                            {
                                 sSubEffect = string.Empty;
+                            }
+
                             sBuild = sMag + " " + sEffect + sSubEffect + sTarget + sDuration;
                         }
                     }
@@ -2070,7 +2086,15 @@ namespace mrbBase.Base.Data_Classes
                 switch (condition)
                 {
                     case "Active":
-                        cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                        bool? boolVal = Convert.ToBoolean(cVp.Value);
+                        if (conditionPower.Active == boolVal)
+                        {
+                            cVp.Validated = true;
+                        }
+                        else
+                        {
+                            cVp.Validated = false;
+                        }
 
                         break;
                     case "Taken":
@@ -2148,11 +2172,20 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-            var validCount = ActiveConditionals.Count(b => b.Validated);
-            var invalidCount = ActiveConditionals.Count(b => !b.Validated);
-            if (ActiveConditionals.Count > 0)
+            int allValid = ActiveConditionals.Count;
+            foreach (var condition in ActiveConditionals)
             {
-                Validated = validCount == ActiveConditionals.Count;
+                if (!condition.Validated)
+                    allValid -= 1;
+            }
+
+            if (allValid == ActiveConditionals.Count)
+            {
+                Validated = true;
+            }
+            else
+            {
+                Validated = false;
             }
 
             return Validated;
@@ -2176,7 +2209,15 @@ namespace mrbBase.Base.Data_Classes
 
                 if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Active")
                 {
-                    cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                    bool? boolVal = Convert.ToBoolean(cVp.Value);
+                    if (conditionPower.Active == boolVal)
+                    {
+                        cVp.Validated = true;
+                    }
+                    else
+                    {
+                        cVp.Validated = false;
+                    }
                 }
                 else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) &&
                          condition == "Taken")
@@ -2251,10 +2292,20 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-            var validCount = ActiveConditionals.Count(b => b.Validated);
-            if (ActiveConditionals.Count > 0)
+            int allValid = ActiveConditionals.Count;
+            foreach (var condition in ActiveConditionals)
             {
-                Validated = validCount == ActiveConditionals.Count;
+                if (!condition.Validated)
+                    allValid -= 1;
+            }
+
+            if (allValid == ActiveConditionals.Count)
+            {
+                Validated = true;
+            }
+            else
+            {
+                Validated = false;
             }
 
             return Validated;
@@ -2275,7 +2326,15 @@ namespace mrbBase.Base.Data_Classes
                     case "Active":
                         if (conditionPower != null)
                         {
-                            cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                            bool? boolVal = Convert.ToBoolean(cVp.Value);
+                            if (conditionPower.Active == boolVal)
+                            {
+                                cVp.Validated = true;
+                            }
+                            else
+                            {
+                                cVp.Validated = false;
+                            }
                         }
 
                         break;
@@ -2356,18 +2415,23 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-            var validCount = ActiveConditionals.Count(b => b.Validated);
-            var invalidCount = ActiveConditionals.Count(b => !b.Validated);
-            if (ActiveConditionals.Count > 0)
+            int allValid = ActiveConditionals.Count;
+            foreach (var condition in ActiveConditionals)
             {
-                Validated = validCount == ActiveConditionals.Count;
-                if (Validated)
-                {
-                    return true;
-                }
+                if (!condition.Validated)
+                    allValid -= 1;
             }
 
-            return false;
+            if (allValid == ActiveConditionals.Count)
+            {
+                Validated = true;
+            }
+            else
+            {
+                Validated = false;
+            }
+
+            return Validated;
         }
         public void UpdateAttrib()
         {
@@ -2379,8 +2443,7 @@ namespace mrbBase.Base.Data_Classes
                     break;
                 case Enums.ePowerAttribs.ActivateInterval:
                     conditionsMet = ValidateConditional();
-                    power.ActivatePeriod =
-                        conditionsMet ? AtrModActivatePeriod : AtrOrigActivatePeriod;
+                    power.ActivatePeriod = conditionsMet ? AtrModActivatePeriod : AtrOrigActivatePeriod;
                     break;
                 case Enums.ePowerAttribs.Arc:
                     conditionsMet = ValidateConditional();
