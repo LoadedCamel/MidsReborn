@@ -565,14 +565,26 @@ namespace Mids_Reborn.Forms
             cbDrawItem(CbtAncillary.Value, Enums.ePowerSetType.Ancillary, e);
         }
 
-        private void cbAncillary_MouseMove(object sender, MouseEventArgs e)
+        private void cbPools_MouseMove(object sender, MouseEventArgs e)
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[7] == null)
-                return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[7].nID, MidsContext.Character.Archetype.Idx, cbAncillary.Bounds,
-                ExtraString);
+            if (MainModule.MidsController.Toon == null) return;
+            
+            var combo = (ComboBox) sender;
+            var loc = combo.Name == "cbAncillary"
+                ? new Point(poolsPanel.Location.X + combo.Bounds.X, poolsPanel.Location.Y + combo.Location.Y)
+                : new Point(poolsPanel.Location.X + combo.Bounds.X, poolsPanel.Location.Y + combo.Location.Y);
+            var rBounds = new Rectangle(loc.X, loc.Y, 0, 0);
+            var extraString = "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
+            var nId = combo.Name switch
+            {
+                "cbPool0" => MidsContext.Character.Powersets[3].nID,
+                "cbPool1" => MidsContext.Character.Powersets[4].nID,
+                "cbPool2" => MidsContext.Character.Powersets[5].nID,
+                "cbPool3" => MidsContext.Character.Powersets[6].nID,
+                "cbAncillary" => MidsContext.Character.Powersets[7].nID,
+                _ => -1
+            };
+            ShowPopup(nId, MidsContext.Character.Archetype.Idx, rBounds, extraString);
         }
 
         private void cbAncillery_SelectedIndexChanged(object sender, EventArgs e)
@@ -584,6 +596,15 @@ namespace Mids_Reborn.Forms
             if (!MidsContext.Config.UseOldTotalsWindow)
                 frmTotalsV2.SetTitle(fTotals2);
         }
+
+        /*private Rectangle CalculatePowerPoolBounds(ref ComboBox cbCtl)
+        {
+            return new Rectangle(
+                cbCtl.Bounds.X + poolsPanel.Location.X,
+                cbCtl.Bounds.Y + poolsPanel.Location.Y - 16, // + poolsPanel.VerticalScroll.Value,
+                0, // cbCtl.Bounds.Width,
+                0); // cbCtl.Bounds.Height
+        }*/
 
         private void cbAT_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -725,16 +746,6 @@ namespace Mids_Reborn.Forms
             HidePopup();
         }
 
-        private void cbPool0_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[3] == null)
-                return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[3].nID, MidsContext.Character.Archetype.Idx, cbPool0.Bounds,
-                ExtraString);
-        }
-
         private void cbPool0_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (NoUpdate)
@@ -746,14 +757,6 @@ namespace Mids_Reborn.Forms
         private void cbPool1_DrawItem(object sender, DrawItemEventArgs e)
         {
             cbDrawItem(CbtPool1.Value, Enums.ePowerSetType.Pool, e);
-        }
-
-        private void cbPool1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[4] == null)
-                return;
-            ShowPopup(MidsContext.Character.Powersets[4].nID, MidsContext.Character.Archetype.Idx, cbPool1.Bounds,
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.");
         }
 
         private void cbPool1_SelectedIndexChanged(object sender, EventArgs e)
@@ -769,16 +772,6 @@ namespace Mids_Reborn.Forms
             cbDrawItem(CbtPool2.Value, Enums.ePowerSetType.Pool, e);
         }
 
-        private void cbPool2_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[5] == null)
-                return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[5].nID, MidsContext.Character.Archetype.Idx, cbPool2.Bounds,
-                ExtraString);
-        }
-
         private void cbPool2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (NoUpdate)
@@ -790,16 +783,6 @@ namespace Mids_Reborn.Forms
         private void cbPool3_DrawItem(object sender, DrawItemEventArgs e)
         {
             cbDrawItem(CbtPool3.Value, Enums.ePowerSetType.Pool, e);
-        }
-
-        private void cbPool3_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[6] == null)
-                return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[6].nID, MidsContext.Character.Archetype.Idx, cbPool3.Bounds,
-                ExtraString);
         }
 
         private void cbPool3_SelectedIndexChanged(object sender, EventArgs e)
@@ -4730,15 +4713,31 @@ namespace Mids_Reborn.Forms
             {
                 var bounds = I9Popup.Bounds;
                 RedrawUnderPopup(bounds);
-                if (!((nIDPowerset > -1) | (nIDClass > -1)))
-                    return;
+                if (!((nIDPowerset > -1) | (nIDClass > -1))) return;
                 if (I9Popup.psIDX != (nIDPowerset <= -1 ? nIDClass : nIDPowerset))
                 {
                     var iPopup = nIDPowerset <= -1
                         ? MidsContext.Character.Archetype.PopInfo()
                         : MainModule.MidsController.Toon.PopPowersetInfo(nIDPowerset, ExtraString);
-                    if (true & (iPopup.Sections != null))
+                    if (iPopup.Sections != null) //(true & (iPopup.Sections != null))
                     {
+                        //Debug.WriteLine($"Setting popup location: ({rBounds.X}, {rBounds.Y}), {rBounds.Width}x{rBounds.Height} - nIDPowrset: {nIDPowerset}, nIDClass: {nIDClass}, I9Popup.Size: {I9Popup.Size.Width}x{I9Popup.Size.Height}");
+                        if (I9Popup.Location.Y + I9Popup.Size.Height >= rBounds.Y)
+                        {
+                            // Popup can be relocated without the need to be resized
+                            if (rBounds.Y - I9Popup.Size.Height - 1 >= MenuBar.Height)
+                            {
+                                I9Popup.Location = new Point(I9Popup.Location.X, rBounds.Y - I9Popup.Size.Height - 1);
+                                rBounds.Y = rBounds.Y - I9Popup.Size.Height - 1;
+                            }
+                            else
+                            {
+                                I9Popup.Size = new Size(I9Popup.Size.Width, I9Popup.Size.Height + 200); // ???
+                                I9Popup.Location = new Point(I9Popup.Location.X, MenuBar.Height);
+                                rBounds.Y = MenuBar.Height;
+                                RedrawUnderPopup(I9Popup.Bounds);
+                            }
+                        }
                         I9Popup.SetPopup(iPopup);
                         PopUpVisible = true;
                         SetPopupLocation(rBounds, false, true);

@@ -330,7 +330,7 @@ namespace Mids_Reborn.Forms
             this.cbPool0.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool0_DrawItem);
             this.cbPool0.SelectionChangeCommitted += new System.EventHandler(this.cbPool0_SelectedIndexChanged);
             this.cbPool0.MouseLeave += new System.EventHandler(this.cbPool0_MouseLeave);
-            this.cbPool0.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPool0_MouseMove);
+            this.cbPool0.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPools_MouseMove);
             // 
             // lblPool1
             // 
@@ -358,7 +358,7 @@ namespace Mids_Reborn.Forms
             this.cbPool1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool1_DrawItem);
             this.cbPool1.SelectionChangeCommitted += new System.EventHandler(this.cbPool1_SelectedIndexChanged);
             this.cbPool1.MouseLeave += new System.EventHandler(this.cbPool0_MouseLeave);
-            this.cbPool1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPool1_MouseMove);
+            this.cbPool1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPools_MouseMove);
             // 
             // lblPool2
             // 
@@ -386,7 +386,7 @@ namespace Mids_Reborn.Forms
             this.cbPool2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool2_DrawItem);
             this.cbPool2.SelectionChangeCommitted += new System.EventHandler(this.cbPool2_SelectedIndexChanged);
             this.cbPool2.MouseLeave += new System.EventHandler(this.cbPool0_MouseLeave);
-            this.cbPool2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPool2_MouseMove);
+            this.cbPool2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPools_MouseMove);
             // 
             // lblPool3
             // 
@@ -414,7 +414,7 @@ namespace Mids_Reborn.Forms
             this.cbPool3.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool3_DrawItem);
             this.cbPool3.SelectionChangeCommitted += new System.EventHandler(this.cbPool3_SelectedIndexChanged);
             this.cbPool3.MouseLeave += new System.EventHandler(this.cbPool0_MouseLeave);
-            this.cbPool3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPool3_MouseMove);
+            this.cbPool3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPools_MouseMove);
             // 
             // lblPool4
             // 
@@ -441,7 +441,7 @@ namespace Mids_Reborn.Forms
             this.cbAncillary.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbAncillary_DrawItem);
             this.cbAncillary.SelectionChangeCommitted += new System.EventHandler(this.cbAncillery_SelectedIndexChanged);
             this.cbAncillary.MouseLeave += new System.EventHandler(this.cbPool0_MouseLeave);
-            this.cbAncillary.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbAncillary_MouseMove);
+            this.cbAncillary.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cbPools_MouseMove);
             // 
             // lblEpic
             // 
