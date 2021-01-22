@@ -584,7 +584,7 @@ namespace Mids_Reborn.Forms
                 "cbPool1" => MidsContext.Character.Powersets[4].nID,
                 "cbPool2" => MidsContext.Character.Powersets[5].nID,
                 "cbPool3" => MidsContext.Character.Powersets[6].nID,
-                "cbAncillary" => MidsContext.Character.Powersets[7].nID,
+                "cbAncillary" => MidsContext.Character.IsKheldian ? -1 : MidsContext.Character.Powersets[7].nID,
                 _ => -1
             };
 
