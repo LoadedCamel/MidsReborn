@@ -1171,7 +1171,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
                     {
-                        if (Effects[index].Mag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination || Effects[index].ValidateConditional("active", "Domination"))
+                        if (Effects[index].Mag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination || Effects[index].ValidateConditional("active", "Domination") && MidsContext.Character.Domination)
                         {
                             applies = true;
                         }
@@ -1204,7 +1204,7 @@ namespace mrbBase.Base.Data_Classes
                     applies = false;
                 }
 
-                if ((Effects[index].EffectClass > eEffectClass ? 1 : 0) == 0)
+                /*if ((Effects[index].EffectClass > eEffectClass ? 1 : 0) == 0)
                 {
                     if (Effects[index].SpecialCase == Enums.eSpecialCase.None && !Effects[index].ValidateConditional())
                     {
@@ -1214,6 +1214,10 @@ namespace mrbBase.Base.Data_Classes
                     {
                         applies = true;
                     }
+                }*/
+                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("active", "Domination") ? 1 : !MidsContext.Character.Domination ? 1 : 0)) != 0)
+                {
+                    applies = false;
                 }
 
                 if ((Effects[index].EffectType == Enums.eEffectType.EntCreate) & !isEntCreate &

@@ -383,7 +383,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             this.lblTotal.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotal.ForeColor = System.Drawing.Color.White;
-            this.lblTotal.Location = new System.Drawing.Point(4, 300);
+            this.lblTotal.Location = new System.Drawing.Point(3, 324);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(292, 16);
             this.lblTotal.TabIndex = 75;
@@ -567,7 +567,7 @@ namespace Mids_Reborn.Forms.Controls
             this.total_Misc.Location = new System.Drawing.Point(4, 244);
             this.total_Misc.Name = "total_Misc";
             this.total_Misc.NameColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.total_Misc.Size = new System.Drawing.Size(292, 60);
+            this.total_Misc.Size = new System.Drawing.Size(292, 77);
             this.total_Misc.TabIndex = 27;
             this.total_Misc.ValueWidth = 55;
             this.total_Misc.ItemHover += new mrbControls.PairedList.ItemHoverEventHandler(this.PairedList_Hover);

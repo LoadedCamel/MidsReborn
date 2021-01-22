@@ -630,8 +630,7 @@ namespace Mids_Reborn.Forms.Controls
                 effect.UpdateAttrib();
                 SetDamageTip();
             }
-            info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, Suffix1,
-                Tip1));
+            info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, Suffix1, Tip1));
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
                         DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
             var flag2 = false;
@@ -754,8 +753,7 @@ namespace Mids_Reborn.Forms.Controls
                                     {
                                         rankedEffect.Value = pBase.Effects[rankedEffects[ID]].Summon;
                                         if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                            rankedEffect.Value =
-                                                rankedEffect.Value.Replace("MastermindPets_", string.Empty);
+                                            rankedEffect.Value = rankedEffect.Value.Replace("MastermindPets_", string.Empty);
                                         if (rankedEffect.Value.StartsWith("Pets_"))
                                             rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
                                         if (rankedEffect.Value.StartsWith("Villain_Pets_"))
@@ -777,8 +775,7 @@ namespace Mids_Reborn.Forms.Controls
                                     {
                                         rankedEffect.Value = pBase.Effects[rankedEffects[ID]].Summon;
                                         if (rankedEffect.Value.StartsWith("MastermindPets_"))
-                                            rankedEffect.Value =
-                                                rankedEffect.Value.Replace("MastermindPets_", string.Empty);
+                                            rankedEffect.Value = rankedEffect.Value.Replace("MastermindPets_", string.Empty);
                                         if (rankedEffect.Value.StartsWith("Pets_"))
                                             rankedEffect.Value = rankedEffect.Value.Replace("Pets_", string.Empty);
                                         if (rankedEffect.Value.StartsWith("Villain_Pets_"))
@@ -1264,10 +1261,8 @@ namespace Mids_Reborn.Forms.Controls
                 if (dType1 != 9)
                 {
                     string iTip;
-                    if (MidsContext.Character.TotalsCapped.Res[dType1] <
-                        (double)MidsContext.Character.Totals.Res[dType1])
-                        iTip =
-                            $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):0.##}% {names[dType1]} resistance capped at {Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%";
+                    if (MidsContext.Character.TotalsCapped.Res[dType1] < (double)MidsContext.Character.Totals.Res[dType1])
+                        iTip = $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):0.##}% {names[dType1]} resistance capped at {Convert.ToDecimal(displayStats.DamageResistance(dType1, false)):0.##}%";
                     //iTip = Strings.Format(displayStats.DamageResistance(dType1, true), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "% " + names[dType1] + " resistance capped at " + Strings.Format(displayStats.DamageResistance(dType1, false), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "##") + "%";
                     else
                         iTip = $"{Convert.ToDecimal(displayStats.DamageResistance(dType1, true)):0.##}% {names[dType1]} resistance. ({str})";
@@ -1511,18 +1506,68 @@ namespace Mids_Reborn.Forms.Controls
                 if (sFXCheck(effectMagSum1))
                     iList.SetUnique();
 
-                if (effectMagSum3.Present)
+                //original damage buff code
+                Enums.ShortFX[] shortFxArray = Power.SplitFX(ref effectMagSum3, ref pEnh);
+                int num2 = shortFxArray.Length - 1;
+                for (int index1 = 0; index1 <= num2; ++index1)
+                {
+                    if (shortFxArray[index1].Present)
+                    {
+                        bool isDefiance = true;
+                        int num3 = shortFxArray[index1].Index.Length - 1;
+                        for (int index2 = 0; index2 <= num3; ++index2)
+                        {
+                            if (pEnh.Effects[shortFxArray[index1].Index[index2]].SpecialCase != Enums.eSpecialCase.Defiance)
+                            {
+                                isDefiance = false;
+                            }
+                            else if (!pEnh.Effects[shortFxArray[index1].Index[index2]].ValidateConditional("active", "defiance"))
+                            {
+                                isDefiance = false;
+                            }
+                        }
+                        if (isDefiance)
+                        {
+                            iList.AddItem(new PairedList.ItemPair("Defiance:", Utilities.FixDP(shortFxArray[index1].Value[0]) + "%", false, false, false, pEnh.Effects[shortFxArray[index1].Index[0]].BuildEffectString(false, "Damage Buff (Defiance)", false, false, false)));
+                        }
+                        else
+                        {
+                            if (pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase != Enums.eSpecialCase.None && pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase != Enums.eSpecialCase.Defiance)
+                            {
+                                iList.AddItem(new PairedList.ItemPair("DamageBuff:",
+                                    Utilities.FixDP(shortFxArray[index1].Value[0]) + "%", false,
+                                    pEnh.Effects[shortFxArray[index1].Index[0]].SpecialCase == Enums.eSpecialCase.Combo,
+                                    false, Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
+                            }
+                            else if (pEnh.Effects[shortFxArray[index1].Index[0]].ActiveConditionals.Count > 0)
+                            {
+                                iList.AddItem(new PairedList.ItemPair("DamageBuff:", Utilities.FixDP(shortFxArray[index1].Value[0]) + "%", false, false, pEnh.Effects[shortFxArray[index1].Index[0]].ValidateConditional("active", "combo"), Power.SplitFXGroupTip(ref shortFxArray[index1], ref pEnh, false)));
+                            }
+                        }
+
+                        if (pEnh.Effects[shortFxArray[index1].Index[0]].isEnhancementEffect)
+                        {
+                            iList.SetUnique();
+                        }
+                    }
+                }
+
+                /*if (effectMagSum3.Present)
                 {
                     iTip = GetToolTip(effectMagSum3);
-                    if (pBase.Effects[effectMagSum12.Index[0]].SpecialCase != Enums.eSpecialCase.None)
+                    if (pBase.Effects[effectMagSum12.Index[0]].SpecialCase == Enums.eSpecialCase.Defiance)
                     {
-                        iList.AddItem(FastItem("DamBuff", effectMagSum12, effectMagSum3, "%", false, false, false, pBase.Effects[effectMagSum12.Index[0]].SpecialCase == Enums.eSpecialCase.Combo, iTip));
+                        iList.AddItem(FastItem("Defiance", effectMagSum12, effectMagSum3, "%", false, false, false, pBase.Effects[effectMagSum12.Index[0]].SpecialCase == Enums.eSpecialCase.Combo, iTip));
+                    }
+                    else if (pBase.Effects[effectMagSum12.Index[0]].ValidateConditional("Active", "Defiance"))
+                    {
+                        iList.AddItem(FastItem("Defiance", effectMagSum12, effectMagSum3, "%", false, false, false, pBase.Effects[effectMagSum12.Index[0]].SpecialCase == Enums.eSpecialCase.Combo, iTip));
                     }
                     else
                     {
-                        iList.AddItem(FastItem("DamBuff", effectMagSum12, effectMagSum3, "%",false, false, false,pBase.Effects[effectMagSum12.Index[0]].ValidateConditional("active", "Combo"), iTip));
+                        iList.AddItem(FastItem("Damage Buff", effectMagSum12, effectMagSum3, "%",false, false, false,pBase.Effects[effectMagSum12.Index[0]].ValidateConditional("active", "Combo"), iTip));
                     }
-                }
+                }*/
 
                 if (sFXCheck(effectMagSum12))
                     iList.SetUnique();
@@ -2182,7 +2227,7 @@ namespace Mids_Reborn.Forms.Controls
             var def1 = pBase.GetDef(buffDebuff);
             var def2 = pEnh.GetDef(buffDebuff);
             var names = Enum.GetNames(eDamage.GetType());
-            fx_lblHead1.Text = pBase.AffectsTarget(Enums.eEffectType.Defense) ? "Defence (Target)" : "Defence (Self)";
+            fx_lblHead1.Text = pBase.AffectsTarget(Enums.eEffectType.Defense) ? "Defense (Target)" : "Defense (Self)";
             fx_List1.ValueWidth = 55;
             var num2 = def1.Length - 1;
             for (var index = 0; index <= num2; ++index)
@@ -2805,10 +2850,8 @@ namespace Mids_Reborn.Forms.Controls
                                  (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range))
                         {
                             shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
-                            shortFx.Sum *= 100f;
-                            s2.Sum *= 100f;
-                            Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget));
+                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag * 100f);
+                            Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, false));
                         }
                         else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
                         {
@@ -2885,7 +2928,17 @@ namespace Mids_Reborn.Forms.Controls
 
             string iTip;
             iTip = GetToolTip(s2);
-            return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip);//
+            if (pBase.Effects[Index[ID]].ActiveConditionals.Count > 0)
+            {
+                return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].ActiveConditionals.Count > 0, iTip); //
+            }
+
+            if (pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None)
+            {
+                return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, pBase.Effects[Index[ID]].SpecialCase != Enums.eSpecialCase.None, iTip);
+            }
+
+            return FastItem(Title, shortFx, s2, Suffix, true, false, pBase.Effects[Index[ID]].Probability < 1.0, false, iTip);
         }
 
         public void Init()
@@ -3559,7 +3612,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private string ShortStr(string full, string brief)
         {
-            return (double)info_DataList.Font.Size <= (double)(68f / (float)full.Length) ? full : brief;
+            return info_DataList.Font.Size <= 90f / full.Length ? full : brief;
         }
 
         private void SizeRefresh()

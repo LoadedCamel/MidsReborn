@@ -710,7 +710,8 @@ namespace Mids_Reborn.Forms
             iList.HoverColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-            iList.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+            var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
+            iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
         }
 
         private void VitaeButton_ButtonClicked()
