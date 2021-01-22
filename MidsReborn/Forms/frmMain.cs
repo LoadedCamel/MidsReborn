@@ -1443,7 +1443,7 @@ namespace Mids_Reborn.Forms
             pnlGFX.Select();
             FloatingDataForm.Show();
             RefreshInfo();
-            ReArrange(false);
+            //ReArrange(false);
             if (dvLastPower <= -1)
                 return;
             Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, DataViewLocked);
