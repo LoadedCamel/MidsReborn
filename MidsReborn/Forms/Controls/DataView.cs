@@ -701,12 +701,11 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItem("Arc", pBase.Arc, pEnh.Arc, "°")
                 : FastItem("Radius", pBase.Radius, pEnh.Radius, string.Empty));
-            info_DataList.AddItem(FastItem(ShortStr("Cast Time", "Cast"), pBase.CastTime, pEnh.CastTime, "s", $"CastTime (Base): {pBase.CastTime}\r\nCastTime (Enhanced): {pEnh.CastTime}\r\nArcana CastTime: {(float)(Math.Ceiling(pEnh.CastTime / 0.132f) + 1.0) * 0.132f}", false, true, false, false, 3));
+            info_DataList.AddItem(FastItem(ShortStr("Cast Time", "Cast"), pBase.CastTime, pEnh.CastTime, "s", $"CastTime: {pEnh.CastTime}\r\nArcana CastTime: {(float)(Math.Ceiling(pEnh.CastTime / 0.132f) + 1.0) * 0.132f}", false, true, false, false, 3));
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, pEnh.ActivatePeriod, "s",
                     "The effects of this toggle power are applied at this interval.")
-                : FastItem(ShortStr("Interrupt", "Intrpt"), pBase.InterruptTime, pEnh.InterruptTime, "s",
-                    "After activating this power, it can be interrupted for this amount of time."));
+                : FastItem(ShortStr("Interrupt", "Intrpt"), pBase.InterruptTime, pEnh.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
             var num3 = 2;
             if (num3 > 1 && durationEffectId > -1 && (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez) & (pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt))
             {
@@ -3162,11 +3161,11 @@ namespace Mids_Reborn.Forms.Controls
                 num = pBase.VariableMax;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
-            foreach (var effect in MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Effects)
+            /*foreach (var effect in MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Effects)
             {
                 effect.UpdateAttrib();
                 display_Info();
-            }
+            }*/
             if (num == pLastScaleVal)
                 return;
             SetPowerScaler();
@@ -3326,7 +3325,10 @@ namespace Mids_Reborn.Forms.Controls
                     pEnh = new Power(iBase);
                 }
             else
+            {
                 pEnh = new Power(iBase);
+            }
+
             HistoryIDX = iHistoryIDX;
             SetDamageTip();
             DisplayData(noLevel);
