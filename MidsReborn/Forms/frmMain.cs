@@ -1286,10 +1286,10 @@ namespace Mids_Reborn.Forms
                 petsButton.Enabled = true;
             }
 
-            NewDraw();
-            UpdateControls();
-            SetFormHeight();
-            PerformAutoScale();
+            //NewDraw();
+            //UpdateControls();
+            //SetFormHeight();
+            //PerformAutoScale();
             myDataView.Clear();
             MidsContext.Character.ResetLevel();
             PowerModified(false);
