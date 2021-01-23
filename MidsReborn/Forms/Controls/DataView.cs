@@ -625,11 +625,12 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            foreach (var effect in pBase.Effects)
+            /*foreach (var effect in pBase.Effects)
             {
                 effect.UpdateAttrib();
                 SetDamageTip();
-            }
+            }*/
+
             info_DataList.AddItem(FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, pEnh.ToggleCost, Suffix1, Tip1));
             var flag1 = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 &&
                         DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;

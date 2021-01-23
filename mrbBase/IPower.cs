@@ -228,6 +228,8 @@ namespace mrbBase
 
         bool HasResEffects();
 
+        bool HasAttribModEffects();
+
         Enums.ShortFX GetEnhancementMagSum(Enums.eEffectType iEffect, int subType = 0);
 
         Enums.ShortFX GetEffectMagSum(

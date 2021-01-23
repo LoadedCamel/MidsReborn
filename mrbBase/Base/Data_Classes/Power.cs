@@ -1372,6 +1372,7 @@ namespace mrbBase.Base.Data_Classes
         public bool HasResEffects()
         {
             for (var index = 0; index <= Effects.Length - 1; ++index)
+            {
                 if ((Effects[index].EffectType == Enums.eEffectType.Resistance) & (Effects[index].Probability > 0.0) &
                     ((Effects[index].Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None) &
                     (((Effects[index].PvMode != Enums.ePvX.PvP) & !MidsContext.Config.Inc.DisablePvE) |
@@ -1379,6 +1380,20 @@ namespace mrbBase.Base.Data_Classes
                 {
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        public bool HasAttribModEffects()
+        {
+            for (var index = 0; index <= Effects.Length - 1; ++index)
+            {
+                if (Effects[index].EffectType == Enums.eEffectType.ModifyAttrib)
+                {
+                    return true;
+                }
+            }
 
             return false;
         }
