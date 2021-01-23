@@ -371,6 +371,8 @@ namespace mrbControls
 
         private void FillDefaultItems()
         {
+            if (!Debugger.IsAttached && !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv")) return;
+            
             ClearItems();
             AddItem(new ListLabelItemV3("Header Item", LLItemState.Heading, -1, -1, -1, "", LLFontFlags.Bold,
                 LLTextAlign.Center));

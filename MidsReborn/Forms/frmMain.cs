@@ -2565,14 +2565,19 @@ namespace Mids_Reborn.Forms
         {
             LastIndex = -1;
             LastEnhIndex = -1;
+            var llBounds = new Rectangle(
+                llAncillary.Bounds.X + poolsPanel.Bounds.X,
+                llAncillary.Bounds.Y + poolsPanel.Bounds.Y,
+                llAncillary.Bounds.Width,
+                llAncillary.Bounds.Height);
             if (Item.ItemState == ListLabelV3.LLItemState.Heading)
             {
-                ShowPopup(Item.nIDSet, -1, llAncillary.Bounds, string.Empty);
+                ShowPopup(Item.nIDSet, -1, llBounds);
             }
             else
             {
                 Info_Power(Item.nIDPower);
-                ShowPopup(-1, Item.nIDPower, -1, new Point(), llAncillary.Bounds);
+                ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds, null, -1, VerticalAlignment.Bottom);
             }
         }
 
@@ -2595,7 +2600,12 @@ namespace Mids_Reborn.Forms
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.nIDPower);
-            ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool0.Bounds);
+            var llBounds = new Rectangle(
+                llPool0.Bounds.X + poolsPanel.Bounds.X,
+                llPool0.Bounds.Y + poolsPanel.Bounds.Y,
+                llPool0.Bounds.Width,
+                llPool0.Bounds.Height);
+            ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds);
         }
 
         private void llPool1_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
@@ -2617,7 +2627,12 @@ namespace Mids_Reborn.Forms
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.nIDPower);
-            ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool1.Bounds);
+            var llBounds = new Rectangle(
+                llPool1.Bounds.X + poolsPanel.Bounds.X,
+                llPool1.Bounds.Y + poolsPanel.Bounds.Y,
+                llPool1.Bounds.Width,
+                llPool1.Bounds.Height);
+            ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds);
         }
 
         private void llPool2_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
@@ -2639,7 +2654,12 @@ namespace Mids_Reborn.Forms
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.nIDPower);
-            ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool2.Bounds);
+            var llBounds = new Rectangle(
+                llPool2.Bounds.X + poolsPanel.Bounds.X,
+                llPool2.Bounds.Y + poolsPanel.Bounds.Y,
+                llPool2.Bounds.Width,
+                llPool2.Bounds.Height);
+            ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds);
         }
 
         private void llPool3_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
@@ -2661,6 +2681,11 @@ namespace Mids_Reborn.Forms
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.nIDPower);
+            var llBounds = new Rectangle(
+                llPool3.Bounds.X + poolsPanel.Bounds.X,
+                llPool3.Bounds.Y + poolsPanel.Bounds.Y,
+                llPool3.Bounds.Width,
+                llPool3.Bounds.Height);
             ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool3.Bounds);
         }
 
@@ -4770,7 +4795,8 @@ namespace Mids_Reborn.Forms
             Point e,
             Rectangle rBounds,
             I9Slot eSlot = null,
-            int setIDX = -1)
+            int setIDX = -1,
+            VerticalAlignment vAlign = VerticalAlignment.Top)
         {
             if (MidsContext.Config.DisableShowPopup)
             {
@@ -4851,6 +4877,11 @@ namespace Mids_Reborn.Forms
                             rectangle = Dilate(drawing.ScaleDown(rectangle), 2);
                             rectangle.X += pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value;
                             rectangle.Y += pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value;
+                        }
+
+                        if (vAlign == VerticalAlignment.Bottom)
+                        {
+                            rectangle.Y -= I9Popup.Height;
                         }
 
                         I9Popup.SetPopup(iPopup);
