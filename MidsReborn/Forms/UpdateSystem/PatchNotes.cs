@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -97,8 +98,15 @@ namespace Mids_Reborn.Forms.UpdateSystem
             if (update)
             {
                 Hide();
-                var updater = new Updater(_parent);
-                updater.ShowDialog(this);
+                switch(Type)
+                {
+                    case "App":
+                        clsXMLUpdate.Update(clsXMLUpdate.UpdateType.App, Version, _parent);
+                        break;
+                    case "Database":
+                        clsXMLUpdate.Update(clsXMLUpdate.UpdateType.Database, Version, _parent);
+                        break;
+                }
                 Close();
             }
             else

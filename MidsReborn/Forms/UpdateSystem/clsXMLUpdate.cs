@@ -183,7 +183,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
         }
 
-        private static void Update(Enum type, string updateVersion, frmMain parent)
+        internal static void Update(Enum type, string updateVersion, frmMain parent)
         {
             try
             {
@@ -196,7 +196,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
             catch (ArgumentException e)
             {
-                MessageBox.Show($"{e.Message}\n{e.StackTrace}", "Error");
+                MessageBox.Show($"{e.Message}\r\n{e.StackTrace}", "Error");
             }
         }
 
