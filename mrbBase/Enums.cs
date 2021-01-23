@@ -81,6 +81,19 @@ namespace mrbBase
             Pet
         }
 
+        public enum eInherentOrder
+        {
+            Class,
+            Inherent,
+            Powerset,
+            Power,
+            Prestige,
+            Incarnate,
+            Accolade,
+            Pet,
+            Temp
+
+        }
         public enum eAlphaOrder
         {
             Boost,
