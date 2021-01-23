@@ -455,6 +455,14 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (power?.Power == null) continue;
                 var powName = power.Power.PowerName;
+                if (powName.Contains("Pistols"))
+                {
+                    for (var index = 0; index < power.Power.Effects.Length; index++)
+                    {
+                        var effect = power.Power.Effects[1];
+                        Console.WriteLine(effect.ValidateConditional("active", "Domination"));
+                    }
+                }
                 if (power.HasProc())
                 {
                     power.Power.HasProcSlotted = true;
