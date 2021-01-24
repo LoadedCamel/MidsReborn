@@ -455,6 +455,14 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (power?.Power == null) continue;
                 var powName = power.Power.PowerName;
+                if (power.HasProc())
+                {
+                    power.Power.HasProcSlotted = true;
+                }
+                else if (!power.HasProc())
+                {
+                    power.Power.HasProcSlotted = false;
+                }
                 switch (powName)
                 {
                     default:
@@ -485,6 +493,14 @@ namespace mrbBase.Base.Data_Classes
                         {
                             PEnhancementsList.Add(enhancement.UID);
                         }
+                    }
+                }
+
+                if (power.Power.HasAttribModEffects())
+                {
+                    foreach (var effect in power.Power.Effects)
+                    {
+                        effect.UpdateAttrib();
                     }
                 }
             }
@@ -855,10 +871,7 @@ namespace mrbBase.Base.Data_Classes
                                 Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
                                 _ => iColor
                             };
-                        popupData1.Sections[index1]
-                            .Add(
-                                DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " +
-                                enhancement.Name, iColor, 1.25f);
+                        popupData1.Sections[index1].Add(DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName + ": " + enhancement.Name, iColor, 1.25f);
                         break;
                 }
 

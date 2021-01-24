@@ -868,7 +868,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmTotalsV2_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _myParent.FloatTotals(false);
+            _myParent.FloatTotals(false, false);
         }
 
         private void frmTotalsV2_Move(object sender, EventArgs e)
@@ -1156,8 +1156,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             #region Bars setup
 
-            Debug.WriteLine($"SetBarsBulk: {string.Join(", ", DefenseDamageList.Cast<int>().Select(t => displayStats.Defense(t)).ToArray())}");
-
             SetBarsBulk(
                 barsList,
                 "Defense",
@@ -1265,7 +1263,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetBarsBulk(
                 barsList,
                 "Status Protection",
-                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray()
+                MezList.Select(m => -MidsContext.Character.Totals.Mez[(int) m]).ToArray()
             );
 
             SetBarsBulk(
@@ -1357,7 +1355,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetLvsBulk(
                 lvList,
                 "Status Protection",
-                MezList.Select(m => Math.Abs(MidsContext.Character.Totals.Mez[(int) m])).ToArray()
+                MezList.Select(m => -MidsContext.Character.Totals.Mez[(int) m]).ToArray()
             );
 
             SetLvsBulk(

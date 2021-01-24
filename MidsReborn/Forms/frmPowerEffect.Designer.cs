@@ -32,16 +32,13 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Equal To");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Greater Than");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Equal To");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Greater Than");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Less Than");
             this.btnPaste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
-            this.chkStack = new System.Windows.Forms.CheckBox();
             this.GroupBox3 = new System.Windows.Forms.GroupBox();
             this.clbSuppression = new System.Windows.Forms.CheckedListBox();
-            this.chkFXResistable = new System.Windows.Forms.CheckBox();
-            this.chkFXBuffable = new System.Windows.Forms.CheckBox();
             this.Label26 = new System.Windows.Forms.Label();
             this.txtFXProb = new System.Windows.Forms.TextBox();
             this.Label25 = new System.Windows.Forms.Label();
@@ -85,7 +82,6 @@ namespace Mids_Reborn.Forms
             this.cbAttribute = new System.Windows.Forms.ComboBox();
             this.Label5 = new System.Windows.Forms.Label();
             this.cbAspect = new System.Windows.Forms.ComboBox();
-            this.chkNearGround = new System.Windows.Forms.CheckBox();
             this.lblAffectsCaster = new System.Windows.Forms.Label();
             this.lvEffectType = new mrbControls.ctlListViewColored();
             this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -95,7 +91,6 @@ namespace Mids_Reborn.Forms
             this.chSubSub = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Label9 = new System.Windows.Forms.Label();
             this.cmbEffectId = new System.Windows.Forms.ComboBox();
-            this.IgnoreED = new System.Windows.Forms.CheckBox();
             this.Label10 = new System.Windows.Forms.Label();
             this.txtOverride = new System.Windows.Forms.TextBox();
             this.Label11 = new System.Windows.Forms.Label();
@@ -105,7 +100,6 @@ namespace Mids_Reborn.Forms
             this.cbModifier = new System.Windows.Forms.ComboBox();
             this.Label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.cbTarget = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -136,12 +130,17 @@ namespace Mids_Reborn.Forms
             this.txtFXRadius = new System.Windows.Forms.TextBox();
             this.txtFXArc = new System.Windows.Forms.TextBox();
             this.txtFXMaxTargets = new System.Windows.Forms.TextBox();
+            this.chkCancelOnMiss = new System.Windows.Forms.CheckBox();
+            this.chkStack = new System.Windows.Forms.CheckBox();
+            this.chkFXBuffable = new System.Windows.Forms.CheckBox();
+            this.IgnoreED = new System.Windows.Forms.CheckBox();
+            this.chkFXResistable = new System.Windows.Forms.CheckBox();
+            this.chkNearGround = new System.Windows.Forms.CheckBox();
             this.GroupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -166,18 +165,6 @@ namespace Mids_Reborn.Forms
             this.btnCopy.Text = "Copy Effect Data";
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
-            // chkStack
-            // 
-            this.chkStack.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkStack.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkStack.Location = new System.Drawing.Point(3, 3);
-            this.chkStack.Name = "chkStack";
-            this.chkStack.Size = new System.Drawing.Size(222, 20);
-            this.chkStack.TabIndex = 112;
-            this.chkStack.Text = "Effect Can Stack";
-            this.chkStack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkStack.CheckedChanged += new System.EventHandler(this.chkFxNoStack_CheckedChanged);
-            // 
             // GroupBox3
             // 
             this.GroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -198,30 +185,6 @@ namespace Mids_Reborn.Forms
             this.clbSuppression.Size = new System.Drawing.Size(200, 259);
             this.clbSuppression.TabIndex = 0;
             this.clbSuppression.SelectedIndexChanged += new System.EventHandler(this.clbSuppression_SelectedIndexChanged);
-            // 
-            // chkFXResistable
-            // 
-            this.chkFXResistable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXResistable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkFXResistable.Location = new System.Drawing.Point(3, 81);
-            this.chkFXResistable.Name = "chkFXResistable";
-            this.chkFXResistable.Size = new System.Drawing.Size(222, 20);
-            this.chkFXResistable.TabIndex = 90;
-            this.chkFXResistable.Text = "Effect is Unresistible";
-            this.chkFXResistable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXResistable.CheckedChanged += new System.EventHandler(this.chkFXResistable_CheckedChanged);
-            // 
-            // chkFXBuffable
-            // 
-            this.chkFXBuffable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXBuffable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkFXBuffable.Location = new System.Drawing.Point(3, 29);
-            this.chkFXBuffable.Name = "chkFXBuffable";
-            this.chkFXBuffable.Size = new System.Drawing.Size(222, 20);
-            this.chkFXBuffable.TabIndex = 89;
-            this.chkFXBuffable.Text = "Ignore Buffs / Enhancements";
-            this.chkFXBuffable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXBuffable.CheckedChanged += new System.EventHandler(this.chkFXBuffable_CheckedChanged);
             // 
             // Label26
             // 
@@ -389,9 +352,9 @@ namespace Mids_Reborn.Forms
             this.lvConditionalOp.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvConditionalOp.HideSelection = false;
             this.lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3});
+            listViewItem4,
+            listViewItem5,
+            listViewItem6});
             this.lvConditionalOp.Location = new System.Drawing.Point(460, 14);
             this.lvConditionalOp.LostFocusItem = -1;
             this.lvConditionalOp.MultiSelect = false;
@@ -462,6 +425,7 @@ namespace Mids_Reborn.Forms
             // columnHeader6
             // 
             this.columnHeader6.Text = "Value";
+            this.columnHeader6.Width = 45;
             // 
             // lvConditionalBool
             // 
@@ -683,17 +647,6 @@ namespace Mids_Reborn.Forms
             this.cbAspect.TabIndex = 135;
             this.cbAspect.SelectedIndexChanged += new System.EventHandler(this.cbAspect_SelectedIndexChanged);
             // 
-            // chkNearGround
-            // 
-            this.chkNearGround.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkNearGround.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkNearGround.Location = new System.Drawing.Point(3, 107);
-            this.chkNearGround.Name = "chkNearGround";
-            this.chkNearGround.Size = new System.Drawing.Size(222, 26);
-            this.chkNearGround.TabIndex = 139;
-            this.chkNearGround.Text = "Target must be Near Ground";
-            this.chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // lblAffectsCaster
             // 
             this.lblAffectsCaster.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -800,18 +753,6 @@ namespace Mids_Reborn.Forms
             this.cmbEffectId.Size = new System.Drawing.Size(166, 22);
             this.cmbEffectId.TabIndex = 150;
             this.cmbEffectId.TextChanged += new System.EventHandler(this.cmbEffectId_TextChanged);
-            // 
-            // IgnoreED
-            // 
-            this.IgnoreED.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.IgnoreED.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IgnoreED.Location = new System.Drawing.Point(3, 55);
-            this.IgnoreED.Name = "IgnoreED";
-            this.IgnoreED.Size = new System.Drawing.Size(222, 20);
-            this.IgnoreED.TabIndex = 151;
-            this.IgnoreED.Text = "Ignore ED";
-            this.IgnoreED.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.IgnoreED.CheckedChanged += new System.EventHandler(this.IgnoreED_CheckedChanged);
             // 
             // Label10
             // 
@@ -962,28 +903,6 @@ namespace Mids_Reborn.Forms
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(228, 63);
             this.tableLayoutPanel3.TabIndex = 163;
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.chkStack, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.chkFXBuffable, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.IgnoreED, 0, 2);
-            this.tableLayoutPanel4.Controls.Add(this.chkFXResistable, 0, 3);
-            this.tableLayoutPanel4.Controls.Add(this.chkNearGround, 0, 4);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(12, 596);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 6;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(228, 136);
-            this.tableLayoutPanel4.TabIndex = 164;
             // 
             // tableLayoutPanel5
             // 
@@ -1346,16 +1265,87 @@ namespace Mids_Reborn.Forms
             this.txtFXMaxTargets.Text = "0";
             this.txtFXMaxTargets.TextChanged += new System.EventHandler(this.txtFXMaxTargets_TextChanged);
             // 
+            // chkCancelOnMiss
+            // 
+            this.chkCancelOnMiss.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkCancelOnMiss.Location = new System.Drawing.Point(12, 726);
+            this.chkCancelOnMiss.Name = "chkCancelOnMiss";
+            this.chkCancelOnMiss.Size = new System.Drawing.Size(222, 20);
+            this.chkCancelOnMiss.TabIndex = 174;
+            this.chkCancelOnMiss.Text = "Cancel on Miss";
+            this.chkCancelOnMiss.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkCancelOnMiss.CheckedChanged += new System.EventHandler(this.chkCancelOnMiss_CheckedChanged);
+            // 
+            // chkStack
+            // 
+            this.chkStack.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkStack.Location = new System.Drawing.Point(12, 593);
+            this.chkStack.Name = "chkStack";
+            this.chkStack.Size = new System.Drawing.Size(222, 20);
+            this.chkStack.TabIndex = 171;
+            this.chkStack.Text = "Effect Can Stack";
+            this.chkStack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkStack.CheckedChanged += new System.EventHandler(this.chkFxNoStack_CheckedChanged);
+            // 
+            // chkFXBuffable
+            // 
+            this.chkFXBuffable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkFXBuffable.Location = new System.Drawing.Point(12, 619);
+            this.chkFXBuffable.Name = "chkFXBuffable";
+            this.chkFXBuffable.Size = new System.Drawing.Size(222, 20);
+            this.chkFXBuffable.TabIndex = 169;
+            this.chkFXBuffable.Text = "Ignore Buffs / Enhancements";
+            this.chkFXBuffable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkFXBuffable.CheckedChanged += new System.EventHandler(this.chkFXBuffable_CheckedChanged);
+            // 
+            // IgnoreED
+            // 
+            this.IgnoreED.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.IgnoreED.Location = new System.Drawing.Point(12, 645);
+            this.IgnoreED.Name = "IgnoreED";
+            this.IgnoreED.Size = new System.Drawing.Size(222, 20);
+            this.IgnoreED.TabIndex = 173;
+            this.IgnoreED.Text = "Ignore ED";
+            this.IgnoreED.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.IgnoreED.CheckedChanged += new System.EventHandler(this.IgnoreED_CheckedChanged);
+            // 
+            // chkFXResistable
+            // 
+            this.chkFXResistable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkFXResistable.Location = new System.Drawing.Point(12, 671);
+            this.chkFXResistable.Name = "chkFXResistable";
+            this.chkFXResistable.Size = new System.Drawing.Size(222, 20);
+            this.chkFXResistable.TabIndex = 170;
+            this.chkFXResistable.Text = "Effect is Unresistible";
+            this.chkFXResistable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkFXResistable.CheckedChanged += new System.EventHandler(this.chkFXResistible_CheckedChanged);
+            // 
+            // chkNearGround
+            // 
+            this.chkNearGround.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkNearGround.Location = new System.Drawing.Point(12, 697);
+            this.chkNearGround.Name = "chkNearGround";
+            this.chkNearGround.Size = new System.Drawing.Size(222, 20);
+            this.chkNearGround.TabIndex = 172;
+            this.chkNearGround.Text = "Target must be Near Ground";
+            this.chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkNearGround.CheckedChanged += new System.EventHandler(this.chkNearGround_CheckedChanged);
+            // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1264, 756);
+            this.Controls.Add(this.chkCancelOnMiss);
+            this.Controls.Add(this.chkStack);
+            this.Controls.Add(this.chkFXBuffable);
+            this.Controls.Add(this.IgnoreED);
+            this.Controls.Add(this.chkFXResistable);
+            this.Controls.Add(this.chkNearGround);
             this.Controls.Add(this.tpPowerAttribs);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tableLayoutPanel6);
             this.Controls.Add(this.tableLayoutPanel5);
             this.Controls.Add(this.chkVariable);
-            this.Controls.Add(this.tableLayoutPanel4);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -1385,7 +1375,6 @@ namespace Mids_Reborn.Forms
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -1407,10 +1396,6 @@ namespace Mids_Reborn.Forms
         ComboBox cbFXClass;
         ComboBox cbFXSpecialCase;
         ComboBox cbPercentageOverride;
-        CheckBox chkFXBuffable;
-        CheckBox chkFXResistable;
-        CheckBox chkNearGround;
-        CheckBox chkStack;
         CheckBox chkVariable;
         ColumnHeader chSub;
         ColumnHeader chSubSub;
@@ -1418,7 +1403,6 @@ namespace Mids_Reborn.Forms
         ComboBox cmbEffectId;
         ColumnHeader ColumnHeader1;
         GroupBox GroupBox3;
-        CheckBox IgnoreED;
         Label Label1;
         Label Label10;
         Label Label11;
@@ -1449,7 +1433,6 @@ namespace Mids_Reborn.Forms
         private ComboBox cbModifier;
         private Label Label6;
         private TableLayoutPanel tableLayoutPanel3;
-        private TableLayoutPanel tableLayoutPanel4;
         private TableLayoutPanel tableLayoutPanel5;
         private ComboBox cbTarget;
         private Label label12;
@@ -1498,5 +1481,11 @@ namespace Mids_Reborn.Forms
         private ctlListViewColored lvConditionalBool;
         private ctlListViewColored lvConditionalOp;
         private ColumnHeader columnHeader8;
+        private CheckBox chkCancelOnMiss;
+        private CheckBox chkStack;
+        private CheckBox chkFXBuffable;
+        private CheckBox IgnoreED;
+        private CheckBox chkFXResistable;
+        private CheckBox chkNearGround;
     }
 }

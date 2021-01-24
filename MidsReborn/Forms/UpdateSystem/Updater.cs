@@ -36,11 +36,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
             Begin_Update();
         }
 
-        private void Load_Updater(object sender, EventArgs e)
-        {
-            Begin_Update();
-        }
-
         private void Begin_Update()
         {
             DownloadThread = new Thread(() =>

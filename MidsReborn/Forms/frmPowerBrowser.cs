@@ -761,7 +761,7 @@ namespace Mids_Reborn.Forms
 
         private void BusyMsg(string sMessage)
         {
-            using var bFrm = new frmBusy();
+            var bFrm = new frmBusy();
             bFrm.Show(this);
             bFrm.SetMessage(sMessage);
         }

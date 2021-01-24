@@ -6,6 +6,7 @@ namespace mrbBase
 {
     public interface IPower : IComparable
     {
+        bool HasProcSlotted { get; set; }
         string FullSetName { get; }
 
         float CastTime { get; set; }
@@ -226,6 +227,8 @@ namespace mrbBase
         bool HasDefEffects();
 
         bool HasResEffects();
+
+        bool HasAttribModEffects();
 
         Enums.ShortFX GetEnhancementMagSum(Enums.eEffectType iEffect, int subType = 0);
 

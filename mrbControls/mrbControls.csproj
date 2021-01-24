@@ -117,15 +117,6 @@
     <Compile Include="ctlOutlinedLabel.Designer.cs">
       <DependentUpon>ctlOutlinedLabel.cs</DependentUpon>
     </Compile>
-    <Compile Include="ctlPairedList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ctlPairedListNew.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ctlPairedListNew.Designer.cs">
-      <DependentUpon>ctlPairedListNew.cs</DependentUpon>
-    </Compile>
     <Compile Include="ctlPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -178,6 +169,12 @@
     </Compile>
     <Compile Include="My\MySettingsProperty.cs" />
     <Compile Include="My\Resources\Resources.cs" />
+    <Compile Include="PairedList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PairedList.Designer.cs">
+      <DependentUpon>PairedList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ctlProgressBar.cs">
       <SubType>Component</SubType>
@@ -219,10 +216,6 @@
       <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ctlMultiGraph.resources" />
-    <EmbeddedResource Include="ctlPairedList.resources" />
-    <EmbeddedResource Include="ctlPairedListNew.resx">
-      <DependentUpon>ctlPairedListNew.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ctlPanel.resx">
       <DependentUpon>ctlPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -236,6 +229,9 @@
     <EmbeddedResource Include="GFXLabel.resources" />
     <EmbeddedResource Include="I9Picker.resources" />
     <EmbeddedResource Include="ImageButton.resources" />
+    <EmbeddedResource Include="PairedList.resx">
+      <DependentUpon>PairedList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resources" />
   </ItemGroup>
   <ItemGroup>

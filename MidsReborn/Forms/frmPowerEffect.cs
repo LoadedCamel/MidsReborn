@@ -169,11 +169,27 @@ namespace Mids_Reborn.Forms
             UpdateFXText();
         }
 
-        private void chkFXResistable_CheckedChanged(object sender, EventArgs e)
+        private void chkFXResistible_CheckedChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
             myFX.Resistible = !chkFXResistable.Checked;
+            UpdateFXText();
+        }
+
+        private void chkNearGround_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.NearGround = chkNearGround.Checked;
+            UpdateFXText();
+        }
+
+        private void chkCancelOnMiss_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Loading)
+                return;
+            myFX.CancelOnMiss = chkCancelOnMiss.Checked;
             UpdateFXText();
         }
 
@@ -230,6 +246,7 @@ namespace Mids_Reborn.Forms
             chkFXBuffable.Checked = !fx.Buffable;
             chkFXResistable.Checked = !fx.Resistible;
             chkNearGround.Checked = fx.NearGround;
+            chkCancelOnMiss.Checked = fx.CancelOnMiss;
             IgnoreED.Checked = fx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int)fx.SpecialCase;
             if (fx.SpecialCase != Enums.eSpecialCase.None)
@@ -539,28 +556,32 @@ namespace Mids_Reborn.Forms
                 tableLayoutPanel1.Enabled = false;
                 tableLayoutPanel2.Enabled = false;
                 tableLayoutPanel3.Enabled = false;
-                tableLayoutPanel4.Enabled = false;
                 tableLayoutPanel5.Enabled = false;
-                tableLayoutPanel1.Visible = false;
-                tableLayoutPanel2.Visible = false;
-                tableLayoutPanel3.Visible = false;
-                tableLayoutPanel4.Visible = false;
-                tableLayoutPanel5.Visible = false;
                 tpPowerAttribs.Visible = true;
+
+                //Old tableLayoutPanel4 contents
+                chkStack.Enabled = false;
+                chkFXBuffable.Enabled = false;
+                IgnoreED.Enabled = false;
+                chkFXResistable.Enabled = false;
+                chkNearGround.Enabled = false;
+                chkCancelOnMiss.Enabled = false;
             }
             else
             {
                 tableLayoutPanel1.Enabled = true;
                 tableLayoutPanel2.Enabled = true;
                 tableLayoutPanel3.Enabled = true;
-                tableLayoutPanel4.Enabled = true;
                 tableLayoutPanel5.Enabled = true;
-                tableLayoutPanel1.Visible = true;
-                tableLayoutPanel2.Visible = true;
-                tableLayoutPanel3.Visible = true;
-                tableLayoutPanel4.Visible = true;
-                tableLayoutPanel5.Visible = true;
                 tpPowerAttribs.Visible = false;
+
+                //Old tableLayoutPanel4 contents
+                chkStack.Enabled = true;
+                chkFXBuffable.Enabled = true;
+                IgnoreED.Enabled = true;
+                chkFXResistable.Enabled = true;
+                chkNearGround.Enabled = true;
+                chkCancelOnMiss.Enabled = true;
             }
             UpdateEffectSubAttribList();
             UpdateFXText();
@@ -1141,8 +1162,10 @@ namespace Mids_Reborn.Forms
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
+                        var pType = power.PowerType;
+                        var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle || (pType == Enums.ePowerType.Click && power.ClickBuff);
                         var isUsable = !eArray.Contains((int)pSetType);
-                        if (isUsable)
+                        if (isUsable || isType)
                         {
                             var pItem = new Regex("[_]");
                             var pStrings = pItem.Replace(power.FullName, " ").Split('.');

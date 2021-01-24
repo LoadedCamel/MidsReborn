@@ -193,8 +193,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
             Console.WriteLine(lvEnh.SelectedItems[0].SubItems[6].Text);
-            //var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
-            var selectedIndex = DatabaseAPI.GetEnhancementByName(lvEnh.SelectedItems[0].SubItems[6].Text);
+            var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
+            //var selectedIndex = DatabaseAPI.GetEnhancementByName(lvEnh.SelectedItems[0].SubItems[6].Text);
             using var frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[selectedIndex], 0);
             var num = (int)frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)

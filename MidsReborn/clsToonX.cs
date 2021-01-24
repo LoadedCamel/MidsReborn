@@ -32,12 +32,7 @@ namespace Mids_Reborn
                     Totals.Def[index] = CalculatePvpDr(Totals.Def[index], 1.2f, 1f);
         }
 
-        private static PopUp.StringValue BuildEDItem(
-            int index,
-            float[] value,
-            Enums.eSchedule[] schedule,
-            string edName,
-            float[] afterED)
+        private static PopUp.StringValue BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string edName, float[] afterED)
         {
             var stringValue1 = new PopUp.StringValue();
             var flag1 = value[index] > (double) DatabaseAPI.Database.MultED[(int) schedule[index]][0];
@@ -325,11 +320,14 @@ namespace Mids_Reborn
                     var effect = tPwr.Effects[shortFx.Index[shortFxIdx]];
                     if (!((effect.ToWho == Enums.eToWho.Self) | (effect.ToWho != Enums.eToWho.Target)))
                         continue;
+                    var pIdx = tPwr.PowerIndex;
                     if (!enhancementPass)
+                    {
                         switch (effect.EffectType)
                         {
                             case Enums.eEffectType.Mez:
-                                nBuffs.StatusProtection[(int) effect.MezType] += shortFx.Value[shortFxIdx];
+                                if (effect.GetPower().DisplayName.Contains("Knockback Protection") || !DatabaseAPI.Database.Power[pIdx].HasProcSlotted)
+                                    nBuffs.StatusProtection[(int) effect.MezType] += shortFx.Value[shortFxIdx];
                                 break;
                             case Enums.eEffectType.MezResist:
                                 nBuffs.StatusResistance[(int) effect.MezType] += shortFx.Value[shortFxIdx];
@@ -338,10 +336,9 @@ namespace Mids_Reborn
                                 nBuffs.DebuffResistance[(int) effect.ETModifies] += shortFx.Value[shortFxIdx];
                                 break;
                         }
+                    }
 
-                    if (((tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType == Enums.eEffectType.DamageBuff) |
-                         (tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType == Enums.eEffectType.Enhancement)) &
-                        enhancementPass)
+                    if (((tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType == Enums.eEffectType.DamageBuff) | (tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType == Enums.eEffectType.Enhancement)) & enhancementPass)
                     {
                         switch (effect.ETModifies)
                         {
@@ -359,14 +356,13 @@ namespace Mids_Reborn
                                 if (iEffect == Enums.eEffectType.DamageBuff)
                                 {
                                     if (!((effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)) | effect.ValidateConditional("active", "Defiance") | effect.SpecialCase == Enums.eSpecialCase.Defiance))
+                                    {
                                         nBuffs.Damage[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
+                                    }
                                 }
                                 else if (!((effect.ETModifies == Enums.eEffectType.Accuracy) & enhancementPass))
                                 {
-                                    if ((effect.ETModifies == Enums.eEffectType.SpeedRunning) |
-                                        (effect.ETModifies == Enums.eEffectType.SpeedFlying) |
-                                        (effect.ETModifies == Enums.eEffectType.SpeedJumping) |
-                                        (effect.ETModifies == Enums.eEffectType.JumpHeight))
+                                    if ((effect.ETModifies == Enums.eEffectType.SpeedRunning) | (effect.ETModifies == Enums.eEffectType.SpeedFlying) | (effect.ETModifies == Enums.eEffectType.SpeedJumping) | (effect.ETModifies == Enums.eEffectType.JumpHeight))
                                     {
                                         if (effect.buffMode != Enums.eBuffMode.Debuff)
                                             nBuffs.Effect[(int) effect.ETModifies] += shortFx.Value[shortFxIdx];
@@ -409,26 +405,24 @@ namespace Mids_Reborn
                         {
                             nBuffs.Effect[1] += shortFx.Value[shortFxIdx];
                         }
-                        else if ((effect.ETModifies == Enums.eEffectType.SpeedRunning) &
-                                 (effect.Aspect == Enums.eAspect.Max))
+                        else if ((effect.ETModifies == Enums.eEffectType.SpeedRunning) & (effect.Aspect == Enums.eAspect.Max))
                         {
                             nBuffs.Effect[49] += shortFx.Value[shortFxIdx];
                         }
-                        else if ((effect.ETModifies == Enums.eEffectType.SpeedFlying) &
-                                 (effect.Aspect == Enums.eAspect.Max))
+                        else if ((effect.ETModifies == Enums.eEffectType.SpeedFlying) & (effect.Aspect == Enums.eAspect.Max))
                         {
                             nBuffs.Effect[51] += shortFx.Value[shortFxIdx];
                         }
-                        else if ((effect.ETModifies == Enums.eEffectType.SpeedJumping) &
-                                 (effect.Aspect == Enums.eAspect.Max))
+                        else if ((effect.ETModifies == Enums.eEffectType.SpeedJumping) & (effect.Aspect == Enums.eAspect.Max))
                         {
                             nBuffs.Effect[50] += shortFx.Value[shortFxIdx];
                         }
                         else if ((iEffect == Enums.eEffectType.ToHit) & !enhancementPass)
                         {
                             if (!(effect.isEnhancementEffect & (effect.EffectClass == Enums.eEffectClass.Tertiary)))
+                            {
                                 nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
-                            
+                            }
                         }
                         else if (!enhancementPass)
                         {
@@ -439,6 +433,7 @@ namespace Mids_Reborn
                             {
                                 shortFx.Value[shortFxIdx] = shortFx.Value[shortFxIdx] * MidsContext.Character.Totals.HPMax; // MidsContext.Character.Archetype.Hitpoints
                             }
+
                             nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
                         }
                     }
@@ -558,38 +553,7 @@ namespace Mids_Reborn
             TotalsCapped.Perception = Math.Min(TotalsCapped.Perception, Archetype.PerceptionCap);
         }
 
-        /* DO NOT USE **TESTING ONLY**
-        void CloneParentEnh(int iIndex)
-        {
-            try
-            {
-                int parentIndex = -1;
-                switch (CurrentBuild.Powers[iIndex].Power.FullName)
-                {
-                    case "Mastermind_Summon.Beast_Mastery.Summon_Wolves":
-                        parentIndex = iIndex;
-                        break;
-                    case "Mastermind_Summon.Beast_Mastery.Howler_Wolf_H":
-                        if (parentIndex != -1)
-                        {
-                            CurrentBuild.Powers[iIndex].Slots = CurrentBuild.Powers[parentIndex].Slots;
-                            CurrentBuild.Powers[iIndex].Power.Enhancements =
-                                CurrentBuild.Powers[parentIndex].Power.Enhancements;
-                            for (int i = 0; i <= CurrentBuild.Powers[parentIndex].Power.Effects.Length - 1; ++i)
-                            {
-                                CurrentBuild.Powers[iIndex].Power.Effects[i].Enhancement.Effect[i] =
-                                    CurrentBuild.Powers[parentIndex].Power.Effects[i].Enhancement.Effect[i];
-                            }
-                        }
-
-                        break;
-                }
-            }
-            catch
-            {
-            }
-        }*/
-
+        
         private bool GBPA_AddEnhFX(ref IPower iPower, int iIndex)
         {
             if (MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower == null)
@@ -599,7 +563,7 @@ namespace Mids_Reborn
                 if (CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh <= -1)
                     continue;
                 var hasPower = DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].Effect.Any(e => e.Mode == Enums.eEffMode.FX);
-                if (!hasPower || (CurrentBuild.Powers[iIndex].ProcInclude && DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].IsProc))
+                if (!hasPower || CurrentBuild.Powers[iIndex].ProcInclude && DatabaseAPI.Database.Enhancements[CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh].IsProc)
                     continue;
                 var enhIndex = CurrentBuild.Powers[iIndex].Slots[index1].Enhancement.Enh;
                 var enh = DatabaseAPI.Database.Enhancements[enhIndex];
@@ -609,8 +573,8 @@ namespace Mids_Reborn
                 for (var index2 = 0; index2 <= power1.Effects.Length - 1; ++index2)
                 {
                     var effect = power1.Effects[index2];
-                    if (power1.Effects[index2].EffectType == Enums.eEffectType.Enhancement)
-                        continue;
+                    //if (power1.Effects[index2].EffectType == Enums.eEffectType.Enhancement)
+                    //    continue;
                     var toAdd = (IEffect) effect.Clone();
                     toAdd.isEnhancementEffect = true;
                     toAdd.ToWho = effect.ToWho;
@@ -1369,9 +1333,7 @@ namespace Mids_Reborn
         {
             for (var i = 0; i <= CurrentBuild.Powers.Count - 1; ++i)
             {
-                if (!(CurrentBuild.Powers[i].StatInclude & (CurrentBuild.Powers[i].NIDPower > -1)) ||
-                    DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType ==
-                    Enums.ePowerType.GlobalBoost)
+                if (!(CurrentBuild.Powers[i].StatInclude & (CurrentBuild.Powers[i].NIDPower > -1)) || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
                     continue;
                 if (enhancementPass)
                 {
@@ -2203,8 +2165,7 @@ namespace Mids_Reborn
                     sContent = new PopUp.StringValue[section.Content.Length + 1];
                     Array.Copy(section.Content, sContent, section.Content.Length);
                     section.Content = sContent;
-                    section.Content[section.Content.Length - 1] =
-                        BuildEDItem(index, nBuff, schedBuff, Enum.GetName(eEnhance.GetType(), index), afterED1);
+                    section.Content[section.Content.Length - 1] = BuildEDItem(index, nBuff, schedBuff, Enum.GetName(eEnhance.GetType(), index), afterED1);
                 }
 
                 if (nDebuff[index] > 0.0)

@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.ImportExportItems;
 using Mids_Reborn.Forms.OptionsMenuItems;
@@ -375,6 +376,7 @@ namespace Mids_Reborn.Forms
                 loading = false;
                 UpdateControls(true);
                 CenterToScreen();
+                UpdatePoolsPanelSize();
                 if (this.IsInDesignMode())
                     return;
                 /*if (MidsContext.Config.CheckForUpdates)
@@ -564,14 +566,32 @@ namespace Mids_Reborn.Forms
             cbDrawItem(CbtAncillary.Value, Enums.ePowerSetType.Ancillary, e);
         }
 
-        private void cbAncillary_MouseMove(object sender, MouseEventArgs e)
+        private void cbPools_MouseMove(object sender, MouseEventArgs e)
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[7] == null)
-                return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[7].nID, MidsContext.Character.Archetype.Idx, cbAncillary.Bounds,
-                ExtraString);
+            if (MainModule.MidsController.Toon == null) return;
+            
+            var combo = (ComboBox) sender;
+            var rBounds = new Rectangle(
+                poolsPanel.Location.X + combo.Bounds.X + 1,
+                poolsPanel.Location.Y + combo.Location.Y - (combo.Name == "cbAncillary" ? 0 : combo.Height) + lblPool1.Height + 5,
+                combo.Width,
+                combo.Height
+            );
+            const string extraString = "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
+            var nId = combo.Name switch
+            {
+                "cbPool0" => MidsContext.Character.Powersets[3].nID,
+                "cbPool1" => MidsContext.Character.Powersets[4].nID,
+                "cbPool2" => MidsContext.Character.Powersets[5].nID,
+                "cbPool3" => MidsContext.Character.Powersets[6].nID,
+                "cbAncillary" => MidsContext.Character.IsKheldian ? -1 : MidsContext.Character.Powersets[7].nID,
+                _ => -1
+            };
+
+            var vAlign = combo.Name == "cbAncillary"
+                ? VerticalAlignment.Bottom
+                : VerticalAlignment.Top;
+            ShowPopup(nId, MidsContext.Character.Archetype.Idx, rBounds, extraString, vAlign);
         }
 
         private void cbAncillery_SelectedIndexChanged(object sender, EventArgs e)
@@ -580,8 +600,18 @@ namespace Mids_Reborn.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
-            frmTotalsV2.SetTitle(fTotals);
+            if (!MidsContext.Config.UseOldTotalsWindow)
+                frmTotalsV2.SetTitle(fTotals2);
         }
+
+        /*private Rectangle CalculatePowerPoolBounds(ref ComboBox cbCtl)
+        {
+            return new Rectangle(
+                cbCtl.Bounds.X + poolsPanel.Location.X,
+                cbCtl.Bounds.Y + poolsPanel.Location.Y - 16, // + poolsPanel.VerticalScroll.Value,
+                0, // cbCtl.Bounds.Width,
+                0); // cbCtl.Bounds.Height
+        }*/
 
         private void cbAT_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -626,11 +656,12 @@ namespace Mids_Reborn.Forms
         {
             if (NoUpdate) return;
             NewToon(false);
-            SetFormHeight();
+            //SetFormHeight();
             //PerformAutoScale();
             SetAncilPoolHeight();
             GetBestDamageValues();
-            frmTotalsV2.SetTitle(fTotals);
+            if (!MidsContext.Config.UseOldTotalsWindow)
+                frmTotalsV2.SetTitle(fTotals2);
         }
 
         private static void cbDrawItem(
@@ -722,16 +753,6 @@ namespace Mids_Reborn.Forms
             HidePopup();
         }
 
-        private void cbPool0_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[3] == null)
-                return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[3].nID, MidsContext.Character.Archetype.Idx, cbPool0.Bounds,
-                ExtraString);
-        }
-
         private void cbPool0_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (NoUpdate)
@@ -743,14 +764,6 @@ namespace Mids_Reborn.Forms
         private void cbPool1_DrawItem(object sender, DrawItemEventArgs e)
         {
             cbDrawItem(CbtPool1.Value, Enums.ePowerSetType.Pool, e);
-        }
-
-        private void cbPool1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[4] == null)
-                return;
-            ShowPopup(MidsContext.Character.Powersets[4].nID, MidsContext.Character.Archetype.Idx, cbPool1.Bounds,
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.");
         }
 
         private void cbPool1_SelectedIndexChanged(object sender, EventArgs e)
@@ -766,16 +779,6 @@ namespace Mids_Reborn.Forms
             cbDrawItem(CbtPool2.Value, Enums.ePowerSetType.Pool, e);
         }
 
-        private void cbPool2_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[5] == null)
-                return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[5].nID, MidsContext.Character.Archetype.Idx, cbPool2.Bounds,
-                ExtraString);
-        }
-
         private void cbPool2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (NoUpdate)
@@ -787,16 +790,6 @@ namespace Mids_Reborn.Forms
         private void cbPool3_DrawItem(object sender, DrawItemEventArgs e)
         {
             cbDrawItem(CbtPool3.Value, Enums.ePowerSetType.Pool, e);
-        }
-
-        private void cbPool3_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character.Powersets[6] == null)
-                return;
-            var ExtraString =
-                "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[6].nID, MidsContext.Character.Archetype.Idx, cbPool3.Bounds,
-                ExtraString);
         }
 
         private void cbPool3_SelectedIndexChanged(object sender, EventArgs e)
@@ -835,7 +828,8 @@ namespace Mids_Reborn.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
-            frmTotalsV2.SetTitle(fTotals);
+            if (!MidsContext.Config.UseOldTotalsWindow)
+                frmTotalsV2.SetTitle(fTotals2);
         }
 
         private void cbSecondary_DrawItem(object sender, DrawItemEventArgs e)
@@ -868,7 +862,8 @@ namespace Mids_Reborn.Forms
                 return;
             ChangeSets();
             UpdatePowerLists();
-            frmTotalsV2.SetTitle(fTotals);
+            if (!MidsContext.Config.UseOldTotalsWindow)
+                frmTotalsV2.SetTitle(fTotals2);
         }
 
         private void ChangeSets()
@@ -1291,10 +1286,10 @@ namespace Mids_Reborn.Forms
                 petsButton.Enabled = true;
             }
 
-            NewDraw();
-            UpdateControls();
-            SetFormHeight();
-            PerformAutoScale();
+            //NewDraw();
+            //UpdateControls();
+            //SetFormHeight();
+            //PerformAutoScale();
             myDataView.Clear();
             MidsContext.Character.ResetLevel();
             PowerModified(false);
@@ -1448,7 +1443,7 @@ namespace Mids_Reborn.Forms
             pnlGFX.Select();
             FloatingDataForm.Show();
             RefreshInfo();
-            ReArrange(false);
+            //ReArrange(false);
             if (dvLastPower <= -1)
                 return;
             Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, DataViewLocked);
@@ -1760,11 +1755,23 @@ namespace Mids_Reborn.Forms
                         fGraphCompare.TopMost = false;
                 }
 
-                if (fTotals != null)
+                if (MidsContext.Config.UseOldTotalsWindow)
                 {
-                    top_fTotals = fTotals.TopMost;
-                    if (fTotals.TopMost)
-                        fTotals.TopMost = false;
+                    if (fTotals != null)
+                    {
+                        top_fTotals = fTotals.TopMost;
+                        if (fTotals.TopMost)
+                            fTotals.TopMost = false;
+                    }
+                }
+                else
+                {
+                    if (fTotals2 != null)
+                    {
+                        top_fTotals = fTotals2.TopMost;
+                        if (fTotals2.TopMost)
+                            fTotals2.TopMost = false;
+                    }
                 }
 
                 if (fRecipe != null)
@@ -1811,11 +1818,23 @@ namespace Mids_Reborn.Forms
                         fGraphCompare.BringToFront();
                 }
 
-                if (fTotals != null && fTotals.TopMost != top_fTotals)
+                if (MidsContext.Config.UseOldTotalsWindow)
                 {
-                    fTotals.TopMost = top_fTotals;
-                    if (fTotals.TopMost)
-                        fTotals.BringToFront();
+                    if (fTotals != null && fTotals.TopMost != top_fTotals)
+                    {
+                        fTotals.TopMost = top_fTotals;
+                        if (fTotals.TopMost)
+                            fTotals.BringToFront();
+                    }
+                }
+                else
+                {
+                    if (fTotals2 != null && fTotals2.TopMost != top_fTotals)
+                    {
+                        fTotals2.TopMost = top_fTotals;
+                        if (fTotals2.TopMost)
+                            fTotals2.BringToFront();
+                    }
                 }
 
                 if (fRecipe != null && fRecipe.TopMost != top_fRecipe)
@@ -1840,31 +1859,59 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        internal void FloatTotals(bool show)
+        internal void FloatTotals(bool show, bool useOld)
         {
-            if (show)
+            if (!useOld)
             {
-                if (fTotals == null)
+                if (show)
                 {
-                    var iParent = this;
-                    fTotals = new frmTotalsV2(ref iParent);
-                }
+                    if (fTotals2 == null)
+                    {
+                        var iParent = this;
+                        fTotals2 = new frmTotalsV2(ref iParent);
+                    }
 
-                DoRedraw();
-                fTotals.SetLocation();
-                fTotals.Show();
-                fTotals.BringToFront();
-                fTotals.UpdateData();
-                frmTotalsV2.SetTitle(fTotals);
-                fTotals.Activate();
+                    DoRedraw();
+                    fTotals2.SetLocation();
+                    fTotals2.Show();
+                    fTotals2.BringToFront();
+                    fTotals2.UpdateData();
+                    frmTotalsV2.SetTitle(fTotals2);
+                    fTotals2.Activate();
+                }
+                else
+                {
+                    if (fTotals2 == null)
+                        return;
+                    fTotals2.Hide();
+                    fTotals2.Dispose();
+                    fTotals2 = null;
+                }
             }
             else
             {
-                if (fTotals == null)
-                    return;
-                fTotals.Hide();
-                fTotals.Dispose();
-                fTotals = null;
+                if (show)
+                {
+                    if (fTotals == null)
+                    {
+                        var iParent = this;
+                        fTotals = new frmTotals(ref iParent);
+                    }
+                    DoRedraw();
+                    fTotals.SetLocation();
+                    fTotals.Show();
+                    fTotals.BringToFront();
+                    fTotals.UpdateData();
+                    fTotals.Activate();
+                }
+                else
+                {
+                    if (fTotals == null)
+                        return;
+                    fTotals.Hide();
+                    fTotals.Dispose();
+                    fTotals = null;
+                }
             }
         }
 
@@ -1873,6 +1920,7 @@ namespace Mids_Reborn.Forms
             fSets?.UpdateData();
             fGraphStats?.UpdateData(newData);
             fTotals?.UpdateData();
+            fTotals2?.UpdateData();
             fGraphCompare?.UpdateData();
             fRecipe?.UpdateData();
             fDPSCalc?.UpdateData();
@@ -1908,7 +1956,6 @@ namespace Mids_Reborn.Forms
                 frmMain_Resize(RuntimeHelpers.GetObjectValue(sender), e);
             }
             LastState = WindowState;
-
         }
 
         private void frmMain_MouseWheel(object sender, MouseEventArgs e)
@@ -1918,6 +1965,7 @@ namespace Mids_Reborn.Forms
 
         private void frmMain_Resize(object sender, EventArgs e)
         {
+            UpdatePoolsPanelSize();
             if (dvAnchored != null)
             {
                 dvAnchored.SetScreenBounds(ClientRectangle);
@@ -1950,7 +1998,7 @@ namespace Mids_Reborn.Forms
             if (drawing != null)
                 DoRedraw();
             UpdateColors();
-            frmTotalsV2.SetTitle(fTotals);
+            frmTotalsV2.SetTitle(fTotals2);
         }
 
         private void GetBestDamageValues()
@@ -2239,7 +2287,7 @@ namespace Mids_Reborn.Forms
 
         private void ibTotals_ButtonClicked()
         {
-            FloatTotals(true);
+            FloatTotals(true, MidsContext.Config.UseOldTotalsWindow);
         }
 
         private void incarnateButton_ButtonClicked()
@@ -2505,7 +2553,7 @@ namespace Mids_Reborn.Forms
             {
                 case MouseButtons.Left:
                     PowerPicked(Item.nIDSet, Item.nIDPower);
-                    frmTotalsV2.SetTitle(fTotals);
+                    frmTotalsV2.SetTitle(fTotals2);
                     break;
                 case MouseButtons.Right:
                     Info_Power(Item.nIDPower, -1, false, true);
@@ -2517,14 +2565,19 @@ namespace Mids_Reborn.Forms
         {
             LastIndex = -1;
             LastEnhIndex = -1;
+            var llBounds = new Rectangle(
+                llAncillary.Bounds.X + poolsPanel.Bounds.X,
+                llAncillary.Bounds.Y + poolsPanel.Bounds.Y,
+                llAncillary.Bounds.Width,
+                llAncillary.Bounds.Height);
             if (Item.ItemState == ListLabelV3.LLItemState.Heading)
             {
-                ShowPopup(Item.nIDSet, -1, llAncillary.Bounds, string.Empty);
+                ShowPopup(Item.nIDSet, -1, llBounds);
             }
             else
             {
                 Info_Power(Item.nIDPower);
-                ShowPopup(-1, Item.nIDPower, -1, new Point(), llAncillary.Bounds);
+                ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds, null, -1, VerticalAlignment.Bottom);
             }
         }
 
@@ -2547,7 +2600,12 @@ namespace Mids_Reborn.Forms
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.nIDPower);
-            ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool0.Bounds);
+            var llBounds = new Rectangle(
+                llPool0.Bounds.X + poolsPanel.Bounds.X,
+                llPool0.Bounds.Y + poolsPanel.Bounds.Y,
+                llPool0.Bounds.Width,
+                llPool0.Bounds.Height);
+            ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds);
         }
 
         private void llPool1_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
@@ -2569,7 +2627,12 @@ namespace Mids_Reborn.Forms
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.nIDPower);
-            ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool1.Bounds);
+            var llBounds = new Rectangle(
+                llPool1.Bounds.X + poolsPanel.Bounds.X,
+                llPool1.Bounds.Y + poolsPanel.Bounds.Y,
+                llPool1.Bounds.Width,
+                llPool1.Bounds.Height);
+            ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds);
         }
 
         private void llPool2_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
@@ -2591,7 +2654,12 @@ namespace Mids_Reborn.Forms
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.nIDPower);
-            ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool2.Bounds);
+            var llBounds = new Rectangle(
+                llPool2.Bounds.X + poolsPanel.Bounds.X,
+                llPool2.Bounds.Y + poolsPanel.Bounds.Y,
+                llPool2.Bounds.Width,
+                llPool2.Bounds.Height);
+            ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds);
         }
 
         private void llPool3_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
@@ -2613,6 +2681,11 @@ namespace Mids_Reborn.Forms
             LastIndex = -1;
             LastEnhIndex = -1;
             Info_Power(Item.nIDPower);
+            var llBounds = new Rectangle(
+                llPool3.Bounds.X + poolsPanel.Bounds.X,
+                llPool3.Bounds.Y + poolsPanel.Bounds.Y,
+                llPool3.Bounds.Width,
+                llPool3.Bounds.Height);
             ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool3.Bounds);
         }
 
@@ -3108,8 +3181,7 @@ namespace Mids_Reborn.Forms
                 }
                 else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & (e.Button == MouseButtons.Left))
                 {
-                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
-                        MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
                         {
@@ -4663,7 +4735,10 @@ namespace Mids_Reborn.Forms
             FloatingDataForm = null;
         }
 
-        private void ShowPopup(int nIDPowerset, int nIDClass, Rectangle rBounds, string ExtraString = "")
+        private void ShowPopup(int nIDPowerset, int nIDClass,
+            Rectangle rBounds,
+            string extraString = "",
+            VerticalAlignment vAlign = VerticalAlignment.Top)
         {
             if (MidsContext.Config.DisableShowPopup)
             {
@@ -4671,18 +4746,25 @@ namespace Mids_Reborn.Forms
             }
             else
             {
+                if (vAlign == VerticalAlignment.Center) vAlign = VerticalAlignment.Bottom;
+
                 var bounds = I9Popup.Bounds;
                 RedrawUnderPopup(bounds);
-                if (!((nIDPowerset > -1) | (nIDClass > -1)))
-                    return;
+                if (!((nIDPowerset > -1) | (nIDClass > -1))) return;
                 if (I9Popup.psIDX != (nIDPowerset <= -1 ? nIDClass : nIDPowerset))
                 {
                     var iPopup = nIDPowerset <= -1
                         ? MidsContext.Character.Archetype.PopInfo()
-                        : MainModule.MidsController.Toon.PopPowersetInfo(nIDPowerset, ExtraString);
-                    if (true & (iPopup.Sections != null))
+                        : MainModule.MidsController.Toon.PopPowersetInfo(nIDPowerset, extraString);
+                    if (iPopup.Sections != null)
                     {
                         I9Popup.SetPopup(iPopup);
+                        if (vAlign == VerticalAlignment.Bottom)
+                        {
+                            I9Popup.Location = new Point(I9Popup.Location.X, I9Popup.Location.Y - I9Popup.Height);
+                            rBounds.Y -= I9Popup.Height;
+                        }
+
                         PopUpVisible = true;
                         SetPopupLocation(rBounds, false, true);
                     }
@@ -4713,7 +4795,8 @@ namespace Mids_Reborn.Forms
             Point e,
             Rectangle rBounds,
             I9Slot eSlot = null,
-            int setIDX = -1)
+            int setIDX = -1,
+            VerticalAlignment vAlign = VerticalAlignment.Top)
         {
             if (MidsContext.Config.DisableShowPopup)
             {
@@ -4727,13 +4810,21 @@ namespace Mids_Reborn.Forms
                 var PowerListing = false;
                 var bounds = I9Popup.Bounds;
                 if ((hIDX < 0) & (pIDX > -1))
+                {
                     hIDX = MidsContext.Character.CurrentBuild.FindInToonHistory(pIDX);
+                }
+
                 PowerEntry powerEntry = null;
                 if (hIDX > -1)
+                {
                     powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDX];
-                if (!((I9Popup.hIDX != hIDX) | (I9Popup.eIDX != sIDX) | (I9Popup.pIDX != pIDX) |
-                      (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
+                }
+
+                if (!((I9Popup.hIDX != hIDX) | (I9Popup.eIDX != sIDX) | (I9Popup.pIDX != pIDX) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
+                {
                     return;
+                }
+
                 var rectangle = new Rectangle();
                 if ((hIDX > -1) & (sIDX < 0) & (pIDX < 0) & (eSlot == null) & (setIDX < 0))
                 {
@@ -4741,7 +4832,7 @@ namespace Mids_Reborn.Forms
                     var e1 = new Point(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                     if (drawing.WithinPowerBar(rectangle, e1))
                     {
-                        if (powerEntry != null && powerEntry.NIDPower > 0)
+                        if (powerEntry != null && powerEntry.NIDPower > -1)
                             iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIDX, powerEntry.NIDPower);
                         flag = true;
                     }
@@ -4786,6 +4877,11 @@ namespace Mids_Reborn.Forms
                             rectangle = Dilate(drawing.ScaleDown(rectangle), 2);
                             rectangle.X += pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value;
                             rectangle.Y += pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value;
+                        }
+
+                        if (vAlign == VerticalAlignment.Bottom)
+                        {
+                            rectangle.Y -= I9Popup.Height;
                         }
 
                         I9Popup.SetPopup(iPopup);
@@ -5748,7 +5844,7 @@ namespace Mids_Reborn.Forms
 
         private void tsViewTotals_Click(object sender, EventArgs e)
         {
-            FloatTotals(true);
+            FloatTotals(true, MidsContext.Config.UseOldTotalsWindow);
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
@@ -5756,7 +5852,7 @@ namespace Mids_Reborn.Forms
             if (NoUpdate)
                 return;
             MidsContext.Character.Name = txtName.Text;
-            frmTotalsV2.SetTitle(fTotals);
+            frmTotalsV2.SetTitle(fTotals2);
             DisplayName();
         }
 
@@ -5859,6 +5955,11 @@ namespace Mids_Reborn.Forms
             pbDynMode.Refresh();
         }
 
+        private void UpdatePoolsPanelSize()
+        {
+            poolsPanel.Height = Math.Max(32, Size.Height - poolsPanel.Location.Y - 39); // 16 + 22 + 1
+        }
+
         private void UpdateControls(bool ForceComplete = false)
         {
             if (loading) return;
@@ -5958,7 +6059,8 @@ namespace Mids_Reborn.Forms
             llPrimary.PaddingY = 2;
             llSecondary.PaddingY = 2;
             FixPrimarySecondaryHeight();
-            foreach (var llControl in Controls.OfType<ListLabelV3>())
+            foreach (var llControl in Controls.OfType<ListLabelV3>().Concat(poolsPanel.Controls.OfType<ListLabelV3>()))
+            //foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
                 var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
                 llControl.Font = new Font(llControl.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
@@ -6495,7 +6597,8 @@ namespace Mids_Reborn.Forms
         private frmSetFind fSetFinder;
         private frmSetViewer fSets;
         private frmTemp fTemp;
-        private frmTotalsV2 fTotals = null;
+        private frmTotalsV2 fTotals2;
+        private frmTotals fTotals;
         private bool HasSentBack;
         private bool HasSentForwards;
         private bool LastClickPlacedSlot;

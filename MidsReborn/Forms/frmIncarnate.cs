@@ -212,6 +212,7 @@ namespace Mids_Reborn.Forms
                 case "Judgement":
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Cryonic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Ion"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Mighty"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Pyronic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Void"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Vorpal"));
@@ -219,7 +220,7 @@ namespace Mids_Reborn.Forms
                 case "Interface":
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Cognitive"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Degenerative"));
-                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Diagmagnetic"));
+                    newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Diamagnetic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Gravitic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Paralytic"));
                     newPowerList.AddRange(ParseIncarnate(myPowers.ToList(), setName, "Preemptive"));
@@ -709,7 +710,8 @@ namespace Mids_Reborn.Forms
             iList.HoverColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-            iList.Font = new Font("Arial", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+            var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
+            iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
         }
 
         private void VitaeButton_ButtonClicked()

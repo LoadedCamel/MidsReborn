@@ -60,7 +60,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             foreach (var llControl in Controls.OfType<ListLabelV3>())
             {
                 llControl.SuspendRedraw = true;
-                llControl.Font = font;
                 llControl.UpdateTextColors(ListLabelV3.LLItemState.Enabled,
                     MidsContext.Config.RtFont.ColorPowerAvailable);
                 llControl.UpdateTextColors(ListLabelV3.LLItemState.Disabled,
@@ -83,8 +82,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 llControl.HoverColor = MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                     : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-                for (var index = 0; index <= llControl.Items.Length - 1; ++index)
-                    llControl.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
+                var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
+                llControl.Font = new Font(llControl.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
+                foreach (var e in llControl.Items)
+                {
+                    e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+                }
                 llControl.SuspendRedraw = false;
                 llControl.Refresh();
             }
@@ -150,9 +153,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var iPopup = new PopUp.PopupData();
             var index = iPopup.Add();
             iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);
-            iPopup.Sections[index]
-                .Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.",
-                    PopUp.Colors.Text, 0.9f);
+            iPopup.Sections[index].Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.", PopUp.Colors.Text, 0.9f);
             PopInfo.SetPopup(iPopup);
             ChangedScrollFrameContents();
             FillLists();
@@ -395,8 +396,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
 
-            iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PairedBase, FontStyle.Bold,
-                GraphicsUnit.Point);
+            var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
+            iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
         }
 
         private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)

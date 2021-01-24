@@ -10,7 +10,6 @@ namespace mrbBase.Base.Data_Classes
     public class Power : IPower, IComparable
     {
         private bool Contains;
-
         public Power()
         {
             DescLong = string.Empty;
@@ -337,7 +336,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
         public float CastTimeReal { get; set; }
-
+        
         public float ToggleCost
             => !((PowerType == Enums.ePowerType.Toggle) & (ActivatePeriod > 0.0)) ? EndCost : EndCost / ActivatePeriod;
 
@@ -522,6 +521,8 @@ namespace mrbBase.Base.Data_Classes
 
         public bool BoostUsePlayerLevel { get; set; }
 
+        public bool HasProcSlotted { get; set; }
+
         public string FullSetName
         {
             get
@@ -681,12 +682,7 @@ namespace mrbBase.Base.Data_Classes
             var num1 = 0.0f;
             foreach (var effect in Effects)
             {
-                if (effect.EffectType != Enums.eEffectType.Damage ||
-                    MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum &&
-                    !(Math.Abs(effect.Probability) > 0.999000012874603) ||
-                    effect.EffectClass == Enums.eEffectClass.Ignored ||
-                    effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self ||
-                    !(effect.Probability > 0.0) || !effect.CanInclude() || !effect.PvXInclude())
+                if (effect.EffectType != Enums.eEffectType.Damage || MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) || (effect.EffectClass == Enums.eEffectClass.Ignored || effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self) || (!(effect.Probability > 0.0) || !effect.CanInclude()) || !effect.PvXInclude())
                 {
                     continue;
                 }
@@ -704,12 +700,9 @@ namespace mrbBase.Base.Data_Classes
 
                 if (effect.Ticks > 1)
                 {
-                    if (effect.CancelOnMiss &&
-                        MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average &&
-                        effect.Probability < 1.0)
+                    if (effect.CancelOnMiss && MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average && effect.Probability < 1.0)
                     {
-                        num2 *=
-                            (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
+                        num2 *= (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
                     }
                     else
                     {
@@ -773,15 +766,15 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                var num1 = effect.Mag;
+                var effectMag = effect.Mag;
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
-                    num1 *= effect.Probability;
+                    effectMag *= effect.Probability;
                 }
 
                 if (PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
                 {
-                    num1 = (float) (num1 * (double) ActivatePeriod / 10.0);
+                    effectMag = (float) (effectMag * (double) ActivatePeriod / 10.0);
                 }
 
                 switch (MidsContext.Config.DamageMath.ReturnValue)
@@ -789,26 +782,26 @@ namespace mrbBase.Base.Data_Classes
                     case ConfigData.EDamageReturn.DPS:
                         if (PowerType == Enums.ePowerType.Toggle && ActivatePeriod > 0.0)
                         {
-                            num1 /= ActivatePeriod;
+                            effectMag /= ActivatePeriod;
                             break;
                         }
 
                         if (RechargeTime + (double) CastTime > 0.0)
                         {
-                            num1 /= RechargeTime + CastTime;
+                            effectMag /= RechargeTime + CastTime;
                         }
 
                         break;
                     case ConfigData.EDamageReturn.DPA:
                         if (PowerType == Enums.ePowerType.Toggle && ActivatePeriod > 0.0)
                         {
-                            num1 /= ActivatePeriod;
+                            effectMag /= ActivatePeriod;
                             break;
                         }
 
                         if (CastTime > 0.0)
                         {
-                            num1 /= CastTime;
+                            effectMag /= CastTime;
                         }
 
                         break;
@@ -820,26 +813,30 @@ namespace mrbBase.Base.Data_Classes
 
                 if (effect.Ticks != 0)
                 {
-                    var num2 =
-                        !effect.CancelOnMiss ||
-                        MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average ||
-                        (double) effect.Probability >= 1.0
-                            ? effect.Ticks
-                            : (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
+                    float num2;
+                    if (!effect.CancelOnMiss || MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average || effect.Probability >= 1.0)
+                    {
+                        num2 = effect.Ticks;
+                    }
+                    else
+                    {
+                        num2 = (float) ((1.0 - Math.Pow(effect.Probability, effect.Ticks)) / (1.0 - effect.Probability));
+                    }
+
                     var index = 0;
                     if (Math.Abs(numArray2[(int) effect.DamageType, 0] - 0.0f) > 0.01)
                     {
                         index = 1;
                     }
 
-                    numArray2[(int) effect.DamageType, index] = num1;
+                    numArray2[(int) effect.DamageType, index] = effectMag;
                     numArray3[(int) effect.DamageType, index] = num2;
-                    iNum += num1 * num2;
+                    iNum += effectMag * num2;
                 }
                 else
                 {
-                    iNum += num1;
-                    numArray1[(int) effect.DamageType] += num1;
+                    iNum += effectMag;
+                    numArray1[(int) effect.DamageType] += effectMag;
                 }
             }
 
@@ -887,6 +884,7 @@ namespace mrbBase.Base.Data_Classes
 
                 str1 = str1 + " = " + Utilities.FixDP(iNum);
             }
+            
             return str1;
         }
 
@@ -1141,10 +1139,7 @@ namespace mrbBase.Base.Data_Classes
             for (var index = 0; index <= Effects.Length - 1; ++index)
             {
                 var applies = false;
-                if (!((!MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvP)) |
-                      (MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvE))) ||
-                    !(((Effects[index].Duration > 0.0) | (Effects[index].EffectType == Enums.eEffectType.EntCreate)) &
-                      (Effects[index].EffectClass != Enums.eEffectClass.Ignored)))
+                if (!((!MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvP)) | (MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvE))) || !(((Effects[index].Duration > 0.0) | (Effects[index].EffectType == Enums.eEffectType.EntCreate)) &                      (Effects[index].EffectClass != Enums.eEffectClass.Ignored)))
                 {
                     continue;
                 }
@@ -1154,16 +1149,12 @@ namespace mrbBase.Base.Data_Classes
                     applies = true;
                 }
 
-                if ((Effects[index].Probability > (double) probability) & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance))
+                if ((Effects[index].Probability > (double) probability) & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("active", "Defiance")))
                 {
                     applies = true;
                 }
 
 
-                if ((Effects[index].Probability > (double) probability) & !Effects[index].ValidateConditional("active", "Defiance"))
-                {
-                    applies = true;
-                }
                 //write in where active conditionals true clause doesnt coincide with defiance
 
                 if (Effects[index].Buffable & !buffable)
@@ -1171,36 +1162,16 @@ namespace mrbBase.Base.Data_Classes
                     applies = true;
                 }
 
-                if ((Effects[index].SpecialCase != Enums.eSpecialCase.Defiance) & isDefiance)
+                if ((Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("active", "Defiance")) & isDefiance)
                 {
                     applies = true;
                 }
 
-                if (!Effects[index].ValidateConditional("active", "Defiance"))
-                {
-                    applies = true;
-                }
-
-                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
+                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double) duration) & !Effects[index].isEnhancementEffect & (Effects[index].SpecialCase != Enums.eSpecialCase.Defiance || !Effects[index].ValidateConditional("active", "Defiance")) && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
                 {
                     if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
                     {
-                        if (Effects[index].Mag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination)
-                        {
-                            applies = true;
-                        }
-                    }
-                    else
-                    {
-                        applies = true;
-                    }
-                }
-
-                if ((Math.Abs(Effects[index].Probability - probability) < 0.01) & (Effects[index].Duration > (double)duration) & !Effects[index].isEnhancementEffect & !Effects[index].ValidateConditional("active", "Defiance") && (eEffectType != Enums.eEffectType.Mez) | (Effects[index].EffectType == Enums.eEffectType.Mez))
-                {
-                    if ((eEffectType == Enums.eEffectType.Mez) & (Effects[index].EffectType == Enums.eEffectType.Mez))
-                    {
-                        if (Effects[index].Mag > (double)mag || Effects[index].ValidateConditional("active", "Domination"))
+                        if (Effects[index].Mag > (double) mag || Effects[index].SpecialCase == Enums.eSpecialCase.Domination && MidsContext.Character.Domination || Effects[index].ValidateConditional("active", "Domination") && MidsContext.Character.Domination)
                         {
                             applies = true;
                         }
@@ -1233,12 +1204,22 @@ namespace mrbBase.Base.Data_Classes
                     applies = false;
                 }
 
-                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("active", "Domination") ? 1 : 0)) != 0)
+                /*if ((Effects[index].EffectClass > eEffectClass ? 1 : 0) == 0)
+                {
+                    if (Effects[index].SpecialCase == Enums.eSpecialCase.None && !Effects[index].ValidateConditional())
+                    {
+                        applies = false;
+                    }
+                    else
+                    {
+                        applies = true;
+                    }
+                }*/
+                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("active", "Domination") ? 1 : !MidsContext.Character.Domination ? 1 : 0)) != 0)
                 {
                     applies = false;
                 }
 
-                
                 if ((Effects[index].EffectType == Enums.eEffectType.EntCreate) & !isEntCreate &
                     (Effects[index].DelayedTime < 20.0) & (eEffectType != Enums.eEffectType.Mez))
                 {
@@ -1287,7 +1268,15 @@ namespace mrbBase.Base.Data_Classes
                 eEffectType = Effects[index].EffectType;
                 mag = Effects[index].Mag;
                 buffable = Effects[index].Buffable;
-                isDefiance = Effects[index].SpecialCase == Enums.eSpecialCase.Defiance;
+                if (Effects[index].SpecialCase == Enums.eSpecialCase.Defiance || Effects[index].ValidateConditional("active", "Defiance"))
+                {
+                    isDefiance = true;
+                }
+                else
+                {
+                    isDefiance = false;
+                }
+                //isDefiance = Effects[index].SpecialCase == Enums.eSpecialCase.Defiance;
                 isEntCreate = Effects[index].EffectType == Enums.eEffectType.EntCreate;
                 delayTime = (int) Effects[index].DelayedTime;
             }
@@ -1383,6 +1372,7 @@ namespace mrbBase.Base.Data_Classes
         public bool HasResEffects()
         {
             for (var index = 0; index <= Effects.Length - 1; ++index)
+            {
                 if ((Effects[index].EffectType == Enums.eEffectType.Resistance) & (Effects[index].Probability > 0.0) &
                     ((Effects[index].Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None) &
                     (((Effects[index].PvMode != Enums.ePvX.PvP) & !MidsContext.Config.Inc.DisablePvE) |
@@ -1390,6 +1380,20 @@ namespace mrbBase.Base.Data_Classes
                 {
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        public bool HasAttribModEffects()
+        {
+            for (var index = 0; index <= Effects.Length - 1; ++index)
+            {
+                if (Effects[index].EffectType == Enums.eEffectType.ModifyAttrib)
+                {
+                    return true;
+                }
+            }
 
             return false;
         }
@@ -1400,7 +1404,7 @@ namespace mrbBase.Base.Data_Classes
             for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
                 if (!Effects[iIndex].PvXInclude() || !(Effects[iIndex].Probability > 0.0) ||
-                    Effects[iIndex].ETModifies != iEffect || !Effects[iIndex].CanInclude() ||
+                    (Effects[iIndex].ETModifies != iEffect || !Effects[iIndex].CanInclude()) ||
                     Effects[iIndex].EffectType != Enums.eEffectType.Enhancement &&
                     Effects[iIndex].EffectType != Enums.eEffectType.DamageBuff ||
                     Effects[iIndex].Absorbed_Effect &&
@@ -1458,7 +1462,7 @@ namespace mrbBase.Base.Data_Classes
                     Effects[iIndex].EffectType != iEffect ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Special ||
-                    !(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude() ||
+                    (!(Effects[iIndex].DelayedTime <= 5.0) && !includeDelayed || !Effects[iIndex].CanInclude()) ||
                     !Effects[iIndex].PvXInclude())
                 {
                     continue;
@@ -1784,13 +1788,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
         
-        public bool GetEffectStringGrouped(
-            int idEffect,
-            ref string returnString,
-            ref int[] returnMask,
-            bool shortForm,
-            bool simple,
-            bool noMag = false)
+        public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false)
         {
             bool flag;
             if ((idEffect < 0) | (idEffect > Effects.Length - 1))
@@ -2067,6 +2065,7 @@ namespace mrbBase.Base.Data_Classes
                     if (Effects.Length == 4)
                     {
                         for (var index = 0; index <= Effects.Length - 1; ++index)
+                        {
                             if (Effects[index].EffectType == Enums.eEffectType.Enhancement &&
                                 (Effects[index].ETModifies == Enums.eEffectType.SpeedRunning) |
                                 (Effects[index].ETModifies == Enums.eEffectType.SpeedFlying) |
@@ -2075,16 +2074,21 @@ namespace mrbBase.Base.Data_Classes
                             {
                                 ++num;
                             }
+                        }
 
                         if (num == Effects.Length)
                         {
                             array = new int[Effects.Length];
                             for (var index = 0; index <= array.Length - 1; ++index)
+                            {
                                 array[index] = index;
+                            }
+
                             effect.ETModifies = Enums.eEffectType.Slow;
-                            str = shortForm
-                                ? effect.BuildEffectStringShort(noMag, simple)
-                                : effect.BuildEffectString(simple);
+                            if (shortForm)
+                                str = effect.BuildEffectStringShort(noMag, simple);
+                            else
+                                str = effect.BuildEffectString(simple);
                             if (BuffMode != Enums.eBuffMode.Debuff)
                             {
                                 str = str.Replace("Slow", "Movement");
@@ -2326,8 +2330,7 @@ namespace mrbBase.Base.Data_Classes
                         Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
                         if (Effects[array1[index1]].Probability < 1.0)
                         {
-                            Effects[index2].Probability =
-                                Effects[array1[index1]].Probability * Effects[index2].Probability;
+                            Effects[index2].Probability = Effects[array1[index1]].Probability * Effects[index2].Probability;
                         }
                     }
                 }
@@ -2411,7 +2414,7 @@ namespace mrbBase.Base.Data_Classes
                 var effect = Effects[t];
                 var nSummon1 = effect.nSummon;
                 var stacking = 1;
-                if (VariableEnabled && effect.VariableModified && hIdx > -1 && MidsContext.Character != null &&
+                if (VariableEnabled && effect.VariableModified && (hIdx > -1 && MidsContext.Character != null) &&
                     MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
                 {
                     stacking = MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue;
@@ -2586,13 +2589,33 @@ namespace mrbBase.Base.Data_Classes
 
             var iDamage = new bool[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
             for (var index = 0; index <= iSfx.Index.Length - 1; ++index)
+            {
                 iDamage[(int) iPower.Effects[iSfx.Index[index]].DamageType] = true;
-            newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) |
-                         (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity))
+            }
+
+            newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) | (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity))
                 ? Enums.GetGroupedDamage(iDamage, shortForm)
                 : Enums.GetGroupedDefense(iDamage, shortForm);
             return str.Replace("%VALUE%", newValue);
         }
+        /*public static List<string> SplitFXGroupTipL(ref Enums.ShortFX iSfx, ref IPower iPower, bool shortForm)
+        {
+            var str = iPower.Effects[iSfx.Index[0]].BuildEffectString(false, string.Empty, false, true);
+            var newValue = string.Empty;
+            //if (!iPower.Effects[iSfx.Index[0]].isDamage())
+            //{
+            //    return str.Replace("%VALUE%", newValue);
+            //}
+
+            var iDamage = new bool[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
+            for (var index = 0; index <= iSfx.Index.Length - 1; ++index)
+            {
+                iDamage[(int)iPower.Effects[iSfx.Index[index]].DamageType] = true;
+            }
+
+            newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) | (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity)) ? Enums.GetGroupedDamage(iDamage, shortForm) : Enums.GetGroupedDefense(iDamage, shortForm);
+            return str.Replace("%VALUE%", newValue);
+        }*/
 
         private Requirement ImportRequirementString(string iReq)
 

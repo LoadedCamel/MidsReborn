@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
@@ -76,9 +77,9 @@ namespace Mids_Reborn.Forms
             effects.Add(new Enums.sEffect
             {
                 Mode = Enums.eEffMode.FX,
-                Enhance = new Enums.sTwinID{ID = -1, SubID = -1}, 
-                Multiplier = 1f, 
-                Schedule = Enums.eSchedule.A, 
+                Enhance = new Enums.sTwinID { ID = -1, SubID = -1 },
+                Multiplier = 1f,
+                Schedule = Enums.eSchedule.A,
                 FX = (IEffect)frmPowerEffect.myFX.Clone()
             });
             effects[effects.Count - 1].FX.isEnhancementEffect = true;
@@ -131,15 +132,15 @@ namespace Mids_Reborn.Forms
                 if (myEnh.Effect[index].Mode != Enums.eEffMode.Enhancement)
                     continue;
                 ++num1;
-                var id = (Enums.eEnhance) myEnh.Effect[index].Enhance.ID;
+                var id = (Enums.eEnhance)myEnh.Effect[index].Enhance.ID;
                 if (id != Enums.eEnhance.Mez)
                 {
                     if (!string.IsNullOrWhiteSpace(myEnh.Name))
                         myEnh.Name += "/";
-                    myEnh.Name += names1[(int) id];
+                    myEnh.Name += names1[(int)id];
                     if (!string.IsNullOrWhiteSpace(myEnh.ShortName))
                         myEnh.ShortName += "/";
-                    myEnh.ShortName += names2[(int) id];
+                    myEnh.ShortName += names2[(int)id];
                 }
                 else
                 {
@@ -215,7 +216,7 @@ namespace Mids_Reborn.Forms
                 using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
                 if (frmEditPower.ShowDialog() != DialogResult.OK)
                     return;
-                IPower newPower = new Power(frmEditPower.myPower) {IsModified = true};
+                IPower newPower = new Power(frmEditPower.myPower) { IsModified = true };
                 DatabaseAPI.Database.Power[index1] = newPower;
                 if (text == DatabaseAPI.Database.Power[index1].FullName)
                     return;
@@ -226,8 +227,7 @@ namespace Mids_Reborn.Forms
 
                 var num2 = DatabaseAPI.Database.Power[index1].Effects.Length - 1;
                 for (var index2 = 0; index2 <= num2; ++index2)
-                    DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName =
-                        DatabaseAPI.Database.Power[index1].FullName;
+                    DatabaseAPI.Database.Power[index1].Effects[index2].PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
                 var strArray =
                     DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
                 var str1 = "";
@@ -253,7 +253,7 @@ namespace Mids_Reborn.Forms
             using var frmEditPower = new frmEditPower(power);
             if (frmEditPower.ShowDialog() != DialogResult.OK)
                 return;
-            power = new Power(frmEditPower.myPower) {IsModified = true};
+            power = new Power(frmEditPower.myPower) { IsModified = true };
             // could really use structural equality here, but since we don't have it... we'll mark it as modified just because :/
             var num = power.Effects.Length - 1;
             for (var index = 0; index <= num; ++index)
@@ -292,7 +292,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void btnOK_Click(object sender, EventArgs e)
-
         {
             DialogResult = DialogResult.OK;
             Hide();
@@ -350,7 +349,7 @@ namespace Mids_Reborn.Forms
         {
             if (Loading)
                 return;
-            myEnh.MutExID = (Enums.eEnhMutex) cbMutEx.SelectedIndex;
+            myEnh.MutExID = (Enums.eEnhMutex)cbMutEx.SelectedIndex;
         }
 
         private void cbRecipe_SelectedIndexChanged(object sender, EventArgs e)
@@ -375,7 +374,7 @@ namespace Mids_Reborn.Forms
                 return;
             var selectedIndex = lstSelected.SelectedIndex;
             if (myEnh.Effect[selectedIndex].Mode == Enums.eEffMode.Enhancement)
-                myEnh.Effect[selectedIndex].Schedule = (Enums.eSchedule) cbSched.SelectedIndex;
+                myEnh.Effect[selectedIndex].Schedule = (Enums.eSchedule)cbSched.SelectedIndex;
         }
 
         private void cbSet_SelectedIndexChanged(object sender, EventArgs e)
@@ -392,7 +391,7 @@ namespace Mids_Reborn.Forms
         private void cbSubType_SelectedIndexChanged(object sender, EventArgs e)
 
         {
-            myEnh.SubTypeID = (Enums.eSubtype) cbSubType.SelectedIndex;
+            myEnh.SubTypeID = (Enums.eSubtype)cbSubType.SelectedIndex;
         }
 
         private void chkSuperior_CheckedChanged(object sender, EventArgs e)
@@ -438,7 +437,7 @@ namespace Mids_Reborn.Forms
             udMaxLevel.Minimum = udMinLevel.Value;
             udMinLevel.Maximum = udMaxLevel.Value;
             chkUnique.Checked = myEnh.Unique;
-            cbMutEx.SelectedIndex = (int) myEnh.MutExID;
+            cbMutEx.SelectedIndex = (int)myEnh.MutExID;
             chkSuperior.Checked = myEnh.Superior;
             chkProc.Checked = myEnh.IsProc;
             switch (myEnh.TypeID)
@@ -459,7 +458,7 @@ namespace Mids_Reborn.Forms
                     break;
                 case Enums.eType.SpecialO:
                     typeHO.Checked = true;
-                    cbSubType.SelectedIndex = (int) myEnh.SubTypeID;
+                    cbSubType.SelectedIndex = (int)myEnh.SubTypeID;
                     cbSubType.Enabled = true;
                     cbRecipe.Enabled = false;
                     cbRecipe.SelectedIndex = 0;
@@ -550,7 +549,7 @@ namespace Mids_Reborn.Forms
                             break;
                     }
 
-                    cbSched.SelectedIndex = (int) myEnh.Effect[selectedIndex].Schedule;
+                    cbSched.SelectedIndex = (int)myEnh.Effect[selectedIndex].Schedule;
                 }
             }
         }
@@ -684,9 +683,10 @@ namespace Mids_Reborn.Forms
                     {
                         var effect = myEnh.Effect;
                         var index2 = index1;
-                        if ((effect[index2].Mode == Enums.eEffMode.Enhancement) &
-                            (effect[index2].Enhance.SubID == num1))
+                        if ((effect[index2].Mode == Enums.eEffMode.Enhancement) & (effect[index2].Enhance.SubID == num1))
+                        {
                             flag = false;
+                        }
                     }
                 }
 
@@ -710,7 +710,7 @@ namespace Mids_Reborn.Forms
                     effect[index].Enhance.SubID = -1;
                     effect[index].Multiplier = 1f;
                     effect[index].Schedule = Enums.eSchedule.A;
-                    effect[index].FX = (IEffect) frmPowerEffect.myFX.Clone();
+                    effect[index].FX = (IEffect)frmPowerEffect.myFX.Clone();
                 }
             }
 
@@ -725,7 +725,7 @@ namespace Mids_Reborn.Forms
             var eEnhance = Enums.eEnhance.None;
             var flag = true;
             var tSub = -1;
-            var integer = (Enums.eEnhance) Convert.ToInt32(
+            var integer = (Enums.eEnhance)Convert.ToInt32(
                 Enum.Parse(eEnhance.GetType(), lstAvailable.Items[lstAvailable.SelectedIndex].ToString()),
                 CultureInfo.InvariantCulture);
             if (integer == Enums.eEnhance.Mez)
@@ -747,15 +747,13 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                var enh = myEnh;
-                //var sEffectArray =(Enums.sEffect[]) Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
-                var sEffectArray = new Enums.sEffect[myEnh.Effect.Length + 1];
-                Array.Copy(enh.Effect, sEffectArray, myEnh.Effect.Length + 1);
+                IEnhancement enh = myEnh;
+                Enums.sEffect[] sEffectArray = (Enums.sEffect[])Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
                 enh.Effect = sEffectArray;
-                var effect = myEnh.Effect;
-                var index = myEnh.Effect.Length - 1;
+                Enums.sEffect[] effect = myEnh.Effect;
+                int index = myEnh.Effect.Length - 1;
                 effect[index].Mode = Enums.eEffMode.Enhancement;
-                effect[index].Enhance.ID = (int) integer;
+                effect[index].Enhance.ID = (int)integer;
                 effect[index].Enhance.SubID = tSub;
                 effect[index].Multiplier = 1f;
                 effect[index].Schedule = Enhancement.GetSchedule(integer, tSub);
@@ -774,7 +772,7 @@ namespace Mids_Reborn.Forms
             var num1 = names.Length - 1;
             for (var index1 = 1; index1 <= num1; ++index1)
             {
-                var eEnhance2 = (Enums.eEnhance) index1;
+                var eEnhance2 = (Enums.eEnhance)index1;
                 var flag = false;
                 var num2 = myEnh.Effect.Length - 1;
                 for (var index2 = 0; index2 <= num2; ++index2)
@@ -1116,6 +1114,7 @@ namespace Mids_Reborn.Forms
             if (rbModOther.Checked)
             {
                 txtModOther.Enabled = true;
+                txtModOther.Text = $"{myEnh.Effect[selectedIndex].Multiplier}";
                 myEnh.Effect[selectedIndex].Multiplier = Convert.ToSingle(txtModOther.Text);
                 txtModOther.SelectAll();
                 txtModOther.Select();

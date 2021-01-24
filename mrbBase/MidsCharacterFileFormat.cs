@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using mrbBase.Base.Master_Classes;
@@ -9,6 +10,10 @@ namespace mrbBase
 {
     public static class MidsCharacterFileFormat
     {
+
+        private static int DisplayIndex { get; set; } = -1;
+        private static List<PowerEntry> InherentPowers { get; set; } = new List<PowerEntry>();
+
         public enum eLoadReturnCode
         {
             Failure,
@@ -183,8 +188,78 @@ namespace mrbBase
                    "|-------------------------------------------------------------------|";
         }
 
+        private static List<PowerEntry> SortGridPowers(List<PowerEntry> powerList, Enums.eGridType iType)
+        {
+            var tList = powerList.FindAll(x => x.Power.InherentType == iType);
+            var tempList = new PowerEntry[tList.Count];
+            for (var eIndex = 0; eIndex < tList.Count; eIndex++)
+            {
+                var power = tList[eIndex];
+                switch (power.Power.InherentType)
+                {
+                    case Enums.eGridType.Class:
+                        tempList[eIndex] = power;
+                        break;
+                    case Enums.eGridType.Inherent:
+                        switch (power.Power.PowerName)
+                        {
+                            case "Brawl":
+                                tempList[0] = power;
+                                break;
+                            case "Sprint":
+                                tempList[1] = power;
+                                break;
+                            case "Rest":
+                                tempList[2] = power;
+                                break;
+                            case "Swift":
+                                tempList[3] = power;
+                                break;
+                            case "Hurdle":
+                                tempList[4] = power;
+                                break;
+                            case "Health":
+                                tempList[5] = power;
+                                break;
+                            case "Stamina":
+                                tempList[6] = power;
+                                break;
+                        }
+
+                        break;
+                    case Enums.eGridType.Powerset:
+                        tempList[eIndex] = power;
+                        break;
+                    case Enums.eGridType.Power:
+                        tempList[eIndex] = power;
+                        break;
+                    case Enums.eGridType.Prestige:
+                        tempList[eIndex] = power;
+                        break;
+                    case Enums.eGridType.Incarnate:
+                        tempList[eIndex] = power;
+                        break;
+                    case Enums.eGridType.Accolade:
+                        power.Level = 49;
+                        tempList[eIndex] = power;
+                        break;
+                    case Enums.eGridType.Pet:
+                        tempList[eIndex] = power;
+                        break;
+                    case Enums.eGridType.Temp:
+                        tempList[eIndex] = power;
+                        break;
+                }
+            }
+
+            var outList = tempList.ToList();
+            return outList;
+        }
+
         private static bool MxDReadSaveData(ref byte[] buffer, bool silent)
         {
+            InherentPowers = new List<PowerEntry>();
+            DisplayIndex = -1;
             if (buffer.Length < 1)
             {
                 MessageBox.Show("Unable to read data - Empty Buffer.", "ReadSaveData Failed");
@@ -278,6 +353,7 @@ namespace mrbBase
                 foreach (var (i, n) in errors)
                     MessageBox.Show($"Failed to load powerset by name:{n} at {i}", "Powerset load failure");
                 MidsContext.Character.CurrentBuild.LastPower = r.ReadInt32() - 1;
+                var pEntryList = new List<PowerEntry>();
                 var powerCount = r.ReadInt32();
                 try
                 {
@@ -392,27 +468,51 @@ namespace mrbBase
                         var ps = powerEntry1.Power?.GetPowerSet();
                         if (powerIndex < MidsContext.Character.CurrentBuild.Powers.Count)
                         {
-                            if (powerEntry1.Power != null &&
-                                !(!MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen &
-                                  (ps != null && ps.nArchetype > -1 || powerEntry1.Power.GroupName == "Pool")))
+                            if (powerEntry1.Power != null && !(!MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen & (ps != null && ps.nArchetype > -1 || powerEntry1.Power.GroupName == "Pool")))
+                            {
                                 flag5 = !MidsContext.Character.CurrentBuild.Powers[powerIndex].Chosen;
+                            }
                             else
+                            {
                                 continue;
+                            }
                         }
 
                         if (flag5)
-                            MidsContext.Character.CurrentBuild.Powers.Add(powerEntry1);
-                        else if (powerEntry1.Power != null &&
-                                 (ps != null && ps.nArchetype > -1 || powerEntry1.Power.GroupName == "Pool"))
+                        {
+                            if (powerEntry1.Power.InherentType != Enums.eGridType.None)
+                            {
+                                InherentPowers.Add(powerEntry1);
+                            }
+                            
+                            //Console.WriteLine($"{powerEntry1.Power.DisplayName} - {powerEntry1.Power.InherentType}");
+                            //MidsContext.Character.CurrentBuild.Powers.Add(powerEntry1);
+                        }
+                        else if (powerEntry1.Power != null && (ps != null && ps.nArchetype > -1 || powerEntry1.Power.GroupName == "Pool"))
+                        {
                             MidsContext.Character.CurrentBuild.Powers[powerIndex] = powerEntry1;
+                        }
+                    }
+
+                    var newPowerList = new List<PowerEntry>();
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Class));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Inherent));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Powerset));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Power));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Prestige));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Incarnate));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Accolade));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Pet));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Temp));
+                    foreach (var entry in newPowerList)
+                    {
+                        MidsContext.Character.CurrentBuild.Powers.Add(entry);
                     }
                 }
                 catch (Exception ex)
                 {
                     if (!silent)
-                        MessageBox.Show(
-                            "Error reading some power data, will attempt to build character with known data - " +
-                            ex.Message, "ReadSaveData Failed");
+                        MessageBox.Show($"Error reading some power data, will attempt to build character with known data.\r\n{ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
                     return false;
                 }
 
