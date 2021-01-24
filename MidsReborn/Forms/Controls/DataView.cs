@@ -3614,7 +3614,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private string ShortStr(string full, string brief)
         {
-            return info_DataList.Font.Size <= 90f / full.Length ? full : brief;
+            return info_DataList.Font.Size <= 100f / full.Length ? full : brief;
         }
 
         private void SizeRefresh()
