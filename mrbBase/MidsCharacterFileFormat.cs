@@ -240,6 +240,7 @@ namespace mrbBase
                         tempList[eIndex] = power;
                         break;
                     case Enums.eGridType.Accolade:
+                        power.Level = 49;
                         tempList[eIndex] = power;
                         break;
                     case Enums.eGridType.Pet:
