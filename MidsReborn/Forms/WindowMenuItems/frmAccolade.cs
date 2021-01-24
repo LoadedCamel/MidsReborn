@@ -191,7 +191,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 else
                 {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX], 49).StatInclude = true;
+                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX], 0).StatInclude = true;
                     Item.ItemState = ListLabelV3.LLItemState.Selected;
                 }
 
