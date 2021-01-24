@@ -656,7 +656,7 @@ namespace Mids_Reborn.Forms
         {
             if (NoUpdate) return;
             NewToon(false);
-            SetFormHeight();
+            //SetFormHeight();
             //PerformAutoScale();
             SetAncilPoolHeight();
             GetBestDamageValues();
