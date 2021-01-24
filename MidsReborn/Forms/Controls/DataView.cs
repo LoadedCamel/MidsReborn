@@ -2754,7 +2754,7 @@ namespace Mids_Reborn.Forms.Controls
                         Suffix = "%";
                         break;
                     case Enums.eEffectType.Endurance:
-                        if (pBase.Effects[Index[ID]].Mag < 1)
+                        if (pBase.Effects[Index[ID]].Mag < -0.01 && pBase.Effects[Index[ID]].Mag > -1)
                         {
                             temp = $"{pBase.Effects[Index[ID]].Mag:P2}";
                             shortFx.Add(Index[ID], Convert.ToSingle(temp.Replace("%", "")));
