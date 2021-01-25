@@ -74,7 +74,12 @@ namespace Mids_Reborn.Forms
             this.ButtonDefault = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.ButtonOkay = new System.Windows.Forms.Button();
-            this.ctlColorList1 = new ctlColorList();
+            this.ctlColorList1 = new mrbControls.ctlColorList();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.baseDamagebar = new System.Windows.Forms.Button();
+            this.enhDamagebar = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -218,6 +223,7 @@ namespace Mids_Reborn.Forms
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 68.23529F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 31.76471F));
+            this.tableLayoutPanel1.Controls.Add(this.label22, 0, 18);
             this.tableLayoutPanel1.Controls.Add(this.HighlightVillain, 1, 16);
             this.tableLayoutPanel1.Controls.Add(this.DarkTakenVillain, 1, 15);
             this.tableLayoutPanel1.Controls.Add(this.TakenVillain, 1, 14);
@@ -252,6 +258,9 @@ namespace Mids_Reborn.Forms
             this.tableLayoutPanel1.Controls.Add(this.BGColor, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label13, 0, 10);
             this.tableLayoutPanel1.Controls.Add(this.label18, 0, 15);
+            this.tableLayoutPanel1.Controls.Add(this.label21, 0, 17);
+            this.tableLayoutPanel1.Controls.Add(this.baseDamagebar, 1, 17);
+            this.tableLayoutPanel1.Controls.Add(this.enhDamagebar, 1, 18);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(16, 51);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 19;
@@ -598,11 +607,67 @@ namespace Mids_Reborn.Forms
             this.ctlColorList1.Size = new System.Drawing.Size(204, 186);
             this.ctlColorList1.TabIndex = 14;
             // 
+            // label20
+            // 
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(62, 456);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(392, 20);
+            this.label20.TabIndex = 15;
+            this.label20.Text = "Note: Your Dataview/InfoPanel color will be the same as your Dark Taken colors.\r\n" +
+    "\r\n";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label21
+            // 
+            this.label21.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(65, 360);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(105, 14);
+            this.label21.TabIndex = 13;
+            this.label21.Text = "Damage Bar (Base):";
+            // 
+            // label22
+            // 
+            this.label22.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(42, 383);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(128, 14);
+            this.label22.TabIndex = 14;
+            this.label22.Text = "Damage Bar (Enhanced):";
+            // 
+            // baseDamagebar
+            // 
+            this.baseDamagebar.BackColor = System.Drawing.Color.MidnightBlue;
+            this.baseDamagebar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.baseDamagebar.Location = new System.Drawing.Point(176, 360);
+            this.baseDamagebar.Name = "baseDamagebar";
+            this.baseDamagebar.Size = new System.Drawing.Size(75, 14);
+            this.baseDamagebar.TabIndex = 15;
+            this.baseDamagebar.UseVisualStyleBackColor = false;
+            this.baseDamagebar.Click += new System.EventHandler(this.baseDamagebar_Click);
+            // 
+            // enhDamagebar
+            // 
+            this.enhDamagebar.BackColor = System.Drawing.Color.MidnightBlue;
+            this.enhDamagebar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.enhDamagebar.Location = new System.Drawing.Point(176, 381);
+            this.enhDamagebar.Name = "enhDamagebar";
+            this.enhDamagebar.Size = new System.Drawing.Size(75, 14);
+            this.enhDamagebar.TabIndex = 16;
+            this.enhDamagebar.UseVisualStyleBackColor = false;
+            this.enhDamagebar.Click += new System.EventHandler(this.enhDamagebar_Click);
+            // 
             // frmColorOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 507);
+            this.Controls.Add(this.label20);
             this.Controls.Add(this.ctlColorList1);
             this.Controls.Add(this.ButtonOkay);
             this.Controls.Add(this.ButtonCancel);
@@ -668,5 +733,10 @@ namespace Mids_Reborn.Forms
         private Button ButtonCancel;
         private Button ButtonOkay;
         private ctlColorList ctlColorList1;
+        private Label label20;
+        private Label label22;
+        private Label label21;
+        private Button baseDamagebar;
+        private Button enhDamagebar;
     }
 }

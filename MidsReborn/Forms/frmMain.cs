@@ -2686,7 +2686,7 @@ namespace Mids_Reborn.Forms
                 llPool3.Bounds.Y + poolsPanel.Bounds.Y,
                 llPool3.Bounds.Width,
                 llPool3.Bounds.Height);
-            ShowPopup(-1, Item.nIDPower, -1, new Point(), llPool3.Bounds);
+            ShowPopup(-1, Item.nIDPower, -1, new Point(), llBounds);
         }
 
         private void llPrimary_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
@@ -4633,7 +4633,7 @@ namespace Mids_Reborn.Forms
                         : ObjectBounds.Bottom;
                 }
             }
-            else if (true)
+            else
             {
                 y = (int)Math.Round(ObjectBounds.Top + ObjectBounds.Height / 2.0 - I9Popup.Height / 2.0);
                 if (y < 0)
@@ -4662,6 +4662,11 @@ namespace Mids_Reborn.Forms
                     clientSize = ClientSize;
                     x = clientSize.Width - I9Popup.Width;
                 }
+            }
+
+            if (y + I9Popup.Height > ClientSize.Height)
+            {
+                y -= y + I9Popup.Height - ClientSize.Height;
             }
 
             I9Popup.BringToFront();
@@ -4879,12 +4884,19 @@ namespace Mids_Reborn.Forms
                             rectangle.Y += pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value;
                         }
 
+                        I9Popup.SetPopup(iPopup);
+                        //Debug.WriteLine($"rectangle.Y: {rectangle.Y}, I9Popup.Height: {I9Popup.Height}, rectangle.Height: {rectangle.Height} -- frmMain.InnerHeight:{ClientSize.Height - MenuBar.Height}");
+                        //Debug.WriteLine($"rectangle.Bottom: {rectangle.Bottom}, frmMain.Height: {ClientSize.Height - MenuBar.Height}");
+                        //Debug.WriteLine($"Diff: {rectangle.Bottom - (ClientSize.Height - MenuBar.Height)}");
                         if (vAlign == VerticalAlignment.Bottom)
                         {
-                            rectangle.Y -= I9Popup.Height;
+                            rectangle.Y -= rectangle.Height;
                         }
+                        //else if (rectangle.Bottom > ClientSize.Height - MenuBar.Height)
+                        //{
+                        //    rectangle.Y -= rectangle.Bottom - (ClientSize.Height - MenuBar.Height); // I9Popup.Height
+                        //}
 
-                        I9Popup.SetPopup(iPopup);
                         PopUpVisible = true;
                         SetPopupLocation(rectangle, PowerListing, Picker);
                     }

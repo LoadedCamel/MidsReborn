@@ -166,6 +166,22 @@ namespace Mids_Reborn.Forms
             updateColors();
         }
 
+        private void baseDamagebar_Click(object sender, EventArgs e)
+        {
+            colorSelector.Color = _myFs.ColorDamageBarBase;
+            if (colorSelector.ShowDialog(this) == DialogResult.OK)
+                _myFs.ColorDamageBarBase = colorSelector.Color;
+            updateColors();
+        }
+
+        private void enhDamagebar_Click(object sender, EventArgs e)
+        {
+            colorSelector.Color = _myFs.ColorDamageBarEnh;
+            if (colorSelector.ShowDialog(this) == DialogResult.OK)
+                _myFs.ColorDamageBarEnh = colorSelector.Color;
+            updateColors();
+        }
+
         private void OkayButton_Click(object sender, EventArgs e)
         {
             MidsContext.Config.RtFont.Assign(_myFs);
@@ -207,6 +223,9 @@ namespace Mids_Reborn.Forms
             iFs.Assign(MidsContext.Config.RtFont);
             MidsContext.Config.RtFont.Assign(_myFs);
             richTextBox1.BackColor = _myFs.ColorBackgroundHero;
+            ctlColorList1.BackColor = _myFs.ColorBackgroundHero;
+            baseDamagebar.BackColor = _myFs.ColorDamageBarBase;
+            enhDamagebar.BackColor = _myFs.ColorDamageBarEnh;
             MidsContext.Config.RtFont.ColorBackgroundHero = _myFs.ColorPlName;
             MidsContext.Config.RtFont.ColorBackgroundVillain = _myFs.ColorPlSpecial;
             richTextBox1.Rtf = RTF.StartRTF() + RTF.Color(RTF.ElementID.Invention) + RTF.Underline("Invention Name") +
