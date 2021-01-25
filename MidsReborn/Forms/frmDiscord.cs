@@ -130,10 +130,9 @@ namespace Mids_Reborn.Forms
                 if (MidsContext.Config.Registered == 0 && MidsContext.Config.DiscordAuthorized)
                 {
                     clsDiscord.MbRegister();
-                    //clsDiscord.ValidateServers();
                 }
-                //clsOAuth.RequestServerChannels(token?.ToString(), MidsContext.Config.DServerCount);
-                //add servers to list
+                clsDiscord.MbLogin();
+                clsDiscord.ValidateServers();
                 PopulateUserData();
                 PopulateServerData();
                 StatInitializer();

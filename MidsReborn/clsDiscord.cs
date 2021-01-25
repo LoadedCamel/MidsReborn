@@ -263,7 +263,7 @@ namespace Mids_Reborn
             }
             else
             {
-                Console.WriteLine(response.ErrorMessage);
+                MessageBox.Show($"Error Code: {response.StatusCode}\r\nResponse: {response.Content}\r\nRecommendation: Please reach out to the RebornTeam to resolve this issue.", @"MidsBot Error Response");
             }
         }
 
