@@ -2849,7 +2849,9 @@ namespace Mids_Reborn.Forms.Controls
                                  (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.Range))
                         {
                             shortFx.Add(Index[ID], pBase.Effects[Index[ID]].Mag);
-                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag * 100f);
+                            s2.Add(Index[ID], pEnh.Effects[Index[ID]].Mag);
+                            shortFx.Multiply();
+                            s2.Multiply();
                             Tag2.Assign(pEnh.GetEffectMagSum(pBase.Effects[Index[ID]].EffectType, false, onlySelf, onlyTarget, false));
                         }
                         else if (pBase.Effects[Index[ID]].EffectType == Enums.eEffectType.SilentKill)
@@ -3204,12 +3206,16 @@ namespace Mids_Reborn.Forms.Controls
                 info_DataList.Top = Info_txtLarge.Bottom + 4;
             }
             //Controls Dataview Sizing for Info panel.
-            Info_Damage.ColorBackEnd = Color.Black;
-            Info_Damage.ColorBackStart = Color.Black;
-            Info_Damage.ColorBaseEnd = Color.LawnGreen;
-            Info_Damage.ColorBaseStart = Color.Green;
-            Info_Damage.ColorEnhEnd = Color.Crimson;
-            Info_Damage.ColorEnhStart = Color.DarkRed;
+            Info_Damage.ColorBackEnd = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            Info_Damage.ColorBackStart = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            Info_Damage.ColorBaseEnd = MidsContext.Config.RtFont.ColorDamageBarBase;
+            Info_Damage.ColorBaseStart = MidsContext.Config.RtFont.ColorDamageBarBase;
+            Info_Damage.ColorEnhEnd = MidsContext.Config.RtFont.ColorDamageBarEnh;
+            Info_Damage.ColorEnhStart = MidsContext.Config.RtFont.ColorDamageBarEnh;
 
             info_DataList.Height = 104;
             lblDmg.Visible = true;
@@ -3232,23 +3238,61 @@ namespace Mids_Reborn.Forms.Controls
 
         private void SetBackColor()
         {
-            info_Title.BackColor = BackColor;
-            Info_txtLarge.BackColor = BackColor;
-            info_txtSmall.BackColor = BackColor;
-            info_DataList.BackColor = BackColor;
-            Info_Damage.BackColor = BackColor;
-            fx_List1.BackColor = BackColor;
-            fx_List2.BackColor = BackColor;
-            fx_List3.BackColor = BackColor;
-            fx_Title.BackColor = BackColor;
-            total_Misc.BackColor = BackColor;
-            total_Title.BackColor = BackColor;
-            enhListing.BackColor = BackColor;
-            Enh_Title.BackColor = BackColor;
-            enhNameDisp.BackColor = BackColor;
+            info_Title.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            Info_txtLarge.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            info_txtSmall.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            info_DataList.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            Info_Damage.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            fx_List1.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            fx_List2.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            fx_List3.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            fx_Title.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            total_Misc.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            total_Title.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            enhListing.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            Enh_Title.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            enhNameDisp.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
             DoPaint();
-            lblFloat.BackColor = BackColor;
-            lblShrink.BackColor = BackColor;
+            lblFloat.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            lblShrink.BackColor = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            Info_Damage.ColorBackEnd = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
+            Info_Damage.ColorBackStart = VillainColor
+                ? MidsContext.Config.RtFont.ColorBackgroundVillain
+                : MidsContext.Config.RtFont.ColorBackgroundHero;
             info_DataList.Draw();
             Info_Damage.Draw(); //Drawing controls
             fx_List1.Draw();

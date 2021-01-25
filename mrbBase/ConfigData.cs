@@ -643,6 +643,8 @@ namespace mrbBase
             public Color ColorPowerTakenVillain { get; set; }
             public Color ColorPowerTakenDarkVillain { get; set; }
             public Color ColorPowerHighlightVillain { get; set; }
+            public Color ColorDamageBarBase { get; set; }
+            public Color ColorDamageBarEnh { get; set; }
             public List<Color> ColorList { get; set; }
             public bool PairedBold { get; set; }
             public float PairedBase { get; set; }
@@ -673,6 +675,8 @@ namespace mrbBase
                 ColorPowerTakenVillain = iFs.ColorPowerTakenVillain;
                 ColorPowerTakenDarkVillain = iFs.ColorPowerTakenDarkVillain;
                 ColorPowerHighlightVillain = iFs.ColorPowerHighlightVillain;
+                ColorDamageBarBase = iFs.ColorDamageBarBase;
+                ColorDamageBarEnh = iFs.ColorDamageBarEnh;
                 ColorList = iFs.ColorList;
                 PairedBold = iFs.PairedBold;
                 PairedBase = iFs.PairedBase;
@@ -686,7 +690,7 @@ namespace mrbBase
             {
                 RTFBase = 16;
                 RTFBold = true;
-                ColorBackgroundHero = Color.FromArgb(0, 0, 32);
+                ColorBackgroundHero = Color.Black;
                 ColorBackgroundVillain = Color.FromArgb(32, 0, 0);
                 ColorEnhancement = Color.FromArgb(0, byte.MaxValue, 0);
                 ColorFaded = Color.FromArgb(192, 192, 192);
@@ -704,6 +708,8 @@ namespace mrbBase
                 ColorPowerTakenVillain = Color.FromArgb(191, 74, 56);
                 ColorPowerTakenDarkVillain = Color.Maroon;
                 ColorPowerHighlightVillain = Color.FromArgb(96, 64, 64);
+                ColorDamageBarBase = Color.LimeGreen;
+                ColorDamageBarEnh = Color.DarkRed;
                 ColorList = new List<Color>
                 {
                     ColorPowerTakenHero, ColorPowerTakenDarkHero, ColorPowerHighlightHero, ColorPowerTakenVillain,
