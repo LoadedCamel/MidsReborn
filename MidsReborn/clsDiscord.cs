@@ -278,8 +278,9 @@ namespace Mids_Reborn
                 request.AddParameter("username", regName);
                 request.AddParameter("pass_token", pass);
                 var response = client.Execute(request);
-                if (response.Content == "Bad Request" && response.Content == "User already exists")
+                if (response.Content == "Bad Request" || response.Content == "User already exists")
                 {
+                    MessageBox.Show($"Error Code: {response.StatusCode}\r\nResponse: {response.Content}\r\nRecommendation: Please reach out to the RebornTeam to resolve this issue.", @"MidsBot Error Response");
                     return;
                 }
 
@@ -299,7 +300,7 @@ namespace Mids_Reborn
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.");
             }
 
         }
@@ -315,6 +316,7 @@ namespace Mids_Reborn
                 var response = client.Execute(request);
                 if (response.Content == "User or Pass is incorrect" || response.Content == "Bad Request")
                 {
+                    MessageBox.Show($"Error Code: {response.StatusCode}\r\nResponse: {response.Content}\r\nRecommendation: Please reach out to the RebornTeam to resolve this issue.", @"MidsBot Error Response");
                     return;
                 }
 
@@ -331,7 +333,7 @@ namespace Mids_Reborn
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.");
             }
         }
 
@@ -349,14 +351,18 @@ namespace Mids_Reborn
                     MidsContext.ConfigSp.ServerList
                 });
                 var response = client.Execute(request);
-
+                if (response.Content == "Bad Request")
+                {
+                    MessageBox.Show($"Error Code: {response.StatusCode}\r\nResponse: {response.Content}\r\nRecommendation: Please reach out to the RebornTeam to resolve this issue.", @"MidsBot Error Response");
+                    return;
+                }
                 var jValidatedServers = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(response.Content);
 
                 MidsContext.ConfigSp.ValidatedServers = jValidatedServers;
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.");
             }
         }
     }
