@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEnhEdit : Form
     {
+        private frmBusy _bFrm;
+
         public frmEnhEdit()
         {
             Load += frmEnhEdit_Load;
@@ -192,11 +195,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvEnh.SelectedIndices.Count <= 0)
                 return;
-            Console.WriteLine(lvEnh.SelectedItems[0].SubItems[6].Text);
+            //Console.WriteLine(lvEnh.SelectedItems[0].SubItems[6].Text);
             var selectedIndex = DatabaseAPI.GetEnhancementByUIDName(lvEnh.SelectedItems[0].SubItems[5].Text);
             //var selectedIndex = DatabaseAPI.GetEnhancementByName(lvEnh.SelectedItems[0].SubItems[6].Text);
             using var frmEnhData = new frmEnhData(ref DatabaseAPI.Database.Enhancements[selectedIndex], 0);
-            var num = (int)frmEnhData.ShowDialog();
+            frmEnhData.ShowDialog();
             if (frmEnhData.DialogResult != DialogResult.OK)
                 return;
             var newEnhancement = new Enhancement(frmEnhData.myEnh) { IsModified = true };
@@ -205,22 +208,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateListItem(selectedIndex);
         }
 
-        private static void BusyHide()
+        private void BusyHide()
         {
-            using var bFrm = new frmBusy();
-            bFrm.Close();
+            _bFrm.Close();
         }
 
         private void BusyMsg(string sMessage)
         {
-            using var bFrm = new frmBusy();
-            bFrm.Show(this);
-            bFrm.SetMessage(sMessage);
+            _bFrm.SetMessage(sMessage);
+            _bFrm.Show(this);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            BusyMsg("Saving please wait...");
+            BusyMsg("Saving, please wait...");
             I9Gfx.LoadEnhancements();
             foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
             Array.Sort(DatabaseAPI.Database.Power);
@@ -323,6 +324,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmEnhEdit_Load(object sender, EventArgs e)
         {
+            _bFrm = new frmBusy();
             Show();
             Refresh();
             DisplayList();
@@ -341,10 +343,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvEnh_DoubleClick(object sender, EventArgs e)
         {
             btnEdit_Click(RuntimeHelpers.GetObjectValue(sender), e);
-        }
-
-        private void lvEnh_SelectedIndexChanged(object sender, EventArgs e)
-        {
         }
 
         private void NoReload_CheckedChanged(object sender, EventArgs e)

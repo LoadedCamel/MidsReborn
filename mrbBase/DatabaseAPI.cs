@@ -833,6 +833,9 @@ namespace mrbBase
 
         public static int GetEnhancementByUIDName(string iName)
         {
+            // Artillery set still use its old name for the UIDs.
+            if (iName.Contains("Artillery")) iName = iName.Replace("Artillery", "Shrapnel");
+
             return Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
         }
 

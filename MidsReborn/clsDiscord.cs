@@ -300,7 +300,7 @@ namespace Mids_Reborn
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.");
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.", @"Registration Method Error");
             }
 
         }
@@ -333,7 +333,7 @@ namespace Mids_Reborn
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.");
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.", @"Login Method Error");
             }
         }
 
@@ -362,7 +362,7 @@ namespace Mids_Reborn
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.");
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}\r\n\r\nIf you received this error, please reach out to the RebornTeam.", @"Server Validation Method Error");
             }
         }
     }
