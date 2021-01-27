@@ -131,8 +131,6 @@ namespace Mids_Reborn.Forms
                 {
                     clsDiscord.MbRegister();
                 }
-                clsDiscord.MbLogin();
-                clsDiscord.ValidateServers();
                 PopulateUserData();
                 PopulateServerData();
                 StatInitializer();
@@ -176,6 +174,7 @@ namespace Mids_Reborn.Forms
 
         private void PopulateServerData()
         {
+            clsDiscord.MbLogin();
             foreach (var kvp in MidsContext.ConfigSp.ValidatedServers)
             {
                 ValidServers.Add(new ValidServer { Name = kvp.Key, Channels = kvp.Value });
