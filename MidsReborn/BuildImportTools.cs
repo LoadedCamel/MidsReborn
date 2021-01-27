@@ -311,7 +311,8 @@ namespace Mids_Reborn
                 else if (m2.Success)
                 {
                     // Empty slot
-                    e = new RawEnhData() {
+                    e = new RawEnhData
+                    {
                         InternalName = "Empty",
                         Level = 0,
                         Boosters = 0,
