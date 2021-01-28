@@ -3,8 +3,10 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security.AccessControl;
 using System.Threading;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.UpdateSystem;
@@ -44,11 +46,13 @@ namespace Mids_Reborn.Forms
             thread = new Thread(() =>
             {
                 var client = new WebClient();
+                TempFile = $"{Path.GetTempPath()}\\MidsTemp\\{VersionText}.zip";
+                if (File.Exists(TempFile)) File.Delete(TempFile);
+
                 client.DownloadProgressChanged += Client_DownloadProgressChanged;
                 client.DownloadFileCompleted += Client_DownloadFileCompleted;
                 UpdateFile = new Uri($"{Path.GetDirectoryName(MidsContext.Config.UpdatePath)?.Replace("https:\\", "https://").Replace("\\", "/")}/{VersionText}.zip");
                 Directory.CreateDirectory($"{Path.GetTempPath()}\\MidsTemp\\");
-                TempFile = $"{Path.GetTempPath()}\\MidsTemp\\{VersionText}.zip";
                 client.DownloadFileAsync(UpdateFile, TempFile);
             });
             thread.Start();
@@ -83,20 +87,100 @@ namespace Mids_Reborn.Forms
             if (DLComplete) InstallUpdate(Type);
         }
 
+        // https://stackoverflow.com/a/1281638
+        private bool HasWritePermissionOnDir(string path)
+        {
+            var writeAllow = false;
+            var writeDeny = false;
+            var accessControlList = Directory.GetAccessControl(path);
+            var accessRules = accessControlList?.GetAccessRules(true, true,
+                typeof(System.Security.Principal.SecurityIdentifier));
+            if (accessRules == null) return false;
+
+            foreach (FileSystemAccessRule rule in accessRules)
+            {
+                if ((FileSystemRights.Write & rule.FileSystemRights) != FileSystemRights.Write) continue;
+
+                if (rule.AccessControlType == AccessControlType.Allow)
+                {
+                    writeAllow = true;
+                }
+                else if (rule.AccessControlType == AccessControlType.Deny)
+                {
+                    writeDeny = true;
+                }
+            }
+
+            return writeAllow && !writeDeny;
+        }
+
+        private (int returnCode, string msg) SafeCreateBackup(string filename, bool overwrite=true)
+        {
+            var backupName = $"{filename}.bak";
+            var ofExists = File.Exists(filename);
+            var bfExists = File.Exists(backupName);
+
+            if (ofExists & !bfExists)
+            {
+                File.Move(filename, backupName);
+                return (returnCode: 0, msg: "");
+            }
+
+            if (!ofExists)
+            {
+                return (returnCode: -1, msg: $"{Path.GetFileName(filename)} backup cannot be created because this file cannot be reached.");
+            }
+
+            if (!overwrite)
+            {
+                return (returnCode: -2, msg: $"{Path.GetFileName(filename)} backup file already exists (won't overwrite).");
+            }
+
+            File.Delete(backupName);
+            File.Move(filename, backupName);
+
+            return (returnCode: 0, msg: "");
+        }
+
+        private bool SafeCreateBackupWMsg(string filename)
+        {
+            var (returnCode, msg) = SafeCreateBackup(filename);
+            if (returnCode >= 0) return true;
+
+            MessageBox.Show(
+                $"Cannot create backup file for {Path.GetFileName(filename)}.\r\n{msg}",
+                "Dang", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            return false;
+        }
+
         private void InstallUpdate(string updateType)
         {
-            var asmLOC = Assembly.GetExecutingAssembly().Location;
-            var dirLOC = $"{Directory.GetParent(asmLOC)}";
+            var asmLoc = Assembly.GetExecutingAssembly().Location;
+            var dirLoc = $"{Directory.GetParent(asmLoc)}";
+            if (!HasWritePermissionOnDir(dirLoc))
+            {
+                MessageBox.Show(
+                    $"Cannot start update process: no write permission on Mids Reborn install folder.\r\n({dirLoc})",
+                    "Dang", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+                Close();
+                return;
+            }
+
             //ctlProgressBar2.Value = 0;
             switch (updateType)
             {
                 case "App":
                     //ctlProgressBar2.StatusText = $"Installing: Mids {VersionText}";
-                    foreach (var filename in Directory.GetFiles(dirLOC, "*.dll"))
-                        File.Move(filename, $"{filename}.bak");
+                    foreach (var filename in Directory.GetFiles(dirLoc, "*.dll").Append(asmLoc))
+                    {
+                        if (SafeCreateBackupWMsg(filename)) continue;
+                        
+                        Close();
+                        return;
+                    }
 
-                    File.Move(Assembly.GetExecutingAssembly().Location,
-                        $"{Assembly.GetExecutingAssembly().Location}.bak");
                     break;
                 case "Database":
                     //ctlProgressBar2.StatusText = $"Installing: {updateType} {VersionText}";
