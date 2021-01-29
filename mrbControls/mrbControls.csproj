@@ -200,6 +200,10 @@
     <Compile Include="ctlLayeredBar.Designer.cs">
       <DependentUpon>ctlLayeredBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="ctlLayeredBarPb.cs" />
+    <Compile Include="ctlLayeredBarPb.Designer.cs">
+      <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ctlCombo.resx">
@@ -211,6 +215,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ctlLayeredBar.resx">
       <DependentUpon>ctlLayeredBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlLayeredBarPb.resx">
+      <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ctlLockedTextBox.resx">
       <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
