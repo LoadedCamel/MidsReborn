@@ -3707,6 +3707,7 @@
       "LongName": "Touch of Death: Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 95,
       "Name": "Chance of Damage(Negative)",
       "ShortName": "Dam%",
@@ -4228,6 +4229,7 @@
       "LongName": "Mako's Bite: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 107,
       "Name": "Chance of Damage(Lethal)",
       "ShortName": "Dam%",
@@ -4872,6 +4874,7 @@
       "LongName": "Scirocco's Dervish: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 123,
       "Name": "Chance of Damage(Lethal)",
       "ShortName": "Dam%",
@@ -7499,6 +7502,7 @@
       "LongName": "Positron's Blast: Accuracy/Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 184,
       "Name": "Chance of Damage(Energy)",
       "ShortName": "Dam%",
@@ -8679,6 +8683,7 @@
       "LongName": "Sting of the Manticore: Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 212,
       "Name": "Chance of Damage(Toxic)",
       "ShortName": "Dam%",
@@ -14716,6 +14721,7 @@
       "LongName": "Neuronic Shutdown: Accuracy/Hold/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 353,
       "Name": "Chance of Damage(Psionic)",
       "ShortName": "Dam%",
@@ -15213,6 +15219,7 @@
       "LongName": "Ghost Widow's Embrace: Accuracy/Hold/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 365,
       "Name": "Chance of Damage(Psionic)",
       "ShortName": "Dam%",
@@ -17127,6 +17134,7 @@
       "LongName": "Trap of the Hunter: Accuracy/Immobilize/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 411,
       "Name": "Chance of Damage(Lethal)",
       "ShortName": "Dam%",
@@ -17780,6 +17788,7 @@
       "LongName": "Impeded Swiftness: Endurance/Recharge/Slow"
     },
     {
+      "IsModified": true,
       "StaticIndex": 422,
       "Name": "Chance of Damage(Smashing)",
       "ShortName": "Dam%",
@@ -20387,6 +20396,7 @@
       "LongName": "Glimpse of the Abyss: Accuracy/Fear/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 480,
       "Name": "Chance of Damage(Psionic)",
       "ShortName": "Dam%",
@@ -20848,6 +20858,7 @@
       "LongName": "Cacophany: Accuracy/Confused/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 491,
       "Name": "Chance of Damage(Energy)",
       "ShortName": "Dam%",
@@ -21345,6 +21356,7 @@
       "LongName": "Malaise's Illusions: Accuracy/Confused/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 503,
       "Name": "Chance of Damage(Psionic)",
       "ShortName": "Dam%",
@@ -24010,6 +24022,7 @@
       "LongName": "Hecatomb: Damage/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 555,
       "Name": "Chance of Damage(Negative)",
       "ShortName": "Dam%",
@@ -25381,6 +25394,7 @@
       "LongName": "Unbreakable Constraint: Endurance/Hold"
     },
     {
+      "IsModified": true,
       "StaticIndex": 585,
       "Name": "Chance for Smashing Damage",
       "ShortName": "Dam%",
@@ -27219,6 +27233,7 @@
       "Schedule": 4
     },
     {
+      "IsModified": true,
       "StaticIndex": 627,
       "Name": "Chance for Psi Damage",
       "ShortName": "Dam%",
@@ -27492,6 +27507,7 @@
       "Schedule": 4
     },
     {
+      "IsModified": true,
       "StaticIndex": 633,
       "Name": "Chance for Smashing Damage",
       "ShortName": "Dam%",
@@ -31177,6 +31193,7 @@
       "LongName": "Touch of Lady Grey: Defense Debuff/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 717,
       "Name": "Chance for Negative Damage",
       "ShortName": "%Dam",
@@ -32371,6 +32388,7 @@
       "LongName": "Cloud Senses: Accuracy/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 744,
       "Name": "Chance for Negative Energy Damage",
       "ShortName": "%Dam",
@@ -32646,6 +32664,7 @@
       "LongName": "Eradication: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 750,
       "Name": "Chance for Energy Damage",
       "ShortName": "%Dam",
@@ -33419,6 +33438,7 @@
       "LongName": "Obliteration: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 768,
       "Name": "Chance for Smashing Damage",
       "ShortName": "%Dam",
@@ -33690,6 +33710,7 @@
       "LongName": "Shield Breaker: Accuracy/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 774,
       "Name": "Chance for Lethal Damage",
       "ShortName": "%Dam",
@@ -34671,6 +34692,7 @@
       "LongName": "Touch of the Nictus: Accuracy/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 792,
       "Name": "Chance for Negative Energy Damage",
       "ShortName": "%Dam",
@@ -35299,6 +35321,7 @@
       "LongName": "Panacea: +Hit Points/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 802,
       "Name": "Chance of Damage(Lethal)",
       "ShortName": "Dam%",
@@ -35590,6 +35613,7 @@
       "LongName": "Gladiator's Strike: Accuracy/Damage/End/Rech"
     },
     {
+      "IsModified": true,
       "StaticIndex": 808,
       "Name": "Chance for Smashing Damage",
       "ShortName": "%Dam",
@@ -35793,6 +35817,7 @@
       "LongName": "Gladiator's Javelin: Accuracy/Damage/End/Rech"
     },
     {
+      "IsModified": true,
       "StaticIndex": 812,
       "Name": "Chance of Damage(Toxic)",
       "ShortName": "Dam%",
@@ -36880,6 +36905,7 @@
       "LongName": "Gladiator's Net: Accuracy/Endurance/Recharge/Hold"
     },
     {
+      "IsModified": true,
       "StaticIndex": 837,
       "Name": "Chance of Damage(Lethal)",
       "ShortName": "Dam%",
@@ -37754,6 +37780,7 @@
       "LongName": "Blaster's Wrath: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 855,
       "Name": "Recharge/Chance for Fire Damage",
       "ShortName": "Rchg/Dam%",
@@ -38545,6 +38572,7 @@
       "LongName": "Will of the Controller: Accuracy/Control Duration/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 867,
       "Name": "Recharge/Chance for Psionic Damage",
       "ShortName": "Rchg/Dam%",
@@ -38901,6 +38929,7 @@
       "LongName": "Malice of the Corruptor: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 873,
       "Name": "Recharge/Chance for Negative Energy Damage",
       "ShortName": "Rchg/Dmg%",
@@ -41890,6 +41919,7 @@
       "LongName": "Superior Blaster's Wrath: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 927,
       "Name": "Recharge/Chance for Fire Damage",
       "ShortName": "Rchg/Dmg%",
@@ -42643,6 +42673,7 @@
       "LongName": "Superior Will of the Controller: Accuracy/Control Duration/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 939,
       "Name": "Recharge/Chance for Psionic Damage",
       "ShortName": "Rchg/Dmg%",
@@ -42954,6 +42985,7 @@
       "LongName": "Superior Malice of the Corruptor: Accuracy/Damage/Endurance/Recharge"
     },
     {
+      "IsModified": true,
       "StaticIndex": 945,
       "Name": "Recharge/Chance for Negative Energy Damage",
       "ShortName": "Rchg/Dmg%",
@@ -56329,7 +56361,6 @@
       "LongName": "Winter's Bite: Damage/Endurance/Accuracy/RechargeTime"
     },
     {
-      "IsModified": true,
       "StaticIndex": 1191,
       "Name": "Recharge/Chance for -Speed & -Recharge",
       "ShortName": "Rchg/SlowProc",
@@ -60677,6 +60708,7 @@
       "LongName": "Bombardment: Accuracy/Damage/Recharge/Endurance"
     },
     {
+      "IsModified": true,
       "StaticIndex": 1282,
       "Name": "Chance for Fire Damage",
       "ShortName": "+FireDmg",
