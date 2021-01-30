@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
+using mrbBase.Base.Display;
 
 namespace mrbControls
 {
@@ -25,11 +27,15 @@ namespace mrbControls
         private float _MaximumValue = 100;
         private string _Tip = "";
         private string _Group = "";
+        private Graphics Gfx;
+        private ExtendedBitmap BxBuffer;
         // https://stackoverflow.com/a/34299931
         // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
         protected override Size DefaultSize => new Size(277, 13);
         public new Color DefaultBackColor => Color.Transparent;
         private List<Color> HighlightColors;
+        public delegate void BarEventHandler(object sender);
+        public event BarEventHandler BarHover;
 
         public ctlLayeredBarPb()
         {
@@ -147,10 +153,24 @@ namespace mrbControls
             return (int)Math.Floor(Width / Math.Abs(_MaximumValue - _MinimumValue) * (value - _MinimumValue));
         }
 
-        public void Draw()
+        public void Draw(bool highlighted = false)
         {
             var sortedList = new List<BarData>();
-            sortedList.AddRange(ListValues.Where(e => e.Enabled & e.Value > _MinimumValue));
+            if (!highlighted)
+            {
+                sortedList.AddRange(ListValues.Where(e => e.Enabled & e.Value > _MinimumValue));
+            }
+            else
+            {
+                sortedList.AddRange(ListValues);
+                for (var i = 0; i < sortedList.Count; i++)
+                {
+                    sortedList[i].Color = HighlightColors[i];
+                }
+
+                sortedList = (List<BarData>) sortedList.Where(e => e.Enabled & e.Value > _MinimumValue);
+            }
+
             if (sortedList.Count == 0) return;
 
             sortedList.Sort((a, b) => -a.Value.CompareTo(b.Value));
@@ -162,9 +182,61 @@ namespace mrbControls
                 Value = Value2Pixels(e.Value)
             });
 
+            Gfx = null;
+            Gfx = CreateGraphics(); 
+            BxBuffer = new ExtendedBitmap(Size);
+            if (BxBuffer.Graphics == null) return;
 
+            BxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            BxBuffer.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 0, 0)), 0, 0, BxBuffer.Size.Width, BxBuffer.Size.Height);
 
+            var outlineBrush = new SolidBrush(Color.Black);
+            foreach (var e in sortedList)
+            {
+                // Draw outline
+                BxBuffer.Graphics.FillRectangle(outlineBrush, -1, -1, e.Value + 1, BxBuffer.Size.Height + 1);
+
+                // Draw bar
+                BxBuffer.Graphics.FillRectangle(new SolidBrush(e.Color), 0, 0, e.Value, BxBuffer.Size.Height);
+            }
+
+            Gfx.DrawImageUnscaled(BxBuffer.Bitmap, 0, 0);
         }
+        public void SetTip(string iTip)
+        {
+            TTip.SetToolTip(this, iTip);
+        }
+
+        #region Event handlers
+        private void ctlLayeredBarPb_Paint(object sender, PaintEventArgs e)
+        {
+            if (BxBuffer != null)
+            {
+                e.Graphics.DrawImage(BxBuffer.Bitmap, e.ClipRectangle.Left, e.ClipRectangle.Top, e.ClipRectangle, GraphicsUnit.Pixel);
+            }
+        }
+
+        private void ctlLayeredBarPb_Resize(object sender, EventArgs e)
+        {
+            Draw();
+        }
+
+        private void ctlLayeredBarPb_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Draw(true);
+        }
+
+        private void ctlLayeredBarPb_MouseMove(object sender, MouseEventArgs e)
+        {
+            BarHover?.Invoke(sender);
+        }
+
+        private void ctlLayeredBarPb_MouseLeave(object sender, EventArgs e)
+        {
+            TTip.SetToolTip(this, "");
+            Draw();
+        }
+        #endregion
 
         #region HLSColor sub-class
         private class HLSColor
