@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace mrbControls
 
     public partial class ctlLayeredBarPb : UserControl
     {
-        public List<BarData> ListValues;
+        private List<BarData> ListValues;
         private float _MinimumValue;
         private float _MaximumValue = 100;
         private string _Tip = "";
@@ -43,7 +44,8 @@ namespace mrbControls
                 ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.OptimizedDoubleBuffer |
                 ControlStyles.ResizeRedraw |
-                ControlStyles.UserPaint,
+                ControlStyles.UserPaint |
+                ControlStyles.SupportsTransparentBackColor,
                 true);
             ListValues = new List<BarData>();
             HighlightColors = new List<Color>();
@@ -52,7 +54,7 @@ namespace mrbControls
 
         private void AppendVariable(string name, Color color, bool enabled = true, float value = 0)
         {
-            ListValues = (List<BarData>) ListValues.Append(new BarData {FriendlyName = name, Color = color, Enabled = enabled, Value = value});
+            ListValues = ListValues.Append(new BarData {FriendlyName = name, Color = color, Enabled = enabled, Value = value}).ToList();
         }
 
         public void AssignNames(List<string> names)
@@ -79,8 +81,17 @@ namespace mrbControls
         {
             for (var i=0 ; i<values.Count; i++)
             {
-                ListValues[i].Value = values[i];
+                try
+                {
+                    ListValues[i].Value = values[i];
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{ex.Message}\r\nControl name: {Name}\r\nListValues.Count: {ListValues.Count}, values.Count: {values.Count}");
+                }
             }
+
+            Draw();
         }
 
         public void AssignValues(List<(string name, float value)> listValues)
@@ -90,6 +101,8 @@ namespace mrbControls
                 var idx = ListValues.FindIndex(e => e.FriendlyName == listValues[i].name);
                 ListValues[idx].Value = listValues[i].value;
             }
+
+            Draw();
         }
 
         public void AssignZero()
@@ -98,16 +111,23 @@ namespace mrbControls
             {
                 e.Value = 0;
             }
+
+            Draw();
         }
 
         private void SetHighlightColors()
         {
             HighlightColors.Clear();
-            for (var i=0; i<ListValues.Count; i++)
+            foreach (var e in ListValues)
             {
-                var hlsColor = HLSColor.FromRgb(ListValues[i].Color);
-                HighlightColors[i] = HLSColor.ToRgb(hlsColor.H, Math.Min(1, hlsColor.L + 0.2), hlsColor.S);
+                var hlsColor = HLSColor.FromRgb(e.Color);
+                HighlightColors = HighlightColors.Append(HLSColor.ToRgb(hlsColor.H, Math.Min(1, hlsColor.L + 0.2), hlsColor.S)).ToList();
             }
+        }
+
+        public Dictionary<string, float> GetValues()
+        {
+            return ListValues.ToDictionary(e => e.FriendlyName, e => e.Value);
         }
 
         #region Properties
@@ -168,36 +188,57 @@ namespace mrbControls
                     sortedList[i].Color = HighlightColors[i];
                 }
 
-                sortedList = (List<BarData>) sortedList.Where(e => e.Enabled & e.Value > _MinimumValue);
+                sortedList = sortedList.Where(e => e.Enabled & e.Value > _MinimumValue).ToList();
             }
 
-            if (sortedList.Count == 0) return;
-
-            sortedList.Sort((a, b) => -a.Value.CompareTo(b.Value));
-            sortedList = (List<BarData>) sortedList.Select(e => new BarData
-            {
-                FriendlyName = e.FriendlyName,
-                Color = e.Color,
-                Enabled = e.Enabled,
-                Value = Value2Pixels(e.Value)
-            });
-
             Gfx = null;
-            Gfx = CreateGraphics(); 
+            Gfx = CreateGraphics();
             BxBuffer = new ExtendedBitmap(Size);
             if (BxBuffer.Graphics == null) return;
 
             BxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            BxBuffer.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 0, 0)), 0, 0, BxBuffer.Size.Width, BxBuffer.Size.Height);
+            var bgColor = highlighted
+                ? Color.FromArgb(90, 128, 128, 128)
+                : Color.FromArgb(0, 0, 0, 0);
+            BxBuffer.Graphics.FillRectangle(new SolidBrush(bgColor), 0, 0, BxBuffer.Size.Width, BxBuffer.Size.Height);
 
-            var outlineBrush = new SolidBrush(Color.Black);
-            foreach (var e in sortedList)
+            if (sortedList.Count > 0)
             {
-                // Draw outline
-                BxBuffer.Graphics.FillRectangle(outlineBrush, -1, -1, e.Value + 1, BxBuffer.Size.Height + 1);
 
-                // Draw bar
-                BxBuffer.Graphics.FillRectangle(new SolidBrush(e.Color), 0, 0, e.Value, BxBuffer.Size.Height);
+                sortedList.Sort((a, b) => -a.Value.CompareTo(b.Value));
+                sortedList = sortedList.Select(e => new BarData
+                {
+                    FriendlyName = e.FriendlyName,
+                    Color = e.Color,
+                    Enabled = e.Enabled,
+                    Value = Value2Pixels(e.Value)
+                }).ToList();
+
+                var values = GetValues();
+                var vp = Value2Pixels(values["value"]);
+
+                // Draw bars
+                for (var i = 0; i < sortedList.Count; i++)
+                {
+                    if (sortedList[i].FriendlyName == "base" &&
+                        Math.Abs(sortedList[i].Value - vp) < float.Epsilon) continue;
+                    if (sortedList[i].FriendlyName == "uncapped" &&
+                        Math.Abs(sortedList[i].Value - vp) < float.Epsilon) continue;
+                    BxBuffer.Graphics.FillRectangle(new SolidBrush(sortedList[i].Color), 0, 0, sortedList[i].Value,
+                        BxBuffer.Size.Height);
+                }
+
+                // Draw outlines
+                var outlinePen = new Pen(new SolidBrush(Color.Black), 1);
+                for (var i = 0; i < sortedList.Count; i++)
+                {
+                    if (sortedList[i].FriendlyName == "base" &&
+                        Math.Abs(sortedList[i].Value - vp) < float.Epsilon) continue;
+                    if (sortedList[i].FriendlyName == "uncapped" &&
+                        Math.Abs(sortedList[i].Value - vp) < float.Epsilon) continue;
+                    BxBuffer.Graphics.DrawLine(outlinePen, sortedList[i].Value, 0, sortedList[i].Value,
+                        BxBuffer.Size.Height);
+                }
             }
 
             Gfx.DrawImageUnscaled(BxBuffer.Bitmap, 0, 0);
@@ -221,7 +262,7 @@ namespace mrbControls
             Draw();
         }
 
-        private void ctlLayeredBarPb_MouseEnter(object sender, MouseEventArgs e)
+        private void ctlLayeredBarPb_MouseEnter(object sender, EventArgs e)
         {
             Draw(true);
         }
@@ -233,7 +274,9 @@ namespace mrbControls
 
         private void ctlLayeredBarPb_MouseLeave(object sender, EventArgs e)
         {
+            var target = sender as ctlLayeredBarPb;
             TTip.SetToolTip(this, "");
+            Invalidate();
             Draw();
         }
         #endregion

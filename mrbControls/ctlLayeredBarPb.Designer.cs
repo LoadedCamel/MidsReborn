@@ -62,7 +62,7 @@ namespace mrbControls
             this.Name = "ctlLayeredBarPb";
             this.Size = new System.Drawing.Size(277, 13);
             this.Padding = new Padding(0, 0, 0, 0);
-            this.MouseEnter += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBarPb_MouseEnter);
+            this.MouseEnter += new System.EventHandler(this.ctlLayeredBarPb_MouseEnter);
             this.MouseLeave += new System.EventHandler(this.ctlLayeredBarPb_MouseLeave);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ctlLayeredBarPb_MouseMove);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ctlLayeredBarPb_Paint);

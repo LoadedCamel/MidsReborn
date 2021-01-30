@@ -42,9 +42,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lv23 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.lv22 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar21 = new mrbControls.ctlLayeredBar();
-            this.bar23 = new mrbControls.ctlLayeredBar();
-            this.bar22 = new mrbControls.ctlLayeredBar();
+            this.bar21 = new mrbControls.ctlLayeredBarPb();
+            this.bar23 = new mrbControls.ctlLayeredBarPb();
+            this.bar22 = new mrbControls.ctlLayeredBarPb();
             this.label45 = new System.Windows.Forms.Label();
             this.label46 = new System.Windows.Forms.Label();
             this.label47 = new System.Windows.Forms.Label();
@@ -56,8 +56,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.gradientPanel3 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.lv20 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar19 = new mrbControls.ctlLayeredBar();
-            this.bar20 = new mrbControls.ctlLayeredBar();
+            this.bar19 = new mrbControls.ctlLayeredBarPb();
+            this.bar20 = new mrbControls.ctlLayeredBarPb();
             this.label41 = new System.Windows.Forms.Label();
             this.label42 = new System.Windows.Forms.Label();
             this.lv19 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
@@ -70,14 +70,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.lv14 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.lv13 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.lv12 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar11 = new mrbControls.ctlLayeredBar();
-            this.bar18 = new mrbControls.ctlLayeredBar();
-            this.bar12 = new mrbControls.ctlLayeredBar();
-            this.bar17 = new mrbControls.ctlLayeredBar();
-            this.bar13 = new mrbControls.ctlLayeredBar();
-            this.bar16 = new mrbControls.ctlLayeredBar();
-            this.bar14 = new mrbControls.ctlLayeredBar();
-            this.bar15 = new mrbControls.ctlLayeredBar();
+            this.bar11 = new mrbControls.ctlLayeredBarPb();
+            this.bar18 = new mrbControls.ctlLayeredBarPb();
+            this.bar12 = new mrbControls.ctlLayeredBarPb();
+            this.bar17 = new mrbControls.ctlLayeredBarPb();
+            this.bar13 = new mrbControls.ctlLayeredBarPb();
+            this.bar16 = new mrbControls.ctlLayeredBarPb();
+            this.bar14 = new mrbControls.ctlLayeredBarPb();
+            this.bar15 = new mrbControls.ctlLayeredBarPb();
             this.label25 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
@@ -90,25 +90,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.gradientPanel1 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.lv10 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar10 = new mrbControls.ctlLayeredBar();
+            this.bar10 = new mrbControls.ctlLayeredBarPb();
             this.lv9 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar9 = new mrbControls.ctlLayeredBar();
+            this.bar9 = new mrbControls.ctlLayeredBarPb();
             this.lv8 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar8 = new mrbControls.ctlLayeredBar();
+            this.bar8 = new mrbControls.ctlLayeredBarPb();
             this.lv7 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar7 = new mrbControls.ctlLayeredBar();
+            this.bar7 = new mrbControls.ctlLayeredBarPb();
             this.lv6 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar6 = new mrbControls.ctlLayeredBar();
+            this.bar6 = new mrbControls.ctlLayeredBarPb();
             this.lv5 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar5 = new mrbControls.ctlLayeredBar();
+            this.bar5 = new mrbControls.ctlLayeredBarPb();
             this.lv4 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar4 = new mrbControls.ctlLayeredBar();
+            this.bar4 = new mrbControls.ctlLayeredBarPb();
             this.lv3 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar3 = new mrbControls.ctlLayeredBar();
+            this.bar3 = new mrbControls.ctlLayeredBarPb();
             this.lv2 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar2 = new mrbControls.ctlLayeredBar();
+            this.bar2 = new mrbControls.ctlLayeredBarPb();
             this.label5 = new System.Windows.Forms.Label();
-            this.bar1 = new mrbControls.ctlLayeredBar();
+            this.bar1 = new mrbControls.ctlLayeredBarPb();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -125,47 +125,47 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.gradientPanel14 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
             this.label79 = new System.Windows.Forms.Label();
-            this.bar37 = new mrbControls.ctlLayeredBar();
+            this.bar37 = new mrbControls.ctlLayeredBarPb();
             this.lv37 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel13 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
             this.label77 = new System.Windows.Forms.Label();
-            this.bar36 = new mrbControls.ctlLayeredBar();
+            this.bar36 = new mrbControls.ctlLayeredBarPb();
             this.lv36 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel12 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.label75 = new System.Windows.Forms.Label();
-            this.bar35 = new mrbControls.ctlLayeredBar();
+            this.bar35 = new mrbControls.ctlLayeredBarPb();
             this.lv35 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel11 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
             this.label72 = new System.Windows.Forms.Label();
-            this.bar34 = new mrbControls.ctlLayeredBar();
+            this.bar34 = new mrbControls.ctlLayeredBarPb();
             this.lv34 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel10 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.label68 = new System.Windows.Forms.Label();
-            this.bar33 = new mrbControls.ctlLayeredBar();
+            this.bar33 = new mrbControls.ctlLayeredBarPb();
             this.lv33 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel9 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.label65 = new System.Windows.Forms.Label();
-            this.bar32 = new mrbControls.ctlLayeredBar();
+            this.bar32 = new mrbControls.ctlLayeredBarPb();
             this.lv32 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.gradientPanel8 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.label69 = new System.Windows.Forms.Label();
-            this.bar31 = new mrbControls.ctlLayeredBar();
+            this.bar31 = new mrbControls.ctlLayeredBarPb();
             this.lv31 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.label52 = new System.Windows.Forms.Label();
             this.gradientPanel6 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.lv30 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar30 = new mrbControls.ctlLayeredBar();
+            this.bar30 = new mrbControls.ctlLayeredBarPb();
             this.lv29 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar29 = new mrbControls.ctlLayeredBar();
+            this.bar29 = new mrbControls.ctlLayeredBarPb();
             this.label55 = new System.Windows.Forms.Label();
-            this.bar28 = new mrbControls.ctlLayeredBar();
+            this.bar28 = new mrbControls.ctlLayeredBarPb();
             this.label56 = new System.Windows.Forms.Label();
             this.label64 = new System.Windows.Forms.Label();
             this.lv28 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
@@ -177,13 +177,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.gradientPanel5 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.lv27 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar27 = new mrbControls.ctlLayeredBar();
+            this.bar27 = new mrbControls.ctlLayeredBarPb();
             this.lv26 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar26 = new mrbControls.ctlLayeredBar();
+            this.bar26 = new mrbControls.ctlLayeredBarPb();
             this.lv25 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar25 = new mrbControls.ctlLayeredBar();
+            this.bar25 = new mrbControls.ctlLayeredBarPb();
             this.label60 = new System.Windows.Forms.Label();
-            this.bar24 = new mrbControls.ctlLayeredBar();
+            this.bar24 = new mrbControls.ctlLayeredBarPb();
             this.label61 = new System.Windows.Forms.Label();
             this.label62 = new System.Windows.Forms.Label();
             this.label63 = new System.Windows.Forms.Label();
@@ -206,24 +206,24 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label117 = new System.Windows.Forms.Label();
             this.label118 = new System.Windows.Forms.Label();
             this.lv52 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar52 = new mrbControls.ctlLayeredBar();
+            this.bar52 = new mrbControls.ctlLayeredBarPb();
             this.lv51 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar51 = new mrbControls.ctlLayeredBar();
+            this.bar51 = new mrbControls.ctlLayeredBarPb();
             this.lv50 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar50 = new mrbControls.ctlLayeredBar();
+            this.bar50 = new mrbControls.ctlLayeredBarPb();
             this.label122 = new System.Windows.Forms.Label();
-            this.bar49 = new mrbControls.ctlLayeredBar();
+            this.bar49 = new mrbControls.ctlLayeredBarPb();
             this.label123 = new System.Windows.Forms.Label();
             this.label124 = new System.Windows.Forms.Label();
             this.label125 = new System.Windows.Forms.Label();
             this.lv49 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar53 = new mrbControls.ctlLayeredBar();
-            this.bar54 = new mrbControls.ctlLayeredBar();
-            this.bar55 = new mrbControls.ctlLayeredBar();
-            this.bar56 = new mrbControls.ctlLayeredBar();
-            this.bar57 = new mrbControls.ctlLayeredBar();
-            this.bar58 = new mrbControls.ctlLayeredBar();
-            this.bar59 = new mrbControls.ctlLayeredBar();
+            this.bar53 = new mrbControls.ctlLayeredBarPb();
+            this.bar54 = new mrbControls.ctlLayeredBarPb();
+            this.bar55 = new mrbControls.ctlLayeredBarPb();
+            this.bar56 = new mrbControls.ctlLayeredBarPb();
+            this.bar57 = new mrbControls.ctlLayeredBarPb();
+            this.bar58 = new mrbControls.ctlLayeredBarPb();
+            this.bar59 = new mrbControls.ctlLayeredBarPb();
             this.lv53 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.label104 = new System.Windows.Forms.Label();
             this.gradientPanel15 = new Syncfusion.Windows.Forms.Tools.GradientPanel();
@@ -242,24 +242,24 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label91 = new System.Windows.Forms.Label();
             this.label90 = new System.Windows.Forms.Label();
             this.lv41 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar41 = new mrbControls.ctlLayeredBar();
+            this.bar41 = new mrbControls.ctlLayeredBarPb();
             this.lv40 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar40 = new mrbControls.ctlLayeredBar();
+            this.bar40 = new mrbControls.ctlLayeredBarPb();
             this.lv39 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar39 = new mrbControls.ctlLayeredBar();
+            this.bar39 = new mrbControls.ctlLayeredBarPb();
             this.label85 = new System.Windows.Forms.Label();
-            this.bar38 = new mrbControls.ctlLayeredBar();
+            this.bar38 = new mrbControls.ctlLayeredBarPb();
             this.label86 = new System.Windows.Forms.Label();
             this.label87 = new System.Windows.Forms.Label();
             this.label88 = new System.Windows.Forms.Label();
             this.lv38 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar42 = new mrbControls.ctlLayeredBar();
-            this.bar43 = new mrbControls.ctlLayeredBar();
-            this.bar44 = new mrbControls.ctlLayeredBar();
-            this.bar45 = new mrbControls.ctlLayeredBar();
-            this.bar46 = new mrbControls.ctlLayeredBar();
-            this.bar47 = new mrbControls.ctlLayeredBar();
-            this.bar48 = new mrbControls.ctlLayeredBar();
+            this.bar42 = new mrbControls.ctlLayeredBarPb();
+            this.bar43 = new mrbControls.ctlLayeredBarPb();
+            this.bar44 = new mrbControls.ctlLayeredBarPb();
+            this.bar45 = new mrbControls.ctlLayeredBarPb();
+            this.bar46 = new mrbControls.ctlLayeredBarPb();
+            this.bar47 = new mrbControls.ctlLayeredBarPb();
+            this.bar48 = new mrbControls.ctlLayeredBarPb();
             this.lv42 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.tabPageAdv1 = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.label128 = new System.Windows.Forms.Label();
@@ -272,14 +272,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.lv63 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.lv62 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.lv61 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
-            this.bar60 = new mrbControls.ctlLayeredBar();
-            this.bar67 = new mrbControls.ctlLayeredBar();
-            this.bar61 = new mrbControls.ctlLayeredBar();
-            this.bar66 = new mrbControls.ctlLayeredBar();
-            this.bar62 = new mrbControls.ctlLayeredBar();
-            this.bar65 = new mrbControls.ctlLayeredBar();
-            this.bar63 = new mrbControls.ctlLayeredBar();
-            this.bar64 = new mrbControls.ctlLayeredBar();
+            this.bar60 = new mrbControls.ctlLayeredBarPb();
+            this.bar67 = new mrbControls.ctlLayeredBarPb();
+            this.bar61 = new mrbControls.ctlLayeredBarPb();
+            this.bar66 = new mrbControls.ctlLayeredBarPb();
+            this.bar62 = new mrbControls.ctlLayeredBarPb();
+            this.bar65 = new mrbControls.ctlLayeredBarPb();
+            this.bar63 = new mrbControls.ctlLayeredBarPb();
+            this.bar64 = new mrbControls.ctlLayeredBarPb();
             this.label136 = new System.Windows.Forms.Label();
             this.label137 = new System.Windows.Forms.Label();
             this.label138 = new System.Windows.Forms.Label();
@@ -516,15 +516,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar21.BackColor = System.Drawing.Color.Transparent;
             this.bar21.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar21.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(114)))), ((int)(((byte)(204)))));
-            this.bar21.ColorMainBar = System.Drawing.Color.DodgerBlue;
-            this.bar21.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(63)))), ((int)(((byte)(112)))));
-            this.bar21.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar21.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar21.EnableBaseValue = true;
-            this.bar21.EnableOverCap = true;
-            this.bar21.EnableOverlay1 = false;
-            this.bar21.EnableOverlay2 = false;
             this.bar21.Group = "Endurance";
             this.bar21.Location = new System.Drawing.Point(183, 3);
             this.bar21.MaximumBarValue = 10F;
@@ -533,25 +524,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar21.Size = new System.Drawing.Size(309, 13);
             this.bar21.TabIndex = 3;
             this.bar21.Tip = "";
-            this.bar21.ValueBase = 0F;
-            this.bar21.ValueMainBar = 100F;
-            this.bar21.ValueOverCap = 0F;
-            this.bar21.ValueOverlay1 = 0F;
-            this.bar21.ValueOverlay2 = 0F;
             // 
             // bar23
             // 
             this.bar23.BackColor = System.Drawing.Color.Transparent;
             this.bar23.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar23.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(125)))), ((int)(((byte)(204)))));
-            this.bar23.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(158)))), ((int)(((byte)(255)))));
-            this.bar23.ColorOverCap = System.Drawing.Color.Red;
-            this.bar23.ColorOverlay1 = System.Drawing.Color.Yellow;
-            this.bar23.ColorOverlay2 = System.Drawing.Color.Green;
-            this.bar23.EnableBaseValue = true;
-            this.bar23.EnableOverCap = false;
-            this.bar23.EnableOverlay1 = false;
-            this.bar23.EnableOverlay2 = false;
             this.bar23.Group = "Endurance";
             this.bar23.Location = new System.Drawing.Point(183, 41);
             this.bar23.MaximumBarValue = 200F;
@@ -560,25 +537,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar23.Size = new System.Drawing.Size(309, 13);
             this.bar23.TabIndex = 5;
             this.bar23.Tip = "";
-            this.bar23.ValueBase = 0F;
-            this.bar23.ValueMainBar = 100F;
-            this.bar23.ValueOverCap = 0F;
-            this.bar23.ValueOverlay1 = 0F;
-            this.bar23.ValueOverlay2 = 0F;
             // 
             // bar22
             // 
             this.bar22.BackColor = System.Drawing.Color.Transparent;
             this.bar22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar22.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar22.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(149)))), ((int)(((byte)(203)))), ((int)(((byte)(255)))));
-            this.bar22.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar22.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar22.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar22.EnableBaseValue = false;
-            this.bar22.EnableOverCap = false;
-            this.bar22.EnableOverlay1 = false;
-            this.bar22.EnableOverlay2 = false;
             this.bar22.Group = "Endurance";
             this.bar22.Location = new System.Drawing.Point(183, 22);
             this.bar22.MaximumBarValue = 15F;
@@ -587,11 +550,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar22.Size = new System.Drawing.Size(309, 13);
             this.bar22.TabIndex = 4;
             this.bar22.Tip = "";
-            this.bar22.ValueBase = 0F;
-            this.bar22.ValueMainBar = 100F;
-            this.bar22.ValueOverCap = 0F;
-            this.bar22.ValueOverlay1 = 0F;
-            this.bar22.ValueOverlay2 = 0F;
             // 
             // label45
             // 
@@ -733,15 +691,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar19.BackColor = System.Drawing.Color.Transparent;
             this.bar19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar19.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(204)))), ((int)(((byte)(51)))));
-            this.bar19.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(255)))), ((int)(((byte)(64)))));
-            this.bar19.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(111)))), ((int)(((byte)(28)))));
-            this.bar19.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar19.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar19.EnableBaseValue = true;
-            this.bar19.EnableOverCap = true;
-            this.bar19.EnableOverlay1 = false;
-            this.bar19.EnableOverlay2 = false;
             this.bar19.Group = "HP";
             this.bar19.Location = new System.Drawing.Point(184, 3);
             this.bar19.MaximumBarValue = 1500F;
@@ -750,25 +699,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar19.Size = new System.Drawing.Size(309, 13);
             this.bar19.TabIndex = 2;
             this.bar19.Tip = "";
-            this.bar19.ValueBase = 0F;
-            this.bar19.ValueMainBar = 100F;
-            this.bar19.ValueOverCap = 0F;
-            this.bar19.ValueOverlay1 = 0F;
-            this.bar19.ValueOverlay2 = 0F;
             // 
             // bar20
             // 
             this.bar20.BackColor = System.Drawing.Color.Transparent;
             this.bar20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar20.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(130)))), ((int)(((byte)(31)))));
-            this.bar20.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(180)))), ((int)(((byte)(44)))));
-            this.bar20.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(38)))), ((int)(((byte)(10)))));
-            this.bar20.ColorOverlay1 = System.Drawing.Color.Gainsboro;
-            this.bar20.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar20.EnableBaseValue = true;
-            this.bar20.EnableOverCap = true;
-            this.bar20.EnableOverlay1 = true;
-            this.bar20.EnableOverlay2 = false;
             this.bar20.Group = "HP";
             this.bar20.Location = new System.Drawing.Point(184, 22);
             this.bar20.MaximumBarValue = 4500F;
@@ -777,11 +712,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar20.Size = new System.Drawing.Size(309, 13);
             this.bar20.TabIndex = 3;
             this.bar20.Tip = "";
-            this.bar20.ValueBase = 0F;
-            this.bar20.ValueMainBar = 1000F;
-            this.bar20.ValueOverCap = 0F;
-            this.bar20.ValueOverlay1 = 0F;
-            this.bar20.ValueOverlay2 = 0F;
             // 
             // label41
             // 
@@ -961,15 +891,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar11.BackColor = System.Drawing.Color.Transparent;
             this.bar11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar11.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar11.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.bar11.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.bar11.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar11.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar11.EnableBaseValue = false;
-            this.bar11.EnableOverCap = true;
-            this.bar11.EnableOverlay1 = false;
-            this.bar11.EnableOverlay2 = false;
             this.bar11.Group = "Resistance";
             this.bar11.Location = new System.Drawing.Point(183, 3);
             this.bar11.MaximumBarValue = 100F;
@@ -978,25 +899,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar11.Size = new System.Drawing.Size(309, 13);
             this.bar11.TabIndex = 1;
             this.bar11.Tip = "";
-            this.bar11.ValueBase = 0F;
-            this.bar11.ValueMainBar = 100F;
-            this.bar11.ValueOverCap = 0F;
-            this.bar11.ValueOverlay1 = 0F;
-            this.bar11.ValueOverlay2 = 0F;
             // 
             // bar18
             // 
             this.bar18.BackColor = System.Drawing.Color.Transparent;
             this.bar18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar18.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar18.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.bar18.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.bar18.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar18.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar18.EnableBaseValue = false;
-            this.bar18.EnableOverCap = true;
-            this.bar18.EnableOverlay1 = false;
-            this.bar18.EnableOverlay2 = false;
             this.bar18.Group = "Resistance";
             this.bar18.Location = new System.Drawing.Point(183, 136);
             this.bar18.MaximumBarValue = 100F;
@@ -1005,25 +912,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar18.Size = new System.Drawing.Size(309, 13);
             this.bar18.TabIndex = 8;
             this.bar18.Tip = "";
-            this.bar18.ValueBase = 0F;
-            this.bar18.ValueMainBar = 100F;
-            this.bar18.ValueOverCap = 0F;
-            this.bar18.ValueOverlay1 = 0F;
-            this.bar18.ValueOverlay2 = 0F;
             // 
             // bar12
             // 
             this.bar12.BackColor = System.Drawing.Color.Transparent;
             this.bar12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar12.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar12.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.bar12.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.bar12.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar12.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar12.EnableBaseValue = false;
-            this.bar12.EnableOverCap = true;
-            this.bar12.EnableOverlay1 = false;
-            this.bar12.EnableOverlay2 = false;
             this.bar12.Group = "Resistance";
             this.bar12.Location = new System.Drawing.Point(183, 22);
             this.bar12.MaximumBarValue = 100F;
@@ -1032,25 +925,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar12.Size = new System.Drawing.Size(309, 13);
             this.bar12.TabIndex = 2;
             this.bar12.Tip = "";
-            this.bar12.ValueBase = 0F;
-            this.bar12.ValueMainBar = 100F;
-            this.bar12.ValueOverCap = 0F;
-            this.bar12.ValueOverlay1 = 0F;
-            this.bar12.ValueOverlay2 = 0F;
             // 
             // bar17
             // 
             this.bar17.BackColor = System.Drawing.Color.Transparent;
             this.bar17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar17.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar17.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.bar17.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.bar17.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar17.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar17.EnableBaseValue = false;
-            this.bar17.EnableOverCap = true;
-            this.bar17.EnableOverlay1 = false;
-            this.bar17.EnableOverlay2 = false;
             this.bar17.Group = "Resistance";
             this.bar17.Location = new System.Drawing.Point(183, 117);
             this.bar17.MaximumBarValue = 100F;
@@ -1059,25 +938,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar17.Size = new System.Drawing.Size(309, 13);
             this.bar17.TabIndex = 7;
             this.bar17.Tip = "";
-            this.bar17.ValueBase = 0F;
-            this.bar17.ValueMainBar = 100F;
-            this.bar17.ValueOverCap = 0F;
-            this.bar17.ValueOverlay1 = 0F;
-            this.bar17.ValueOverlay2 = 0F;
             // 
             // bar13
             // 
             this.bar13.BackColor = System.Drawing.Color.Transparent;
             this.bar13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar13.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar13.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.bar13.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.bar13.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar13.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar13.EnableBaseValue = false;
-            this.bar13.EnableOverCap = true;
-            this.bar13.EnableOverlay1 = false;
-            this.bar13.EnableOverlay2 = false;
             this.bar13.Group = "Resistance";
             this.bar13.Location = new System.Drawing.Point(183, 41);
             this.bar13.MaximumBarValue = 100F;
@@ -1086,25 +951,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar13.Size = new System.Drawing.Size(309, 13);
             this.bar13.TabIndex = 3;
             this.bar13.Tip = "";
-            this.bar13.ValueBase = 0F;
-            this.bar13.ValueMainBar = 100F;
-            this.bar13.ValueOverCap = 0F;
-            this.bar13.ValueOverlay1 = 0F;
-            this.bar13.ValueOverlay2 = 0F;
             // 
             // bar16
             // 
             this.bar16.BackColor = System.Drawing.Color.Transparent;
             this.bar16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar16.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar16.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.bar16.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.bar16.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar16.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar16.EnableBaseValue = false;
-            this.bar16.EnableOverCap = true;
-            this.bar16.EnableOverlay1 = false;
-            this.bar16.EnableOverlay2 = false;
             this.bar16.Group = "Resistance";
             this.bar16.Location = new System.Drawing.Point(183, 98);
             this.bar16.MaximumBarValue = 100F;
@@ -1113,25 +964,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar16.Size = new System.Drawing.Size(309, 13);
             this.bar16.TabIndex = 6;
             this.bar16.Tip = "";
-            this.bar16.ValueBase = 0F;
-            this.bar16.ValueMainBar = 100F;
-            this.bar16.ValueOverCap = 0F;
-            this.bar16.ValueOverlay1 = 0F;
-            this.bar16.ValueOverlay2 = 0F;
             // 
             // bar14
             // 
             this.bar14.BackColor = System.Drawing.Color.Transparent;
             this.bar14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar14.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar14.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.bar14.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.bar14.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar14.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar14.EnableBaseValue = false;
-            this.bar14.EnableOverCap = true;
-            this.bar14.EnableOverlay1 = false;
-            this.bar14.EnableOverlay2 = false;
             this.bar14.Group = "Resistance";
             this.bar14.Location = new System.Drawing.Point(183, 60);
             this.bar14.MaximumBarValue = 100F;
@@ -1140,25 +977,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar14.Size = new System.Drawing.Size(309, 13);
             this.bar14.TabIndex = 4;
             this.bar14.Tip = "";
-            this.bar14.ValueBase = 0F;
-            this.bar14.ValueMainBar = 100F;
-            this.bar14.ValueOverCap = 0F;
-            this.bar14.ValueOverlay1 = 0F;
-            this.bar14.ValueOverlay2 = 0F;
             // 
             // bar15
             // 
             this.bar15.BackColor = System.Drawing.Color.Transparent;
             this.bar15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar15.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar15.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.bar15.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.bar15.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar15.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar15.EnableBaseValue = false;
-            this.bar15.EnableOverCap = true;
-            this.bar15.EnableOverlay1 = false;
-            this.bar15.EnableOverlay2 = false;
             this.bar15.Group = "Resistance";
             this.bar15.Location = new System.Drawing.Point(183, 79);
             this.bar15.MaximumBarValue = 100F;
@@ -1167,11 +990,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar15.Size = new System.Drawing.Size(309, 13);
             this.bar15.TabIndex = 5;
             this.bar15.Tip = "";
-            this.bar15.ValueBase = 0F;
-            this.bar15.ValueMainBar = 100F;
-            this.bar15.ValueOverCap = 0F;
-            this.bar15.ValueOverlay1 = 0F;
-            this.bar15.ValueOverlay2 = 0F;
             // 
             // label25
             // 
@@ -1364,15 +1182,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar10.BackColor = System.Drawing.Color.Transparent;
             this.bar10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar10.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar10.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar10.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar10.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar10.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar10.EnableBaseValue = false;
-            this.bar10.EnableOverCap = false;
-            this.bar10.EnableOverlay1 = false;
-            this.bar10.EnableOverlay2 = false;
             this.bar10.Group = "Defense";
             this.bar10.Location = new System.Drawing.Point(184, 174);
             this.bar10.MaximumBarValue = 100F;
@@ -1381,11 +1190,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar10.Size = new System.Drawing.Size(309, 13);
             this.bar10.TabIndex = 9;
             this.bar10.Tip = "";
-            this.bar10.ValueBase = 0F;
-            this.bar10.ValueMainBar = 100F;
-            this.bar10.ValueOverCap = 0F;
-            this.bar10.ValueOverlay1 = 0F;
-            this.bar10.ValueOverlay2 = 0F;
             // 
             // lv9
             // 
@@ -1402,15 +1206,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar9.BackColor = System.Drawing.Color.Transparent;
             this.bar9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar9.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar9.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar9.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar9.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar9.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar9.EnableBaseValue = false;
-            this.bar9.EnableOverCap = false;
-            this.bar9.EnableOverlay1 = false;
-            this.bar9.EnableOverlay2 = false;
             this.bar9.Group = "Defense";
             this.bar9.Location = new System.Drawing.Point(184, 155);
             this.bar9.MaximumBarValue = 100F;
@@ -1419,11 +1214,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar9.Size = new System.Drawing.Size(309, 13);
             this.bar9.TabIndex = 8;
             this.bar9.Tip = "";
-            this.bar9.ValueBase = 0F;
-            this.bar9.ValueMainBar = 100F;
-            this.bar9.ValueOverCap = 0F;
-            this.bar9.ValueOverlay1 = 0F;
-            this.bar9.ValueOverlay2 = 0F;
             // 
             // lv8
             // 
@@ -1440,15 +1230,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar8.BackColor = System.Drawing.Color.Transparent;
             this.bar8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar8.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar8.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar8.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar8.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar8.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar8.EnableBaseValue = false;
-            this.bar8.EnableOverCap = false;
-            this.bar8.EnableOverlay1 = false;
-            this.bar8.EnableOverlay2 = false;
             this.bar8.Group = "Defense";
             this.bar8.Location = new System.Drawing.Point(184, 136);
             this.bar8.MaximumBarValue = 100F;
@@ -1457,11 +1238,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar8.Size = new System.Drawing.Size(309, 13);
             this.bar8.TabIndex = 7;
             this.bar8.Tip = "";
-            this.bar8.ValueBase = 0F;
-            this.bar8.ValueMainBar = 100F;
-            this.bar8.ValueOverCap = 0F;
-            this.bar8.ValueOverlay1 = 0F;
-            this.bar8.ValueOverlay2 = 0F;
             // 
             // lv7
             // 
@@ -1478,15 +1254,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar7.BackColor = System.Drawing.Color.Transparent;
             this.bar7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar7.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar7.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar7.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar7.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar7.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar7.EnableBaseValue = false;
-            this.bar7.EnableOverCap = false;
-            this.bar7.EnableOverlay1 = false;
-            this.bar7.EnableOverlay2 = false;
             this.bar7.Group = "Defense";
             this.bar7.Location = new System.Drawing.Point(184, 117);
             this.bar7.MaximumBarValue = 100F;
@@ -1495,11 +1262,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar7.Size = new System.Drawing.Size(309, 13);
             this.bar7.TabIndex = 6;
             this.bar7.Tip = "";
-            this.bar7.ValueBase = 0F;
-            this.bar7.ValueMainBar = 100F;
-            this.bar7.ValueOverCap = 0F;
-            this.bar7.ValueOverlay1 = 0F;
-            this.bar7.ValueOverlay2 = 0F;
             // 
             // lv6
             // 
@@ -1516,15 +1278,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar6.BackColor = System.Drawing.Color.Transparent;
             this.bar6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar6.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar6.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar6.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar6.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar6.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar6.EnableBaseValue = false;
-            this.bar6.EnableOverCap = false;
-            this.bar6.EnableOverlay1 = false;
-            this.bar6.EnableOverlay2 = false;
             this.bar6.Group = "Defense";
             this.bar6.Location = new System.Drawing.Point(184, 98);
             this.bar6.MaximumBarValue = 100F;
@@ -1533,11 +1286,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar6.Size = new System.Drawing.Size(309, 13);
             this.bar6.TabIndex = 5;
             this.bar6.Tip = "";
-            this.bar6.ValueBase = 0F;
-            this.bar6.ValueMainBar = 100F;
-            this.bar6.ValueOverCap = 0F;
-            this.bar6.ValueOverlay1 = 0F;
-            this.bar6.ValueOverlay2 = 0F;
             // 
             // lv5
             // 
@@ -1554,15 +1302,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar5.BackColor = System.Drawing.Color.Transparent;
             this.bar5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar5.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar5.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar5.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar5.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar5.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar5.EnableBaseValue = false;
-            this.bar5.EnableOverCap = false;
-            this.bar5.EnableOverlay1 = false;
-            this.bar5.EnableOverlay2 = false;
             this.bar5.Group = "Defense";
             this.bar5.Location = new System.Drawing.Point(184, 79);
             this.bar5.MaximumBarValue = 100F;
@@ -1571,11 +1310,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar5.Size = new System.Drawing.Size(309, 13);
             this.bar5.TabIndex = 4;
             this.bar5.Tip = "";
-            this.bar5.ValueBase = 0F;
-            this.bar5.ValueMainBar = 100F;
-            this.bar5.ValueOverCap = 0F;
-            this.bar5.ValueOverlay1 = 0F;
-            this.bar5.ValueOverlay2 = 0F;
             // 
             // lv4
             // 
@@ -1592,15 +1326,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar4.BackColor = System.Drawing.Color.Transparent;
             this.bar4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar4.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar4.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar4.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar4.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar4.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar4.EnableBaseValue = false;
-            this.bar4.EnableOverCap = false;
-            this.bar4.EnableOverlay1 = false;
-            this.bar4.EnableOverlay2 = false;
             this.bar4.Group = "Defense";
             this.bar4.Location = new System.Drawing.Point(184, 60);
             this.bar4.MaximumBarValue = 100F;
@@ -1609,11 +1334,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar4.Size = new System.Drawing.Size(309, 13);
             this.bar4.TabIndex = 3;
             this.bar4.Tip = "";
-            this.bar4.ValueBase = 0F;
-            this.bar4.ValueMainBar = 100F;
-            this.bar4.ValueOverCap = 0F;
-            this.bar4.ValueOverlay1 = 0F;
-            this.bar4.ValueOverlay2 = 0F;
             // 
             // lv3
             // 
@@ -1630,15 +1350,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar3.BackColor = System.Drawing.Color.Transparent;
             this.bar3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar3.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar3.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar3.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar3.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar3.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar3.EnableBaseValue = false;
-            this.bar3.EnableOverCap = false;
-            this.bar3.EnableOverlay1 = false;
-            this.bar3.EnableOverlay2 = false;
             this.bar3.Group = "Defense";
             this.bar3.Location = new System.Drawing.Point(184, 41);
             this.bar3.MaximumBarValue = 100F;
@@ -1647,11 +1358,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar3.Size = new System.Drawing.Size(309, 13);
             this.bar3.TabIndex = 2;
             this.bar3.Tip = "";
-            this.bar3.ValueBase = 0F;
-            this.bar3.ValueMainBar = 100F;
-            this.bar3.ValueOverCap = 0F;
-            this.bar3.ValueOverlay1 = 0F;
-            this.bar3.ValueOverlay2 = 0F;
             // 
             // lv2
             // 
@@ -1668,15 +1374,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar2.BackColor = System.Drawing.Color.Transparent;
             this.bar2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar2.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar2.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar2.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar2.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar2.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar2.EnableBaseValue = false;
-            this.bar2.EnableOverCap = false;
-            this.bar2.EnableOverlay1 = false;
-            this.bar2.EnableOverlay2 = false;
             this.bar2.Group = "Defense";
             this.bar2.Location = new System.Drawing.Point(184, 22);
             this.bar2.MaximumBarValue = 100F;
@@ -1685,11 +1382,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar2.Size = new System.Drawing.Size(309, 13);
             this.bar2.TabIndex = 1;
             this.bar2.Tip = "";
-            this.bar2.ValueBase = 0F;
-            this.bar2.ValueMainBar = 100F;
-            this.bar2.ValueOverCap = 0F;
-            this.bar2.ValueOverlay1 = 0F;
-            this.bar2.ValueOverlay2 = 0F;
             // 
             // label5
             // 
@@ -1707,15 +1399,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar1.BackColor = System.Drawing.Color.Transparent;
             this.bar1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar1.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar1.ColorMainBar = System.Drawing.Color.Magenta;
-            this.bar1.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar1.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar1.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar1.EnableBaseValue = false;
-            this.bar1.EnableOverCap = false;
-            this.bar1.EnableOverlay1 = false;
-            this.bar1.EnableOverlay2 = false;
             this.bar1.Group = "Defense";
             this.bar1.Location = new System.Drawing.Point(184, 3);
             this.bar1.MaximumBarValue = 100F;
@@ -1724,11 +1407,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar1.Size = new System.Drawing.Size(309, 13);
             this.bar1.TabIndex = 0;
             this.bar1.Tip = "";
-            this.bar1.ValueBase = 0F;
-            this.bar1.ValueMainBar = 100F;
-            this.bar1.ValueOverCap = 0F;
-            this.bar1.ValueOverlay1 = 0F;
-            this.bar1.ValueOverlay2 = 0F;
             // 
             // label6
             // 
@@ -1953,15 +1631,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar37.BackColor = System.Drawing.Color.Transparent;
             this.bar37.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar37.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar37.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(163)))), ((int)(((byte)(1)))), ((int)(((byte)(231)))));
-            this.bar37.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar37.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar37.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar37.EnableBaseValue = false;
-            this.bar37.EnableOverCap = false;
-            this.bar37.EnableOverlay1 = false;
-            this.bar37.EnableOverlay2 = false;
             this.bar37.Group = "";
             this.bar37.Location = new System.Drawing.Point(152, 3);
             this.bar37.MaximumBarValue = 100F;
@@ -1970,11 +1639,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar37.Size = new System.Drawing.Size(343, 13);
             this.bar37.TabIndex = 0;
             this.bar37.Tip = "";
-            this.bar37.ValueBase = 0F;
-            this.bar37.ValueMainBar = 50F;
-            this.bar37.ValueOverCap = 0F;
-            this.bar37.ValueOverlay1 = 0F;
-            this.bar37.ValueOverlay2 = 0F;
             // 
             // lv37
             // 
@@ -2036,15 +1700,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar36.BackColor = System.Drawing.Color.Transparent;
             this.bar36.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar36.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(113)))), ((int)(((byte)(86)))), ((int)(((byte)(168)))));
-            this.bar36.ColorMainBar = System.Drawing.Color.MediumPurple;
-            this.bar36.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar36.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar36.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar36.EnableBaseValue = true;
-            this.bar36.EnableOverCap = false;
-            this.bar36.EnableOverlay1 = false;
-            this.bar36.EnableOverlay2 = false;
             this.bar36.Group = "";
             this.bar36.Location = new System.Drawing.Point(153, 3);
             this.bar36.MaximumBarValue = 500F;
@@ -2053,11 +1708,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar36.Size = new System.Drawing.Size(343, 13);
             this.bar36.TabIndex = 0;
             this.bar36.Tip = "";
-            this.bar36.ValueBase = 0F;
-            this.bar36.ValueMainBar = 100F;
-            this.bar36.ValueOverCap = 0F;
-            this.bar36.ValueOverlay1 = 0F;
-            this.bar36.ValueOverlay2 = 0F;
             // 
             // lv36
             // 
@@ -2119,15 +1769,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar35.BackColor = System.Drawing.Color.Transparent;
             this.bar35.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar35.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar35.ColorMainBar = System.Drawing.Color.RoyalBlue;
-            this.bar35.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar35.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar35.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar35.EnableBaseValue = false;
-            this.bar35.EnableOverCap = false;
-            this.bar35.EnableOverlay1 = false;
-            this.bar35.EnableOverlay2 = false;
             this.bar35.Group = "";
             this.bar35.Location = new System.Drawing.Point(153, 3);
             this.bar35.MaximumBarValue = 200F;
@@ -2136,11 +1777,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar35.Size = new System.Drawing.Size(343, 13);
             this.bar35.TabIndex = 0;
             this.bar35.Tip = "";
-            this.bar35.ValueBase = 0F;
-            this.bar35.ValueMainBar = 100F;
-            this.bar35.ValueOverCap = 0F;
-            this.bar35.ValueOverlay1 = 0F;
-            this.bar35.ValueOverlay2 = 0F;
             // 
             // lv35
             // 
@@ -2202,15 +1838,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar34.BackColor = System.Drawing.Color.Transparent;
             this.bar34.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar34.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.bar34.ColorMainBar = System.Drawing.Color.Red;
-            this.bar34.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar34.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar34.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar34.EnableBaseValue = true;
-            this.bar34.EnableOverCap = false;
-            this.bar34.EnableOverlay1 = false;
-            this.bar34.EnableOverlay2 = false;
             this.bar34.Group = "";
             this.bar34.Location = new System.Drawing.Point(152, 3);
             this.bar34.MaximumBarValue = 750F;
@@ -2219,11 +1846,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar34.Size = new System.Drawing.Size(343, 13);
             this.bar34.TabIndex = 0;
             this.bar34.Tip = "";
-            this.bar34.ValueBase = 0F;
-            this.bar34.ValueMainBar = 100F;
-            this.bar34.ValueOverCap = 0F;
-            this.bar34.ValueOverlay1 = 0F;
-            this.bar34.ValueOverlay2 = 0F;
             // 
             // lv34
             // 
@@ -2285,15 +1907,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar33.BackColor = System.Drawing.Color.Transparent;
             this.bar33.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar33.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar33.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar33.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar33.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar33.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar33.EnableBaseValue = false;
-            this.bar33.EnableOverCap = false;
-            this.bar33.EnableOverlay1 = false;
-            this.bar33.EnableOverlay2 = false;
             this.bar33.Group = "";
             this.bar33.Location = new System.Drawing.Point(152, 3);
             this.bar33.MaximumBarValue = 100F;
@@ -2302,11 +1915,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar33.Size = new System.Drawing.Size(343, 13);
             this.bar33.TabIndex = 0;
             this.bar33.Tip = "";
-            this.bar33.ValueBase = 0F;
-            this.bar33.ValueMainBar = 100F;
-            this.bar33.ValueOverCap = 0F;
-            this.bar33.ValueOverlay1 = 0F;
-            this.bar33.ValueOverlay2 = 0F;
             // 
             // lv33
             // 
@@ -2368,15 +1976,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar32.BackColor = System.Drawing.Color.Transparent;
             this.bar32.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar32.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar32.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.bar32.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar32.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar32.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar32.EnableBaseValue = false;
-            this.bar32.EnableOverCap = false;
-            this.bar32.EnableOverlay1 = false;
-            this.bar32.EnableOverlay2 = false;
             this.bar32.Group = "";
             this.bar32.Location = new System.Drawing.Point(151, 3);
             this.bar32.MaximumBarValue = 250F;
@@ -2385,11 +1984,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar32.Size = new System.Drawing.Size(343, 13);
             this.bar32.TabIndex = 0;
             this.bar32.Tip = "";
-            this.bar32.ValueBase = 0F;
-            this.bar32.ValueMainBar = 100F;
-            this.bar32.ValueOverCap = 0F;
-            this.bar32.ValueOverlay1 = 0F;
-            this.bar32.ValueOverlay2 = 0F;
             // 
             // lv32
             // 
@@ -2451,15 +2045,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar31.BackColor = System.Drawing.Color.Transparent;
             this.bar31.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar31.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(102)))), ((int)(((byte)(0)))));
-            this.bar31.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar31.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(56)))), ((int)(((byte)(0)))));
-            this.bar31.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar31.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar31.EnableBaseValue = true;
-            this.bar31.EnableOverCap = true;
-            this.bar31.EnableOverlay1 = false;
-            this.bar31.EnableOverlay2 = false;
             this.bar31.Group = "";
             this.bar31.Location = new System.Drawing.Point(151, 3);
             this.bar31.MaximumBarValue = 500F;
@@ -2468,11 +2053,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar31.Size = new System.Drawing.Size(343, 13);
             this.bar31.TabIndex = 0;
             this.bar31.Tip = "";
-            this.bar31.ValueBase = 0F;
-            this.bar31.ValueMainBar = 100F;
-            this.bar31.ValueOverCap = 0F;
-            this.bar31.ValueOverlay1 = 0F;
-            this.bar31.ValueOverlay2 = 0F;
             // 
             // lv31
             // 
@@ -2551,15 +2131,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar30.BackColor = System.Drawing.Color.Transparent;
             this.bar30.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar30.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(80)))), ((int)(((byte)(122)))));
-            this.bar30.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(100)))), ((int)(((byte)(153)))));
-            this.bar30.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(43)))), ((int)(((byte)(66)))));
-            this.bar30.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar30.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar30.EnableBaseValue = true;
-            this.bar30.EnableOverCap = true;
-            this.bar30.EnableOverlay1 = false;
-            this.bar30.EnableOverlay2 = false;
             this.bar30.Group = "Perception";
             this.bar30.Location = new System.Drawing.Point(168, 41);
             this.bar30.MaximumBarValue = 1000F;
@@ -2568,11 +2139,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar30.Size = new System.Drawing.Size(316, 13);
             this.bar30.TabIndex = 2;
             this.bar30.Tip = "";
-            this.bar30.ValueBase = 0F;
-            this.bar30.ValueMainBar = 100F;
-            this.bar30.ValueOverCap = 0F;
-            this.bar30.ValueOverlay1 = 0F;
-            this.bar30.ValueOverlay2 = 0F;
             // 
             // lv29
             // 
@@ -2589,15 +2155,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar29.BackColor = System.Drawing.Color.Transparent;
             this.bar29.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar29.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(95)))), ((int)(((byte)(107)))));
-            this.bar29.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(121)))), ((int)(((byte)(136)))));
-            this.bar29.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(59)))));
-            this.bar29.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar29.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar29.EnableBaseValue = false;
-            this.bar29.EnableOverCap = true;
-            this.bar29.EnableOverlay1 = false;
-            this.bar29.EnableOverlay2 = false;
             this.bar29.Group = "Perception";
             this.bar29.Location = new System.Drawing.Point(168, 22);
             this.bar29.MaximumBarValue = 100F;
@@ -2606,11 +2163,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar29.Size = new System.Drawing.Size(316, 13);
             this.bar29.TabIndex = 1;
             this.bar29.Tip = "";
-            this.bar29.ValueBase = 0F;
-            this.bar29.ValueMainBar = 100F;
-            this.bar29.ValueOverCap = 0F;
-            this.bar29.ValueOverlay1 = 0F;
-            this.bar29.ValueOverlay2 = 0F;
             // 
             // label55
             // 
@@ -2628,15 +2180,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar28.BackColor = System.Drawing.Color.Transparent;
             this.bar28.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar28.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(95)))), ((int)(((byte)(107)))));
-            this.bar28.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(121)))), ((int)(((byte)(136)))));
-            this.bar28.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(59)))));
-            this.bar28.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar28.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar28.EnableBaseValue = false;
-            this.bar28.EnableOverCap = true;
-            this.bar28.EnableOverlay1 = false;
-            this.bar28.EnableOverlay2 = false;
             this.bar28.Group = "Perception";
             this.bar28.Location = new System.Drawing.Point(168, 3);
             this.bar28.MaximumBarValue = 100F;
@@ -2645,11 +2188,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar28.Size = new System.Drawing.Size(316, 13);
             this.bar28.TabIndex = 0;
             this.bar28.Tip = "";
-            this.bar28.ValueBase = 0F;
-            this.bar28.ValueMainBar = 100F;
-            this.bar28.ValueOverCap = 0F;
-            this.bar28.ValueOverlay1 = 0F;
-            this.bar28.ValueOverlay2 = 0F;
             // 
             // label56
             // 
@@ -2808,15 +2346,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar27.BackColor = System.Drawing.Color.Transparent;
             this.bar27.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar27.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
-            this.bar27.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.bar27.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
-            this.bar27.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar27.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar27.EnableBaseValue = true;
-            this.bar27.EnableOverCap = true;
-            this.bar27.EnableOverlay1 = false;
-            this.bar27.EnableOverlay2 = false;
             this.bar27.Group = "Movement";
             this.bar27.Location = new System.Drawing.Point(198, 53);
             this.bar27.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -2826,11 +2355,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar27.Size = new System.Drawing.Size(287, 13);
             this.bar27.TabIndex = 3;
             this.bar27.Tip = "";
-            this.bar27.ValueBase = 0F;
-            this.bar27.ValueMainBar = 100F;
-            this.bar27.ValueOverCap = 0F;
-            this.bar27.ValueOverlay1 = 0F;
-            this.bar27.ValueOverlay2 = 0F;
             // 
             // lv26
             // 
@@ -2847,15 +2371,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar26.BackColor = System.Drawing.Color.Transparent;
             this.bar26.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar26.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
-            this.bar26.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.bar26.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
-            this.bar26.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar26.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar26.EnableBaseValue = true;
-            this.bar26.EnableOverCap = true;
-            this.bar26.EnableOverlay1 = false;
-            this.bar26.EnableOverlay2 = false;
             this.bar26.Group = "Movement";
             this.bar26.Location = new System.Drawing.Point(198, 36);
             this.bar26.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -2865,11 +2380,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar26.Size = new System.Drawing.Size(287, 13);
             this.bar26.TabIndex = 2;
             this.bar26.Tip = "";
-            this.bar26.ValueBase = 0F;
-            this.bar26.ValueMainBar = 100F;
-            this.bar26.ValueOverCap = 0F;
-            this.bar26.ValueOverlay1 = 0F;
-            this.bar26.ValueOverlay2 = 0F;
             // 
             // lv25
             // 
@@ -2886,15 +2396,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar25.BackColor = System.Drawing.Color.Transparent;
             this.bar25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar25.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
-            this.bar25.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.bar25.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
-            this.bar25.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar25.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar25.EnableBaseValue = true;
-            this.bar25.EnableOverCap = true;
-            this.bar25.EnableOverlay1 = false;
-            this.bar25.EnableOverlay2 = false;
             this.bar25.Group = "Movement";
             this.bar25.Location = new System.Drawing.Point(198, 19);
             this.bar25.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -2904,11 +2405,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar25.Size = new System.Drawing.Size(287, 13);
             this.bar25.TabIndex = 1;
             this.bar25.Tip = "";
-            this.bar25.ValueBase = 0F;
-            this.bar25.ValueMainBar = 100F;
-            this.bar25.ValueOverCap = 0F;
-            this.bar25.ValueOverlay1 = 0F;
-            this.bar25.ValueOverlay2 = 0F;
             // 
             // label60
             // 
@@ -2926,15 +2422,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar24.BackColor = System.Drawing.Color.Transparent;
             this.bar24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar24.ColorBaseValue = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(140)))), ((int)(((byte)(94)))));
-            this.bar24.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.bar24.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(48)))), ((int)(((byte)(32)))));
-            this.bar24.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar24.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar24.EnableBaseValue = true;
-            this.bar24.EnableOverCap = true;
-            this.bar24.EnableOverlay1 = false;
-            this.bar24.EnableOverlay2 = false;
             this.bar24.Group = "Movement";
             this.bar24.Location = new System.Drawing.Point(198, 2);
             this.bar24.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -2944,11 +2431,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar24.Size = new System.Drawing.Size(287, 13);
             this.bar24.TabIndex = 0;
             this.bar24.Tip = "";
-            this.bar24.ValueBase = 0F;
-            this.bar24.ValueMainBar = 100F;
-            this.bar24.ValueOverCap = 0F;
-            this.bar24.ValueOverlay1 = 0F;
-            this.bar24.ValueOverlay2 = 0F;
             // 
             // label61
             // 
@@ -3262,15 +2744,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar52.BackColor = System.Drawing.Color.Transparent;
             this.bar52.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar52.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar52.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar52.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar52.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar52.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar52.EnableBaseValue = false;
-            this.bar52.EnableOverCap = false;
-            this.bar52.EnableOverlay1 = false;
-            this.bar52.EnableOverlay2 = false;
             this.bar52.Group = "Status Resistance";
             this.bar52.Location = new System.Drawing.Point(179, 60);
             this.bar52.MaximumBarValue = 400F;
@@ -3279,11 +2752,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar52.Size = new System.Drawing.Size(323, 13);
             this.bar52.TabIndex = 3;
             this.bar52.Tip = "";
-            this.bar52.ValueBase = 0F;
-            this.bar52.ValueMainBar = 100F;
-            this.bar52.ValueOverCap = 0F;
-            this.bar52.ValueOverlay1 = 0F;
-            this.bar52.ValueOverlay2 = 0F;
             // 
             // lv51
             // 
@@ -3300,15 +2768,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar51.BackColor = System.Drawing.Color.Transparent;
             this.bar51.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar51.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar51.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar51.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar51.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar51.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar51.EnableBaseValue = false;
-            this.bar51.EnableOverCap = false;
-            this.bar51.EnableOverlay1 = false;
-            this.bar51.EnableOverlay2 = false;
             this.bar51.Group = "Status Resistance";
             this.bar51.Location = new System.Drawing.Point(179, 41);
             this.bar51.MaximumBarValue = 400F;
@@ -3317,11 +2776,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar51.Size = new System.Drawing.Size(323, 13);
             this.bar51.TabIndex = 2;
             this.bar51.Tip = "";
-            this.bar51.ValueBase = 0F;
-            this.bar51.ValueMainBar = 100F;
-            this.bar51.ValueOverCap = 0F;
-            this.bar51.ValueOverlay1 = 0F;
-            this.bar51.ValueOverlay2 = 0F;
             // 
             // lv50
             // 
@@ -3338,15 +2792,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar50.BackColor = System.Drawing.Color.Transparent;
             this.bar50.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar50.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar50.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar50.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar50.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar50.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar50.EnableBaseValue = false;
-            this.bar50.EnableOverCap = false;
-            this.bar50.EnableOverlay1 = false;
-            this.bar50.EnableOverlay2 = false;
             this.bar50.Group = "Status Resistance";
             this.bar50.Location = new System.Drawing.Point(179, 22);
             this.bar50.MaximumBarValue = 400F;
@@ -3355,11 +2800,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar50.Size = new System.Drawing.Size(323, 13);
             this.bar50.TabIndex = 1;
             this.bar50.Tip = "";
-            this.bar50.ValueBase = 0F;
-            this.bar50.ValueMainBar = 100F;
-            this.bar50.ValueOverCap = 0F;
-            this.bar50.ValueOverlay1 = 0F;
-            this.bar50.ValueOverlay2 = 0F;
             // 
             // label122
             // 
@@ -3377,15 +2817,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar49.BackColor = System.Drawing.Color.Transparent;
             this.bar49.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar49.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar49.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar49.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar49.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar49.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar49.EnableBaseValue = false;
-            this.bar49.EnableOverCap = false;
-            this.bar49.EnableOverlay1 = false;
-            this.bar49.EnableOverlay2 = false;
             this.bar49.Group = "Status Resistance";
             this.bar49.Location = new System.Drawing.Point(179, 3);
             this.bar49.MaximumBarValue = 400F;
@@ -3394,11 +2825,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar49.Size = new System.Drawing.Size(323, 13);
             this.bar49.TabIndex = 0;
             this.bar49.Tip = "";
-            this.bar49.ValueBase = 0F;
-            this.bar49.ValueMainBar = 100F;
-            this.bar49.ValueOverCap = 0F;
-            this.bar49.ValueOverlay1 = 0F;
-            this.bar49.ValueOverlay2 = 0F;
             // 
             // label123
             // 
@@ -3451,15 +2877,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar53.BackColor = System.Drawing.Color.Transparent;
             this.bar53.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar53.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar53.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar53.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar53.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar53.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar53.EnableBaseValue = false;
-            this.bar53.EnableOverCap = false;
-            this.bar53.EnableOverlay1 = false;
-            this.bar53.EnableOverlay2 = false;
             this.bar53.Group = "Status Resistance";
             this.bar53.Location = new System.Drawing.Point(179, 79);
             this.bar53.MaximumBarValue = 400F;
@@ -3468,25 +2885,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar53.Size = new System.Drawing.Size(323, 13);
             this.bar53.TabIndex = 14;
             this.bar53.Tip = "";
-            this.bar53.ValueBase = 0F;
-            this.bar53.ValueMainBar = 100F;
-            this.bar53.ValueOverCap = 0F;
-            this.bar53.ValueOverlay1 = 0F;
-            this.bar53.ValueOverlay2 = 0F;
             // 
             // bar54
             // 
             this.bar54.BackColor = System.Drawing.Color.Transparent;
             this.bar54.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar54.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar54.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar54.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar54.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar54.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar54.EnableBaseValue = false;
-            this.bar54.EnableOverCap = false;
-            this.bar54.EnableOverlay1 = false;
-            this.bar54.EnableOverlay2 = false;
             this.bar54.Group = "Status Resistance";
             this.bar54.Location = new System.Drawing.Point(179, 99);
             this.bar54.MaximumBarValue = 400F;
@@ -3495,25 +2898,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar54.Size = new System.Drawing.Size(323, 13);
             this.bar54.TabIndex = 15;
             this.bar54.Tip = "";
-            this.bar54.ValueBase = 0F;
-            this.bar54.ValueMainBar = 100F;
-            this.bar54.ValueOverCap = 0F;
-            this.bar54.ValueOverlay1 = 0F;
-            this.bar54.ValueOverlay2 = 0F;
             // 
             // bar55
             // 
             this.bar55.BackColor = System.Drawing.Color.Transparent;
             this.bar55.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar55.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar55.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar55.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar55.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar55.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar55.EnableBaseValue = false;
-            this.bar55.EnableOverCap = false;
-            this.bar55.EnableOverlay1 = false;
-            this.bar55.EnableOverlay2 = false;
             this.bar55.Group = "Status Resistance";
             this.bar55.Location = new System.Drawing.Point(179, 119);
             this.bar55.MaximumBarValue = 400F;
@@ -3522,25 +2911,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar55.Size = new System.Drawing.Size(323, 13);
             this.bar55.TabIndex = 16;
             this.bar55.Tip = "";
-            this.bar55.ValueBase = 0F;
-            this.bar55.ValueMainBar = 100F;
-            this.bar55.ValueOverCap = 0F;
-            this.bar55.ValueOverlay1 = 0F;
-            this.bar55.ValueOverlay2 = 0F;
             // 
             // bar56
             // 
             this.bar56.BackColor = System.Drawing.Color.Transparent;
             this.bar56.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar56.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar56.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar56.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar56.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar56.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar56.EnableBaseValue = false;
-            this.bar56.EnableOverCap = false;
-            this.bar56.EnableOverlay1 = false;
-            this.bar56.EnableOverlay2 = false;
             this.bar56.Group = "Status Resistance";
             this.bar56.Location = new System.Drawing.Point(179, 139);
             this.bar56.MaximumBarValue = 400F;
@@ -3549,25 +2924,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar56.Size = new System.Drawing.Size(323, 13);
             this.bar56.TabIndex = 17;
             this.bar56.Tip = "";
-            this.bar56.ValueBase = 0F;
-            this.bar56.ValueMainBar = 100F;
-            this.bar56.ValueOverCap = 0F;
-            this.bar56.ValueOverlay1 = 0F;
-            this.bar56.ValueOverlay2 = 0F;
             // 
             // bar57
             // 
             this.bar57.BackColor = System.Drawing.Color.Transparent;
             this.bar57.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar57.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar57.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar57.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar57.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar57.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar57.EnableBaseValue = false;
-            this.bar57.EnableOverCap = false;
-            this.bar57.EnableOverlay1 = false;
-            this.bar57.EnableOverlay2 = false;
             this.bar57.Group = "Status Resistance";
             this.bar57.Location = new System.Drawing.Point(179, 159);
             this.bar57.MaximumBarValue = 400F;
@@ -3576,25 +2937,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar57.Size = new System.Drawing.Size(323, 13);
             this.bar57.TabIndex = 18;
             this.bar57.Tip = "";
-            this.bar57.ValueBase = 0F;
-            this.bar57.ValueMainBar = 100F;
-            this.bar57.ValueOverCap = 0F;
-            this.bar57.ValueOverlay1 = 0F;
-            this.bar57.ValueOverlay2 = 0F;
             // 
             // bar58
             // 
             this.bar58.BackColor = System.Drawing.Color.Transparent;
             this.bar58.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar58.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar58.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar58.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar58.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar58.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar58.EnableBaseValue = false;
-            this.bar58.EnableOverCap = false;
-            this.bar58.EnableOverlay1 = false;
-            this.bar58.EnableOverlay2 = false;
             this.bar58.Group = "Status Resistance";
             this.bar58.Location = new System.Drawing.Point(179, 179);
             this.bar58.MaximumBarValue = 400F;
@@ -3603,25 +2950,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar58.Size = new System.Drawing.Size(323, 13);
             this.bar58.TabIndex = 19;
             this.bar58.Tip = "";
-            this.bar58.ValueBase = 0F;
-            this.bar58.ValueMainBar = 100F;
-            this.bar58.ValueOverCap = 0F;
-            this.bar58.ValueOverlay1 = 0F;
-            this.bar58.ValueOverlay2 = 0F;
             // 
             // bar59
             // 
             this.bar59.BackColor = System.Drawing.Color.Transparent;
             this.bar59.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar59.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar59.ColorMainBar = System.Drawing.Color.Yellow;
-            this.bar59.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar59.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar59.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar59.EnableBaseValue = false;
-            this.bar59.EnableOverCap = false;
-            this.bar59.EnableOverlay1 = false;
-            this.bar59.EnableOverlay2 = false;
             this.bar59.Group = "Status Resistance";
             this.bar59.Location = new System.Drawing.Point(179, 199);
             this.bar59.MaximumBarValue = 400F;
@@ -3630,11 +2963,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar59.Size = new System.Drawing.Size(323, 13);
             this.bar59.TabIndex = 20;
             this.bar59.Tip = "";
-            this.bar59.ValueBase = 0F;
-            this.bar59.ValueMainBar = 100F;
-            this.bar59.ValueOverCap = 0F;
-            this.bar59.ValueOverlay1 = 0F;
-            this.bar59.ValueOverlay2 = 0F;
             // 
             // lv53
             // 
@@ -3895,15 +3223,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar41.BackColor = System.Drawing.Color.Transparent;
             this.bar41.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar41.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar41.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar41.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar41.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar41.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar41.EnableBaseValue = false;
-            this.bar41.EnableOverCap = false;
-            this.bar41.EnableOverlay1 = false;
-            this.bar41.EnableOverlay2 = false;
             this.bar41.Group = "Status Protection";
             this.bar41.Location = new System.Drawing.Point(178, 60);
             this.bar41.MaximumBarValue = 40F;
@@ -3912,11 +3231,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar41.Size = new System.Drawing.Size(324, 13);
             this.bar41.TabIndex = 3;
             this.bar41.Tip = "";
-            this.bar41.ValueBase = 0F;
-            this.bar41.ValueMainBar = 100F;
-            this.bar41.ValueOverCap = 0F;
-            this.bar41.ValueOverlay1 = 0F;
-            this.bar41.ValueOverlay2 = 0F;
             // 
             // lv40
             // 
@@ -3933,15 +3247,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar40.BackColor = System.Drawing.Color.Transparent;
             this.bar40.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar40.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar40.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar40.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar40.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar40.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar40.EnableBaseValue = false;
-            this.bar40.EnableOverCap = false;
-            this.bar40.EnableOverlay1 = false;
-            this.bar40.EnableOverlay2 = false;
             this.bar40.Group = "Status Protection";
             this.bar40.Location = new System.Drawing.Point(178, 41);
             this.bar40.MaximumBarValue = 40F;
@@ -3950,11 +3255,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar40.Size = new System.Drawing.Size(324, 13);
             this.bar40.TabIndex = 2;
             this.bar40.Tip = "";
-            this.bar40.ValueBase = 0F;
-            this.bar40.ValueMainBar = 100F;
-            this.bar40.ValueOverCap = 0F;
-            this.bar40.ValueOverlay1 = 0F;
-            this.bar40.ValueOverlay2 = 0F;
             // 
             // lv39
             // 
@@ -3971,15 +3271,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar39.BackColor = System.Drawing.Color.Transparent;
             this.bar39.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar39.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar39.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar39.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar39.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar39.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar39.EnableBaseValue = false;
-            this.bar39.EnableOverCap = false;
-            this.bar39.EnableOverlay1 = false;
-            this.bar39.EnableOverlay2 = false;
             this.bar39.Group = "Status Protection";
             this.bar39.Location = new System.Drawing.Point(178, 22);
             this.bar39.MaximumBarValue = 40F;
@@ -3988,11 +3279,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar39.Size = new System.Drawing.Size(324, 13);
             this.bar39.TabIndex = 1;
             this.bar39.Tip = "";
-            this.bar39.ValueBase = 0F;
-            this.bar39.ValueMainBar = 100F;
-            this.bar39.ValueOverCap = 0F;
-            this.bar39.ValueOverlay1 = 0F;
-            this.bar39.ValueOverlay2 = 0F;
             // 
             // label85
             // 
@@ -4010,15 +3296,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar38.BackColor = System.Drawing.Color.Transparent;
             this.bar38.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar38.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar38.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar38.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar38.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar38.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar38.EnableBaseValue = false;
-            this.bar38.EnableOverCap = false;
-            this.bar38.EnableOverlay1 = false;
-            this.bar38.EnableOverlay2 = false;
             this.bar38.Group = "Status Protection";
             this.bar38.Location = new System.Drawing.Point(178, 3);
             this.bar38.MaximumBarValue = 40F;
@@ -4027,11 +3304,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar38.Size = new System.Drawing.Size(324, 13);
             this.bar38.TabIndex = 0;
             this.bar38.Tip = "";
-            this.bar38.ValueBase = 0F;
-            this.bar38.ValueMainBar = 100F;
-            this.bar38.ValueOverCap = 0F;
-            this.bar38.ValueOverlay1 = 0F;
-            this.bar38.ValueOverlay2 = 0F;
             // 
             // label86
             // 
@@ -4084,15 +3356,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar42.BackColor = System.Drawing.Color.Transparent;
             this.bar42.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar42.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar42.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar42.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar42.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar42.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar42.EnableBaseValue = false;
-            this.bar42.EnableOverCap = false;
-            this.bar42.EnableOverlay1 = false;
-            this.bar42.EnableOverlay2 = false;
             this.bar42.Group = "Status Protection";
             this.bar42.Location = new System.Drawing.Point(178, 79);
             this.bar42.MaximumBarValue = 40F;
@@ -4101,25 +3364,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar42.Size = new System.Drawing.Size(324, 13);
             this.bar42.TabIndex = 14;
             this.bar42.Tip = "";
-            this.bar42.ValueBase = 0F;
-            this.bar42.ValueMainBar = 100F;
-            this.bar42.ValueOverCap = 0F;
-            this.bar42.ValueOverlay1 = 0F;
-            this.bar42.ValueOverlay2 = 0F;
             // 
             // bar43
             // 
             this.bar43.BackColor = System.Drawing.Color.Transparent;
             this.bar43.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar43.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar43.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar43.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar43.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar43.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar43.EnableBaseValue = false;
-            this.bar43.EnableOverCap = false;
-            this.bar43.EnableOverlay1 = false;
-            this.bar43.EnableOverlay2 = false;
             this.bar43.Group = "Status Protection";
             this.bar43.Location = new System.Drawing.Point(178, 99);
             this.bar43.MaximumBarValue = 40F;
@@ -4128,25 +3377,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar43.Size = new System.Drawing.Size(324, 13);
             this.bar43.TabIndex = 15;
             this.bar43.Tip = "";
-            this.bar43.ValueBase = 0F;
-            this.bar43.ValueMainBar = 100F;
-            this.bar43.ValueOverCap = 0F;
-            this.bar43.ValueOverlay1 = 0F;
-            this.bar43.ValueOverlay2 = 0F;
             // 
             // bar44
             // 
             this.bar44.BackColor = System.Drawing.Color.Transparent;
             this.bar44.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar44.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar44.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar44.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar44.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar44.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar44.EnableBaseValue = false;
-            this.bar44.EnableOverCap = false;
-            this.bar44.EnableOverlay1 = false;
-            this.bar44.EnableOverlay2 = false;
             this.bar44.Group = "Status Protection";
             this.bar44.Location = new System.Drawing.Point(178, 119);
             this.bar44.MaximumBarValue = 40F;
@@ -4155,25 +3390,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar44.Size = new System.Drawing.Size(324, 13);
             this.bar44.TabIndex = 16;
             this.bar44.Tip = "";
-            this.bar44.ValueBase = 0F;
-            this.bar44.ValueMainBar = 100F;
-            this.bar44.ValueOverCap = 0F;
-            this.bar44.ValueOverlay1 = 0F;
-            this.bar44.ValueOverlay2 = 0F;
             // 
             // bar45
             // 
             this.bar45.BackColor = System.Drawing.Color.Transparent;
             this.bar45.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar45.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar45.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar45.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar45.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar45.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar45.EnableBaseValue = false;
-            this.bar45.EnableOverCap = false;
-            this.bar45.EnableOverlay1 = false;
-            this.bar45.EnableOverlay2 = false;
             this.bar45.Group = "Status Protection";
             this.bar45.Location = new System.Drawing.Point(178, 139);
             this.bar45.MaximumBarValue = 40F;
@@ -4182,25 +3403,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar45.Size = new System.Drawing.Size(324, 13);
             this.bar45.TabIndex = 17;
             this.bar45.Tip = "";
-            this.bar45.ValueBase = 0F;
-            this.bar45.ValueMainBar = 100F;
-            this.bar45.ValueOverCap = 0F;
-            this.bar45.ValueOverlay1 = 0F;
-            this.bar45.ValueOverlay2 = 0F;
             // 
             // bar46
             // 
             this.bar46.BackColor = System.Drawing.Color.Transparent;
             this.bar46.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar46.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar46.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar46.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar46.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar46.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar46.EnableBaseValue = false;
-            this.bar46.EnableOverCap = false;
-            this.bar46.EnableOverlay1 = false;
-            this.bar46.EnableOverlay2 = false;
             this.bar46.Group = "Status Protection";
             this.bar46.Location = new System.Drawing.Point(178, 159);
             this.bar46.MaximumBarValue = 40F;
@@ -4209,25 +3416,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar46.Size = new System.Drawing.Size(324, 13);
             this.bar46.TabIndex = 18;
             this.bar46.Tip = "";
-            this.bar46.ValueBase = 0F;
-            this.bar46.ValueMainBar = 100F;
-            this.bar46.ValueOverCap = 0F;
-            this.bar46.ValueOverlay1 = 0F;
-            this.bar46.ValueOverlay2 = 0F;
             // 
             // bar47
             // 
             this.bar47.BackColor = System.Drawing.Color.Transparent;
             this.bar47.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar47.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar47.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar47.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar47.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar47.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar47.EnableBaseValue = false;
-            this.bar47.EnableOverCap = false;
-            this.bar47.EnableOverlay1 = false;
-            this.bar47.EnableOverlay2 = false;
             this.bar47.Group = "Status Protection";
             this.bar47.Location = new System.Drawing.Point(178, 179);
             this.bar47.MaximumBarValue = 40F;
@@ -4236,25 +3429,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar47.Size = new System.Drawing.Size(324, 13);
             this.bar47.TabIndex = 19;
             this.bar47.Tip = "";
-            this.bar47.ValueBase = 0F;
-            this.bar47.ValueMainBar = 100F;
-            this.bar47.ValueOverCap = 0F;
-            this.bar47.ValueOverlay1 = 0F;
-            this.bar47.ValueOverlay2 = 0F;
             // 
             // bar48
             // 
             this.bar48.BackColor = System.Drawing.Color.Transparent;
             this.bar48.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar48.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar48.ColorMainBar = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.bar48.ColorOverCap = System.Drawing.Color.Magenta;
-            this.bar48.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar48.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar48.EnableBaseValue = false;
-            this.bar48.EnableOverCap = false;
-            this.bar48.EnableOverlay1 = false;
-            this.bar48.EnableOverlay2 = false;
             this.bar48.Group = "Status Protection";
             this.bar48.Location = new System.Drawing.Point(178, 199);
             this.bar48.MaximumBarValue = 40F;
@@ -4263,11 +3442,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar48.Size = new System.Drawing.Size(324, 13);
             this.bar48.TabIndex = 20;
             this.bar48.Tip = "";
-            this.bar48.ValueBase = 0F;
-            this.bar48.ValueMainBar = 100F;
-            this.bar48.ValueOverCap = 0F;
-            this.bar48.ValueOverlay1 = 0F;
-            this.bar48.ValueOverlay2 = 0F;
             // 
             // lv42
             // 
@@ -4448,15 +3622,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.bar60.BackColor = System.Drawing.Color.Transparent;
             this.bar60.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar60.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar60.ColorMainBar = System.Drawing.Color.Cyan;
-            this.bar60.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(90)))), ((int)(((byte)(127)))));
-            this.bar60.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar60.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar60.EnableBaseValue = false;
-            this.bar60.EnableOverCap = true;
-            this.bar60.EnableOverlay1 = false;
-            this.bar60.EnableOverlay2 = false;
             this.bar60.Group = "Debuff Resistance";
             this.bar60.Location = new System.Drawing.Point(149, 3);
             this.bar60.MaximumBarValue = 110F;
@@ -4465,25 +3630,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar60.Size = new System.Drawing.Size(337, 13);
             this.bar60.TabIndex = 1;
             this.bar60.Tip = "";
-            this.bar60.ValueBase = 0F;
-            this.bar60.ValueMainBar = 200F;
-            this.bar60.ValueOverCap = 0F;
-            this.bar60.ValueOverlay1 = 0F;
-            this.bar60.ValueOverlay2 = 0F;
             // 
             // bar67
             // 
             this.bar67.BackColor = System.Drawing.Color.Transparent;
             this.bar67.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar67.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar67.ColorMainBar = System.Drawing.Color.Cyan;
-            this.bar67.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(90)))), ((int)(((byte)(127)))));
-            this.bar67.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar67.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar67.EnableBaseValue = false;
-            this.bar67.EnableOverCap = true;
-            this.bar67.EnableOverlay1 = false;
-            this.bar67.EnableOverlay2 = false;
             this.bar67.Group = "Debuff Resistance";
             this.bar67.Location = new System.Drawing.Point(149, 136);
             this.bar67.MaximumBarValue = 110F;
@@ -4492,25 +3643,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar67.Size = new System.Drawing.Size(337, 13);
             this.bar67.TabIndex = 8;
             this.bar67.Tip = "";
-            this.bar67.ValueBase = 0F;
-            this.bar67.ValueMainBar = 200F;
-            this.bar67.ValueOverCap = 0F;
-            this.bar67.ValueOverlay1 = 0F;
-            this.bar67.ValueOverlay2 = 0F;
             // 
             // bar61
             // 
             this.bar61.BackColor = System.Drawing.Color.Transparent;
             this.bar61.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar61.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar61.ColorMainBar = System.Drawing.Color.Cyan;
-            this.bar61.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(90)))), ((int)(((byte)(127)))));
-            this.bar61.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar61.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar61.EnableBaseValue = false;
-            this.bar61.EnableOverCap = true;
-            this.bar61.EnableOverlay1 = false;
-            this.bar61.EnableOverlay2 = false;
             this.bar61.Group = "Debuff Resistance";
             this.bar61.Location = new System.Drawing.Point(149, 22);
             this.bar61.MaximumBarValue = 110F;
@@ -4519,25 +3656,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar61.Size = new System.Drawing.Size(337, 13);
             this.bar61.TabIndex = 2;
             this.bar61.Tip = "";
-            this.bar61.ValueBase = 0F;
-            this.bar61.ValueMainBar = 200F;
-            this.bar61.ValueOverCap = 0F;
-            this.bar61.ValueOverlay1 = 0F;
-            this.bar61.ValueOverlay2 = 0F;
             // 
             // bar66
             // 
             this.bar66.BackColor = System.Drawing.Color.Transparent;
             this.bar66.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar66.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar66.ColorMainBar = System.Drawing.Color.Cyan;
-            this.bar66.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(90)))), ((int)(((byte)(127)))));
-            this.bar66.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar66.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar66.EnableBaseValue = false;
-            this.bar66.EnableOverCap = true;
-            this.bar66.EnableOverlay1 = false;
-            this.bar66.EnableOverlay2 = false;
             this.bar66.Group = "Debuff Resistance";
             this.bar66.Location = new System.Drawing.Point(149, 117);
             this.bar66.MaximumBarValue = 110F;
@@ -4546,25 +3669,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar66.Size = new System.Drawing.Size(337, 13);
             this.bar66.TabIndex = 7;
             this.bar66.Tip = "";
-            this.bar66.ValueBase = 0F;
-            this.bar66.ValueMainBar = 200F;
-            this.bar66.ValueOverCap = 0F;
-            this.bar66.ValueOverlay1 = 0F;
-            this.bar66.ValueOverlay2 = 0F;
             // 
             // bar62
             // 
             this.bar62.BackColor = System.Drawing.Color.Transparent;
             this.bar62.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar62.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar62.ColorMainBar = System.Drawing.Color.Cyan;
-            this.bar62.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(90)))), ((int)(((byte)(127)))));
-            this.bar62.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar62.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar62.EnableBaseValue = false;
-            this.bar62.EnableOverCap = true;
-            this.bar62.EnableOverlay1 = false;
-            this.bar62.EnableOverlay2 = false;
             this.bar62.Group = "Debuff Resistance";
             this.bar62.Location = new System.Drawing.Point(149, 41);
             this.bar62.MaximumBarValue = 110F;
@@ -4573,25 +3682,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar62.Size = new System.Drawing.Size(337, 13);
             this.bar62.TabIndex = 3;
             this.bar62.Tip = "";
-            this.bar62.ValueBase = 0F;
-            this.bar62.ValueMainBar = 200F;
-            this.bar62.ValueOverCap = 0F;
-            this.bar62.ValueOverlay1 = 0F;
-            this.bar62.ValueOverlay2 = 0F;
             // 
             // bar65
             // 
             this.bar65.BackColor = System.Drawing.Color.Transparent;
             this.bar65.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar65.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar65.ColorMainBar = System.Drawing.Color.Cyan;
-            this.bar65.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(90)))), ((int)(((byte)(127)))));
-            this.bar65.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar65.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar65.EnableBaseValue = false;
-            this.bar65.EnableOverCap = true;
-            this.bar65.EnableOverlay1 = false;
-            this.bar65.EnableOverlay2 = false;
             this.bar65.Group = "Debuff Resistance";
             this.bar65.Location = new System.Drawing.Point(149, 98);
             this.bar65.MaximumBarValue = 110F;
@@ -4600,25 +3695,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar65.Size = new System.Drawing.Size(337, 13);
             this.bar65.TabIndex = 6;
             this.bar65.Tip = "";
-            this.bar65.ValueBase = 0F;
-            this.bar65.ValueMainBar = 200F;
-            this.bar65.ValueOverCap = 0F;
-            this.bar65.ValueOverlay1 = 0F;
-            this.bar65.ValueOverlay2 = 0F;
             // 
             // bar63
             // 
             this.bar63.BackColor = System.Drawing.Color.Transparent;
             this.bar63.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar63.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar63.ColorMainBar = System.Drawing.Color.Cyan;
-            this.bar63.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(90)))), ((int)(((byte)(127)))));
-            this.bar63.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar63.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar63.EnableBaseValue = false;
-            this.bar63.EnableOverCap = true;
-            this.bar63.EnableOverlay1 = false;
-            this.bar63.EnableOverlay2 = false;
             this.bar63.Group = "Debuff Resistance";
             this.bar63.Location = new System.Drawing.Point(149, 60);
             this.bar63.MaximumBarValue = 110F;
@@ -4627,25 +3708,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar63.Size = new System.Drawing.Size(337, 13);
             this.bar63.TabIndex = 4;
             this.bar63.Tip = "";
-            this.bar63.ValueBase = 0F;
-            this.bar63.ValueMainBar = 200F;
-            this.bar63.ValueOverCap = 0F;
-            this.bar63.ValueOverlay1 = 0F;
-            this.bar63.ValueOverlay2 = 0F;
             // 
             // bar64
             // 
             this.bar64.BackColor = System.Drawing.Color.Transparent;
             this.bar64.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar64.ColorBaseValue = System.Drawing.Color.Magenta;
-            this.bar64.ColorMainBar = System.Drawing.Color.Cyan;
-            this.bar64.ColorOverCap = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(90)))), ((int)(((byte)(127)))));
-            this.bar64.ColorOverlay1 = System.Drawing.Color.Magenta;
-            this.bar64.ColorOverlay2 = System.Drawing.Color.Magenta;
-            this.bar64.EnableBaseValue = false;
-            this.bar64.EnableOverCap = true;
-            this.bar64.EnableOverlay1 = false;
-            this.bar64.EnableOverlay2 = false;
             this.bar64.Group = "Debuff Resistance";
             this.bar64.Location = new System.Drawing.Point(149, 79);
             this.bar64.MaximumBarValue = 110F;
@@ -4654,11 +3721,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar64.Size = new System.Drawing.Size(337, 13);
             this.bar64.TabIndex = 5;
             this.bar64.Tip = "";
-            this.bar64.ValueBase = 0F;
-            this.bar64.ValueMainBar = 200F;
-            this.bar64.ValueOverCap = 0F;
-            this.bar64.ValueOverlay1 = 0F;
-            this.bar64.ValueOverlay2 = 0F;
             // 
             // label136
             // 
@@ -4883,29 +3945,29 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel3;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel2;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel1;
-        private ctlLayeredBar bar1;
-        private ctlLayeredBar bar10;
-        private ctlLayeredBar bar9;
-        private ctlLayeredBar bar8;
-        private ctlLayeredBar bar7;
-        private ctlLayeredBar bar6;
-        private ctlLayeredBar bar5;
-        private ctlLayeredBar bar4;
-        private ctlLayeredBar bar3;
-        private ctlLayeredBar bar2;
-        private ctlLayeredBar bar11;
+        private ctlLayeredBarPb bar1;
+        private ctlLayeredBarPb bar10;
+        private ctlLayeredBarPb bar9;
+        private ctlLayeredBarPb bar8;
+        private ctlLayeredBarPb bar7;
+        private ctlLayeredBarPb bar6;
+        private ctlLayeredBarPb bar5;
+        private ctlLayeredBarPb bar4;
+        private ctlLayeredBarPb bar3;
+        private ctlLayeredBarPb bar2;
+        private ctlLayeredBarPb bar11;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel4;
         private Label label4;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
-        private ctlLayeredBar bar18;
-        private ctlLayeredBar bar17;
-        private ctlLayeredBar bar16;
-        private ctlLayeredBar bar15;
-        private ctlLayeredBar bar14;
-        private ctlLayeredBar bar13;
-        private ctlLayeredBar bar12;
+        private ctlLayeredBarPb bar18;
+        private ctlLayeredBarPb bar17;
+        private ctlLayeredBarPb bar16;
+        private ctlLayeredBarPb bar15;
+        private ctlLayeredBarPb bar14;
+        private ctlLayeredBarPb bar13;
+        private ctlLayeredBarPb bar12;
         private TableLayoutPanel tableLayoutPanel4;
         private Label label5;
         private Label label6;
@@ -4957,7 +4019,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel6;
         private TableLayoutPanel tableLayoutPanel6;
         private BarLabel lv30;
-        private ctlLayeredBar bar30;
+        private ctlLayeredBarPb bar30;
         private BarLabel lv29;
         private Label label55;
         private Label label56;
@@ -4971,9 +4033,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel5;
         private TableLayoutPanel tableLayoutPanel5;
         private BarLabel lv27;
-        private ctlLayeredBar bar27;
+        private ctlLayeredBarPb bar27;
         private BarLabel lv26;
-        private ctlLayeredBar bar26;
+        private ctlLayeredBarPb bar26;
         private BarLabel lv25;
         private Label label60;
         private Label label61;
@@ -4984,12 +4046,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel13;
         private TableLayoutPanel tableLayoutPanel12;
         private Label label77;
-        private ctlLayeredBar bar36;
+        private ctlLayeredBarPb bar36;
         private BarLabel lv36;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel12;
         private TableLayoutPanel tableLayoutPanel11;
         private Label label75;
-        private ctlLayeredBar bar35;
+        private ctlLayeredBarPb bar35;
         private BarLabel lv35;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel11;
         private TableLayoutPanel tableLayoutPanel10;
@@ -5028,23 +4090,23 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private Label label91;
         private Label label90;
         private BarLabel lv41;
-        private ctlLayeredBar bar41;
+        private ctlLayeredBarPb bar41;
         private BarLabel lv40;
-        private ctlLayeredBar bar40;
+        private ctlLayeredBarPb bar40;
         private BarLabel lv39;
-        private ctlLayeredBar bar39;
+        private ctlLayeredBarPb bar39;
         private Label label85;
         private Label label86;
         private Label label87;
         private Label label88;
         private BarLabel lv38;
-        private ctlLayeredBar bar42;
-        private ctlLayeredBar bar43;
-        private ctlLayeredBar bar44;
-        private ctlLayeredBar bar45;
-        private ctlLayeredBar bar46;
-        private ctlLayeredBar bar47;
-        private ctlLayeredBar bar48;
+        private ctlLayeredBarPb bar42;
+        private ctlLayeredBarPb bar43;
+        private ctlLayeredBarPb bar44;
+        private ctlLayeredBarPb bar45;
+        private ctlLayeredBarPb bar46;
+        private ctlLayeredBarPb bar47;
+        private ctlLayeredBarPb bar48;
         private BarLabel lv42;
         private Label label105;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel16;
@@ -5063,41 +4125,41 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private Label label117;
         private Label label118;
         private BarLabel lv52;
-        private ctlLayeredBar bar52;
+        private ctlLayeredBarPb bar52;
         private BarLabel lv51;
-        private ctlLayeredBar bar51;
+        private ctlLayeredBarPb bar51;
         private BarLabel lv50;
-        private ctlLayeredBar bar50;
+        private ctlLayeredBarPb bar50;
         private Label label122;
-        private ctlLayeredBar bar49;
+        private ctlLayeredBarPb bar49;
         private Label label123;
         private Label label124;
         private Label label125;
         private BarLabel lv49;
-        private ctlLayeredBar bar53;
-        private ctlLayeredBar bar54;
-        private ctlLayeredBar bar55;
-        private ctlLayeredBar bar56;
-        private ctlLayeredBar bar57;
-        private ctlLayeredBar bar58;
-        private ctlLayeredBar bar59;
+        private ctlLayeredBarPb bar53;
+        private ctlLayeredBarPb bar54;
+        private ctlLayeredBarPb bar55;
+        private ctlLayeredBarPb bar56;
+        private ctlLayeredBarPb bar57;
+        private ctlLayeredBarPb bar58;
+        private ctlLayeredBarPb bar59;
         private BarLabel lv53;
         private Label label104;
-        private ctlLayeredBar bar21;
-        private ctlLayeredBar bar23;
-        private ctlLayeredBar bar22;
-        private ctlLayeredBar bar19;
-        private ctlLayeredBar bar20;
-        private ctlLayeredBar bar37;
-        private ctlLayeredBar bar34;
-        private ctlLayeredBar bar33;
-        private ctlLayeredBar bar32;
-        private ctlLayeredBar bar31;
-        private ctlLayeredBar bar29;
-        private ctlLayeredBar bar28;
-        private ctlLayeredBar bar25;
-        private ctlLayeredBar bar24;
-        private ctlLayeredBar bar38;
+        private ctlLayeredBarPb bar21;
+        private ctlLayeredBarPb bar23;
+        private ctlLayeredBarPb bar22;
+        private ctlLayeredBarPb bar19;
+        private ctlLayeredBarPb bar20;
+        private ctlLayeredBarPb bar37;
+        private ctlLayeredBarPb bar34;
+        private ctlLayeredBarPb bar33;
+        private ctlLayeredBarPb bar32;
+        private ctlLayeredBarPb bar31;
+        private ctlLayeredBarPb bar29;
+        private ctlLayeredBarPb bar28;
+        private ctlLayeredBarPb bar25;
+        private ctlLayeredBarPb bar24;
+        private ctlLayeredBarPb bar38;
         private Syncfusion.Windows.Forms.Tools.TabPageAdv tabPageAdv1;
         private Label label128;
         private Syncfusion.Windows.Forms.Tools.GradientPanel gradientPanel17;
@@ -5109,14 +4171,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private BarLabel lv63;
         private BarLabel lv62;
         private BarLabel lv61;
-        private ctlLayeredBar bar60;
-        private ctlLayeredBar bar67;
-        private ctlLayeredBar bar61;
-        private ctlLayeredBar bar66;
-        private ctlLayeredBar bar62;
-        private ctlLayeredBar bar65;
-        private ctlLayeredBar bar63;
-        private ctlLayeredBar bar64;
+        private ctlLayeredBarPb bar60;
+        private ctlLayeredBarPb bar67;
+        private ctlLayeredBarPb bar61;
+        private ctlLayeredBarPb bar66;
+        private ctlLayeredBarPb bar62;
+        private ctlLayeredBarPb bar65;
+        private ctlLayeredBarPb bar63;
+        private ctlLayeredBarPb bar64;
         private Label label136;
         private Label label137;
         private Label label138;
