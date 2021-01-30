@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
+using FastDeepCloner;
 using mrbBase.Base.Display;
 
 namespace mrbControls
@@ -176,13 +176,15 @@ namespace mrbControls
         public void Draw(bool highlighted = false)
         {
             var sortedList = new List<BarData>();
+            sortedList = ListValues.Clone();
             if (!highlighted)
             {
-                sortedList.AddRange(ListValues.Where(e => e.Enabled & e.Value > _MinimumValue));
+                //sortedList.AddRange(ListValues.Where(e => e.Enabled & e.Value > _MinimumValue));
+                sortedList = sortedList.Where(e => e.Enabled & e.Value > _MinimumValue).ToList();
             }
             else
             {
-                sortedList.AddRange(ListValues);
+                //sortedList.AddRange(ListValues);
                 for (var i = 0; i < sortedList.Count; i++)
                 {
                     sortedList[i].Color = HighlightColors[i];
@@ -197,10 +199,11 @@ namespace mrbControls
             if (BxBuffer.Graphics == null) return;
 
             BxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            var bgColor = highlighted
-                ? Color.FromArgb(90, 128, 128, 128)
-                : Color.FromArgb(0, 0, 0, 0);
-            BxBuffer.Graphics.FillRectangle(new SolidBrush(bgColor), 0, 0, BxBuffer.Size.Width, BxBuffer.Size.Height);
+            BxBuffer.Graphics.Clear(Color.Transparent);
+            if (highlighted)
+            {
+                BxBuffer.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(90, 128, 128, 128)), 0, 0, BxBuffer.Size.Width, BxBuffer.Size.Height);
+            }
 
             if (sortedList.Count > 0)
             {
@@ -276,8 +279,8 @@ namespace mrbControls
         {
             var target = sender as ctlLayeredBarPb;
             TTip.SetToolTip(this, "");
-            Invalidate();
             Draw();
+            Refresh();
         }
         #endregion
 
