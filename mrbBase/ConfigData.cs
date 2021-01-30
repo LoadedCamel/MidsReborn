@@ -161,6 +161,11 @@ namespace mrbBase
         public bool LongExport { get; set; }
         public bool MasterMode { get; set; }
         public bool ShrinkFrmSets { get; set; }
+        public bool ConvertOldDb { get; set; }
+        public bool FirstRun { get; set; } = true;
+        public string SourceDataPath { get; set; }
+        public string ConversionDataPath { get; set; }
+        public string DataPath { get; set; } = Path.Combine(Files.GetAssemblyLoc(), "Data\\MRBHC\\");
 
 
         public string DefaultSaveFolderOverride
@@ -213,7 +218,9 @@ namespace mrbBase
             // force Mhd if it exists, then rename it
             var mhdFn = Files.GetConfigFilename(true);
             if (File.Exists(mhdFn))
+            {
                 MigrateToSerializer(mhdFn, serializer);
+            }
 
             var fn = Files.GetConfigFilename(false);
             if (File.Exists(fn) && fn.EndsWith(".json"))

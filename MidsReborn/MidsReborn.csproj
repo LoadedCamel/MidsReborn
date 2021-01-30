@@ -87,6 +87,12 @@
     <Compile Include="clsShoppingCheckList.cs" />
     <Compile Include="clsGenFreebies.cs" />
     <Compile Include="clsOAuth.cs" />
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.Designer.cs">
+      <DependentUpon>frmDBConvert.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UpdateSystem\clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
     <Compile Include="FileAssociation.cs" />
@@ -492,12 +498,15 @@
     <Content Include="Images\Classes\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\AttribMod.json">
+    <Content Include="Data\MRBHC\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\GlobalMods.mhd">
+    <Content Include="Data\MRBHC\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.resx">
+      <DependentUpon>frmDBConvert.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmIncarnates.resx">
       <DependentUpon>frmIncarnates.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -511,10 +520,10 @@
     <EmbeddedResource Include="UIv2\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Data\NLevels.mhd">
+    <Content Include="Data\MRBHC\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\RLevels.mhd">
+    <Content Include="Data\MRBHC\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Images\defaultAvatar.png" />
@@ -2675,37 +2684,37 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\bbcode.mhd">
+    <Content Include="Data\MRBHC\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Compare.mhd">
+    <Content Include="Data\MRBHC\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\EClasses.mhd">
+    <Content Include="Data\MRBHC\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\EnhDB.mhd">
+    <Content Include="Data\MRBHC\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\I12.mhd">
+    <Content Include="Data\MRBHC\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\I9.mhd">
+    <Content Include="Data\MRBHC\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Maths.mhd">
+    <Content Include="Data\MRBHC\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Origins.mhd">
+    <Content Include="Data\MRBHC\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Recipe.mhd">
+    <Content Include="Data\MRBHC\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Salvage.mhd">
+    <Content Include="Data\MRBHC\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\SetTypes.mhd">
+    <Content Include="Data\MRBHC\SetTypes.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
@@ -2719,6 +2728,9 @@
     </PackageReference>
     <PackageReference Include="FontAwesome.Sharp">
       <Version>5.15.3</Version>
+    </PackageReference>
+    <PackageReference Include="Joveler.Compression.ZLib">
+      <Version>4.0.0</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>

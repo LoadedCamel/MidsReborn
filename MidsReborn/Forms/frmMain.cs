@@ -43,8 +43,7 @@ namespace Mids_Reborn.Forms
 
         public frmMain()
         {
-            if (!Debugger.IsAttached || !this.IsInDesignMode() ||
-                !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
+            if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
                 ConfigData.Initialize(MyApplication.GetSerializer());
                 ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
@@ -257,8 +256,18 @@ namespace Mids_Reborn.Forms
                 }
 
                 if (findCommandLineParameter(args, "MASTERMODE=YES"))
+                {
                     MidsContext.Config.MasterMode = true;
-                MainModule.MidsController.LoadData(ref _frmInitializing);
+                }
+
+                if (MidsContext.Config.ConvertOldDb)
+                {
+                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.SourceDataPath, true);
+                }
+                else
+                {
+                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
+                }
                 _frmInitializing?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
@@ -361,6 +370,11 @@ namespace Mids_Reborn.Forms
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
                 Refresh();
+                if (MidsContext.Config.ConvertOldDb)
+                { 
+                    MessageBox.Show(@"Source loaded, please open the database editor and save the main/enhancement database to convert.", @"Conversion");
+
+                }
                 //Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
@@ -5518,6 +5532,13 @@ namespace Mids_Reborn.Forms
             doSaveAs();
         }
 
+        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
+        {
+            if (e.Text.Trim().Length != 0) return;
+            e.Cancel = true;
+            e.Message = "Required";
+        }
+
         void tsGenFreebies_Click(object sender, EventArgs e)
         {
             if (MainModule.MidsController.Toon == null) return;
@@ -5527,11 +5548,14 @@ namespace Mids_Reborn.Forms
             // and sub directories can be automatically created.
             var dirSelector = new FolderBrowserDialog
             {
-                Description = "Select your base CoH directory:",
+                Description = @"Select your base CoH directory:",
                 ShowNewFolderButton = false
             };
             var dsr = dirSelector.ShowDialog();
             if (dsr == DialogResult.Cancel) return;
+            InputBoxResult iResult = InputBox.Show("Enter a name for the popmenu", "Name your menu", "Enter the menu name here", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (!iResult.OK) return;
+            clsGenFreebies.MenuName = iResult.Text;
             Directory.CreateDirectory(dirSelector.SelectedPath + @"\data\texts\English\Menus");
             var mnuFileName = dirSelector.SelectedPath + @"\data\texts\English\Menus\" + clsGenFreebies.MenuName + "." + clsGenFreebies.MenuExt;
             var saveOp = clsGenFreebies.SaveTo(mnuFileName);
@@ -5541,7 +5565,7 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                MessageBox.Show("Popmenu saved.\r\nIf necessary, restart your client for it to be updated.\r\nUse /popmenu " + clsGenFreebies.MenuName + " to open it.",
+                MessageBox.Show("Popmenu created.\r\nIf necessary, restart your client for it to become available for use.\r\nUse /popmenu " + clsGenFreebies.MenuName + " to open it.",
                     "Woop",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);

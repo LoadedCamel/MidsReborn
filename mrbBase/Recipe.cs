@@ -27,39 +27,71 @@ namespace mrbBase
         {
         }
 
-        public Recipe(BinaryReader reader)
+        public Recipe(BinaryReader reader, bool useOld = false)
         {
-            Rarity = (RecipeRarity) reader.ReadInt32();
-            InternalName = reader.ReadString();
-            ExternalName = reader.ReadString();
-            Enhancement = reader.ReadString();
-            Item = new RecipeEntry[reader.ReadInt32() + 1];
-            for (var index1 = 0; index1 < Item.Length; index1++)
+            if (!useOld)
             {
-                Item[index1] = new RecipeEntry
+                Rarity = (RecipeRarity) reader.ReadInt32();
+                InternalName = reader.ReadString();
+                ExternalName = reader.ReadString();
+                Enhancement = reader.ReadString();
+                Item = new RecipeEntry[reader.ReadInt32() + 1];
+                for (var index1 = 0; index1 < Item.Length; index1++)
                 {
-                    Level = reader.ReadInt32(),
-                    BuyCost = reader.ReadInt32(),
-                    CraftCost = reader.ReadInt32(),
-                    BuyCostM = reader.ReadInt32(),
-                    CraftCostM = reader.ReadInt32()
-                };
-                var num = reader.ReadInt32();
-                Item[index1].Salvage = new string[num + 1];
-                Item[index1].Count = new int[num + 1];
-                Item[index1].SalvageIdx = new int[num + 1];
-                for (var index2 = 0; index2 < Item[index1].Salvage.Length; ++index2)
+                    Item[index1] = new RecipeEntry
+                    {
+                        Level = reader.ReadInt32(),
+                        BuyCost = reader.ReadInt32(),
+                        CraftCost = reader.ReadInt32(),
+                        BuyCostM = reader.ReadInt32(),
+                        CraftCostM = reader.ReadInt32()
+                    };
+                    var num = reader.ReadInt32();
+                    Item[index1].Salvage = new string[num + 1];
+                    Item[index1].Count = new int[num + 1];
+                    Item[index1].SalvageIdx = new int[num + 1];
+                    for (var index2 = 0; index2 < Item[index1].Salvage.Length; ++index2)
+                    {
+                        Item[index1].Salvage[index2] = reader.ReadString();
+                        Item[index1].Count[index2] = reader.ReadInt32();
+                        Item[index1].SalvageIdx[index2] = reader.ReadInt32();
+                        Item[index1].RecipeIdx[index2] = reader.ReadInt32();
+                    }
+                }
+
+                //IsGeneric = reader.ReadBoolean();
+                //IsVirtual = reader.ReadBoolean();
+                //IsHidden = reader.ReadBoolean();
+            }
+            else
+            {
+                Rarity = (RecipeRarity)reader.ReadInt32();
+                InternalName = reader.ReadString();
+                ExternalName = reader.ReadString();
+                Enhancement = reader.ReadString();
+                Item = new RecipeEntry[reader.ReadInt32() + 1];
+                for (int index1 = 0; index1 < Item.Length; ++index1)
                 {
-                    Item[index1].Salvage[index2] = reader.ReadString();
-                    Item[index1].Count[index2] = reader.ReadInt32();
-                    Item[index1].SalvageIdx[index2] = reader.ReadInt32();
-                    Item[index1].RecipeIdx[index2] = reader.ReadInt32();
+                    Item[index1] = new RecipeEntry
+                    {
+                        Level = reader.ReadInt32(),
+                        BuyCost = reader.ReadInt32(),
+                        CraftCost = reader.ReadInt32(),
+                        BuyCostM = reader.ReadInt32(),
+                        CraftCostM = reader.ReadInt32()
+                    };
+                    int num = reader.ReadInt32();
+                    Item[index1].Salvage = new string[num + 1];
+                    Item[index1].Count = new int[num + 1];
+                    Item[index1].SalvageIdx = new int[num + 1];
+                    for (int index2 = 0; index2 < Item[index1].Salvage.Length; ++index2)
+                    {
+                        Item[index1].Salvage[index2] = reader.ReadString();
+                        Item[index1].Count[index2] = reader.ReadInt32();
+                        Item[index1].SalvageIdx[index2] = reader.ReadInt32();
+                    }
                 }
             }
-            //IsGeneric = reader.ReadBoolean();
-            //IsVirtual = reader.ReadBoolean();
-            //IsHidden = reader.ReadBoolean();
-
         }
 
         public void StoreTo(BinaryWriter writer)
@@ -82,7 +114,7 @@ namespace mrbBase
                     writer.Write(r.Salvage[index2]);
                     writer.Write(r.Count[index2]);
                     writer.Write(r.SalvageIdx[index2]);
-                    //writer.Write(r.RecipeIdx[index2]);
+                    writer.Write(r.RecipeIdx[index2]);
                 }
             }
             //writer.Write(IsGeneric);

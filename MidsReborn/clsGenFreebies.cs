@@ -14,7 +14,7 @@ namespace Mids_Reborn
         private const string BoostCmd = "boost";
         private const string CmdSeparator = "$$";
         private const bool AutoAttune = true;
-        public const string MenuName = "MRBTest";
+        public static string MenuName { get; set; } = "MRBTest";
         public const string MenuExt = "mnu";
 
         private static List<List<string>> GenerateBoostChunks()
