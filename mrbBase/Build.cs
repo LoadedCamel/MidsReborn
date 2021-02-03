@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -868,10 +869,10 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                 }
             }
 
-            for (var powerIdx = 0; powerIdx < Powers.Count; ++powerIdx)
+            for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
             {
                 var power = Powers[powerIdx];
-                for (var slotIndex = 0; slotIndex <= power.Slots.Length - 1; ++slotIndex)
+                for (var slotIndex = 0; slotIndex < power.Slots.Length; slotIndex++)
                 {
                     if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
                         continue;
@@ -1004,29 +1005,86 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             return power1;
         }
 
-        public IEffect[] GetCumulativeSetBonuses()
+        public List<IEffect> GetCumulativeSetBonuses()
         {
             var bonusVirtualPower = SetBonusVirtualPower;
-            var array = Array.Empty<IEffect>();
+            var fxList = new List<IEffect>();
             foreach (var effIdx in bonusVirtualPower.Effects)
             {
                 if (effIdx.EffectType == Enums.eEffectType.None && string.IsNullOrEmpty(effIdx.Special))
                     continue;
-                var index2 = GcsbCheck(array, effIdx);
+                var index2 = GcsbCheck(fxList.ToArray(), effIdx);
                 if (index2 < 0)
                 {
-                    Array.Resize(ref array, array.Length + 1);
-                    var index3 = array.Length - 1;
-                    array[index3] = (IEffect)effIdx.Clone();
-                    array[index3].Math_Mag = effIdx.Mag;
+                    var fx = (IEffect) effIdx.Clone();
+                    fx.Math_Mag = effIdx.Mag;
+                    fxList = fxList.Append(fx).ToList();
+                    /*Array.Resize(ref fxList, fxList.Length + 1);
+                    var index3 = fxList.Length - 1;
+                    fxList[index3] = (IEffect)effIdx.Clone();
+                    fxList[index3].Math_Mag = effIdx.Mag;*/
                 }
                 else
                 {
-                    array[index2].Math_Mag += effIdx.Mag;
+                    fxList[index2].Math_Mag += effIdx.Mag;
                 }
             }
 
-            return array;
+            return fxList;
+        }
+
+        public Dictionary<(Enums.eEffectType effectType, Enums.eMez mezType, Enums.eDamage damageType, Enums.eEffectType targetEffectType), List<IEffect>> GetCumulativeSetBonusesDetail()
+        {
+            var bonusVirtualPower = SetBonusVirtualPower;
+            var fxListDetail = new Dictionary<(Enums.eEffectType effectType, Enums.eMez mezType, Enums.eDamage damageType, Enums.eEffectType targetEffectType), List<IEffect>>();
+            foreach (var effIdx in bonusVirtualPower.Effects)
+            {
+                if (effIdx.EffectType == Enums.eEffectType.None && string.IsNullOrEmpty(effIdx.Special) ||
+                    effIdx.EffectType == Enums.eEffectType.GrantPower) continue;
+
+                var fx = (IEffect) effIdx.Clone();
+                fx.Math_Mag = effIdx.Mag;
+                var mezVector = fx.EffectType == Enums.eEffectType.Mez || fx.EffectType == Enums.eEffectType.MezResist
+                    ? fx.MezType
+                    : Enums.eMez.None;
+
+                var dmgVector = fx.EffectType == Enums.eEffectType.Defense ||
+                                fx.EffectType == Enums.eEffectType.Resistance ||
+                                fx.EffectType == Enums.eEffectType.Damage ||
+                                fx.EffectType == Enums.eEffectType.DamageBuff
+                    ? fx.DamageType
+                    : Enums.eDamage.None;
+                var targetEffectVector = fx.EffectType == Enums.eEffectType.ResEffect ||
+                                         fx.EffectType == Enums.eEffectType.Enhancement
+
+                    ? fx.ETModifies
+                    : Enums.eEffectType.None;
+
+                var tupleKey = (fx.EffectType, mezVector, dmgVector, targetEffectVector);
+                if (!fxListDetail.ContainsKey(tupleKey))
+                {
+                    fxListDetail.Add(tupleKey, new List<IEffect>());
+                }
+
+                fxListDetail[tupleKey] = fxListDetail[tupleKey].Append(fx).ToList();
+            }
+
+            foreach (var fxListSub in fxListDetail)
+            {
+                fxListSub.Value.Sort((a, b) => -a.Mag.CompareTo(b.Mag) );
+            }
+
+            fxListDetail = fxListDetail
+                .OrderBy(pair =>
+                    $"{pair.Key.effectType}{(int) pair.Key.mezType:0:000}{(int) pair.Key.damageType:0:000}{(int) pair.Key.targetEffectType:0:000}")
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            /*fxListDetail = fxListDetail
+                .OrderByDescending(pair => pair.Value[0].Mag)
+                .ToDictionary(x => x.Key, x => x.Value);
+            */
+            
+            return fxListDetail;
         }
 
         private static int GcsbCheck(IEffect[] fxList, IEffect testFX)

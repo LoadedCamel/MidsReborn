@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Display;
@@ -79,6 +82,73 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             TopMost = chkOnTop.Checked;
         }
 
+        private (string enhSet, string power) GetEffectSourceData(string powerFullName,
+            Enums.eEffectType effectType,
+            ref Dictionary<string, List<(string enhSet, string power, Enums.eEffectType effectTypeLock)>> sourceFxDict)
+        {
+            if (!sourceFxDict.ContainsKey(powerFullName)) return ("", "");
+            for (var i = 0; i < sourceFxDict[powerFullName].Count; i++)
+            {
+                if (sourceFxDict[powerFullName][i].effectTypeLock != Enums.eEffectType.None &
+                    sourceFxDict[powerFullName][i].effectTypeLock != effectType
+                ) continue;
+
+                effectType = effectType switch
+                {
+                    Enums.eEffectType.JumpHeight => Enums.eEffectType.SpeedRunning,
+                    Enums.eEffectType.SpeedJumping => Enums.eEffectType.SpeedRunning,
+                    Enums.eEffectType.SpeedFlying => Enums.eEffectType.SpeedRunning,
+                    _ => effectType
+                };
+
+                sourceFxDict[powerFullName][i] = (sourceFxDict[powerFullName][i].enhSet, sourceFxDict[powerFullName][i].power, effectType);
+                return (sourceFxDict[powerFullName][i].enhSet, sourceFxDict[powerFullName][i].power);
+            }
+
+            return ("", "");
+        }
+
+        private Dictionary<string, List<(string enhSet, string power, Enums.eEffectType effectTypeLock)>> GetEffectSources()
+        {
+            var ret = new Dictionary<string, List<(string enhSet, string power, Enums.eEffectType effectTypeLock)>>();
+
+            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
+            {
+                for (var i = 0; i < s.SetInfo.Length; i++)
+                {
+                    var enhSet = DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX];
+                    var linkedPower = MidsContext.Character.CurrentBuild
+                        .Powers[s.PowerIndex]
+                        .NIDPowerset <= -1
+                        ? ""
+                        : DatabaseAPI.Database
+                            .Powersets[
+                                MidsContext.Character.CurrentBuild
+                                    .Powers[s.PowerIndex]
+                                    .NIDPowerset].Powers[
+                                MainModule.MidsController.Toon.CurrentBuild
+                                    .Powers[s.PowerIndex]
+                                    .IDXPower].DisplayName;
+
+                    for (var j = 0; j < enhSet.Bonus.Length; j++)
+                    {
+                        foreach (var b in enhSet.Bonus[j].Name)
+                        {
+                            Debug.WriteLine($"Bonus name: {b}, power: {linkedPower}, set: {enhSet.DisplayName}");
+                            if (!ret.ContainsKey(b))
+                            {
+                                ret.Add(b, new List<(string enhSet, string power, Enums.eEffectType effectTypeLock)>());
+                            }
+
+                            ret[b] = ret[b].Append((enhSet.DisplayName, linkedPower, Enums.eEffectType.None)).ToList();
+                        }
+                    }
+                }
+            }
+
+            return ret;
+        }
+
         private void DisplayList()
         {
             var items = new string[3];
@@ -86,30 +156,28 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lstSets.Items.Clear();
             var imageIndex = -1;
             FillImageList();
-            var num1 = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
-            for (var index1 = 0; index1 <= num1; ++index1)
+            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
             {
-                var num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < s.SetInfo.Length; index2++)
                 {
-                    var setInfo = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo;
+                    var setInfo = s.SetInfo;
                     var index3 = index2;
                     items[0] = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX].DisplayName;
                     items[1] =
                         MidsContext.Character.CurrentBuild
-                            .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
+                            .Powers[s.PowerIndex]
                             .NIDPowerset <= -1
                             ? ""
                             : DatabaseAPI.Database
                                 .Powersets[
                                     MidsContext.Character.CurrentBuild
-                                        .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
+                                        .Powers[s.PowerIndex]
                                         .NIDPowerset].Powers[
                                     MainModule.MidsController.Toon.CurrentBuild
-                                        .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex]
+                                        .Powers[s.PowerIndex]
                                         .IDXPower].DisplayName;
                     items[2] = Convert.ToString(setInfo[index3].SlottedCount);
-                    ++imageIndex;
+                    imageIndex++;
                     lstSets.Items.Add(new ListViewItem(items, imageIndex));
                     lstSets.Items[lstSets.Items.Count - 1].Tag = setInfo[index3].SetIDX;
                 }
@@ -121,39 +189,105 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             FillEffectView();
         }
 
-        private void FillEffectView()
+        private Dictionary<(Enums.eEffectType effectType, Enums.eMez mezType, Enums.eDamage damageType, Enums.eEffectType targetEffectType),
+            List<(IEffect fx, float mag, string enhSet, string power, Enums.ePvX pvMode, bool isFromEnh)>>
+            GetEffectSources2()
+        {
+            var ret = new Dictionary<(Enums.eEffectType effectType, Enums.eMez mezType, Enums.eDamage damageType, Enums.eEffectType targetEffectType),
+                List<(IEffect fx, float mag, string enhSet, string power, Enums.ePvX pvMode, bool isFromEnh)>>();
+            
+            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
+            {
+                for (var i = 0; i < s.SetInfo.Length; i++)
+                {
+                    if (s.SetInfo[i].Powers.Length <= 0) continue;
+
+                    var enhancementSet = DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX];
+                    var powerName = DatabaseAPI.Database
+                        .Powersets[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset]
+                        .Powers[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].IDXPower]
+                        .DisplayName;
+
+                    for (var j = 0; j < enhancementSet.Bonus.Length; j++)
+                    {
+                        var pvMode = enhancementSet.Bonus[j].PvMode;
+                        if (!((s.SetInfo[i].SlottedCount >= enhancementSet.Bonus[j].Slotted) &
+                              ((pvMode == Enums.ePvX.Any) |
+                               ((pvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
+                               ((pvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))))
+                            continue;
+
+                        //var setEffectString = enhancementSet.GetEffectString(j, false, true);
+                        var setEffectsData = enhancementSet.GetEffectDetailedData(j, false);
+                        foreach (var e in setEffectsData)
+                        {
+                            var tupleKey = (effectType: e.EffectType,
+                                mezType: e.MezType,
+                                damageType: e.DamageType,
+                                targetEffectType: e.ETModifies);
+                            if (!ret.ContainsKey(tupleKey))
+                            {
+                                ret.Add(tupleKey, new List<(IEffect fx, float mag, string enhSet, string power, Enums.ePvX pvMode, bool isFromEnh)>());
+                            }
+
+                            ret[tupleKey].Add((e, e.Mag, enhancementSet.DisplayName, powerName, pvMode, false));
+                        }
+                    }
+
+                    foreach (var si in s.SetInfo[i].EnhIndexes)
+                    {
+                        var specialEnhIdx = DatabaseAPI.IsSpecialEnh(si);
+                        if (specialEnhIdx <= -1) continue;
+                        
+                        //var enhEffectString = DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX].GetEffectString(specialEnhIdx, true, true);
+                        var enhEffectsData = enhancementSet.GetEffectDetailedData(specialEnhIdx, true);
+                        foreach (var e in enhEffectsData)
+                        {
+                            var tupleKey = (effectType: e.EffectType,
+                                mezType: e.MezType,
+                                damageType: e.DamageType,
+                                targetEffectType: e.ETModifies);
+                            if (!ret.ContainsKey(tupleKey))
+                            {
+                                ret.Add(tupleKey, new List<(IEffect fx, float mag, string enhSet, string power, Enums.ePvX pvMode, bool isFromEnh)>());
+                            }
+
+                            ret[tupleKey].Add((e, e.Mag, enhancementSet.DisplayName, powerName, Enums.ePvX.Any, true));
+                        }
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        private void FillEffectView(bool getDetails = false)
         {
             var str1 = "";
-            var numArray = new int[DatabaseAPI.NidPowers("set_bonus").Length - 1 + 1];
+            var numArray = new int[DatabaseAPI.NidPowers("set_bonus").Length];
             var hasOvercap = false;
-            var num1 = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
-            for (var index1 = 0; index1 <= num1; ++index1)
+            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
             {
-                var num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < s.SetInfo.Length; index2++)
                 {
-                    if (MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].Powers.Length <= 0)
-                        continue;
-                    var setInfo = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo;
+                    if (s.SetInfo[index2].Powers.Length <= 0) continue;
+
+                    var setInfo = s.SetInfo;
                     var index3 = index2;
                     var enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX];
-                    var str2 = str1 + RTF.Color(RTF.ElementID.Invention) +
-                               RTF.Underline(RTF.Bold(enhancementSet.DisplayName));
-                    if (MidsContext.Character.CurrentBuild
-                            .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].NIDPowerset >
-                        -1)
-                        str2 = str2 + RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "(" + DatabaseAPI.Database
+                    var str2 = str1 + RTF.Color(RTF.ElementID.Invention) + RTF.Underline(RTF.Bold(enhancementSet.DisplayName));
+                    if (MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset > -1)
+                        str2 += RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "(" + DatabaseAPI.Database
                             .Powersets[
                                 MidsContext.Character.CurrentBuild
-                                    .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].NIDPowerset]
+                                    .Powers[s.PowerIndex].NIDPowerset]
                             .Powers[
                                 MidsContext.Character.CurrentBuild
-                                    .Powers[MidsContext.Character.CurrentBuild.SetBonus[index1].PowerIndex].IDXPower]
+                                    .Powers[s.PowerIndex].IDXPower]
                             .DisplayName + ")";
                     var str3 = str2 + RTF.Crlf() + RTF.Color(RTF.ElementID.Text);
                     var str4 = "";
-                    var num3 = enhancementSet.Bonus.Length - 1;
-                    for (var index4 = 0; index4 <= num3; ++index4)
+                    for (var index4 = 0; index4 < enhancementSet.Bonus.Length; index4++)
                     {
                         if (!((setInfo[index3].SlottedCount >= enhancementSet.Bonus[index4].Slotted) &
                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any) |
@@ -162,72 +296,57 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvP) &
                                 MidsContext.Config.Inc.DisablePvE))))
                             continue;
-                        if (str4 != "")
-                            str4 += RTF.Crlf();
+                        if (str4 != "") str4 += RTF.Crlf();
                         var localOverCap = false;
                         var str5 = "  " + enhancementSet.GetEffectString(index4, false, true);
-                        var num4 = enhancementSet.Bonus[index4].Index.Length - 1;
-                        for (var index5 = 0; index5 <= num4; ++index5)
+                        foreach (var esb in enhancementSet.Bonus[index4].Index)
                         {
-                            if (enhancementSet.Bonus[index4].Index[index5] <= -1)
-                                continue;
-                            ++numArray[enhancementSet.Bonus[index4].Index[index5]];
-                            if (numArray[enhancementSet.Bonus[index4].Index[index5]] > 5)
+                            if (esb <= -1) continue;
+
+                            numArray[esb]++;
+                            if (numArray[esb] > 5)
+                            {
                                 localOverCap = true;
+                            }
                         }
 
                         if (localOverCap)
+                        {
                             str5 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str5 + " >Cap" +
                                               RTF.Color(RTF.ElementID.Text));
-                        if (localOverCap)
                             hasOvercap = true;
+                        }
+
                         str4 += str5;
                     }
 
-                    var num5 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].EnhIndexes.Length -
-                               1;
-                    for (var index4 = 0; index4 <= num5; ++index4)
+                    foreach (var si in s.SetInfo[index2].EnhIndexes)
                     {
-                        var index5 = DatabaseAPI.IsSpecialEnh(MidsContext.Character.CurrentBuild.SetBonus[index1]
-                            .SetInfo[index2]
-                            .EnhIndexes[index4]);
-                        if (index5 <= -1)
-                            continue;
+                        var index5 = DatabaseAPI.IsSpecialEnh(si);
+                        if (index5 <= -1) continue;
                         if (str4 != "")
                             str4 += RTF.Crlf();
                         var str5 = str4 + RTF.Color(RTF.ElementID.Enhancement);
                         var localOverCap = false;
                         var str6 = "  " + DatabaseAPI.Database
-                            .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
+                            .EnhancementSets[s.SetInfo[index2].SetIDX]
                             .GetEffectString(index5, true, true);
-                        var num4 = DatabaseAPI.Database
-                            .EnhancementSets[MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                            .SpecialBonus[index5].Index.Length - 1;
-                        for (var index6 = 0; index6 <= num4; ++index6)
+                        foreach (var sb in DatabaseAPI.Database.EnhancementSets[s.SetInfo[index2].SetIDX].SpecialBonus[index5].Index)
                         {
-                            if (DatabaseAPI.Database
-                                .EnhancementSets[
-                                    MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                .SpecialBonus[index5].Index[index6] <= -1)
-                                continue;
-                            ++numArray[
-                                DatabaseAPI.Database
-                                    .EnhancementSets[
-                                        MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                    .SpecialBonus[index5].Index[index6]];
-                            if (numArray[
-                                DatabaseAPI.Database
-                                    .EnhancementSets[
-                                        MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX]
-                                    .SpecialBonus[index5].Index[index6]] > 5)
+                            if (sb <= -1) continue;
+                            numArray[sb]++;
+                            if (numArray[sb] > 5)
+                            {
                                 localOverCap = true;
+                            }
                         }
 
                         if (localOverCap)
-                            str6 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str6 + " >Cap" +
-                                              RTF.Color(RTF.ElementID.Text));
-                        if (localOverCap)
+                        {
+                            str6 = RTF.Italic(RTF.Color(RTF.ElementID.Warning) + str6 + " >Cap" + RTF.Color(RTF.ElementID.Text));
                             hasOvercap = true;
+                        }
+
                         str4 = str5 + str6;
                     }
 
@@ -235,32 +354,77 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
             }
 
-            string str7;
-            if (hasOvercap)
-                str7 = RTF.Color(RTF.ElementID.Invention) + RTF.Underline(RTF.Bold("Information:")) + RTF.Crlf() +
-                       RTF.Color(RTF.ElementID.Text) +
-                       "One or more set bonuses have exceeded the 5 bonus cap, and will not affect your stats. Scroll down this list to find bonuses marked as '" +
-                       RTF.Italic(RTF.Color(RTF.ElementID.Warning) + ">Cap") + RTF.Color(RTF.ElementID.Text) + "'" +
-                       RTF.Crlf() + RTF.Crlf();
-            else
-                str7 = "";
+            var str7 = hasOvercap
+                ? RTF.Color(RTF.ElementID.Invention) + RTF.Underline(RTF.Bold("Information:")) + RTF.Crlf() +
+                  RTF.Color(RTF.ElementID.Text) +
+                  "One or more set bonuses have exceeded the 5 bonus cap, and will not affect your stats. Scroll down this list to find bonuses marked as '" +
+                  RTF.Italic(RTF.Color(RTF.ElementID.Warning) + ">Cap") + RTF.Color(RTF.ElementID.Text) + "'" +
+                  RTF.Crlf() + RTF.Crlf()
+                : "";
             var str8 = RTF.StartRTF() + str7 + str1 + RTF.EndRTF();
-            if (rtxtFX.Rtf != str8)
-                rtxtFX.Rtf = str8;
-            var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
-            Array.Sort(cumulativeSetBonuses);
+            if (rtxtFX.Rtf != str8) rtxtFX.Rtf = str8;
             var iStr = "";
-            var num6 = cumulativeSetBonuses.Length - 1;
-            for (var index = 0; index <= num6; ++index)
+            if (!getDetails)
             {
-                if (iStr != "")
-                    iStr += RTF.Crlf();
-                var str2 = cumulativeSetBonuses[index].BuildEffectString(true);
-                if (!str2.StartsWith("+"))
-                    str2 = "+" + str2;
-                if (str2.IndexOf("Endurance", StringComparison.Ordinal) > -1)
-                    str2 = str2.Replace("Endurance", "Max Endurance");
-                iStr += str2;
+                var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses().ToArray();
+                Array.Sort(cumulativeSetBonuses);
+
+                foreach (var csb in cumulativeSetBonuses)
+                {
+                    if (iStr != "") iStr += RTF.Crlf();
+                    var str2 = csb.BuildEffectString(true);
+                    if (!str2.StartsWith("+"))
+                        str2 = "+" + str2;
+                    if (str2.IndexOf("Endurance", StringComparison.Ordinal) > -1)
+                        str2 = str2.Replace("Endurance", "Max Endurance");
+                    iStr += str2;
+                }
+            }
+            else
+            {
+                //var effectSources = GetEffectSources();
+                //var setBonusesDetail = MidsContext.Character.CurrentBuild.GetCumulativeSetBonusesDetail();
+                //foreach (var csb in setBonusesDetail)
+                var effectSources = GetEffectSources2();
+                foreach (var fxGroup in effectSources)
+                {
+                    if (fxGroup.Key.effectType == Enums.eEffectType.GrantPower |
+                        fxGroup.Key.effectType == Enums.eEffectType.Null |
+                        fxGroup.Key.effectType == Enums.eEffectType.NullBool) continue;
+                    if (iStr != "") iStr += RTF.Crlf();
+                    var fxBlockStr = "";
+                    fxBlockStr += fxGroup.Key.effectType.ToString();
+                    fxBlockStr += fxGroup.Key.mezType != Enums.eMez.None ? $" ({fxGroup.Key.mezType})" : "";
+                    fxBlockStr += fxGroup.Key.damageType != Enums.eDamage.None ? $" ({fxGroup.Key.damageType})" : "";
+                    fxBlockStr += fxGroup.Key.targetEffectType != Enums.eEffectType.None ? $" ({fxGroup.Key.targetEffectType})" : "";
+
+                    foreach (var e in effectSources[fxGroup.Key])
+                    {
+                        fxBlockStr += RTF.Crlf();
+                        var effectString = e.fx.BuildEffectString(true);
+                        if (!effectString.StartsWith("+"))
+                        {
+                            effectString = "+" + effectString;
+                        }
+
+                        if (effectString.IndexOf("Endurance", StringComparison.Ordinal) > -1)
+                        {
+                            effectString = effectString.Replace("Endurance", "Max Endurance");
+                        }
+
+                        fxBlockStr += $"    {(e.pvMode == Enums.ePvX.PvP ? "[PVP] " : "")}{effectString}";
+                        if (e.enhSet != "" & e.power != "" & !e.isFromEnh)
+                        {
+                            fxBlockStr += $" ({e.enhSet}, on {e.power})";
+                        }
+                        else if (e.isFromEnh)
+                        {
+                            fxBlockStr += $" (Enh. special, on {e.power})";
+                        }
+                    }
+
+                    iStr += fxBlockStr;
+                }
             }
 
             var str9 = RTF.StartRTF() + RTF.ToRTF(iStr) + RTF.EndRTF();
@@ -277,17 +441,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var height1 = imageSize1.Height;
             var extendedBitmap = new ExtendedBitmap(width1, height1);
             ilSet.Images.Clear();
-            var setBonusCount = MidsContext.Character.CurrentBuild.SetBonus.Count - 1;
-            for (var index1 = 0; index1 <= setBonusCount; ++index1)
+            foreach (var sb in MidsContext.Character.CurrentBuild.SetBonus)
             {
-                var num2 = MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < sb.SetInfo.Length; index2++)
                 {
-                    if (MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX <= -1)
-                        continue;
-                    var enhancementSet =
-                        DatabaseAPI.Database.EnhancementSets[
-                            MidsContext.Character.CurrentBuild.SetBonus[index1].SetInfo[index2].SetIDX];
+                    if (sb.SetInfo[index2].SetIDX <= -1) continue;
+                    var enhancementSet = DatabaseAPI.Database.EnhancementSets[sb.SetInfo[index2].SetIDX];
                     if (enhancementSet.ImageIdx > -1)
                     {
                         extendedBitmap.Graphics.Clear(Color.White);
@@ -325,8 +484,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void lstSets_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lstSets.SelectedItems.Count < 1)
-                return;
+            if (lstSets.SelectedItems.Count < 1) return;
             rtxtInfo.Rtf = RTF.StartRTF() + EnhancementSetCollection.GetSetInfoLongRTF(
                 Convert.ToInt32(lstSets.SelectedItems[0].Tag),
                 Convert.ToInt32(lstSets.SelectedItems[0].SubItems[2].Text)) + RTF.EndRTF();
@@ -339,22 +497,29 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 X = MainModule.MidsController.SzFrmSets.X, Y = MainModule.MidsController.SzFrmSets.Y
             };
             if (rectangle.X < 1)
+            {
                 rectangle.X = myParent.Left + 8;
+            }
+
             if (rectangle.Y < 32)
+            {
                 rectangle.Y = myParent.Top + (myParent.Height - myParent.ClientSize.Height) +
                               myParent.GetPrimaryBottom();
-            if (MidsContext.Config.ShrinkFrmSets & (Width > 600))
+            }
+
+            if (MidsContext.Config.ShrinkFrmSets & (Width > 600) |
+                !MidsContext.Config.ShrinkFrmSets & (Width < 600))
+            {
                 btnSmall_Click();
-            else if (!MidsContext.Config.ShrinkFrmSets & (Width < 600))
-                btnSmall_Click();
+            }
+
             Top = rectangle.Y;
             Left = rectangle.X;
         }
 
         private void StoreLocation()
         {
-            if (!MainModule.MidsController.IsAppInitialized)
-                return;
+            if (!MainModule.MidsController.IsAppInitialized) return;
             MainModule.MidsController.SzFrmSets.X = Left;
             MainModule.MidsController.SzFrmSets.Y = Top;
             MidsContext.Config.ShrinkFrmSets = Width < 600;
@@ -362,31 +527,49 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public void UpdateData()
         {
-            if (myParent == null)
-                return;
+            if (myParent == null) return;
+
             BackColor = myParent.BackColor;
             if (rtApplied.BackColor != BackColor)
+            {
                 rtApplied.BackColor = BackColor;
+            }
+
             if (rtxtFX.BackColor != BackColor)
+            {
                 rtxtFX.BackColor = BackColor;
+            }
+
             if (rtxtInfo.BackColor != BackColor)
+            {
                 rtxtInfo.BackColor = BackColor;
+            }
+
+            var imageOffIdx = MidsContext.Character.IsHero() ? 2 : 4;
+            var imageOnIdx = imageOffIdx + 1;
+
             btnClose.IA = myParent.Drawing.pImageAttributes;
-            btnClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            btnClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            btnClose.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
+            btnClose.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
+
             chkOnTop.IA = myParent.Drawing.pImageAttributes;
-            chkOnTop.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            chkOnTop.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            chkOnTop.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
+            chkOnTop.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
+
             btnSmall.IA = myParent.Drawing.pImageAttributes;
-            btnSmall.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            btnSmall.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            btnSmall.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
+            btnSmall.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
+
+            btnDetailFx.IA = myParent.Drawing.pImageAttributes;
+            btnDetailFx.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
+            btnDetailFx.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
+
             DisplayList();
+        }
+
+        private void btnDetailFx_ButtonClicked()
+        {
+            FillEffectView(btnDetailFx.Checked);
         }
     }
 }

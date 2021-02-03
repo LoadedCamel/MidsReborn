@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace mrbBase
@@ -136,6 +138,27 @@ namespace mrbBase
                 SpecialBonus[index].Name = new string[0];
                 SpecialBonus[index].Index = new int[0];
             }
+        }
+
+        public List<IEffect> GetEffectDetailedData(int index, bool special)
+        {
+            var ret = new List<IEffect>();
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 | index > bonusItemArray.Length - 1)
+            {
+                return ret;
+            }
+
+            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
+            {
+                if (bonusItemArray[index].Index[i] < 0) continue;
+                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
+
+                var linkedPower = DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
+                ret.AddRange((IEnumerable<IEffect>) linkedPower.Effects.Clone());
+            }
+
+            return ret;
         }
 
         public string GetEffectString(int index, bool special, bool longForm = false)
