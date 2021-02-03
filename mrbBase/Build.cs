@@ -1033,60 +1033,6 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             return fxList;
         }
 
-        public Dictionary<(Enums.eEffectType effectType, Enums.eMez mezType, Enums.eDamage damageType, Enums.eEffectType targetEffectType), List<IEffect>> GetCumulativeSetBonusesDetail()
-        {
-            var bonusVirtualPower = SetBonusVirtualPower;
-            var fxListDetail = new Dictionary<(Enums.eEffectType effectType, Enums.eMez mezType, Enums.eDamage damageType, Enums.eEffectType targetEffectType), List<IEffect>>();
-            foreach (var effIdx in bonusVirtualPower.Effects)
-            {
-                if (effIdx.EffectType == Enums.eEffectType.None && string.IsNullOrEmpty(effIdx.Special) ||
-                    effIdx.EffectType == Enums.eEffectType.GrantPower) continue;
-
-                var fx = (IEffect) effIdx.Clone();
-                fx.Math_Mag = effIdx.Mag;
-                var mezVector = fx.EffectType == Enums.eEffectType.Mez || fx.EffectType == Enums.eEffectType.MezResist
-                    ? fx.MezType
-                    : Enums.eMez.None;
-
-                var dmgVector = fx.EffectType == Enums.eEffectType.Defense ||
-                                fx.EffectType == Enums.eEffectType.Resistance ||
-                                fx.EffectType == Enums.eEffectType.Damage ||
-                                fx.EffectType == Enums.eEffectType.DamageBuff
-                    ? fx.DamageType
-                    : Enums.eDamage.None;
-                var targetEffectVector = fx.EffectType == Enums.eEffectType.ResEffect ||
-                                         fx.EffectType == Enums.eEffectType.Enhancement
-
-                    ? fx.ETModifies
-                    : Enums.eEffectType.None;
-
-                var tupleKey = (fx.EffectType, mezVector, dmgVector, targetEffectVector);
-                if (!fxListDetail.ContainsKey(tupleKey))
-                {
-                    fxListDetail.Add(tupleKey, new List<IEffect>());
-                }
-
-                fxListDetail[tupleKey] = fxListDetail[tupleKey].Append(fx).ToList();
-            }
-
-            foreach (var fxListSub in fxListDetail)
-            {
-                fxListSub.Value.Sort((a, b) => -a.Mag.CompareTo(b.Mag) );
-            }
-
-            fxListDetail = fxListDetail
-                .OrderBy(pair =>
-                    $"{pair.Key.effectType}{(int) pair.Key.mezType:0:000}{(int) pair.Key.damageType:0:000}{(int) pair.Key.targetEffectType:0:000}")
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            /*fxListDetail = fxListDetail
-                .OrderByDescending(pair => pair.Value[0].Mag)
-                .ToDictionary(x => x.Key, x => x.Value);
-            */
-            
-            return fxListDetail;
-        }
-
         private static int GcsbCheck(IEffect[] fxList, IEffect testFX)
         {
             for (var index = 0; index < fxList.Length; ++index)

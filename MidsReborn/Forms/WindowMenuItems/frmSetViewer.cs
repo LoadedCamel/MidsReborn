@@ -14,11 +14,50 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmSetViewer : Form
     {
+        private class FXIdentifierKey
+        {
+            public Enums.eEffectType EffectType { get; set; }
+            public Enums.eMez MezType { get; set; }
+            public Enums.eDamage DamageType { get; set; }
+            public Enums.eEffectType TargetEffectType { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is FXIdentifierKey o)
+                {
+                    return (EffectType == o.EffectType &
+                            MezType == o.MezType &
+                            DamageType == o.DamageType &
+                            TargetEffectType == o.TargetEffectType);
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return EffectType.GetHashCode() ^ MezType.GetHashCode() ^ DamageType.GetHashCode() ^ TargetEffectType.GetHashCode();
+            }
+        }
+
+        private class FXSourceData
+        {
+            private IEffect _fx;
+            public IEffect Fx
+            {
+                get => _fx;
+                set => _fx = (IEffect) value.Clone();
+            }
+            public float Mag { get; set; }
+            public string EnhSet { get; set; }
+            public string Power { get; set; }
+            public Enums.ePvX PvMode { get; set; }
+            public bool IsFromEnh { get; set; }
+        }
+
         private readonly frmMain myParent;
         private ImageButton btnClose;
-
         private ImageButton btnSmall;
-
         private ImageButton chkOnTop;
         private ColumnHeader ColumnHeader1;
         private ColumnHeader ColumnHeader2;
@@ -82,73 +121,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             TopMost = chkOnTop.Checked;
         }
 
-        private (string enhSet, string power) GetEffectSourceData(string powerFullName,
-            Enums.eEffectType effectType,
-            ref Dictionary<string, List<(string enhSet, string power, Enums.eEffectType effectTypeLock)>> sourceFxDict)
-        {
-            if (!sourceFxDict.ContainsKey(powerFullName)) return ("", "");
-            for (var i = 0; i < sourceFxDict[powerFullName].Count; i++)
-            {
-                if (sourceFxDict[powerFullName][i].effectTypeLock != Enums.eEffectType.None &
-                    sourceFxDict[powerFullName][i].effectTypeLock != effectType
-                ) continue;
-
-                effectType = effectType switch
-                {
-                    Enums.eEffectType.JumpHeight => Enums.eEffectType.SpeedRunning,
-                    Enums.eEffectType.SpeedJumping => Enums.eEffectType.SpeedRunning,
-                    Enums.eEffectType.SpeedFlying => Enums.eEffectType.SpeedRunning,
-                    _ => effectType
-                };
-
-                sourceFxDict[powerFullName][i] = (sourceFxDict[powerFullName][i].enhSet, sourceFxDict[powerFullName][i].power, effectType);
-                return (sourceFxDict[powerFullName][i].enhSet, sourceFxDict[powerFullName][i].power);
-            }
-
-            return ("", "");
-        }
-
-        private Dictionary<string, List<(string enhSet, string power, Enums.eEffectType effectTypeLock)>> GetEffectSources()
-        {
-            var ret = new Dictionary<string, List<(string enhSet, string power, Enums.eEffectType effectTypeLock)>>();
-
-            foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
-            {
-                for (var i = 0; i < s.SetInfo.Length; i++)
-                {
-                    var enhSet = DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX];
-                    var linkedPower = MidsContext.Character.CurrentBuild
-                        .Powers[s.PowerIndex]
-                        .NIDPowerset <= -1
-                        ? ""
-                        : DatabaseAPI.Database
-                            .Powersets[
-                                MidsContext.Character.CurrentBuild
-                                    .Powers[s.PowerIndex]
-                                    .NIDPowerset].Powers[
-                                MainModule.MidsController.Toon.CurrentBuild
-                                    .Powers[s.PowerIndex]
-                                    .IDXPower].DisplayName;
-
-                    for (var j = 0; j < enhSet.Bonus.Length; j++)
-                    {
-                        foreach (var b in enhSet.Bonus[j].Name)
-                        {
-                            Debug.WriteLine($"Bonus name: {b}, power: {linkedPower}, set: {enhSet.DisplayName}");
-                            if (!ret.ContainsKey(b))
-                            {
-                                ret.Add(b, new List<(string enhSet, string power, Enums.eEffectType effectTypeLock)>());
-                            }
-
-                            ret[b] = ret[b].Append((enhSet.DisplayName, linkedPower, Enums.eEffectType.None)).ToList();
-                        }
-                    }
-                }
-            }
-
-            return ret;
-        }
-
         private void DisplayList()
         {
             var items = new string[3];
@@ -189,12 +161,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             FillEffectView();
         }
 
-        private Dictionary<(Enums.eEffectType effectType, Enums.eMez mezType, Enums.eDamage damageType, Enums.eEffectType targetEffectType),
-            List<(IEffect fx, float mag, string enhSet, string power, Enums.ePvX pvMode, bool isFromEnh)>>
-            GetEffectSources2()
+        private Dictionary<FXIdentifierKey, List<FXSourceData>> GetEffectSources()
         {
-            var ret = new Dictionary<(Enums.eEffectType effectType, Enums.eMez mezType, Enums.eDamage damageType, Enums.eEffectType targetEffectType),
-                List<(IEffect fx, float mag, string enhSet, string power, Enums.ePvX pvMode, bool isFromEnh)>>();
+            var ret = new Dictionary<FXIdentifierKey, List<FXSourceData>>();
             
             foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
             {
@@ -217,20 +186,29 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                ((pvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))))
                             continue;
 
-                        //var setEffectString = enhancementSet.GetEffectString(j, false, true);
                         var setEffectsData = enhancementSet.GetEffectDetailedData(j, false);
                         foreach (var e in setEffectsData)
                         {
-                            var tupleKey = (effectType: e.EffectType,
-                                mezType: e.MezType,
-                                damageType: e.DamageType,
-                                targetEffectType: e.ETModifies);
-                            if (!ret.ContainsKey(tupleKey))
+                            var identKey = new FXIdentifierKey
                             {
-                                ret.Add(tupleKey, new List<(IEffect fx, float mag, string enhSet, string power, Enums.ePvX pvMode, bool isFromEnh)>());
-                            }
+                                EffectType = e.EffectType,
+                                MezType = e.MezType,
+                                DamageType = e.DamageType,
+                                TargetEffectType = e.ETModifies
+                            };
+                            
+                            if (!ret.ContainsKey(identKey)) ret.Add(identKey, new List<FXSourceData>());
+                            ret[identKey].Add(new FXSourceData
+                            {
+                                Fx = e,
+                                Mag = e.Mag,
+                                EnhSet = enhancementSet.DisplayName,
+                                Power = powerName,
+                                PvMode = pvMode,
+                                IsFromEnh = false
+                            });
 
-                            ret[tupleKey].Add((e, e.Mag, enhancementSet.DisplayName, powerName, pvMode, false));
+                            Debug.WriteLine($"Set: {identKey.EffectType}, {identKey.MezType}, {identKey.DamageType}, {identKey.TargetEffectType}: L={ret[identKey].Count}");
                         }
                     }
 
@@ -239,24 +217,45 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         var specialEnhIdx = DatabaseAPI.IsSpecialEnh(si);
                         if (specialEnhIdx <= -1) continue;
                         
-                        //var enhEffectString = DatabaseAPI.Database.EnhancementSets[s.SetInfo[i].SetIDX].GetEffectString(specialEnhIdx, true, true);
                         var enhEffectsData = enhancementSet.GetEffectDetailedData(specialEnhIdx, true);
                         foreach (var e in enhEffectsData)
                         {
-                            var tupleKey = (effectType: e.EffectType,
-                                mezType: e.MezType,
-                                damageType: e.DamageType,
-                                targetEffectType: e.ETModifies);
-                            if (!ret.ContainsKey(tupleKey))
+                            var identKey = new FXIdentifierKey
                             {
-                                ret.Add(tupleKey, new List<(IEffect fx, float mag, string enhSet, string power, Enums.ePvX pvMode, bool isFromEnh)>());
-                            }
+                                EffectType = e.EffectType,
+                                MezType = e.MezType,
+                                DamageType = e.DamageType,
+                                TargetEffectType = e.ETModifies
+                            };
+                            
+                            if (!ret.ContainsKey(identKey)) ret.Add(identKey, new List<FXSourceData>());
+                            ret[identKey].Add(new FXSourceData
+                            {
+                                Fx = e,
+                                Mag = e.Mag,
+                                EnhSet = enhancementSet.DisplayName,
+                                Power = powerName,
+                                PvMode = Enums.ePvX.Any,
+                                IsFromEnh = true
+                            });
 
-                            ret[tupleKey].Add((e, e.Mag, enhancementSet.DisplayName, powerName, Enums.ePvX.Any, true));
+                            Debug.WriteLine($"Enh: {identKey.EffectType}, {identKey.MezType}, {identKey.DamageType}, {identKey.TargetEffectType}: L={ret[identKey].Count}");
                         }
                     }
                 }
             }
+
+            foreach (var fxListSub in ret)
+            {
+                // Sort each type of buff, biggest one first
+                fxListSub.Value.Sort((a, b) => -a.Mag.CompareTo(b.Mag));
+            }
+
+            // Sort groups by effect type, mez type, damage type and target effect type (e.g. for enhancement(something) )
+            ret = ret
+                .OrderBy(pair =>
+                    $"{pair.Key.EffectType}{(int)pair.Key.MezType:0:000}{(int)pair.Key.DamageType:0:000}{(int)pair.Key.TargetEffectType:0:000}")
+                .ToDictionary(x => x.Key, x => x.Value);
 
             return ret;
         }
@@ -382,26 +381,34 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
             else
             {
-                //var effectSources = GetEffectSources();
-                //var setBonusesDetail = MidsContext.Character.CurrentBuild.GetCumulativeSetBonusesDetail();
-                //foreach (var csb in setBonusesDetail)
-                var effectSources = GetEffectSources2();
+                var effectSources = GetEffectSources();
                 foreach (var fxGroup in effectSources)
                 {
-                    if (fxGroup.Key.effectType == Enums.eEffectType.GrantPower |
-                        fxGroup.Key.effectType == Enums.eEffectType.Null |
-                        fxGroup.Key.effectType == Enums.eEffectType.NullBool) continue;
+                    if (fxGroup.Key.EffectType == Enums.eEffectType.GrantPower |
+                        fxGroup.Key.EffectType == Enums.eEffectType.Null |
+                        fxGroup.Key.EffectType == Enums.eEffectType.NullBool) continue;
                     if (iStr != "") iStr += RTF.Crlf();
+                    var fxTypePercent = false;
+                    if (effectSources[fxGroup.Key].Count > 0)
+                    {
+                        fxTypePercent = effectSources[fxGroup.Key].First().Fx.DisplayPercentage;
+                    }
+
+                    var fxSumMag = effectSources[fxGroup.Key].Count > 0
+                        ? effectSources[fxGroup.Key].Sum(e => e.Mag)
+                        : 0;
+                    
                     var fxBlockStr = "";
-                    fxBlockStr += fxGroup.Key.effectType.ToString();
-                    fxBlockStr += fxGroup.Key.mezType != Enums.eMez.None ? $" ({fxGroup.Key.mezType})" : "";
-                    fxBlockStr += fxGroup.Key.damageType != Enums.eDamage.None ? $" ({fxGroup.Key.damageType})" : "";
-                    fxBlockStr += fxGroup.Key.targetEffectType != Enums.eEffectType.None ? $" ({fxGroup.Key.targetEffectType})" : "";
+                    fxBlockStr += fxGroup.Key.EffectType.ToString();
+                    fxBlockStr += fxGroup.Key.MezType != Enums.eMez.None ? $" ({fxGroup.Key.MezType})" : "";
+                    fxBlockStr += fxGroup.Key.DamageType != Enums.eDamage.None ? $" ({fxGroup.Key.DamageType})" : "";
+                    fxBlockStr += fxGroup.Key.TargetEffectType != Enums.eEffectType.None ? $" ({fxGroup.Key.TargetEffectType})" : "";
+                    fxBlockStr += $" ({(fxTypePercent ? fxSumMag * 100 : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")})";
 
                     foreach (var e in effectSources[fxGroup.Key])
                     {
                         fxBlockStr += RTF.Crlf();
-                        var effectString = e.fx.BuildEffectString(true);
+                        var effectString = e.Fx.BuildEffectString(true);
                         if (!effectString.StartsWith("+"))
                         {
                             effectString = "+" + effectString;
@@ -412,14 +419,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             effectString = effectString.Replace("Endurance", "Max Endurance");
                         }
 
-                        fxBlockStr += $"    {(e.pvMode == Enums.ePvX.PvP ? "[PVP] " : "")}{effectString}";
-                        if (e.enhSet != "" & e.power != "" & !e.isFromEnh)
+                        fxBlockStr += $"    {(e.PvMode == Enums.ePvX.PvP ? "[PVP] " : "")}{effectString}";
+                        if (e.EnhSet != "" & e.Power != "" & !e.IsFromEnh)
                         {
-                            fxBlockStr += $" ({e.enhSet}, on {e.power})";
+                            fxBlockStr += $" ({e.EnhSet}, on {e.Power})";
                         }
-                        else if (e.isFromEnh)
+                        else if (e.IsFromEnh)
                         {
-                            fxBlockStr += $" (Enh. special, on {e.power})";
+                            fxBlockStr += $" (Enh. special, on {e.Power})";
                         }
                     }
 
