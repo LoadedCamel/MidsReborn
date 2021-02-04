@@ -1270,6 +1270,35 @@ namespace mrbBase
             DebuffResistanceRegen = 66
         }
 
+        public enum eFXGroup
+        {
+            Offense = 0,
+            Defense = 1,
+            Survival = 2,
+            StatusEffects = 3,
+            Movement = 4,
+            Perception = 5,
+            Misc = 6
+        }
+
+        public enum eFXSubGroup
+        {
+            NoGroup = 0,
+            DamageAll = 1,
+            MezResistAll = 2,
+            SmashLethalDefense = 3,
+            FireColdDefense = 4,
+            EnergyNegativeDefense = 5,
+            SmashLethalResistance = 6,
+            FireColdResistance = 7,
+            EnergyNegativeResistance = 8,
+            SlowResistance = 9,
+            SlowBuffs = 10,
+            KnockProtection = 11,
+            KnockResistance = 12,
+            Jump = 13
+        }
+
         public static bool MezDurationEnhancable(eMez mezEnum)
         {
             return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized ||
@@ -1290,6 +1319,11 @@ namespace mrbBase
         public static string GetMezName(eMezShort iID)
         {
             return ((eMez) iID).ToString();
+        }
+
+        public static string GetMezName(eMez iID)
+        {
+            return iID.ToString();
         }
 
         public static string GetMezNameShort(eMezShort iID)

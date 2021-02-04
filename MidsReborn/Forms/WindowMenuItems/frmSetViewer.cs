@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Display;
@@ -20,6 +21,170 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             public Enums.eMez MezType { get; set; }
             public Enums.eDamage DamageType { get; set; }
             public Enums.eEffectType TargetEffectType { get; set; }
+
+            public Enums.eFXGroup L1Group
+            {
+                get
+                {
+                    if (EffectType == Enums.eEffectType.Damage |
+                        EffectType == Enums.eEffectType.DamageBuff |
+                        EffectType == Enums.eEffectType.Accuracy |
+                        EffectType == Enums.eEffectType.ToHit |
+                        EffectType == Enums.eEffectType.RechargeTime |
+                        EffectType == Enums.eEffectType.Range |
+                        EffectType == Enums.eEffectType.Enhancement &
+                        TargetEffectType == Enums.eEffectType.RechargeTime)
+                    {
+                        return Enums.eFXGroup.Offense;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Regeneration |
+                        EffectType == Enums.eEffectType.HitPoints |
+                        EffectType == Enums.eEffectType.Absorb |
+                        EffectType == Enums.eEffectType.Recovery |
+                        EffectType == Enums.eEffectType.Endurance |
+                        EffectType == Enums.eEffectType.EnduranceDiscount)
+                    {
+                        return Enums.eFXGroup.Survival;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Mez |
+                        EffectType == Enums.eEffectType.MezResist |
+                        EffectType == Enums.eEffectType.Slow |
+                        EffectType == Enums.eEffectType.ResEffect)
+                    {
+                        return Enums.eFXGroup.StatusEffects;
+                    }
+
+                    if (EffectType == Enums.eEffectType.SpeedRunning |
+                        EffectType == Enums.eEffectType.MaxRunSpeed |
+                        EffectType == Enums.eEffectType.SpeedJumping |
+                        EffectType == Enums.eEffectType.JumpHeight |
+                        EffectType == Enums.eEffectType.MaxJumpSpeed |
+                        EffectType == Enums.eEffectType.SpeedFlying |
+                        EffectType == Enums.eEffectType.MaxFlySpeed)
+                    {
+                        return Enums.eFXGroup.Movement;
+                    }
+
+                    if (EffectType == Enums.eEffectType.StealthRadius |
+                        EffectType == Enums.eEffectType.StealthRadiusPlayer |
+                        EffectType == Enums.eEffectType.PerceptionRadius)
+                    {
+                        return Enums.eFXGroup.Perception;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Resistance |
+                        EffectType == Enums.eEffectType.Defense |
+                        EffectType == Enums.eEffectType.Elusivity)
+                    {
+                        return Enums.eFXGroup.Defense;
+                    }
+
+                    return Enums.eFXGroup.Misc;
+                }
+            }
+
+            public Enums.eFXSubGroup L2Group
+            {
+                get
+                {
+                    if (EffectType == Enums.eEffectType.DamageBuff)
+                    {
+                        return Enums.eFXSubGroup.DamageAll;
+                    }
+
+                    if (EffectType == Enums.eEffectType.MezResist &
+                        (MezType == Enums.eMez.Sleep |
+                         MezType == Enums.eMez.Stunned |
+                         MezType == Enums.eMez.Held |
+                         MezType == Enums.eMez.Immobilized |
+                         MezType == Enums.eMez.Confused |
+                         MezType == Enums.eMez.Terrorized))
+                    {
+                        return Enums.eFXSubGroup.MezResistAll;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Defense &
+                        (DamageType == Enums.eDamage.Smashing | DamageType == Enums.eDamage.Lethal))
+                    {
+                        return Enums.eFXSubGroup.SmashLethalDefense;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Defense &
+                        (DamageType == Enums.eDamage.Fire | DamageType == Enums.eDamage.Cold))
+                    {
+                        return Enums.eFXSubGroup.FireColdDefense;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Defense &
+                        (DamageType == Enums.eDamage.Energy | DamageType == Enums.eDamage.Negative))
+                    {
+                        return Enums.eFXSubGroup.EnergyNegativeDefense;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Resistance &
+                        (DamageType == Enums.eDamage.Smashing | DamageType == Enums.eDamage.Lethal))
+                    {
+                        return Enums.eFXSubGroup.SmashLethalResistance;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Resistance &
+                        (DamageType == Enums.eDamage.Fire | DamageType == Enums.eDamage.Cold))
+                    {
+                        return Enums.eFXSubGroup.FireColdResistance;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Resistance &
+                        (DamageType == Enums.eDamage.Energy | DamageType == Enums.eDamage.Negative))
+                    {
+                        return Enums.eFXSubGroup.EnergyNegativeResistance;
+                    }
+
+                    if (EffectType == Enums.eEffectType.MezResist &
+                        (TargetEffectType == Enums.eEffectType.SpeedRunning |
+                         TargetEffectType == Enums.eEffectType.SpeedJumping |
+                         TargetEffectType == Enums.eEffectType.SpeedFlying |
+                         TargetEffectType == Enums.eEffectType.RechargeTime))
+                    {
+                        return Enums.eFXSubGroup.SlowResistance;
+                    }
+
+                    if (EffectType == Enums.eEffectType.Enhancement & TargetEffectType == Enums.eEffectType.Slow) // ???
+                    {
+                        return Enums.eFXSubGroup.SlowBuffs;
+                    }
+
+                    if (EffectType == Enums.eEffectType.MezResist &
+                        (MezType == Enums.eMez.Knockback | MezType == Enums.eMez.Knockup))
+                    {
+                        return Enums.eFXSubGroup.KnockResistance;
+                    }
+
+                    return Enums.eFXSubGroup.NoGroup;
+                }
+            }
+
+            public string L2GroupText()
+            {
+                return L2Group switch
+                {
+                    Enums.eFXSubGroup.DamageAll => "Damage(All)",
+                    Enums.eFXSubGroup.MezResistAll => "MezResist(All)",
+                    Enums.eFXSubGroup.SmashLethalDefense => "S/L Defense",
+                    Enums.eFXSubGroup.FireColdDefense => "Fire/Cold Defense",
+                    Enums.eFXSubGroup.EnergyNegativeDefense => "Energy/Negative Defense",
+                    Enums.eFXSubGroup.SmashLethalResistance => "S/L Resistance",
+                    Enums.eFXSubGroup.FireColdResistance => "Fire/Cold Resistance",
+                    Enums.eFXSubGroup.EnergyNegativeResistance => "Energy/Negative Resistance",
+                    Enums.eFXSubGroup.SlowResistance => "Slow Resistance",
+                    Enums.eFXSubGroup.SlowBuffs => "Slows",
+                    Enums.eFXSubGroup.KnockProtection => "Knock Protection",
+                    Enums.eFXSubGroup.KnockResistance => "Knock Resistance",
+                    Enums.eFXSubGroup.Jump => "Jump",
+                    _ => "No group"
+                };
+            }
 
             public override bool Equals(object obj)
             {
@@ -207,8 +372,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                 PvMode = pvMode,
                                 IsFromEnh = false
                             });
-
-                            Debug.WriteLine($"Set: {identKey.EffectType}, {identKey.MezType}, {identKey.DamageType}, {identKey.TargetEffectType}: L={ret[identKey].Count}");
                         }
                     }
 
@@ -238,8 +401,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                 PvMode = Enums.ePvX.Any,
                                 IsFromEnh = true
                             });
-
-                            Debug.WriteLine($"Enh: {identKey.EffectType}, {identKey.MezType}, {identKey.DamageType}, {identKey.TargetEffectType}: L={ret[identKey].Count}");
                         }
                     }
                 }
@@ -372,52 +533,80 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 {
                     if (iStr != "") iStr += RTF.Crlf();
                     var str2 = csb.BuildEffectString(true);
-                    if (!str2.StartsWith("+"))
-                        str2 = "+" + str2;
-                    if (str2.IndexOf("Endurance", StringComparison.Ordinal) > -1)
-                        str2 = str2.Replace("Endurance", "Max Endurance");
+                    if (!str2.StartsWith("+")) str2 = "+" + str2;
+                    str2 = Regex.Replace(str2, @"Endurance\b|Max End", "Max Endurance");
                     iStr += str2;
                 }
             }
             else
             {
                 var effectSources = GetEffectSources();
+                var PickedGroups = new Dictionary<Enums.eFXSubGroup, bool>();
                 foreach (var fxGroup in effectSources)
                 {
                     if (fxGroup.Key.EffectType == Enums.eEffectType.GrantPower |
+                        fxGroup.Key.EffectType == Enums.eEffectType.EntCreate |
+                        fxGroup.Key.EffectType == Enums.eEffectType.EntCreate_x |
                         fxGroup.Key.EffectType == Enums.eEffectType.Null |
                         fxGroup.Key.EffectType == Enums.eEffectType.NullBool) continue;
-                    if (iStr != "") iStr += RTF.Crlf();
-                    var fxTypePercent = false;
-                    if (effectSources[fxGroup.Key].Count > 0)
+                    
+                    var L2Group = fxGroup.Key.L2Group;
+                    if (L2Group != Enums.eFXSubGroup.NoGroup && PickedGroups.ContainsKey(L2Group)) continue;
+                    if (L2Group != Enums.eFXSubGroup.NoGroup) PickedGroups.Add(L2Group, true);
+                    var effectName = Enums.GetEffectName(fxGroup.Key.EffectType);
+
+                    if (fxGroup.Key.MezType != Enums.eMez.None)
                     {
-                        fxTypePercent = effectSources[fxGroup.Key].First().Fx.DisplayPercentage;
+                        effectName += $"({Enums.GetMezName(fxGroup.Key.MezType)})";
                     }
 
+                    if (fxGroup.Key.DamageType != Enums.eDamage.None)
+                    {
+                        effectName += $"({Enums.GetDamageName(fxGroup.Key.DamageType)})";
+                    }
+
+                    if (fxGroup.Key.TargetEffectType != Enums.eEffectType.None)
+                    {
+                        effectName += $"({Enums.GetEffectName(fxGroup.Key.TargetEffectType)})";
+                    }
+
+                    Debug.WriteLine(effectName);
+
+
+                    if (iStr != "") iStr += RTF.Crlf();
+                    var fxTypePercent = fxGroup.Key.EffectType == Enums.eEffectType.Endurance ||
+                                        effectSources[fxGroup.Key].Count > 0 && effectSources[fxGroup.Key].First().Fx.DisplayPercentage;
                     var fxSumMag = effectSources[fxGroup.Key].Count > 0
                         ? effectSources[fxGroup.Key].Sum(e => e.Mag)
                         : 0;
-                    
+
                     var fxBlockStr = "";
-                    fxBlockStr += fxGroup.Key.EffectType.ToString();
-                    fxBlockStr += fxGroup.Key.MezType != Enums.eMez.None ? $" ({fxGroup.Key.MezType})" : "";
-                    fxBlockStr += fxGroup.Key.DamageType != Enums.eDamage.None ? $" ({fxGroup.Key.DamageType})" : "";
-                    fxBlockStr += fxGroup.Key.TargetEffectType != Enums.eEffectType.None ? $" ({fxGroup.Key.TargetEffectType})" : "";
-                    fxBlockStr += $" ({(fxTypePercent ? fxSumMag * 100 : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")})";
+                    if (L2Group != Enums.eFXSubGroup.NoGroup)
+                    {
+                        fxBlockStr += fxGroup.Key.L2GroupText();
+                    }
+                    else
+                    {
+                        fxBlockStr += Regex.Replace(fxGroup.Key.EffectType.ToString(), @"Endurance\b|Max End", "Max Endurance");
+                        fxBlockStr += fxGroup.Key.MezType != Enums.eMez.None ? $" ({fxGroup.Key.MezType})" : "";
+                        fxBlockStr += fxGroup.Key.DamageType != Enums.eDamage.None ? $" ({fxGroup.Key.DamageType})" : "";
+                        fxBlockStr += fxGroup.Key.TargetEffectType != Enums.eEffectType.None ? $" ({fxGroup.Key.TargetEffectType})" : "";
+                    }
+
+                    fxBlockStr += $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")})";
 
                     foreach (var e in effectSources[fxGroup.Key])
                     {
                         fxBlockStr += RTF.Crlf();
-                        var effectString = e.Fx.BuildEffectString(true);
+                        var effectString = L2Group != Enums.eFXSubGroup.NoGroup
+                            ? e.Fx.BuildEffectString(true).Replace(effectName, fxGroup.Key.L2GroupText())
+                            : e.Fx.BuildEffectString(true);
                         if (!effectString.StartsWith("+"))
                         {
                             effectString = "+" + effectString;
                         }
 
-                        if (effectString.IndexOf("Endurance", StringComparison.Ordinal) > -1)
-                        {
-                            effectString = effectString.Replace("Endurance", "Max Endurance");
-                        }
+                        effectString = Regex.Replace(effectString, @"Endurance\b|Max End", "Max Endurance");
 
                         fxBlockStr += $"    {(e.PvMode == Enums.ePvX.PvP ? "[PVP] " : "")}{effectString}";
                         if (e.EnhSet != "" & e.Power != "" & !e.IsFromEnh)
