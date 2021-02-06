@@ -8,20 +8,6 @@ namespace Mids_Reborn
     // 2 possibilities, the actual direct association, and the open with list options
     public static class FileAssociation
     {
-        // Reg key must exist (should be set with the installer)
-        //private const string HKCRMxdFileShellNew = @"HKEY_CLASSES_ROOT\.mxd\RebornTeam.Mids Reborn.mxd\ShellNew";
-
-        // To mimic HKCR equivalent at a user-level
-        private const string HKCUMxdFileShellNew = @"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd\RebornTeam.Mids Reborn.mxd\ShellNew";
-
-        // Reg key must exist (should be set with the installer)
-        // Default value must be "<MRBInstallPath>\MidsReborn.exe" "%1"
-        private const string HKCURebornTeamMxdOpen = @"HKEY_CURRENT_USER\SOFTWARE\Classes\RebornTeam.Mids Reborn.mxd\shell\open\command";
-
-        // Reg key must exist, installer may set this to a different value
-        // Must be <MRBInstallPath>\MidsReborn.exe,0
-        private const string HKCURebornTeamMxdIcon = @"HKEY_CURRENT_USER\SOFTWARE\Classes\RebornTeam.Mids Reborn.mxd\DefaultIcon";
-
         private static RegistryKey OpenRegistryKey(string regPath, bool writable=false)
         {
             if (regPath.StartsWith(@"HKEY_CLASSES_ROOT\") || regPath.StartsWith(@"HKCR\"))
@@ -50,53 +36,68 @@ namespace Mids_Reborn
 
         public static bool CheckAssociations()
         {
-            var regExistsHKCU = true;
-            regExistsHKCU &= CheckRegKeyExists(HKCUMxdFileShellNew);
-            regExistsHKCU &= CheckRegKeyExists(HKCURebornTeamMxdIcon);
-            regExistsHKCU &= CheckRegKeyExists(HKCURebornTeamMxdOpen);
+            var regExistsHKCU = CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd");
+            regExistsHKCU &= CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + GetMxdType() + @"\DefaultIcon");
+            regExistsHKCU &= CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + GetMxdType() + @"\shell\open\command");
 
             return regExistsHKCU;
         }
 
+        private static string GetMxdType()
+        {
+            return CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd")
+                ? OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\.mxd").GetValue(null).ToString()
+                : "RebornTeam.Mids Reborn";
+        }
         public static string CheckdAssociatedProgram()
         {
-            if (!CheckRegKeyExists(HKCURebornTeamMxdOpen)) return "";
-            var rk = OpenRegistryKey(HKCURebornTeamMxdOpen);
+            var mxdOpenKey = @"HKEY_CURRENT_USER\SOFTWARE\Classes\" + GetMxdType();
+            if (!CheckRegKeyExists(mxdOpenKey)) return "";
+            if (!CheckRegKeyExists(mxdOpenKey + @"\shell\open\command")) return "";
+            var rk = OpenRegistryKey(mxdOpenKey + @"\shell\open\command");
             var v = rk.GetValue(null).ToString();
+            var vc = rk.GetValue("command");
+            var vcmd = vc == null ? "" : vc.ToString();
+            if (vc != null & !vcmd.Contains("\"%1\"")) return "";
 
-            return v.Replace(" \"%1\"", "").TrimStart('\"');
+            return v.Replace(" \"%1\"", "").Trim('\"');
         }
 
         public static bool SetAssociations()
         {
             try
             {
-                if (!CheckRegKeyExists(HKCUMxdFileShellNew))
+                var mxdTypeKeyExists = CheckRegKeyExists(@"HKEY_CURRENT_USER\Classes\.mxd");
+                var mxdType = GetMxdType();
+
+                if (!mxdTypeKeyExists)
                 {
-                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes", true);
-                    rk.CreateSubKey(@".mxd\RebornTeam.Mids Reborn.mxd\ShellNew");
-                }
-                
-                if (!CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\RebornTeam.Mids Reborn.mxd"))
-                {
-                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes", true);
-                    rk.CreateSubKey("RebornTeam.Mids Reborn.mxd");
-                }
-                
-                if (!CheckRegKeyExists(HKCURebornTeamMxdIcon))
-                {
-                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\RebornTeam.Mids Reborn.mxd", true);
-                    rk.CreateSubKey("DefaultIcon");
+                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\Classes", true);
+                    rk.CreateSubKey(@".mxd\" + mxdType + @"\ShellNew");
+                    rk.Close();
                 }
 
-                if (!CheckRegKeyExists(HKCURebornTeamMxdOpen))
+                if (!CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType))
                 {
-                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\RebornTeam.Mids Reborn.mxd", true);
-                    rk.CreateSubKey(@"shell\open\command");
+                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes", true);
+                    rk.CreateSubKey(mxdType + @"\DefaultIcon");
+                    rk.CreateSubKey(mxdType + @"shell\open\command");
+                    rk.Close();
                 }
 
-                OpenRegistryKey(HKCURebornTeamMxdIcon, true).SetValue(null, $"{Application.ExecutablePath},0");
-                OpenRegistryKey(HKCURebornTeamMxdOpen, true).SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
+                if (OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command").GetValue("command") == null)
+                {
+                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command", true);
+                    rk.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
+                    rk.Close();
+                }
+                else
+                {
+                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command", true);
+                    rk.DeleteValue("command");
+                    rk.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
+                    rk.Close();
+                }
 
                 // Tell explorer the file association has been changed
                 SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
