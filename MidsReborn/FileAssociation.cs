@@ -67,33 +67,42 @@ namespace Mids_Reborn
         {
             try
             {
+                RegistryKey rk;
                 var mxdTypeKeyExists = CheckRegKeyExists(@"HKEY_CURRENT_USER\Classes\.mxd");
                 var mxdType = GetMxdType();
 
                 if (!mxdTypeKeyExists)
                 {
-                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\Classes", true);
+                    rk = OpenRegistryKey(@"HKEY_CURRENT_USER\Classes", true);
                     rk.CreateSubKey(@".mxd\" + mxdType + @"\ShellNew");
                     rk.Close();
                 }
 
                 if (!CheckRegKeyExists(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType))
                 {
-                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes", true);
+                    rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes", true);
                     rk.CreateSubKey(mxdType + @"\DefaultIcon");
                     rk.CreateSubKey(mxdType + @"shell\open\command");
                     rk.Close();
                 }
 
+                rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell", true);
+                rk.SetValue(null, "open");
+                rk.Close();
+
+                rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open", true);
+                rk.SetValue(null, "&Open");
+                rk.Close();
+
                 if (OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command").GetValue("command") == null)
                 {
-                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command", true);
+                    rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command", true);
                     rk.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
                     rk.Close();
                 }
                 else
                 {
-                    var rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command", true);
+                    rk = OpenRegistryKey(@"HKEY_CURRENT_USER\SOFTWARE\Classes\" + mxdType + @"\shell\open\command", true);
                     rk.DeleteValue("command");
                     rk.SetValue(null, $"\"{Application.ExecutablePath}\" \"%1\"");
                     rk.Close();
