@@ -853,10 +853,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 new BarSettings (Enums.eEffectType.PerceptionRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107))
             };
 
+            effectListOrder = effectListOrder
+                .AsEnumerable()
+                .OrderBy(e => (int) new FXIdentifierKey
+                {
+                    EffectType = e.EffectType,
+                    TargetEffectType = e.TargetEffectType,
+                    DamageType = e.DamageType,
+                    MezType = Enums.eMez.None
+                }.L1Group)
+                .ToList();
+
             var l1Group = "";
             var nh = 0; // Nb of headers
-            var nc = 0; // Nb of controls
             var nb = 0; // Nb of bars
+            var barsFx = new Dictionary<string, FXIdentifierKey>();
             panelBars.SuspendLayout();
             panelBars.Controls.Clear();
             foreach (var st in effectListOrder)
@@ -870,22 +881,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 };
 
                 var fxL1Group = fxId.L1Group;
+                var newHeader = false;
+                var header = new Label();
                 if (fxL1Group.ToString() != l1Group)
                 {
-                    var header = new Label
-                    {
-                        Location = new Point(0, 13 * nc),
-                        ForeColor = Color.White,
-                        BackColor = Color.Transparent,
-                        Font = new Font("Arial", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
-                        Size = new Size(panelBars.Size.Width - 20, 10),
-                        Name = $"HeaderLabel{nh + 1}"
-                    };
+                    header.Location = new Point(0, 13 * nb + 20 * nh);
+                    header.ForeColor = Color.White;
+                    header.BackColor = Color.Black; // Transparent
+                    header.Font = new Font("Arial", 8.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+                    header.Size = new Size(panelBars.Size.Width - 20, 16);
+                    header.Name = $"HeaderLabel{nh + 1}";
+                    header.Text = fxL1Group.ToString();
 
-                    panelBars.Controls.Add(header);
-                    nh++;
-                    nc++;
-                    l1Group = fxId.L1Group.ToString();
+                    newHeader = true;
                 }
 
                 var lBuffs = cumulativeSetBonuses.Where(e => e.EffectType == st.EffectType &
@@ -894,9 +902,16 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 if (lBuffs.Count <= 0) continue;
 
+                if (newHeader)
+                {
+                    panelBars.Controls.Add(header);
+                    nh++;
+                    l1Group = fxL1Group.ToString();
+                }
+
                 var bar = new ctlLayeredBarPb
                 {
-                    Location = new Point(8, 13 * nc),
+                    Location = new Point(8, 13 * nb + 20 * nh),
                     Size = new Size(panelBars.Size.Width - 28, 10),
                     Name = $"Bar{nb + 1}",
                     MaximumBarValue = 100
@@ -915,8 +930,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.Regeneration => displayStats.HealthRegenPercent(false),
                     Enums.eEffectType.HitPoints => displayStats.HealthHitpointsNumeric(false),
                     Enums.eEffectType.Absorb => Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints),
-                    Enums.eEffectType.Recovery => displayStats.EnduranceRecoveryNumeric,
-                    Enums.eEffectType.Endurance => displayStats.EnduranceMaxEnd,
+                    Enums.eEffectType.Recovery => displayStats.EnduranceRecoveryNumeric - MidsContext.Character.Archetype.BaseRecovery,
+                    Enums.eEffectType.Endurance => displayStats.EnduranceMaxEnd - 100,
                     Enums.eEffectType.SpeedRunning => displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
                     Enums.eEffectType.SpeedJumping => displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
                     Enums.eEffectType.JumpHeight => displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
@@ -929,13 +944,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.StealthRadiusPlayer => MidsContext.Character.Totals.StealthPvP,
                     Enums.eEffectType.PerceptionRadius => displayStats.Perception(false),
                     
-                    Enums.eEffectType.RechargeTime => displayStats.BuffHaste(false),
+                    Enums.eEffectType.RechargeTime => displayStats.BuffHaste(false) - 100,
                     Enums.eEffectType.ToHit => displayStats.BuffToHit,
                     Enums.eEffectType.DamageBuff => displayStats.BuffDamage(false),
                     Enums.eEffectType.Elusivity => MidsContext.Character.Totals.Elusivity,
                     Enums.eEffectType.Enhancement => st.TargetEffectType switch
                     {
-                        Enums.eEffectType.RechargeTime => displayStats.BuffHaste(false),
+                        Enums.eEffectType.RechargeTime => displayStats.BuffHaste(false) - 100,
                         Enums.eEffectType.Accuracy => displayStats.BuffAccuracy,
                         Enums.eEffectType.EnduranceDiscount => displayStats.BuffEndRdx,
                         _ => 0
@@ -960,13 +975,38 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 if (Math.Abs(fxMagAdjusted - totalsValue) < float.Epsilon) totalsValue = 0;
 
-                // Todo: adjust maximum bar value according to effect type
-                bar.MaximumBarValue = Math.Max(fxMagAdjusted, totalsValue);
-                Debug.WriteLine($"#2 - {st.EffectType}, {st.TargetEffectType}, {st.DamageType}: {fxMagAdjusted} / {totalsValue}");
+                bar.MaximumBarValue = st.EffectType switch
+                {
+                    Enums.eEffectType.DamageBuff => MidsContext.Character.Archetype.DamageCap * 100 - 100,
+                    Enums.eEffectType.Regeneration => MidsContext.Character.Archetype.RegenCap * 100,
+                    Enums.eEffectType.HitPoints => MidsContext.Character.Archetype.HPCap,
+                    Enums.eEffectType.Recovery => 10,
+                    Enums.eEffectType.Endurance => 50,
+                    Enums.eEffectType.SpeedRunning => MidsContext.Character.Totals.MaxRunSpd,
+                    Enums.eEffectType.SpeedJumping => MidsContext.Character.Totals.MaxJumpSpd,
+                    Enums.eEffectType.SpeedFlying => MidsContext.Character.Totals.MaxFlySpd,
+                    Enums.eEffectType.StealthRadius => 1000,
+                    Enums.eEffectType.StealthRadiusPlayer => 1000,
+                    Enums.eEffectType.PerceptionRadius => 1000,
+                    Enums.eEffectType.Enhancement => st.TargetEffectType switch
+                    {
+                        Enums.eEffectType.Accuracy => 200,
+                        Enums.eEffectType.RechargeTime => 400,
+                        _ => 100
+                    },
+                    _ => 100
+                };
+
                 bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
                 panelBars.Controls.Add(bar);
+                barsFx.Add(bar.Name, new FXIdentifierKey
+                {
+                    EffectType = st.EffectType,
+                    TargetEffectType = st.TargetEffectType,
+                    DamageType = st.DamageType,
+                    MezType = Enums.eMez.None
+                });
 
-                nc++;
                 nb++;
             }
 
