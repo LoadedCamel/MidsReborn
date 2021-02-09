@@ -46,6 +46,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnSmall = new mrbControls.ImageButton();
             this.chkOnTop = new mrbControls.ImageButton();
             this.btnClose = new mrbControls.ImageButton();
+            this.panelBars = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // lstSets
@@ -209,11 +210,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnClose.Toggle = false;
             this.btnClose.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnClose_Click);
             // 
+            // panelBars
+            // 
+            this.panelBars.AutoScroll = true;
+            this.panelBars.BackColor = System.Drawing.Color.Transparent;
+            this.panelBars.Location = new System.Drawing.Point(384, 20);
+            this.panelBars.Name = "panelBars";
+            this.panelBars.Size = new System.Drawing.Size(279, 366);
+            this.panelBars.TabIndex = 22;
+            this.panelBars.Visible = false;
+            // 
             // frmSetViewer
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(675, 448);
+            this.Controls.Add(this.panelBars);
             this.Controls.Add(this.btnDetailFx);
             this.Controls.Add(this.btnSmall);
             this.Controls.Add(this.chkOnTop);
@@ -239,5 +251,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         #endregion
 
         private ImageButton btnDetailFx;
+        private System.Windows.Forms.Panel panelBars;
     }
 }

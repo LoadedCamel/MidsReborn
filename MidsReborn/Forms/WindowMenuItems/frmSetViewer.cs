@@ -570,9 +570,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         effectName += $"({Enums.GetEffectName(fxGroup.Key.TargetEffectType)})";
                     }
 
-                    Debug.WriteLine(effectName);
-
-
                     if (iStr != "") iStr += RTF.Crlf();
                     var fxTypePercent = fxGroup.Key.EffectType == Enums.eEffectType.Endurance ||
                                         effectSources[fxGroup.Key].Count > 0 && effectSources[fxGroup.Key].First().Fx.DisplayPercentage;
@@ -671,6 +668,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmSetViewer_Load(object sender, EventArgs e)
         {
+            lstSets
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lstSets, true, null);
         }
 
         private void frmSetViewer_Move(object sender, EventArgs e)
@@ -763,9 +764,222 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             DisplayList();
         }
 
+        private class BarSettings
+        {
+            public Enums.eEffectType EffectType;
+            public Enums.eEffectType TargetEffectType = Enums.eEffectType.None;
+            public Enums.eDamage DamageType = Enums.eDamage.None;
+            public Color SetBuffsColor;
+            public Color TotalsColor;
+
+            public BarSettings(Enums.eEffectType effectType, Color setBuffsColor, Color totalsColor)
+            {
+                EffectType = effectType;
+                TargetEffectType = Enums.eEffectType.None;
+                DamageType = Enums.eDamage.None;
+                SetBuffsColor = setBuffsColor;
+                TotalsColor = totalsColor;
+            }
+
+            public BarSettings(Enums.eEffectType effectType, Enums.eEffectType targetEffectType, Color setBuffsColor, Color totalsColor)
+            {
+                EffectType = effectType;
+                TargetEffectType = targetEffectType;
+                DamageType = Enums.eDamage.None;
+                SetBuffsColor = setBuffsColor;
+                TotalsColor = totalsColor;
+            }
+
+            public BarSettings(Enums.eEffectType effectType, Enums.eDamage damageType, Color setBuffsColor, Color totalsColor)
+            {
+                EffectType = effectType;
+                TargetEffectType = Enums.eEffectType.None;
+                DamageType = damageType;
+                SetBuffsColor = setBuffsColor;
+                TotalsColor = totalsColor;
+            }
+        }
+
+        private void DrawBars()
+        {
+            var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
+            var displayStats = MidsContext.Character.DisplayStats;
+            var effectListOrder = new List<BarSettings>
+            {
+                new BarSettings (Enums.eEffectType.DamageBuff, Color.Red, Color.FromArgb(204, 0, 0)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Accuracy, Color.Yellow, Color.FromArgb(204, 204, 0)),
+                //new BarSettings (Enums.eEffectType.ToHit, Color.FromArgb(255, 255, 128), Color.FromArgb(204, 204, 102)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.RechargeTime, Color.FromArgb(255, 128, 0), Color.FromArgb(204, 102, 0)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Range, Color.FromArgb(170, 168, 179), Color.FromArgb(121, 120, 128)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Heal, Color.FromArgb(116, 255, 116), Color.FromArgb(92, 204, 92)),
+
+                new BarSettings (Enums.eEffectType.Regeneration, Color.FromArgb(64, 255, 64), Color.FromArgb(51, 204, 51)),
+                new BarSettings (Enums.eEffectType.HitPoints, Color.FromArgb(44, 180, 44), Color.FromArgb(31, 130, 31)),
+                //new BarSettings (Enums.eEffectType.Absorb, Color.Gainsboro, Color.FromArgb(168, 168, 168)),
+                new BarSettings (Enums.eEffectType.Recovery, Color.DodgerBlue, Color.FromArgb(24, 114, 204)),
+                new BarSettings (Enums.eEffectType.Endurance, Color.FromArgb(59, 158, 255), Color.FromArgb(47, 125, 204)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.EnduranceDiscount, Color.RoyalBlue, Color.FromArgb(50, 81, 173)),
+
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Smashing, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Fire, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Energy, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Toxic, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Psionic, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Smashing, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Fire, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Energy, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Psionic, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Melee, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Ranged, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.AoE, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Elusivity, Color.FromArgb(163, 1, 231), Color.FromArgb(127, 1, 181)),
+
+                //Enums.eEffectType.Mez,
+                //Enums.eEffectType.MezResist,
+                //Enums.eEffectType.Slow,
+                //Enums.eEffectType.ResEffect,
+
+                new BarSettings (Enums.eEffectType.SpeedRunning, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxRunSpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                new BarSettings (Enums.eEffectType.SpeedJumping, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.JumpHeight, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxJumpSpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                new BarSettings (Enums.eEffectType.SpeedFlying, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxFlySpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+
+                new BarSettings (Enums.eEffectType.StealthRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107)),
+                new BarSettings (Enums.eEffectType.StealthRadiusPlayer, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107)),
+                new BarSettings (Enums.eEffectType.PerceptionRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107))
+            };
+
+            var l1Group = "";
+            var nh = 0; // Nb of headers
+            var nc = 0; // Nb of controls
+            var nb = 0; // Nb of bars
+            panelBars.SuspendLayout();
+            panelBars.Controls.Clear();
+            foreach (var st in effectListOrder)
+            {
+                var fxId = new FXIdentifierKey
+                {
+                    EffectType = st.EffectType,
+                    TargetEffectType = st.TargetEffectType,
+                    DamageType = st.DamageType,
+                    MezType = Enums.eMez.None
+                };
+
+                var fxL1Group = fxId.L1Group;
+                if (fxL1Group.ToString() != l1Group)
+                {
+                    var header = new Label
+                    {
+                        Location = new Point(0, 13 * nc),
+                        ForeColor = Color.White,
+                        BackColor = Color.Transparent,
+                        Font = new Font("Arial", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                        Size = new Size(panelBars.Size.Width - 20, 10),
+                        Name = $"HeaderLabel{nh + 1}"
+                    };
+
+                    panelBars.Controls.Add(header);
+                    nh++;
+                    nc++;
+                    l1Group = fxId.L1Group.ToString();
+                }
+
+                var lBuffs = cumulativeSetBonuses.Where(e => e.EffectType == st.EffectType &
+                                                             (st.DamageType == Enums.eDamage.None | st.DamageType == e.DamageType) &
+                                                             (st.TargetEffectType == Enums.eEffectType.None | st.TargetEffectType == e.ETModifies)).ToList();
+
+                if (lBuffs.Count <= 0) continue;
+
+                var bar = new ctlLayeredBarPb
+                {
+                    Location = new Point(8, 13 * nc),
+                    Size = new Size(panelBars.Size.Width - 28, 10),
+                    Name = $"Bar{nb + 1}",
+                    MaximumBarValue = 100
+                };
+
+                bar.AssignNames(new List<(string name, Color color)>
+                {
+                    ("base", st.SetBuffsColor),
+                    ("value", st.TotalsColor)
+                });
+                
+                var totalsValue = st.EffectType switch
+                {
+                    Enums.eEffectType.Resistance => displayStats.DamageResistance((int) st.DamageType, false),
+                    Enums.eEffectType.Defense => displayStats.Defense((int) st.DamageType),
+                    Enums.eEffectType.Regeneration => displayStats.HealthRegenPercent(false),
+                    Enums.eEffectType.HitPoints => displayStats.HealthHitpointsNumeric(false),
+                    Enums.eEffectType.Absorb => Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints),
+                    Enums.eEffectType.Recovery => displayStats.EnduranceRecoveryNumeric,
+                    Enums.eEffectType.Endurance => displayStats.EnduranceMaxEnd,
+                    Enums.eEffectType.SpeedRunning => displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
+                    Enums.eEffectType.SpeedJumping => displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
+                    Enums.eEffectType.JumpHeight => displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
+                    Enums.eEffectType.SpeedFlying => displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false),
+                    // MaxRunSpeed
+                    // MaxJumpSpeed
+                    // MaxFlySpeed
+                    
+                    Enums.eEffectType.StealthRadius => MidsContext.Character.Totals.StealthPvE,
+                    Enums.eEffectType.StealthRadiusPlayer => MidsContext.Character.Totals.StealthPvP,
+                    Enums.eEffectType.PerceptionRadius => displayStats.Perception(false),
+                    
+                    Enums.eEffectType.RechargeTime => displayStats.BuffHaste(false),
+                    Enums.eEffectType.ToHit => displayStats.BuffToHit,
+                    Enums.eEffectType.DamageBuff => displayStats.BuffDamage(false),
+                    Enums.eEffectType.Elusivity => MidsContext.Character.Totals.Elusivity,
+                    Enums.eEffectType.Enhancement => st.TargetEffectType switch
+                    {
+                        Enums.eEffectType.RechargeTime => displayStats.BuffHaste(false),
+                        Enums.eEffectType.Accuracy => displayStats.BuffAccuracy,
+                        Enums.eEffectType.EnduranceDiscount => displayStats.BuffEndRdx,
+                        _ => 0
+                    },
+                    _ => 0
+                };
+
+                var fx = lBuffs.First(); 
+                var fxMagAdjusted = fx.Mag * st.EffectType switch
+                {
+                    Enums.eEffectType.DamageBuff => 100,
+                    Enums.eEffectType.Enhancement => 100,
+                    Enums.eEffectType.Regeneration => 100,
+                    Enums.eEffectType.Resistance => 100,
+                    Enums.eEffectType.Defense => 100,
+                    Enums.eEffectType.SpeedRunning => 100,
+                    Enums.eEffectType.SpeedJumping => 100,
+                    Enums.eEffectType.JumpHeight => 100,
+                    Enums.eEffectType.SpeedFlying => 100,
+                    _ => 1
+                };
+
+                if (Math.Abs(fxMagAdjusted - totalsValue) < float.Epsilon) totalsValue = 0;
+
+                // Todo: adjust maximum bar value according to effect type
+                bar.MaximumBarValue = Math.Max(fxMagAdjusted, totalsValue);
+                Debug.WriteLine($"#2 - {st.EffectType}, {st.TargetEffectType}, {st.DamageType}: {fxMagAdjusted} / {totalsValue}");
+                bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
+                panelBars.Controls.Add(bar);
+
+                nc++;
+                nb++;
+            }
+
+            panelBars.ResumeLayout();
+        }
+
         private void btnDetailFx_ButtonClicked()
         {
+            panelBars.Visible = btnDetailFx.Checked;
+            rtxtFX.Visible = !btnDetailFx.Checked;
+            Label1.Text = btnDetailFx.Checked ? "Set Bonuses vs. Totals:" : "Effect Breakdown:";
             FillEffectView(btnDetailFx.Checked);
+            if (btnDetailFx.Checked) DrawBars();
         }
     }
 }
