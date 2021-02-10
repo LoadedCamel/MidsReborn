@@ -88,7 +88,7 @@ namespace mrbBase
             TeamMembers = new Dictionary<string, int>();
             Registered = 0;
             DiscordAuthorized = false;
-            IntializeComponent();
+            InitializeComponent();
         }
 
 
@@ -206,7 +206,7 @@ namespace mrbBase
         private static void MigrateToSerializer(string mhdFn, ISerialize serializer)
         {
             var oldMethod = new ConfigData(false, mhdFn);
-            oldMethod.IntializeComponent();
+            oldMethod.InitializeComponent();
             var file = mhdFn + ".old";
             if (File.Exists(file))
                 file += "2";
@@ -238,16 +238,18 @@ namespace mrbBase
             else
                 _current = new ConfigData(false, Files.GetConfigFilename(true));
 
-            _current.IntializeComponent();
+            _current.InitializeComponent();
         }
 
-        private void IntializeComponent()
+        private void InitializeComponent()
         {
             if (string.IsNullOrWhiteSpace(UpdatePath))
                 UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
 
             if (string.IsNullOrWhiteSpace(DbUpdatePath))
                 DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
+            if (string.IsNullOrWhiteSpace(DataPath))
+                DataPath = Files.FDefaultPath;
             RelocateSaveFolder(false);
             try
             {
@@ -521,7 +523,7 @@ namespace mrbBase
 
         private void LoadOverrides()
         {
-            using var fileStream = new FileStream(Files.SelectDataFileLoad("Compare.mhd"), FileMode.Open, FileAccess.Read);
+            using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath), FileMode.Open, FileAccess.Read);
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != "Mids' Hero Designer Comparison Overrides")
             {
