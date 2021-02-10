@@ -2,7 +2,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using mrbBase.Base.Master_Classes;
 
 namespace mrbBase
 {
@@ -10,6 +12,8 @@ namespace mrbBase
     {
         public const string MxdbFileDB = "I12.mhd";
         public const string MxdbFileLevels = "Levels.mhd";
+        public const string MxdbFileNLevels = "NLevels.mhd";
+        public const string MxdbFileRLevels = "RLevels.mhd";
         public const string MxdbFileMaths = "Maths.mhd";
         public const string MxdbFileEClasses = "EClasses.mhd";
         public const string MxdbFileOrigins = "Origins.mhd";
@@ -22,6 +26,8 @@ namespace mrbBase
         public const string MxdbFileModifiers = "AttribMod.mhd";
         public const string MxdbFileLookups = "AttribLookup.mhd";
         public const string MxdbFileEffectIds = "GlobalMods.mhd";
+        public const string MxdbFileGraphics = "I9.mhd";
+        public const string JsonFileModifiers = "AttribMod.json";
         //public const string PatchRtf = "patch.rtf";
         private const string MxdbFileConfig = "Config.mhd";
         private const string JsonFileConfig = "Config.json";
@@ -30,28 +36,21 @@ namespace mrbBase
         public const string RoamingFolder = "Data\\";
         public static string FileData = string.Empty;
 
-        private static string FNameJsonConfig
-        {
-            get
-            {
-                var asmLOC = Assembly.GetExecutingAssembly().Location;
-                var dirLOC = $"{Directory.GetParent(asmLOC)}\\Data\\";
-                //var fp = Path.Combine(Application.StartupPath, Path.Combine("Data", JsonFileConfig));
-                return $"{dirLOC}{JsonFileConfig}";
-            }
-        }
+        private static string FNameJsonConfig => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), JsonFileConfig);
 
         internal static string GetConfigSpFile()
         {
             var sPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\RebornTeam\";
-            return $"{sPath}{JsonFileConfigSP}";
+            return Path.Combine(sPath, JsonFileConfigSP);
         }
 
-        private static string FNameConfig => SelectDataFileLoad(MxdbFileConfig);
+        public static string FDefaultPath => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), "Homecoming\\");
 
-        private static string FPathAppData => Path.Combine(Application.StartupPath, "Data");
+        private static string FNameConfig => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), MxdbFileConfig);
 
-        internal static string SearchUp(string folder, string fn)
+        private static string FPathAppData => MidsContext.Config.DataPath;
+
+        public static string SearchUp(string folder, string fn)
         {
             string SearchUpRec(string foldername, string filename)
             {
@@ -87,16 +86,37 @@ namespace mrbBase
             }
         }
 
-        public static string SelectDataFileLoad(string iDataFile)
+        /*public static string SelectDataFileLoad(string iDataFile)
         {
             var str = Path.Combine(FPathAppData, iDataFile);
             if (Debugger.IsAttached)
                 str = SearchUp("Data", str);
             FileData = FileData + str + '\n';
             return str;
+        }*/
+
+        public static string GetAssemblyLoc()
+        {
+            var asmLoc = Assembly.GetExecutingAssembly().Location;
+            var dirLoc = $"{Directory.GetParent(asmLoc)}\\";
+            return dirLoc;
         }
 
-        public static string SelectDataFileSave(string iDataFile)
+        public static string SelectDataFileLoad(string iDataFile, string iPath = "")
+        {
+            var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
+
+            FileData = FileData + filePath + '\n';
+            return filePath;
+        }
+
+        public static string SelectDataFileSave(string iDataFile, string iPath = "")
+        {
+            var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
+            return filePath;
+        }
+
+        /*public static string SelectDataFileSave(string iDataFile)
         {
             try
             {
@@ -113,24 +133,28 @@ namespace mrbBase
             }
 
             return string.Empty;
-        }
+        }*/
 
         internal static string GetConfigFilename(bool forceMhd)
         {
             try
             {
-                var asmLOC = Assembly.GetExecutingAssembly().Location;
-                var dirLOC = $"{Directory.GetParent(asmLOC)}\\Data\\";
-                if (!forceMhd && File.Exists(FNameJsonConfig)) return FNameJsonConfig;
-                if (File.Exists(FNameConfig) || !File.Exists(dirLOC + "Config.mhd"))
+                if (!forceMhd && File.Exists(FNameJsonConfig))
+                {
+                    return FNameJsonConfig;
+                }
+
+                if (File.Exists(FNameConfig) || !File.Exists(FNameConfig))
+                {
                     return FNameConfig;
-                return $"{dirLOC}Config.mhd";
+                }
+
+                return FNameConfig;
             }
             catch
             {
-                MessageBox.Show("Config folder doesn't exist. Creating new one.");
+                MessageBox.Show(@"Config file doesn't exist.");
             }
-
             return FNameConfig;
         }
 
@@ -139,7 +163,9 @@ namespace mrbBase
             try
             {
                 if (!Directory.Exists(FileIO.StripFileName(FNameConfig)))
+                {
                     Directory.CreateDirectory(FileIO.StripFileName(FNameConfig));
+                }
             }
             catch (Exception ex)
             {

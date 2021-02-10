@@ -14,6 +14,7 @@ using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms
 {
@@ -232,7 +233,7 @@ namespace Mids_Reborn.Forms
                 var serializer = MyApplication.GetSerializer();
                 DatabaseAPI.AssignStaticIndexValues(serializer, false);
                 DatabaseAPI.MatchAllIDs();
-                DatabaseAPI.SaveMainDatabase(serializer);
+                DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
                 BusyHide();
                 DialogResult = DialogResult.OK;
                 Hide();

@@ -43,7 +43,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             this.circularProgressBar1.InnerColor = System.Drawing.Color.Transparent;
             this.circularProgressBar1.InnerMargin = 3;
             this.circularProgressBar1.InnerWidth = 1;
-            this.circularProgressBar1.Location = new System.Drawing.Point(128, 31);
+            this.circularProgressBar1.Location = new System.Drawing.Point(9, 9);
             this.circularProgressBar1.Margin = new System.Windows.Forms.Padding(0);
             this.circularProgressBar1.MarqueeAnimationSpeed = 2000;
             this.circularProgressBar1.Name = "circularProgressBar1";
@@ -71,18 +71,19 @@ namespace Mids_Reborn.Forms.UpdateSystem
             // 
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(51, 327);
+            this.label1.Location = new System.Drawing.Point(12, 280);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(450, 29);
+            this.label1.Size = new System.Drawing.Size(311, 48);
             this.label1.TabIndex = 1;
-            this.label1.Text = "The application will automatically restart when finished.";
+            this.label1.Text = "The application will automatically restart when finished.\r\n";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // Updater
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(548, 382);
+            this.ClientSize = new System.Drawing.Size(331, 337);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.circularProgressBar1);
             this.ForeColor = System.Drawing.Color.White;

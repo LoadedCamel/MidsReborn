@@ -57,8 +57,10 @@ namespace mrbBase
         private string _defaultSaveFolderOverride;
         private Size _lastSize = new Size(1072, 760);
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
-        public string UpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
-
+        public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
+        public string DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
+        public string AppChangeLog { get; set; }
+        public string DbChangeLog { get; set; }
         private ConfigData() : this(true, "")
         {
         }
@@ -88,6 +90,7 @@ namespace mrbBase
             DiscordAuthorized = false;
             IntializeComponent();
         }
+
 
         // these properties require setters for deserialization
         public SDamageMath DamageMath { get; } = new SDamageMath();
@@ -161,7 +164,11 @@ namespace mrbBase
         public bool LongExport { get; set; }
         public bool MasterMode { get; set; }
         public bool ShrinkFrmSets { get; set; }
-
+        public bool ConvertOldDb { get; set; }
+        public bool FirstRun { get; set; } = true;
+        public string SourceDataPath { get; set; }
+        public string ConversionDataPath { get; set; }
+        public string DataPath { get; set; } = Path.Combine(Files.GetAssemblyLoc(), "Data\\Homecoming\\");
 
         public string DefaultSaveFolderOverride
         {
@@ -213,7 +220,9 @@ namespace mrbBase
             // force Mhd if it exists, then rename it
             var mhdFn = Files.GetConfigFilename(true);
             if (File.Exists(mhdFn))
+            {
                 MigrateToSerializer(mhdFn, serializer);
+            }
 
             var fn = Files.GetConfigFilename(false);
             if (File.Exists(fn) && fn.EndsWith(".json"))
@@ -234,9 +243,11 @@ namespace mrbBase
 
         private void IntializeComponent()
         {
-            if (string.IsNullOrEmpty(UpdatePath))
-                UpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
+            if (string.IsNullOrWhiteSpace(UpdatePath))
+                UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
 
+            if (string.IsNullOrWhiteSpace(DbUpdatePath))
+                DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
             RelocateSaveFolder(false);
             try
             {

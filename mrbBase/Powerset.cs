@@ -151,9 +151,12 @@ namespace mrbBase
             {
                 string str;
                 if ((str = _groupName) == null)
+                {
                     str = _groupName = FullName.Contains(".")
                         ? FullName.Substring(0, FullName.IndexOf(".", StringComparison.Ordinal))
                         : string.Empty;
+                }
+
                 return str;
             }
             set => _groupName = value;

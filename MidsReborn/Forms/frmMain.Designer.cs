@@ -812,6 +812,7 @@ namespace Mids_Reborn.Forms
             // 
             this.ToolStripSeparator15.Name = "ToolStripSeparator15";
             this.ToolStripSeparator15.Size = new System.Drawing.Size(162, 6);
+            this.ToolStripSeparator15.Visible = false;
             // 
             // tsAdvFreshInstall
             // 
@@ -826,6 +827,7 @@ namespace Mids_Reborn.Forms
             this.tsAdvResetTips.Name = "tsAdvResetTips";
             this.tsAdvResetTips.Size = new System.Drawing.Size(165, 22);
             this.tsAdvResetTips.Text = "Reset Tips";
+            this.tsAdvResetTips.Visible = false;
             this.tsAdvResetTips.Click += new System.EventHandler(this.tsAdvResetTips_Click);
             // 
             // CharacterToolStripMenuItem

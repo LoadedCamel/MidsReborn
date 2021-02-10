@@ -11,25 +11,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
 {
     public class clsXMLUpdate
     {
-        public enum ECheckResponse
-        {
-            NoUpdates,
-            Updates,
-            FailedWithMessage
-        }
-
-        private const string ReadmeUrl =
-            "https://raw.githubusercontent.com/Crytilis/mids-reborn-hero-designer/master/README.md";
-
         public bool RestartNeeded = false;
-        private static bool Mandatory { get; set; }
-        private static Version AppVersion { get; set; }
-        private static float DbVersion { get; set; }
-        private static string ChangeLog { get; set; }
 
         public static void BugReportCrytilis()
         {
-            LaunchBrowser("https://github.com/Reborn-Team/Hero-Designer/issues");
+            LaunchBrowser("https://github.com/Reborn-Team/MidsReborn/issues");
         }
 
         public static void DownloadFromDomain()
@@ -49,7 +35,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         public static void GoToGitHub()
         {
-            LaunchBrowser("https://github.com/Reborn-Team/Hero-Designer");
+            LaunchBrowser("https://github.com/Reborn-Team/MidsReborn");
         }
 
         public static void GoToForums()
@@ -71,119 +57,22 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         public static void CheckUpdate(frmMain parent)
         {
-            var settings = new XmlReaderSettings
+            if (AppUpdate.IsAvailable)
             {
-                XmlResolver = null,
-                DtdProcessing = DtdProcessing.Ignore
-            };
-            using var xmlReader = XmlReader.Create(MidsContext.Config.UpdatePath, settings);
-            while (xmlReader.Read())
-                try
-                {
-                    switch (xmlReader.Name)
-                    {
-                        case "app-version":
-                        {
-                            AppVersion = new Version(xmlReader.ReadElementContentAsString());
-                            break;
-                        }
-                        case "db-version":
-                        {
-                            DbVersion = xmlReader.ReadElementContentAsFloat();
-                            break;
-                        }
-                        case "changelog":
-                        {
-                            ChangeLog = xmlReader.ReadElementContentAsString();
-                            break;
-                        }
-                        case "mandatory":
-                        {
-                            Mandatory = bool.Parse(xmlReader.ReadElementContentAsString());
-                            break;
-                        }
-                    }
-                }
-                catch (XmlException e)
-                {
-                    MessageBox.Show($"{e.Message}\r\n{e.StackTrace}", "Error");
-                }
-
-            var cDbVersion = DatabaseAPI.Database.Version;
-            if (AppVersion > MidsContext.AppVersion)
-            {
-                if (!Mandatory)
-                {
-                    var appResult = new UpdateQuery(parent)
-                    {
-                        Type = UpdateType.App.ToString()
-                    };
-                    appResult.ShowDialog();
-                    switch (appResult.DialogResult)
-                    {
-                        case DialogResult.Yes:
-                        {
-                            var patchNotes = new PatchNotes(parent, true)
-                            {
-                                Type = UpdateType.App.ToString(),
-                                Version = AppVersion.ToString()
-                            };
-                            patchNotes.ShowDialog();
-                            break;
-                        }
-                        case DialogResult.No:
-                            appResult.Close();
-                            break;
-                        case DialogResult.OK:
-                            Update(UpdateType.App, AppVersion.ToString(), parent);
-                            break;
-                    }
-                }
-                else
-                {
-                    Update(UpdateType.App, AppVersion.ToString(), parent);
-                }
+                AppUpdate.InitiateQuery(parent);
             }
-            else if (DbVersion > cDbVersion && AppVersion < MidsContext.AppVersion)
+            else if (DbUpdate.IsAvailable)
             {
-                if (!Mandatory)
-                {
-                    var dbResult = new UpdateQuery(parent)
-                    {
-                        Type = UpdateType.Database.ToString()
-                    };
-                    switch (dbResult.DialogResult)
-                    {
-                        case DialogResult.Yes:
-                        {
-                            var patchNotes = new PatchNotes(parent, true)
-                            {
-                                Type = UpdateType.Database.ToString(),
-                                Version = DbVersion.ToString(CultureInfo.InvariantCulture)
-                            };
-                            patchNotes.ShowDialog();
-                            break;
-                        }
-                        case DialogResult.No:
-                            dbResult.Close();
-                            break;
-                        case DialogResult.OK:
-                            Update(UpdateType.Database, DbVersion.ToString(CultureInfo.InvariantCulture), parent);
-                            break;
-                    }
-                }
-                else
-                {
-                    Update(UpdateType.Database, DbVersion.ToString(CultureInfo.InvariantCulture), parent);
-                }
+                DbUpdate.InitiateQuery(parent);
             }
             else
             {
-                MessageBox.Show(@"No update is available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"There are no updates available at this time.", @"Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            
         }
 
-        internal static void Update(Enum type, string updateVersion, frmMain parent)
+        public static void Update(Enum type, string updateVersion, frmMain parent)
         {
             try
             {
@@ -194,9 +83,9 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 };
                 updateForm.ShowDialog();
             }
-            catch (ArgumentException e)
+            catch
             {
-                MessageBox.Show($"{e.Message}\r\n{e.StackTrace}", "Error");
+                // Ignored
             }
         }
 
@@ -205,13 +94,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
             None,
             App,
             Database
-        }
-
-        protected enum EUpdateType
-        {
-            None,
-            AppUpdate,
-            DbUpdate
         }
     }
 }

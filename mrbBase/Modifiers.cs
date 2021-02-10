@@ -16,10 +16,12 @@ namespace mrbBase
         public string SourceTables = string.Empty;
 
         #region ICloneable implementation
+
         public object Clone()
         {
             return MemberwiseClone();
         }
+
         #endregion
 
         private void StoreRaw(ISerialize serializer, string path, string name)
@@ -36,33 +38,114 @@ namespace mrbBase
             ConfigData.SaveRawMhd(serializer, toSerialize, path, null);
         }
 
-        public bool Load()
+        public bool Load(string iPath = "")
         {
-            var path = Files.SelectDataFileLoad("AttribMod.json");
-            try
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
             {
-                var jsonText = File.ReadAllText(path);
-                var settings = new JsonSerializerSettings
+                path = Files.SelectDataFileLoad(Files.JsonFileModifiers);
+            }
+            else
+            {
+                path = Files.SelectDataFileLoad(Files.JsonFileModifiers, iPath);
+            }
+            if (File.Exists(path))
+            {
+                try
                 {
-                    TypeNameHandling = TypeNameHandling.Auto,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    PreserveReferencesHandling = PreserveReferencesHandling.None,
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                };
-                DatabaseAPI.Database.AttribMods = JsonConvert.DeserializeObject<Modifiers>(jsonText, settings);
-                return true;
+                    var jsonText = File.ReadAllText(path);
+                    var settings = new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.Auto,
+                        NullValueHandling = NullValueHandling.Ignore,
+                        PreserveReferencesHandling = PreserveReferencesHandling.None,
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                        DefaultValueHandling = DefaultValueHandling.Ignore,
+                    };
+                    DatabaseAPI.Database.AttribMods = JsonConvert.DeserializeObject<Modifiers>(jsonText, settings);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Modifier table file isn't how it should be....\r\nMessage: {ex.Message}\r\nStackTrace: {ex.StackTrace}\n No modifiers were loaded.");
+                    return false;
+                }
             }
-            catch (Exception ex)
+
+            if (!string.IsNullOrWhiteSpace(iPath))
             {
-                MessageBox.Show($"Modifier table file isn't how it should be....\r\nMessage: {ex.Message}\r\nStackTrace: {ex.StackTrace}\n No modifiers were loaded.");
-                return false;
+                path = Files.SelectDataFileLoad(Files.MxdbFileModifiers, iPath);
+
+
+                Modifier = new ModifierTable[0];
+                FileStream fileStream;
+                BinaryReader reader;
+                try
+                {
+                    fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                    reader = new BinaryReader(fileStream);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message + '\n' + '\n' + "Modifier tables couldn't be loaded.");
+                    return false;
+                }
+
+                try
+                {
+                    if (reader.ReadString() != "Mids' Hero Designer Attribute Modifier Tables")
+                    {
+                        MessageBox.Show("Modifier table header wasn't found, file may be corrupt!");
+                        reader.Close();
+                        fileStream.Close();
+                        return false;
+                    }
+
+                    Revision = reader.ReadInt32();
+                    RevisionDate = DateTime.FromBinary(reader.ReadInt64());
+                    SourceIndex = reader.ReadString();
+                    SourceTables = reader.ReadString();
+                    int num = 0;
+                    Modifier = new ModifierTable[reader.ReadInt32() + 1];
+                    for (int index = 0; index <= Modifier.Length - 1; ++index)
+                    {
+                        Modifier[index] = new ModifierTable();
+                        Modifier[index].Load(reader);
+                        if (num <= 5)
+                            continue;
+                        num = 0;
+                        Application.DoEvents();
+                    }
+
+                    return true;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Modifier table file isn't how it should be (" + ex.Message + ")" + '\n' +
+                                    "No modifiers loaded.");
+                    Modifier = new ModifierTable[0];
+                    reader.Close();
+                    fileStream.Close();
+                    return false;
+                }
             }
+
+            return false;
         }
 
-        public void Store(ISerialize serializer)
+        public void Store(ISerialize serializer, string iPath = "")
         {
-            var path = Files.SelectDataFileSave("AttribMod.json");
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileSave("AttribMod.json");
+            }
+            else
+            {
+                path = Files.SelectDataFileSave("AttribMod.json", iPath);
+            }
+
             var serializerSettings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,

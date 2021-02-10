@@ -11,6 +11,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Display;
+using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -228,10 +229,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var serializer = MyApplication.GetSerializer();
             DatabaseAPI.AssignStaticIndexValues(serializer, false);
             DatabaseAPI.AssignRecipeIDs();
-            DatabaseAPI.SaveEnhancementDb(serializer);
+            DatabaseAPI.SaveEnhancementDb(serializer, MidsContext.Config.DataPath);
             DatabaseAPI.MatchAllIDs();
             Task.Delay(1000).Wait();
-            DatabaseAPI.SaveMainDatabase(serializer);
+            DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
             BusyHide();
             DialogResult = DialogResult.OK;
             Hide();

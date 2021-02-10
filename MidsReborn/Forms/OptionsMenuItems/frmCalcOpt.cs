@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.ImportExportItems;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
+using WK.Libraries.BetterFolderBrowserNS;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems
 {
@@ -459,15 +462,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             var regAssociations = FileAssociation.CheckAssociations();
             if (!regAssociations)
             {
-                lblAssocStatus.Text = "Status: settings missing";
+                lblAssocStatus.Text = @"Status: settings missing";
             }
             else if (!string.Equals(associatedProgram, Application.ExecutablePath, StringComparison.InvariantCultureIgnoreCase))
             {
-                lblAssocStatus.Text = "Status: .MXD set to a different program";
+                lblAssocStatus.Text = @"Status: .MXD set to a different program";
             }
             else
             {
-                lblAssocStatus.Text = "Status: Ok";
+                lblAssocStatus.Text = @"Status: Ok";
             }
         }
 
@@ -584,12 +587,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkPowersBold.Checked = config.RtFont.PowersBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
             lblSaveFolder.Text = config.GetSaveFolder();
-            //this.txtUpdatePath.Text = config.UpdatePath;
+            lblDatabaseLoc.Text = config.DataPath;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
             chkUseArcanaTime.Checked = config.UseArcanaTime;
             cbUpdateURL.Text = MidsContext.Config.UpdatePath;
+            cbDBUpdateURL.Text = MidsContext.Config.DbUpdatePath;
             TeamSize.Value = new decimal(config.TeamSize);
             var index = 0;
             do
@@ -810,6 +814,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.UseArcanaTime = chkUseArcanaTime.Checked;
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
             config.UpdatePath = cbUpdateURL.Text;
+            config.DbUpdatePath = cbDBUpdateURL.Text;
             config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle) cbTotalsWindowTitleOpt.SelectedIndex;
             config.UseOldTotalsWindow = chkOldStyle.Checked;
             var index = 0;
@@ -818,6 +823,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 config.DragDropScenarioAction[index] = defActs[index];
                 ++index;
             } while (index <= 19);
+            config.DataPath = lblDatabaseLoc.Text;
         }
 
         private void btnFileAssoc_Click(object sender, EventArgs e)
@@ -832,6 +838,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             {
                 MessageBox.Show("Could not update file associations.", "Boo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnDatabaseLoc_Click(object sender, EventArgs e)
+        {
+            using var fBrowse = new BetterFolderBrowser
+            {
+                Multiselect = false,
+                RootFolder = Path.Combine(Files.GetAssemblyLoc(), Files.RoamingFolder),
+                Title = @"Select the location of the database files"
+            };
+            if (fBrowse.ShowDialog(this) == DialogResult.OK)
+            {
+                myParent.DbChangeRequested = true;
+                lblDatabaseLoc.Text = fBrowse.SelectedPath;
+            }
+
+        }
+
+        private void btnResetDatabaseLoc_Click(object sender, EventArgs e)
+        {
+            lblDatabaseLoc.Text = Files.FDefaultPath;
         }
     }
 }
