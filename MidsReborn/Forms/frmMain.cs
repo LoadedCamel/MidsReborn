@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Forms.Controls;
@@ -33,6 +34,8 @@ namespace Mids_Reborn.Forms
     {
         private frmInitializing _frmInitializing;
 
+        private frmBusy _frmBusy;
+
         internal OpenFileDialog DlgOpen;
 
         internal SaveFileDialog DlgSave;
@@ -40,6 +43,10 @@ namespace Mids_Reborn.Forms
         private bool exportDiscordInProgress;
 
         private bool loading;
+
+        private int actExec { get; set; }
+
+        public bool DbChangeRequested { get; set; }
 
         public frmMain()
         {
@@ -77,6 +84,8 @@ namespace Mids_Reborn.Forms
                 dragStartSlot = -1;
                 dragdropScenarioAction = new short[20];
                 DoneDblClick = false;
+                DbChangeRequested = false;
+                actExec = 0;
             }
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
@@ -260,14 +269,7 @@ namespace Mids_Reborn.Forms
                     MidsContext.Config.MasterMode = true;
                 }
 
-                if (MidsContext.Config.ConvertOldDb)
-                {
-                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.SourceDataPath, true);
-                }
-                else
-                {
-                    MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
-                }
+                MainModule.MidsController.LoadData(ref _frmInitializing, MidsContext.Config.DataPath);
                 _frmInitializing?.SetMessage("Setting up UI...");
                 dvAnchored.VisibleSize = MidsContext.Config.DvState;
                 SetTitleBar();
@@ -370,12 +372,6 @@ namespace Mids_Reborn.Forms
                 _frmInitializing.Hide();
                 _frmInitializing.Close();
                 Refresh();
-                if (MidsContext.Config.ConvertOldDb)
-                { 
-                    MessageBox.Show(@"Source loaded, please open the database editor and save the main/enhancement database to convert.", @"Conversion");
-
-                }
-                //Refresh();
                 dvAnchored.SetScreenBounds(ClientRectangle);
                 var iLocation = new Point();
                 ref var local = ref iLocation;
@@ -1958,7 +1954,15 @@ namespace Mids_Reborn.Forms
             if (!(e.Alt & e.Control & e.Shift & (e.KeyCode == Keys.A)))
                 return;
             tsAdvFreshInstall.Visible = true;
-            MidsContext.Config.MasterMode = true;
+            switch (MidsContext.Config.MasterMode)
+            {
+                case false:
+                    MidsContext.Config.MasterMode = true;
+                    break;
+                case true:
+                    MidsContext.Config.MasterMode = false;
+                    break;
+            }
             SetTitleBar(MainModule.MidsController.Toon.IsHero());
         }
 
@@ -2012,6 +2016,7 @@ namespace Mids_Reborn.Forms
             if (drawing != null)
                 DoRedraw();
             UpdateColors();
+            SetTitleBar();
             frmTotalsV2.SetTitle(fTotals2);
         }
 
@@ -3260,8 +3265,7 @@ namespace Mids_Reborn.Forms
                                 DoRedraw();*/
                                 PowerModified(false);
                                 LastClickPlacedSlot = true;
-                                /* Disabled until can find why it is not saving
-                                        MidsContext.Config.Tips.Show(Tips.TipType.FirstEnh);*/
+                                //MidsContext.Config.Tips.Show(Tips.TipType.FirstEnh);
                                 return;
                             }
 
@@ -3627,18 +3631,14 @@ namespace Mids_Reborn.Forms
         {
             MainModule.MidsController.Toon.BuildPower(MidsContext.Character.Powersets[(int)SetID].nID, nIDPower);
             PowerModified(true);
-            /* Disabled
-             * MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
-             */
+            //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
         }
 
         private void PowerPicked(int nIDPowerset, int nIDPower)
         {
             MainModule.MidsController.Toon.BuildPower(nIDPowerset, nIDPower);
             PowerModified(true);
-            /* Disabled
-             * MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
-             */
+            //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
             DoRedraw();
         }
 
@@ -4466,9 +4466,8 @@ namespace Mids_Reborn.Forms
             {
                 drawing.InterfaceMode = Enums.eInterfaceMode.PowerToggle;
                 DoRedraw();
-                /* Disabled
-                 * MidsContext.Config.Tips.Show(Tips.TipType.TotalsTab);
-                 */
+                //Fix so tips only show once
+                //MidsContext.Config.Tips.Show(Tips.TipType.TotalsTab);
             }
             else
             {
@@ -4717,12 +4716,11 @@ namespace Mids_Reborn.Forms
 
             if (MidsContext.Config.MasterMode)
             {
-                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} (Master Mode) v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} {MidsContext.AppVersionStatus} (Database: {DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
             }
             else
-            //this.Text = str2 + " v" + MidsContext.AppAssemblyVersion + " (Database Issue: " + DatabaseAPI.Database.Issue + " - Updated: " + DatabaseAPI.Database.Date.ToString("dd/MM/yy") + ")";
             {
-                Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} (Database Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
+                Text = $@"{str2} v{MidsContext.AppAssemblyVersion.Replace(".0.0", "")} (Database: {DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, Version: {DatabaseAPI.Database.Version})";
             }
         }
 
@@ -5224,13 +5222,15 @@ namespace Mids_Reborn.Forms
             FloatTop(true);
         }
 
-        private void tsConfig_Click(object sender, EventArgs e)
+        private async void tsConfig_Click(object sender, EventArgs e)
         {
             FloatTop(false);
             var iParent = this;
             var frmCalcOpt = new frmCalcOpt(ref iParent);
             if (frmCalcOpt.ShowDialog(this) == DialogResult.OK)
             {
+                var serializer = MyApplication.GetSerializer();
+                MidsContext.Config.SaveConfig(serializer);
                 UpdateControls();
                 UpdateOtherFormsFonts();
             }
@@ -5238,6 +5238,14 @@ namespace Mids_Reborn.Forms
             frmCalcOpt.Dispose();
             tsIODefault.Text = "Default (" + (MidsContext.Config.I9.DefaultIOLevel + 1) + ")";
             FloatTop(true);
+            if (DbChangeRequested)
+            {
+                using var iFrm = new frmBusy();
+                _frmBusy = iFrm;
+                _frmBusy.SetTitle(@"Database Change Requested");
+                _frmBusy.Show();
+                await MainModule.MidsController.ChangeDatabase(_frmBusy);
+            }
         }
 
         private void tsKoFi_Click(object sender, EventArgs e)
@@ -5694,12 +5702,33 @@ namespace Mids_Reborn.Forms
 
         private void tsPatchNotes_Click(object sender, EventArgs e)
         {
-            var patchNotes = new PatchNotes(this, false)
+            PatchNotes patchNotes;
+            var patchResult = new PatchQuery(this);
+            patchResult.ShowDialog();
+            switch (patchResult.DialogResult)
             {
-                Type = clsXMLUpdate.UpdateType.None.ToString(),
-                Version = MidsContext.AppVersion.ToString()
-            };
-            patchNotes.ShowDialog();
+                case DialogResult.Yes:
+                {
+                    patchNotes = new PatchNotes(this, false)
+                    {
+                        Type = clsXMLUpdate.UpdateType.App.ToString(),
+                        Version = MidsContext.AppVersion.ToString()
+                    };
+                    patchNotes.ShowDialog();
+                    break;
+                }
+                case DialogResult.No:
+                    patchNotes = new PatchNotes(this, false)
+                    {
+                        Type = clsXMLUpdate.UpdateType.Database.ToString(),
+                        Version = DatabaseAPI.Database.Version.ToString(CultureInfo.InvariantCulture)
+                    };
+                    patchNotes.ShowDialog();
+                    break;
+                case DialogResult.Cancel:
+                    patchResult.Close();
+                    break;
+            }
         }
 
         private void tsUpdateCheck_Click(object sender, EventArgs e)
@@ -6105,19 +6134,6 @@ namespace Mids_Reborn.Forms
                     e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
                 }
             }
-
-            /*llPrimary.Font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, FontStyle.Bold, GraphicsUnit.Point);
-            //llPrimary.Font = new Font("Arial", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
-            llSecondary.Font = llPrimary.Font;
-            foreach (var e in llPrimary.Items)
-            {
-                e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
-            }
-
-            foreach (var e in llSecondary.Items)
-            {
-                e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
-            }*/
             heroVillain.Checked = !MidsContext.Character.IsHero();
             dvAnchored.SetLocation(new Point(llPrimary.Left, llPrimary.Top + raGreater(llPrimary.SizeNormal.Height, llSecondary.SizeNormal.Height) + 5), ForceComplete);
             llPrimary.SuspendRedraw = false;

@@ -1,8 +1,11 @@
 using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Forms;
+using Mids_Reborn.Forms.OptionsMenuItems;
+using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
 
@@ -20,11 +23,39 @@ namespace Mids_Reborn
             public static Rectangle SzFrmTotals = new Rectangle();
 
             public static bool IsAppInitialized { get; private set; }
+            private static frmBusy bFrm;
 
             public static clsToonX Toon
             {
                 get => (clsToonX) MidsContext.Character;
                 set => MidsContext.Character = value;
+            }
+
+            private static void BusyHide()
+            {
+                if (bFrm == null)
+                    return;
+                bFrm.Close();
+                bFrm = null;
+            }
+
+            private static void BusyMsg(ref frmMain iFrm, string sMessage, string sTitle = "")
+            {
+                var bFrm = new frmBusy();
+                if (!string.IsNullOrWhiteSpace(sTitle))
+                {
+                    bFrm.SetTitle(sTitle);
+                }
+                bFrm.Show(iFrm);
+                bFrm.SetMessage(sMessage);
+            }
+
+            public static async Task ChangeDatabase(frmBusy iFrm)
+            {
+                iFrm.SetMessage(@"Mids Reborn will now restart and load your selected database.");
+                await Task.Delay(2000);
+                BusyHide();
+                Application.Restart();
             }
 
             public static void LoadData(ref frmInitializing iFrm, string path, bool forConversion = false)

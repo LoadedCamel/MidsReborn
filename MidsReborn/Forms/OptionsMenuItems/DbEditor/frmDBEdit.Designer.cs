@@ -538,9 +538,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnDBConverter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnDBConverter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDBConverter.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnDBConverter.Location = new System.Drawing.Point(48, 358);
+            this.btnDBConverter.Location = new System.Drawing.Point(236, 328);
             this.btnDBConverter.Name = "btnDBConverter";
-            this.btnDBConverter.Size = new System.Drawing.Size(160, 24);
+            this.btnDBConverter.Size = new System.Drawing.Size(164, 24);
             this.btnDBConverter.TabIndex = 32;
             this.btnDBConverter.Text = "DB Converter";
             this.btnDBConverter.UseVisualStyleBackColor = true;

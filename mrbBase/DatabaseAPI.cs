@@ -1210,7 +1210,16 @@ namespace mrbBase
         }
         #endregion
 
-        public static void CheckEhcBoosts()
+        public static string DatabaseName
+        {
+            get
+            {
+                var name = new DirectoryInfo(MidsContext.Config.DataPath).Name;
+                return name;
+            }
+        }
+
+        private static void CheckEhcBoosts()
         {
             foreach (var power in Database.Power)
             {

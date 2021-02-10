@@ -24,5 +24,14 @@ namespace Mids_Reborn.Forms
             Message.Text = iMsg;
             Refresh();
         }
+
+        [DebuggerStepThrough]
+        public void SetTitle(string iTitle)
+        {
+            if (Text == iTitle)
+                return;
+            Text = iTitle;
+            Refresh();
+        }
     }
 }

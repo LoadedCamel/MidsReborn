@@ -42,10 +42,9 @@ namespace mrbBase
         {
             var sPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\RebornTeam\";
             return Path.Combine(sPath, JsonFileConfigSP);
-            //return $"{sPath}{JsonFileConfigSP}";
         }
 
-        public static string FDefaultPath => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), "MRBHC");
+        public static string FDefaultPath => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), "Homecoming\\");
 
         private static string FNameConfig => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), MxdbFileConfig);
 

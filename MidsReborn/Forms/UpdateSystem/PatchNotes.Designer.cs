@@ -40,7 +40,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             this.richTextBox1.Location = new System.Drawing.Point(12, 12);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(586, 397);
+            this.richTextBox1.Size = new System.Drawing.Size(586, 248);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 
@@ -49,7 +49,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             this.closeUpdate.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.closeUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.closeUpdate.ForeColor = System.Drawing.Color.Black;
-            this.closeUpdate.Location = new System.Drawing.Point(267, 415);
+            this.closeUpdate.Location = new System.Drawing.Point(266, 266);
             this.closeUpdate.Name = "closeUpdate";
             this.closeUpdate.Size = new System.Drawing.Size(78, 23);
             this.closeUpdate.TabIndex = 1;
@@ -62,12 +62,12 @@ namespace Mids_Reborn.Forms.UpdateSystem
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(610, 450);
+            this.ClientSize = new System.Drawing.Size(610, 293);
             this.Controls.Add(this.closeUpdate);
             this.Controls.Add(this.richTextBox1);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.Color.White;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PatchNotes";

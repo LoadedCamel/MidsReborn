@@ -233,35 +233,7 @@ namespace Mids_Reborn.Forms
                 var serializer = MyApplication.GetSerializer();
                 DatabaseAPI.AssignStaticIndexValues(serializer, false);
                 DatabaseAPI.MatchAllIDs();
-                if (MidsContext.Config.ConvertOldDb)
-                {
-                    DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.ConversionDataPath);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, MidsContext.Config.SourceDataPath), Files.SelectDataFileSave(Files.MxdbFileBbCodeUpdate, MidsContext.Config.ConversionDataPath), true);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileEClasses, MidsContext.Config.SourceDataPath), Files.SelectDataFileSave(Files.MxdbFileEClasses, MidsContext.Config.ConversionDataPath), true);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileOrigins, MidsContext.Config.SourceDataPath), Files.SelectDataFileSave(Files.MxdbFileOrigins, MidsContext.Config.ConversionDataPath), true);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileOverrides, MidsContext.Config.SourceDataPath), Files.SelectDataFileSave(Files.MxdbFileOverrides, MidsContext.Config.ConversionDataPath), true);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileMaths, MidsContext.Config.SourceDataPath), Files.SelectDataFileSave(Files.MxdbFileMaths, MidsContext.Config.ConversionDataPath), true);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileSetTypes, MidsContext.Config.SourceDataPath), Files.SelectDataFileSave(Files.MxdbFileSetTypes, MidsContext.Config.ConversionDataPath), true);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileGraphics, MidsContext.Config.SourceDataPath), Files.SelectDataFileSave(Files.MxdbFileGraphics, MidsContext.Config.ConversionDataPath), true);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileNLevels, Files.FDefaultPath), Files.SelectDataFileSave(Files.MxdbFileNLevels, MidsContext.Config.ConversionDataPath), true);
-                    File.Copy(Files.SelectDataFileLoad(Files.MxdbFileRLevels, Files.FDefaultPath), Files.SelectDataFileSave(Files.MxdbFileRLevels, MidsContext.Config.ConversionDataPath), true);
-                    DatabaseAPI.Database.AttribMods?.Store(serializer, MidsContext.Config.ConversionDataPath);
-                    DatabaseAPI.SaveEffectIdsDatabase(MidsContext.Config.ConversionDataPath);
-                    DatabaseAPI.AssignRecipeIDs();
-                    DatabaseAPI.SaveSalvage(serializer, MidsContext.Config.ConversionDataPath);
-                    DatabaseAPI.SaveRecipes(serializer, MidsContext.Config.ConversionDataPath);
-                    DatabaseAPI.SaveEnhancementDb(serializer, MidsContext.Config.ConversionDataPath);
-                    MidsContext.Config.ConvertOldDb = false;
-                    MidsContext.Config.DataPath = MidsContext.Config.ConversionDataPath;
-                    MessageBox.Show(@"Conversion complete! The application will now restart using your converted database.");
-                    MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
-                    Application.Restart();
-                }
-                else
-                {
-                    DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
-                }
-
+                DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
                 BusyHide();
                 DialogResult = DialogResult.OK;
                 Hide();

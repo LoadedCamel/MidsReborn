@@ -38,12 +38,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.destBrowse = new System.Windows.Forms.Button();
             this.convertBtn = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.statusText = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 52);
+            this.label1.Location = new System.Drawing.Point(28, 52);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 0;
@@ -51,7 +52,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // sourceFolder
             // 
-            this.sourceFolder.Location = new System.Drawing.Point(63, 49);
+            this.sourceFolder.Location = new System.Drawing.Point(78, 49);
             this.sourceFolder.Name = "sourceFolder";
             this.sourceFolder.Size = new System.Drawing.Size(293, 20);
             this.sourceFolder.TabIndex = 1;
@@ -59,7 +60,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 106);
+            this.label2.Location = new System.Drawing.Point(9, 106);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 13);
             this.label2.TabIndex = 2;
@@ -67,14 +68,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // destinationFolder
             // 
-            this.destinationFolder.Location = new System.Drawing.Point(82, 103);
+            this.destinationFolder.Location = new System.Drawing.Point(78, 103);
             this.destinationFolder.Name = "destinationFolder";
             this.destinationFolder.Size = new System.Drawing.Size(293, 20);
             this.destinationFolder.TabIndex = 3;
             // 
             // srcBrowse
             // 
-            this.srcBrowse.Location = new System.Drawing.Point(362, 47);
+            this.srcBrowse.Location = new System.Drawing.Point(381, 47);
             this.srcBrowse.Name = "srcBrowse";
             this.srcBrowse.Size = new System.Drawing.Size(40, 23);
             this.srcBrowse.TabIndex = 4;
@@ -95,11 +96,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // convertBtn
             // 
             this.convertBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.convertBtn.Location = new System.Drawing.Point(150, 145);
+            this.convertBtn.Location = new System.Drawing.Point(144, 308);
             this.convertBtn.Name = "convertBtn";
             this.convertBtn.Size = new System.Drawing.Size(160, 23);
             this.convertBtn.TabIndex = 6;
-            this.convertBtn.Text = "RESTART && CONVERT";
+            this.convertBtn.Text = "CONVERT";
             this.convertBtn.UseVisualStyleBackColor = true;
             this.convertBtn.Click += new System.EventHandler(this.convertBtn_Click);
             // 
@@ -114,11 +115,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.label3.Text = "This tool will convert your 2.7.x databases and data structure to the latest form" +
     "at.\r\n";
             // 
+            // statusText
+            // 
+            this.statusText.BackColor = System.Drawing.Color.Ivory;
+            this.statusText.ForeColor = System.Drawing.Color.Black;
+            this.statusText.FormattingEnabled = true;
+            this.statusText.Location = new System.Drawing.Point(12, 143);
+            this.statusText.Name = "statusText";
+            this.statusText.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.statusText.Size = new System.Drawing.Size(419, 160);
+            this.statusText.TabIndex = 8;
+            // 
             // frmDBConvert
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 180);
+            this.ClientSize = new System.Drawing.Size(443, 343);
+            this.Controls.Add(this.statusText);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.convertBtn);
             this.Controls.Add(this.destBrowse);
@@ -145,5 +158,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private System.Windows.Forms.Button destBrowse;
         private System.Windows.Forms.Button convertBtn;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox statusText;
     }
 }

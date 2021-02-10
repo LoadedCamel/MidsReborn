@@ -42,9 +42,9 @@ namespace Mids_Reborn.Forms.UpdateSystem
             this.queryLabel.ForeColor = System.Drawing.Color.Black;
             this.queryLabel.Location = new System.Drawing.Point(12, 9);
             this.queryLabel.Name = "queryLabel";
-            this.queryLabel.Size = new System.Drawing.Size(302, 20);
+            this.queryLabel.Size = new System.Drawing.Size(334, 20);
             this.queryLabel.TabIndex = 0;
-            this.queryLabel.Text = "There is a new update available.";
+            this.queryLabel.Text = "There is a new {type} update available.\r\n";
             this.queryLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label1
@@ -53,9 +53,9 @@ namespace Mids_Reborn.Forms.UpdateSystem
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(12, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(302, 24);
+            this.label1.Size = new System.Drawing.Size(334, 24);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Do you want to update and view the patch notes?";
+            this.label1.Text = "Do you want to download and view the patch notes?";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // yesButton
@@ -73,7 +73,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             // 
             this.noButton.DialogResult = System.Windows.Forms.DialogResult.No;
             this.noButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.noButton.Location = new System.Drawing.Point(128, 58);
+            this.noButton.Location = new System.Drawing.Point(143, 58);
             this.noButton.Name = "noButton";
             this.noButton.Size = new System.Drawing.Size(75, 23);
             this.noButton.TabIndex = 3;
@@ -84,7 +84,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             // 
             this.justupdateButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.justupdateButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.justupdateButton.Location = new System.Drawing.Point(239, 58);
+            this.justupdateButton.Location = new System.Drawing.Point(271, 58);
             this.justupdateButton.Name = "justupdateButton";
             this.justupdateButton.Size = new System.Drawing.Size(75, 23);
             this.justupdateButton.TabIndex = 4;
@@ -96,7 +96,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(326, 93);
+            this.ClientSize = new System.Drawing.Size(358, 93);
             this.Controls.Add(this.justupdateButton);
             this.Controls.Add(this.noButton);
             this.Controls.Add(this.yesButton);
