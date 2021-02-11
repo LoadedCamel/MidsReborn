@@ -65,20 +65,6 @@ namespace mrbBase
 
         private void InitializeComponent()
         {
-            if (!MidsContext.Config.DiscordAuthorized && File.Exists(Files.GetConfigSpFile()))
-            {
-                if (!string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "username")) && !string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "access_token")))
-                {
-                    MidsContext.Config.DiscordAuthorized = true;
-                    MidsContext.Config.Registered = 1;
-                }
-                else
-                {
-                    File.Delete(Files.GetConfigSpFile());
-                    MidsContext.Config.DiscordAuthorized = false;
-                    MidsContext.Config.Registered = 0;
-                }
-            }
         }
 
         public static (bool, T) LoadJson<T>(ISerialize serializer, string filename)

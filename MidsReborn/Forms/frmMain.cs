@@ -44,8 +44,6 @@ namespace Mids_Reborn.Forms
 
         private bool loading;
 
-        private int actExec { get; set; }
-
         public bool DbChangeRequested { get; set; }
 
         public frmMain()
@@ -85,7 +83,6 @@ namespace Mids_Reborn.Forms
                 dragdropScenarioAction = new short[20];
                 DoneDblClick = false;
                 DbChangeRequested = false;
-                actExec = 0;
             }
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
@@ -225,6 +222,20 @@ namespace Mids_Reborn.Forms
             loading = true;
             try
             {
+                if (!MidsContext.Config.DiscordAuthorized && File.Exists(Files.GetConfigSpFile()))
+                {
+                    if (!string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "username")) && !string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "access_token")))
+                    {
+                        MidsContext.Config.DiscordAuthorized = true;
+                        MidsContext.Config.Registered = 1;
+                    }
+                    else
+                    {
+                        File.Delete(Files.GetConfigSpFile());
+                        MidsContext.Config.DiscordAuthorized = false;
+                        MidsContext.Config.Registered = 0;
+                    }
+                }
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 var height1 = 0;

@@ -38,7 +38,7 @@ namespace mrbBase
 
         private static string FNameJsonConfig => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), JsonFileConfig);
 
-        internal static string GetConfigSpFile()
+        public static string GetConfigSpFile()
         {
             var sPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\RebornTeam\";
             return Path.Combine(sPath, JsonFileConfigSP);
