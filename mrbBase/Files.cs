@@ -50,27 +50,42 @@ namespace mrbBase
 
         private static string FPathAppData => MidsContext.Config.DataPath;
 
-        public static string SearchUp(string folder, string fn)
+        internal static string SearchUp(string folder, string fn)
         {
             string SearchUpRec(string foldername, string filename)
             {
                 // if it is not properly rooted, give up, and use the path
                 if (!Path.IsPathRooted(filename))
+                {
+                    Console.WriteLine(filename);
                     return filename;
+                }
+
                 // get the directory that holds the filename, filename should be a FULL path
                 var fnDir = Path.GetDirectoryName(filename);
                 // if the filename is already in a folder with the correct foldername, we need to go up twice instead of once.
-                var targetRoot =
-                    fnDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).EndsWith(foldername)
-                        ? Path.GetDirectoryName(fnDir)
-                        : fnDir;
+                string targetRoot;
+                if (fnDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).EndsWith(foldername))
+                {
+                    targetRoot = Path.GetDirectoryName(fnDir);
+                    Console.WriteLine($"Targetroot: {targetRoot}");
+                }
+                else
+                {
+                    targetRoot = fnDir;
+                    Console.WriteLine($"Targetroot: {targetRoot}");
+                }
+
                 var parent = Path.GetDirectoryName(targetRoot);
+                Console.WriteLine($"Parent: {parent}");
                 if (parent == null) return null;
                 var attempt = Path.Combine(Path.Combine(parent, foldername), Path.GetFileName(filename));
+                Console.WriteLine($"attempt: {attempt}");
                 if (File.Exists(attempt))
                     return attempt;
                 //if (Path.IsPathRooted(attempt)) return filename;
                 var recursed = SearchUpRec(foldername, attempt);
+                Console.WriteLine($"recursed: {recursed}");
                 if (recursed != null && File.Exists(recursed)) return recursed;
                 return File.Exists(filename) ? filename : null;
             }
@@ -105,6 +120,10 @@ namespace mrbBase
         public static string SelectDataFileLoad(string iDataFile, string iPath = "")
         {
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
+            if (Debugger.IsAttached)
+            {
+                filePath = Path.GetFullPath(Path.Combine(Path.Combine(AppContext.BaseDirectory, @"..\..\"), RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
+            }
 
             FileData = FileData + filePath + '\n';
             return filePath;
@@ -113,6 +132,12 @@ namespace mrbBase
         public static string SelectDataFileSave(string iDataFile, string iPath = "")
         {
             var filePath = Path.Combine(!string.IsNullOrWhiteSpace(iPath) ? iPath : FPathAppData, iDataFile);
+            if (Debugger.IsAttached)
+            {
+                filePath = Path.GetFullPath(Path.Combine(Path.Combine(AppContext.BaseDirectory, @"..\..\"), RoamingFolder, DatabaseAPI.DatabaseName, iDataFile));
+                if (!Directory.Exists(FileIO.StripFileName(filePath)))
+                    Directory.CreateDirectory(FileIO.StripFileName(filePath));
+            }
             return filePath;
         }
 

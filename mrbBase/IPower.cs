@@ -153,6 +153,8 @@ namespace mrbBase
 
         int VariableMax { get; set; }
 
+        int VariableStart { get; set; }
+
         int[] NIDSubPower { get; set; }
 
         string[] UIDSubPower { get; set; }

@@ -53,6 +53,7 @@ namespace mrbBase.Base.Data_Classes
             Active = false;
             Taken = false;
             Stacks = 0;
+            VariableStart = 0;
         }
 
         public Power(IPower template)
@@ -328,6 +329,7 @@ namespace mrbBase.Base.Data_Classes
                 Active = reader.ReadBoolean();
                 Taken = reader.ReadBoolean();
                 Stacks = reader.ReadInt32();
+                //VariableStart = reader.ReadInt32();
             }
             else
             {
@@ -601,6 +603,8 @@ namespace mrbBase.Base.Data_Classes
 
         public int VariableMax { get; set; }
 
+        public int VariableStart { get; set; }
+
         public int[] NIDSubPower { get; set; }
 
         public string[] UIDSubPower { get; set; }
@@ -801,6 +805,7 @@ namespace mrbBase.Base.Data_Classes
             writer.Write(Active);
             writer.Write(Taken);
             writer.Write(Stacks);
+            writer.Write(VariableStart);
         }
 
         public float FXGetDamageValue()
