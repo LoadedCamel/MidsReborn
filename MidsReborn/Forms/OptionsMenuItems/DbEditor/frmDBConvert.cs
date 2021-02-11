@@ -93,6 +93,65 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
+        private async void ResetData(string path)
+        {
+            DatabaseAPI.LoadDatabaseVersion(path);
+            DatabaseAPI.Database.AttribMods = new Modifiers();
+            if (!DatabaseAPI.Database.AttribMods.Load(path)) { }
+
+            if (!DatabaseAPI.LoadLevelsDatabase(path))
+            {
+                MessageBox.Show("Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/Reborn-Team/Hero-Designer/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+
+            if (!DatabaseAPI.LoadMainDatabase(path))
+            {
+                MessageBox.Show(@"There was an error reading the database. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+
+            if (!DatabaseAPI.LoadMaths(path))
+            {
+                Application.Exit();
+            }
+
+            if (!DatabaseAPI.LoadEffectIdsDatabase(path))
+            {
+                Application.Exit();
+            }
+
+            if (!DatabaseAPI.LoadEnhancementClasses(path))
+            {
+                Application.Exit();
+            }
+
+            DatabaseAPI.LoadEnhancementDb(path);
+            DatabaseAPI.LoadOrigins(path);
+            DatabaseAPI.LoadSetTypeStrings(path);
+
+            DatabaseAPI.LoadSalvage(path);
+            DatabaseAPI.LoadRecipes(path);
+            var taskArray = new Task[9];
+            taskArray[0] = Task.Run(I9Gfx.LoadOriginImages);
+            taskArray[1] = Task.Run(I9Gfx.LoadArchetypeImages);
+            taskArray[2] = Task.Run(I9Gfx.LoadPowersetImages);
+            taskArray[3] = Task.Run(I9Gfx.LoadEnhancements);
+            taskArray[4] = Task.Run(I9Gfx.LoadSets);
+            taskArray[5] = Task.Run(I9Gfx.LoadBorders);
+            taskArray[6] = Task.Run(I9Gfx.LoadSetTypes);
+            taskArray[7] = Task.Run(I9Gfx.LoadEnhTypes);
+            taskArray[8] = Task.Run(I9Gfx.LoadClasses);
+            Task.WaitAll(taskArray);
+
+            MidsContext.Config.Export.LoadCodes(Files.SelectDataFileLoad(Files.MxdbFileBbCodeUpdate, path));
+            DatabaseAPI.MatchAllIDs();
+            DatabaseAPI.AssignSetBonusIndexes();
+            DatabaseAPI.AssignRecipeIDs();
+            await Task.Delay(1000);
+            statusText.Items.Add("Conversion complete. You can now select your database from the configuration options.");
+        }
+
         private async Task ConvertDatabase()
         {
             SourceFiles = Directory.GetFiles(SourcePath, "*.mhd").ToList();
@@ -197,7 +256,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             statusText.Items.Add("Converting data from enhancement database...");
             DatabaseAPI.SaveEnhancementDb(serializer, MidsContext.Config.ConversionDataPath);
             await Task.Delay(500);
-            statusText.Items.Add("Conversion complete. You can now select your database from the configuration options.");
+            statusText.Items.Add("Performing final cleanup...");
+            await Task.Delay(500);
+            ResetData(MidsContext.Config.DataPath);
         }
     }
 }
