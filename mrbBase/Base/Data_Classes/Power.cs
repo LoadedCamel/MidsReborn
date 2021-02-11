@@ -170,6 +170,7 @@ namespace mrbBase.Base.Data_Classes
             VariableName = template.VariableName;
             VariableMin = template.VariableMin;
             VariableMax = template.VariableMax;
+            VariableStart = template.VariableStart;
             NIDSubPower = new int[template.NIDSubPower.Length];
             Array.Copy(template.NIDSubPower, NIDSubPower, NIDSubPower.Length);
             UIDSubPower = new string[template.UIDSubPower.Length];
@@ -329,7 +330,7 @@ namespace mrbBase.Base.Data_Classes
                 Active = reader.ReadBoolean();
                 Taken = reader.ReadBoolean();
                 Stacks = reader.ReadInt32();
-                //VariableStart = reader.ReadInt32();
+                VariableStart = reader.ReadInt32();
             }
             else
             {

@@ -592,6 +592,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 udScaleMin.BackColor = SystemColors.Window;
                 udScaleMax.BackColor = SystemColors.Window;
             }
+
+            if (Conversion.Val(udScaleStart.Text) > Conversion.Val(udScaleMin.Text) && Conversion.Val(udScaleStart.Text) <= Conversion.Val(udScaleMax.Text))
+            {
+                udScaleStart.BackColor = Color.Coral;
+            }
+            else
+            {
+                udScaleStart.BackColor = SystemColors.Window;
+            }
         }
 
         private void chkAltSub_CheckedChanged(object sender, EventArgs e)
@@ -703,6 +712,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             myPower.VariableEnabled = chkScale.Checked;
+            udScaleStart.Enabled = myPower.VariableEnabled;
             udScaleMax.Enabled = myPower.VariableEnabled;
             udScaleMin.Enabled = myPower.VariableEnabled;
             overideScale.Enabled = myPower.VariableEnabled;
@@ -1128,6 +1138,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DisplayNameData();
             txtDescLong.Text = power.DescLong;
             txtDescShort.Text = power.DescShort;
+            udScaleStart.Value = new decimal(power.VariableStart);
             udScaleMin.Value = new decimal(power.VariableMin);
             udScaleMax.Value = new decimal(power.VariableMax);
             txtScaleName.Text = power.VariableName;
@@ -2518,6 +2529,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             CheckScaleValues();
         }
 
-        
+        private void udScaleStart_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CheckScaleValues();
+        }
+
+        private void udScaleStart_Leave(object sender, EventArgs e)
+        {
+            myPower.VariableStart = (int)Math.Round(Conversion.Val(udScaleStart.Text));
+            CheckScaleValues();
+        }
+
+        private void udScaleStart_ValueChanged(object sender, EventArgs e)
+        {
+            myPower.VariableStart = Convert.ToInt32(udScaleStart.Value);
+            CheckScaleValues();
+        }
+
     }
 }

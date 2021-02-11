@@ -218,6 +218,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnFullPaste = new System.Windows.Forms.Button();
             this.btnFullCopy = new System.Windows.Forms.Button();
             this.btnCSVImport = new System.Windows.Forms.Button();
+            this.label19 = new System.Windows.Forms.Label();
+            this.udScaleStart = new System.Windows.Forms.NumericUpDown();
             this.tcPower.SuspendLayout();
             this.tpText.SuspendLayout();
             this.GroupBox4.SuspendLayout();
@@ -246,6 +248,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpMutex.SuspendLayout();
             this.GroupBox2.SuspendLayout();
             this.tpSubPower.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udScaleStart)).BeginInit();
             this.SuspendLayout();
             // 
             // tcPower
@@ -541,6 +544,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // GroupBox3
             // 
+            this.GroupBox3.Controls.Add(this.udScaleStart);
+            this.GroupBox3.Controls.Add(this.label19);
             this.GroupBox3.Controls.Add(this.overideScale);
             this.GroupBox3.Controls.Add(this.Label28);
             this.GroupBox3.Controls.Add(this.udScaleMax);
@@ -559,28 +564,28 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // overideScale
             // 
             this.overideScale.AutoSize = true;
-            this.overideScale.Location = new System.Drawing.Point(182, 20);
+            this.overideScale.Location = new System.Drawing.Point(177, 20);
             this.overideScale.Name = "overideScale";
-            this.overideScale.Size = new System.Drawing.Size(125, 18);
+            this.overideScale.Size = new System.Drawing.Size(130, 18);
             this.overideScale.TabIndex = 8;
-            this.overideScale.Text = "Override scaling limit";
+            this.overideScale.Text = "Override Scaling Limit";
             this.overideScale.UseVisualStyleBackColor = true;
             this.overideScale.CheckedChanged += new System.EventHandler(this.overideScale_CheckedChanged);
             // 
             // Label28
             // 
-            this.Label28.Location = new System.Drawing.Point(181, 72);
+            this.Label28.Location = new System.Drawing.Point(217, 75);
             this.Label28.Name = "Label28";
-            this.Label28.Size = new System.Drawing.Size(52, 20);
+            this.Label28.Size = new System.Drawing.Size(34, 18);
             this.Label28.TabIndex = 7;
-            this.Label28.Text = "To";
+            this.Label28.Text = "Max:";
             this.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // udScaleMax
             // 
-            this.udScaleMax.Location = new System.Drawing.Point(239, 72);
+            this.udScaleMax.Location = new System.Drawing.Point(257, 73);
             this.udScaleMax.Name = "udScaleMax";
-            this.udScaleMax.Size = new System.Drawing.Size(63, 20);
+            this.udScaleMax.Size = new System.Drawing.Size(45, 20);
             this.udScaleMax.TabIndex = 3;
             this.udScaleMax.ValueChanged += new System.EventHandler(this.udScaleMax_ValueChanged);
             this.udScaleMax.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udScaleMax_KeyPress);
@@ -588,18 +593,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label27
             // 
-            this.Label27.Location = new System.Drawing.Point(5, 72);
+            this.Label27.Location = new System.Drawing.Point(133, 75);
             this.Label27.Name = "Label27";
-            this.Label27.Size = new System.Drawing.Size(101, 20);
+            this.Label27.Size = new System.Drawing.Size(27, 18);
             this.Label27.TabIndex = 5;
-            this.Label27.Text = "Scale Range:";
+            this.Label27.Text = "Min:";
             this.Label27.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // udScaleMin
             // 
-            this.udScaleMin.Location = new System.Drawing.Point(112, 72);
+            this.udScaleMin.Location = new System.Drawing.Point(166, 73);
             this.udScaleMin.Name = "udScaleMin";
-            this.udScaleMin.Size = new System.Drawing.Size(63, 20);
+            this.udScaleMin.Size = new System.Drawing.Size(45, 20);
             this.udScaleMin.TabIndex = 2;
             this.udScaleMin.ValueChanged += new System.EventHandler(this.udScaleMin_ValueChanged);
             this.udScaleMin.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udScaleMin_KeyPress);
@@ -627,9 +632,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             this.chkScale.Location = new System.Drawing.Point(6, 19);
             this.chkScale.Name = "chkScale";
-            this.chkScale.Size = new System.Drawing.Size(302, 21);
+            this.chkScale.Size = new System.Drawing.Size(96, 21);
             this.chkScale.TabIndex = 0;
-            this.chkScale.Text = "Enable scaling for this power";
+            this.chkScale.Text = "Enable Scaling";
             this.chkScale.UseVisualStyleBackColor = true;
             this.chkScale.CheckedChanged += new System.EventHandler(this.chkScale_CheckedChanged);
             // 
@@ -2264,6 +2269,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnCSVImport.UseVisualStyleBackColor = true;
             this.btnCSVImport.Click += new System.EventHandler(this.btnCSVImport_Click);
             // 
+            // label19
+            // 
+            this.label19.Location = new System.Drawing.Point(6, 75);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(64, 18);
+            this.label19.TabIndex = 9;
+            this.label19.Text = "Initial Value:";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // udScaleStart
+            // 
+            this.udScaleStart.Location = new System.Drawing.Point(76, 73);
+            this.udScaleStart.Name = "udScaleStart";
+            this.udScaleStart.Size = new System.Drawing.Size(45, 20);
+            this.udScaleStart.TabIndex = 10;
+            this.udScaleStart.ValueChanged += new System.EventHandler(this.udScaleStart_ValueChanged);
+            this.udScaleStart.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udScaleStart_KeyPress);
+            this.udScaleStart.Leave += new System.EventHandler(this.udScaleStart_Leave);
+            // 
             // frmEditPower
             // 
             this.AcceptButton = this.btnOK;
@@ -2317,6 +2341,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpMutex.ResumeLayout(false);
             this.GroupBox2.ResumeLayout(false);
             this.tpSubPower.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.udScaleStart)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2508,5 +2533,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         ComboBox cbInherentType;
         Label lblInherentType;
         private CheckBox overideScale;
+        private NumericUpDown udScaleStart;
+        private Label label19;
     }
 }
