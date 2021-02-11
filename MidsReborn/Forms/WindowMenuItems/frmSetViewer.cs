@@ -867,6 +867,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var l1Group = "";
             var nh = 0; // Nb of headers
             var nb = 0; // Nb of bars
+            var hBar = 12;
             var barsFx = new Dictionary<string, FXIdentifierKey>();
             panelBars.SuspendLayout();
             panelBars.Controls.Clear();
@@ -885,7 +886,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 var header = new Label();
                 if (fxL1Group.ToString() != l1Group)
                 {
-                    header.Location = new Point(0, 13 * nb + 20 * nh);
+                    header.Location = new Point(0, (hBar + 3) * nb + 20 * nh);
                     header.ForeColor = Color.White;
                     header.BackColor = Color.Black; // Transparent
                     header.Font = new Font("Arial", 8.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
@@ -911,16 +912,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 var bar = new ctlLayeredBarPb
                 {
-                    Location = new Point(8, 13 * nb + 20 * nh),
-                    Size = new Size(panelBars.Size.Width - 28, 10),
+                    Location = new Point(8, (hBar + 3) * nb + 20 * nh),
+                    Size = new Size(panelBars.Size.Width - 28, hBar),
                     Name = $"Bar{nb + 1}",
-                    MaximumBarValue = 100
+                    MaximumBarValue = 100,
+                    OverlayTextFont = new Font("Segoe UI", 11f, FontStyle.Regular, GraphicsUnit.Pixel, 0),
+                    EnableOverlayText = true,
+                    EnableOverlayOutline = true,
                 };
 
                 bar.AssignNames(new List<(string name, Color color)>
                 {
-                    ("base", st.SetBuffsColor),
-                    ("value", st.TotalsColor)
+                    ("setbuffs", st.SetBuffsColor),
+                    ("totalsvalue", st.TotalsColor)
                 });
                 
                 var totalsValue = st.EffectType switch
@@ -997,7 +1001,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     _ => 100
                 };
 
+                // smash, fire, energy, toxic, psi, melee, ranged, aoe
+
+                var overlayVector = (st.EffectType == Enums.eEffectType.Enhancement ? st.TargetEffectType : st.EffectType).ToString();
+                overlayVector = overlayVector
+                    .Replace("Resistance", "Res")
+                    .Replace("Defense", "Def")
+                    .Replace("EnduranceDiscount", "End. Discount");
+                overlayVector = Regex.Replace(overlayVector, @"Endurance\b", "Max End");
+                var overlayDmgType = !(st.EffectType == Enums.eEffectType.Resistance | st.EffectType == Enums.eEffectType.Defense)
+                    ? ""
+                    : st.DamageType switch
+                    {
+                        Enums.eDamage.Smashing => "S/L",
+                        Enums.eDamage.Fire => "Fire/Cold",
+                        Enums.eDamage.Energy => "Energy/Neg",
+                        _ => st.DamageType.ToString()
+                    };
+                var overlayValuePercent = st.EffectType != Enums.eEffectType.HitPoints & st.EffectType != Enums.eEffectType.Endurance;
                 bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
+                bar.OverlayText = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}: {fxMagAdjusted:##0.##}{(overlayValuePercent ? "%" : "")}";
                 panelBars.Controls.Add(bar);
                 barsFx.Add(bar.Name, new FXIdentifierKey
                 {

@@ -28,13 +28,43 @@ namespace mrbControls
         private float _MaximumValue = 100;
         private string _Tip = "";
         private string _Group = "";
+        private bool _EnableOverlayText = false;
+        private string _OverlayText = "";
+
         private Graphics Gfx;
         private ExtendedBitmap BxBuffer;
+        private List<Color> HighlightColors;
         // https://stackoverflow.com/a/34299931
         // https://stackoverflow.com/questions/51597919/c-sharp-winform-stop-control-property-setting-to-default-when-it-is-set-to-be-a
         protected override Size DefaultSize => new Size(277, 13);
+
         public new Color DefaultBackColor => Color.Transparent;
-        private List<Color> HighlightColors;
+        public HorizontalAlignment OverlayHAlign = HorizontalAlignment.Right;
+        public Font OverlayTextFont = new Font("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+        public bool EnableOverlayOutline = true;
+        public Color OverlayTextColor = Color.WhiteSmoke;
+        public Color OverlayOutlineColor = Color.Black;
+
+        public bool EnableOverlayText
+        {
+            get => _EnableOverlayText;
+            set
+            {
+                _EnableOverlayText = value;
+                Draw();
+            }
+        }
+
+        public string OverlayText
+        {
+            get => _OverlayText;
+            set
+            {
+                _OverlayText = value;
+                Draw();
+            }
+        }
+
         public delegate void BarEventHandler(object sender);
         public event BarEventHandler BarHover;
 
@@ -198,11 +228,13 @@ namespace mrbControls
             BxBuffer = new ExtendedBitmap(Size);
             if (BxBuffer.Graphics == null) return;
 
-            BxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            BxBuffer.Graphics.Clear(Color.Transparent);
+            var g = BxBuffer.Graphics;
+
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            g.Clear(Color.Transparent);
             if (highlighted)
             {
-                BxBuffer.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(90, 128, 128, 128)), 0, 0, BxBuffer.Size.Width, BxBuffer.Size.Height);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(90, 128, 128, 128)), 0, 0, BxBuffer.Size.Width, BxBuffer.Size.Height);
             }
 
             if (sortedList.Count > 0)
@@ -218,34 +250,95 @@ namespace mrbControls
                 }).ToList();
 
                 var values = GetValues();
-                var vp = Value2Pixels(values["value"]);
+                var vc = values.ContainsKey("value");
+                var vp = vc ? Value2Pixels(values["value"]) : 0;
 
                 // Draw bars
-                for (var i = 0; i < sortedList.Count; i++)
+                foreach (var e in sortedList)
                 {
-                    if (sortedList[i].FriendlyName == "base" &&
-                        Math.Abs(sortedList[i].Value - vp) < float.Epsilon) continue;
-                    if (sortedList[i].FriendlyName == "uncapped" &&
-                        Math.Abs(sortedList[i].Value - vp) < float.Epsilon) continue;
-                    BxBuffer.Graphics.FillRectangle(new SolidBrush(sortedList[i].Color), 0, 0, sortedList[i].Value,
-                        BxBuffer.Size.Height);
+                    if (vc)
+                    {
+                        if (e.FriendlyName == "base" | e.FriendlyName == "uncapped" && Math.Abs(e.Value - vp) < float.Epsilon) continue;
+                    }
+
+                    g.FillRectangle(new SolidBrush(e.Color), 0, 0, e.Value, BxBuffer.Size.Height);
                 }
 
                 // Draw outlines
                 var outlinePen = new Pen(new SolidBrush(Color.Black), 1);
-                for (var i = 0; i < sortedList.Count; i++)
+                foreach (var e in sortedList)
                 {
-                    if (sortedList[i].FriendlyName == "base" &&
-                        Math.Abs(sortedList[i].Value - vp) < float.Epsilon) continue;
-                    if (sortedList[i].FriendlyName == "uncapped" &&
-                        Math.Abs(sortedList[i].Value - vp) < float.Epsilon) continue;
-                    BxBuffer.Graphics.DrawLine(outlinePen, sortedList[i].Value, 0, sortedList[i].Value,
-                        BxBuffer.Size.Height);
+                    if (vc)
+                    {
+                        if (e.FriendlyName == "base" | e.FriendlyName == "uncapped" && Math.Abs(e.Value - vp) < float.Epsilon) continue;
+                    }
+
+                    g.DrawLine(outlinePen, e.Value, 0, e.Value, BxBuffer.Size.Height);
+                }
+
+                // Draw outline text
+                //public HorizontalAlignment OverlayHAlign = HorizontalAlignment.Right;
+                //public Font OverlayTextFont = new Font("Arial", 7f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+                //public bool EnableOverlayOutline;
+                //public Color OverlayTextColor = Color.WhiteSmoke;
+                //public Color OverlayOutlineColor = Color.Black;
+                if (_EnableOverlayText & !string.IsNullOrWhiteSpace(_OverlayText))
+                {
+                    var overlayLoc = new RectangleF(0, (Height - OverlayTextFont.Size) / 2 - 1, Width - 3, Height);
+                    if (EnableOverlayOutline)
+                    {
+                        DrawOutlineText(_OverlayText, overlayLoc, OverlayTextColor, OverlayOutlineColor, OverlayTextFont, 1, ref g);
+                    }
+                    else
+                    {
+                        g.DrawString(_OverlayText, OverlayTextFont, new SolidBrush(OverlayTextColor), overlayLoc,
+                            new StringFormat(StringFormatFlags.NoWrap)
+                            {
+                                LineAlignment = StringAlignment.Center,
+                                Alignment = StringAlignment.Far
+                            });
+                    }
                 }
             }
 
             Gfx.DrawImageUnscaled(BxBuffer.Bitmap, 0, 0);
         }
+
+        private void DrawOutlineText(string iStr, RectangleF bounds, Color text, Color outline, Font bFont,
+            float outlineSpace, ref Graphics target, bool smallMode = false, bool leftAlign = false)
+        {
+            var stringFormat = new StringFormat(StringFormatFlags.NoWrap)
+            {
+                LineAlignment = StringAlignment.Center,
+                Alignment = leftAlign ? StringAlignment.Near : StringAlignment.Far
+            };
+
+            var brush = new SolidBrush(outline);
+            var layoutRectangle = bounds;
+            var layoutRectangle2 = new RectangleF(layoutRectangle.X, layoutRectangle.Y, layoutRectangle.Width,
+                bFont.GetHeight(target));
+            layoutRectangle2.X -= outlineSpace;
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            layoutRectangle2.Y -= outlineSpace;
+            target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            layoutRectangle2.X += outlineSpace;
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            layoutRectangle2.X += outlineSpace;
+            target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            layoutRectangle2.Y += outlineSpace;
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            layoutRectangle2.Y += outlineSpace;
+            target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            layoutRectangle2.X -= outlineSpace;
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            layoutRectangle2.X -= outlineSpace;
+            target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            layoutRectangle2.Y -= outlineSpace;
+            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
+            brush = new SolidBrush(text);
+            target.DrawString(iStr, bFont, brush, layoutRectangle, stringFormat);
+        }
+
         public void SetTip(string iTip)
         {
             TTip.SetToolTip(this, iTip);
