@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -15,6 +14,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmSetViewer : Form
     {
+        #region FXIdentifier sub-class
         private class FXIdentifierKey
         {
             public Enums.eEffectType EffectType { get; set; }
@@ -205,7 +205,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return EffectType.GetHashCode() ^ MezType.GetHashCode() ^ DamageType.GetHashCode() ^ TargetEffectType.GetHashCode();
             }
         }
+        #endregion
 
+        #region FXSourceData sub-class
         private class FXSourceData
         {
             private IEffect _fx;
@@ -220,6 +222,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             public Enums.ePvX PvMode { get; set; }
             public bool IsFromEnh { get; set; }
         }
+        #endregion
 
         private readonly frmMain myParent;
         private ImageButton btnClose;
@@ -237,16 +240,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private RichTextBox rtxtFX;
         private RichTextBox rtxtInfo;
 
+        private Dictionary<string, FXIdentifierKey> BarsFX;
+
         public frmSetViewer(frmMain iParent)
         {
             Move += frmSetViewer_Move;
             FormClosed += frmSetViewer_FormClosed;
             Load += frmSetViewer_Load;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmSetViewer));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmSetViewer));
             Icon = Resources.reborn;
             Name = nameof(frmSetViewer);
             myParent = iParent;
+            BarsFX = new Dictionary<string, FXIdentifierKey>();
         }
 
         private void btnClose_Click()
@@ -542,7 +548,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             else
             {
                 var effectSources = GetEffectSources();
-                var PickedGroups = new Dictionary<Enums.eFXSubGroup, bool>();
+                var pickedGroups = new Dictionary<Enums.eFXSubGroup, bool>();
                 foreach (var fxGroup in effectSources)
                 {
                     if (fxGroup.Key.EffectType == Enums.eEffectType.GrantPower |
@@ -552,8 +558,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         fxGroup.Key.EffectType == Enums.eEffectType.NullBool) continue;
                     
                     var L2Group = fxGroup.Key.L2Group;
-                    if (L2Group != Enums.eFXSubGroup.NoGroup && PickedGroups.ContainsKey(L2Group)) continue;
-                    if (L2Group != Enums.eFXSubGroup.NoGroup) PickedGroups.Add(L2Group, true);
+                    if (L2Group != Enums.eFXSubGroup.NoGroup && pickedGroups.ContainsKey(L2Group)) continue;
+                    if (L2Group != Enums.eFXSubGroup.NoGroup) pickedGroups.Add(L2Group, true);
                     var effectName = Enums.GetEffectName(fxGroup.Key.EffectType);
 
                     if (fxGroup.Key.MezType != Enums.eMez.None)
@@ -662,6 +668,42 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
         }
 
+        private void Bar_Hover(object sender)
+        {
+            if (!(sender is ctlLayeredBarPb bar)) return;
+
+            var barData = BarsFX[bar.Name];
+            var barValues = bar.GetValues();
+
+            var overlayVector = (barData.EffectType == Enums.eEffectType.Enhancement ? barData.TargetEffectType : barData.EffectType).ToString();
+            overlayVector = overlayVector
+                .Replace("Resistance", "Res")
+                .Replace("Defense", "Def")
+                .Replace("EnduranceDiscount", "End. Discount");
+            overlayVector = Regex.Replace(overlayVector, @"Endurance\b", "Max End");
+            var overlayDmgType = !(barData.EffectType == Enums.eEffectType.Resistance | barData.EffectType == Enums.eEffectType.Defense)
+                ? ""
+                : barData.DamageType switch
+                {
+                    Enums.eDamage.Smashing => "S/L",
+                    Enums.eDamage.Fire => "Fire/Cold",
+                    Enums.eDamage.Energy => "Energy/Neg",
+                    _ => barData.DamageType.ToString()
+                };
+            var overlayValuePercent = barData.EffectType != Enums.eEffectType.HitPoints & barData.EffectType != Enums.eEffectType.Endurance;
+            var plusSignEnabled = barData.EffectType == Enums.eEffectType.SpeedRunning ||
+                                  barData.EffectType == Enums.eEffectType.SpeedJumping ||
+                                  barData.EffectType == Enums.eEffectType.SpeedFlying;
+
+            var ttext = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}\r\nFrom sets: {(plusSignEnabled & barValues["setbuffs"] > 0 ? "+" : "")}{barValues["setbuffs"]:##0.##}{(overlayValuePercent ? "%" : "")}";
+            if (barValues["totalsvalue"] > 0) // & Math.Abs(barValues["setbuffs"] - barValues["totalsvalue"]) > float.Epsilon)
+            {
+                ttext += $"\r\nTotal: {(plusSignEnabled ? "+" : "")}{barValues["totalsvalue"]:##0.##}{(overlayValuePercent ? "%" : "")}";
+            }
+
+            bar.SetTip(ttext);
+        }
+
         private void frmSetViewer_FormClosed(object sender, FormClosedEventArgs e)
         {
             myParent.FloatSets(false);
@@ -763,6 +805,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             btnDetailFx.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
 
             DisplayList();
+            DrawBars();
         }
 
         private class BarSettings
@@ -877,7 +920,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var offset = 0;
             const int hBar = 12;
             const int barLabelWidth = 100;
-            var barsFx = new Dictionary<string, FXIdentifierKey>();
+            BarsFX.Clear();
             panelBars.SuspendLayout();
             panelBars.Controls.Clear();
             foreach (var st in effectListOrder)
@@ -932,6 +975,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     EnableOverlayText = true,
                     EnableOverlayOutline = true,
                 };
+                bar.BarHover += Bar_Hover;
 
                 var barLabel = new Label
                 {
@@ -999,6 +1043,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     _ => 1
                 };
 
+                totalsValue = st.EffectType switch
+                {
+                    Enums.eEffectType.SpeedRunning => Math.Max(0, totalsValue / Statistics.BaseRunSpeed * 100 - 100),
+                    Enums.eEffectType.SpeedJumping => Math.Max(0, totalsValue / Statistics.BaseJumpSpeed * 100 - 100),
+                    Enums.eEffectType.SpeedFlying => Math.Max(0, totalsValue / Statistics.BaseFlySpeed * 100 - 100),
+                    Enums.eEffectType.JumpHeight => Math.Max(0, totalsValue / Statistics.BaseJumpHeight * 100 - 100),
+                    _ => totalsValue
+                };
+
                 if (Math.Abs(fxMagAdjusted - totalsValue) < float.Epsilon) totalsValue = 0;
 
                 bar.MaximumBarValue = st.EffectType switch
@@ -1008,9 +1061,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.HitPoints => MidsContext.Character.Archetype.HPCap,
                     Enums.eEffectType.Recovery => 10,
                     Enums.eEffectType.Endurance => 50,
-                    Enums.eEffectType.SpeedRunning => MidsContext.Character.Totals.MaxRunSpd,
-                    Enums.eEffectType.SpeedJumping => MidsContext.Character.Totals.MaxJumpSpd,
-                    Enums.eEffectType.SpeedFlying => MidsContext.Character.Totals.MaxFlySpd,
+                    Enums.eEffectType.SpeedRunning => MidsContext.Character.Totals.MaxRunSpd / Statistics.BaseRunSpeed * 100 + 25,
+                    Enums.eEffectType.SpeedJumping => MidsContext.Character.Totals.MaxJumpSpd / Statistics.BaseJumpSpeed * 100 + 25,
+                    Enums.eEffectType.SpeedFlying => MidsContext.Character.Totals.MaxFlySpd / Statistics.BaseFlySpeed * 100 + 25,
                     Enums.eEffectType.StealthRadius => 1000,
                     Enums.eEffectType.StealthRadiusPlayer => 1000,
                     Enums.eEffectType.PerceptionRadius => 1000,
@@ -1045,7 +1098,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 barLabel.Text = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}:";
                 panelBars.Controls.Add(bar);
                 panelBars.Controls.Add(barLabel);
-                barsFx.Add(bar.Name, new FXIdentifierKey
+                BarsFX.Add(bar.Name, new FXIdentifierKey
                 {
                     EffectType = st.EffectType,
                     TargetEffectType = st.TargetEffectType,
