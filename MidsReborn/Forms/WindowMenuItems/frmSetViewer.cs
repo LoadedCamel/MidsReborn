@@ -33,7 +33,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         EffectType == Enums.eEffectType.RechargeTime |
                         EffectType == Enums.eEffectType.Range |
                         EffectType == Enums.eEffectType.Enhancement &
-                        TargetEffectType == Enums.eEffectType.RechargeTime)
+                        (TargetEffectType == Enums.eEffectType.RechargeTime |
+                         TargetEffectType == Enums.eEffectType.Accuracy))
                     {
                         return Enums.eFXGroup.Offense;
                     }
@@ -800,6 +801,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
         }
 
+        private int GetControlHeight(int numHeaders, int numBars, int barHeight)
+        {
+            return (barHeight + 3) * numBars + 20 * numHeaders;
+        }
+
         private void DrawBars()
         {
             var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
@@ -867,7 +873,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var l1Group = "";
             var nh = 0; // Nb of headers
             var nb = 0; // Nb of bars
-            var hBar = 12;
+            var yPos = 0;
+            var offset = 0;
+            const int hBar = 12;
+            const int barLabelWidth = 100;
             var barsFx = new Dictionary<string, FXIdentifierKey>();
             panelBars.SuspendLayout();
             panelBars.Controls.Clear();
@@ -881,12 +890,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     MezType = Enums.eMez.None
                 };
 
+                yPos = GetControlHeight(nh, nb, hBar);
                 var fxL1Group = fxId.L1Group;
                 var newHeader = false;
                 var header = new Label();
                 if (fxL1Group.ToString() != l1Group)
                 {
-                    header.Location = new Point(0, (hBar + 3) * nb + 20 * nh);
+                    if (nh > 0) offset += 6;
+                    header.Location = new Point(0, yPos + offset);
                     header.ForeColor = Color.White;
                     header.BackColor = Color.Black; // Transparent
                     header.Font = new Font("Arial", 8.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
@@ -905,20 +916,31 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 if (newHeader)
                 {
-                    panelBars.Controls.Add(header);
                     nh++;
+                    panelBars.Controls.Add(header);
                     l1Group = fxL1Group.ToString();
                 }
 
+                yPos = GetControlHeight(nh, nb, hBar);
                 var bar = new ctlLayeredBarPb
                 {
-                    Location = new Point(8, (hBar + 3) * nb + 20 * nh),
-                    Size = new Size(panelBars.Size.Width - 28, hBar),
+                    Location = new Point(barLabelWidth + 8, yPos + offset),
+                    Size = new Size(panelBars.Size.Width - barLabelWidth - 28, hBar),
                     Name = $"Bar{nb + 1}",
                     MaximumBarValue = 100,
-                    OverlayTextFont = new Font("Segoe UI", 11f, FontStyle.Regular, GraphicsUnit.Pixel, 0),
+                    OverlayTextFont = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
                     EnableOverlayText = true,
                     EnableOverlayOutline = true,
+                };
+
+                var barLabel = new Label
+                {
+                    Location = new Point(2, yPos + offset - 1),
+                    Size = new Size(barLabelWidth, hBar + 2),
+                    Name = $"BarLabel{nb + 1}",
+                    TextAlign = ContentAlignment.TopLeft,
+                    Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
+                    ForeColor = Color.WhiteSmoke
                 };
 
                 bar.AssignNames(new List<(string name, Color color)>
@@ -1001,8 +1023,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     _ => 100
                 };
 
-                // smash, fire, energy, toxic, psi, melee, ranged, aoe
-
                 var overlayVector = (st.EffectType == Enums.eEffectType.Enhancement ? st.TargetEffectType : st.EffectType).ToString();
                 overlayVector = overlayVector
                     .Replace("Resistance", "Res")
@@ -1020,8 +1040,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     };
                 var overlayValuePercent = st.EffectType != Enums.eEffectType.HitPoints & st.EffectType != Enums.eEffectType.Endurance;
                 bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
-                bar.OverlayText = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}: {fxMagAdjusted:##0.##}{(overlayValuePercent ? "%" : "")}";
+                bar.OverlayText = $"{fxMagAdjusted:##0.##}{(overlayValuePercent ? "%" : "")}";
+
+                barLabel.Text = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}:";
                 panelBars.Controls.Add(bar);
+                panelBars.Controls.Add(barLabel);
                 barsFx.Add(bar.Name, new FXIdentifierKey
                 {
                     EffectType = st.EffectType,

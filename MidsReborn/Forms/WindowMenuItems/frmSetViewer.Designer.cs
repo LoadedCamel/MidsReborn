@@ -64,7 +64,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.lstSets.Location = new System.Drawing.Point(12, 168);
             this.lstSets.MultiSelect = false;
             this.lstSets.Name = "lstSets";
-            this.lstSets.Size = new System.Drawing.Size(360, 136);
+            this.lstSets.Size = new System.Drawing.Size(482, 136);
             this.lstSets.SmallImageList = this.ilSet;
             this.lstSets.TabIndex = 0;
             this.lstSets.UseCompatibleStateImageBehavior = false;
@@ -74,12 +74,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ColumnHeader1
             // 
             this.ColumnHeader1.Text = "Set";
-            this.ColumnHeader1.Width = 148;
+            this.ColumnHeader1.Width = 208;
             // 
             // ColumnHeader2
             // 
             this.ColumnHeader2.Text = "Power";
-            this.ColumnHeader2.Width = 124;
+            this.ColumnHeader2.Width = 184;
             // 
             // ColumnHeader3
             // 
@@ -99,7 +99,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.rtxtInfo.Name = "rtxtInfo";
             this.rtxtInfo.ReadOnly = true;
             this.rtxtInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtxtInfo.Size = new System.Drawing.Size(360, 132);
+            this.rtxtInfo.Size = new System.Drawing.Size(482, 132);
             this.rtxtInfo.TabIndex = 1;
             this.rtxtInfo.Text = "";
             // 
@@ -107,11 +107,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.rtxtFX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.rtxtFX.ForeColor = System.Drawing.Color.White;
-            this.rtxtFX.Location = new System.Drawing.Point(384, 20);
+            this.rtxtFX.Location = new System.Drawing.Point(500, 20);
             this.rtxtFX.Name = "rtxtFX";
             this.rtxtFX.ReadOnly = true;
             this.rtxtFX.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtxtFX.Size = new System.Drawing.Size(279, 366);
+            this.rtxtFX.Size = new System.Drawing.Size(329, 366);
             this.rtxtFX.TabIndex = 3;
             this.rtxtFX.Text = "";
             // 
@@ -119,7 +119,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.Label1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label1.ForeColor = System.Drawing.Color.White;
-            this.Label1.Location = new System.Drawing.Point(384, 4);
+            this.Label1.Location = new System.Drawing.Point(499, 4);
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(188, 16);
             this.Label1.TabIndex = 4;
@@ -133,7 +133,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.rtApplied.Name = "rtApplied";
             this.rtApplied.ReadOnly = true;
             this.rtApplied.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtApplied.Size = new System.Drawing.Size(360, 140);
+            this.rtApplied.Size = new System.Drawing.Size(482, 140);
             this.rtApplied.TabIndex = 5;
             this.rtApplied.Text = "";
             // 
@@ -153,7 +153,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnDetailFx.Checked = false;
             this.btnDetailFx.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnDetailFx.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.btnDetailFx.Location = new System.Drawing.Point(384, 390);
+            this.btnDetailFx.Location = new System.Drawing.Point(551, 390);
             this.btnDetailFx.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnDetailFx.Name = "btnDetailFx";
             this.btnDetailFx.Size = new System.Drawing.Size(105, 22);
@@ -169,7 +169,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnSmall.Checked = false;
             this.btnSmall.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnSmall.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.btnSmall.Location = new System.Drawing.Point(384, 418);
+            this.btnSmall.Location = new System.Drawing.Point(551, 418);
             this.btnSmall.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnSmall.Name = "btnSmall";
             this.btnSmall.Size = new System.Drawing.Size(105, 22);
@@ -185,7 +185,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.chkOnTop.Checked = true;
             this.chkOnTop.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.chkOnTop.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.chkOnTop.Location = new System.Drawing.Point(558, 392);
+            this.chkOnTop.Location = new System.Drawing.Point(725, 392);
             this.chkOnTop.Name = "chkOnTop";
             this.chkOnTop.Size = new System.Drawing.Size(105, 22);
             this.chkOnTop.TabIndex = 19;
@@ -200,7 +200,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnClose.Checked = false;
             this.btnClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.btnClose.Location = new System.Drawing.Point(558, 418);
+            this.btnClose.Location = new System.Drawing.Point(725, 418);
             this.btnClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(105, 22);
@@ -214,9 +214,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.panelBars.AutoScroll = true;
             this.panelBars.BackColor = System.Drawing.Color.Transparent;
-            this.panelBars.Location = new System.Drawing.Point(384, 20);
+            this.panelBars.Location = new System.Drawing.Point(500, 20);
             this.panelBars.Name = "panelBars";
-            this.panelBars.Size = new System.Drawing.Size(279, 366);
+            this.panelBars.Size = new System.Drawing.Size(329, 366);
             this.panelBars.TabIndex = 22;
             this.panelBars.Visible = false;
             // 
@@ -224,7 +224,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(675, 448);
+            this.ClientSize = new System.Drawing.Size(842, 448);
             this.Controls.Add(this.panelBars);
             this.Controls.Add(this.btnDetailFx);
             this.Controls.Add(this.btnSmall);
