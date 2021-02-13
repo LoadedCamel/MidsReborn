@@ -417,9 +417,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             timer.Start();
 
-            
-
-            //StoreLocation();
+            StoreLocation();
         }
 
         private void chkOnTop_CheckedChanged()
