@@ -264,24 +264,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (Width > 600)
             {
-                Width = 387;
-                rtxtInfo.Height = btnClose.Top - (rtxtInfo.Top + 8);
-                btnSmall.Left = rtxtInfo.Width + rtxtInfo.Left - btnSmall.Width;
-                btnClose.Left = btnSmall.Left - (btnClose.Width + 8);
-                chkOnTop.Left = btnClose.Left - (chkOnTop.Width + 4);
-                chkOnTop.Top = (int) Math.Round(btnClose.Top + (btnClose.Height - chkOnTop.Height) / 2.0);
+                Width = 516;
+                rtxtInfo.Height = 109;
+                btnDetailFx.Location = new Point(9, 3);
+                btnSmall.Location = new Point(117, 3);
+                chkOnTop.Location = new Point(281, 3);
+                btnClose.Location = new Point(389, 3);
+                panelButtons.Size = new Size(516, 30);
+                panelButtons.Location = new Point(0, 419);
                 btnSmall.TextOff = "Expand >>";
             }
             else
             {
-                Width = 681;
+                Width = 858;
                 rtxtInfo.Height = 132;
-                btnClose.Left = 558;
-                btnClose.Top = 418;
-                btnSmall.Left = 384;
-                btnSmall.Top = 418;
-                chkOnTop.Left = 558;
-                chkOnTop.Top = 392;
+                btnDetailFx.Location = new Point(0, 3);
+                btnSmall.Location = new Point(0, 31);
+                chkOnTop.Location = new Point(224, 3);
+                btnClose.Location = new Point(224, 31);
+                panelButtons.Size = new Size(329, 53);
+                panelButtons.Location = new Point(500, 389);
                 btnSmall.TextOff = "<< Shrink";
             }
 

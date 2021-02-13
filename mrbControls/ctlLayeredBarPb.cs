@@ -284,7 +284,7 @@ namespace mrbControls
                 //public Color OverlayOutlineColor = Color.Black;
                 if (_EnableOverlayText & !string.IsNullOrWhiteSpace(_OverlayText))
                 {
-                    var overlayLoc = new RectangleF(0, (Height - OverlayTextFont.Size) / 2 - 1, Width - 3, Height);
+                    var overlayLoc = new RectangleF(0, (Height - OverlayTextFont.Size) / 2, Width - 3, Bounds.Height);
                     if (EnableOverlayOutline)
                     {
                         DrawOutlineText(_OverlayText, overlayLoc, OverlayTextColor, OverlayOutlineColor, OverlayTextFont, 1, ref g);
@@ -305,7 +305,7 @@ namespace mrbControls
         }
 
         private void DrawOutlineText(string iStr, RectangleF bounds, Color text, Color outline, Font bFont,
-            float outlineSpace, ref Graphics target, bool smallMode = false, bool leftAlign = false)
+            float outlineSpace, ref Graphics target, bool leftAlign = false)
         {
             var stringFormat = new StringFormat(StringFormatFlags.NoWrap)
             {
@@ -313,30 +313,19 @@ namespace mrbControls
                 Alignment = leftAlign ? StringAlignment.Near : StringAlignment.Far
             };
 
-            var brush = new SolidBrush(outline);
-            var layoutRectangle = bounds;
-            var layoutRectangle2 = new RectangleF(layoutRectangle.X, layoutRectangle.Y, layoutRectangle.Width,
-                bFont.GetHeight(target));
-            layoutRectangle2.X -= outlineSpace;
-            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            layoutRectangle2.Y -= outlineSpace;
-            target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            layoutRectangle2.X += outlineSpace;
-            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            layoutRectangle2.X += outlineSpace;
-            target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            layoutRectangle2.Y += outlineSpace;
-            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            layoutRectangle2.Y += outlineSpace;
-            target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            layoutRectangle2.X -= outlineSpace;
-            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            layoutRectangle2.X -= outlineSpace;
-            target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            layoutRectangle2.Y -= outlineSpace;
-            if (!smallMode) target.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
-            brush = new SolidBrush(text);
-            target.DrawString(iStr, bFont, brush, layoutRectangle, stringFormat);
+            using var outlineBrush = new SolidBrush(outline);
+            using var textBrush = new SolidBrush(text);
+
+            target.DrawString(iStr, bFont, outlineBrush, new RectangleF(bounds.X - outlineSpace, bounds.Y, bounds.Width, bounds.Height), stringFormat);
+            target.DrawString(iStr, bFont, outlineBrush, new RectangleF(bounds.X - outlineSpace, bounds.Y - outlineSpace, bounds.Width, bounds.Height), stringFormat);
+            target.DrawString(iStr, bFont, outlineBrush, new RectangleF(bounds.X, bounds.Y - outlineSpace, bounds.Width, bounds.Height), stringFormat);
+            target.DrawString(iStr, bFont, outlineBrush, new RectangleF(bounds.X + outlineSpace, bounds.Y - outlineSpace, bounds.Width, bounds.Height), stringFormat);
+            target.DrawString(iStr, bFont, outlineBrush, new RectangleF(bounds.X + outlineSpace, bounds.Y, bounds.Width, bounds.Height), stringFormat);
+            target.DrawString(iStr, bFont, outlineBrush, new RectangleF(bounds.X + outlineSpace, bounds.Y + outlineSpace, bounds.Width, bounds.Height), stringFormat);
+            target.DrawString(iStr, bFont, outlineBrush, new RectangleF(bounds.X, bounds.Y + outlineSpace, bounds.Width, bounds.Height), stringFormat);
+            target.DrawString(iStr, bFont, outlineBrush, new RectangleF(bounds.X - outlineSpace, bounds.Y + outlineSpace, bounds.Width, bounds.Height), stringFormat);
+            
+            target.DrawString(iStr, bFont, textBrush, bounds, stringFormat);
         }
 
         public void SetTip(string iTip)

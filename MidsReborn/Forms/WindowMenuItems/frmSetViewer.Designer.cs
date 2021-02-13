@@ -47,6 +47,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.chkOnTop = new mrbControls.ImageButton();
             this.btnClose = new mrbControls.ImageButton();
             this.panelBars = new System.Windows.Forms.Panel();
+            this.panelButtons = new System.Windows.Forms.Panel();
+            this.panelButtons.SuspendLayout();
             this.SuspendLayout();
             // 
             // lstSets
@@ -93,7 +95,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // rtxtInfo
             // 
-            this.rtxtInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
+            this.rtxtInfo.BackColor = System.Drawing.Color.Black;
             this.rtxtInfo.ForeColor = System.Drawing.Color.White;
             this.rtxtInfo.Location = new System.Drawing.Point(12, 308);
             this.rtxtInfo.Name = "rtxtInfo";
@@ -127,7 +129,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // rtApplied
             // 
-            this.rtApplied.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
+            this.rtApplied.BackColor = System.Drawing.Color.Black;
             this.rtApplied.ForeColor = System.Drawing.Color.White;
             this.rtApplied.Location = new System.Drawing.Point(12, 20);
             this.rtApplied.Name = "rtApplied";
@@ -149,11 +151,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // btnDetailFx
             // 
-            this.btnDetailFx.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDetailFx.Checked = false;
             this.btnDetailFx.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnDetailFx.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.btnDetailFx.Location = new System.Drawing.Point(551, 390);
+            this.btnDetailFx.Location = new System.Drawing.Point(0, 3);
             this.btnDetailFx.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnDetailFx.Name = "btnDetailFx";
             this.btnDetailFx.Size = new System.Drawing.Size(105, 22);
@@ -165,11 +166,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // btnSmall
             // 
-            this.btnSmall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSmall.Checked = false;
             this.btnSmall.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnSmall.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.btnSmall.Location = new System.Drawing.Point(551, 418);
+            this.btnSmall.Location = new System.Drawing.Point(0, 31);
             this.btnSmall.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnSmall.Name = "btnSmall";
             this.btnSmall.Size = new System.Drawing.Size(105, 22);
@@ -181,11 +181,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // chkOnTop
             // 
-            this.chkOnTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.chkOnTop.Checked = true;
             this.chkOnTop.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.chkOnTop.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.chkOnTop.Location = new System.Drawing.Point(725, 392);
+            this.chkOnTop.Location = new System.Drawing.Point(224, 3);
             this.chkOnTop.Name = "chkOnTop";
             this.chkOnTop.Size = new System.Drawing.Size(105, 22);
             this.chkOnTop.TabIndex = 19;
@@ -196,11 +195,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // btnClose
             // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.Checked = false;
             this.btnClose.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
             this.btnClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.btnClose.Location = new System.Drawing.Point(725, 418);
+            this.btnClose.Location = new System.Drawing.Point(224, 31);
             this.btnClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(105, 22);
@@ -220,16 +218,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.panelBars.TabIndex = 22;
             this.panelBars.Visible = false;
             // 
+            // panelButtons
+            // 
+            this.panelButtons.BackColor = System.Drawing.Color.Black;
+            this.panelButtons.Controls.Add(this.btnSmall);
+            this.panelButtons.Controls.Add(this.btnDetailFx);
+            this.panelButtons.Controls.Add(this.chkOnTop);
+            this.panelButtons.Controls.Add(this.btnClose);
+            this.panelButtons.Location = new System.Drawing.Point(500, 389);
+            this.panelButtons.Margin = new System.Windows.Forms.Padding(0);
+            this.panelButtons.Name = "panelButtons";
+            this.panelButtons.Size = new System.Drawing.Size(329, 53);
+            this.panelButtons.TabIndex = 23;
+            // 
             // frmSetViewer
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
+            this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(842, 448);
+            this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.panelBars);
-            this.Controls.Add(this.btnDetailFx);
-            this.Controls.Add(this.btnSmall);
-            this.Controls.Add(this.chkOnTop);
-            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.rtApplied);
             this.Controls.Add(this.Label1);
@@ -245,6 +253,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Currently Active Sets & Bonuses";
             this.TopMost = true;
+            this.panelButtons.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -252,5 +261,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private ImageButton btnDetailFx;
         private System.Windows.Forms.Panel panelBars;
+        private System.Windows.Forms.Panel panelButtons;
     }
 }
