@@ -74,9 +74,7 @@ namespace Mids_Reborn
                     iFrm?.SetMessage("Loading Powerset Database...");
                     if (!DatabaseAPI.LoadLevelsDatabase(Files.FDefaultPath))
                     {
-                        MessageBox.Show(
-                            "Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://midsreborn.com.",
-                            @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(@"Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://midsreborn.com.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Application.Exit();
                     }
 

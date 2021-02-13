@@ -81,15 +81,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void convertBtn_Click(object sender, EventArgs e)
+        private async void convertBtn_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(SourcePath) && !string.IsNullOrWhiteSpace(DestinationPath))
             {
-                ConvertDatabase();
-                /*MidsContext.Config.ConvertOldDb = true;
-                MessageBox.Show(@"The application will now restart in order to prep conversion.");
-                MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
-                Application.Restart();*/
+                await ConvertDatabase();
             }
         }
 
@@ -101,7 +97,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (!DatabaseAPI.LoadLevelsDatabase(path))
             {
-                MessageBox.Show("Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/Reborn-Team/Hero-Designer/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(@"Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/Reborn-Team/MidsReborn/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
 
