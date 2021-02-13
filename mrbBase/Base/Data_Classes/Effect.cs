@@ -2111,7 +2111,15 @@ namespace mrbBase.Base.Data_Classes
                 switch (condition)
                 {
                     case "Active":
-                        cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                        bool? boolVal = Convert.ToBoolean(cVp.Value);
+                        if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                        {
+                            cVp.Validated = true;
+                        }
+                        else
+                        {
+                            cVp.Validated = false;
+                        }
 
                         break;
                     case "Taken":
@@ -2217,7 +2225,15 @@ namespace mrbBase.Base.Data_Classes
 
                 if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Active")
                 {
-                    cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                    bool? boolVal = Convert.ToBoolean(cVp.Value);
+                    if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                    {
+                        cVp.Validated = true;
+                    }
+                    else
+                    {
+                        cVp.Validated = false;
+                    }
                 }
                 else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Taken")
                 {
