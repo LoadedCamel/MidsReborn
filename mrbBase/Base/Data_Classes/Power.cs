@@ -1352,6 +1352,11 @@ namespace mrbBase.Base.Data_Classes
                     applies = false;
                 }
 
+                if (((Effects[index].EffectClass > eEffectClass ? 1 : 0) & (!Effects[index].ValidateConditional("active", "Assassination") ? 1 : !MidsContext.Character.Assassination ? 1 : 0)) != 0)
+                {
+                    applies = false;
+                }
+
                 if ((Effects[index].EffectType == Enums.eEffectType.EntCreate) & !isEntCreate &
                     (Effects[index].DelayedTime < 20.0) & (eEffectType != Enums.eEffectType.Mez))
                 {
