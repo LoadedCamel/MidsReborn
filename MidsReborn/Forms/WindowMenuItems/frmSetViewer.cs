@@ -224,6 +224,54 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         }
         #endregion
 
+        #region Coord2D sub-class
+        private class Coord2D
+        {
+            private int _X;
+            private int _Y;
+
+            public int X
+            {
+                get => _X;
+                set => _X = value;
+            }
+
+            public int Y
+            {
+                get => _Y;
+                set => _Y = value;
+            }
+
+            public int W
+            {
+                get => _X;
+                set => _X = value;
+            }
+
+            public int H
+            {
+                get => _Y;
+                set => _Y = value;
+            }
+
+            public Coord2D(int x, int y)
+            {
+                _X = x;
+                _Y = y;
+            }
+
+            public Point ToPoint()
+            {
+                return new Point(_X, _Y);
+            }
+
+            public Size ToSize()
+            {
+                return new Size(_X, _Y);
+            }
+        }
+        #endregion
+
         private readonly frmMain myParent;
         private ImageButton btnClose;
         private ImageButton btnSmall;
@@ -241,6 +289,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private RichTextBox rtxtInfo;
 
         private Dictionary<string, FXIdentifierKey> BarsFX;
+        private readonly Dictionary<string, Dictionary<string, Coord2D[]>> ShrinkExpandItemsPos;
 
         public frmSetViewer(frmMain iParent)
         {
@@ -253,6 +302,60 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Name = nameof(frmSetViewer);
             myParent = iParent;
             BarsFX = new Dictionary<string, FXIdentifierKey>();
+            ShrinkExpandItemsPos = new Dictionary<string, Dictionary<string, Coord2D[]>>();
+            ShrinkExpandItemsPos.Add("this", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["this"].Add("Size", new []
+            {
+                new Coord2D(516, Height),
+                new Coord2D(858, Height)
+            });
+
+            ShrinkExpandItemsPos.Add("rtxtInfo", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["rtxtInfo"].Add("Size", new []
+            {
+                new Coord2D(rtxtInfo.Width, 109),
+                new Coord2D(rtxtInfo.Width, 132)
+            });
+
+            ShrinkExpandItemsPos.Add("btnDetailFx", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["btnDetailFx"].Add("Location", new []
+            {
+                new Coord2D(9, 3),
+                new Coord2D(0, 3)
+            });
+
+            ShrinkExpandItemsPos.Add("btnSmall", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["btnSmall"].Add("Location", new[]
+            {
+                new Coord2D(117, 3),
+                new Coord2D(0, 31)
+            });
+
+            ShrinkExpandItemsPos.Add("chkOnTop", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["chkOnTop"].Add("Location", new[]
+            {
+                new Coord2D(281, 3),
+                new Coord2D(224, 3)
+            });
+
+            ShrinkExpandItemsPos.Add("btnClose", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["btnClose"].Add("Location", new[]
+            {
+                new Coord2D(389, 3),
+                new Coord2D(224, 31)
+            });
+
+            ShrinkExpandItemsPos.Add("panelButtons", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["panelButtons"].Add("Size", new[]
+            {
+                new Coord2D(516, 30),
+                new Coord2D(329, 53)
+            });
+            ShrinkExpandItemsPos["panelButtons"].Add("Location", new[]
+            {
+                new Coord2D(0, 419),
+                new Coord2D(500, 389)
+            });
         }
 
         private void btnClose_Click()
@@ -262,32 +365,61 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void btnSmall_Click()
         {
-            if (Width > 600)
+            const int ntk = 15;
+            var idx = Width > 600 ? 1 : 0;
+            var tk = 0;
+            var timer = new Timer();
+            timer.Interval = 12;
+            timer.Tick += (sender, e) =>
             {
-                Width = 516;
-                rtxtInfo.Height = 109;
-                btnDetailFx.Location = new Point(9, 3);
-                btnSmall.Location = new Point(117, 3);
-                chkOnTop.Location = new Point(281, 3);
-                btnClose.Location = new Point(389, 3);
-                panelButtons.Size = new Size(516, 30);
-                panelButtons.Location = new Point(0, 419);
-                btnSmall.TextOff = "Expand >>";
-            }
-            else
-            {
-                Width = 858;
-                rtxtInfo.Height = 132;
-                btnDetailFx.Location = new Point(0, 3);
-                btnSmall.Location = new Point(0, 31);
-                chkOnTop.Location = new Point(224, 3);
-                btnClose.Location = new Point(224, 31);
-                panelButtons.Size = new Size(329, 53);
-                panelButtons.Location = new Point(500, 389);
-                btnSmall.TextOff = "<< Shrink";
-            }
+                Width = ShrinkExpandItemsPos["this"]["Size"][idx].W + (ShrinkExpandItemsPos["this"]["Size"][1 - idx].W - ShrinkExpandItemsPos["this"]["Size"][idx].W) / ntk * tk;
+                rtxtInfo.Height = ShrinkExpandItemsPos["rtxtInfo"]["Size"][idx].H + (ShrinkExpandItemsPos["rtxtInfo"]["Size"][1 - idx].H - ShrinkExpandItemsPos["rtxtInfo"]["Size"][idx].H) / ntk * tk;
+                btnDetailFx.Location = new Point(
+                    ShrinkExpandItemsPos["btnDetailFx"]["Location"][idx].X + (ShrinkExpandItemsPos["btnDetailFx"]["Location"][1 - idx].X - ShrinkExpandItemsPos["btnDetailFx"]["Location"][idx].X) / ntk * tk,
+                    ShrinkExpandItemsPos["btnDetailFx"]["Location"][idx].Y + (ShrinkExpandItemsPos["btnDetailFx"]["Location"][1 - idx].Y - ShrinkExpandItemsPos["btnDetailFx"]["Location"][idx].Y) / ntk * tk);
+                btnSmall.Location = new Point(
+                    ShrinkExpandItemsPos["btnSmall"]["Location"][idx].X + (ShrinkExpandItemsPos["btnSmall"]["Location"][1 - idx].X - ShrinkExpandItemsPos["btnSmall"]["Location"][idx].X) / ntk * tk,
+                    ShrinkExpandItemsPos["btnSmall"]["Location"][idx].Y + (ShrinkExpandItemsPos["btnSmall"]["Location"][1 - idx].Y - ShrinkExpandItemsPos["btnSmall"]["Location"][idx].Y) / ntk * tk);
+                chkOnTop.Location = new Point(
+                    ShrinkExpandItemsPos["chkOnTop"]["Location"][idx].X + (ShrinkExpandItemsPos["chkOnTop"]["Location"][1 - idx].X - ShrinkExpandItemsPos["chkOnTop"]["Location"][idx].X) / ntk * tk,
+                    ShrinkExpandItemsPos["chkOnTop"]["Location"][idx].Y + (ShrinkExpandItemsPos["chkOnTop"]["Location"][1 - idx].Y - ShrinkExpandItemsPos["chkOnTop"]["Location"][idx].Y) / ntk * tk);
+                btnClose.Location = new Point(
+                    ShrinkExpandItemsPos["btnClose"]["Location"][idx].X + (ShrinkExpandItemsPos["btnClose"]["Location"][1 - idx].X - ShrinkExpandItemsPos["btnClose"]["Location"][idx].X) / ntk * tk,
+                    ShrinkExpandItemsPos["btnClose"]["Location"][idx].Y + (ShrinkExpandItemsPos["btnClose"]["Location"][1 - idx].Y - ShrinkExpandItemsPos["btnClose"]["Location"][idx].Y) / ntk * tk);
 
-            StoreLocation();
+                panelButtons.Location = new Point(
+                    ShrinkExpandItemsPos["panelButtons"]["Location"][idx].X + (ShrinkExpandItemsPos["panelButtons"]["Location"][1 - idx].X - ShrinkExpandItemsPos["panelButtons"]["Location"][idx].X) / ntk * tk,
+                    ShrinkExpandItemsPos["panelButtons"]["Location"][idx].Y + (ShrinkExpandItemsPos["panelButtons"]["Location"][1 - idx].Y - ShrinkExpandItemsPos["panelButtons"]["Location"][idx].Y) / ntk * tk);
+
+                panelButtons.Size = new Size(
+                    ShrinkExpandItemsPos["panelButtons"]["Size"][idx].W + (ShrinkExpandItemsPos["panelButtons"]["Size"][1 - idx].W - ShrinkExpandItemsPos["panelButtons"]["Size"][idx].W) / ntk * tk,
+                    ShrinkExpandItemsPos["panelButtons"]["Size"][idx].H + (ShrinkExpandItemsPos["panelButtons"]["Size"][1 - idx].H - ShrinkExpandItemsPos["panelButtons"]["Size"][idx].H) / ntk * tk);
+
+                var tint = Math.Max(0, Math.Min(255, idx == 1 ? 255 - (int) Math.Floor(tk * 255.0 / ntk) : (int) Math.Ceiling(tk * 255.0 / ntk)));
+                Label1.ForeColor = Color.FromArgb(tint, tint, tint);
+
+                if (tk++ < ntk) return;
+
+                timer.Stop();
+                Width = ShrinkExpandItemsPos["this"]["Size"][1 - idx].W;
+                rtxtInfo.Height = ShrinkExpandItemsPos["rtxtInfo"]["Size"][1 - idx].H;
+                btnDetailFx.Location = ShrinkExpandItemsPos["btnDetailFx"]["Location"][1 - idx].ToPoint();
+                btnSmall.Location = ShrinkExpandItemsPos["btnSmall"]["Location"][1 - idx].ToPoint();
+                chkOnTop.Location = ShrinkExpandItemsPos["chkOnTop"]["Location"][1 - idx].ToPoint();
+                btnClose.Location = ShrinkExpandItemsPos["btnClose"]["Location"][1 - idx].ToPoint();
+                panelButtons.Size = ShrinkExpandItemsPos["panelButtons"]["Size"][1 - idx].ToSize();
+                panelButtons.Location = ShrinkExpandItemsPos["panelButtons"]["Location"][1 - idx].ToPoint();
+                Label1.ForeColor = idx == 1 ? Color.Black : Color.White;
+                btnSmall.TextOff = idx == 1 ? "Expand >>" : "<< Shrink";
+                panelBars.Visible = idx == 0 & btnDetailFx.Checked;
+                rtxtFX.Visible = idx == 0 & !btnDetailFx.Checked;
+            };
+
+            timer.Start();
+
+            
+
+            //StoreLocation();
         }
 
         private void chkOnTop_CheckedChanged()
