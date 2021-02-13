@@ -3128,7 +3128,7 @@ namespace mrbBase.Base.Data_Classes
                             if (conditionPower != null)
                             {
                                 bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (conditionPower.Active == boolVal)
+                                if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
                                 {
                                     cVp.Validated = true;
                                 }
