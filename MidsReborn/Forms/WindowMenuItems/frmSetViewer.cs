@@ -290,6 +290,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private Dictionary<string, FXIdentifierKey> BarsFX;
         private readonly Dictionary<string, Dictionary<string, Coord2D[]>> ShrinkExpandItemsPos;
+        private readonly List<BarSettings> EffectListOrder;
 
         public frmSetViewer(frmMain iParent)
         {
@@ -302,6 +303,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Name = nameof(frmSetViewer);
             myParent = iParent;
             BarsFX = new Dictionary<string, FXIdentifierKey>();
+
+            #region Shrunk/expanded control positions and sizes
             ShrinkExpandItemsPos = new Dictionary<string, Dictionary<string, Coord2D[]>>();
             ShrinkExpandItemsPos.Add("this", new Dictionary<string, Coord2D[]>());
             ShrinkExpandItemsPos["this"].Add("Size", new []
@@ -356,6 +359,84 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 new Coord2D(0, 419),
                 new Coord2D(500, 389)
             });
+            #endregion
+
+            #region Bar settings
+            EffectListOrder = new List<BarSettings>
+            {
+                new BarSettings (Enums.eEffectType.DamageBuff, Color.Red, Color.FromArgb(204, 0, 0)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Accuracy, Color.Yellow, Color.FromArgb(204, 204, 0)),
+                //new BarSettings (Enums.eEffectType.ToHit, Color.FromArgb(255, 255, 128), Color.FromArgb(204, 204, 102)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.RechargeTime, Color.FromArgb(255, 128, 0), Color.FromArgb(204, 102, 0)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Range, Color.FromArgb(170, 168, 179), Color.FromArgb(121, 120, 128)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Heal, Color.FromArgb(116, 255, 116), Color.FromArgb(92, 204, 92)),
+
+                new BarSettings (Enums.eEffectType.Regeneration, Color.FromArgb(64, 255, 64), Color.FromArgb(51, 204, 51)),
+                new BarSettings (Enums.eEffectType.HitPoints, Color.FromArgb(44, 180, 44), Color.FromArgb(31, 130, 31)),
+                //new BarSettings (Enums.eEffectType.Absorb, Color.Gainsboro, Color.FromArgb(168, 168, 168)),
+                new BarSettings (Enums.eEffectType.Recovery, Color.DodgerBlue, Color.FromArgb(24, 114, 204)),
+                new BarSettings (Enums.eEffectType.Endurance, Color.FromArgb(59, 158, 255), Color.FromArgb(47, 125, 204)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.EnduranceDiscount, Color.RoyalBlue, Color.FromArgb(50, 81, 173)),
+
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Smashing, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Fire, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Energy, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Toxic, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Psionic, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Smashing, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Fire, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Energy, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Psionic, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Melee, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Ranged, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.AoE, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Elusivity, Color.FromArgb(163, 1, 231), Color.FromArgb(127, 1, 181)),
+
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Held, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Stunned, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Sleep, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Immobilized, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Knockback, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Confused, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Terrorized, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Held, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Stunned, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Sleep, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Immobilized, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Knockback, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Confused, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Terrorized, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Teleport, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+
+                new BarSettings (Enums.eEffectType.SpeedRunning, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxRunSpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                new BarSettings (Enums.eEffectType.SpeedJumping, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.JumpHeight, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxJumpSpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                new BarSettings (Enums.eEffectType.SpeedFlying, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxFlySpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                new BarSettings (Enums.eEffectType.ResEffect, Enums.eEffectType.SpeedRunning, Color.FromArgb(90, 120, 110), Color.FromArgb(52, 69, 63)),
+                // Enhancement (slow)
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.SpeedRunning, Color.FromArgb(90, 120, 110), Color.FromArgb(52, 69, 63)),
+
+                new BarSettings (Enums.eEffectType.StealthRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107)),
+                new BarSettings (Enums.eEffectType.StealthRadiusPlayer, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107)),
+                new BarSettings (Enums.eEffectType.PerceptionRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107))
+            };
+
+            EffectListOrder = EffectListOrder
+                .AsEnumerable()
+                .OrderBy(e => (int)new FXIdentifierKey
+                {
+                    EffectType = e.EffectType,
+                    TargetEffectType = e.TargetEffectType,
+                    DamageType = e.DamageType,
+                    MezType = e.MezType
+                }.L1Group)
+                .ToList();
+            #endregion
         }
 
         private void btnClose_Click()
@@ -943,8 +1024,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private class BarSettings
         {
             public Enums.eEffectType EffectType;
-            public Enums.eEffectType TargetEffectType = Enums.eEffectType.None;
-            public Enums.eDamage DamageType = Enums.eDamage.None;
+            public Enums.eEffectType TargetEffectType;
+            public Enums.eDamage DamageType;
+            public Enums.eMez MezType;
             public Color SetBuffsColor;
             public Color TotalsColor;
 
@@ -953,6 +1035,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 EffectType = effectType;
                 TargetEffectType = Enums.eEffectType.None;
                 DamageType = Enums.eDamage.None;
+                MezType = Enums.eMez.None;
                 SetBuffsColor = setBuffsColor;
                 TotalsColor = totalsColor;
             }
@@ -962,6 +1045,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 EffectType = effectType;
                 TargetEffectType = targetEffectType;
                 DamageType = Enums.eDamage.None;
+                MezType = Enums.eMez.None;
                 SetBuffsColor = setBuffsColor;
                 TotalsColor = totalsColor;
             }
@@ -971,12 +1055,23 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 EffectType = effectType;
                 TargetEffectType = Enums.eEffectType.None;
                 DamageType = damageType;
+                MezType = Enums.eMez.None;
+                SetBuffsColor = setBuffsColor;
+                TotalsColor = totalsColor;
+            }
+
+            public BarSettings(Enums.eEffectType effectType, Enums.eMez mezType, Color setBuffsColor, Color totalsColor)
+            {
+                EffectType = effectType;
+                TargetEffectType = Enums.eEffectType.None;
+                DamageType = Enums.eDamage.None;
+                MezType = mezType;
                 SetBuffsColor = setBuffsColor;
                 TotalsColor = totalsColor;
             }
         }
 
-        private int GetControlHeight(int numHeaders, int numBars, int barHeight)
+        private int GetControlYPosition(int numHeaders, int numBars, int barHeight)
         {
             return (barHeight + 3) * numBars + 20 * numHeaders;
         }
@@ -985,65 +1080,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
             var displayStats = MidsContext.Character.DisplayStats;
-            var effectListOrder = new List<BarSettings>
-            {
-                new BarSettings (Enums.eEffectType.DamageBuff, Color.Red, Color.FromArgb(204, 0, 0)),
-                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Accuracy, Color.Yellow, Color.FromArgb(204, 204, 0)),
-                //new BarSettings (Enums.eEffectType.ToHit, Color.FromArgb(255, 255, 128), Color.FromArgb(204, 204, 102)),
-                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.RechargeTime, Color.FromArgb(255, 128, 0), Color.FromArgb(204, 102, 0)),
-                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Range, Color.FromArgb(170, 168, 179), Color.FromArgb(121, 120, 128)),
-                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Heal, Color.FromArgb(116, 255, 116), Color.FromArgb(92, 204, 92)),
-
-                new BarSettings (Enums.eEffectType.Regeneration, Color.FromArgb(64, 255, 64), Color.FromArgb(51, 204, 51)),
-                new BarSettings (Enums.eEffectType.HitPoints, Color.FromArgb(44, 180, 44), Color.FromArgb(31, 130, 31)),
-                //new BarSettings (Enums.eEffectType.Absorb, Color.Gainsboro, Color.FromArgb(168, 168, 168)),
-                new BarSettings (Enums.eEffectType.Recovery, Color.DodgerBlue, Color.FromArgb(24, 114, 204)),
-                new BarSettings (Enums.eEffectType.Endurance, Color.FromArgb(59, 158, 255), Color.FromArgb(47, 125, 204)),
-                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.EnduranceDiscount, Color.RoyalBlue, Color.FromArgb(50, 81, 173)),
-
-                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Smashing, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
-                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Fire, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
-                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Energy, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
-                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Toxic, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
-                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Psionic, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
-
-                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Smashing, Color.Magenta, Color.FromArgb(204, 0, 204)),
-                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Fire, Color.Magenta, Color.FromArgb(204, 0, 204)),
-                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Energy, Color.Magenta, Color.FromArgb(204, 0, 204)),
-                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Psionic, Color.Magenta, Color.FromArgb(204, 0, 204)),
-                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Melee, Color.Magenta, Color.FromArgb(204, 0, 204)),
-                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Ranged, Color.Magenta, Color.FromArgb(204, 0, 204)),
-                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.AoE, Color.Magenta, Color.FromArgb(204, 0, 204)),
-                new BarSettings (Enums.eEffectType.Elusivity, Color.FromArgb(163, 1, 231), Color.FromArgb(127, 1, 181)),
-
-                //Enums.eEffectType.Mez,
-                //Enums.eEffectType.MezResist,
-                //Enums.eEffectType.Slow,
-                //Enums.eEffectType.ResEffect,
-
-                new BarSettings (Enums.eEffectType.SpeedRunning, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
-                //new BarSettings (Enums.eEffectType.MaxRunSpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
-                new BarSettings (Enums.eEffectType.SpeedJumping, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
-                //new BarSettings (Enums.eEffectType.JumpHeight, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
-                //new BarSettings (Enums.eEffectType.MaxJumpSpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
-                new BarSettings (Enums.eEffectType.SpeedFlying, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
-                //new BarSettings (Enums.eEffectType.MaxFlySpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
-
-                new BarSettings (Enums.eEffectType.StealthRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107)),
-                new BarSettings (Enums.eEffectType.StealthRadiusPlayer, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107)),
-                new BarSettings (Enums.eEffectType.PerceptionRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107))
-            };
-
-            effectListOrder = effectListOrder
-                .AsEnumerable()
-                .OrderBy(e => (int) new FXIdentifierKey
-                {
-                    EffectType = e.EffectType,
-                    TargetEffectType = e.TargetEffectType,
-                    DamageType = e.DamageType,
-                    MezType = Enums.eMez.None
-                }.L1Group)
-                .ToList();
 
             var l1Group = "";
             var nh = 0; // Nb of headers
@@ -1051,21 +1087,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var yPos = 0;
             var offset = 0;
             const int hBar = 12;
-            const int barLabelWidth = 100;
+            const int barLabelWidth = 110;
             BarsFX.Clear();
             panelBars.SuspendLayout();
             panelBars.Controls.Clear();
-            foreach (var st in effectListOrder)
+            foreach (var st in EffectListOrder)
             {
                 var fxId = new FXIdentifierKey
                 {
                     EffectType = st.EffectType,
                     TargetEffectType = st.TargetEffectType,
                     DamageType = st.DamageType,
-                    MezType = Enums.eMez.None
+                    MezType = st.MezType
                 };
 
-                yPos = GetControlHeight(nh, nb, hBar);
+                yPos = GetControlYPosition(nh, nb, hBar);
                 var fxL1Group = fxId.L1Group;
                 var newHeader = false;
                 var header = new Label();
@@ -1073,7 +1109,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 {
                     if (nh > 0) offset += 6;
                     header.Location = new Point(0, yPos + offset);
-                    header.ForeColor = Color.White;
+                    header.ForeColor = Color.Cyan;
                     header.BackColor = Color.Black; // Transparent
                     header.Font = new Font("Arial", 8.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
                     header.Size = new Size(panelBars.Size.Width - 20, 16);
@@ -1085,9 +1121,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 var lBuffs = cumulativeSetBonuses.Where(e => e.EffectType == st.EffectType &
                                                              (st.DamageType == Enums.eDamage.None | st.DamageType == e.DamageType) &
-                                                             (st.TargetEffectType == Enums.eEffectType.None | st.TargetEffectType == e.ETModifies)).ToList();
+                                                             (st.TargetEffectType == Enums.eEffectType.None | st.TargetEffectType == e.ETModifies) &
+                                                             (st.MezType == Enums.eMez.None | st.MezType == e.MezType)).ToList();
 
-                if (lBuffs.Count <= 0) continue;
+                if (lBuffs.Count <= 0)
+                {
+                    if (newHeader) offset -= 6;
+                    continue;
+                }
 
                 if (newHeader)
                 {
@@ -1096,7 +1137,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     l1Group = fxL1Group.ToString();
                 }
 
-                yPos = GetControlHeight(nh, nb, hBar);
+                yPos = GetControlYPosition(nh, nb, hBar);
                 var bar = new ctlLayeredBarPb
                 {
                     Location = new Point(barLabelWidth + 8, yPos + offset),
@@ -1172,6 +1213,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.SpeedJumping => 100,
                     Enums.eEffectType.JumpHeight => 100,
                     Enums.eEffectType.SpeedFlying => 100,
+                    Enums.eEffectType.ResEffect => 100,
+                    Enums.eEffectType.MezResist => 100,
                     _ => 1
                 };
 
@@ -1199,6 +1242,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.StealthRadius => 1000,
                     Enums.eEffectType.StealthRadiusPlayer => 1000,
                     Enums.eEffectType.PerceptionRadius => 1000,
+                    Enums.eEffectType.MezResist => 500,
                     Enums.eEffectType.Enhancement => st.TargetEffectType switch
                     {
                         Enums.eEffectType.Accuracy => 200,
@@ -1212,8 +1256,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 overlayVector = overlayVector
                     .Replace("Resistance", "Res")
                     .Replace("Defense", "Def")
-                    .Replace("EnduranceDiscount", "End. Discount");
+                    .Replace("EnduranceDiscount", "End. Discount")
+                    .Replace("MezResist", "MezRes");
                 overlayVector = Regex.Replace(overlayVector, @"Endurance\b", "Max End");
+                var overlayMezType = st.MezType switch
+                {
+                    Enums.eMez.Held => "Hold",
+                    Enums.eMez.Stunned => "Stun",
+                    Enums.eMez.Immobilized => "Immob.",
+                    Enums.eMez.Knockback => "KB",
+                    Enums.eMez.Terrorized => "Fear",
+                    Enums.eMez.Teleport => "TP",
+                    Enums.eMez.None => "",
+                    _ => st.MezType.ToString()
+                };
+
+                var overlayTargetEffect = st.EffectType == Enums.eEffectType.ResEffect
+                    ? st.TargetEffectType.ToString().Replace("SpeedRunning", "Run")
+                    : "";
+
                 var overlayDmgType = !(st.EffectType == Enums.eEffectType.Resistance | st.EffectType == Enums.eEffectType.Defense)
                     ? ""
                     : st.DamageType switch
@@ -1227,7 +1288,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
                 bar.OverlayText = $"{fxMagAdjusted:##0.##}{(overlayValuePercent ? "%" : "")}";
 
-                barLabel.Text = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}:";
+                barLabel.Text = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{(overlayMezType != "" ? $"({overlayMezType})" : "")}{(overlayTargetEffect != "" ? $"({overlayTargetEffect})" : "")}:";
                 panelBars.Controls.Add(bar);
                 panelBars.Controls.Add(barLabel);
                 BarsFX.Add(bar.Name, new FXIdentifierKey
@@ -1235,7 +1296,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     EffectType = st.EffectType,
                     TargetEffectType = st.TargetEffectType,
                     DamageType = st.DamageType,
-                    MezType = Enums.eMez.None
+                    MezType = st.MezType
                 });
 
                 nb++;
