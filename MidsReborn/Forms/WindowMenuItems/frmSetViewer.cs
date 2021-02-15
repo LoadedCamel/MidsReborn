@@ -52,7 +52,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     if (EffectType == Enums.eEffectType.Mez |
                         EffectType == Enums.eEffectType.MezResist |
                         EffectType == Enums.eEffectType.Slow |
-                        EffectType == Enums.eEffectType.ResEffect)
+                        EffectType == Enums.eEffectType.ResEffect |
+                        (EffectType == Enums.eEffectType.Enhancement & TargetEffectType == Enums.eEffectType.None & MezType != Enums.eMez.None))
                     {
                         return Enums.eFXGroup.StatusEffects;
                     }
@@ -272,6 +273,139 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         }
         #endregion
 
+        #region OverlayText sub-class
+        private static class OverlayText
+        {
+            public static string Vector(FXIdentifierKey idk, bool shortText=false)
+            {
+                var v = (idk.EffectType == Enums.eEffectType.Enhancement & idk.MezType == Enums.eMez.None & idk.TargetEffectType != Enums.eEffectType.SpeedRunning
+                        ? idk.TargetEffectType
+                        : idk.EffectType)
+                    .ToString();
+                if (!shortText) return v;
+
+                v = v
+                    .Replace("Resistance", "Res")
+                    .Replace("Defense", "Def")
+                    .Replace("EnduranceDiscount", "End. Discount")
+                    .Replace("MezResist", "MezRes")
+                    .Replace("Enhancement", "Enh.");
+                return Regex.Replace(v, @"Endurance\b", "Max End");
+            }
+
+            public static string MezType(FXIdentifierKey idk, bool shortText=false)
+            {
+                var m = "";
+                if (shortText)
+                {
+                    m = idk.MezType switch
+                    {
+                        Enums.eMez.Held => "Hold",
+                        Enums.eMez.Stunned => "Stun",
+                        Enums.eMez.Immobilized => "Immob.",
+                        Enums.eMez.Knockback => "KB",
+                        Enums.eMez.Terrorized => "Fear",
+                        Enums.eMez.Teleport => "TP",
+                        Enums.eMez.None => "",
+                        _ => idk.MezType.ToString()
+                    };
+                }
+                else
+                {
+                    m = idk.MezType == Enums.eMez.None ? "" : idk.MezType.ToString();
+                }
+
+                if (idk.EffectType == Enums.eEffectType.Enhancement)
+                {
+                    if (shortText)
+                    {
+                        m = ": " + idk.MezType switch
+                        {
+                            Enums.eMez.Held => "Hold",
+                            Enums.eMez.Stunned => "Stun",
+                            Enums.eMez.Immobilized => "Immob.",
+                            Enums.eMez.Knockback => "KB",
+                            Enums.eMez.Confused => "Confuse",
+                            Enums.eMez.Terrorized => "Fear",
+                            Enums.eMez.Teleport => "TP",
+                            Enums.eMez.None => "",
+                            _ => idk.MezType.ToString()
+                        };
+                    }
+                    else
+                    {
+                        m = ": " + idk.MezType switch
+                        {
+                            Enums.eMez.Held => "Hold",
+                            Enums.eMez.Stunned => "Stun",
+                            Enums.eMez.Immobilized => "Immobilization",
+                            Enums.eMez.Confused => "Confusion",
+                            Enums.eMez.Terrorized => "Fear",
+                            Enums.eMez.Teleport => "Teleportation",
+                            Enums.eMez.None => "",
+                            _ => idk.MezType.ToString()
+                        };
+                    }
+                }
+                else if (m != "")
+                {
+                    m = $"({m})";
+                }
+
+                return m;
+            }
+
+            public static string TargetEffect(FXIdentifierKey idk, bool shortText=false)
+            {
+                if (idk.EffectType == Enums.eEffectType.ResEffect |
+                    (idk.EffectType == Enums.eEffectType.Enhancement & idk.TargetEffectType != Enums.eEffectType.None & idk.TargetEffectType != Enums.eEffectType.EnduranceDiscount))
+                {
+                    if (idk.EffectType == Enums.eEffectType.Enhancement & idk.TargetEffectType == Enums.eEffectType.SpeedRunning)
+                    {
+                        return "Slow";
+                    }
+
+                    return shortText
+                        ? idk.TargetEffectType.ToString().Replace("SpeedRunning", "Run")
+                        : idk.TargetEffectType.ToString();
+                }
+
+                return "";
+            }
+
+            public static string DamageType(FXIdentifierKey idk, bool shortText=false)
+            {
+                if (!(idk.EffectType == Enums.eEffectType.Resistance | idk.EffectType == Enums.eEffectType.Defense) |
+                    idk.DamageType == Enums.eDamage.None)
+                {
+                    return "";
+                }
+
+                return !shortText
+                    ? idk.DamageType.ToString()
+                    : idk.DamageType switch
+                    {
+                        Enums.eDamage.Smashing => "S/L",
+                        Enums.eDamage.Fire => "Fire/Cold",
+                        Enums.eDamage.Energy => "Energy/Neg",
+                        _ => idk.DamageType.ToString()
+                    };
+            }
+
+            public static bool HasPercentage(FXIdentifierKey idk)
+            {
+                return idk.EffectType != Enums.eEffectType.HitPoints & idk.EffectType != Enums.eEffectType.Endurance;
+            }
+
+            public static bool HasPlusSign(FXIdentifierKey idk)
+            {
+                return idk.EffectType == Enums.eEffectType.SpeedRunning ||
+                       idk.EffectType == Enums.eEffectType.SpeedJumping ||
+                       idk.EffectType == Enums.eEffectType.SpeedFlying;
+            }
+        }
+        #endregion
+
         private readonly frmMain myParent;
         private ImageButton btnClose;
         private ImageButton btnSmall;
@@ -366,14 +500,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 new BarSettings (Enums.eEffectType.DamageBuff, Color.Red, Color.FromArgb(204, 0, 0)),
                 new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Accuracy, Color.Yellow, Color.FromArgb(204, 204, 0)),
-                //new BarSettings (Enums.eEffectType.ToHit, Color.FromArgb(255, 255, 128), Color.FromArgb(204, 204, 102)),
                 new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.RechargeTime, Color.FromArgb(255, 128, 0), Color.FromArgb(204, 102, 0)),
                 new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Range, Color.FromArgb(170, 168, 179), Color.FromArgb(121, 120, 128)),
                 new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Heal, Color.FromArgb(116, 255, 116), Color.FromArgb(92, 204, 92)),
 
                 new BarSettings (Enums.eEffectType.Regeneration, Color.FromArgb(64, 255, 64), Color.FromArgb(51, 204, 51)),
                 new BarSettings (Enums.eEffectType.HitPoints, Color.FromArgb(44, 180, 44), Color.FromArgb(31, 130, 31)),
-                //new BarSettings (Enums.eEffectType.Absorb, Color.Gainsboro, Color.FromArgb(168, 168, 168)),
                 new BarSettings (Enums.eEffectType.Recovery, Color.DodgerBlue, Color.FromArgb(24, 114, 204)),
                 new BarSettings (Enums.eEffectType.Endurance, Color.FromArgb(59, 158, 255), Color.FromArgb(47, 125, 204)),
                 new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.EnduranceDiscount, Color.RoyalBlue, Color.FromArgb(50, 81, 173)),
@@ -888,27 +1020,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var barData = BarsFX[bar.Name];
             var barValues = bar.GetValues();
 
-            var overlayVector = (barData.EffectType == Enums.eEffectType.Enhancement ? barData.TargetEffectType : barData.EffectType).ToString();
-            overlayVector = overlayVector
-                .Replace("Resistance", "Res")
-                .Replace("Defense", "Def")
-                .Replace("EnduranceDiscount", "End. Discount");
-            overlayVector = Regex.Replace(overlayVector, @"Endurance\b", "Max End");
-            var overlayDmgType = !(barData.EffectType == Enums.eEffectType.Resistance | barData.EffectType == Enums.eEffectType.Defense)
-                ? ""
-                : barData.DamageType switch
-                {
-                    Enums.eDamage.Smashing => "S/L",
-                    Enums.eDamage.Fire => "Fire/Cold",
-                    Enums.eDamage.Energy => "Energy/Neg",
-                    _ => barData.DamageType.ToString()
-                };
-            var overlayValuePercent = barData.EffectType != Enums.eEffectType.HitPoints & barData.EffectType != Enums.eEffectType.Endurance;
-            var plusSignEnabled = barData.EffectType == Enums.eEffectType.SpeedRunning ||
-                                  barData.EffectType == Enums.eEffectType.SpeedJumping ||
-                                  barData.EffectType == Enums.eEffectType.SpeedFlying;
+            var overlayVector = OverlayText.Vector(barData);
+            var overlayDmgType = OverlayText.DamageType(barData);
+            var overlayMezType = OverlayText.MezType(barData);
+            var overlayTargetEffect = OverlayText.TargetEffect(barData);
+            var overlayValuePercent = OverlayText.HasPercentage(barData);
+            var plusSignEnabled = OverlayText.HasPlusSign(barData);
 
-            var ttext = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}\r\nFrom sets: {(plusSignEnabled & barValues["setbuffs"] > 0 ? "+" : "")}{barValues["setbuffs"]:##0.##}{(overlayValuePercent ? "%" : "")}";
+            var ttext = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{overlayMezType}{overlayTargetEffect}\r\nFrom sets: {(plusSignEnabled & barValues["setbuffs"] > 0 ? "+" : "")}{barValues["setbuffs"]:##0.##}{(overlayValuePercent ? "%" : "")}";
             if (barValues["totalsvalue"] > 0) // & Math.Abs(barValues["setbuffs"] - barValues["totalsvalue"]) > float.Epsilon)
             {
                 ttext += $"\r\nTotal: {(plusSignEnabled ? "+" : "")}{barValues["totalsvalue"]:##0.##}{(overlayValuePercent ? "%" : "")}";
@@ -1069,6 +1188,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 SetBuffsColor = setBuffsColor;
                 TotalsColor = totalsColor;
             }
+
+            public FXIdentifierKey GetIdentifierKey()
+            {
+                return new FXIdentifierKey
+                {
+                    EffectType = EffectType,
+                    DamageType = DamageType,
+                    MezType = MezType,
+                    TargetEffectType = TargetEffectType
+                };
+            }
         }
 
         private int GetControlYPosition(int numHeaders, int numBars, int barHeight)
@@ -1110,7 +1240,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     if (nh > 0) offset += 6;
                     header.Location = new Point(0, yPos + offset);
                     header.ForeColor = Color.Cyan;
-                    header.BackColor = Color.Black; // Transparent
+                    header.BackColor = Color.Black;
                     header.Font = new Font("Arial", 8.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
                     header.Size = new Size(panelBars.Size.Width - 20, 16);
                     header.Name = $"HeaderLabel{nh + 1}";
@@ -1224,6 +1354,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.SpeedJumping => Math.Max(0, totalsValue / Statistics.BaseJumpSpeed * 100 - 100),
                     Enums.eEffectType.SpeedFlying => Math.Max(0, totalsValue / Statistics.BaseFlySpeed * 100 - 100),
                     Enums.eEffectType.JumpHeight => Math.Max(0, totalsValue / Statistics.BaseJumpHeight * 100 - 100),
+                    Enums.eEffectType.MezResist => MidsContext.Character.Totals.MezRes[(int)st.MezType],
+                    Enums.eEffectType.Enhancement => st.TargetEffectType == Enums.eEffectType.SpeedRunning ? 0 : totalsValue, 
                     _ => totalsValue
                 };
 
@@ -1252,43 +1384,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     _ => 100
                 };
 
-                var overlayVector = (st.EffectType == Enums.eEffectType.Enhancement ? st.TargetEffectType : st.EffectType).ToString();
-                overlayVector = overlayVector
-                    .Replace("Resistance", "Res")
-                    .Replace("Defense", "Def")
-                    .Replace("EnduranceDiscount", "End. Discount")
-                    .Replace("MezResist", "MezRes");
-                overlayVector = Regex.Replace(overlayVector, @"Endurance\b", "Max End");
-                var overlayMezType = st.MezType switch
-                {
-                    Enums.eMez.Held => "Hold",
-                    Enums.eMez.Stunned => "Stun",
-                    Enums.eMez.Immobilized => "Immob.",
-                    Enums.eMez.Knockback => "KB",
-                    Enums.eMez.Terrorized => "Fear",
-                    Enums.eMez.Teleport => "TP",
-                    Enums.eMez.None => "",
-                    _ => st.MezType.ToString()
-                };
+                var idk = st.GetIdentifierKey();
+                var overlayVector = OverlayText.Vector(idk, true);
+                var overlayMezType = OverlayText.MezType(idk, true);
+                var overlayTargetEffect = OverlayText.TargetEffect(idk, true);
+                var overlayDmgType = OverlayText.DamageType(idk, true);
+                var overlayValuePercent = OverlayText.HasPercentage(idk);
 
-                var overlayTargetEffect = st.EffectType == Enums.eEffectType.ResEffect
-                    ? st.TargetEffectType.ToString().Replace("SpeedRunning", "Run")
-                    : "";
-
-                var overlayDmgType = !(st.EffectType == Enums.eEffectType.Resistance | st.EffectType == Enums.eEffectType.Defense)
-                    ? ""
-                    : st.DamageType switch
-                    {
-                        Enums.eDamage.Smashing => "S/L",
-                        Enums.eDamage.Fire => "Fire/Cold",
-                        Enums.eDamage.Energy => "Energy/Neg",
-                        _ => st.DamageType.ToString()
-                    };
-                var overlayValuePercent = st.EffectType != Enums.eEffectType.HitPoints & st.EffectType != Enums.eEffectType.Endurance;
                 bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
                 bar.OverlayText = $"{fxMagAdjusted:##0.##}{(overlayValuePercent ? "%" : "")}";
 
-                barLabel.Text = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{(overlayMezType != "" ? $"({overlayMezType})" : "")}{(overlayTargetEffect != "" ? $"({overlayTargetEffect})" : "")}:";
+                barLabel.Text = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{overlayMezType}{(overlayTargetEffect != "" ? $"({overlayTargetEffect})" : "")}:";
                 panelBars.Controls.Add(bar);
                 panelBars.Controls.Add(barLabel);
                 BarsFX.Add(bar.Name, new FXIdentifierKey
