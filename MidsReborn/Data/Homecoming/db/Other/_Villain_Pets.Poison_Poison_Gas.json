@@ -268,8 +268,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 0.015,
-          "Mag": -3.30000019,
-          "MagPercent": -3.30000019,
+          "Mag": -3.0,
+          "MagPercent": -3.0,
           "BaseProbability": 0.015,
           "Reward": "",
           "EffectId": "EndDrain",
@@ -436,8 +436,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.751721,
-          "MagPercent": 1.751721,
+          "Mag": 1.584891,
+          "MagPercent": 1.584891,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
