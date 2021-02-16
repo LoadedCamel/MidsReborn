@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -282,7 +283,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         ? idk.TargetEffectType
                         : idk.EffectType)
                     .ToString();
-                if (!shortText) return v;
+                if (!shortText) return $"{v}{(idk.EffectType == Enums.eEffectType.Enhancement ? ":" : "")}";
 
                 v = v
                     .Replace("Resistance", "Res")
@@ -298,17 +299,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 var m = "";
                 if (shortText)
                 {
-                    m = idk.MezType switch
-                    {
-                        Enums.eMez.Held => "Hold",
-                        Enums.eMez.Stunned => "Stun",
-                        Enums.eMez.Immobilized => "Immob.",
-                        Enums.eMez.Knockback => "KB",
-                        Enums.eMez.Terrorized => "Fear",
-                        Enums.eMez.Teleport => "TP",
-                        Enums.eMez.None => "",
-                        _ => idk.MezType.ToString()
-                    };
+                    m = idk.MezType == Enums.eMez.None
+                        ? ""
+                        : idk.MezType switch
+                        {
+                            Enums.eMez.Held => "Hold",
+                            Enums.eMez.Stunned => "Stun",
+                            Enums.eMez.Immobilized => "Immob.",
+                            Enums.eMez.Knockback => "KB",
+                            Enums.eMez.Terrorized => "Fear",
+                            Enums.eMez.Teleport => "TP",
+                            _ => idk.MezType.ToString()
+                        };
                 }
                 else
                 {
@@ -319,32 +321,34 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 {
                     if (shortText)
                     {
-                        m = ": " + idk.MezType switch
-                        {
-                            Enums.eMez.Held => "Hold",
-                            Enums.eMez.Stunned => "Stun",
-                            Enums.eMez.Immobilized => "Immob.",
-                            Enums.eMez.Knockback => "KB",
-                            Enums.eMez.Confused => "Confuse",
-                            Enums.eMez.Terrorized => "Fear",
-                            Enums.eMez.Teleport => "TP",
-                            Enums.eMez.None => "",
-                            _ => idk.MezType.ToString()
-                        };
+                        m = idk.MezType == Enums.eMez.None
+                            ? ""
+                            : (idk.EffectType == Enums.eEffectType.Enhancement ? " " : ": ") + idk.MezType switch
+                            {
+                                Enums.eMez.Held => "Hold",
+                                Enums.eMez.Stunned => "Stun",
+                                Enums.eMez.Immobilized => "Immob.",
+                                Enums.eMez.Knockback => "KB",
+                                Enums.eMez.Confused => "Confuse",
+                                Enums.eMez.Terrorized => "Fear",
+                                Enums.eMez.Teleport => "TP",
+                                _ => idk.MezType.ToString()
+                            };
                     }
                     else
                     {
-                        m = ": " + idk.MezType switch
-                        {
-                            Enums.eMez.Held => "Hold",
-                            Enums.eMez.Stunned => "Stun",
-                            Enums.eMez.Immobilized => "Immobilization",
-                            Enums.eMez.Confused => "Confusion",
-                            Enums.eMez.Terrorized => "Fear",
-                            Enums.eMez.Teleport => "Teleportation",
-                            Enums.eMez.None => "",
-                            _ => idk.MezType.ToString()
-                        };
+                        m = idk.MezType == Enums.eMez.None
+                            ? ""
+                            : (idk.EffectType == Enums.eEffectType.Enhancement ? " " : ": ") + idk.MezType switch
+                            {
+                                Enums.eMez.Held => "Hold",
+                                Enums.eMez.Stunned => "Stun",
+                                Enums.eMez.Immobilized => "Immobilization",
+                                Enums.eMez.Confused => "Confusion",
+                                Enums.eMez.Terrorized => "Fear",
+                                Enums.eMez.Teleport => "Teleportation",
+                                _ => idk.MezType.ToString()
+                            };
                     }
                 }
                 else if (m != "")
@@ -358,7 +362,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             public static string TargetEffect(FXIdentifierKey idk, bool shortText=false)
             {
                 if (idk.EffectType == Enums.eEffectType.ResEffect |
-                    (idk.EffectType == Enums.eEffectType.Enhancement & idk.TargetEffectType != Enums.eEffectType.None & idk.TargetEffectType != Enums.eEffectType.EnduranceDiscount))
+                    (idk.EffectType == Enums.eEffectType.Enhancement & 
+                     idk.TargetEffectType != Enums.eEffectType.None &
+                     idk.TargetEffectType != Enums.eEffectType.EnduranceDiscount &
+                     idk.TargetEffectType != Enums.eEffectType.Accuracy &
+                     idk.TargetEffectType != Enums.eEffectType.RechargeTime))
                 {
                     if (idk.EffectType == Enums.eEffectType.Enhancement & idk.TargetEffectType == Enums.eEffectType.SpeedRunning)
                     {
@@ -381,13 +389,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     return "";
                 }
 
-                return !shortText
-                    ? idk.DamageType.ToString()
-                    : idk.DamageType switch
+                return shortText
+                    ? idk.DamageType switch
                     {
                         Enums.eDamage.Smashing => "S/L",
                         Enums.eDamage.Fire => "Fire/Cold",
                         Enums.eDamage.Energy => "Energy/Neg",
+                        _ => idk.DamageType.ToString()
+                    }
+                    : idk.DamageType switch
+                    {
+                        Enums.eDamage.Smashing => "Smash/Lethal",
+                        Enums.eDamage.Fire => "Fire/Cold",
+                        Enums.eDamage.Energy => "Energy/Negative",
                         _ => idk.DamageType.ToString()
                     };
             }
@@ -402,6 +416,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return idk.EffectType == Enums.eEffectType.SpeedRunning ||
                        idk.EffectType == Enums.eEffectType.SpeedJumping ||
                        idk.EffectType == Enums.eEffectType.SpeedFlying;
+            }
+
+            public static string ShortLabel(FXIdentifierKey idk)
+            {
+                var overlayVector = Vector(idk, true);
+                var overlayMezType = MezType(idk, true);
+                var overlayTargetEffect = TargetEffect(idk, true);
+                var overlayDmgType = DamageType(idk, true);
+                var overlayValuePercent = HasPercentage(idk);
+
+                //overlayDmgType = overlayDmgType != "" ? $"{overlayDmgType} " : "";
+                overlayTargetEffect = overlayTargetEffect switch
+                {
+                    "" => "",
+                    "Slow" => " Slow",
+                    _ => $"({overlayTargetEffect})"
+                };
+
+                return $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{overlayMezType}{overlayTargetEffect}:";
             }
         }
         #endregion
@@ -1047,6 +1080,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 .GetType()
                 .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                 ?.SetValue(lstSets, true, null);
+            panelBars
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(panelBars, true, null);
         }
 
         private void frmSetViewer_Move(object sender, EventArgs e)
@@ -1385,16 +1422,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 };
 
                 var idk = st.GetIdentifierKey();
-                var overlayVector = OverlayText.Vector(idk, true);
-                var overlayMezType = OverlayText.MezType(idk, true);
-                var overlayTargetEffect = OverlayText.TargetEffect(idk, true);
-                var overlayDmgType = OverlayText.DamageType(idk, true);
-                var overlayValuePercent = OverlayText.HasPercentage(idk);
-
                 bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
-                bar.OverlayText = $"{fxMagAdjusted:##0.##}{(overlayValuePercent ? "%" : "")}";
+                bar.OverlayText = $"{fxMagAdjusted:##0.##}{(OverlayText.HasPercentage(idk) ? "%" : "")}";
 
-                barLabel.Text = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{overlayMezType}{(overlayTargetEffect != "" ? $"({overlayTargetEffect})" : "")}:";
+                barLabel.Text = OverlayText.ShortLabel(idk);
                 panelBars.Controls.Add(bar);
                 panelBars.Controls.Add(barLabel);
                 BarsFX.Add(bar.Name, new FXIdentifierKey
