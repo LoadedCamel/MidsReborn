@@ -6,17 +6,13 @@ namespace Mids_Reborn.Forms
 {
     public partial class frmBusy : Form
     {
-        private Label Message;
-
         public frmBusy()
         {
+            Closing += Busy_Closing;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmBusy));
             Icon = Resources.reborn;
-            Name = nameof(frmBusy);
         }
 
-        [DebuggerStepThrough]
         public void SetMessage(string iMsg)
         {
             if (Message.Text == iMsg)
@@ -25,13 +21,22 @@ namespace Mids_Reborn.Forms
             Refresh();
         }
 
-        [DebuggerStepThrough]
         public void SetTitle(string iTitle)
         {
             if (Text == iTitle)
                 return;
             Text = iTitle;
-            Refresh();
+        }
+
+        public void Completed()
+        {
+            Close();
+        }
+
+        private void Busy_Closing(object sender, CancelEventArgs e)
+        {
+            e.Cancel = false;
+            Dispose();
         }
     }
 }

@@ -32,8 +32,8 @@ namespace Mids_Reborn.Forms
 
         private const int FILTER_ORPHAN_SETS = 4;
 
-        private frmBusy bFrm;
-        //private frmDBDiffing _diffFrm;
+        private frmBusy BusyForm { get; set; }
+        private frmDBDiffing _diffFrm;
 
         private bool Updating;
 
@@ -752,19 +752,20 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        private void BusyHide()
-        {
-            if (bFrm == null)
-                return;
-            bFrm.Close();
-            bFrm = null;
-        }
-
         private void BusyMsg(string sMessage)
         {
-            var bFrm = new frmBusy();
-            bFrm.Show(this);
-            bFrm.SetMessage(sMessage);
+            BusyForm = new frmBusy();
+            BusyForm.SetTitle(@"Please wait");
+            BusyForm.Show(this);
+            BusyForm.SetMessage(sMessage);
+        }
+
+        private void BusyHide()
+        {
+            if (BusyForm == null)
+                return;
+            BusyForm.Completed();
+            BusyForm = null;
         }
 
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -840,10 +841,7 @@ namespace Mids_Reborn.Forms
                             var num = DatabaseAPI.Database.Classes.Length - 1;
                             for (var index = 0; index <= num; ++index)
                             {
-                                if (!(string.Equals(DatabaseAPI.Database.Classes[index].PrimaryGroup, powersetGroup.Name,
-                                    StringComparison.OrdinalIgnoreCase) | string.Equals(
-                                    DatabaseAPI.Database.Classes[index].SecondaryGroup,
-                                    powersetGroup.Name, StringComparison.OrdinalIgnoreCase)))
+                                if (!(string.Equals(DatabaseAPI.Database.Classes[index].PrimaryGroup, powersetGroup.Name, StringComparison.OrdinalIgnoreCase) | string.Equals(DatabaseAPI.Database.Classes[index].SecondaryGroup, powersetGroup.Name, StringComparison.OrdinalIgnoreCase)))
                                     continue;
                                 imageIndex = index;
                                 break;
@@ -1026,9 +1024,14 @@ namespace Mids_Reborn.Forms
             lvPower.BeginUpdate();
             lvPower.Items.Clear();
             if (iPowers2.Length > 0)
+            {
                 List_Power_AddBlock(iPowers2, DisplayFullName);
+            }
             else
+            {
                 List_Power_AddBlock(iPowers1, DisplayFullName);
+            }
+
             BusyHide();
             if (lvPower.Items.Count > 0)
             {

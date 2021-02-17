@@ -169,8 +169,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (num13 > 10000.0)
                     num13 = 1153f;
                 MyAT.PerceptionCap = num13;
-                MyAT.PrimaryGroup = cbPriGroup.Text;
-                MyAT.SecondaryGroup = cbSecGroup.Text;
+                if (!DatabaseAPI.Database.PowersetGroups.ContainsKey(cbPriGroup.Text))
+                {
+                    DatabaseAPI.Database.PowersetGroups.Add(cbPriGroup.Text, new PowersetGroup(cbPriGroup.Text));
+                    MyAT.PrimaryGroup = cbPriGroup.Text;
+                }
+                else
+                {
+                    MyAT.PrimaryGroup = cbPriGroup.Text;
+                }
+                if (!DatabaseAPI.Database.PowersetGroups.ContainsKey(cbSecGroup.Text))
+                {
+                    DatabaseAPI.Database.PowersetGroups.Add(cbSecGroup.Text, new PowersetGroup(cbSecGroup.Text));
+                    MyAT.SecondaryGroup = cbSecGroup.Text;
+                }
+                else
+                {
+                    MyAT.SecondaryGroup = cbSecGroup.Text;
+                }
                 MyAT.Origin = new string[clbOrigin.CheckedItems.Count - 1 + 1];
                 var num14 = clbOrigin.CheckedItems.Count - 1;
                 for (var index = 0; index <= num14; ++index)
