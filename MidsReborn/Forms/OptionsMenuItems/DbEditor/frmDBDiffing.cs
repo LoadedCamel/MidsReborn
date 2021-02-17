@@ -11,7 +11,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
     {
         private readonly ISerialize _serializer;
         private readonly frmPowerBrowser _myParent;
-
+        
         public frmDBDiffing(ISerialize serializer, frmPowerBrowser iParent)
         {
             InitializeComponent();
@@ -31,7 +31,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void Busy_OnLoad(object sender, EventArgs e)
         {
             Visible = true;
-            SetMessage("Saving and Diffing Main database, please wait...");
+            SetMessage("Saving and Diffing Main database...");
             var path = Files.SelectDataFileSave(Files.MxdbFileDB);
             DatabaseAPI.SaveMainDatabase(_serializer);
             DiffDatabase(_serializer, path, DatabaseAPI.MainDbName);

@@ -30,15 +30,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDiscord));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDBDiffing));
             this.lblmessage = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // _message
+            // lblmessage
             // 
             this.lblmessage.Location = new System.Drawing.Point(12, 9);
-            this.lblmessage.Name = "_message";
+            this.lblmessage.Name = "lblmessage";
             this.lblmessage.Size = new System.Drawing.Size(381, 65);
             this.lblmessage.TabIndex = 0;
             this.lblmessage.Text = "Busy";
@@ -59,7 +58,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Saving & Diffing...";
+            this.Text = "Please wait";
             this.TopMost = true;
             this.ResumeLayout(false);
 

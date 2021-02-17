@@ -56,8 +56,7 @@ namespace mrbBase.Base.Data_Classes
             ClassName = "NewClass";
         }
 
-        public Archetype(Archetype template)
-            : this()
+        public Archetype(Archetype template) : this()
         {
             Idx = template.Idx;
             DisplayName = template.DisplayName;
@@ -86,8 +85,7 @@ namespace mrbBase.Base.Data_Classes
             PerceptionCap = template.PerceptionCap;
         }
 
-        public Archetype(BinaryReader reader)
-            : this()
+        public Archetype(BinaryReader reader) : this()
         {
             DisplayName = reader.ReadString();
             Hitpoints = reader.ReadInt32();
