@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using FastDeepCloner;
+using mrbBase.Base.Data_Classes;
 
 namespace mrbBase
 {
@@ -161,6 +163,52 @@ namespace mrbBase
             return ret;
         }
 
+        public Dictionary<string, List<IEffect>> GetEffectDetailedData2(int index, bool special)
+        {
+            var ret = new Dictionary<string, List<IEffect>>();
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 | index > bonusItemArray.Length - 1)
+            {
+                return ret;
+            }
+
+            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
+            {
+                if (bonusItemArray[index].Index[i] < 0) continue;
+                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
+
+                var linkedPower = DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
+                if (!ret.ContainsKey(linkedPower.FullName))
+                {
+                    ret.Add(linkedPower.FullName, new List<IEffect>());
+                }
+                ret[linkedPower.FullName].AddRange((IEnumerable<IEffect>)linkedPower.Effects.Clone());
+            }
+
+            return ret;
+        }
+
+        public List<Power> GetEnhancementSetLinkedPowers(int index, bool special)
+        {
+            var ret = new List<Power>();
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 | index > bonusItemArray.Length - 1)
+            {
+                return ret;
+            }
+
+            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
+            {
+                if (bonusItemArray[index].Index[i] < 0) continue;
+                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
+
+                var linkedPower = (Power) DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
+                ret.Add(linkedPower.Clone());
+            }
+
+            return ret;
+        }
+
         public string GetEffectString(int index, bool special, bool longForm = false)
         {
             var bonusItemArray = special ? SpecialBonus : Bonus;
@@ -187,12 +235,10 @@ namespace mrbBase
                         .GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true);
                     if (!string.IsNullOrEmpty(empty2))
                         empty1 += empty2;
-                    for (var index2 = 0;
-                        index2 <= DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length - 1;
-                        ++index2)
+                    for (var index2 = 0; index2 < DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length; index2++)
                     {
                         var flag = false;
-                        for (var index3 = 0; index3 <= returnMask.Length - 1; ++index3)
+                        for (var index3 = 0; index3 < returnMask.Length; index3++)
                             if (index2 == returnMask[index3])
                                 flag = true;
 
