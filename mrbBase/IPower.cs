@@ -255,8 +255,6 @@ namespace mrbBase
 
         bool I9FXPresentP(Enums.eEffectType iEffect, Enums.eMez iMez = Enums.eMez.None);
 
-        bool UpdateFromCSV(string iCSV);
-
         bool IgnoreEnhancement(Enums.eEnhance iEffect);
 
         bool IgnoreBuff(Enums.eEnhance iEffect);

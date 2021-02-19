@@ -226,6 +226,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             public bool IsFromEnh { get; set; }
             public Enums.eEntity AffectedEntity { get; set; }
             public Enums.eEntity EntitiesAutoHit { get; set; }
+            public IEnhancement Enhancement { get; set; }
         }
         #endregion
 
@@ -479,8 +480,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             ShrinkExpandItemsPos.Add("this", new Dictionary<string, Coord2D[]>());
             ShrinkExpandItemsPos["this"].Add("Size", new []
             {
-                new Coord2D(516, Height),
-                new Coord2D(858, Height)
+                new Coord2D(panelBars.Left + 20, Height),
+                new Coord2D(panelBars.Right + 20, Height)
             });
 
             ShrinkExpandItemsPos.Add("rtxtInfo", new Dictionary<string, Coord2D[]>());
@@ -526,8 +527,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             });
             ShrinkExpandItemsPos["panelButtons"].Add("Location", new[]
             {
-                new Coord2D(0, 419),
-                new Coord2D(500, 389)
+                new Coord2D(0, rtxtInfo.Bottom - 20),
+                new Coord2D(panelBars.Left, panelBars.Bottom)
             });
             #endregion
 
@@ -615,10 +616,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void btnSmall_Click()
         {
             const int ntk = 15;
-            var idx = Width > 600 ? 1 : 0;
+            var idx = Width > 700 ? 1 : 0;
             var tk = 0;
-            var timer = new Timer();
-            timer.Interval = 12;
+            var timer = new Timer {Interval = 12};
             timer.Tick += (sender, e) =>
             {
                 Width = ShrinkExpandItemsPos["this"]["Size"][idx].W + (ShrinkExpandItemsPos["this"]["Size"][1 - idx].W - ShrinkExpandItemsPos["this"]["Size"][idx].W) / ntk * tk;
@@ -801,7 +801,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                     PvMode = Enums.ePvX.Any,
                                     IsFromEnh = true,
                                     AffectedEntity = p.EntitiesAffected,
-                                    EntitiesAutoHit = p.EntitiesAutoHit
+                                    EntitiesAutoHit = p.EntitiesAutoHit,
+                                    Enhancement = DatabaseAPI.Database.Enhancements[si]
                                 });
                             }
                         }
@@ -829,6 +830,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var str1 = "";
             var numArray = new int[DatabaseAPI.NidPowers("set_bonus").Length];
             var hasOvercap = false;
+            EnhancementSet enhancementSet = null;
             foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
             {
                 for (var index2 = 0; index2 < s.SetInfo.Length; index2++)
@@ -837,27 +839,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                     var setInfo = s.SetInfo;
                     var index3 = index2;
-                    var enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX];
+                    enhancementSet = DatabaseAPI.Database.EnhancementSets[setInfo[index3].SetIDX];
                     var str2 = str1 + RTF.Color(RTF.ElementID.Invention) + RTF.Underline(RTF.Bold(enhancementSet.DisplayName));
                     if (MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset > -1)
-                        str2 += RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "(" + DatabaseAPI.Database
-                            .Powersets[
-                                MidsContext.Character.CurrentBuild
-                                    .Powers[s.PowerIndex].NIDPowerset]
-                            .Powers[
-                                MidsContext.Character.CurrentBuild
-                                    .Powers[s.PowerIndex].IDXPower]
-                            .DisplayName + ")";
+                    {
+                        str2 += RTF.Crlf() + RTF.Color(RTF.ElementID.Faded) + "(" +  DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].NIDPowerset].Powers[MidsContext.Character.CurrentBuild.Powers[s.PowerIndex].IDXPower].DisplayName + ")";
+                    }
+
                     var str3 = str2 + RTF.Crlf() + RTF.Color(RTF.ElementID.Text);
                     var str4 = "";
                     for (var index4 = 0; index4 < enhancementSet.Bonus.Length; index4++)
                     {
-                        if (!((setInfo[index3].SlottedCount >= enhancementSet.Bonus[index4].Slotted) &
-                              ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any) |
-                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvE) &
-                                !MidsContext.Config.Inc.DisablePvE) |
-                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvP) &
-                                MidsContext.Config.Inc.DisablePvE))))
+                        if (!((setInfo[index3].SlottedCount >= enhancementSet.Bonus[index4].Slotted) & ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any) | ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))))
                             continue;
                         if (str4 != "") str4 += RTF.Crlf();
                         var localOverCap = false;
@@ -892,9 +885,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             str4 += RTF.Crlf();
                         var str5 = str4 + RTF.Color(RTF.ElementID.Enhancement);
                         var localOverCap = false;
-                        var str6 = "  " + DatabaseAPI.Database
-                            .EnhancementSets[s.SetInfo[index2].SetIDX]
-                            .GetEffectString(index5, true, true);
+                        var str6 = "  " + DatabaseAPI.Database.EnhancementSets[s.SetInfo[index2].SetIDX].GetEffectString(index5, true, true);
                         foreach (var sb in DatabaseAPI.Database.EnhancementSets[s.SetInfo[index2].SetIDX].SpecialBonus[index5].Index)
                         {
                             if (sb <= -1) continue;
@@ -975,8 +966,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     }
 
                     if (iStr != "") iStr += RTF.Crlf();
-                    var fxTypePercent = fxGroup.Key.EffectType == Enums.eEffectType.Endurance ||
-                                        effectSources[fxGroup.Key].Count > 0 && effectSources[fxGroup.Key].First().Fx.DisplayPercentage;
+                    var fxTypePercent = fxGroup.Key.EffectType == Enums.eEffectType.Endurance || effectSources[fxGroup.Key].Count > 0 && effectSources[fxGroup.Key].First().Fx.DisplayPercentage;
                     var fxSumMag = effectSources[fxGroup.Key].Count > 0
                         ? effectSources[fxGroup.Key].Sum(e => e.Mag)
                         : 0;
@@ -993,32 +983,54 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         fxBlockStr += fxGroup.Key.DamageType != Enums.eDamage.None ? $" ({fxGroup.Key.DamageType})" : "";
                         fxBlockStr += fxGroup.Key.TargetEffectType != Enums.eEffectType.None ? $" ({fxGroup.Key.TargetEffectType})" : "";
                     }
-
-                    fxBlockStr += $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")})";
+                    var petSum = 0.0;
+                    var selfSum = 0.0;
+                    fxBlockStr += $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")} Total)";
 
                     foreach (var e in effectSources[fxGroup.Key])
                     {
-                        if ((e.AffectedEntity & Enums.eEntity.Caster) == Enums.eEntity.None) continue;
-                        if (e.EntitiesAutoHit != Enums.eEntity.None & ((e.EntitiesAutoHit & Enums.eEntity.Caster) == Enums.eEntity.None)) continue;
+                        //if ((e.AffectedEntity & Enums.eEntity.Caster) == Enums.eEntity.None) continue;
+                        //if (e.EntitiesAutoHit != Enums.eEntity.None & ((e.EntitiesAutoHit & Enums.eEntity.Caster) == Enums.eEntity.None)) continue;
                         fxBlockStr += RTF.Crlf();
-                        var effectString = l2Group != Enums.eFXSubGroup.NoGroup
-                            ? e.Fx.BuildEffectString(true).Replace(effectName, fxGroup.Key.L2GroupText())
-                            : e.Fx.BuildEffectString(true);
+                        string effectString;
+                        if (l2Group != Enums.eFXSubGroup.NoGroup)
+                        {
+                            effectString = e.Fx.BuildEffectString(true).Replace(effectName, fxGroup.Key.L2GroupText());
+                        }
+                        else
+                        {
+                            effectString = e.Fx.BuildEffectString(true);
+                        }
+
                         if (!effectString.StartsWith("+"))
                         {
                             effectString = "+" + effectString;
                         }
 
                         effectString = Regex.Replace(effectString, @"Endurance\b|Max End", "Max Endurance");
-
                         fxBlockStr += $"    {(e.PvMode == Enums.ePvX.PvP ? "[PVP] " : "")}{effectString}";
+                        switch (e.AffectedEntity)
+                        {
+                            case Enums.eEntity.MyPet:
+                                fxBlockStr += @" to Pets";
+                                break;
+                            case Enums.eEntity.Caster:
+                                fxBlockStr += @" to Self";
+                                break;
+                            case Enums.eEntity.Foe:
+                                fxBlockStr += @" to Enemy";
+                                break;
+                        }
                         if (e.EnhSet != "" & e.Power != "" & !e.IsFromEnh)
                         {
-                            fxBlockStr += $" ({e.EnhSet}, on {e.Power})";
+                            fxBlockStr += $"\r\n    (From {RTF.Color(RTF.ElementID.Invention)}{e.EnhSet}{RTF.Color(RTF.ElementID.Text)} in {e.Power})";
                         }
                         else if (e.IsFromEnh)
                         {
-                            fxBlockStr += $" (Enh. special, on {e.Power})";
+                            if (e.Enhancement != null)
+                            {
+                                fxBlockStr += $"\r\n    (From {RTF.Color(RTF.ElementID.Enhancement)}{e.Enhancement.LongName}{RTF.Color(RTF.ElementID.Text)} in {e.Power})";
+                            }
                         }
                     }
 
@@ -1137,8 +1149,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                               myParent.GetPrimaryBottom();
             }
 
-            if (MidsContext.Config.ShrinkFrmSets & (Width > 600) |
-                !MidsContext.Config.ShrinkFrmSets & (Width < 600))
+            if (MidsContext.Config.ShrinkFrmSets & (Width > 700) |
+                !MidsContext.Config.ShrinkFrmSets & (Width < 700))
             {
                 btnSmall_Click();
             }
@@ -1152,7 +1164,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (!MainModule.MidsController.IsAppInitialized) return;
             MainModule.MidsController.SzFrmSets.X = Left;
             MainModule.MidsController.SzFrmSets.Y = Top;
-            MidsContext.Config.ShrinkFrmSets = Width < 600;
+            MidsContext.Config.ShrinkFrmSets = Width < 700;
         }
 
         public void UpdateData()
@@ -1295,7 +1307,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 var header = new Label();
                 if (fxL1Group.ToString() != l1Group)
                 {
-                    if (nh > 0) offset += 6;
+                    if (nh > 0) offset += 2;
                     header.Location = new Point(0, yPos + offset);
                     header.ForeColor = Color.Cyan;
                     header.BackColor = Color.Black;
@@ -1314,7 +1326,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 if (lBuffs.Count <= 0)
                 {
-                    if (newHeader) offset -= 6;
+                    if (newHeader) offset -= 0;
                     continue;
                 }
 

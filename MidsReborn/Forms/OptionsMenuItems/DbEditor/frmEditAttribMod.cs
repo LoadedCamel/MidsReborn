@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using FastDeepCloner;
 using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
@@ -27,6 +28,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmEditAttribMod_Load(object sender, EventArgs e)
         {
+            CenterToParent();
             // Safer to work on a temp copy...
             TempAttribMods = (Modifiers)Database.Instance.AttribMods.Clone();
 
@@ -80,12 +82,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             Modifiers.ModifierTable table = new Modifiers.ModifierTable(Database.Instance.Classes.Length)
             {
-                BaseIndex = TempAttribMods.Modifier.Length - 1, // Zed: This may not be correct, but this field is not used anywhere.
+                BaseIndex = TempAttribMods.Modifier.Count - 1, // Zed: This may not be correct, but this field is not used anywhere.
                 ID = tableName
             };
             _ = TempAttribMods.Modifier.Append(table);
 
-            UpdateModifiersList(TempAttribMods.Modifier.Length - 1);
+            UpdateModifiersList(TempAttribMods.Modifier.Count - 1);
         }
 
         private void bnRemoveTable_Click(object sender, EventArgs e)
@@ -96,7 +98,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            TempAttribMods.Modifier.RemoveLast();
+            TempAttribMods.Modifier.RemoveAt(TempAttribMods.Modifier.Count - 1);
             UpdateClassesList(listBoxTables.Items.Count - 1);
         }
 
@@ -155,11 +157,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 if (src.TrimStart(' ', '\t', '\r', '\n', '\0').StartsWith("["))
                 {
-                    Modifiers.ModifierTable[]? tables =
-                        JsonConvert.DeserializeObject<Modifiers.ModifierTable[]>(src, jsonOpt);
+                    //Modifiers.ModifierTable[]? tables = JsonConvert.DeserializeObject<Modifiers.ModifierTable[]>(src, jsonOpt);
+                    var tables = JsonConvert.DeserializeObject<List<Modifiers.ModifierTable>>(src, jsonOpt);
                     if (tables == null) throw new FormatException("JSON file contains no modifier tables.");
 
-                    m.Modifier = (Modifiers.ModifierTable[]) tables.Clone();
+                    m.Modifier = (List<Modifiers.ModifierTable>) tables.Clone();
                     m.Revision = Database.Instance.AttribMods.Revision + 1;
                     m.RevisionDate = DateTime.Now;
                     m.SourceIndex = string.Empty;
@@ -191,8 +193,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            int nAt = m.Modifier[0].Table.Length;
-            int nMods = m.Modifier.Length;
+            int nAt = m.Modifier[0].Table.Count;
+            int nMods = m.Modifier.Count;
 
             r = MessageBox.Show(
                 Convert.ToString(nAt, null) + " Archetype" + (nAt != 1 ? "s" : "") + "/Entit" + (nAt != 1 ? "ies" : "y") + " found,\n" +
@@ -352,7 +354,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbArchetype.BeginUpdate();
             cbArchetype.Items.Clear();
             // e.DisplayName + e.ClassName is too long!
-            cbArchetype.Items.AddRange(Database.Instance.Classes.Select(e => e.ClassName).ToArray() as object[]);
+            cbArchetype.Items.AddRange(DatabaseAPI.Database.Classes.Select(e => e.ClassName).ToArray() as object[]);
             cbArchetype.SelectedIndex = selectedIndex;
             cbArchetype.EndUpdate();
         }
@@ -400,14 +402,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void PopulateTableGrid(int modIdx, int atIdx)
         {
-            int i; int l;
+            int i;
 
             SuspendLayout();
-            l = Convert.ToInt32(Math.Ceiling(TempAttribMods.Modifier[modIdx].Table.Length / 10d)) * 10;
+            var l = Convert.ToInt32(Math.Ceiling(TempAttribMods.Modifier[modIdx].Table.Count / 10d)) * 10;
             for (i = 0; i < l; i++)
             {
-                if (i < TempAttribMods.Modifier[modIdx].Table.Length &&
-                TempAttribMods.Modifier[modIdx].Table[i].Length > 0) {
+                if (i < TempAttribMods.Modifier[modIdx].Table.Count && TempAttribMods.Modifier[modIdx].Table[i].Count > 0) 
+                {
                     dgCells[i].Text = Convert.ToString(TempAttribMods.Modifier[modIdx].Table[i][atIdx], null);
                     dgCells[i].Enabled = true;
                     dgCells[i].BackColor = SystemColors.Control;
@@ -428,9 +430,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             int i;
             
             List<float> dataSeries = new List<float>();
-            for (i = 0; i < TempAttribMods.Modifier[modIdx].Table.Length; i++)
+            for (i = 0; i < TempAttribMods.Modifier[modIdx].Table.Count; i++)
             {
-                if (TempAttribMods.Modifier[modIdx].Table[i].Length > 0)
+                if (TempAttribMods.Modifier[modIdx].Table[i].Count > 0)
                 {
                     dataSeries.Add(TempAttribMods.Modifier[modIdx].Table[i][atIdx]);
                 }

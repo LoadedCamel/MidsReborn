@@ -122,7 +122,7 @@ namespace mrbBase
                 return AttribMod[uID];
             }
 
-            for (var index = 0; index <= Database.AttribMods.Modifier.Length - 1; ++index)
+            for (var index = 0; index <= Database.AttribMods.Modifier.Count - 1; ++index)
             {
                 if (!string.Equals(uID, Database.AttribMods.Modifier[index].ID, StringComparison.OrdinalIgnoreCase))
                     continue;
@@ -1724,11 +1724,8 @@ namespace mrbBase
 
         public static int IsSpecialEnh(int enhID)
         {
-            for (var index = 0;
-                index < Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements.Length;
-                ++index)
-                if (enhID == Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements[index] &&
-                    Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].SpecialBonus[index].Index.Length > 0)
+            for (var index = 0; index < Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements.Length; ++index)
+                if (enhID == Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements[index] && Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].SpecialBonus[index].Index.Length > 0)
                     return index;
             return -1;
         }
@@ -2536,15 +2533,19 @@ namespace mrbBase
             else
             {
                 iClass = Database.Classes[iClass].Column;
-                num = iClass >= 0
-                    ? iTable <= Database.AttribMods.Modifier.Length - 1
-                        ? iLevel <= Database.AttribMods.Modifier[iTable].Table.Length - 1
-                            ? iClass <= Database.AttribMods.Modifier[iTable].Table[iLevel].Length - 1
-                                ? Database.AttribMods.Modifier[iTable].Table[iLevel][iClass]
-                                : 0.0f
-                            : 0.0f
-                        : 0.0f
-                    : 0.0f;
+                if (iClass >= 0)
+                    if (iTable <= Database.AttribMods.Modifier.Count - 1)
+                        if (iLevel <= Database.AttribMods.Modifier[iTable].Table.Count - 1)
+                            if (iClass <= Database.AttribMods.Modifier[iTable].Table[iLevel].Count - 1)
+                                num = Database.AttribMods.Modifier[iTable].Table[iLevel][iClass];
+                            else
+                                num = 0.0f;
+                        else
+                            num = 0.0f;
+                    else
+                        num = 0.0f;
+                else
+                    num = 0.0f;
             }
 
             return num;

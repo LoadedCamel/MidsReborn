@@ -326,7 +326,7 @@ namespace Mids_Reborn.Forms
             cbPercentageOverride.Items.Add("No");
             cbAttribute.Items.AddRange(Enum.GetNames(myFX.AttribType.GetType()));
             cbAspect.Items.AddRange(Enum.GetNames(myFX.Aspect.GetType()));
-            var num1 = DatabaseAPI.Database.AttribMods.Modifier.Length - 1;
+            var num1 = DatabaseAPI.Database.AttribMods.Modifier.Count - 1;
             for (var index = 0; index <= num1; ++index)
                 cbModifier.Items.Add(DatabaseAPI.Database.AttribMods.Modifier[index].ID);
             cbAffects.Items.Add("None");

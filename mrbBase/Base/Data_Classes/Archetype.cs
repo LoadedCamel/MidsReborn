@@ -161,6 +161,8 @@ namespace mrbBase.Base.Data_Classes
 
         public bool Playable { get; set; }
 
+        public bool Pet { get; set; }
+
         public float BaseRecovery { get; set; }
 
         public float BaseRegen { get; set; }

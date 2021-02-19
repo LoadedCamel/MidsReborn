@@ -347,42 +347,6 @@
     <Compile Include="Forms\frmIncarnate.Designer.cs">
       <DependentUpon>frmIncarnate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SetBonusAssignment.Designer.cs">
-      <DependentUpon>frmImport_SetBonusAssignment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SetAssignments.Designer.cs">
-      <DependentUpon>frmImport_SetAssignments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SalvageReq.Designer.cs">
-      <DependentUpon>frmImport_SalvageReq.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Recipe.Designer.cs">
-      <DependentUpon>frmImport_Recipe.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Powerset.Designer.cs">
-      <DependentUpon>frmImport_Powerset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Power.Designer.cs">
-      <DependentUpon>frmImport_Power.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Entities.Designer.cs">
-      <DependentUpon>frmImport_Entities.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_EnhancementEffects.Designer.cs">
-      <DependentUpon>frmImport_EnhancementEffects.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Archetype.Designer.cs">
-      <DependentUpon>frmImport_Archetype.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportPowerLevels.Designer.cs">
-      <DependentUpon>frmImportPowerLevels.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportEnhSets.Designer.cs">
-      <DependentUpon>frmImportEnhSets.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportEffects.Designer.cs">
-      <DependentUpon>frmImportEffects.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmFloatingStats.Designer.cs">
       <DependentUpon>frmFloatingStats.cs</DependentUpon>
     </Compile>
@@ -394,9 +358,6 @@
     </Compile>
     <Compile Include="Forms\frmEnhData.Designer.cs">
       <DependentUpon>frmEnhData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmCSV.Designer.cs">
-      <DependentUpon>frmCSV.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmBusy.Designer.cs">
       <DependentUpon>frmBusy.cs</DependentUpon>
@@ -2357,9 +2318,6 @@
     <Compile Include="Forms\WindowMenuItems\frmCompare.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmCSV.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\WindowMenuItems\frmData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2400,42 +2358,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ImportExportItems\frmForum.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportEffects.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportEnhSets.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportPowerLevels.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Archetype.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_EnhancementEffects.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Entities.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Power.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Powerset.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Recipe.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SalvageReq.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SetAssignments.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SetBonusAssignment.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmIncarnate.cs">
@@ -2507,9 +2429,6 @@
     <EmbeddedResource Include="Forms\WindowMenuItems\frmCompare.resx">
       <DependentUpon>frmCompare.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmCSV.resx">
-      <DependentUpon>frmCSV.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmData.resx">
       <DependentUpon>frmData.cs</DependentUpon>
     </EmbeddedResource>
@@ -2551,42 +2470,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportExportItems\frmForum.resx">
       <DependentUpon>frmForum.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Archetype.resx">
-      <DependentUpon>frmImport_Archetype.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_EnhancementEffects.resx">
-      <DependentUpon>frmImport_EnhancementEffects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Entities.resx">
-      <DependentUpon>frmImport_Entities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Power.resx">
-      <DependentUpon>frmImport_Power.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Powerset.resx">
-      <DependentUpon>frmImport_Powerset.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Recipe.resx">
-      <DependentUpon>frmImport_Recipe.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_SalvageReq.resx">
-      <DependentUpon>frmImport_SalvageReq.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_SetAssignments.resx">
-      <DependentUpon>frmImport_SetAssignments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_SetBonusAssignment.resx">
-      <DependentUpon>frmImport_SetBonusAssignment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImportEffects.resx">
-      <DependentUpon>frmImportEffects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImportEnhSets.resx">
-      <DependentUpon>frmImportEnhSets.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImportPowerLevels.resx">
-      <DependentUpon>frmImportPowerLevels.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmIncarnate.resx">
       <DependentUpon>frmIncarnate.cs</DependentUpon>

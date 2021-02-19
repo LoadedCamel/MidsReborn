@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -15,6 +16,7 @@ using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Forms
 {
@@ -225,7 +227,7 @@ namespace Mids_Reborn.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (!Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
                 BusyMsg("Re-Indexing && Saving...");
                 foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;

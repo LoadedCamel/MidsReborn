@@ -1733,137 +1733,6 @@ namespace mrbBase.Base.Data_Classes
             return false;
         }
 
-        public bool UpdateFromCSV(string iCSV)
-        {
-            bool flag;
-            if (string.IsNullOrEmpty(iCSV))
-            {
-                flag = false;
-            }
-            else if (NeverAutoUpdate)
-            {
-                flag = true;
-            }
-            else
-            {
-                var array = CSV.ToArray(iCSV);
-                try
-                {
-                    if (array[0].Split(".".ToCharArray())[2].StartsWith("Hide"))
-                    {
-                        array = CSV.ToArray(
-                            iCSV.Replace("'Hidden" + char.ConvertFromUtf32(34) + char.ConvertFromUtf32(34),
-                                "'Hidden'"));
-                    }
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Power Import: Fixed stupid Hide bug.");
-                }
-
-                if (array.Length < 93)
-                {
-                    flag = false;
-                }
-                else
-                {
-                    FullName = array[0];
-                    var strArray = FullName.Split('.');
-                    if (strArray.Length > 2)
-                    {
-                        if (!string.IsNullOrEmpty(strArray[1]))
-                        {
-                            PowerName = strArray[2];
-                        }
-
-                        if (!string.IsNullOrEmpty(strArray[1]))
-                        {
-                            SetName = strArray[1];
-                        }
-
-                        if (!string.IsNullOrEmpty(strArray[0]))
-                        {
-                            GroupName = strArray[0];
-                        }
-                    }
-
-                    var lower = GroupName.ToLower();
-                    if (string.IsNullOrEmpty(ForcedClass))
-                    {
-                        if (lower == "pets")
-                        {
-                            ForcedClass = "Class_Minion_Pets";
-                        }
-                        else if (lower == "mastermind_pets")
-                        {
-                            ForcedClass = "Class_Minion_Henchman";
-                        }
-                    }
-
-                    DisplayName = array[1];
-                    Available = int.Parse(array[2]);
-                    var iReq = array[3];
-                    if (!NeverAutoUpdateRequirements)
-                    {
-                        Requires = ImportRequirementString(iReq);
-                    }
-
-                    ModesRequired = (Enums.eModeFlags) Enums.StringToFlaggedEnum(array[4], ModesRequired);
-                    ModesDisallowed = (Enums.eModeFlags) Enums.StringToFlaggedEnum(array[5], ModesDisallowed);
-                    var str = array[6];
-                    try
-                    {
-                        PowerType = (Enums.ePowerType) Enum.Parse(PowerType.GetType(),
-                            str.Replace("Auto", "Auto_").Replace("Global Boost", "GlobalBoost"), true);
-                    }
-                    catch
-                    {
-                        PowerType = Enums.ePowerType.Auto_;
-                    }
-
-                    Accuracy = float.Parse(array[7]);
-                    AttackTypes = (Enums.eVector) Enums.StringToFlaggedEnum(array[8], AttackTypes);
-                    GroupMembership = Enums.StringToArray(array[9]);
-                    EntitiesAffected = (Enums.eEntity) Enums.StringToFlaggedEnum(array[11], EntitiesAffected);
-                    EntitiesAutoHit = (Enums.eEntity) Enums.StringToFlaggedEnum(array[12], EntitiesAutoHit);
-                    Target = (Enums.eEntity) Enums.StringToFlaggedEnum(array[13], Target);
-                    TargetLoS = !string.Equals(array[14], "NONE", StringComparison.OrdinalIgnoreCase);
-                    Range = float.Parse(array[17]);
-                    TargetSecondary = (Enums.eEntity) Enums.StringToFlaggedEnum(array[18], TargetSecondary, true);
-                    RangeSecondary = float.Parse(array[19]);
-                    EndCost = float.Parse(array[20]);
-                    InterruptTime = float.Parse(array[22]);
-                    CastTimeReal = float.Parse(array[23]);
-                    RechargeTime = float.Parse(array[24]);
-                    ActivatePeriod = float.Parse(array[25]);
-                    EffectArea = (Enums.eEffectArea) Enums.StringToFlaggedEnum(array[26], EffectArea, true);
-                    Radius = float.Parse(array[27]);
-                    Arc = int.Parse(array[28]);
-                    MaxTargets = int.Parse(array[29]);
-                    MaxBoosts = array[30];
-                    CastFlags = (Enums.eCastFlags) Enums.StringToFlaggedEnum(array[31], CastFlags);
-                    AIReport = (Enums.eNotify) Enums.StringToFlaggedEnum(array[32], AIReport, true);
-                    NumCharges = int.Parse(array[33]);
-                    UsageTime = int.Parse(array[34]);
-                    LifeTime = int.Parse(array[35]);
-                    LifeTimeInGame = int.Parse(array[36]);
-                    NumAllowed = int.Parse(array[37]);
-                    DoNotSave = int.Parse(array[38]) > 0;
-                    BoostsAllowed = Enums.StringToArray(array[39]);
-                    CastThroughHold = int.Parse(array[41]) > 0;
-                    IgnoreStrength = int.Parse(array[45]) > 0;
-                    DescShort = array[46];
-                    DescLong = array[47];
-                    BoostBoostable = int.Parse(array[69]) > 0;
-                    BoostUsePlayerLevel = int.Parse(array[70]) > 0;
-                    IgnoreEnh = Enums.StringToEnumArray<Enums.eEnhance>(array[76], typeof(Enums.eEnhance));
-                    flag = true;
-                }
-            }
-
-            return flag;
-        }
-
         public bool IgnoreEnhancement(Enums.eEnhance iEffect)
         {
             if (IgnoreEnh.Length == 0)
@@ -2458,8 +2327,7 @@ namespace mrbBase.Base.Data_Classes
                             Effects[index2].ToWho = Effects[array1[index1]].ToWho;
                         }
 
-                        if (Effects[index2].ToWho == Enums.eToWho.All &&
-                            (EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                        if (Effects[index2].ToWho == Enums.eToWho.All && (EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                         {
                             Effects[index2].ToWho = Enums.eToWho.Target;
                         }
@@ -2585,8 +2453,7 @@ namespace mrbBase.Base.Data_Classes
                             Radius = power.Radius;
                             Target = power.Target;
                             ActivatePeriod = power.ActivatePeriod;
-                            if (DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit == Enums.eEntity.None ||
-                                DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit == Enums.eEntity.Caster)
+                            if (DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit == Enums.eEntity.None || DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit == Enums.eEntity.Caster)
                             {
                                 continue;
                             }

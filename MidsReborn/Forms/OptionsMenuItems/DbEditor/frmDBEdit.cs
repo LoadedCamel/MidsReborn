@@ -100,12 +100,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Hide();
         }
 
-        private void btnCSV_Click(object sender, EventArgs e)
-        {
-            using frmCSV f = new frmCSV();
-            f.ShowDialog();
-        }
-
         private void btnDate_Click(object sender, EventArgs e)
         {
             DatabaseAPI.Database.Date = DateTime.Now;

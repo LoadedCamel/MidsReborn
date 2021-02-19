@@ -42,12 +42,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Label1 = new System.Windows.Forms.Label();
             this.rtApplied = new System.Windows.Forms.RichTextBox();
             this.Label2 = new System.Windows.Forms.Label();
-            this.btnDetailFx = new mrbControls.ImageButton();
-            this.btnSmall = new mrbControls.ImageButton();
-            this.chkOnTop = new mrbControls.ImageButton();
-            this.btnClose = new mrbControls.ImageButton();
             this.panelBars = new System.Windows.Forms.Panel();
             this.panelButtons = new System.Windows.Forms.Panel();
+            this.btnSmall = new mrbControls.ImageButton();
+            this.btnDetailFx = new mrbControls.ImageButton();
+            this.chkOnTop = new mrbControls.ImageButton();
+            this.btnClose = new mrbControls.ImageButton();
             this.panelButtons.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,10 +63,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.lstSets.FullRowSelect = true;
             this.lstSets.HideSelection = false;
             this.lstSets.LargeImageList = this.ilSet;
-            this.lstSets.Location = new System.Drawing.Point(12, 168);
+            this.lstSets.Location = new System.Drawing.Point(13, 200);
             this.lstSets.MultiSelect = false;
             this.lstSets.Name = "lstSets";
-            this.lstSets.Size = new System.Drawing.Size(482, 136);
+            this.lstSets.Size = new System.Drawing.Size(607, 136);
             this.lstSets.SmallImageList = this.ilSet;
             this.lstSets.TabIndex = 0;
             this.lstSets.UseCompatibleStateImageBehavior = false;
@@ -97,11 +97,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.rtxtInfo.BackColor = System.Drawing.Color.Black;
             this.rtxtInfo.ForeColor = System.Drawing.Color.White;
-            this.rtxtInfo.Location = new System.Drawing.Point(12, 308);
+            this.rtxtInfo.Location = new System.Drawing.Point(13, 340);
             this.rtxtInfo.Name = "rtxtInfo";
             this.rtxtInfo.ReadOnly = true;
             this.rtxtInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtxtInfo.Size = new System.Drawing.Size(482, 132);
+            this.rtxtInfo.Size = new System.Drawing.Size(607, 132);
             this.rtxtInfo.TabIndex = 1;
             this.rtxtInfo.Text = "";
             // 
@@ -109,11 +109,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.rtxtFX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.rtxtFX.ForeColor = System.Drawing.Color.White;
-            this.rtxtFX.Location = new System.Drawing.Point(500, 20);
+            this.rtxtFX.Location = new System.Drawing.Point(626, 28);
             this.rtxtFX.Name = "rtxtFX";
             this.rtxtFX.ReadOnly = true;
             this.rtxtFX.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtxtFX.Size = new System.Drawing.Size(329, 366);
+            this.rtxtFX.Size = new System.Drawing.Size(329, 388);
             this.rtxtFX.TabIndex = 3;
             this.rtxtFX.Text = "";
             // 
@@ -121,7 +121,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.Label1.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label1.ForeColor = System.Drawing.Color.White;
-            this.Label1.Location = new System.Drawing.Point(499, 4);
+            this.Label1.Location = new System.Drawing.Point(625, 9);
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(188, 16);
             this.Label1.TabIndex = 4;
@@ -135,7 +135,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.rtApplied.Name = "rtApplied";
             this.rtApplied.ReadOnly = true;
             this.rtApplied.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtApplied.Size = new System.Drawing.Size(482, 140);
+            this.rtApplied.Size = new System.Drawing.Size(607, 174);
             this.rtApplied.TabIndex = 5;
             this.rtApplied.Text = "";
             // 
@@ -149,20 +149,28 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.Label2.TabIndex = 6;
             this.Label2.Text = "Applied Bonus Effects:";
             // 
-            // btnDetailFx
+            // panelBars
             // 
-            this.btnDetailFx.Checked = false;
-            this.btnDetailFx.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.btnDetailFx.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.btnDetailFx.Location = new System.Drawing.Point(0, 3);
-            this.btnDetailFx.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnDetailFx.Name = "btnDetailFx";
-            this.btnDetailFx.Size = new System.Drawing.Size(105, 22);
-            this.btnDetailFx.TabIndex = 21;
-            this.btnDetailFx.TextOff = "FX summary";
-            this.btnDetailFx.TextOn = "FX by source";
-            this.btnDetailFx.Toggle = true;
-            this.btnDetailFx.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnDetailFx_ButtonClicked);
+            this.panelBars.AutoScroll = true;
+            this.panelBars.BackColor = System.Drawing.Color.Transparent;
+            this.panelBars.Location = new System.Drawing.Point(626, 28);
+            this.panelBars.Name = "panelBars";
+            this.panelBars.Size = new System.Drawing.Size(329, 388);
+            this.panelBars.TabIndex = 22;
+            this.panelBars.Visible = false;
+            // 
+            // panelButtons
+            // 
+            this.panelButtons.BackColor = System.Drawing.Color.Black;
+            this.panelButtons.Controls.Add(this.btnSmall);
+            this.panelButtons.Controls.Add(this.btnDetailFx);
+            this.panelButtons.Controls.Add(this.chkOnTop);
+            this.panelButtons.Controls.Add(this.btnClose);
+            this.panelButtons.Location = new System.Drawing.Point(626, 419);
+            this.panelButtons.Margin = new System.Windows.Forms.Padding(0);
+            this.panelButtons.Name = "panelButtons";
+            this.panelButtons.Size = new System.Drawing.Size(329, 53);
+            this.panelButtons.TabIndex = 23;
             // 
             // btnSmall
             // 
@@ -178,6 +186,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnSmall.TextOn = ">>";
             this.btnSmall.Toggle = false;
             this.btnSmall.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnSmall_Click);
+            // 
+            // btnDetailFx
+            // 
+            this.btnDetailFx.Checked = false;
+            this.btnDetailFx.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.btnDetailFx.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.btnDetailFx.Location = new System.Drawing.Point(0, 3);
+            this.btnDetailFx.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnDetailFx.Name = "btnDetailFx";
+            this.btnDetailFx.Size = new System.Drawing.Size(105, 22);
+            this.btnDetailFx.TabIndex = 21;
+            this.btnDetailFx.TextOff = "FX summary";
+            this.btnDetailFx.TextOn = "FX by source";
+            this.btnDetailFx.Toggle = true;
+            this.btnDetailFx.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnDetailFx_ButtonClicked);
             // 
             // chkOnTop
             // 
@@ -208,34 +231,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.btnClose.Toggle = false;
             this.btnClose.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.btnClose_Click);
             // 
-            // panelBars
-            // 
-            this.panelBars.AutoScroll = true;
-            this.panelBars.BackColor = System.Drawing.Color.Transparent;
-            this.panelBars.Location = new System.Drawing.Point(500, 20);
-            this.panelBars.Name = "panelBars";
-            this.panelBars.Size = new System.Drawing.Size(329, 366);
-            this.panelBars.TabIndex = 22;
-            this.panelBars.Visible = false;
-            // 
-            // panelButtons
-            // 
-            this.panelButtons.BackColor = System.Drawing.Color.Black;
-            this.panelButtons.Controls.Add(this.btnSmall);
-            this.panelButtons.Controls.Add(this.btnDetailFx);
-            this.panelButtons.Controls.Add(this.chkOnTop);
-            this.panelButtons.Controls.Add(this.btnClose);
-            this.panelButtons.Location = new System.Drawing.Point(500, 389);
-            this.panelButtons.Margin = new System.Windows.Forms.Padding(0);
-            this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Size = new System.Drawing.Size(329, 53);
-            this.panelButtons.TabIndex = 23;
-            // 
             // frmSetViewer
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(842, 448);
+            this.ClientSize = new System.Drawing.Size(967, 481);
             this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.panelBars);
             this.Controls.Add(this.Label2);

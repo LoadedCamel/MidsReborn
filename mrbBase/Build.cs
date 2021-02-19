@@ -969,12 +969,18 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                     PowerIndex = index1
                 };
                 if (Powers[index1].Level <= MidsContext.Config.ForceLevel)
+                {
                     for (var index2 = 0; index2 < Powers[index1].SlotCount; ++index2)
+                    {
                         i9SetData.Add(ref Powers[index1].Slots[index2].Enhancement);
+                    }
+                }
 
                 i9SetData.BuildEffects(!MidsContext.Config.Inc.DisablePvE ? Enums.ePvX.PvE : Enums.ePvX.PvP);
                 if (!i9SetData.Empty)
+                {
                     SetBonus.Add(i9SetData);
+                }
             }
 
             _setBonusVirtualPower = null;
@@ -988,7 +994,11 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             var nidPowers = DatabaseAPI.NidPowers("set_bonus");
             var setCount = new int[nidPowers.Length];
             for (var index = 0; index < setCount.Length; ++index)
+            {
                 setCount[index] = 0;
+            }
+
+            bool skipEffects = false;
             var effectList = new List<IEffect>();
             foreach (var setBonus in SetBonus)
                 foreach (var setInfo in setBonus.SetInfo)
@@ -997,8 +1007,16 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                         if (power > setCount.Length - 1)
                             throw new IndexOutOfRangeException("power to setBonusArray");
                         ++setCount[power];
+                        
+                        if ((DatabaseAPI.Database.Power[power].Target & Enums.eEntity.MyPet) != 0 && (DatabaseAPI.Database.Power[power].EntitiesAffected & Enums.eEntity.MyPet) != 0)
+                        {
+                            skipEffects = true;
+                        }
+                        //Console.WriteLine($"{DatabaseAPI.Database.Power[power].DisplayName} skip effects? {skipEffects}");
                         if (setCount[power] < 6)
+                        {
                             effectList.AddRange(DatabaseAPI.Database.Power[power].Effects.Select(t => (IEffect)t.Clone()));
+                        }
                     }
 
             power1.Effects = effectList.ToArray();
