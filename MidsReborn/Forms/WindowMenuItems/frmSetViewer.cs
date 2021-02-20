@@ -369,6 +369,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     (idk.EffectType == Enums.eEffectType.Enhancement & 
                      idk.TargetEffectType != Enums.eEffectType.None &
                      idk.TargetEffectType != Enums.eEffectType.EnduranceDiscount &
+                     idk.TargetEffectType != Enums.eEffectType.Heal &
                      idk.TargetEffectType != Enums.eEffectType.Accuracy &
                      idk.TargetEffectType != Enums.eEffectType.RechargeTime))
                 {
@@ -1303,6 +1304,16 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             return (barHeight + 3) * numBars + 20 * numHeaders;
         }
 
+        private float GetMultiScaleMaxValue(float barValue, float[] caps)
+        {
+            for (var i = 0; i < caps.Length; i++)
+            {
+                if (barValue < 0.75 * caps[i]) return caps[i];
+            }
+
+            return caps[caps.Length - 1];
+        }
+
         private void DrawBars()
         {
             var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
@@ -1352,7 +1363,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 if (lBuffs.Count <= 0)
                 {
-                    if (newHeader) offset -= 0;
+                    //if (newHeader) offset -= 0;
                     continue;
                 }
 
@@ -1434,6 +1445,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.Enhancement => 100,
                     Enums.eEffectType.Regeneration => 100,
                     Enums.eEffectType.Resistance => 100,
+                    Enums.eEffectType.Recovery => 100,
                     Enums.eEffectType.Defense => 100,
                     Enums.eEffectType.SpeedRunning => 100,
                     Enums.eEffectType.SpeedJumping => 100,
@@ -1462,7 +1474,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.DamageBuff => MidsContext.Character.Archetype.DamageCap * 100 - 100,
                     Enums.eEffectType.Regeneration => MidsContext.Character.Archetype.RegenCap * 100,
                     Enums.eEffectType.HitPoints => MidsContext.Character.Archetype.HPCap,
-                    Enums.eEffectType.Recovery => 10,
+                    Enums.eEffectType.Recovery => GetMultiScaleMaxValue(Math.Max(fxMagAdjusted, totalsValue), new float[] {50, 100, 250, MidsContext.Character.Archetype.RecoveryCap * 100 + 10}),
                     Enums.eEffectType.Endurance => 50,
                     Enums.eEffectType.SpeedRunning => MidsContext.Character.Totals.MaxRunSpd / Statistics.BaseRunSpeed * 100 + 25,
                     Enums.eEffectType.SpeedJumping => MidsContext.Character.Totals.MaxJumpSpd / Statistics.BaseJumpSpeed * 100 + 25,
@@ -1495,7 +1507,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     DamageType = st.DamageType,
                     MezType = st.MezType
                 });
-                
 
                 nb++;
             }
