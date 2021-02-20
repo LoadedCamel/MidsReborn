@@ -92,29 +92,29 @@ namespace mrbBase.Base.Data_Classes
             {
                 PowerFullName = reader.ReadString();
                 UniqueID = reader.ReadInt32();
-                EffectClass = (Enums.eEffectClass) reader.ReadInt32();
-                EffectType = (Enums.eEffectType) reader.ReadInt32();
-                DamageType = (Enums.eDamage) reader.ReadInt32();
-                MezType = (Enums.eMez) reader.ReadInt32();
-                ETModifies = (Enums.eEffectType) reader.ReadInt32();
+                EffectClass = (Enums.eEffectClass)reader.ReadInt32();
+                EffectType = (Enums.eEffectType)reader.ReadInt32();
+                DamageType = (Enums.eDamage)reader.ReadInt32();
+                MezType = (Enums.eMez)reader.ReadInt32();
+                ETModifies = (Enums.eEffectType)reader.ReadInt32();
                 Summon = reader.ReadString();
                 DelayedTime = reader.ReadSingle();
                 Ticks = reader.ReadInt32();
-                Stacking = (Enums.eStacking) reader.ReadInt32();
+                Stacking = (Enums.eStacking)reader.ReadInt32();
                 BaseProbability = reader.ReadSingle();
-                Suppression = (Enums.eSuppress) reader.ReadInt32();
+                Suppression = (Enums.eSuppress)reader.ReadInt32();
                 Buffable = reader.ReadBoolean();
                 Resistible = reader.ReadBoolean();
-                SpecialCase = (Enums.eSpecialCase) reader.ReadInt32();
+                SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
                 VariableModifiedOverride = reader.ReadBoolean();
-                PvMode = (Enums.ePvX) reader.ReadInt32();
-                ToWho = (Enums.eToWho) reader.ReadInt32();
-                DisplayPercentageOverride = (Enums.eOverrideBoolean) reader.ReadInt32();
+                PvMode = (Enums.ePvX)reader.ReadInt32();
+                ToWho = (Enums.eToWho)reader.ReadInt32();
+                DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
                 Scale = reader.ReadSingle();
                 nMagnitude = reader.ReadSingle();
                 nDuration = reader.ReadSingle();
-                AttribType = (Enums.eAttribType) reader.ReadInt32();
-                Aspect = (Enums.eAspect) reader.ReadInt32();
+                AttribType = (Enums.eAttribType)reader.ReadInt32();
+                Aspect = (Enums.eAspect)reader.ReadInt32();
                 ModifierTable = reader.ReadString();
                 nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
                 NearGround = reader.ReadBoolean();
@@ -142,7 +142,7 @@ namespace mrbBase.Base.Data_Classes
                 AtrOrigRange = reader.ReadSingle();
                 AtrOrigRechargeTime = reader.ReadSingle();
                 AtrOrigSecondaryRange = reader.ReadSingle();
-    
+
                 AtrModAccuracy = reader.ReadSingle();
                 AtrModActivatePeriod = reader.ReadSingle();
                 AtrModArc = reader.ReadInt32();
@@ -155,7 +155,7 @@ namespace mrbBase.Base.Data_Classes
                 AtrModRange = reader.ReadSingle();
                 AtrModRechargeTime = reader.ReadSingle();
                 AtrModSecondaryRange = reader.ReadSingle();
-    
+
                 var conditionalCount = reader.ReadInt32();
                 for (var cIndex = 0; cIndex < conditionalCount; cIndex++)
                 {
@@ -925,7 +925,7 @@ namespace mrbBase.Base.Data_Classes
                     sToHit = " requires ToHit check";
                 }
             }
-            
+
             if (ProcsPerMinute > 0 && Probability < 0.01)
             {
                 sChance = ProcsPerMinute + "PPM";

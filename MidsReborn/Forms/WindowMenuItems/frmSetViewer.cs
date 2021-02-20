@@ -463,6 +463,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private readonly Dictionary<string, Dictionary<string, Coord2D[]>> ShrinkExpandItemsPos;
         private readonly List<BarSettings> EffectListOrder;
 
+
         public frmSetViewer(frmMain iParent)
         {
             Move += frmSetViewer_Move;
@@ -755,7 +756,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                                     TargetEffectType = fx.ETModifies,
                                 };
 
-                                if (!ret.ContainsKey(identKey)) ret.Add(identKey, new List<FXSourceData>());
+                                if (!ret.ContainsKey(identKey))
+                                {
+                                    ret.Add(identKey, new List<FXSourceData>());
+                                }
+
                                 ret[identKey].Add(new FXSourceData
                                 {
                                     Fx = fx,
@@ -1017,9 +1022,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             case Enums.eEntity.Caster:
                                 fxBlockStr += @" to Self";
                                 break;
-                            case Enums.eEntity.Foe:
-                                fxBlockStr += @" to Enemy";
-                                break;
                         }
                         if (e.EnhSet != "" & e.Power != "" & !e.IsFromEnh)
                         {
@@ -1085,7 +1087,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             var barData = BarsFX[bar.Name];
             var barValues = bar.GetValues();
-
+            var sEffects = GetEffectSources();
             var overlayVector = OverlayText.Vector(barData);
             var overlayDmgType = OverlayText.DamageType(barData);
             var overlayMezType = OverlayText.MezType(barData);
@@ -1093,7 +1095,32 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var overlayValuePercent = OverlayText.HasPercentage(barData);
             var plusSignEnabled = OverlayText.HasPlusSign(barData);
 
-            var ttext = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{overlayMezType}{overlayTargetEffect}\r\nFrom sets: {(plusSignEnabled & barValues["setbuffs"] > 0 ? "+" : "")}{barValues["setbuffs"]:##0.##}{(overlayValuePercent ? "%" : "")}";
+            var ttext = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{overlayMezType}{overlayTargetEffect}";
+            if (barValues["setbuffs"] > 0)
+            {
+                ttext += $"\r\nFrom Sets: {(plusSignEnabled ? "+" : "")}{barValues["setbuffs"]:##0.##}{(overlayValuePercent ? "%" : "")}";
+            }
+
+            var fxPetMagSum = 0.0;
+            var fxSelfMagSum = 0.0;
+            var stext = string.Empty;
+            var fxValue = sEffects.Where(x => OverlayText.Vector(x.Key) == overlayVector).Select(e => e.Value).FirstOrDefault();
+            if (fxValue != null)
+            {
+                fxPetMagSum = fxValue.Where(v => v.AffectedEntity == Enums.eEntity.MyPet && v.IsFromEnh).Sum(x => x.Mag);
+                
+                if (fxPetMagSum > 0)
+                {
+                    stext += $" (Pets: {fxPetMagSum:P0})";
+                }
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(stext))
+            {
+                ttext += stext;
+            }
+            
             if (barValues["totalsvalue"] > 0) // & Math.Abs(barValues["setbuffs"] - barValues["totalsvalue"]) > float.Epsilon)
             {
                 ttext += $"\r\nTotal: {(plusSignEnabled ? "+" : "")}{barValues["totalsvalue"]:##0.##}{(overlayValuePercent ? "%" : "")}";
@@ -1280,7 +1307,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
             var displayStats = MidsContext.Character.DisplayStats;
-
             var l1Group = "";
             var nh = 0; // Nb of headers
             var nb = 0; // Nb of bars
@@ -1456,6 +1482,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 var idk = st.GetIdentifierKey();
                 bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
+                
                 bar.OverlayText = $"{fxMagAdjusted:##0.##}{(OverlayText.HasPercentage(idk) ? "%" : "")}";
 
                 barLabel.Text = OverlayText.ShortLabel(idk);
@@ -1468,6 +1495,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     DamageType = st.DamageType,
                     MezType = st.MezType
                 });
+                
 
                 nb++;
             }
