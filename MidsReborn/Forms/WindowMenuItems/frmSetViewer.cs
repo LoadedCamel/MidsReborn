@@ -1096,6 +1096,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var overlayValuePercent = OverlayText.HasPercentage(barData);
             var plusSignEnabled = OverlayText.HasPlusSign(barData);
 
+            if (barData.EffectType == Enums.eEffectType.Recovery)
+            {
+                barValues["totalsvalue"] += 100;
+            }
+
             var ttext = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{overlayMezType}{overlayTargetEffect}";
             if (barValues["setbuffs"] > 0)
             {
@@ -1114,7 +1119,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 {
                     stext += $" (Pets: {fxPetMagSum:P0})";
                 }
-
             }
 
             if (!string.IsNullOrWhiteSpace(stext))
@@ -1410,7 +1414,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.Regeneration => displayStats.HealthRegenPercent(false),
                     Enums.eEffectType.HitPoints => displayStats.HealthHitpointsNumeric(false),
                     Enums.eEffectType.Absorb => Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints),
-                    Enums.eEffectType.Recovery => displayStats.EnduranceRecoveryNumeric - MidsContext.Character.Archetype.BaseRecovery,
+                    Enums.eEffectType.Recovery => displayStats.EnduranceRecoveryPercentage(false) - 100,
                     Enums.eEffectType.Endurance => displayStats.EnduranceMaxEnd - 100,
                     Enums.eEffectType.SpeedRunning => displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
                     Enums.eEffectType.SpeedJumping => displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
@@ -1474,7 +1478,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.DamageBuff => MidsContext.Character.Archetype.DamageCap * 100 - 100,
                     Enums.eEffectType.Regeneration => MidsContext.Character.Archetype.RegenCap * 100,
                     Enums.eEffectType.HitPoints => MidsContext.Character.Archetype.HPCap,
-                    Enums.eEffectType.Recovery => GetMultiScaleMaxValue(Math.Max(fxMagAdjusted, totalsValue), new float[] {50, 100, 250, MidsContext.Character.Archetype.RecoveryCap * 100 + 10}),
+                    Enums.eEffectType.Recovery => GetMultiScaleMaxValue(Math.Max(fxMagAdjusted, totalsValue), new float[] {50, 100, 260, 510, 760}),
                     Enums.eEffectType.Endurance => 50,
                     Enums.eEffectType.SpeedRunning => MidsContext.Character.Totals.MaxRunSpd / Statistics.BaseRunSpeed * 100 + 25,
                     Enums.eEffectType.SpeedJumping => MidsContext.Character.Totals.MaxJumpSpd / Statistics.BaseJumpSpeed * 100 + 25,
