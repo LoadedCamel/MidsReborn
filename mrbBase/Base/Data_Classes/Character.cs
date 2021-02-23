@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 
@@ -892,9 +891,12 @@ namespace mrbBase.Base.Data_Classes
                             Color.FromArgb(byte.MaxValue, byte.MaxValue, 0));
                         break;
                     case Enums.eType.SetO:
-                        popupData1.Sections[index1]
-                            .Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false),
-                                PopUp.Colors.Invention);
+                        if (!DatabaseAPI.EnhIsNaturallyAttuned(iSlot.Enh))
+                        {
+                            popupData1.Sections[index1]
+                                .Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false),
+                                    PopUp.Colors.Invention);
+                        }
                         break;
                 }
 
@@ -1148,16 +1150,16 @@ namespace mrbBase.Base.Data_Classes
             if (rIdx < 0) return section1;
 
             var recipe = DatabaseAPI.Database.Recipes[rIdx];
-            if (recipe.ExternalName.Contains("Superior")) return section1;
+            //if (recipe.ExternalName.Contains("Superior")) return section1;
             var index1 = -1;
-            var num1 = 52;
-            var num2 = 0;
-            for (var index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
+            var lvlUbound = 52;
+            var lvlLbound = 0;
+            for (var index2 = 0; index2 < recipe.Item.Length; index2++)
             {
-                if (recipe.Item[index2].Level > num2)
-                    num2 = recipe.Item[index2].Level;
-                if (recipe.Item[index2].Level < num1)
-                    num1 = recipe.Item[index2].Level;
+                if (recipe.Item[index2].Level > lvlLbound)
+                    lvlLbound = recipe.Item[index2].Level;
+                if (recipe.Item[index2].Level < lvlUbound)
+                    lvlUbound = recipe.Item[index2].Level;
                 if (recipe.Item[index2].Level != iLevel)
                     continue;
                 index1 = index2;
@@ -1167,7 +1169,7 @@ namespace mrbBase.Base.Data_Classes
             if (index1 < 0)
             {
                 iLevel = Enhancement.GranularLevelZb(iLevel, 0, 49);
-                for (var index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
+                for (var index2 = 0; index2 < recipe.Item.Length; index2++)
                 {
                     if (recipe.Item[index2].Level != iLevel)
                         continue;
@@ -1179,10 +1181,15 @@ namespace mrbBase.Base.Data_Classes
             if (index1 < 0) return section1;
 
             var recipeEntry = recipe.Item[index1];
-            var str = string.Empty;
-            if (recipe.EnhIdx > -1)
-                str = " - " + DatabaseAPI.Database.Enhancements[recipe.EnhIdx].LongName;
-            section1.Add("Recipe" + str, PopUp.Colors.Title);
+            if (recipe.EnhIdx > -1 & !recipe.IsGeneric & !recipe.InternalName.StartsWith("G_"))
+            {
+                section1.Add($"Recipe - {DatabaseAPI.Database.Enhancements[recipe.EnhIdx].LongName}", PopUp.Colors.Title);
+            }
+            else
+            {
+                section1.Add($"Materials:", PopUp.Colors.Title);
+            }
+
             if (recipeEntry.BuyCost > 0)
                 section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}",
                     PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
@@ -1193,9 +1200,9 @@ namespace mrbBase.Base.Data_Classes
                 section1.Add("Craft Cost (Memorized):", PopUp.Colors.Effect, $"{recipeEntry.CraftCostM:###,###,##0}",
                     PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
             for (var index2 = 0;
-                index2 <= recipeEntry.Salvage.Length - 1 &&
+                index2 < recipeEntry.Salvage.Length &&
                 (index2 == 0 || recipeEntry.SalvageIdx[index2] != recipeEntry.SalvageIdx[0]);
-                ++index2)
+                index2++)
             {
                 if (recipeEntry.SalvageIdx[index2] < 0)
                     continue;
