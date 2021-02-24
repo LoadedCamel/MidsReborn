@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -344,7 +345,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (_recipeListPrevSelected == -1)
             {
                 EnableRecipeEntryControls();
-                _recipeListPrevSelected = lvDPA.SelectedItems[0].Index;
+                _recipeListPrevSelected = lvDPA.SelectedItems.Count > 0
+                    ? lvDPA.SelectedItems[0].Index
+                    : -1;
             }
             udStaticIndex.Value = rIndex;
             lvDPA.Items[lvDPA.Items.Count - 1].Selected = true;
@@ -355,8 +358,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbIsGeneric.Checked = true;
             cbEnh.Select();
             _noUpdate = false;
-
-            //Debug.WriteLine($"RAdd: rIndex: {rIndex}\r\nEnhIdx: {_tempRecipes[rIndex].EnhIdx}\r\nEnhancement: '{_tempRecipes[rIndex].Enhancement}'");
         }
 
         private void btnRDel_Click(object sender, EventArgs e)
@@ -431,9 +432,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_noUpdate || RecipeID() <= -1 || cbEnh.SelectedIndex <= -1) return;
             var recipe = _tempRecipes[RecipeID()];
-            recipe.EnhIdx = cbEnh.SelectedText.ToLower() == "none" | cbEnh.SelectedIndex == _noEnhancementIdx
+            var selectedItem = cbEnh.SelectedIndex >= 0 ? cbEnh.SelectedItem.ToString() : "";
+            recipe.EnhIdx = selectedItem.ToLowerInvariant() == "none" | cbEnh.SelectedIndex == _noEnhancementIdx
                 ? -1
-                : _tempEnhancements.TryFindIndex(e => e.UID == cbEnh.SelectedText);
+                : _tempEnhancements.TryFindIndex(enh => enh.UID == selectedItem);
             if (recipe.EnhIdx > -1)
             {
                 recipe.Enhancement = cbEnh.Text;
@@ -452,8 +454,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 recipe.Enhancement = "";
             }
-
-            //Debug.WriteLine($"cbEnh_cb: rIndex: {RecipeID()}\r\nrecipe.EnhIdx: {recipe.EnhIdx}");
 
             UpdateListItem(RecipeID());
         }
@@ -618,7 +618,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             
             var num = _tempRecipes[rId].Item[_tempRecipes[rId].Item.Length - 1].Level + 1;
             if (num >= nMax) return;
-            for (var index = num; index < nMax; index++)
+            for (var index = num; index <= nMax; index++)
             {
                 _tempRecipes[rId].Item = (Recipe.RecipeEntry[]) Utils.CopyArray(
                     _tempRecipes[rId].Item,
@@ -731,22 +731,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             PopulateComboBoxList(ref cbSal1);
             udSal1.Value = 1;
-            udSal1.Visible = false;
+            udSal1.Visible = true;
             cbSal1.SelectedIndex = recipeEntry.SalvageIdx[1] + 1;
 
             PopulateComboBoxList(ref cbSal2);
             udSal2.Value = 1;
-            udSal2.Visible = false;
+            udSal2.Visible = true;
             cbSal2.SelectedIndex = recipeEntry.SalvageIdx[2] + 1;
 
             PopulateComboBoxList(ref cbSal3);
             udSal3.Value = 1;
-            udSal3.Visible = false;
+            udSal3.Visible = true;
             cbSal3.SelectedIndex = recipeEntry.SalvageIdx[3] + 1;
 
             PopulateComboBoxList(ref cbSal4);
             udSal4.Value = 1;
-            udSal4.Visible = false;
+            udSal4.Visible = true;
             cbSal4.SelectedIndex = recipeEntry.SalvageIdx[4] + 1;
 
             _noUpdate = false;
@@ -791,11 +791,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (dupIndex > -1 & eIndex > -1)
             {
-                lstItems.SelectedIndex = dupIndex;
+                lstItems.SelectedIndex = Math.Min(lstItems.Items.Count - 1, dupIndex);
             }
             else
             {
-                lstItems.SelectedIndex = si;
+                lstItems.SelectedIndex = Math.Min(lstItems.Items.Count - 1, si);
             }
         }
 
@@ -887,7 +887,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var rId = RecipeID();
             var eId = EntryID();
-            //Debug.WriteLine($"udCostX_Leave: noUpdate: {_noUpdate}, rId: {rId}, eId: {eId}");
             if (_noUpdate || rId < 0 || eId < 0) return;
             var recipeItem = _tempRecipes[rId].Item[eId];
             recipeItem.Level = MinMax(udLevel) - 1;
