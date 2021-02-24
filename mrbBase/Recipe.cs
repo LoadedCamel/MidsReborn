@@ -55,7 +55,6 @@ namespace mrbBase
                         Item[index1].Salvage[index2] = reader.ReadString();
                         Item[index1].Count[index2] = reader.ReadInt32();
                         Item[index1].SalvageIdx[index2] = reader.ReadInt32();
-                        Item[index1].RecipeIdx[index2] = reader.ReadInt32();
                     }
                 }
 
@@ -114,7 +113,7 @@ namespace mrbBase
                     writer.Write(r.Salvage[index2]);
                     writer.Write(r.Count[index2]);
                     writer.Write(r.SalvageIdx[index2]);
-                    writer.Write(r.RecipeIdx[index2]);
+                    //writer.Write(r.RecipeIdx[index2]);
                 }
             }
             //writer.Write(IsGeneric);
@@ -165,9 +164,7 @@ namespace mrbBase
             public int Level;
             public string[] Salvage = new string[7];
             public int[] SalvageIdx = new int[7];
-            public string[] Recipe = new string[7];
-            public int[] RecipeIdx = new int[7];
-
+ 
             public RecipeEntry()
             {
                 for (var index = 0; index <= 6; ++index)
@@ -175,8 +172,6 @@ namespace mrbBase
                     Salvage[index] = string.Empty;
                     SalvageIdx[index] = -1;
                     Count[index] = 0;
-                    Recipe[index] = "";
-                    RecipeIdx[index] = -1;
                 }
             }
 
@@ -195,8 +190,6 @@ namespace mrbBase
                     Salvage[index] = iRe.Salvage[index];
                     SalvageIdx[index] = iRe.SalvageIdx[index];
                     Count[index] = iRe.Count[index];
-                    Recipe[index] = "";
-                    RecipeIdx[index] = -1;
                 }
             }
 

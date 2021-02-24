@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using mrbBase.Base.Data_Classes;
@@ -603,6 +604,7 @@ namespace mrbBase
         public static bool EnhIsATO(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.nIDSet == -1) return false;
@@ -627,6 +629,7 @@ namespace mrbBase
         public static bool EnhIsWinterEventE(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.nIDSet == -1) return false;
@@ -643,6 +646,7 @@ namespace mrbBase
         public static bool EnhIsMovieE(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.nIDSet == -1) return false;
@@ -655,6 +659,7 @@ namespace mrbBase
         public static bool EnhIsIO(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
 
@@ -667,6 +672,7 @@ namespace mrbBase
         public static bool EnhCanReceiveCatalyst(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
 
@@ -677,6 +683,7 @@ namespace mrbBase
         public static bool EnhIsSuperior(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.RecipeIDX == -1) return false;
@@ -690,6 +697,7 @@ namespace mrbBase
         public static bool EnhIsSuperiorIO(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.RecipeIDX == -1) return false;
@@ -702,6 +710,7 @@ namespace mrbBase
         public static bool EnhIsNaturallyAttuned(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || EnhIsMovieE(enhIdx);
         }
@@ -712,6 +721,7 @@ namespace mrbBase
         public static bool CanCatalystUpgradeSuperior(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             Recipe.RecipeRarity enhRarity;
@@ -829,6 +839,77 @@ namespace mrbBase
                 return iName.IndexOf("Superior_", StringComparison.OrdinalIgnoreCase) > -1;
 
             return iName.IndexOf("Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
+        }
+
+        private static int GetRecipeMultiplier(string recipeName)
+        {
+            var r = new Regex(@"\(x([1-9][0-9]+)\)");
+            if (!r.IsMatch(recipeName)) return 1;
+
+            var m = r.Match(recipeName);
+
+            return Convert.ToInt32(m.Groups[0].Captures[0].Value);
+        }
+
+        private static string ReplaceRecipeNameMultiplier(string recipeName)
+        {
+            var r = new Regex(@"\(x([1-9][0-9]+)\)");
+            return !r.IsMatch(recipeName)
+                ? recipeName
+                : r.Replace(recipeName, "(x1)");
+        }
+
+        public static Recipe GetSalvageRecipe(string salvageName)
+        {
+            // Match recipes by external name
+            var matchingRecipes = Database.Recipes
+                .Where(e => e.ExternalName.ToLowerInvariant().Contains(salvageName.ToLowerInvariant()))
+                .ToList();
+
+            if (matchingRecipes.Count <= 0) return new Recipe
+            {
+                ExternalName = "",
+                InternalName = "",
+                IsVirtual = true,
+                IsHidden = true,
+                Enhancement = "",
+                EnhIdx = -1,
+                Rarity = Recipe.RecipeRarity.Common,
+                Item = new Recipe.RecipeEntry[] { }
+            };
+
+            // For each match, keep only highest level recipe entry
+            var matchingRecipesEntries = matchingRecipes
+                .Select(e => e.Item.OrderByDescending(i => i.Level).First())
+                .ToList();
+
+            // Merge matching recipes and recipeEntries
+            var dictEntries = matchingRecipes
+                .Select((k, i) => new {k, v = matchingRecipesEntries[i]})
+                .ToDictionary(x => x.k, x => x.v);
+
+            // Keep only the lowest multiplier pair (e.g. (x5) )
+            var re = dictEntries
+                .OrderBy(e => GetRecipeMultiplier(e.Key.ExternalName))
+                .First();
+
+            // Normalize salvage counts (divide by multiplier)
+            var multiplier = GetRecipeMultiplier(re.Key.ExternalName);
+            foreach (var s in re.Value.Count)
+            {
+                dictEntries[re.Key].Count[s] = (int) Math.Ceiling((decimal)s / multiplier);
+            }
+
+            return new Recipe
+            {
+                ExternalName = ReplaceRecipeNameMultiplier(re.Key.ExternalName),
+                InternalName = re.Key.InternalName,
+                IsVirtual = true,
+                Enhancement = "",
+                EnhIdx = -1,
+                Rarity = re.Key.Rarity,
+                Item = new[] {re.Value}
+            };
         }
 
         public static int GetEnhancementByUIDName(string iName)
