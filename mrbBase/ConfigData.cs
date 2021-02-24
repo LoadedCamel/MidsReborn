@@ -704,7 +704,7 @@ namespace mrbBase
                 RTFBase = 16;
                 RTFBold = true;
                 ColorBackgroundHero = Color.Black;
-                ColorBackgroundVillain = Color.FromArgb(32, 0, 0);
+                ColorBackgroundVillain = Color.Black;
                 ColorEnhancement = Color.FromArgb(0, byte.MaxValue, 0);
                 ColorFaded = Color.FromArgb(192, 192, 192);
                 ColorInvention = Color.FromArgb(0, byte.MaxValue, byte.MaxValue);

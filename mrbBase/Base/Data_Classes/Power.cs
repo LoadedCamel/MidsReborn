@@ -1060,9 +1060,7 @@ namespace mrbBase.Base.Data_Classes
                         numArray1[index1] += -100;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & ((Effects[index1].Mag > 0.0) |
-                                                                        (Effects[index1].EffectType ==
-                                                                         Enums.eEffectType.Mez)))
+                    if ((Effects[index1].ToWho == Enums.eToWho.Self) & ((Effects[index1].Mag > 0.0) | (Effects[index1].EffectType == Enums.eEffectType.Mez)))
                     {
                         numArray1[index1] += 10;
                     }
@@ -1072,8 +1070,17 @@ namespace mrbBase.Base.Data_Classes
                         numArray1[index1] += 10;
                     }
 
-                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].Mag > 0.0) &
-                        Effects[index1].Absorbed_Effect)
+                    if ((Effects[index1].ToWho == Enums.eToWho.Ally) & (Effects[index1].Mag < 0.0))
+                    {
+                        numArray1[index1] += 10;
+                    }
+
+                    if ((Effects[index1].ToWho == Enums.eToWho.Target) & (Effects[index1].Mag > 0.0) & Effects[index1].Absorbed_Effect)
+                    {
+                        numArray1[index1] += 10;
+                    }
+
+                    if ((Effects[index1].ToWho == Enums.eToWho.Ally) & (Effects[index1].Mag > 0.0) & Effects[index1].Absorbed_Effect)
                     {
                         numArray1[index1] += 10;
                     }
@@ -1271,7 +1278,7 @@ namespace mrbBase.Base.Data_Classes
             for (var index = 0; index <= Effects.Length - 1; ++index)
             {
                 var applies = false;
-                if (!((!MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvP)) | (MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvE))) || !(((Effects[index].Duration > 0.0) | (Effects[index].EffectType == Enums.eEffectType.EntCreate)) &                      (Effects[index].EffectClass != Enums.eEffectClass.Ignored)))
+                if (!((!MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvP)) | (MidsContext.Config.Inc.DisablePvE & (Effects[index].PvMode != Enums.ePvX.PvE))) || !(((Effects[index].Duration > 0.0) | (Effects[index].EffectType == Enums.eEffectType.EntCreate)) & (Effects[index].EffectClass != Enums.eEffectClass.Ignored)))
                 {
                     continue;
                 }
@@ -1550,14 +1557,14 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 }
 
-                if (iEffect == Enums.eEffectType.Mez && Effects[iIndex].ToWho != Enums.eToWho.Target)
+                if (iEffect == Enums.eEffectType.Mez && (Effects[iIndex].ToWho != Enums.eToWho.Target || Effects[iIndex].ToWho != Enums.eToWho.Ally))
                 {
                     if ((Enums.eMez) subType == Effects[iIndex].MezType || subType < 0)
                     {
                         shortFx.Add(iIndex, Effects[iIndex].Mag);
                     }
                 }
-                else if (Effects[iIndex].ToWho != Enums.eToWho.Target)
+                else if (Effects[iIndex].ToWho != Enums.eToWho.Target || Effects[iIndex].ToWho != Enums.eToWho.Ally)
                 {
                     shortFx.Add(iIndex, Effects[iIndex].Mag);
                 }
@@ -1571,15 +1578,37 @@ namespace mrbBase.Base.Data_Classes
             bool includeDelayed = false,
             bool onlySelf = false,
             bool onlyTarget = false,
+            bool onlyAlly = false,
             bool maxMode = false)
         {
             var shortFx = new Enums.ShortFX();
             for (var iIndex = 0; iIndex <= Effects.Length - 1; ++iIndex)
             {
-                var flag = onlySelf == onlyTarget || !onlySelf && Effects[iIndex].ToWho == Enums.eToWho.Target ||
-                           !onlyTarget && Effects[iIndex].ToWho == Enums.eToWho.Self ||
-                           onlySelf & (Effects[iIndex].ToWho != Enums.eToWho.Target) ||
-                           onlyTarget & (Effects[iIndex].ToWho != Enums.eToWho.Self);
+                bool flag = false;
+                if (!onlySelf & !onlyAlly && Effects[iIndex].ToWho == Enums.eToWho.Target)
+                {
+                    flag = true;
+                }
+                else if (!onlyTarget & !onlyAlly && Effects[iIndex].ToWho == Enums.eToWho.Self)
+                {
+                    flag = true;
+                }
+                else if (!onlySelf & !onlyTarget && Effects[iIndex].ToWho == Enums.eToWho.Ally)
+                {
+                    flag = true;
+                }
+                else if (onlySelf && Effects[iIndex].ToWho != Enums.eToWho.Ally && Effects[iIndex].ToWho != Enums.eToWho.Target)
+                {
+                    flag = true;
+                }
+                else if (onlyTarget && Effects[iIndex].ToWho != Enums.eToWho.Ally && Effects[iIndex].ToWho != Enums.eToWho.Self)
+                {
+                    flag = true;
+                }
+                else if (onlyAlly && Effects[iIndex].ToWho != Enums.eToWho.Self && Effects[iIndex].ToWho != Enums.eToWho.Target)
+                {
+                    flag = true;
+                }
                 if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
                     Effects[iIndex].Aspect == Enums.eAspect.Max ||
                     (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode &
@@ -1706,6 +1735,17 @@ namespace mrbBase.Base.Data_Classes
         {
             for (var index = 0; index <= Effects.Length - 1; ++index)
                 if (Effects[index].EffectType == iEffect && Effects[index].ToWho == Enums.eToWho.Self)
+                {
+                    return true;
+                }
+
+            return false;
+        }
+
+        public bool AffectsAlly(Enums.eEffectType iEffect)
+        {
+            for (var index = 0; index <= Effects.Length - 1; ++index)
+                if (Effects[index].EffectType == iEffect && Effects[index].ToWho == Enums.eToWho.Ally)
                 {
                     return true;
                 }
@@ -2178,13 +2218,14 @@ namespace mrbBase.Base.Data_Classes
 
                     if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend)
                     {
-                        effect.ToWho = Enums.eToWho.Self;
+                        effect.ToWho = Enums.eToWho.Ally;
                         if (effect.Stacking == Enums.eStacking.Yes)
                         {
                             effect.Scale *= stacking;
                         }
                     }
 
+                    
                     if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet)
                     {
                         effect.ToWho = Enums.eToWho.Target;
@@ -2213,11 +2254,9 @@ namespace mrbBase.Base.Data_Classes
                     Effects[num1 + length] = effect;
                 }
             }
-            else if (isGrantPower || source.EntitiesAffected != Enums.eEntity.Caster ||
-                     source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate)
+            else if (isGrantPower || source.EntitiesAffected != Enums.eEntity.Caster || source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate)
             {
-                if (source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate &&
-                    source.Effects[effectId].nSummon > -1)
+                if (source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate && source.Effects[effectId].nSummon > -1)
                 {
                     Array.Resize(ref array, array.Length + 1);
                     array[array.Length - 1] = effectId;
@@ -2240,7 +2279,7 @@ namespace mrbBase.Base.Data_Classes
 
                 if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend)
                 {
-                    effect.ToWho = Enums.eToWho.Self;
+                    effect.ToWho = Enums.eToWho.Ally;
                     if (effect.Stacking == Enums.eStacking.Yes)
                     {
                         effect.Scale *= stacking;
@@ -2327,9 +2366,13 @@ namespace mrbBase.Base.Data_Classes
                             Effects[index2].ToWho = Effects[array1[index1]].ToWho;
                         }
 
-                        if (Effects[index2].ToWho == Enums.eToWho.All && (EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                        if (Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend))
                         {
                             Effects[index2].ToWho = Enums.eToWho.Target;
+                        }
+                        else if (Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe))
+                        {
+                            Effects[index2].ToWho = Enums.eToWho.Ally;
                         }
 
                         Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
