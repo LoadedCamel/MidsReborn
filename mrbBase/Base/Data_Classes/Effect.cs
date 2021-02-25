@@ -444,7 +444,7 @@ namespace mrbBase.Base.Data_Classes
                 bool flag;
                 if (VariableModifiedOverride)
                 {
-                    flag = true;
+                    flag = false;
                 }
                 else
                 {
@@ -468,11 +468,11 @@ namespace mrbBase.Base.Data_Classes
                         }
                     }
 
-                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes))
+                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes))
                     {
                         flag = true;
                     }
-                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes))
+                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes))
                     {
                         flag = true;
                     }
@@ -482,7 +482,7 @@ namespace mrbBase.Base.Data_Classes
                         {
                             for (var index = 0; index <= power.Effects.Length - 1; ++index)
                             {
-                                if ((power.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (power.Effects[index].ToWho == Enums.eToWho.Target) & (power.Effects[index].Stacking == Enums.eStacking.Yes))
+                                if ((power.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (power.Effects[index].ToWho == Enums.eToWho.Target | power.Effects[index].ToWho == Enums.eToWho.Ally) & (power.Effects[index].Stacking == Enums.eStacking.Yes))
                                 {
                                     return false;
                                 }
@@ -700,6 +700,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     Enums.eToWho.Target => " to Tgt",
                     Enums.eToWho.Self => " to Slf",
+                    Enums.eToWho.Ally => " to Ally",
                     _ => str3
                 };
             if (useBaseProbability)
@@ -919,6 +920,10 @@ namespace mrbBase.Base.Data_Classes
                 else if (ToWho == Enums.eToWho.Self)
                 {
                     sTarget = " to Self";
+                }
+                else if (ToWho == Enums.eToWho.Ally)
+                {
+                    sTarget = " to Ally";
                 }
                 if (RequiresToHitCheck)
                 {

@@ -83,7 +83,7 @@ namespace Mids_Reborn.Forms
             lblAffectsCaster.Text = "";
             var power = myFX.GetPower();
             if (power != null && (power.EntitiesAutoHit & Enums.eEntity.Caster) > Enums.eEntity.None)
-                lblAffectsCaster.Text = "Power also affects Self";
+                lblAffectsCaster.Text = @"Power also affects Self";
             UpdateFXText();
         }
 
@@ -240,7 +240,7 @@ namespace Mids_Reborn.Forms
             var power = fx.GetPower();
             FillPowerAttribs();
             if (power != null && (power.EntitiesAutoHit & Enums.eEntity.Caster) > Enums.eEntity.None)
-                lblAffectsCaster.Text = "Power also affects Self";
+                lblAffectsCaster.Text = @"Power also affects Self";
             cbTarget.SelectedIndex = (int)fx.PvMode;
             chkStack.Checked = fx.Stacking == Enums.eStacking.Yes;
             chkFXBuffable.Checked = !fx.Buffable;
@@ -332,6 +332,7 @@ namespace Mids_Reborn.Forms
             cbAffects.Items.Add("None");
             cbAffects.Items.Add("Target");
             cbAffects.Items.Add("Self");
+            cbAffects.Items.Add("Ally");
             foreach (var effectId in DatabaseAPI.Database.EffectIds)
             {
                 cmbEffectId.Items.Add(effectId);

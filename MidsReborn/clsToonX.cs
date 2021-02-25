@@ -318,7 +318,7 @@ namespace Mids_Reborn
                     if (tPwr.Effects[shortFx.Index[shortFxIdx]].Absorbed_PowerType == Enums.ePowerType.GlobalBoost)
                         continue;
                     var effect = tPwr.Effects[shortFx.Index[shortFxIdx]];
-                    if (!((effect.ToWho == Enums.eToWho.Self) | (effect.ToWho != Enums.eToWho.Target)))
+                    if (!((effect.ToWho == Enums.eToWho.Self) | (effect.ToWho != Enums.eToWho.Target) | (effect.ToWho != Enums.eToWho.Ally)))
                         continue;
                     var pIdx = tPwr.PowerIndex;
                     if (!enhancementPass)
@@ -719,11 +719,9 @@ namespace Mids_Reborn
             }
         }
 
-        private static void HandleGrantPowerIncarnate(ref IPower powerMath, IEffect effect1, IPower[] buffedPowers,
-            int effIdx, Archetype at, int hIDX)
+        private static void HandleGrantPowerIncarnate(ref IPower powerMath, IEffect effect1, IPower[] buffedPowers, int effIdx, Archetype at, int hIDX)
         {
-            powerMath.AbsorbEffects(DatabaseAPI.Database.Power[effect1.nSummon], effect1.Duration, 0.0f, at, 1, true,
-                effIdx);
+            powerMath.AbsorbEffects(DatabaseAPI.Database.Power[effect1.nSummon], effect1.Duration, 0.0f, at, 1, true, effIdx);
             for (var index2 = 0; index2 <= powerMath.Effects.Length - 1; ++index2)
             {
                 powerMath.Effects[index2].ToWho = Enums.eToWho.Target;
@@ -733,12 +731,10 @@ namespace Mids_Reborn
                 powerMath.Effects[index2].Ticks = effect1.Ticks;
             }
 
-            if (hIDX <= -1)
-                return;
+            if (hIDX <= -1) return;
             {
                 var length2 = buffedPowers[hIDX].Effects.Length;
-                buffedPowers[hIDX].AbsorbEffects(DatabaseAPI.Database.Power[effect1.nSummon], effect1.Duration, 0.0f,
-                    at, 1, true, effIdx);
+                buffedPowers[hIDX].AbsorbEffects(DatabaseAPI.Database.Power[effect1.nSummon], effect1.Duration, 0.0f, at, 1, true, effIdx);
                 for (var index2 = length2; index2 <= buffedPowers[hIDX].Effects.Length - 1; ++index2)
                 {
                     buffedPowers[hIDX].Effects[index2].ToWho = effect1.ToWho;
