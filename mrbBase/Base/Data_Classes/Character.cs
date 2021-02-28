@@ -878,7 +878,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     case Enums.eType.Normal:
                         popupData1.Sections[index1]
-                            .Add(iSlot.GetEnhancementString(), Color.FromArgb(0, byte.MaxValue, 0));
+                            .Add(iSlot.GetEnhancementString(), Color.FromArgb(0, 255, 0));
                         break;
                     case Enums.eType.InventO:
                         popupData1.Sections[index1]
@@ -888,7 +888,7 @@ namespace mrbBase.Base.Data_Classes
                         break;
                     case Enums.eType.SpecialO:
                         popupData1.Sections[index1].Add(iSlot.GetEnhancementString(),
-                            Color.FromArgb(byte.MaxValue, byte.MaxValue, 0));
+                            Color.FromArgb(255, 255, 0));
                         break;
                     case Enums.eType.SetO:
                         if (!DatabaseAPI.EnhIsNaturallyAttuned(iSlot.Enh))
@@ -923,11 +923,11 @@ namespace mrbBase.Base.Data_Classes
 
                         var index2 = popupData1.Add();
                         var strArray1 = BreakByNewLine(iSlot.GetEnhancementStringLong());
-                        for (var index3 = 0; index3 <= strArray1.Length - 1; ++index3)
+                        foreach (var s in strArray1)
                         {
-                            var strArray2 = BreakByBracket(strArray1[index3]);
-                            popupData1.Sections[index2].Add(strArray2[0], Color.FromArgb(0, byte.MaxValue, 0),
-                                strArray2[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
+                            var strArray2 = BreakByBracket(s);
+                            popupData1.Sections[index2].Add(strArray2[0], Color.FromArgb(0, 255, 0),
+                                strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
                         }
 
                         break;
@@ -937,7 +937,7 @@ namespace mrbBase.Base.Data_Classes
                             popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title);
                         var index4 = popupData1.Add();
                         var strArray3 = BreakByNewLine(iSlot.GetEnhancementStringLong());
-                        for (var index3 = 0; index3 <= strArray3.Length - 1; ++index3)
+                        for (var index3 = 0; index3 < strArray3.Length; index3++)
                         {
                             var strArray2 = !enhancement.HasPowerEffect
                                 ? BreakByBracket(strArray3[index3])
@@ -1204,9 +1204,8 @@ namespace mrbBase.Base.Data_Classes
                 (index2 == 0 || recipeEntry.SalvageIdx[index2] != recipeEntry.SalvageIdx[0]);
                 index2++)
             {
-                if (recipeEntry.SalvageIdx[index2] < 0)
-                    continue;
-                var empty = string.Empty;
+                if (recipeEntry.SalvageIdx[index2] < 0) continue;
+
                 var iColor = DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].Rarity switch
                 {
                     Recipe.RecipeRarity.Common => PopUp.Colors.Common,
@@ -1215,10 +1214,34 @@ namespace mrbBase.Base.Data_Classes
                     Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                if (recipeEntry.Count[index2] > 0)
-                    section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName + empty,
-                        iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
-                        0.9f, FontStyle.Bold, 1);
+
+                if (recipeEntry.Count[index2] <= 0) continue;
+
+                section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName,
+                    iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
+                    0.9f, FontStyle.Bold, 1);
+                var subRecipe = DatabaseAPI.GetSalvageRecipe(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName);
+                if (subRecipe.ExternalName == "" & subRecipe.InternalName == "") continue;
+                
+                if (subRecipe.Item[0].BuyCost > 0)
+                {
+                    section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}",
+                        PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 2);
+                }
+
+                for (var k = 0; k < subRecipe.Item[0].Count.Length; k++)
+                {
+                    section1.Add(DatabaseAPI.Database.Salvage[subRecipe.Item[0].SalvageIdx[k]].ExternalName,
+                        DatabaseAPI.Database.Salvage[subRecipe.Item[0].SalvageIdx[k]].Rarity switch
+                        {
+                            Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
+                            Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                            Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
+                            _ => PopUp.Colors.Common
+                        },
+                        subRecipe.Item[0].Count[k].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
+                        0.9f, FontStyle.Bold, 2);
+                }
             }
 
             return section1;

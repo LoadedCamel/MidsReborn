@@ -866,6 +866,8 @@ namespace mrbBase
                 .Where(e => e.ExternalName.ToLowerInvariant().Contains(salvageName.ToLowerInvariant()))
                 .ToList();
 
+            Debug.WriteLine($"matchingRecipes.Count: {matchingRecipes.Count}");
+
             if (matchingRecipes.Count <= 0) return new Recipe
             {
                 ExternalName = "",
@@ -883,6 +885,8 @@ namespace mrbBase
                 .Select(e => e.Item.OrderByDescending(i => i.Level).First())
                 .ToList();
 
+            Debug.WriteLine($"matchingRecipesEntries: {matchingRecipesEntries.Count}");
+
             // Merge matching recipes and recipeEntries
             var dictEntries = matchingRecipes
                 .Select((k, i) => new {k, v = matchingRecipesEntries[i]})
@@ -893,23 +897,32 @@ namespace mrbBase
                 .OrderBy(e => GetRecipeMultiplier(e.Key.ExternalName))
                 .First();
 
+            Debug.WriteLine($"re: {re.Key.ExternalName} {re.Key.InternalName}");
+
             // Normalize salvage counts (divide by multiplier)
             var multiplier = GetRecipeMultiplier(re.Key.ExternalName);
+            Debug.WriteLine($"Multiplier: {multiplier}");
             foreach (var s in re.Value.Count)
             {
-                dictEntries[re.Key].Count[s] = (int) Math.Ceiling((decimal)s / multiplier);
+                re.Value.Count[s] = (int) Math.Ceiling((decimal)s / multiplier);
             }
 
-            return new Recipe
+            Debug.WriteLine($"re (Normalized): {re.Key.ExternalName}, {re.Key.InternalName}, {re.Key.Rarity}, {re.Value}");
+
+            var ret = new Recipe
             {
                 ExternalName = ReplaceRecipeNameMultiplier(re.Key.ExternalName),
                 InternalName = re.Key.InternalName,
                 IsVirtual = true,
                 Enhancement = "",
                 EnhIdx = -1,
-                Rarity = re.Key.Rarity,
-                Item = new[] {re.Value}
+                Rarity = re.Key.Rarity
             };
+
+            Array.Resize(ref ret.Item, 1);
+            ret.Item[0] = re.Value;
+
+            return ret;
         }
 
         public static int GetEnhancementByUIDName(string iName)
