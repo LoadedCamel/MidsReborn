@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -1208,11 +1209,10 @@ namespace mrbBase.Base.Data_Classes
 
                 var iColor = DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].Rarity switch
                 {
-                    Recipe.RecipeRarity.Common => PopUp.Colors.Common,
                     Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
                     Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
                     Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => PopUp.Colors.Common
                 };
 
                 if (recipeEntry.Count[index2] <= 0) continue;
@@ -1220,6 +1220,7 @@ namespace mrbBase.Base.Data_Classes
                 section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName,
                     iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
                     0.9f, FontStyle.Bold, 1);
+                Debug.WriteLine($"Source salvage: {DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName}");
                 var subRecipe = DatabaseAPI.GetSalvageRecipe(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName);
                 if (subRecipe.ExternalName == "" & subRecipe.InternalName == "") continue;
                 
@@ -1229,8 +1230,14 @@ namespace mrbBase.Base.Data_Classes
                         PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 2);
                 }
 
+                Debug.WriteLine($"subRecipe.Item.Count: {subRecipe.Item[0].Count.Length}");
+                Debug.WriteLine($"subRecipe.SalvageIdx.Count: {subRecipe.Item[0].SalvageIdx.Length}");
+
                 for (var k = 0; k < subRecipe.Item[0].Count.Length; k++)
                 {
+                    Debug.WriteLine($"SalvageIdx[{k}]: {subRecipe.Item[0].SalvageIdx[k]}");
+                    if (subRecipe.Item[0].SalvageIdx[k] < 0) continue;
+                    Debug.WriteLine($"SalvageName[{k}]: {DatabaseAPI.Database.Salvage[subRecipe.Item[0].SalvageIdx[k]].ExternalName}");
                     section1.Add(DatabaseAPI.Database.Salvage[subRecipe.Item[0].SalvageIdx[k]].ExternalName,
                         DatabaseAPI.Database.Salvage[subRecipe.Item[0].SalvageIdx[k]].Rarity switch
                         {

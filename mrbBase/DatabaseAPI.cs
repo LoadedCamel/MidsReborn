@@ -843,12 +843,12 @@ namespace mrbBase
 
         private static int GetRecipeMultiplier(string recipeName)
         {
-            var r = new Regex(@"\(x([1-9][0-9]+)\)");
+            var r = new Regex(@"\(x(\d+)\)");
             if (!r.IsMatch(recipeName)) return 1;
 
             var m = r.Match(recipeName);
 
-            return Convert.ToInt32(m.Groups[0].Captures[0].Value);
+            return Convert.ToInt32(m.Groups[1].Captures[0].Value);
         }
 
         private static string ReplaceRecipeNameMultiplier(string recipeName)
@@ -901,10 +901,10 @@ namespace mrbBase
 
             // Normalize salvage counts (divide by multiplier)
             var multiplier = GetRecipeMultiplier(re.Key.ExternalName);
-            Debug.WriteLine($"Multiplier: {multiplier}");
-            foreach (var s in re.Value.Count)
+            Debug.WriteLine($"Multiplier: {multiplier}, salvage count: {re.Value.Count.Length}");
+            for (var i = 0 ; i < re.Value.Count.Length ; i++)
             {
-                re.Value.Count[s] = (int) Math.Ceiling((decimal)s / multiplier);
+                re.Value.Count[i] = (int) Math.Ceiling((decimal) re.Value.Count[i] / multiplier);
             }
 
             Debug.WriteLine($"re (Normalized): {re.Key.ExternalName}, {re.Key.InternalName}, {re.Key.Rarity}, {re.Value}");
