@@ -205,6 +205,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmSalvageEdit_Load(object sender, EventArgs e)
         {
+            lvSalvage
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvSalvage, true, null);
+
             var salvageOrigin = Salvage.SalvageOrigin.Tech;
             var recipeRarity = Recipe.RecipeRarity.Common;
             FillList();

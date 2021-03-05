@@ -202,6 +202,10 @@ namespace Mids_Reborn.Forms
 
         private void frmEntityListing_Load(object sender, EventArgs e)
         {
+            lvEntity
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvEntity, true, null);
             DisplayList();
         }
 

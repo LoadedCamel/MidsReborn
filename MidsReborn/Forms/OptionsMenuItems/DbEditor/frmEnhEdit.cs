@@ -326,6 +326,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void frmEnhEdit_Load(object sender, EventArgs e)
         {
             _bFrm = new frmBusy();
+            lvEnh
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvEnh, true, null);
             Show();
             Refresh();
             DisplayList();

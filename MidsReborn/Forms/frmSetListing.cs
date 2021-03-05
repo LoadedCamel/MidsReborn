@@ -240,8 +240,11 @@ namespace Mids_Reborn.Forms
         }
 
         private void frmSetListing_Load(object sender, EventArgs e)
-
         {
+            lvSets
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvSets, true, null);
             DisplayList();
         }
 

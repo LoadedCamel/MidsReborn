@@ -811,8 +811,20 @@ namespace Mids_Reborn.Forms
         }
 
         private void frmPowerBrowser_Load(object sender, EventArgs e)
-
         {
+            lvGroup
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvGroup, true, null);
+            lvSet
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvSet, true, null);
+            lvPower
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvPower, true, null);
+
             try
             {
                 FillFilter();

@@ -32,7 +32,6 @@ namespace Mids_Reborn.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSetListingPvP));
             this.ilSets = new System.Windows.Forms.ImageList(this.components);
             this.lvSets = new System.Windows.Forms.ListView();
             this.ColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -105,11 +104,12 @@ namespace Mids_Reborn.Forms
             // ColumnHeader5
             // 
             this.ColumnHeader5.Text = "Enh\'s";
-            this.ColumnHeader5.Width = 51;
+            this.ColumnHeader5.Width = 48;
             // 
             // ColumnHeader6
             // 
             this.ColumnHeader6.Text = "FX";
+            this.ColumnHeader6.Width = 53;
             // 
             // btnClone
             // 
@@ -235,7 +235,6 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.btnUp);
             this.Controls.Add(this.lvSets);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmSetListingPvP";
