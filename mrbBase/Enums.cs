@@ -1300,6 +1300,17 @@ namespace mrbBase
             Jump = 13
         }
 
+        public enum RewardCurrency
+        {
+            RewardMerit = 0,
+            AstralMerit = 1,
+            EmpyreanMerit = 2,
+            AlignmentMerit = 3,
+            VanguardMerit = 4,
+            AETicket = 5,
+            Influence = 6
+        }
+
         public static bool MezDurationEnhancable(eMez mezEnum)
         {
             return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized ||

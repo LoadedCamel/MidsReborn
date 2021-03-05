@@ -46,6 +46,7 @@
     <RootNamespace>mrbBase</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="clsRewardCurrency.cs" />
     <Compile Include="ConfigDataSpecial.cs" />
     <Compile Include="HeroViewerBase.cs" />
     <Compile Include="Extensions.cs" />
