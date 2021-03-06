@@ -1226,18 +1226,22 @@ namespace mrbBase.Base.Data_Classes
                     0.9f, FontStyle.Bold, 1);
                 var sCost = clsRewardCurrency.GetSalvageCost(
                     DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]],
-                    MidsContext.Config.PreferredCurrency);
+                    MidsContext.Config.PreferredCurrency,
+                    recipeEntry.Count[index2]);
                 if (sCost != null)
                 {
-                    subRecipesCost[MidsContext.Config.PreferredCurrency] += Math.Max(1, (int) sCost * recipeEntry.Count[index2]);
+                    subRecipesCost[MidsContext.Config.PreferredCurrency] += (int) sCost;
                 }
                 else
                 {
                     // Fallback to reward merits
-                    var sCost2 = clsRewardCurrency.GetSalvageCost(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]]);
+                    var sCost2 = clsRewardCurrency.GetSalvageCost(
+                        DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]],
+                        Enums.RewardCurrency.RewardMerit,
+                        recipeEntry.Count[index2]);
                     if (sCost2 != null)
                     {
-                        subRecipesCost[Enums.RewardCurrency.RewardMerit] += (int) sCost2 * recipeEntry.Count[index2];
+                        subRecipesCost[Enums.RewardCurrency.RewardMerit] += (int) sCost2;
                     }
                 }
             }

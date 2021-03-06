@@ -24,7 +24,7 @@ namespace mrbBase
                 },
                 {
                     new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(Enums.RewardCurrency.EmpyreanMerit, Enums.RewardCurrency.RewardMerit),
-                    new KeyValuePair<int, int>(30, 1)
+                    new KeyValuePair<int, int>(10, 1)
                 },
                 {
                     new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(Enums.RewardCurrency.EmpyreanMerit, Enums.RewardCurrency.AstralMerit),
@@ -137,28 +137,30 @@ namespace mrbBase
             };
         }
 
-        public static int? GetSalvageCost(Salvage s, Enums.RewardCurrency c = Enums.RewardCurrency.RewardMerit)
+        public static int? GetSalvageCost(Salvage s, Enums.RewardCurrency c = Enums.RewardCurrency.RewardMerit, int amount = 1)
         {
+            if (amount == 0) return 0;
+
             return s.ExternalName switch
             {
-                "Reward Merit" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 1),
-                "Enhancement Catalyst" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 20),
-                "Enhancement Booster" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 5),
+                "Reward Merit" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, amount),
+                "Enhancement Catalyst" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 20 * amount),
+                "Enhancement Booster" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 5 * amount),
                 _ => c switch
                 {
                     Enums.RewardCurrency.AETicket => s.Rarity switch
                     {
-                        Recipe.RecipeRarity.Uncommon => 80,
-                        Recipe.RecipeRarity.Rare => 540,
+                        Recipe.RecipeRarity.Uncommon => 80 * amount,
+                        Recipe.RecipeRarity.Rare => 540 * amount,
                         _ => null // Commons are within a reward roll for 8 tickets. Ignored.
                     },
                     Enums.RewardCurrency.Influence => s.Rarity switch
                     {
                         // Estimated AH prices here.
                         // Don't take it for granted.
-                        Recipe.RecipeRarity.Common => 500,
-                        Recipe.RecipeRarity.Uncommon => 1500,
-                        Recipe.RecipeRarity.Rare => 500000,
+                        Recipe.RecipeRarity.Common => 500 * amount,
+                        Recipe.RecipeRarity.Uncommon => 1500 * amount,
+                        Recipe.RecipeRarity.Rare => 500000 * amount,
                         _ => null
                     },
                     _ => null
