@@ -28,7 +28,7 @@ namespace mrbBase
                 },
                 {
                     new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(Enums.RewardCurrency.EmpyreanMerit, Enums.RewardCurrency.AstralMerit),
-                    new KeyValuePair<int, int>(1, 5) // ??
+                    new KeyValuePair<int, int>(1, 5)
                 },
                 {
                     new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(Enums.RewardCurrency.AlignmentMerit, Enums.RewardCurrency.RewardMerit),
@@ -42,7 +42,8 @@ namespace mrbBase
 
         public static int? CurrencyChange(Enums.RewardCurrency c1, Enums.RewardCurrency c2, int amount)
         {
-            if (c1 == c2) return amount; // Approved by Captain Obvious.
+            if (c1 == c2) return amount;
+            if (amount == 0) return 0; // Approved by Captain Obvious.
 
             var path = new List<Enums.RewardCurrency>();
 

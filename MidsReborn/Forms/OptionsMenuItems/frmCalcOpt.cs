@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.ImportExportItems;
 using mrbBase;
@@ -545,6 +544,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private void SetControls()
         {
             var config = MidsContext.Config;
+            SuspendLayout();
             optSO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.SingleO;
             optDO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.DualO;
             optTO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.TrainingO;
@@ -604,6 +604,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 
             cbTotalsWindowTitleOpt.SelectedIndex = (int)config.TotalsWindowTitleStyle;
             chkOldStyle.Checked = config.UseOldTotalsWindow;
+            cbCurrency.Items.Clear();
+            foreach (var c in Enum.GetValues(typeof(Enums.RewardCurrency)))
+            {
+                cbCurrency.Items.Add(clsRewardCurrency.GetCurrencyName((Enums.RewardCurrency) c));
+            }
+
+            cbCurrency.SelectedIndex = (int) config.PreferredCurrency;
+
+            ResumeLayout();
         }
 
         private void setupScenarios()
@@ -824,6 +833,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 ++index;
             } while (index <= 19);
             config.DataPath = lblDatabaseLoc.Text;
+            config.PreferredCurrency = (Enums.RewardCurrency) cbCurrency.SelectedIndex;
         }
 
         private void btnFileAssoc_Click(object sender, EventArgs e)

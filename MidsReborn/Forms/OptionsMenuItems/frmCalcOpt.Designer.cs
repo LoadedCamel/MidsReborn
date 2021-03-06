@@ -154,23 +154,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.csDelete = new System.Windows.Forms.Button();
             this.csAdd = new System.Windows.Forms.Button();
             this.csList = new System.Windows.Forms.ListBox();
-            this.TabPage5 = new System.Windows.Forms.TabPage();
-            this.cbDBUpdateURL = new System.Windows.Forms.ComboBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.groupBox19 = new System.Windows.Forms.GroupBox();
-            this.btnFileAssoc = new System.Windows.Forms.Button();
-            this.lblFileAssoc = new System.Windows.Forms.Label();
-            this.lblAssocStatus = new System.Windows.Forms.Label();
-            this.cbUpdateURL = new System.Windows.Forms.ComboBox();
-            this.lblUpdateURL = new System.Windows.Forms.Label();
-            this.btnSaveFolderReset = new System.Windows.Forms.Button();
-            this.lblSaveFolder = new System.Windows.Forms.Label();
-            this.btnSaveFolder = new System.Windows.Forms.Button();
-            this.chkLoadLastFile = new System.Windows.Forms.CheckBox();
-            this.Label1 = new System.Windows.Forms.Label();
-            this.GroupBox1 = new System.Windows.Forms.GroupBox();
-            this.Label34 = new System.Windows.Forms.Label();
-            this.chkUpdates = new System.Windows.Forms.CheckBox();
             this.TabPage1 = new System.Windows.Forms.TabPage();
             this.Label15 = new System.Windows.Forms.Label();
             this.Label10 = new System.Windows.Forms.Label();
@@ -179,16 +162,35 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.lblExample = new System.Windows.Forms.Label();
             this.GroupBox7 = new System.Windows.Forms.GroupBox();
             this.listScenarios = new System.Windows.Forms.ListBox();
+            this.TabPage5 = new System.Windows.Forms.TabPage();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.lblDatabaseLoc = new System.Windows.Forms.TextBox();
+            this.btnResetDatabaseLoc = new System.Windows.Forms.Button();
+            this.label35 = new System.Windows.Forms.Label();
+            this.btnDatabaseLoc = new System.Windows.Forms.Button();
+            this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.btnFileAssoc = new System.Windows.Forms.Button();
+            this.lblFileAssoc = new System.Windows.Forms.Label();
+            this.lblAssocStatus = new System.Windows.Forms.Label();
+            this.btnSaveFolderReset = new System.Windows.Forms.Button();
+            this.lblSaveFolder = new System.Windows.Forms.Label();
+            this.btnSaveFolder = new System.Windows.Forms.Button();
+            this.chkLoadLastFile = new System.Windows.Forms.CheckBox();
+            this.Label1 = new System.Windows.Forms.Label();
+            this.GroupBox1 = new System.Windows.Forms.GroupBox();
+            this.Label37 = new System.Windows.Forms.Label();
+            this.Label34 = new System.Windows.Forms.Label();
+            this.chkUpdates = new System.Windows.Forms.CheckBox();
+            this.cbDBUpdateURL = new System.Windows.Forms.ComboBox();
+            this.cbUpdateURL = new System.Windows.Forms.ComboBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.lblUpdateURL = new System.Windows.Forms.Label();
             this.chkColorPrint = new System.Windows.Forms.CheckBox();
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.label35 = new System.Windows.Forms.Label();
-            this.btnDatabaseLoc = new System.Windows.Forms.Button();
-            this.groupBox16 = new System.Windows.Forms.GroupBox();
-            this.btnResetDatabaseLoc = new System.Windows.Forms.Button();
-            this.Label37 = new System.Windows.Forms.Label();
-            this.lblDatabaseLoc = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.cbCurrency = new System.Windows.Forms.ComboBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.groupBox18.SuspendLayout();
@@ -218,13 +220,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.TabPage4.SuspendLayout();
             this.GroupBox12.SuspendLayout();
             this.GroupBox11.SuspendLayout();
-            this.TabPage5.SuspendLayout();
-            this.groupBox19.SuspendLayout();
-            this.GroupBox1.SuspendLayout();
             this.TabPage1.SuspendLayout();
             this.GroupBox9.SuspendLayout();
             this.GroupBox7.SuspendLayout();
+            this.TabPage5.SuspendLayout();
             this.groupBox16.SuspendLayout();
+            this.groupBox19.SuspendLayout();
+            this.GroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOK
@@ -283,16 +285,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.groupBox18.Controls.Add(this.chkOldStyle);
             this.groupBox18.Controls.Add(this.cbTotalsWindowTitleOpt);
             this.groupBox18.Controls.Add(this.label2);
-            this.groupBox18.Location = new System.Drawing.Point(196, 120);
+            this.groupBox18.Location = new System.Drawing.Point(388, 120);
             this.groupBox18.Name = "groupBox18";
-            this.groupBox18.Size = new System.Drawing.Size(545, 44);
+            this.groupBox18.Size = new System.Drawing.Size(353, 44);
             this.groupBox18.TabIndex = 79;
             this.groupBox18.TabStop = false;
             this.groupBox18.Text = "Totals Window:";
             // 
             // chkOldStyle
             // 
-            this.chkOldStyle.Location = new System.Drawing.Point(11, 18);
+            this.chkOldStyle.Location = new System.Drawing.Point(11, 17);
             this.chkOldStyle.Name = "chkOldStyle";
             this.chkOldStyle.Size = new System.Drawing.Size(88, 18);
             this.chkOldStyle.TabIndex = 80;
@@ -308,15 +310,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             "Character name + Archetype + Powersets",
             "Build file name + Archetype + Powersets",
             "Character name + Build file name (fallback to generic if none)"});
-            this.cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(221, 16);
+            this.cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(199, 13);
             this.cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
-            this.cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(318, 22);
+            this.cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(148, 22);
             this.cbTotalsWindowTitleOpt.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(130, 19);
+            this.label2.Location = new System.Drawing.Point(108, 18);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(85, 14);
             this.label2.TabIndex = 0;
@@ -628,13 +630,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // GroupBox14
             // 
+            this.GroupBox14.Controls.Add(this.cbCurrency);
+            this.GroupBox14.Controls.Add(this.label19);
             this.GroupBox14.Controls.Add(this.chkIOLevel);
             this.GroupBox14.Controls.Add(this.btnIOReset);
             this.GroupBox14.Controls.Add(this.Label40);
             this.GroupBox14.Controls.Add(this.udIOLevel);
             this.GroupBox14.Location = new System.Drawing.Point(196, 4);
             this.GroupBox14.Name = "GroupBox14";
-            this.GroupBox14.Size = new System.Drawing.Size(188, 117);
+            this.GroupBox14.Size = new System.Drawing.Size(188, 160);
             this.GroupBox14.TabIndex = 69;
             this.GroupBox14.TabStop = false;
             this.GroupBox14.Text = "Inventions:";
@@ -650,7 +654,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // btnIOReset
             // 
-            this.btnIOReset.Location = new System.Drawing.Point(8, 63);
+            this.btnIOReset.Location = new System.Drawing.Point(8, 109);
             this.btnIOReset.Name = "btnIOReset";
             this.btnIOReset.Size = new System.Drawing.Size(172, 44);
             this.btnIOReset.TabIndex = 59;
@@ -1601,187 +1605,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.csList.TabIndex = 0;
             this.csList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.csList_KeyPress);
             // 
-            // TabPage5
-            // 
-            this.TabPage5.Controls.Add(this.groupBox16);
-            this.TabPage5.Controls.Add(this.groupBox19);
-            this.TabPage5.Controls.Add(this.btnSaveFolderReset);
-            this.TabPage5.Controls.Add(this.lblSaveFolder);
-            this.TabPage5.Controls.Add(this.btnSaveFolder);
-            this.TabPage5.Controls.Add(this.chkLoadLastFile);
-            this.TabPage5.Controls.Add(this.Label1);
-            this.TabPage5.Controls.Add(this.GroupBox1);
-            this.TabPage5.Location = new System.Drawing.Point(4, 23);
-            this.TabPage5.Name = "TabPage5";
-            this.TabPage5.Size = new System.Drawing.Size(749, 325);
-            this.TabPage5.TabIndex = 4;
-            this.TabPage5.Text = "Updates & Paths";
-            this.TabPage5.UseVisualStyleBackColor = true;
-            // 
-            // cbDBUpdateURL
-            // 
-            this.cbDBUpdateURL.AutoCompleteCustomSource.AddRange(new string[] {
-            "https://midsreborn.com/mids_updates/update_manifest.xml",
-            "http://keepers.dk/mids/update.xml"});
-            this.cbDBUpdateURL.FormattingEnabled = true;
-            this.cbDBUpdateURL.Items.AddRange(new object[] {
-            "https://midsreborn.com/mids_updates/update_manifest.xml"});
-            this.cbDBUpdateURL.Location = new System.Drawing.Point(174, 114);
-            this.cbDBUpdateURL.Name = "cbDBUpdateURL";
-            this.cbDBUpdateURL.Size = new System.Drawing.Size(335, 22);
-            this.cbDBUpdateURL.TabIndex = 73;
-            // 
-            // label23
-            // 
-            this.label23.Location = new System.Drawing.Point(25, 112);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(137, 24);
-            this.label23.TabIndex = 72;
-            this.label23.Text = "Database Update Manifest:";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // groupBox19
-            // 
-            this.groupBox19.Controls.Add(this.btnFileAssoc);
-            this.groupBox19.Controls.Add(this.lblFileAssoc);
-            this.groupBox19.Controls.Add(this.lblAssocStatus);
-            this.groupBox19.Location = new System.Drawing.Point(417, 151);
-            this.groupBox19.Name = "groupBox19";
-            this.groupBox19.Size = new System.Drawing.Size(324, 87);
-            this.groupBox19.TabIndex = 71;
-            this.groupBox19.TabStop = false;
-            this.groupBox19.Text = "File Association Repair:";
-            // 
-            // btnFileAssoc
-            // 
-            this.btnFileAssoc.Location = new System.Drawing.Point(9, 47);
-            this.btnFileAssoc.Name = "btnFileAssoc";
-            this.btnFileAssoc.Size = new System.Drawing.Size(129, 36);
-            this.btnFileAssoc.TabIndex = 68;
-            this.btnFileAssoc.Text = "Rebuild file associations";
-            this.btnFileAssoc.UseVisualStyleBackColor = true;
-            this.btnFileAssoc.Click += new System.EventHandler(this.btnFileAssoc_Click);
-            // 
-            // lblFileAssoc
-            // 
-            this.lblFileAssoc.Location = new System.Drawing.Point(5, 16);
-            this.lblFileAssoc.Name = "lblFileAssoc";
-            this.lblFileAssoc.Size = new System.Drawing.Size(313, 28);
-            this.lblFileAssoc.TabIndex = 69;
-            this.lblFileAssoc.Text = "If you need to reassociate your .MXD build files with MRB you can do so by clicki" +
-    "ng the button below.\r\n";
-            // 
-            // lblAssocStatus
-            // 
-            this.lblAssocStatus.Location = new System.Drawing.Point(144, 57);
-            this.lblAssocStatus.Name = "lblAssocStatus";
-            this.lblAssocStatus.Size = new System.Drawing.Size(174, 14);
-            this.lblAssocStatus.TabIndex = 70;
-            this.lblAssocStatus.Text = "Status: --";
-            // 
-            // cbUpdateURL
-            // 
-            this.cbUpdateURL.AutoCompleteCustomSource.AddRange(new string[] {
-            "https://midsreborn.com/mids_updates/update_manifest.xml",
-            "http://keepers.dk/mids/update.xml"});
-            this.cbUpdateURL.FormattingEnabled = true;
-            this.cbUpdateURL.Items.AddRange(new object[] {
-            "https://midsreborn.com/mids_updates/update_manifest.xml"});
-            this.cbUpdateURL.Location = new System.Drawing.Point(174, 86);
-            this.cbUpdateURL.Name = "cbUpdateURL";
-            this.cbUpdateURL.Size = new System.Drawing.Size(335, 22);
-            this.cbUpdateURL.TabIndex = 67;
-            // 
-            // lblUpdateURL
-            // 
-            this.lblUpdateURL.Location = new System.Drawing.Point(19, 84);
-            this.lblUpdateURL.Name = "lblUpdateURL";
-            this.lblUpdateURL.Size = new System.Drawing.Size(149, 24);
-            this.lblUpdateURL.TabIndex = 65;
-            this.lblUpdateURL.Text = "Application Update Manifest:";
-            this.lblUpdateURL.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnSaveFolderReset
-            // 
-            this.btnSaveFolderReset.Location = new System.Drawing.Point(616, 298);
-            this.btnSaveFolderReset.Name = "btnSaveFolderReset";
-            this.btnSaveFolderReset.Size = new System.Drawing.Size(105, 22);
-            this.btnSaveFolderReset.TabIndex = 64;
-            this.btnSaveFolderReset.Text = "Reset to Default";
-            this.btnSaveFolderReset.UseVisualStyleBackColor = true;
-            this.btnSaveFolderReset.Click += new System.EventHandler(this.btnSaveFolderReset_Click);
-            // 
-            // lblSaveFolder
-            // 
-            this.lblSaveFolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblSaveFolder.Location = new System.Drawing.Point(99, 270);
-            this.lblSaveFolder.Name = "lblSaveFolder";
-            this.lblSaveFolder.Size = new System.Drawing.Size(511, 22);
-            this.lblSaveFolder.TabIndex = 63;
-            this.lblSaveFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblSaveFolder.UseMnemonic = false;
-            // 
-            // btnSaveFolder
-            // 
-            this.btnSaveFolder.Location = new System.Drawing.Point(616, 270);
-            this.btnSaveFolder.Name = "btnSaveFolder";
-            this.btnSaveFolder.Size = new System.Drawing.Size(105, 22);
-            this.btnSaveFolder.TabIndex = 62;
-            this.btnSaveFolder.Text = "Browse...";
-            this.btnSaveFolder.UseVisualStyleBackColor = true;
-            this.btnSaveFolder.Click += new System.EventHandler(this.btnSaveFolder_Click);
-            // 
-            // chkLoadLastFile
-            // 
-            this.chkLoadLastFile.Location = new System.Drawing.Point(11, 301);
-            this.chkLoadLastFile.Name = "chkLoadLastFile";
-            this.chkLoadLastFile.Size = new System.Drawing.Size(156, 18);
-            this.chkLoadLastFile.TabIndex = 61;
-            this.chkLoadLastFile.Text = "Load last build on startup";
-            // 
-            // Label1
-            // 
-            this.Label1.Location = new System.Drawing.Point(8, 269);
-            this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(85, 24);
-            this.Label1.TabIndex = 8;
-            this.Label1.Text = "Save Builds To:";
-            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // GroupBox1
-            // 
-            this.GroupBox1.Controls.Add(this.Label37);
-            this.GroupBox1.Controls.Add(this.Label34);
-            this.GroupBox1.Controls.Add(this.chkUpdates);
-            this.GroupBox1.Controls.Add(this.cbDBUpdateURL);
-            this.GroupBox1.Controls.Add(this.cbUpdateURL);
-            this.GroupBox1.Controls.Add(this.label23);
-            this.GroupBox1.Controls.Add(this.lblUpdateURL);
-            this.GroupBox1.Location = new System.Drawing.Point(8, 3);
-            this.GroupBox1.Name = "GroupBox1";
-            this.GroupBox1.Size = new System.Drawing.Size(733, 142);
-            this.GroupBox1.TabIndex = 7;
-            this.GroupBox1.TabStop = false;
-            this.GroupBox1.Text = "Automatic Updates:";
-            // 
-            // Label34
-            // 
-            this.Label34.Location = new System.Drawing.Point(6, 16);
-            this.Label34.Name = "Label34";
-            this.Label34.Size = new System.Drawing.Size(478, 32);
-            this.Label34.TabIndex = 5;
-            this.Label34.Text = "Mids Reborn can automatically check for updates and download newer versions when " +
-    "it starts. This feature requires an internet connection.";
-            this.Label34.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // chkUpdates
-            // 
-            this.chkUpdates.Location = new System.Drawing.Point(535, 48);
-            this.chkUpdates.Name = "chkUpdates";
-            this.chkUpdates.Size = new System.Drawing.Size(167, 24);
-            this.chkUpdates.TabIndex = 6;
-            this.chkUpdates.Text = "Check for updates on startup";
-            // 
             // TabPage1
             // 
             this.TabPage1.Controls.Add(this.Label15);
@@ -1876,24 +1699,53 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.listScenarios.TabIndex = 0;
             this.listScenarios.SelectedIndexChanged += new System.EventHandler(this.listScenarios_SelectedIndexChanged);
             // 
-            // chkColorPrint
+            // TabPage5
             // 
-            this.chkColorPrint.Location = new System.Drawing.Point(246, 367);
-            this.chkColorPrint.Name = "chkColorPrint";
-            this.chkColorPrint.Size = new System.Drawing.Size(156, 16);
-            this.chkColorPrint.TabIndex = 2;
-            this.chkColorPrint.Text = "Print in color";
-            this.chkColorPrint.Visible = false;
+            this.TabPage5.Controls.Add(this.groupBox16);
+            this.TabPage5.Controls.Add(this.groupBox19);
+            this.TabPage5.Controls.Add(this.btnSaveFolderReset);
+            this.TabPage5.Controls.Add(this.lblSaveFolder);
+            this.TabPage5.Controls.Add(this.btnSaveFolder);
+            this.TabPage5.Controls.Add(this.chkLoadLastFile);
+            this.TabPage5.Controls.Add(this.Label1);
+            this.TabPage5.Controls.Add(this.GroupBox1);
+            this.TabPage5.Location = new System.Drawing.Point(4, 23);
+            this.TabPage5.Name = "TabPage5";
+            this.TabPage5.Size = new System.Drawing.Size(749, 325);
+            this.TabPage5.TabIndex = 4;
+            this.TabPage5.Text = "Updates & Paths";
+            this.TabPage5.UseVisualStyleBackColor = true;
             // 
-            // myTip
+            // groupBox16
             // 
-            this.myTip.AutoPopDelay = 10000;
-            this.myTip.InitialDelay = 500;
-            this.myTip.ReshowDelay = 100;
+            this.groupBox16.Controls.Add(this.lblDatabaseLoc);
+            this.groupBox16.Controls.Add(this.btnResetDatabaseLoc);
+            this.groupBox16.Controls.Add(this.label35);
+            this.groupBox16.Controls.Add(this.btnDatabaseLoc);
+            this.groupBox16.Location = new System.Drawing.Point(8, 151);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(403, 87);
+            this.groupBox16.TabIndex = 77;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "Database Location:";
             // 
-            // cPicker
+            // lblDatabaseLoc
             // 
-            this.cPicker.FullOpen = true;
+            this.lblDatabaseLoc.Location = new System.Drawing.Point(37, 32);
+            this.lblDatabaseLoc.Name = "lblDatabaseLoc";
+            this.lblDatabaseLoc.ReadOnly = true;
+            this.lblDatabaseLoc.Size = new System.Drawing.Size(261, 20);
+            this.lblDatabaseLoc.TabIndex = 78;
+            // 
+            // btnResetDatabaseLoc
+            // 
+            this.btnResetDatabaseLoc.Location = new System.Drawing.Point(303, 59);
+            this.btnResetDatabaseLoc.Name = "btnResetDatabaseLoc";
+            this.btnResetDatabaseLoc.Size = new System.Drawing.Size(94, 22);
+            this.btnResetDatabaseLoc.TabIndex = 77;
+            this.btnResetDatabaseLoc.Text = "Reset to Default";
+            this.btnResetDatabaseLoc.UseVisualStyleBackColor = true;
+            this.btnResetDatabaseLoc.Click += new System.EventHandler(this.btnResetDatabaseLoc_Click);
             // 
             // label35
             // 
@@ -1914,28 +1766,107 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.btnDatabaseLoc.UseVisualStyleBackColor = true;
             this.btnDatabaseLoc.Click += new System.EventHandler(this.btnDatabaseLoc_Click);
             // 
-            // groupBox16
+            // groupBox19
             // 
-            this.groupBox16.Controls.Add(this.lblDatabaseLoc);
-            this.groupBox16.Controls.Add(this.btnResetDatabaseLoc);
-            this.groupBox16.Controls.Add(this.label35);
-            this.groupBox16.Controls.Add(this.btnDatabaseLoc);
-            this.groupBox16.Location = new System.Drawing.Point(8, 151);
-            this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(403, 87);
-            this.groupBox16.TabIndex = 77;
-            this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "Database Location:";
+            this.groupBox19.Controls.Add(this.btnFileAssoc);
+            this.groupBox19.Controls.Add(this.lblFileAssoc);
+            this.groupBox19.Controls.Add(this.lblAssocStatus);
+            this.groupBox19.Location = new System.Drawing.Point(417, 151);
+            this.groupBox19.Name = "groupBox19";
+            this.groupBox19.Size = new System.Drawing.Size(324, 87);
+            this.groupBox19.TabIndex = 71;
+            this.groupBox19.TabStop = false;
+            this.groupBox19.Text = "File Association Repair:";
             // 
-            // btnResetDatabaseLoc
+            // btnFileAssoc
             // 
-            this.btnResetDatabaseLoc.Location = new System.Drawing.Point(303, 59);
-            this.btnResetDatabaseLoc.Name = "btnResetDatabaseLoc";
-            this.btnResetDatabaseLoc.Size = new System.Drawing.Size(94, 22);
-            this.btnResetDatabaseLoc.TabIndex = 77;
-            this.btnResetDatabaseLoc.Text = "Reset to Default";
-            this.btnResetDatabaseLoc.UseVisualStyleBackColor = true;
-            this.btnResetDatabaseLoc.Click += new System.EventHandler(this.btnResetDatabaseLoc_Click);
+            this.btnFileAssoc.Location = new System.Drawing.Point(9, 47);
+            this.btnFileAssoc.Name = "btnFileAssoc";
+            this.btnFileAssoc.Size = new System.Drawing.Size(129, 36);
+            this.btnFileAssoc.TabIndex = 68;
+            this.btnFileAssoc.Text = "Rebuild file associations";
+            this.btnFileAssoc.UseVisualStyleBackColor = true;
+            this.btnFileAssoc.Click += new System.EventHandler(this.btnFileAssoc_Click);
+            // 
+            // lblFileAssoc
+            // 
+            this.lblFileAssoc.Location = new System.Drawing.Point(5, 16);
+            this.lblFileAssoc.Name = "lblFileAssoc";
+            this.lblFileAssoc.Size = new System.Drawing.Size(313, 28);
+            this.lblFileAssoc.TabIndex = 69;
+            this.lblFileAssoc.Text = "If you need to reassociate your .MXD build files with MRB you can do so by clicki" +
+    "ng the button below.\r\n";
+            // 
+            // lblAssocStatus
+            // 
+            this.lblAssocStatus.Location = new System.Drawing.Point(144, 57);
+            this.lblAssocStatus.Name = "lblAssocStatus";
+            this.lblAssocStatus.Size = new System.Drawing.Size(174, 14);
+            this.lblAssocStatus.TabIndex = 70;
+            this.lblAssocStatus.Text = "Status: --";
+            // 
+            // btnSaveFolderReset
+            // 
+            this.btnSaveFolderReset.Location = new System.Drawing.Point(616, 298);
+            this.btnSaveFolderReset.Name = "btnSaveFolderReset";
+            this.btnSaveFolderReset.Size = new System.Drawing.Size(105, 22);
+            this.btnSaveFolderReset.TabIndex = 64;
+            this.btnSaveFolderReset.Text = "Reset to Default";
+            this.btnSaveFolderReset.UseVisualStyleBackColor = true;
+            this.btnSaveFolderReset.Click += new System.EventHandler(this.btnSaveFolderReset_Click);
+            // 
+            // lblSaveFolder
+            // 
+            this.lblSaveFolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblSaveFolder.Location = new System.Drawing.Point(99, 270);
+            this.lblSaveFolder.Name = "lblSaveFolder";
+            this.lblSaveFolder.Size = new System.Drawing.Size(511, 22);
+            this.lblSaveFolder.TabIndex = 63;
+            this.lblSaveFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblSaveFolder.UseMnemonic = false;
+            // 
+            // btnSaveFolder
+            // 
+            this.btnSaveFolder.Location = new System.Drawing.Point(616, 270);
+            this.btnSaveFolder.Name = "btnSaveFolder";
+            this.btnSaveFolder.Size = new System.Drawing.Size(105, 22);
+            this.btnSaveFolder.TabIndex = 62;
+            this.btnSaveFolder.Text = "Browse...";
+            this.btnSaveFolder.UseVisualStyleBackColor = true;
+            this.btnSaveFolder.Click += new System.EventHandler(this.btnSaveFolder_Click);
+            // 
+            // chkLoadLastFile
+            // 
+            this.chkLoadLastFile.Location = new System.Drawing.Point(11, 301);
+            this.chkLoadLastFile.Name = "chkLoadLastFile";
+            this.chkLoadLastFile.Size = new System.Drawing.Size(156, 18);
+            this.chkLoadLastFile.TabIndex = 61;
+            this.chkLoadLastFile.Text = "Load last build on startup";
+            // 
+            // Label1
+            // 
+            this.Label1.Location = new System.Drawing.Point(8, 269);
+            this.Label1.Name = "Label1";
+            this.Label1.Size = new System.Drawing.Size(85, 24);
+            this.Label1.TabIndex = 8;
+            this.Label1.Text = "Save Builds To:";
+            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // GroupBox1
+            // 
+            this.GroupBox1.Controls.Add(this.Label37);
+            this.GroupBox1.Controls.Add(this.Label34);
+            this.GroupBox1.Controls.Add(this.chkUpdates);
+            this.GroupBox1.Controls.Add(this.cbDBUpdateURL);
+            this.GroupBox1.Controls.Add(this.cbUpdateURL);
+            this.GroupBox1.Controls.Add(this.label23);
+            this.GroupBox1.Controls.Add(this.lblUpdateURL);
+            this.GroupBox1.Location = new System.Drawing.Point(8, 3);
+            this.GroupBox1.Name = "GroupBox1";
+            this.GroupBox1.Size = new System.Drawing.Size(733, 142);
+            this.GroupBox1.TabIndex = 7;
+            this.GroupBox1.TabStop = false;
+            this.GroupBox1.Text = "Automatic Updates:";
             // 
             // Label37
             // 
@@ -1948,13 +1879,104 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
     " use of the hosting site.*";
             this.Label37.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblDatabaseLoc
+            // Label34
             // 
-            this.lblDatabaseLoc.Location = new System.Drawing.Point(37, 32);
-            this.lblDatabaseLoc.Name = "lblDatabaseLoc";
-            this.lblDatabaseLoc.ReadOnly = true;
-            this.lblDatabaseLoc.Size = new System.Drawing.Size(261, 20);
-            this.lblDatabaseLoc.TabIndex = 78;
+            this.Label34.Location = new System.Drawing.Point(6, 16);
+            this.Label34.Name = "Label34";
+            this.Label34.Size = new System.Drawing.Size(478, 32);
+            this.Label34.TabIndex = 5;
+            this.Label34.Text = "Mids Reborn can automatically check for updates and download newer versions when " +
+    "it starts. This feature requires an internet connection.";
+            this.Label34.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // chkUpdates
+            // 
+            this.chkUpdates.Location = new System.Drawing.Point(535, 48);
+            this.chkUpdates.Name = "chkUpdates";
+            this.chkUpdates.Size = new System.Drawing.Size(167, 24);
+            this.chkUpdates.TabIndex = 6;
+            this.chkUpdates.Text = "Check for updates on startup";
+            // 
+            // cbDBUpdateURL
+            // 
+            this.cbDBUpdateURL.AutoCompleteCustomSource.AddRange(new string[] {
+            "https://midsreborn.com/mids_updates/update_manifest.xml",
+            "http://keepers.dk/mids/update.xml"});
+            this.cbDBUpdateURL.FormattingEnabled = true;
+            this.cbDBUpdateURL.Items.AddRange(new object[] {
+            "https://midsreborn.com/mids_updates/update_manifest.xml"});
+            this.cbDBUpdateURL.Location = new System.Drawing.Point(174, 114);
+            this.cbDBUpdateURL.Name = "cbDBUpdateURL";
+            this.cbDBUpdateURL.Size = new System.Drawing.Size(335, 22);
+            this.cbDBUpdateURL.TabIndex = 73;
+            // 
+            // cbUpdateURL
+            // 
+            this.cbUpdateURL.AutoCompleteCustomSource.AddRange(new string[] {
+            "https://midsreborn.com/mids_updates/update_manifest.xml",
+            "http://keepers.dk/mids/update.xml"});
+            this.cbUpdateURL.FormattingEnabled = true;
+            this.cbUpdateURL.Items.AddRange(new object[] {
+            "https://midsreborn.com/mids_updates/update_manifest.xml"});
+            this.cbUpdateURL.Location = new System.Drawing.Point(174, 86);
+            this.cbUpdateURL.Name = "cbUpdateURL";
+            this.cbUpdateURL.Size = new System.Drawing.Size(335, 22);
+            this.cbUpdateURL.TabIndex = 67;
+            // 
+            // label23
+            // 
+            this.label23.Location = new System.Drawing.Point(25, 112);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(137, 24);
+            this.label23.TabIndex = 72;
+            this.label23.Text = "Database Update Manifest:";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblUpdateURL
+            // 
+            this.lblUpdateURL.Location = new System.Drawing.Point(19, 84);
+            this.lblUpdateURL.Name = "lblUpdateURL";
+            this.lblUpdateURL.Size = new System.Drawing.Size(149, 24);
+            this.lblUpdateURL.TabIndex = 65;
+            this.lblUpdateURL.Text = "Application Update Manifest:";
+            this.lblUpdateURL.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // chkColorPrint
+            // 
+            this.chkColorPrint.Location = new System.Drawing.Point(246, 367);
+            this.chkColorPrint.Name = "chkColorPrint";
+            this.chkColorPrint.Size = new System.Drawing.Size(156, 16);
+            this.chkColorPrint.TabIndex = 2;
+            this.chkColorPrint.Text = "Print in color";
+            this.chkColorPrint.Visible = false;
+            // 
+            // myTip
+            // 
+            this.myTip.AutoPopDelay = 10000;
+            this.myTip.InitialDelay = 500;
+            this.myTip.ReshowDelay = 100;
+            // 
+            // cPicker
+            // 
+            this.cPicker.FullOpen = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(5, 64);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(103, 14);
+            this.label19.TabIndex = 61;
+            this.label19.Text = "Preferred currency:";
+            // 
+            // cbCurrency
+            // 
+            this.cbCurrency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCurrency.FormattingEnabled = true;
+            this.cbCurrency.Location = new System.Drawing.Point(9, 81);
+            this.cbCurrency.Name = "cbCurrency";
+            this.cbCurrency.Size = new System.Drawing.Size(171, 22);
+            this.cbCurrency.TabIndex = 62;
             // 
             // frmCalcOpt
             // 
@@ -1989,6 +2011,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox5.ResumeLayout(false);
             this.GroupBox5.PerformLayout();
             this.GroupBox14.ResumeLayout(false);
+            this.GroupBox14.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udIOLevel)).EndInit();
             this.GroupBox3.ResumeLayout(false);
             this.TabPage2.ResumeLayout(false);
@@ -2009,15 +2032,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox12.ResumeLayout(false);
             this.GroupBox12.PerformLayout();
             this.GroupBox11.ResumeLayout(false);
-            this.TabPage5.ResumeLayout(false);
-            this.groupBox19.ResumeLayout(false);
-            this.GroupBox1.ResumeLayout(false);
             this.TabPage1.ResumeLayout(false);
             this.TabPage1.PerformLayout();
             this.GroupBox9.ResumeLayout(false);
             this.GroupBox7.ResumeLayout(false);
+            this.TabPage5.ResumeLayout(false);
             this.groupBox16.ResumeLayout(false);
             this.groupBox16.PerformLayout();
+            this.groupBox19.ResumeLayout(false);
+            this.GroupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2181,5 +2204,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Button btnResetDatabaseLoc;
         private TextBox lblDatabaseLoc;
         private Label Label37;
+        private ComboBox cbCurrency;
+        private Label label19;
     }
 }

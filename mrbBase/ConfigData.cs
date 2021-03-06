@@ -170,6 +170,8 @@ namespace mrbBase
         public string ConversionDataPath { get; set; }
         public string DataPath { get; set; } = Path.Combine(Files.GetAssemblyLoc(), "Data\\Homecoming\\");
 
+        public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
+
         public string DefaultSaveFolderOverride
         {
             get => _defaultSaveFolderOverride;

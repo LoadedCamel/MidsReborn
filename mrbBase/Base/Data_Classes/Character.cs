@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -1201,7 +1200,10 @@ namespace mrbBase.Base.Data_Classes
                 section1.Add("Craft Cost (Memorized):", PopUp.Colors.Effect, $"{recipeEntry.CraftCostM:###,###,##0}",
                     PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
 
-            var subRecipesCost = new Dictionary<Enums.RewardCurrency, int> {{Enums.RewardCurrency.RewardMerit, 0}};
+            var subRecipesCost = Enum.GetValues(typeof(Enums.RewardCurrency))
+                .Cast<Enums.RewardCurrency>()
+                .ToDictionary(c => c, _ => 0);
+
             for (var index2 = 0;
                 index2 < recipeEntry.Salvage.Length &&
                 (index2 == 0 || recipeEntry.SalvageIdx[index2] != recipeEntry.SalvageIdx[0]);
@@ -1222,40 +1224,22 @@ namespace mrbBase.Base.Data_Classes
                 section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName,
                     iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
                     0.9f, FontStyle.Bold, 1);
-                var sCost = clsRewardCurrency.GetSalvageCost(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]]);
+                var sCost = clsRewardCurrency.GetSalvageCost(
+                    DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]],
+                    MidsContext.Config.PreferredCurrency);
                 if (sCost != null)
                 {
-                    subRecipesCost[Enums.RewardCurrency.RewardMerit] += (int) sCost * recipeEntry.Count[index2];
+                    subRecipesCost[MidsContext.Config.PreferredCurrency] += Math.Max(1, (int) sCost * recipeEntry.Count[index2]);
                 }
-                /*Debug.WriteLine($"Source salvage: {DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName}");
-                var subRecipe = DatabaseAPI.GetSalvageRecipe(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName);
-                if (subRecipe.ExternalName == "" & subRecipe.InternalName == "") continue;
-                
-                if (subRecipe.Item[0].BuyCost > 0)
+                else
                 {
-                    section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}",
-                        PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 2);
+                    // Fallback to reward merits
+                    var sCost2 = clsRewardCurrency.GetSalvageCost(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]]);
+                    if (sCost2 != null)
+                    {
+                        subRecipesCost[Enums.RewardCurrency.RewardMerit] += (int) sCost2 * recipeEntry.Count[index2];
+                    }
                 }
-
-                Debug.WriteLine($"subRecipe.Item.Count: {subRecipe.Item[0].Count.Length}");
-                Debug.WriteLine($"subRecipe.SalvageIdx.Count: {subRecipe.Item[0].SalvageIdx.Length}");
-
-                for (var k = 0; k < subRecipe.Item[0].Count.Length; k++)
-                {
-                    Debug.WriteLine($"SalvageIdx[{k}]: {subRecipe.Item[0].SalvageIdx[k]}");
-                    if (subRecipe.Item[0].SalvageIdx[k] < 0) continue;
-                    Debug.WriteLine($"SalvageName[{k}]: {DatabaseAPI.Database.Salvage[subRecipe.Item[0].SalvageIdx[k]].ExternalName}");
-                    section1.Add(DatabaseAPI.Database.Salvage[subRecipe.Item[0].SalvageIdx[k]].ExternalName,
-                        DatabaseAPI.Database.Salvage[subRecipe.Item[0].SalvageIdx[k]].Rarity switch
-                        {
-                            Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
-                            Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
-                            Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
-                            _ => PopUp.Colors.Common
-                        },
-                        subRecipe.Item[0].Count[k].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
-                        0.9f, FontStyle.Bold, 2);
-                }*/
             }
 
             var subCostTotal = subRecipesCost.Count <= 0 ? 0 : subRecipesCost.Sum(e => e.Value);
@@ -1266,8 +1250,11 @@ namespace mrbBase.Base.Data_Classes
                 foreach (var c in subRecipesCost)
                 {
                     if (c.Value <= 0) continue;
+                    var cAmt = c.Key == Enums.RewardCurrency.Influence
+                        ? $"{c.Value:###,###,##0}"
+                        : c.Value.ToString(CultureInfo.InvariantCulture);
                     section1.Add(clsRewardCurrency.GetCurrencyName(c.Key),
-                        clsRewardCurrency.GetCurrencyRarityColor(c.Key), c.Value.ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
+                        clsRewardCurrency.GetCurrencyRarityColor(c.Key), cAmt, PopUp.Colors.Title,
                         0.9f, FontStyle.Bold, 1);
                 }
             }
