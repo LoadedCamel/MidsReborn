@@ -542,7 +542,7 @@ namespace mrbBase.Base.Document_Classes
                     include = false;
                 if (!include)
                     continue;
-                var s1 = "Level " + MidsContext.Character.CurrentBuild.Powers[index1].Level + 1 + ":";
+                var s1 = $"Level {MidsContext.Character.CurrentBuild.Powers[index1].Level + 1}:";
                 var layoutRectangle = new RectangleF(bounds.Left + 15f, vPos, bounds.Width, fontSize * 1.25f);
                 args.Graphics.DrawString(s1, font, solidBrush, layoutRectangle, format);
                 var s2 = MidsContext.Character.CurrentBuild.Powers[index1].Power != null
