@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using FastDeepCloner;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 
@@ -24,7 +25,7 @@ namespace mrbBase
                 },
                 {
                     new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(Enums.RewardCurrency.EmpyreanMerit, Enums.RewardCurrency.RewardMerit),
-                    new KeyValuePair<int, int>(10, 1)
+                    new KeyValuePair<int, int>(1, 10)
                 },
                 {
                     new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(Enums.RewardCurrency.EmpyreanMerit, Enums.RewardCurrency.AstralMerit),
@@ -40,46 +41,63 @@ namespace mrbBase
                 },
             };
 
-        public static int? CurrencyChange(Enums.RewardCurrency c1, Enums.RewardCurrency c2, int amount)
+        private static int? CurrencyChangeInner(Enums.RewardCurrency c1, Enums.RewardCurrency c2, int amount, ref List<Enums.RewardCurrency> path)
         {
             if (c1 == c2) return amount;
-            if (amount == 0) return 0; // Approved by Captain Obvious.
 
-            var path = new List<Enums.RewardCurrency>();
-
-            var c = c1;
-            while (c != c2)
+            var linkFound = false;
+            var l = int.MaxValue;
+            var p = new List<Enums.RewardCurrency>();
+            var amt = 0;
+            foreach (var k in Enum.GetValues(typeof(Enums.RewardCurrency)))
             {
-                var linkFound = false;
-                foreach (var k in Enum.GetValues(typeof(Enums.RewardCurrency)))
-                {
-                    var kv = (Enums.RewardCurrency) k;
-                    if (path.Contains(kv)) continue;
-                    var cLink = new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(c, kv);
-                    var cLinkRev = new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(kv, c);
+                var kv = (Enums.RewardCurrency) k;
+                if (path.Contains(kv)) continue;
 
-                    if (AllowedConversions.ContainsKey(cLink))
+                var cLink = new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(c1, kv);
+                var cLinkRev = new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(kv, c1);
+
+                if (AllowedConversions.ContainsKey(cLink))
+                {
+                    var l2 = path.Clone();
+                    l2.Add(kv);
+                    var cnvRate = AllowedConversions[cLink];
+                    var t = CurrencyChangeInner(kv, c2, (int)Math.Floor((decimal)(amount / cnvRate.Key * cnvRate.Value)), ref l2);
+                    if (t != null & l2.Count < l)
                     {
-                        path.Add(c);
-                        var cnvRate = AllowedConversions[cLink];
-                        amount = (int) Math.Floor((decimal) (amount / cnvRate.Key * cnvRate.Value));
-                        c = kv;
-                        linkFound = true;
-                    }
-                    else if (AllowedConversions.ContainsKey(cLinkRev))
-                    {
-                        path.Add(c);
-                        var cnvRate = AllowedConversions[cLinkRev];
-                        amount = (int) Math.Floor((decimal) (amount / cnvRate.Value * cnvRate.Key));
-                        c = kv;
+                        l = l2.Count;
+                        p = l2.Clone();
+                        amt = (int) t;
                         linkFound = true;
                     }
                 }
 
-                if (!linkFound) return null;
+                if (AllowedConversions.ContainsKey(cLinkRev))
+                {
+                    var l2 = path.Clone();
+                    l2.Add(kv);
+                    var cnvRate = AllowedConversions[cLinkRev];
+                    var t = CurrencyChangeInner(kv, c2, (int)Math.Floor((decimal)(amount / cnvRate.Value * cnvRate.Key)), ref l2);
+                    if (t != null & l2.Count < l)
+                    {
+                        l = l2.Count;
+                        p = l2.Clone();
+                        amt = (int) t;
+                        linkFound = true;
+                    }
+                }
             }
 
-            return amount;
+            path = p.Clone();
+            return linkFound ? amt : null;
+        }
+
+        public static int? CurrencyChange(Enums.RewardCurrency c1, Enums.RewardCurrency c2, int amount)
+        {
+            var cPath = new List<Enums.RewardCurrency> {c1};
+            var ret =  CurrencyChangeInner(c1, c2, amount, ref cPath);
+
+            return ret == null ? null : Math.Max(1, (int) ret);
         }
 
         public static int? GetSalvageCost(int salvageIdx, Enums.RewardCurrency c = Enums.RewardCurrency.RewardMerit)
@@ -144,8 +162,8 @@ namespace mrbBase
             return s.ExternalName switch
             {
                 "Reward Merit" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, amount),
-                "Enhancement Catalyst" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 20 * amount),
-                "Enhancement Booster" => CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 5 * amount),
+                "Enhancement Catalyst" => c == Enums.RewardCurrency.Influence ? 1500000 * amount: CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 20 * amount),
+                "Enhancement Booster" => c == Enums.RewardCurrency.Influence ? 1000000 * amount: CurrencyChange(Enums.RewardCurrency.RewardMerit, c, 5 * amount),
                 _ => c switch
                 {
                     Enums.RewardCurrency.AETicket => s.Rarity switch
