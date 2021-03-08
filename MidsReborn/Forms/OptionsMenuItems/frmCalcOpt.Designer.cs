@@ -67,6 +67,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.rbGraphStacked = new System.Windows.Forms.RadioButton();
             this.rbGraphTwoLine = new System.Windows.Forms.RadioButton();
             this.GroupBox14 = new System.Windows.Forms.GroupBox();
+            this.cbCurrency = new System.Windows.Forms.ComboBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.chkIOLevel = new System.Windows.Forms.CheckBox();
             this.btnIOReset = new System.Windows.Forms.Button();
             this.Label40 = new System.Windows.Forms.Label();
@@ -189,8 +191,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
-            this.label19 = new System.Windows.Forms.Label();
-            this.cbCurrency = new System.Windows.Forms.ComboBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.groupBox18.SuspendLayout();
@@ -642,6 +642,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.GroupBox14.TabIndex = 69;
             this.GroupBox14.TabStop = false;
             this.GroupBox14.Text = "Inventions:";
+            // 
+            // cbCurrency
+            // 
+            this.cbCurrency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCurrency.FormattingEnabled = true;
+            this.cbCurrency.Location = new System.Drawing.Point(9, 81);
+            this.cbCurrency.Name = "cbCurrency";
+            this.cbCurrency.Size = new System.Drawing.Size(171, 22);
+            this.cbCurrency.TabIndex = 62;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(5, 64);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(103, 14);
+            this.label19.TabIndex = 61;
+            this.label19.Text = "Preferred currency:";
             // 
             // chkIOLevel
             // 
@@ -1959,24 +1977,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // cPicker
             // 
             this.cPicker.FullOpen = true;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(5, 64);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(103, 14);
-            this.label19.TabIndex = 61;
-            this.label19.Text = "Preferred currency:";
-            // 
-            // cbCurrency
-            // 
-            this.cbCurrency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCurrency.FormattingEnabled = true;
-            this.cbCurrency.Location = new System.Drawing.Point(9, 81);
-            this.cbCurrency.Name = "cbCurrency";
-            this.cbCurrency.Size = new System.Drawing.Size(171, 22);
-            this.cbCurrency.TabIndex = 62;
             // 
             // frmCalcOpt
             // 

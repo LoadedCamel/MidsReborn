@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.ImportExportItems;
@@ -36,14 +35,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             defActs = new short[20];
             InitializeComponent();
             Name = nameof(frmCalcOpt);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmCalcOpt));
-            optTO.Image = (Image)componentResourceManager.GetObject("optTO.Image");
-            optDO.Image = (Image)componentResourceManager.GetObject("optDO.Image");
-            optSO.Image = (Image)componentResourceManager.GetObject("optSO.Image");
-            Label9.Text = componentResourceManager.GetString("Label9.Text");
-            Label5.Text = componentResourceManager.GetString("Label5.Text");
-            myTip.SetToolTip(udExHigh, componentResourceManager.GetString("udExHigh.ToolTip"));
-            Label15.Text = componentResourceManager.GetString("Label15.Text");
+            optTO.Image = Resources.optTO_Image;
+            optDO.Image = Resources.optDO_Image;
+            optSO.Image = Resources.optSO_Image;
+            myTip.SetToolTip(udExHigh, "Set this to the level of your character.\r\n" +
+                    "This setting will not reduce the number of slots / powers placed to match the level.\r\n" +
+                    "Powers available after the level set here will still be calculated unless you disable them."
+            );
+            Label15.Text = "Swap = two powers are swapped. The powers in between are unaffected by the transition.\r\n"
+                           + "Move = One power is moved to the position of another. The power being replaced, as well as the powers in between, are shifted in the direction of the powers being moved.\r\n"
+                           + "Shift = cascading swaps.Shifting down means powers are moved to a lower level, starting with the lowest.Shifting up means powers are moved to a higher level, starting with the highest.";
+
+            Label5.Text =
+                "When exemplared below level 32, the game scales your enhancements down. If you want to see the approximate values for your character when exemplared, enter a starting level and exemplar level"
+                + " (Remember that if your build's level is different to the starting level set here, the numbers will be wrong!)";
+
+            Label9.Text =
+                "Some attacks have a chance to deal additional damage (such as fire). Because this damage isn't always going to happen, the attack's damage can be calculated either as an average,"
+                + " at maximum possible (as thought the extra damage always happens), or at minimum (as though it never happens).\r\n"
+                + "Note that this also affects how Scrapper damage is displayed with Critical Hit is toggled on.\r\n"
+                + "Where an attack has a chance to do additional damage:";
             Icon = Resources.reborn;
             myParent = iParent;
         }
