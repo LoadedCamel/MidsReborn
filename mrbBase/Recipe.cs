@@ -58,13 +58,13 @@ namespace mrbBase
                     }
                 }
 
-                //IsGeneric = reader.ReadBoolean();
-                //IsVirtual = reader.ReadBoolean();
-                //IsHidden = reader.ReadBoolean();
+                IsGeneric = reader.ReadBoolean();
+                IsVirtual = reader.ReadBoolean();
+                IsHidden = reader.ReadBoolean();
             }
             else
             {
-                Rarity = (RecipeRarity)reader.ReadInt32();
+                Rarity = (RecipeRarity) reader.ReadInt32();
                 InternalName = reader.ReadString();
                 ExternalName = reader.ReadString();
                 Enhancement = reader.ReadString();
@@ -113,12 +113,11 @@ namespace mrbBase
                     writer.Write(r.Salvage[index2]);
                     writer.Write(r.Count[index2]);
                     writer.Write(r.SalvageIdx[index2]);
-                    //writer.Write(r.RecipeIdx[index2]);
                 }
             }
-            //writer.Write(IsGeneric);
-            //writer.Write(IsVirtual);
-            //writer.Write(IsHidden);
+            writer.Write(IsGeneric);
+            writer.Write(IsVirtual);
+            writer.Write(IsHidden);
         }
 
         public Recipe(ref Recipe iRecipe)

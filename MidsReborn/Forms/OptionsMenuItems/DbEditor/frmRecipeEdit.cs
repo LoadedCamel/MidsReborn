@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.WindowMenuItems;
@@ -204,10 +202,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void AssignRecipeIndexes()
         {
             var recipesArr = new Recipe[_tempRecipes.Length];
-            for (var i = 0; i < lvDPA.Items.Count; i++)
+            var l = lvDPA.Items.Count;
+            var recipesInfo = new KeyValuePair<int, string>[l];
+            // Pre-load info from listview for speedup
+            for (var i = 0; i < l; i++)
             {
-                var index = Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text);
-                recipesArr[index] = _tempRecipes.First(r => r.InternalName == lvDPA.Items[i].SubItems[0].Text);
+                recipesInfo[i] = new KeyValuePair<int, string>(Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text), lvDPA.Items[i].SubItems[0].Text);
+            }
+
+            for (var i = 0; i < l; i++)
+            {
+                recipesArr[recipesInfo[i].Key] = _tempRecipes.First(r => r.InternalName == recipesInfo[i].Value);
             }
 
             _tempRecipes = (Recipe[]) recipesArr.Clone();
@@ -248,7 +253,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.LoadRecipes();
+            //DatabaseAPI.LoadRecipes();
             Close();
         }
 
@@ -312,7 +317,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (!CheckIndexesConsistency()) return;
-            
+
             AssignRecipeIndexes();
             AssignNewRecipes();
             DatabaseAPI.Database.Recipes = (Recipe[]) _tempRecipes.Clone();
