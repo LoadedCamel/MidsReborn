@@ -739,6 +739,15 @@ namespace Mids_Reborn.Forms
 
         private void frmRecipeViewer_Load(object sender, EventArgs e)
         {
+            lvPower
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvPower, true, null);
+            lvDPA
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(lvDPA, true, null);
+
             ibClose.IA = myParent.Drawing.pImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap

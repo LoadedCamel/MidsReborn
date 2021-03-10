@@ -45,18 +45,18 @@ namespace Mids_Reborn.Forms
             this.lblHeader = new System.Windows.Forms.Label();
             this.Panel1 = new System.Windows.Forms.Panel();
             this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.RecipeInfo = new ctlPopUp();
+            this.RecipeInfo = new mrbControls.ctlPopUp();
             this.Panel2 = new System.Windows.Forms.Panel();
             this.chkRecipe = new System.Windows.Forms.CheckBox();
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.ibMiniList = new ImageButton();
-            this.ibClipboard = new ImageButton();
-            this.ibTopmost = new ImageButton();
-            this.ibClose = new ImageButton();
-            this.ibEnhCheckMode = new ImageButton();
+            this.ibMiniList = new mrbControls.ImageButton();
+            this.ibClipboard = new mrbControls.ImageButton();
+            this.ibTopmost = new mrbControls.ImageButton();
+            this.ibClose = new mrbControls.ImageButton();
+            this.ibEnhCheckMode = new mrbControls.ImageButton();
             this.pSalvageSummary = new System.Windows.Forms.Panel();
             this.lblBoosters = new System.Windows.Forms.Label();
             this.lblCatalysts = new System.Windows.Forms.Label();
@@ -64,13 +64,13 @@ namespace Mids_Reborn.Forms
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
-            this.ctlPopUp1 = new ctlPopUp();
+            this.ctlPopUp1 = new mrbControls.ctlPopUp();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.lblRewardMerits = new System.Windows.Forms.Label();
-            this.imageButton1 = new ImageButton();
+            this.imageButton1 = new mrbControls.ImageButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecipe)).BeginInit();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
@@ -78,6 +78,10 @@ namespace Mids_Reborn.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.pSalvageSummary.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // pbRecipe
@@ -129,7 +133,7 @@ namespace Mids_Reborn.Forms
             // ColumnHeader3
             // 
             this.ColumnHeader3.Text = "Enhancement";
-            this.ColumnHeader3.Width = 241;
+            this.ColumnHeader3.Width = 301;
             // 
             // ColumnHeader4
             // 
@@ -139,7 +143,7 @@ namespace Mids_Reborn.Forms
             // ColumnHeader5
             // 
             this.ColumnHeader5.Text = "Power";
-            this.ColumnHeader5.Width = 114;
+            this.ColumnHeader5.Width = 134;
             // 
             // ilSets
             // 
@@ -327,7 +331,6 @@ namespace Mids_Reborn.Forms
             this.pSalvageSummary.BackColor = System.Drawing.Color.Transparent;
             this.pSalvageSummary.Controls.Add(this.lblBoosters);
             this.pSalvageSummary.Controls.Add(this.pictureBox3);
-            this.pSalvageSummary.Controls.Add(this.lblCatalysts);
             this.pSalvageSummary.Controls.Add(this.pictureBox2);
             this.pSalvageSummary.Controls.Add(this.lblEnhObtained);
             this.pSalvageSummary.Controls.Add(this.pictureBox1);
@@ -355,7 +358,7 @@ namespace Mids_Reborn.Forms
             this.lblCatalysts.Location = new System.Drawing.Point(259, 8);
             this.lblCatalysts.Name = "lblCatalysts";
             this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
-            this.lblCatalysts.TabIndex = 3;
+            this.lblCatalysts.TabIndex = 5;
             this.lblCatalysts.Text = "x50";
             // 
             // lblEnhObtained
@@ -448,24 +451,11 @@ namespace Mids_Reborn.Forms
             // 
             this.panel5.BackColor = System.Drawing.Color.Transparent;
             this.panel5.Controls.Add(this.lblCatalysts);
-            //this.panel5.Controls.Add(this.pictureBox5);
             this.panel5.Controls.Add(this.lblRewardMerits);
-            //this.panel5.Controls.Add(this.pictureBox6);
             this.panel5.Location = new System.Drawing.Point(194, 538);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(372, 32);
             this.panel5.TabIndex = 18;
-            // 
-            // lblCatalysts
-            // 
-            this.lblCatalysts.AutoSize = true;
-            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.lblCatalysts.ForeColor = System.Drawing.Color.White;
-            this.lblCatalysts.Location = new System.Drawing.Point(259, 8);
-            this.lblCatalysts.Name = "lblCatalysts";
-            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
-            this.lblCatalysts.TabIndex = 5;
-            this.lblCatalysts.Text = "x50";
             // 
             // lblRewardMerits
             // 
@@ -521,6 +511,11 @@ namespace Mids_Reborn.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.pSalvageSummary.ResumeLayout(false);
             this.pSalvageSummary.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
