@@ -526,7 +526,7 @@ namespace mrbControls
             var height = Font.GetHeight(myGFX) + 10;
             bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             layoutRectangle.X = checked(bounds.X + phPadding);
-            if (pStyle == (Enums.eDDStyle) 3)
+            if (pStyle == Enums.eDDStyle.TextUnderGraph)
                 layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f + 2f + 2f;
             else
                 layoutRectangle.Y = bounds.Y + (bounds.Height - height) / 2f - 1f - 10f;
@@ -542,24 +542,30 @@ namespace mrbControls
                 _ => stringFormat.Alignment
             };
 
-            var eDdText = pText;
+            /*var eDdText = pText;
             if (eDdText == 0)
             {
-            }
+            }*/
 
-            var sizeF = bxBuffer.Graphics.MeasureString(pString, Font);
-            if (sizeF.Width > layoutRectangle.Width)
+            var txtSizeF = bxBuffer.Graphics.MeasureString(pString, Font);
+            bxBuffer.Graphics.TextRenderingHint = txtSizeF.Width > layoutRectangle.Width
+                ? TextRenderingHint.ClearTypeGridFit
+                : TextRenderingHint.AntiAliasGridFit;
+            //Font font = new Font(Font.Name, Font.Size * (layoutRectangle.Width / sizeF.Width), Font.Style, GraphicsUnit.Point);
+            var smlFont = new Font("Arial", 9.25f, FontStyle.Bold, GraphicsUnit.Point);
+            var font = txtSizeF.Width > layoutRectangle.Width ? smlFont : Font;
+            bxBuffer.Graphics.MeasureString(pString, font,
+                new SizeF(layoutRectangle.Width, layoutRectangle.Height), stringFormat,
+                out _, out var linesFilled);
+            layoutRectangle.Y -= linesFilled switch
             {
-                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-                //Font font = new Font(Font.Name, Font.Size * (layoutRectangle.Width / sizeF.Width), Font.Style, GraphicsUnit.Point);
-                var font = new Font("Arial", 9.25f, FontStyle.Bold, GraphicsUnit.Point);
-                bxBuffer.Graphics.DrawString(pString, font, brush, layoutRectangle, stringFormat);
-            }
-            else
-            {
-                bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                bxBuffer.Graphics.DrawString(pString, Font, brush, layoutRectangle, stringFormat);
-            }
+                0 => 0,
+                1 => 0,
+                2 => font.GetHeight(myGFX) / 2 - 3,
+                _ => font.GetHeight(myGFX) - 3
+            };
+            if (linesFilled > 3) font = smlFont;
+            bxBuffer.Graphics.DrawString(pString, font, brush, layoutRectangle, stringFormat);
         }
 
         // Token: 0x06000078 RID: 120 RVA: 0x00007474 File Offset: 0x00005674
