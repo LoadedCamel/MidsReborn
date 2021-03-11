@@ -913,12 +913,10 @@ namespace Mids_Reborn.Forms
 
         private void RecipeInfo_MouseWheel(object sender, MouseEventArgs e)
         {
-            VScrollBar1.Value =
-                Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, e.Delta > 0 ? -1 : 1)); // Interaction.IIf(e.Delta > 0, -1, 1)
-            if (VScrollBar1.Value > VScrollBar1.Maximum - 9)
-                VScrollBar1.Value = VScrollBar1.Maximum - 9;
-            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender),
-                new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+            //VScrollBar1.Value =
+                //Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, e.Delta > 0 ? -1 : 1)); // Interaction.IIf(e.Delta > 0, -1, 1)
+            VScrollBar1.Value = Math.Max(VScrollBar1.Minimum, Math.Min(VScrollBar1.Maximum - 9, VScrollBar1.Value + (e.Delta > 0 ? -1 : 1)));
+            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender), new ScrollEventArgs(ScrollEventType.EndScroll, 0));
         }
 
         public void SetLocation()
