@@ -211,31 +211,54 @@ namespace Mids_Reborn.Forms
             }
         }
 
+        private Font GetBestFitFont(Label lbl, string txt, float minSize, float maxSize, FontStyle fontStyle = FontStyle.Regular)
+        {
+            // http://csharphelper.com/blog/2015/04/size-a-font-to-fit-a-label-in-c/
+            if (txt.Length <= 0) return new Font(lbl.Font.FontFamily, maxSize, fontStyle, GraphicsUnit.Pixel, 0);
+
+            var bestSize = maxSize;
+            var w = lbl.DisplayRectangle.Width - 3;
+            var h = lbl.DisplayRectangle.Height - 3;
+            using (var g = lbl.CreateGraphics())
+            {
+                for (var i = minSize; i <= maxSize; i += 0.5f)
+                {
+                    using var f = new Font(lbl.Font.FontFamily, i, fontStyle, GraphicsUnit.Pixel, 0);
+                    var txtSize = g.MeasureString(txt, f);
+                    if (txtSize.Width <= w & txtSize.Height <= h) continue;
+
+                    bestSize = i - 1;
+                    break;
+                }
+            }
+
+            return new Font(lbl.Font.FontFamily, bestSize, fontStyle, GraphicsUnit.Pixel, 0);
+        }
+
         private PopUp.PopupData BuildList(bool Mini)
         {
             var iIndent = 1;
             var popupData = new PopUp.PopupData();
             var tl = new CountingList[0];
-            if (lvDPA.SelectedIndices.Count < 1 || lvDPA.SelectedItems[0].Text.Contains("Superior"))
-                return popupData;
+            if (lvDPA.SelectedIndices.Count < 1) return popupData;
             if (lvDPA.SelectedIndices[0] == 0)
             {
-                var numArray1 = new int[DatabaseAPI.Database.Salvage.Length - 1 + 1];
+                var numArray1 = new int[DatabaseAPI.Database.Salvage.Length];
                 var num1 = 0;
                 var num2 = 0;
                 var num3 = 0;
                 var num4 = 0;
                 DrawIcon(-1);
-                var numArray2 = new int[DatabaseAPI.Database.Recipes.Length - 1 + 1][];
+                var numArray2 = new int[DatabaseAPI.Database.Recipes.Length][];
                 var num5 = numArray2.Length - 1;
-                for (var index = 0; index <= num5; ++index)
+                for (var index = 0; index < num5; index++)
                 {
-                    var numArray3 = new int[DatabaseAPI.Database.Recipes[index].Item.Length - 1 + 1];
+                    var numArray3 = new int[DatabaseAPI.Database.Recipes[index].Item.Length];
                     numArray2[index] = numArray3;
                 }
 
-                var num6 = lvDPA.Items.Count - 1;
-                for (var index1 = 1; index1 <= num6; ++index1)
+                var num6 = lvDPA.Items.Count;
+                for (var index1 = 1; index1 < num6; index1++)
                 {
                     var rIDX = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[index1].Tag)].RecipeIDX;
                     if (lvDPA.Items[index1].SubItems[1].Text == "*")
@@ -253,8 +276,8 @@ namespace Mids_Reborn.Forms
                     if (chkRecipe.Checked)
                         ++numArray2[rIDX][itemId];
                     var recipeEntry = DatabaseAPI.Database.Recipes[rIDX].Item[itemId];
-                    var num7 = recipeEntry.SalvageIdx.Length - 1;
-                    for (var index2 = 0; index2 <= num7; ++index2)
+                    var num7 = recipeEntry.SalvageIdx.Length;
+                    for (var index2 = 0; index2 < num7; index2++)
                     {
                         if (!((recipeEntry.SalvageIdx[index2] > -1) & (recipeEntry.Count[index2] > 0)))
                             continue;
@@ -272,8 +295,7 @@ namespace Mids_Reborn.Forms
                     num1 += recipeEntry.CraftCost;
                     if (recipeEntry.CraftCostM > 0)
                         num3 += recipeEntry.CraftCostM;
-                    else if (DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[index1].Tag)].TypeID ==
-                             Enums.eType.SetO)
+                    else if (DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[index1].Tag)].TypeID == Enums.eType.SetO)
                         num3 += recipeEntry.CraftCost;
                     num2 += recipeEntry.BuyCost;
                 }
@@ -442,8 +464,11 @@ namespace Mids_Reborn.Forms
                 return popupData;
             }
 
-            lblHeader.Text = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].LongName +
-                             " (" + lvDPA.SelectedItems[0].SubItems[1].Text + ")";
+            var headerText = $"{DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].LongName} ({lvDPA.SelectedItems[0].SubItems[1].Text})";
+            lblHeader.SuspendLayout();
+            lblHeader.Font = GetBestFitFont(lblHeader, headerText, 10f, 18f, FontStyle.Bold);
+            lblHeader.Text = headerText;
+            lblHeader.ResumeLayout();
             var rIdx = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].RecipeIDX;
             if (lvDPA.SelectedItems[0].SubItems[1].Text == "*")
                 rIdx = -1;
@@ -952,7 +977,7 @@ namespace Mids_Reborn.Forms
             PopUp.StringValue[] inStrs)
         {
             var num1 = 0;
-            var numArray = new int[inStrs.Length - 1 + 1];
+            var numArray = new int[inStrs.Length];
             var num2 = numArray.Length - 1;
             for (var index1 = 0; index1 <= num2; ++index1)
             {
@@ -984,7 +1009,7 @@ namespace Mids_Reborn.Forms
                     numArray[index1] = index1;
             }
 
-            var stringValueArray = new PopUp.StringValue[inStrs.Length - 1 + 1];
+            var stringValueArray = new PopUp.StringValue[inStrs.Length];
             var num5 = inStrs.Length - 1;
             for (var index = 0; index <= num5; ++index)
                 stringValueArray[index] = inStrs[numArray[index]];
