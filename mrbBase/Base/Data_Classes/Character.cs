@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -972,7 +973,7 @@ namespace mrbBase.Base.Data_Classes
                 }
                 else if (enhancement.TypeID == Enums.eType.SetO || enhancement.TypeID == Enums.eType.InventO)
                 {
-                    popupData1.Add(PopRecipeInfo(enhancement.RecipeIDX, iSlot.IOLevel));
+                    popupData1.Add(PopRecipeInfo(enhancement.RecipeIDX, iSlot.IOLevel, iSlot.RelativeLevel));
                 }
 
                 popupData2 = popupData1;
@@ -1144,13 +1145,29 @@ namespace mrbBase.Base.Data_Classes
             return section1;
         }
 
-        public static PopUp.Section PopRecipeInfo(int rIdx, int iLevel)
+        private static void GetSalvageCostOuter(ref Dictionary<Enums.RewardCurrency, int> costList, Salvage s, int amount)
+        {
+            var sCost = clsRewardCurrency.GetSalvageCost(s, MidsContext.Config.PreferredCurrency, amount);
+            if (sCost != null)
+            {
+                costList[MidsContext.Config.PreferredCurrency] += (int) sCost;
+            }
+            else
+            {
+                var sCost2 = clsRewardCurrency.GetSalvageCost(s, Enums.RewardCurrency.RewardMerit, amount);
+                if (sCost2 != null)
+                {
+                    costList[Enums.RewardCurrency.RewardMerit] += (int) sCost2;
+                }
+            }
+        }
+
+        public static PopUp.Section PopRecipeInfo(int rIdx, int iLevel, Enums.eEnhRelative relLevel = Enums.eEnhRelative.Even)
         {
             var section1 = new PopUp.Section();
             if (rIdx < 0) return section1;
 
             var recipe = DatabaseAPI.Database.Recipes[rIdx];
-            //if (recipe.ExternalName.Contains("Superior")) return section1;
             var index1 = -1;
             var lvlUbound = 52;
             var lvlLbound = 0;
@@ -1224,26 +1241,28 @@ namespace mrbBase.Base.Data_Classes
                 section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName,
                     iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
                     0.9f, FontStyle.Bold, 1);
-                var sCost = clsRewardCurrency.GetSalvageCost(
-                    DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]],
-                    MidsContext.Config.PreferredCurrency,
+                GetSalvageCostOuter(ref subRecipesCost, DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]],
                     recipeEntry.Count[index2]);
-                if (sCost != null)
-                {
-                    subRecipesCost[MidsContext.Config.PreferredCurrency] += (int) sCost;
-                }
-                else
-                {
-                    // Fallback to reward merits
-                    var sCost2 = clsRewardCurrency.GetSalvageCost(
-                        DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]],
-                        Enums.RewardCurrency.RewardMerit,
-                        recipeEntry.Count[index2]);
-                    if (sCost2 != null)
-                    {
-                        subRecipesCost[Enums.RewardCurrency.RewardMerit] += (int) sCost2;
-                    }
-                }
+            }
+
+            var numBoosters = relLevel switch
+            {
+                Enums.eEnhRelative.PlusOne => 1,
+                Enums.eEnhRelative.PlusTwo => 2,
+                Enums.eEnhRelative.PlusThree => 3,
+                Enums.eEnhRelative.PlusFour => 4,
+                Enums.eEnhRelative.PlusFive => 5,
+                _ => 0
+            };
+
+            if (numBoosters > 0)
+            {
+                //section1.Add("", PopUp.Colors.Title);
+                section1.Add("Enhancement Booster",
+                    PopUp.Colors.Rare, numBoosters.ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
+                    0.9f, FontStyle.Bold, 1);
+                var boosterSalvage = DatabaseAPI.Database.Salvage.First(s => s.ExternalName == "Enhancement Booster");
+                GetSalvageCostOuter(ref subRecipesCost, boosterSalvage, numBoosters);
             }
 
             var subCostTotal = subRecipesCost.Count <= 0 ? 0 : subRecipesCost.Sum(e => e.Value);

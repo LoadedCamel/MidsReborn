@@ -123,6 +123,26 @@ namespace Mids_Reborn {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Icon_AncientMemories {
+            get {
+                object obj = ResourceManager.GetObject("Icon_AncientMemories", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_DisorientingField {
+            get {
+                object obj = ResourceManager.GetObject("Icon_DisorientingField", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap MRB_Concept {
             get {
                 object obj = ResourceManager.GetObject("MRB_Concept", resourceCulture);

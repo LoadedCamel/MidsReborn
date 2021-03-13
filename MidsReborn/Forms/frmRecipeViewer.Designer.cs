@@ -59,8 +59,8 @@ namespace Mids_Reborn.Forms
             this.ibEnhCheckMode = new mrbControls.ImageButton();
             this.pSalvageSummary = new System.Windows.Forms.Panel();
             this.lblBoosters = new System.Windows.Forms.Label();
-            this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblEnhObtained = new System.Windows.Forms.Label();
+            this.lblCatalysts = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
@@ -158,7 +158,7 @@ namespace Mids_Reborn.Forms
             this.chkSortByLevel.ForeColor = System.Drawing.Color.White;
             this.chkSortByLevel.Location = new System.Drawing.Point(12, 217);
             this.chkSortByLevel.Name = "chkSortByLevel";
-            this.chkSortByLevel.Size = new System.Drawing.Size(176, 16);
+            this.chkSortByLevel.Size = new System.Drawing.Size(176, 17);
             this.chkSortByLevel.TabIndex = 9;
             this.chkSortByLevel.Text = "Sort By Level";
             this.chkSortByLevel.UseVisualStyleBackColor = true;
@@ -350,17 +350,6 @@ namespace Mids_Reborn.Forms
             this.lblBoosters.TabIndex = 5;
             this.lblBoosters.Text = "x50";
             // 
-            // lblCatalysts
-            // 
-            this.lblCatalysts.AutoSize = true;
-            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.lblCatalysts.ForeColor = System.Drawing.Color.White;
-            this.lblCatalysts.Location = new System.Drawing.Point(259, 8);
-            this.lblCatalysts.Name = "lblCatalysts";
-            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
-            this.lblCatalysts.TabIndex = 5;
-            this.lblCatalysts.Text = "x50";
-            // 
             // lblEnhObtained
             // 
             this.lblEnhObtained.AutoSize = true;
@@ -371,6 +360,17 @@ namespace Mids_Reborn.Forms
             this.lblEnhObtained.Size = new System.Drawing.Size(109, 15);
             this.lblEnhObtained.TabIndex = 1;
             this.lblEnhObtained.Text = "Obtained: 100/100";
+            // 
+            // lblCatalysts
+            // 
+            this.lblCatalysts.AutoSize = true;
+            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblCatalysts.ForeColor = System.Drawing.Color.White;
+            this.lblCatalysts.Location = new System.Drawing.Point(259, 8);
+            this.lblCatalysts.Name = "lblCatalysts";
+            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
+            this.lblCatalysts.TabIndex = 5;
+            this.lblCatalysts.Text = "x50";
             // 
             // panel3
             // 
