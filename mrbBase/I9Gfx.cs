@@ -414,6 +414,11 @@ namespace mrbBase
             return ImagePath() + "Overlay\\Recipe.png";
         }
 
+        public static string GetRecipeTransparentName()
+        {
+            return ImagePath() + "Overlay\\Recipe2.png";
+        }
+
         public static string GetPowersetsPath()
         {
             return ImagePath() + "Powersets\\";

@@ -158,7 +158,7 @@ namespace Mids_Reborn.Forms
             Loading = true;
             InitializeComponent();
             Name = nameof(frmRecipeViewer);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeViewer));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeViewer));
             Icon = Resources.reborn;
             RecipeInfo.MouseWheel += RecipeInfo_MouseWheel;
             RecipeInfo.MouseEnter += RecipeInfo_MouseEnter;
@@ -175,7 +175,7 @@ namespace Mids_Reborn.Forms
             ibTopmost.ButtonClicked += ibTopmost_ButtonClicked;
             ibEnhCheckMode.ButtonClicked += ibEnhCheckMode_ButtonClicked;
             myParent = iParent;
-            bxRecipe = new ExtendedBitmap(I9Gfx.GetRecipeName());
+            bxRecipe = new ExtendedBitmap(I9Gfx.GetRecipeTransparentName());
         }
 
         public void RecalcSalvage()
@@ -257,12 +257,28 @@ namespace Mids_Reborn.Forms
             return numBoosters;
         }
 
+        private int GetPopupDataLines(PopUp.PopupData popupData)
+        {
+            return popupData.Sections?.Sum(s => s.Content.Length) ?? 0;
+        }
+
+        private void ChangeVScrollBarState(PopUp.PopupData popupData)
+        {
+            var lines = GetPopupDataLines(popupData);
+            VScrollBar1.Enabled = lines > 12;
+            VScrollBar1.Visible = lines > 12;
+        }
+
         private PopUp.PopupData BuildList(bool Mini)
         {
             var iIndent = 1;
             var popupData = new PopUp.PopupData();
             var tl = new CountingList[0];
-            if (lvDPA.SelectedIndices.Count < 1) return popupData;
+            if (lvDPA.SelectedIndices.Count < 1)
+            {
+                ChangeVScrollBarState(popupData);
+                return popupData;
+            }
             var boosterSalvageIdx = Array.IndexOf(DatabaseAPI.Database.Salvage,
                 DatabaseAPI.Database.Salvage.First(s => s.ExternalName == "Enhancement Booster"));
             RecipeInfo.SuspendLayout();
@@ -472,7 +488,9 @@ namespace Mids_Reborn.Forms
                     popupData.Sections[index1].Content = sortPopupStrings(Mini, 1, popupData.Sections[index1].Content);
                 }
 
+                ChangeVScrollBarState(popupData);
                 RecipeInfo.ResumeLayout();
+
                 return popupData;
             }
 
@@ -493,26 +511,35 @@ namespace Mids_Reborn.Forms
             lblHeader.ResumeLayout();
             var rIdx = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].RecipeIDX;
             if (lvDPA.SelectedItems[0].SubItems[1].Text == "*")
-                rIdx = -1;
-            DrawIcon(Convert.ToInt32(lvDPA.SelectedItems[0].Tag));
-            if (rIdx <= -1)
-                return popupData;
             {
-                var index1 = popupData.Add();
-                popupData.Sections[index1] = Character.PopRecipeInfo(rIdx,
-                    Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text) - 1,
-                    boostersRelLevel);
-                if (popupData.Sections[index1].Content != null && popupData.Sections[index1].Content.Length > 0)
-                {
-                    var content = popupData.Sections[index1].Content;
-                    content[0].Text = $"{content[0].Text} ({lvDPA.SelectedItems[0].SubItems[1].Text})";
-                    return popupData;
-                }
-
-                var sContent = popupData.Sections[index1].Content;
-                if (sContent != null) sContent[0].Text = "";
+                rIdx = -1;
             }
 
+            DrawIcon(Convert.ToInt32(lvDPA.SelectedItems[0].Tag));
+            if (rIdx <= -1)
+            {
+                ChangeVScrollBarState(popupData);
+
+                return popupData;
+            }
+
+            var index4 = popupData.Add();
+            popupData.Sections[index4] = Character.PopRecipeInfo(rIdx,
+                Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text) - 1,
+                boostersRelLevel);
+            if (popupData.Sections[index4].Content != null && popupData.Sections[index4].Content.Length > 0)
+            {
+                var content = popupData.Sections[index4].Content;
+                content[0].Text = $"{content[0].Text} ({lvDPA.SelectedItems[0].SubItems[1].Text})";
+                ChangeVScrollBarState(popupData);
+
+                return popupData;
+            }
+
+            var sContent = popupData.Sections[index4].Content;
+            if (sContent != null) sContent[0].Text = "";
+
+            ChangeVScrollBarState(popupData);
             RecipeInfo.ResumeLayout();
             return popupData;
         }
@@ -616,9 +643,9 @@ namespace Mids_Reborn.Forms
         {
             var extendedBitmap = new ExtendedBitmap(bxRecipe.Size);
             extendedBitmap.Graphics.Clear(Color.Black);
-            extendedBitmap.Graphics.DrawImageUnscaled(bxRecipe.Bitmap, 0, 0);
             extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_AncientMemories, 0, 0);
             //extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_DisorientingField, 0, 0);
+            extendedBitmap.Graphics.DrawImageUnscaled(bxRecipe.Bitmap, 0, 0);
             pbRecipe.Image = new Bitmap(extendedBitmap.Bitmap);
         }
 
