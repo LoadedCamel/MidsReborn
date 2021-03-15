@@ -58,9 +58,9 @@ namespace Mids_Reborn.Forms
             this.ibClose = new mrbControls.ImageButton();
             this.ibEnhCheckMode = new mrbControls.ImageButton();
             this.pSalvageSummary = new System.Windows.Forms.Panel();
+            this.lblCatalysts = new System.Windows.Forms.Label();
             this.lblBoosters = new System.Windows.Forms.Label();
             this.lblEnhObtained = new System.Windows.Forms.Label();
-            this.lblCatalysts = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
@@ -259,7 +259,7 @@ namespace Mids_Reborn.Forms
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 4;
             this.pictureBox3.TabStop = false;
-            this.ToolTip1.SetToolTip(this.pictureBox3, "Enhancements Catalysts");
+            this.ToolTip1.SetToolTip(this.pictureBox3, "Enhancements Boosters");
             // 
             // ibMiniList
             // 
@@ -324,11 +324,12 @@ namespace Mids_Reborn.Forms
             this.ibEnhCheckMode.TabIndex = 16;
             this.ibEnhCheckMode.TextOff = "Enh. check mode";
             this.ibEnhCheckMode.TextOn = "Enh. check mode";
-            this.ibEnhCheckMode.Toggle = false;
+            this.ibEnhCheckMode.Toggle = true;
             // 
             // pSalvageSummary
             // 
             this.pSalvageSummary.BackColor = System.Drawing.Color.Transparent;
+            this.pSalvageSummary.Controls.Add(this.lblCatalysts);
             this.pSalvageSummary.Controls.Add(this.lblBoosters);
             this.pSalvageSummary.Controls.Add(this.pictureBox3);
             this.pSalvageSummary.Controls.Add(this.pictureBox2);
@@ -338,6 +339,17 @@ namespace Mids_Reborn.Forms
             this.pSalvageSummary.Name = "pSalvageSummary";
             this.pSalvageSummary.Size = new System.Drawing.Size(516, 32);
             this.pSalvageSummary.TabIndex = 17;
+            // 
+            // lblCatalysts
+            // 
+            this.lblCatalysts.AutoSize = true;
+            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblCatalysts.ForeColor = System.Drawing.Color.White;
+            this.lblCatalysts.Location = new System.Drawing.Point(260, 8);
+            this.lblCatalysts.Name = "lblCatalysts";
+            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
+            this.lblCatalysts.TabIndex = 6;
+            this.lblCatalysts.Text = "x50";
             // 
             // lblBoosters
             // 
@@ -360,17 +372,6 @@ namespace Mids_Reborn.Forms
             this.lblEnhObtained.Size = new System.Drawing.Size(109, 15);
             this.lblEnhObtained.TabIndex = 1;
             this.lblEnhObtained.Text = "Obtained: 100/100";
-            // 
-            // lblCatalysts
-            // 
-            this.lblCatalysts.AutoSize = true;
-            this.lblCatalysts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.lblCatalysts.ForeColor = System.Drawing.Color.White;
-            this.lblCatalysts.Location = new System.Drawing.Point(259, 8);
-            this.lblCatalysts.Name = "lblCatalysts";
-            this.lblCatalysts.Size = new System.Drawing.Size(26, 15);
-            this.lblCatalysts.TabIndex = 5;
-            this.lblCatalysts.Text = "x50";
             // 
             // panel3
             // 
@@ -450,7 +451,6 @@ namespace Mids_Reborn.Forms
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.Transparent;
-            this.panel5.Controls.Add(this.lblCatalysts);
             this.panel5.Controls.Add(this.lblRewardMerits);
             this.panel5.Location = new System.Drawing.Point(194, 538);
             this.panel5.Name = "panel5";
@@ -550,11 +550,11 @@ namespace Mids_Reborn.Forms
         private Label label1;
         private CheckBox checkBox1;
         private Panel panel5;
-        private Label lblCatalysts;
         private PictureBox pictureBox5;
         private Label lblRewardMerits;
         private PictureBox pictureBox6;
         private ImageButton imageButton1;
         private PictureBox pictureBox2;
+        private Label lblCatalysts;
     }
 }

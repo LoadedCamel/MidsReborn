@@ -232,7 +232,7 @@ namespace Mids_Reborn
                         ResetLevel();
                         Lock();
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(message) & !MidsContext.EnhCheckMode)
                     {
                         MessageBox.Show(message, @"FYI", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }

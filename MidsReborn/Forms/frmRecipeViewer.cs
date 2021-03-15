@@ -65,12 +65,14 @@ namespace Mids_Reborn.Forms
             public static void CalcTotalEnhancements()
             {
                 TotalEnhancements = 0;
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    for (var j = 0; j < p.Slots.Length; j++)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh > -1)
+                        if (p.Slots[j].Enhancement.Enh > -1)
+                        {
                             TotalEnhancements++;
+                        }
                     }
                 }
             }
@@ -78,16 +80,14 @@ namespace Mids_Reborn.Forms
             public static void CalcEnhObtained()
             {
                 EnhObtained = 0;
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    for (var j = 0; j < p.Slots.Length; j++)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained &
-                            MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh > -1)
+                        if (p.Slots[j].Enhancement.Obtained & p.Slots[j].Enhancement.Enh > -1)
                         {
                             EnhObtained++;
                         }
-
                     }
                 }
             }
@@ -95,11 +95,11 @@ namespace Mids_Reborn.Forms
             public static void CalcEnhCatalysts()
             {
                 EnhCatalysts = 0;
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    for (var j = 0; j < p.Slots.Length; j++)
                     {
-                        var enhIdx = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh;
+                        var enhIdx = p.Slots[j].Enhancement.Enh;
                         if (enhIdx == -1) continue;
                         var enhName = Database.Instance.Enhancements[enhIdx].UID;
 
@@ -111,28 +111,24 @@ namespace Mids_Reborn.Forms
             public static void CalcEnhBoosters()
             {
                 EnhBoosters = 0;
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
+                    for (var j = 0; j < p.Slots.Length; j++)
                     {
-                        var enhIdx = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh;
+                        var enhIdx = p.Slots[j].Enhancement.Enh;
                         if (enhIdx == -1) continue;
+                        if (!DatabaseAPI.EnhIsIO(enhIdx)) continue;
 
-                        var relativeLevel = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.RelativeLevel;
-                        if (DatabaseAPI.EnhIsIO(enhIdx) &
-                            relativeLevel != Enums.eEnhRelative.Even &
-                            relativeLevel != Enums.eEnhRelative.None)
+                        var relativeLevel = p.Slots[j].Enhancement.RelativeLevel;
+                        EnhBoosters += relativeLevel switch
                         {
-                            EnhBoosters += relativeLevel switch
-                            {
-                                Enums.eEnhRelative.PlusOne => 1,
-                                Enums.eEnhRelative.PlusTwo => 2,
-                                Enums.eEnhRelative.PlusThree => 3,
-                                Enums.eEnhRelative.PlusFour => 4,
-                                Enums.eEnhRelative.PlusFive => 5,
-                                _ => 0
-                            };
-                        }
+                            Enums.eEnhRelative.PlusOne => 1,
+                            Enums.eEnhRelative.PlusTwo => 2,
+                            Enums.eEnhRelative.PlusThree => 3,
+                            Enums.eEnhRelative.PlusFour => 4,
+                            Enums.eEnhRelative.PlusFive => 5,
+                            _ => 0
+                        };
                     }
                 }
             }
@@ -181,14 +177,26 @@ namespace Mids_Reborn.Forms
         public void RecalcSalvage()
         {
             BuildSalvageSummary.CalcAll();
+            lblEnhObtained.ForeColor = BuildSalvageSummary.EnhObtained == BuildSalvageSummary.TotalEnhancements &
+                                       BuildSalvageSummary.TotalEnhancements > 0
+                ? Color.FromArgb(0, 255, 128)
+                : Color.White;
             lblEnhObtained.Text = $"Obtained: {BuildSalvageSummary.EnhObtained}/{BuildSalvageSummary.TotalEnhancements}";
-            lblCatalysts.Text = $"x{BuildSalvageSummary.EnhCatalysts}";
-            lblBoosters.Text = $"x{BuildSalvageSummary.EnhBoosters}";
+            lblCatalysts.Text = BuildSalvageSummary.EnhCatalysts == 0
+                ? "--"
+                : $"x{BuildSalvageSummary.EnhCatalysts}";
+            lblBoosters.Text = BuildSalvageSummary.EnhBoosters == 0
+                ? "--"
+                : $"x{BuildSalvageSummary.EnhBoosters}";
         }
 
         public void UpdateEnhObtained()
         {
             BuildSalvageSummary.CalcEnhObtained();
+            lblEnhObtained.ForeColor = BuildSalvageSummary.EnhObtained == BuildSalvageSummary.TotalEnhancements &
+                                       BuildSalvageSummary.TotalEnhancements > 0
+                ? Color.FromArgb(0, 255, 128)
+                : Color.White;
             lblEnhObtained.Text = $"Obtained: {BuildSalvageSummary.EnhObtained}/{BuildSalvageSummary.TotalEnhancements}";
         }
 
@@ -920,10 +928,8 @@ namespace Mids_Reborn.Forms
 
         private void ibEnhCheckMode_ButtonClicked()
         {
-            Debug.WriteLine($"Check mode (before): {ibEnhCheckMode.Checked}");
-            ibEnhCheckMode.Checked = !ibEnhCheckMode.Checked;
             MidsContext.EnhCheckMode = ibEnhCheckMode.Checked;
-            Debug.WriteLine($"Check mode (after): {ibEnhCheckMode.Checked}");
+            RecalcSalvage();
             pSalvageSummary.Visible = MidsContext.EnhCheckMode;
             myParent.DoRedraw();
         }
