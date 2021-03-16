@@ -1096,6 +1096,17 @@ namespace Mids_Reborn.Forms
 
             DataViewLocked = false;
             NewToon(false);
+            MidsContext.EnhCheckMode = false;
+            if (fRecipe != null && fRecipe.Visible)
+            {
+                fRecipe.UpdateData();
+            }
+
+            if (fSalvageHud != null && fSalvageHud.Visible)
+            {
+                FloatBuildSalvageHud(false);
+            }
+
             MidsContext.Config.LastFileName = "";
             LastFileName = "";
             PowerModified(false);
@@ -1660,6 +1671,25 @@ namespace Mids_Reborn.Forms
                 fRecipe.Hide();
                 fRecipe.Dispose();
                 fRecipe = null;
+            }
+        }
+
+        internal void FloatBuildSalvageHud(bool show)
+        {
+            if (show)
+            {
+                fSalvageHud ??= new frmBuildSalvageHud(this);
+                fSalvageHud.Show();
+                FloatUpdate();
+                //fSalvageHud.Activate();
+            }
+            else
+            {
+                if (fSalvageHud == null)
+                    return;
+                fSalvageHud.Hide();
+                fSalvageHud.Dispose();
+                fSalvageHud = null;
             }
         }
 
@@ -3132,6 +3162,11 @@ namespace Mids_Reborn.Forms
                     {
                         //fRecipe.RecalcSalvage();
                         fRecipe.UpdateEnhObtained();
+                    }
+
+                    if (fSalvageHud != null && fSalvageHud.Visible)
+                    {
+                        fSalvageHud.UpdateEnhObtained();
                     }
 
                     DoRedraw();
@@ -5553,6 +5588,17 @@ namespace Mids_Reborn.Forms
             }
 
             FloatTop(false);
+            MidsContext.EnhCheckMode = false;
+            if (fRecipe != null && fRecipe.Visible)
+            {
+                fRecipe.UpdateData();
+            }
+
+            if (fSalvageHud != null && fSalvageHud.Visible)
+            {
+                FloatBuildSalvageHud(false);
+            }
+
             if (DlgOpen.ShowDialog() == DialogResult.OK)
                 DoOpen(DlgOpen.FileName);
             FloatTop(true);
@@ -6053,6 +6099,16 @@ namespace Mids_Reborn.Forms
                     : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             }
 
+            if (fRecipe != null && fRecipe.Visible)
+            {
+                fRecipe.UpdateColorTheme();
+            }
+
+            if (fSalvageHud != null && fSalvageHud.Visible)
+            {
+                fSalvageHud.UpdateColorTheme();
+            }
+
             if (!draw)
                 return;
             if (!skipDraw)
@@ -6416,6 +6472,36 @@ namespace Mids_Reborn.Forms
             UpdatePowerList(llPool3);
         }
 
+        private void tsToggleCheckModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MidsContext.EnhCheckMode = !MidsContext.EnhCheckMode;
+            if (fRecipe != null && fRecipe.Visible)
+            {
+                fRecipe.UpdateData();
+            }
+
+            FloatBuildSalvageHud(MidsContext.EnhCheckMode);
+            DoRedraw();
+        }
+
+        public void UpdateEnhCheckModeToolStrip()
+        {
+            ToggleCheckModeToolStripMenuItem.Checked = MidsContext.EnhCheckMode;
+        }
+
+        public bool IsSalvageHudVisible()
+        {
+            return fSalvageHud != null && fSalvageHud.Visible;
+        }
+
+        public void SetSalvageHudOnCloseExecution(bool s)
+        {
+            if (IsSalvageHudVisible())
+            {
+                fSalvageHud.SetOnCloseUpdatesExecution(s);
+            }
+        }
+    
         private void GameImport(string buildString)
         {
             try
@@ -6692,6 +6778,7 @@ namespace Mids_Reborn.Forms
         private frmTemp fTemp;
         private frmTotalsV2 fTotals2;
         private frmTotals fTotals;
+        private frmBuildSalvageHud fSalvageHud;
         private bool HasSentBack;
         private bool HasSentForwards;
         private bool LastClickPlacedSlot;
@@ -6714,8 +6801,9 @@ namespace Mids_Reborn.Forms
         private bool top_fSets;
         private bool top_fTotals;
         private int xCursorOffset;
-
         private int yCursorOffset;
+
+        
         //RawEnhData RawEnhData = new RawEnhData();
         //RawPowerData RawPowerData = new RawPowerData();
 

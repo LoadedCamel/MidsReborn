@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -17,124 +16,6 @@ namespace Mids_Reborn.Forms
 {
     public partial class frmRecipeViewer : Form
     {
-        #region BuildSavageSummary sub-class
-        private static class BuildSalvageSummary
-        {
-            public static int EnhObtained { get; private set; }
-            public static int EnhCatalysts { get; private set; }
-            public static int EnhBoosters { get; private set; }
-            public static int TotalEnhancements { get; private set; }
-
-            public static void CalcAll()
-            {
-                TotalEnhancements = 0;
-                EnhObtained = 0;
-                EnhCatalysts = 0;
-                EnhBoosters = 0;
-
-                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-                {
-                    for (var j = 0; j < p.Slots.Length; j++)
-                    {
-                        var enhIdx = p.Slots[j].Enhancement.Enh;
-
-                        if (enhIdx > -1) TotalEnhancements++;
-                        if (p.Slots[j].Enhancement.Obtained & enhIdx > -1) EnhObtained++;
-                        if (enhIdx == -1) continue;
-
-                        var enhName = Database.Instance.Enhancements[enhIdx].UID;
-                        if (DatabaseAPI.EnhHasCatalyst(enhName) && DatabaseAPI.EnhIsSuperior(enhIdx)) EnhCatalysts++;
-
-                        var relativeLevel = p.Slots[j].Enhancement.RelativeLevel;
-                        if (DatabaseAPI.EnhIsIO(enhIdx))
-                        {
-                            EnhBoosters += relativeLevel switch
-                            {
-                                Enums.eEnhRelative.PlusOne => 1,
-                                Enums.eEnhRelative.PlusTwo => 2,
-                                Enums.eEnhRelative.PlusThree => 3,
-                                Enums.eEnhRelative.PlusFour => 4,
-                                Enums.eEnhRelative.PlusFive => 5,
-                                _ => 0
-                            };
-                        }
-                    }
-                }
-            }
-
-            public static void CalcTotalEnhancements()
-            {
-                TotalEnhancements = 0;
-                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-                {
-                    for (var j = 0; j < p.Slots.Length; j++)
-                    {
-                        if (p.Slots[j].Enhancement.Enh > -1)
-                        {
-                            TotalEnhancements++;
-                        }
-                    }
-                }
-            }
-
-            public static void CalcEnhObtained()
-            {
-                EnhObtained = 0;
-                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-                {
-                    for (var j = 0; j < p.Slots.Length; j++)
-                    {
-                        if (p.Slots[j].Enhancement.Obtained & p.Slots[j].Enhancement.Enh > -1)
-                        {
-                            EnhObtained++;
-                        }
-                    }
-                }
-            }
-
-            public static void CalcEnhCatalysts()
-            {
-                EnhCatalysts = 0;
-                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-                {
-                    for (var j = 0; j < p.Slots.Length; j++)
-                    {
-                        var enhIdx = p.Slots[j].Enhancement.Enh;
-                        if (enhIdx == -1) continue;
-                        var enhName = Database.Instance.Enhancements[enhIdx].UID;
-
-                        if (DatabaseAPI.EnhHasCatalyst(enhName) && DatabaseAPI.EnhIsSuperior(enhIdx)) EnhCatalysts++;
-                    }
-                }
-            }
-
-            public static void CalcEnhBoosters()
-            {
-                EnhBoosters = 0;
-                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-                {
-                    for (var j = 0; j < p.Slots.Length; j++)
-                    {
-                        var enhIdx = p.Slots[j].Enhancement.Enh;
-                        if (enhIdx == -1) continue;
-                        if (!DatabaseAPI.EnhIsIO(enhIdx)) continue;
-
-                        var relativeLevel = p.Slots[j].Enhancement.RelativeLevel;
-                        EnhBoosters += relativeLevel switch
-                        {
-                            Enums.eEnhRelative.PlusOne => 1,
-                            Enums.eEnhRelative.PlusTwo => 2,
-                            Enums.eEnhRelative.PlusThree => 3,
-                            Enums.eEnhRelative.PlusFour => 4,
-                            Enums.eEnhRelative.PlusFive => 5,
-                            _ => 0
-                        };
-                    }
-                }
-            }
-        }
-        #endregion
-
         private readonly ExtendedBitmap bxRecipe;
         private readonly frmMain myParent;
 
@@ -144,11 +25,13 @@ namespace Mids_Reborn.Forms
         private ImageButton ibTopmost;
 
         private bool Loading;
+        private bool SalvageHudVisible;
         private int nonRecipeCount;
         private ctlPopUp RecipeInfo;
 
         public frmRecipeViewer(frmMain iParent)
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             FormClosed += frmRecipeViewer_FormClosed;
             Load += frmRecipeViewer_Load;
             Loading = true;
@@ -176,28 +59,12 @@ namespace Mids_Reborn.Forms
 
         public void RecalcSalvage()
         {
-            BuildSalvageSummary.CalcAll();
-            lblEnhObtained.ForeColor = BuildSalvageSummary.EnhObtained == BuildSalvageSummary.TotalEnhancements &
-                                       BuildSalvageSummary.TotalEnhancements > 0
-                ? Color.FromArgb(0, 255, 128)
-                : Color.White;
-            lblEnhObtained.Text = $"Obtained: {BuildSalvageSummary.EnhObtained}/{BuildSalvageSummary.TotalEnhancements}";
-            lblCatalysts.Text = BuildSalvageSummary.EnhCatalysts == 0
-                ? "--"
-                : $"x{BuildSalvageSummary.EnhCatalysts}";
-            lblBoosters.Text = BuildSalvageSummary.EnhBoosters == 0
-                ? "--"
-                : $"x{BuildSalvageSummary.EnhBoosters}";
+            BuildSalvageSummary.UpdateAllSalvage(lblEnhObtained, lblCatalysts, lblBoosters);
         }
 
         public void UpdateEnhObtained()
         {
-            BuildSalvageSummary.CalcEnhObtained();
-            lblEnhObtained.ForeColor = BuildSalvageSummary.EnhObtained == BuildSalvageSummary.TotalEnhancements &
-                                       BuildSalvageSummary.TotalEnhancements > 0
-                ? Color.FromArgb(0, 255, 128)
-                : Color.White;
-            lblEnhObtained.Text = $"Obtained: {BuildSalvageSummary.EnhObtained}/{BuildSalvageSummary.TotalEnhancements}";
+            BuildSalvageSummary.UpdateEnhObtained(lblEnhObtained);
         }
 
         private void AddToImageList(int eIDX)
@@ -784,8 +651,8 @@ namespace Mids_Reborn.Forms
             var num1 = -1;
             var num2 = 52;
             var num3 = 0;
-            var num4 = DatabaseAPI.Database.Recipes[rIDX].Item.Length - 1;
-            for (var index = 0; index <= num4; ++index)
+            var num4 = DatabaseAPI.Database.Recipes[rIDX].Item.Length;
+            for (var index = 0; index < num4; index++)
             {
                 if (DatabaseAPI.Database.Recipes[rIDX].Item[index].Level > num3)
                     num3 = DatabaseAPI.Database.Recipes[rIDX].Item[index].Level;
@@ -801,8 +668,8 @@ namespace Mids_Reborn.Forms
                 return num1 >= 0 ? num1 : -1;
             {
                 iLevel = Enhancement.GranularLevelZb(iLevel, 0, 49);
-                var num5 = DatabaseAPI.Database.Recipes[rIDX].Item.Length - 1;
-                for (var index = 0; index <= num5; ++index)
+                var num5 = DatabaseAPI.Database.Recipes[rIDX].Item.Length;
+                for (var index = 0; index < num5; index++)
                 {
                     if (DatabaseAPI.Database.Recipes[rIDX].Item[index].Level != iLevel)
                         continue;
@@ -815,11 +682,20 @@ namespace Mids_Reborn.Forms
 
         private void frmRecipeViewer_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ibEnhCheckMode.Checked = false;
-            pSalvageSummary.Visible = false;
-            MidsContext.EnhCheckMode = false;
+            if (SalvageHudVisible)
+            {
+                myParent.FloatBuildSalvageHud(true);
+            }
+            else
+            {
+                MidsContext.EnhCheckMode = false;
+                ibEnhCheckMode.Checked = false;
+                pSalvageSummary.Visible = false;
+                myParent.UpdateEnhCheckModeToolStrip();
+                myParent.DoRedraw();
+            }
+
             StoreLocation();
-            myParent.DoRedraw();
             myParent.FloatRecipe(false);
         }
 
@@ -834,6 +710,36 @@ namespace Mids_Reborn.Forms
                 .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                 ?.SetValue(lvDPA, true, null);
 
+            UpdateColorTheme();
+            RecipeInfo.SetPopup(new PopUp.PopupData());
+            ChangedRecipeInfoElements();
+            chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
+            RecalcSalvage();
+            SalvageHudVisible = myParent.IsSalvageHudVisible();
+            if (SalvageHudVisible)
+            {
+                myParent.SetSalvageHudOnCloseExecution(false);
+                myParent.FloatBuildSalvageHud(false);
+            }
+            else
+            {
+                MidsContext.EnhCheckMode = false;
+                myParent.UpdateEnhCheckModeToolStrip();
+            }
+
+            ibEnhCheckMode.Checked = false;
+            pSalvageSummary.Visible = false;
+            if (SalvageHudVisible)
+            {
+                myParent.Activate();
+            }
+
+            Loading = false;
+        }
+
+        public void UpdateColorTheme()
+        {
+            BackColor = myParent.BackColor;
             ibClose.IA = myParent.Drawing.pImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
@@ -841,6 +747,7 @@ namespace Mids_Reborn.Forms
             ibClose.ImageOn = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[3].Bitmap
                 : myParent.Drawing.bxPower[5].Bitmap;
+            
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
             ibTopmost.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
@@ -848,19 +755,14 @@ namespace Mids_Reborn.Forms
             ibTopmost.ImageOn = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[3].Bitmap
                 : myParent.Drawing.bxPower[5].Bitmap;
-            RecipeInfo.SetPopup(new PopUp.PopupData());
-            ChangedRecipeInfoElements();
-            chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
-            RecalcSalvage();
+            
             ibEnhCheckMode.IA = myParent.Drawing.pImageAttributes;
             ibEnhCheckMode.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibEnhCheckMode.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            MidsContext.EnhCheckMode = false;
-            ibEnhCheckMode.Checked = false;
-            pSalvageSummary.Visible = false;
-            Loading = false;
+            ibEnhCheckMode.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
         }
 
         private bool HasIOs(int hIDX)
@@ -1087,28 +989,10 @@ namespace Mids_Reborn.Forms
 
         public void UpdateData()
         {
-            BackColor = myParent.BackColor;
-            ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibClipboard.IA = myParent.Drawing.pImageAttributes;
-            ibClipboard.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClipboard.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibMiniList.IA = myParent.Drawing.pImageAttributes;
-            ibMiniList.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibMiniList.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            UpdateColorTheme();
             FillPowerList();
+            ibEnhCheckMode.Checked = MidsContext.EnhCheckMode;
+            pSalvageSummary.Visible = MidsContext.EnhCheckMode;
         }
 
         private void UpdatePowerList()

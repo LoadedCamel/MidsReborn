@@ -84,9 +84,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
+    <Compile Include="clsBuildSalvageSummary.cs" />
     <Compile Include="clsShoppingCheckList.cs" />
     <Compile Include="clsGenFreebies.cs" />
     <Compile Include="clsOAuth.cs" />
+    <Compile Include="Forms\frmBuildSalvageHud.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmBuildSalvageHud.Designer.cs">
+      <DependentUpon>frmBuildSalvageHud.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -464,6 +471,9 @@
     <Content Include="Data\Homecoming\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Forms\frmBuildSalvageHud.resx">
+      <DependentUpon>frmBuildSalvageHud.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.resx">
       <DependentUpon>frmDBConvert.cs</DependentUpon>
     </EmbeddedResource>

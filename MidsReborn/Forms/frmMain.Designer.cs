@@ -173,6 +173,8 @@ namespace Mids_Reborn.Forms
             this.AccoladesWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.IncarnateWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TemporaryPowersWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToggleCheckModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.topPanel = new System.Windows.Forms.Panel();
             this.lblHero = new System.Windows.Forms.Label();
             this.heroVillain = new ImageButton();
@@ -838,7 +840,9 @@ namespace Mids_Reborn.Forms
             this.ToolStripMenuItem1,
             this.ToolStripMenuItem2,
             this.ToolStripSeparator17,
-            this.SlotsToolStripMenuItem});
+            this.SlotsToolStripMenuItem,
+            this.ToolStripSeparator28,
+            this.ToggleCheckModeToolStripMenuItem});
             this.CharacterToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.CharacterToolStripMenuItem.Name = "CharacterToolStripMenuItem";
             this.CharacterToolStripMenuItem.Size = new System.Drawing.Size(133, 20);
@@ -895,6 +899,18 @@ namespace Mids_Reborn.Forms
             this.ToolStripMenuItem1.Name = "ToolStripMenuItem1";
             this.ToolStripMenuItem1.Size = new System.Drawing.Size(245, 22);
             this.ToolStripMenuItem1.Text = "Set all Enhancement &Origins to...";
+            //
+            // ToolStripSeparator28
+            //
+            this.ToolStripSeparator28.Name = "ToolStripSeparator28";
+            this.ToolStripSeparator28.Size = new System.Drawing.Size(242, 6);
+            //
+            // ToggleCheckModeToolStripMenuItem
+            //
+            this.ToggleCheckModeToolStripMenuItem.Name = "ToggleCheckModeToolStripMenuItem";
+            this.ToggleCheckModeToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.ToggleCheckModeToolStripMenuItem.Text = "Toggle Enhancement Check Mode";
+            this.ToggleCheckModeToolStripMenuItem.Click += new System.EventHandler(this.tsToggleCheckModeToolStripMenuItem_Click);
             // 
             // tsEnhToSO
             // 
@@ -2224,6 +2240,7 @@ namespace Mids_Reborn.Forms
         Timer tmrGfx;
         ToolStripMenuItem ToolStripMenuItem1;
         ToolStripMenuItem ToolStripMenuItem2;
+        ToolStripMenuItem ToggleCheckModeToolStripMenuItem;
         ToolStripSeparator ToolStripMenuItem4;
         ToolStripSeparator ToolStripSeparator1;
         ToolStripSeparator ToolStripSeparator10;
@@ -2243,6 +2260,7 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator23;
         ToolStripSeparator ToolStripSeparator24;
         ToolStripSeparator ToolStripSeparator26;
+        ToolStripSeparator ToolStripSeparator28;
         ToolStripSeparator ToolStripSeparator4;
         ToolStripSeparator ToolStripSeparator5;
         ToolStripSeparator ToolStripSeparator7;
