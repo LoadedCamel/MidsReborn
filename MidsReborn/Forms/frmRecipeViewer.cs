@@ -763,6 +763,22 @@ namespace Mids_Reborn.Forms
             ibEnhCheckMode.ImageOn = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[3].Bitmap
                 : myParent.Drawing.bxPower[5].Bitmap;
+
+            ibClipboard.IA = myParent.Drawing.pImageAttributes;
+            ibClipboard.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
+            ibClipboard.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
+
+            ibMiniList.IA = myParent.Drawing.pImageAttributes;
+            ibMiniList.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
+            ibMiniList.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
         }
 
         private bool HasIOs(int hIDX)
