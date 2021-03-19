@@ -1284,11 +1284,14 @@ namespace Mids_Reborn.Forms
         private bool DoOpen(string fName)
         {
             if (!File.Exists(fName))
+            {
                 return false;
+            }
+
             DataViewLocked = false;
             NewToon(true, true);
             Stream mStream = null;
-            if (fName.Contains(".txt"))
+            if (fName.Trim(' ', '"').EndsWith(".txt"))
             {
                 GameImport(fName);
             }
@@ -1302,21 +1305,15 @@ namespace Mids_Reborn.Forms
             {
                 LastFileName = fName;
                 if (!fName.EndsWith("mids_build.mxd"))
+                {
                     MidsContext.Config.LastFileName = fName;
+                }
             }
 
             FileModified = false;
             drawing.Highlight = -1;
-            if (MidsContext.Character.Archetype.DisplayName != "Mastermind")
-            {
-                petsButton.Visible = false;
-                petsButton.Enabled = false;
-            }
-            else
-            {
-                petsButton.Visible = true;
-                petsButton.Enabled = true;
-            }
+            petsButton.Visible = MidsContext.Character.Archetype.DisplayName == "Mastermind";
+            petsButton.Enabled = MidsContext.Character.Archetype.DisplayName == "Mastermind";
 
             //NewDraw();
             //UpdateControls();
@@ -1331,6 +1328,7 @@ namespace Mids_Reborn.Forms
             GetBestDamageValues();
             UpdateColors();
             FloatUpdate(true);
+
             return true;
         }
 
@@ -5567,10 +5565,15 @@ namespace Mids_Reborn.Forms
                     return;
             }
 
+            if (DlgOpen.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
             FloatTop(false);
-            if (DlgOpen.ShowDialog() == DialogResult.OK)
-                //DoOpen(DlgOpen.FileName);
-                BuildRecover(DlgOpen.FileName);
+            
+            //DoOpen(DlgOpen.FileName);
+            BuildRecover(DlgOpen.FileName);
             FloatTop(true);
         }
 
@@ -5587,6 +5590,11 @@ namespace Mids_Reborn.Forms
                     return;
             }
 
+            if (DlgOpen.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
             FloatTop(false);
             MidsContext.EnhCheckMode = false;
             if (fRecipe != null && fRecipe.Visible)
@@ -5599,8 +5607,7 @@ namespace Mids_Reborn.Forms
                 FloatBuildSalvageHud(false);
             }
 
-            if (DlgOpen.ShowDialog() == DialogResult.OK)
-                DoOpen(DlgOpen.FileName);
+            DoOpen(DlgOpen.FileName);
             FloatTop(true);
         }
 
