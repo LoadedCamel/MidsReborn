@@ -133,6 +133,7 @@ namespace Mids_Reborn.Forms
             this.ibClose.TextOff = "Exit check mode";
             this.ibClose.TextOn = "Alt Text";
             this.ibClose.Toggle = false;
+            this.ibClose.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibClose_ButtonClicked);
             // 
             // frmBuildSalvageHud
             // 
@@ -144,7 +145,6 @@ namespace Mids_Reborn.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmBuildSalvageHud";
             this.Text = "Build Salvage Status";
-            this.Click += new System.EventHandler(this.frmBuildSalvageHud_Click);
             this.pSalvageSummary.ResumeLayout(false);
             this.pSalvageSummary.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();

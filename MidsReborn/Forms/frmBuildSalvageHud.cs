@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using mrbBase.Base.Master_Classes;
 
@@ -45,6 +46,7 @@ namespace Mids_Reborn.Forms
         {
             TopMost = true;
             BringToFront();
+            Location = new Point(myParent.Location.X + 2, myParent.Location.Y + 56);
             UpdateColorTheme();
             RecalcSalvage();
             MidsContext.EnhCheckMode = true;
@@ -71,7 +73,7 @@ namespace Mids_Reborn.Forms
             executeOnCloseUpdates = s;
         }
 
-        private void frmBuildSalvageHud_Click(object sender, EventArgs e)
+        private void ibClose_ButtonClicked()
         {
             Close();
         }
