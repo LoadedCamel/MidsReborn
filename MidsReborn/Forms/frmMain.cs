@@ -3139,7 +3139,7 @@ namespace Mids_Reborn.Forms
             drawing.DrawPowerSlot(ref powerEntry, singleDraw);
             var powerPos = drawing.PowerPosition(powerEntry);
             drawing.Refresh(new Rectangle(powerPos.X, powerPos.Y, drawing.SzPower.Width, drawing.SzPower.Height));
-            RefreshInfo();
+            if (refreshInfo) RefreshInfo();
         }
 
         private void pnlGFX_MouseUp(object sender, MouseEventArgs e)
