@@ -3015,8 +3015,10 @@ namespace Mids_Reborn.Forms
 
         private void pnlGFX_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (!(!LastClickPlacedSlot && dragStartSlot >= 0))
-                return;
+            // Lock double click usage when enhancement check mode is active
+            // Disable the ability to double click an enhancement slot to remove it
+            if (MidsContext.EnhCheckMode) return;
+            if (!(!LastClickPlacedSlot && dragStartSlot >= 0)) return;
             MainModule.MidsController.Toon.BuildSlot(dragStartPower, dragStartSlot);
             // no idea what pnlGFX_MouseDoubleClick represents, marking modified as it would have before the added arg
             /*var powerEntryArray = DeepCopyPowerList();
@@ -3032,6 +3034,7 @@ namespace Mids_Reborn.Forms
 
         private void pnlGFX_MouseDown(object sender, MouseEventArgs e)
         {
+            if (MidsContext.EnhCheckMode) return;
             if (e.Button != MouseButtons.Left)
                 return;
             pnlGFX.AllowDrop = true;
@@ -3131,6 +3134,14 @@ namespace Mids_Reborn.Forms
             }
         }
 
+        private void RedrawPower(ref PowerEntry powerEntry, bool singleDraw = false, bool refreshInfo = false)
+        {
+            drawing.DrawPowerSlot(ref powerEntry, singleDraw);
+            var powerPos = drawing.PowerPosition(powerEntry);
+            drawing.Refresh(new Rectangle(powerPos.X, powerPos.Y, drawing.SzPower.Width, drawing.SzPower.Height));
+            RefreshInfo();
+        }
+
         private void pnlGFX_MouseUp(object sender, MouseEventArgs e)
         {
             pnlGFX.AllowDrop = false;
@@ -3167,7 +3178,8 @@ namespace Mids_Reborn.Forms
                         fSalvageHud.UpdateEnhObtained();
                     }
 
-                    DoRedraw();
+                    var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
+                    RedrawPower(ref powerEntry, true);
                 }
                 else
                 {
@@ -3266,20 +3278,14 @@ namespace Mids_Reborn.Forms
                     else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) &
                              (e.Button == MouseButtons.Left))
                     {
-                        if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
-                            MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                        var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
+                        if (!flag && powerEntry.CanIncludeForStats() && powerEntry.HasProc())
                         {
-                            if (MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = false;
-                            }
-                            else
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = true;
-                            }
+                            powerEntry.ProcInclude = !powerEntry.ProcInclude;
                         }
 
-                        EnhancementModified();
+                        //EnhancementModified();
+                        RedrawPower(ref powerEntry, true, true);
                         LastClickPlacedSlot = false;
                     }
                     else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Alt))
@@ -3313,7 +3319,7 @@ namespace Mids_Reborn.Forms
                             }
                             else if ((MidsContext.Config.BuildMode == Enums.dmModes.Respec) & flag)
                             {
-                                if (true & (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1))
+                                if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
                                 {
                                     MainModule.MidsController.Toon.RequestedLevel =
                                         MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
