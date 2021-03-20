@@ -3137,7 +3137,7 @@ namespace Mids_Reborn.Forms
         private void RedrawPower(ref PowerEntry powerEntry, bool singleDraw = false, bool refreshInfo = false)
         {
             drawing.DrawPowerSlot(ref powerEntry, singleDraw);
-            var powerPos = drawing.PowerPosition(powerEntry);
+            var powerPos = drawing.PowerPosition2(powerEntry);
             drawing.Refresh(new Rectangle(powerPos.X, powerPos.Y, drawing.SzPower.Width, drawing.SzPower.Height));
             if (refreshInfo) RefreshInfo();
         }

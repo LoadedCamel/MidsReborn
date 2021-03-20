@@ -2197,8 +2197,7 @@ namespace mrbControls
             };
         }
 
-
-        public Point PowerPosition(PowerEntry powerEntry, int displayLocation = -1)
+        private Point PowerPositionCR(PowerEntry powerEntry, int displayLocation = -1)
         {
             var powerIdx = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry);
             checked
@@ -2280,26 +2279,40 @@ namespace mrbControls
                     }
                 }
 
-                return CRtoXY(iCol, iRow);
+                return new Point(iCol, iRow);
             }
         }
 
+        public Point PowerPosition(PowerEntry powerEntry, int displayLocation = -1)
+        {
+            var crPos = PowerPositionCR(powerEntry, displayLocation);
 
-        private Point CRtoXY(int iCol, int iRow)
+            return CRtoXY(crPos.X, crPos.Y);
+        }
+
+        public Point PowerPosition2(PowerEntry powerEntry, int displayLocation = -1)
+        {
+            var crPos = PowerPositionCR(powerEntry, displayLocation);
+
+            return CRtoXY(crPos.X, crPos.Y, true);
+        }
+
+        private Point CRtoXY(int iCol, int iRow, bool ignorePadding=false)
         {
             // Convert a column/row location to the top left XY co-ord of a power entry
             // 3 Columns, 15 Rows
             var result = new Point(0, 0);
+            var padMult = ignorePadding ? 0 : 1;
             checked
             {
                 if (iRow >= vcRowsPowers)
                 {
-                    result.X = iCol * (SzPower.Width + PaddingX);
+                    result.X = iCol * (SzPower.Width + PaddingX * padMult);
                     result.Y = OffsetInherent + iRow * (SzPower.Height + PaddingY);
                 }
                 else
                 {
-                    result.X = iCol * (SzPower.Width + PaddingX);
+                    result.X = iCol * (SzPower.Width + PaddingX * padMult);
                     result.Y = iRow * (SzPower.Height + PaddingY);
                 }
 
