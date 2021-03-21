@@ -3134,10 +3134,10 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        private void RedrawPower(ref PowerEntry powerEntry, bool singleDraw = false, bool refreshInfo = false)
+        private void RedrawSinglePower(ref PowerEntry powerEntry, bool singleDraw = false, bool refreshInfo = false)
         {
             drawing.DrawPowerSlot(ref powerEntry, singleDraw);
-            var powerPos = drawing.PowerPosition2(powerEntry);
+            var powerPos = drawing.PowerPosition(powerEntry, true);
             drawing.Refresh(new Rectangle(powerPos.X, powerPos.Y, drawing.SzPower.Width, drawing.SzPower.Height));
             if (refreshInfo) RefreshInfo();
         }
@@ -3156,8 +3156,6 @@ namespace Mids_Reborn.Forms
                 if ((hIDPower < 0) | (hIDPower >= MidsContext.Character.CurrentBuild.Powers.Count))
                     return;
                 var flag = MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower < 0;
-                /*if (e.Button == MouseButtons.Left & ModifierKeys == (Keys.Shift | Keys.Control) && EditAccoladesOrTemps(hIDPower))
-                    return;*/
                 if ((e.Button == MouseButtons.Left) & (ModifierKeys == (Keys.Shift | Keys.Control)) && EditAccoladesOrTemps(hIDPower))
                     return;
 
@@ -3179,7 +3177,7 @@ namespace Mids_Reborn.Forms
                     }
 
                     var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
-                    RedrawPower(ref powerEntry, true);
+                    RedrawSinglePower(ref powerEntry, true);
                 }
                 else
                 {
@@ -3285,7 +3283,7 @@ namespace Mids_Reborn.Forms
                         }
 
                         //EnhancementModified();
-                        RedrawPower(ref powerEntry, true, true);
+                        RedrawSinglePower(ref powerEntry, true, true);
                         LastClickPlacedSlot = false;
                     }
                     else if ((e.Button == MouseButtons.Left) & (ModifierKeys == Keys.Alt))

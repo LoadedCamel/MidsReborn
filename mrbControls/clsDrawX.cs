@@ -2290,11 +2290,11 @@ namespace mrbControls
             return CRtoXY(crPos.X, crPos.Y);
         }
 
-        public Point PowerPosition2(PowerEntry powerEntry, int displayLocation = -1)
+        public Point PowerPosition(PowerEntry powerEntry, bool ignorePadding, int displayLocation = -1)
         {
             var crPos = PowerPositionCR(powerEntry, displayLocation);
 
-            return CRtoXY(crPos.X, crPos.Y, true);
+            return CRtoXY(crPos.X, crPos.Y, ignorePadding);
         }
 
         private Point CRtoXY(int iCol, int iRow, bool ignorePadding=false)
