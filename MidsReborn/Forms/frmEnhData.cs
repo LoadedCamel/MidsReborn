@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -13,15 +12,11 @@ using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 
-//using Microsoft.VisualBasic;
-//using Microsoft.VisualBasic.CompilerServices;
-
 namespace Mids_Reborn.Forms
 {
     public partial class frmEnhData : Form
     {
         private readonly int ClassSize;
-
         private readonly int EnhAcross;
         private readonly int EnhPadding;
         public readonly IEnhancement myEnh;
@@ -43,7 +38,7 @@ namespace Mids_Reborn.Forms
             pnlClassList.MouseMove += pnlClassList_MouseMove;
             pnlClassList.Paint += pnlClassList_Paint;
             pnlClassList.MouseDown += pnlClassList_MouseDown;
-            var componentResourceManager = new ComponentResourceManager(typeof(frmEnhData));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmEnhData));
             btnImage.Image = Resources.enhData;
             typeSet.Image = Resources.enhData;
             typeIO.Image = Resources.enhData;
@@ -55,6 +50,22 @@ namespace Mids_Reborn.Forms
             if (newStaticIndex > 0)
                 myEnh.StaticIndex = newStaticIndex;
             ClassSize = 22;
+        }
+
+        private int RecipeCbToIndex()
+        {
+            if (cbRecipe.SelectedIndex < 0) return -1;
+            
+            var activeItem = cbRecipe.SelectedItem.ToString();
+            if (activeItem == "None") return -1;
+
+            return Array.IndexOf(DatabaseAPI.Database.Recipes,
+                DatabaseAPI.Database.Recipes.First(r => r.InternalName == activeItem));
+        }
+
+        private int RecipeIndexToCbSel(IEnhancement enh)
+        {
+            return cbRecipe.FindStringExact(DatabaseAPI.Database.Recipes[enh.RecipeIDX].InternalName);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -358,7 +369,7 @@ namespace Mids_Reborn.Forms
             if (cbRecipe.SelectedIndex > 0)
             {
                 myEnh.RecipeName = cbRecipe.Text;
-                myEnh.RecipeIDX = cbRecipe.SelectedIndex - 1;
+                myEnh.RecipeIDX = RecipeCbToIndex();
             }
             else
             {
@@ -453,7 +464,7 @@ namespace Mids_Reborn.Forms
                     typeIO.Checked = true;
                     cbSubType.SelectedIndex = -1;
                     cbSubType.Enabled = false;
-                    cbRecipe.SelectedIndex = myEnh.RecipeIDX + 1;
+                    cbRecipe.SelectedIndex = RecipeIndexToCbSel(myEnh);
                     cbRecipe.Enabled = true;
                     break;
                 case Enums.eType.SpecialO:
@@ -467,7 +478,7 @@ namespace Mids_Reborn.Forms
                     cbSubType.SelectedIndex = -1;
                     cbSubType.Enabled = false;
                     typeSet.Checked = true;
-                    cbRecipe.SelectedIndex = myEnh.RecipeIDX + 1;
+                    cbRecipe.SelectedIndex = RecipeIndexToCbSel(myEnh);
                     cbRecipe.Enabled = true;
                     break;
                 default:
@@ -801,9 +812,14 @@ namespace Mids_Reborn.Forms
             cbRecipe.BeginUpdate();
             cbRecipe.Items.Clear();
             cbRecipe.Items.Add("None");
-            var num = DatabaseAPI.Database.Recipes.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var num = DatabaseAPI.Database.Recipes.Length;
+            for (var index = 0; index < num; index++)
+            {
+                if (DatabaseAPI.Database.Recipes[index].IsHidden |
+                    DatabaseAPI.Database.Recipes[index].IsVirtual) continue;
                 cbRecipe.Items.Add(DatabaseAPI.Database.Recipes[index].InternalName);
+            }
+
             cbRecipe.EndUpdate();
         }
 
