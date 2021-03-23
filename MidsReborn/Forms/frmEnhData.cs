@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
@@ -759,15 +758,26 @@ namespace Mids_Reborn.Forms
             else
             {
                 IEnhancement enh = myEnh;
-                Enums.sEffect[] sEffectArray = (Enums.sEffect[])Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
-                enh.Effect = sEffectArray;
-                Enums.sEffect[] effect = myEnh.Effect;
+                //Enums.sEffect[] sEffectArray = (Enums.sEffect[])Utils.CopyArray(enh.Effect, new Enums.sEffect[myEnh.Effect.Length + 1]);
+                //enh.Effect = sEffectArray;
+
+                var effects = enh.Effect.ToList();
+                effects.Add(new Enums.sEffect
+                {
+                    Mode = Enums.eEffMode.Enhancement,
+                    Enhance = new Enums.sTwinID { ID = (int)integer, SubID = tSub },
+                    Multiplier = 1f,
+                    Schedule = Enhancement.GetSchedule(integer, tSub)
+                });
+                enh.Effect = effects.ToArray();
+
+                /*Enums.sEffect[] effect = myEnh.Effect;
                 int index = myEnh.Effect.Length - 1;
                 effect[index].Mode = Enums.eEffMode.Enhancement;
                 effect[index].Enhance.ID = (int)integer;
                 effect[index].Enhance.SubID = tSub;
                 effect[index].Multiplier = 1f;
-                effect[index].Schedule = Enhancement.GetSchedule(integer, tSub);
+                effect[index].Schedule = Enhancement.GetSchedule(integer, tSub);*/
                 FillEffectList();
                 ListSelectedEffects();
                 lstSelected.SelectedIndex = lstSelected.Items.Count - 1;
