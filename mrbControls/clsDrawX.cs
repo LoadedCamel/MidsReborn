@@ -69,7 +69,7 @@ namespace mrbControls
         public ImageAttributes pImageAttributes;
 
         // Scaling variables
-        private float ScaleValue;
+        public float ScaleValue { get; private set; }
         public bool Scaling { get; private set; }
 
         public static readonly float[][] heroMatrix =
@@ -2301,23 +2301,9 @@ namespace mrbControls
         {
             // Convert a column/row location to the top left XY co-ord of a power entry
             // 3 Columns, 15 Rows
-            var result = new Point(0, 0);
-            var padMult = ignorePadding ? 0 : 1;
-            checked
-            {
-                if (iRow >= vcRowsPowers)
-                {
-                    result.X = iCol * (SzPower.Width + PaddingX * padMult);
-                    result.Y = OffsetInherent + iRow * (SzPower.Height + PaddingY);
-                }
-                else
-                {
-                    result.X = iCol * (SzPower.Width + PaddingX * padMult);
-                    result.Y = iRow * (SzPower.Height + PaddingY);
-                }
-
-                return result;
-            }
+            return new Point(
+                iCol * (SzPower.Width + PaddingX * (ignorePadding ? 0 : 1)),
+                iRow * (SzPower.Height + (PaddingY - (ignorePadding ? (int)Math.Round(5 / ScaleValue): 0))) + (iRow >= vcRowsPowers ? OffsetInherent : 0));
         }
 
         public Size GetDrawingArea()
