@@ -5345,7 +5345,7 @@ namespace Mids_Reborn.Forms
         {
             if (MainModule.MidsController.Toon == null)
                 return;
-            if (MidsContext.Character.CurrentBuild.SetEnhRelativelevels(newVal))
+            if (MidsContext.Character.CurrentBuild.SetEnhRelativeLevels(newVal))
                 I9Picker.UI.Initial.RelLevel = newVal;
             info_Totals();
             DoRedraw();

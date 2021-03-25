@@ -898,7 +898,7 @@ namespace Mids_Reborn.Forms
             this.tsEnhToTO});
             this.ToolStripMenuItem1.Name = "ToolStripMenuItem1";
             this.ToolStripMenuItem1.Size = new System.Drawing.Size(245, 22);
-            this.ToolStripMenuItem1.Text = "Set all Enhancement &Origins to...";
+            this.ToolStripMenuItem1.Text = "Set all Enhancements' &Origin to...";
             //
             // ToolStripSeparator28
             //
