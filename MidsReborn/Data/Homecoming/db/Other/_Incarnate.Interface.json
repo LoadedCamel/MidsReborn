@@ -3660,6 +3660,7 @@
       "AoEModifier": 1.0
     },
     {
+      "LocationIndex": 11,
       "PowerIndex": 4892,
       "PowerSetID": 2823,
       "PowerSetIndex": 11,
@@ -4041,7 +4042,9 @@
       ],
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Interface",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 11,
+      "Taken": true
     },
     {
       "PowerIndex": 4893,
@@ -18093,6 +18096,7 @@
       "AoEModifier": 1.0
     },
     {
+      "LocationIndex": 11,
       "PowerIndex": 4935,
       "PowerSetID": 2823,
       "PowerSetIndex": 54,
@@ -18476,7 +18480,10 @@
       ],
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Interface",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 11,
+      "Active": true,
+      "Taken": true
     },
     {
       "PowerIndex": 4936,

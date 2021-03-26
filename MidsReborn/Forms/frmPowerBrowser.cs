@@ -227,9 +227,9 @@ namespace Mids_Reborn.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (Debugger.IsAttached)
+            if (!Debugger.IsAttached)
             {
-                BusyMsg("Re-Indexing && Saving...");
+                BusyMsg(@"Re-Indexing & Saving...");
                 foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
                 Array.Sort(DatabaseAPI.Database.Power);
                 var serializer = MyApplication.GetSerializer();

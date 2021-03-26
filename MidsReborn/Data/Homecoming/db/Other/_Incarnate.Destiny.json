@@ -66,7 +66,7 @@
   "Powers": [
     {
       "CastTimeReal": 2.03,
-      "LocationIndex": 8,
+      "LocationIndex": 13,
       "PowerIndex": 4664,
       "PowerSetID": 2813,
       "StaticIndex": 5015,
@@ -753,8 +753,7 @@
       "FullSetName": "Incarnate.Destiny",
       "CastTime": 2.03,
       "AoEModifier": 10.0,
-      "DisplayLocation": 8,
-      "Active": true,
+      "DisplayLocation": 13,
       "Taken": true
     },
     {
@@ -11407,7 +11406,7 @@
     {
       "CastTimeReal": 3.0,
       "ToggleCost": 20.0,
-      "LocationIndex": 15,
+      "LocationIndex": 12,
       "PowerIndex": 4673,
       "PowerSetID": 2813,
       "PowerSetIndex": 9,
@@ -15729,7 +15728,8 @@
       "FullSetName": "Incarnate.Destiny",
       "CastTime": 3.0,
       "AoEModifier": 10.0,
-      "DisplayLocation": 15
+      "DisplayLocation": 12,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.0,

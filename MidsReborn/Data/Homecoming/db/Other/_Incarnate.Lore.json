@@ -2791,6 +2791,7 @@
     {
       "CastTimeReal": 3.17,
       "ToggleCost": 20.0,
+      "LocationIndex": 12,
       "PowerIndex": 5114,
       "PowerSetID": 2826,
       "PowerSetIndex": 12,
@@ -3081,7 +3082,10 @@
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Lore",
       "CastTime": 3.17,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "DisplayLocation": 12,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.17,

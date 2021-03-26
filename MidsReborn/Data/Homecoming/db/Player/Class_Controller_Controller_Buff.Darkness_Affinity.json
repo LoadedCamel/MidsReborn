@@ -817,7 +817,9 @@
       "FullSetName": "Controller_Buff.Darkness_Affinity",
       "CastTime": 2.37,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.1,
@@ -893,6 +895,7 @@
           "MagPercent": -100.0,
           "Duration": 45.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -948,7 +951,8 @@
       "FullSetName": "Controller_Buff.Darkness_Affinity",
       "CastTime": 3.1,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.17,
@@ -1544,7 +1548,8 @@
       "FullSetName": "Controller_Buff.Darkness_Affinity",
       "CastTime": 3.17,
       "Slottable": true,
-      "AoEModifier": 4.75
+      "AoEModifier": 4.75,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.17,
@@ -1919,8 +1924,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 13.2074251,
-          "MagPercent": 13.2074251,
+          "Mag": 15.6403751,
+          "MagPercent": 15.6403751,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -2333,7 +2338,8 @@
       "FullSetName": "Controller_Buff.Darkness_Affinity",
       "CastTime": 3.17,
       "Slottable": true,
-      "AoEModifier": 3.25
+      "AoEModifier": 3.25,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.03,
@@ -3172,8 +3178,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.096,
-          "MagPercent": 9.6,
+          "Mag": 0.13,
+          "MagPercent": 13.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -3230,8 +3236,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.096,
-          "MagPercent": 9.6,
+          "Mag": 0.13,
+          "MagPercent": 13.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -3288,8 +3294,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.096,
-          "MagPercent": 9.6,
+          "Mag": 0.13,
+          "MagPercent": 13.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -3523,7 +3529,9 @@
       "FullSetName": "Controller_Buff.Darkness_Affinity",
       "CastTime": 2.03,
       "Slottable": true,
-      "AoEModifier": 7.0
+      "AoEModifier": 7.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.03,
@@ -4230,8 +4238,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0600000024,
-          "MagPercent": 6.0,
+          "Mag": 0.08125,
+          "MagPercent": 8.125,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4287,8 +4295,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0600000024,
-          "MagPercent": 6.0,
+          "Mag": 0.08125,
+          "MagPercent": 8.125,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4344,8 +4352,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0600000024,
-          "MagPercent": 6.0,
+          "Mag": 0.08125,
+          "MagPercent": 8.125,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4401,8 +4409,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0600000024,
-          "MagPercent": 6.0,
+          "Mag": 0.08125,
+          "MagPercent": 8.125,
           "Duration": 60.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -4459,7 +4467,9 @@
       "FullSetName": "Controller_Buff.Darkness_Affinity",
       "CastTime": 2.03,
       "Slottable": true,
-      "AoEModifier": 7.0
+      "AoEModifier": 7.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.0,
@@ -4656,7 +4666,9 @@
       "FullSetName": "Controller_Buff.Darkness_Affinity",
       "CastTime": 3.0,
       "Slottable": true,
-      "AoEModifier": 4.0
+      "AoEModifier": 4.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.03,

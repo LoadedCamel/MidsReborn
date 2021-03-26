@@ -149,7 +149,6 @@
           "Probability": 1.0,
           "Mag": 0.816803,
           "MagPercent": 0.816803,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",

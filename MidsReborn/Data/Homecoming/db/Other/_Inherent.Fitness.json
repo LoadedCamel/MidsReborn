@@ -442,6 +442,7 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Inherent.Fitness",
       "Slottable": true,
       "AoEModifier": 1.0,
@@ -809,6 +810,7 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Inherent.Fitness",
       "Slottable": true,
       "AoEModifier": 1.0,

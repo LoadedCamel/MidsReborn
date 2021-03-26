@@ -103,8 +103,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 52.8297,
-          "MagPercent": 52.8297,
+          "Mag": 62.5615,
+          "MagPercent": 62.5615,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -219,8 +219,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 81.84641,
-          "MagPercent": 81.84641,
+          "Mag": 96.92341,
+          "MagPercent": 96.92341,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -755,10 +755,13 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.67,
@@ -836,8 +839,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 11.6225338,
-          "MagPercent": 11.6225338,
+          "Mag": 13.76353,
+          "MagPercent": 13.76353,
           "Duration": 3.6,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -955,8 +958,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 15.338047,
-          "MagPercent": 15.338047,
+          "Mag": 18.16348,
+          "MagPercent": 18.16348,
           "Duration": 3.6,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1494,10 +1497,13 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.03,
@@ -1580,8 +1586,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 50.71651,
-          "MagPercent": 50.71651,
+          "Mag": 60.05904,
+          "MagPercent": 60.05904,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1695,8 +1701,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 33.6720657,
-          "MagPercent": 33.6720657,
+          "Mag": 39.8748245,
+          "MagPercent": 39.8748245,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -2461,8 +2467,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5,
-          "MagPercent": 50.0,
+          "Mag": 0.625,
+          "MagPercent": 62.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -2520,8 +2526,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5,
-          "MagPercent": 50.0,
+          "Mag": 0.625,
+          "MagPercent": 62.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -2579,8 +2585,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5,
-          "MagPercent": 50.0,
+          "Mag": 0.625,
+          "MagPercent": 62.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -2638,8 +2644,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5,
-          "MagPercent": 50.0,
+          "Mag": 0.625,
+          "MagPercent": 62.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -2697,8 +2703,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5,
-          "MagPercent": 50.0,
+          "Mag": 0.625,
+          "MagPercent": 62.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -2756,8 +2762,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5,
-          "MagPercent": 50.0,
+          "Mag": 0.625,
+          "MagPercent": 62.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -2815,8 +2821,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5,
-          "MagPercent": 50.0,
+          "Mag": 0.625,
+          "MagPercent": 62.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -2874,8 +2880,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.5,
-          "MagPercent": 50.0,
+          "Mag": 0.625,
+          "MagPercent": 62.5,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -2934,7 +2940,8 @@
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.17,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.33,
@@ -3017,8 +3024,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 120.451714,
-          "MagPercent": 120.451714,
+          "Mag": 142.640213,
+          "MagPercent": 142.640213,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3063,17 +3070,18 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.9945534,
-          "MagPercent": 0.9945534,
-          "VariableModified": true,
+          "Mag": 1.67811048,
+          "MagPercent": 1.67811048,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3120,16 +3128,18 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 82.55208,
-          "MagPercent": 82.55208,
+          "Mag": 139.290161,
+          "MagPercent": 139.290161,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3175,9 +3185,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3242,8 +3254,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 237.733658,
-          "MagPercent": 237.733658,
+          "Mag": 281.526764,
+          "MagPercent": 281.526764,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3297,8 +3309,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 146.369247,
-          "MagPercent": 146.369247,
+          "Mag": 246.968918,
+          "MagPercent": 246.968918,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3396,9 +3408,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3448,9 +3462,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3499,9 +3515,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3653,16 +3671,20 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.33,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.67,
@@ -3745,8 +3767,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 5.28297,
-          "MagPercent": 5.28297,
+          "Mag": 6.25615025,
+          "MagPercent": 6.25615025,
           "Duration": 7.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3806,8 +3828,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 7.13201,
-          "MagPercent": 7.13201,
+          "Mag": 8.445803,
+          "MagPercent": 8.445803,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -3864,8 +3886,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 1.38413811,
-          "MagPercent": 1.38413811,
+          "Mag": 1.63911128,
+          "MagPercent": 1.63911128,
           "Duration": 7.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3926,8 +3948,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 11.0736332,
-          "MagPercent": 11.0736332,
+          "Mag": 13.1135159,
+          "MagPercent": 13.1135159,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -4624,10 +4646,13 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.67,
       "Slottable": true,
-      "AoEModifier": 2.30662441
+      "AoEModifier": 2.30662441,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.67,
@@ -4886,8 +4911,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 24.93562,
-          "MagPercent": 24.93562,
+          "Mag": 29.5290279,
+          "MagPercent": 29.5290279,
           "Duration": 2.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -4947,8 +4972,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 51.295,
-          "MagPercent": 51.295,
+          "Mag": 60.74409,
+          "MagPercent": 60.74409,
           "Duration": 2.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -5486,10 +5511,13 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.93,
@@ -5570,8 +5598,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 86.64071,
-          "MagPercent": 86.64071,
+          "Mag": 102.600861,
+          "MagPercent": 102.600861,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -5627,8 +5655,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 80.3173,
-          "MagPercent": 80.3173,
+          "Mag": 120.4759,
+          "MagPercent": 120.4759,
           "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -5685,8 +5713,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 134.527145,
-          "MagPercent": 134.527145,
+          "Mag": 159.308487,
+          "MagPercent": 159.308487,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -6280,10 +6308,13 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.93,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.0,
@@ -6359,8 +6390,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 52.8297,
-          "MagPercent": 52.8297,
+          "Mag": 62.5615,
+          "MagPercent": 62.5615,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -6416,8 +6447,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 158.4891,
-          "MagPercent": 158.4891,
+          "Mag": 187.684509,
+          "MagPercent": 187.684509,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -6474,8 +6505,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 30.1456833,
-          "MagPercent": 30.1456833,
+          "Mag": 35.6988449,
+          "MagPercent": 35.6988449,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -6532,8 +6563,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 61.204792,
-          "MagPercent": 61.204792,
+          "Mag": 72.47938,
+          "MagPercent": 72.47938,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -7111,10 +7142,13 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 3.0,
       "Slottable": true,
-      "AoEModifier": 4.75
+      "AoEModifier": 4.75,
+      "Active": true,
+      "Taken": true
     }
   ]
 }

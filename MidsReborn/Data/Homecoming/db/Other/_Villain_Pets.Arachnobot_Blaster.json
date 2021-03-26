@@ -94,8 +94,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 25.8865528,
-          "MagPercent": 25.8865528,
+          "Mag": 30.6551361,
+          "MagPercent": 30.6551361,
           "Duration": 1.05,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -338,8 +338,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 44.3769455,
-          "MagPercent": 44.3769455,
+          "Mag": 46.7125664,
+          "MagPercent": 46.7125664,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -462,8 +462,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 103.546211,
-          "MagPercent": 103.546211,
+          "Mag": 122.620544,
+          "MagPercent": 122.620544,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1364,8 +1364,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 25.5167465,
-          "MagPercent": 25.5167465,
+          "Mag": 30.217205,
+          "MagPercent": 30.217205,
           "Duration": 1.05,
           "BaseProbability": 1.0,
           "Reward": "",

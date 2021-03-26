@@ -2779,7 +2779,7 @@
       "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 8,
+      "LocationIndex": 18,
       "PowerIndex": 8921,
       "PowerSetID": 3435,
       "PowerSetIndex": 5,
@@ -2886,7 +2886,8 @@
       ],
       "FullSetName": "Temporary_Powers.Accolades",
       "AoEModifier": 1.0,
-      "DisplayLocation": 8,
+      "DisplayLocation": 18,
+      "Active": true,
       "Taken": true
     },
     {
@@ -4181,7 +4182,7 @@
       "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 9,
+      "LocationIndex": 15,
       "PowerIndex": 8929,
       "PowerSetID": 3435,
       "PowerSetIndex": 13,
@@ -4342,7 +4343,8 @@
       ],
       "FullSetName": "Temporary_Powers.Accolades",
       "AoEModifier": 1.0,
-      "DisplayLocation": 9,
+      "DisplayLocation": 15,
+      "Active": true,
       "Taken": true
     },
     {
@@ -5330,7 +5332,7 @@
       "AoEModifier": 1.0
     },
     {
-      "LocationIndex": 10,
+      "LocationIndex": 16,
       "PowerIndex": 8933,
       "PowerSetID": 3435,
       "PowerSetIndex": 17,
@@ -5437,11 +5439,12 @@
       ],
       "FullSetName": "Temporary_Powers.Accolades",
       "AoEModifier": 1.0,
-      "DisplayLocation": 10,
+      "DisplayLocation": 16,
+      "Active": true,
       "Taken": true
     },
     {
-      "LocationIndex": 11,
+      "LocationIndex": 17,
       "PowerIndex": 8934,
       "PowerSetID": 3435,
       "PowerSetIndex": 18,
@@ -5548,7 +5551,8 @@
       ],
       "FullSetName": "Temporary_Powers.Accolades",
       "AoEModifier": 1.0,
-      "DisplayLocation": 11,
+      "DisplayLocation": 17,
+      "Active": true,
       "Taken": true
     },
     {

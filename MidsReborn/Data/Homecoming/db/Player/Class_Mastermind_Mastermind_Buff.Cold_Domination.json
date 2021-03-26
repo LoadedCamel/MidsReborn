@@ -564,7 +564,8 @@
       "FullSetName": "Mastermind_Buff.Cold_Domination",
       "CastTime": 1.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.17,
@@ -813,8 +814,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0600000024,
-          "MagPercent": 6.0,
+          "Mag": 0.08125,
+          "MagPercent": 8.125,
           "Duration": 240.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -870,8 +871,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.048,
-          "MagPercent": 4.8,
+          "Mag": 0.065,
+          "MagPercent": 6.5,
           "Duration": 240.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -928,7 +929,8 @@
       "FullSetName": "Mastermind_Buff.Cold_Domination",
       "CastTime": 1.17,
       "Slottable": true,
-      "AoEModifier": 5.5
+      "AoEModifier": 5.5,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.03,
@@ -1405,7 +1407,8 @@
       "FullSetName": "Mastermind_Buff.Cold_Domination",
       "CastTime": 2.03,
       "Slottable": true,
-      "AoEModifier": 4.75
+      "AoEModifier": 4.75,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.17,
@@ -1712,8 +1715,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.0600000024,
-          "MagPercent": 6.0,
+          "Mag": 0.08125,
+          "MagPercent": 8.125,
           "Duration": 240.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1770,7 +1773,8 @@
       "FullSetName": "Mastermind_Buff.Cold_Domination",
       "CastTime": 1.17,
       "Slottable": true,
-      "AoEModifier": 5.5
+      "AoEModifier": 5.5,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.17,
@@ -1894,8 +1898,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.096,
-          "MagPercent": 9.6,
+          "Mag": 0.13,
+          "MagPercent": 13.0,
           "Duration": 120.0,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -1952,7 +1956,8 @@
       "FullSetName": "Mastermind_Buff.Cold_Domination",
       "CastTime": 1.17,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.87,
@@ -2791,8 +2796,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.096,
-          "MagPercent": 9.6,
+          "Mag": 0.13,
+          "MagPercent": 13.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2849,8 +2854,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.096,
-          "MagPercent": 9.6,
+          "Mag": 0.13,
+          "MagPercent": 13.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2907,8 +2912,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.096,
-          "MagPercent": 9.6,
+          "Mag": 0.13,
+          "MagPercent": 13.0,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -7494,6 +7499,7 @@
           "MagPercent": -100.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",

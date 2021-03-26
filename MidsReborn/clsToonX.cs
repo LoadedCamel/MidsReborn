@@ -318,7 +318,7 @@ namespace Mids_Reborn
                     if (tPwr.Effects[shortFx.Index[shortFxIdx]].Absorbed_PowerType == Enums.ePowerType.GlobalBoost)
                         continue;
                     var effect = tPwr.Effects[shortFx.Index[shortFxIdx]];
-                    if (!((effect.ToWho == Enums.eToWho.Self) | (effect.ToWho != Enums.eToWho.Target) | (effect.ToWho != Enums.eToWho.Ally)))
+                    if (effect.ToWho != Enums.eToWho.Self && effect.ToWho != Enums.eToWho.All && effect.ToWho != Enums.eToWho.Ally)
                         continue;
                     var pIdx = tPwr.PowerIndex;
                     if (!enhancementPass)
@@ -391,11 +391,11 @@ namespace Mids_Reborn
                     {
                         nBuffs.MezRes[(int) effect.MezType] += shortFx.Value[shortFxIdx];
                     }
-                    else if ((iEffect == Enums.eEffectType.Defense) & !enhancementPass)
+                    else if ((iEffect == Enums.eEffectType.Defense && effect.DamageType != Enums.eDamage.None) & !enhancementPass)
                     {
                         nBuffs.Defense[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
                     }
-                    else if ((iEffect == Enums.eEffectType.Resistance) & !enhancementPass)
+                    else if ((iEffect == Enums.eEffectType.Resistance && effect.DamageType != Enums.eDamage.None) & !enhancementPass)
                     {
                         nBuffs.Resistance[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
                     }

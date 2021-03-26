@@ -1654,8 +1654,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.125,
-          "MagPercent": 12.5,
+          "Mag": 0.15625,
+          "MagPercent": 15.625,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -1713,8 +1713,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.125,
-          "MagPercent": 12.5,
+          "Mag": 0.15625,
+          "MagPercent": 15.625,
           "Duration": 10.0,
           "DisplayPercentage": true,
           "VariableModified": true,
@@ -13764,7 +13764,7 @@
       "NeverAutoUpdateRequirements": true,
       "IncludeFlag": true,
       "ForcedClass": "",
-      "InherentType": 6,
+      "InherentType": 7,
       "Effects": [
         {
           "MagnitudeExpression": "",
@@ -14142,6 +14142,7 @@
       "NeverAutoUpdate": true,
       "IncludeFlag": true,
       "ForcedClass": "",
+      "InherentType": 2,
       "Effects": [
         {
           "MagnitudeExpression": "",
@@ -14540,9 +14541,7 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.716,
-      "AoEModifier": 1.0,
-      "Active": true,
-      "Taken": true
+      "AoEModifier": 1.0
     },
     {
       "PowerIndex": 5527,
@@ -15907,8 +15906,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 19.018692,
-          "MagPercent": 19.018692,
+          "Mag": 20.0196724,
+          "MagPercent": 20.0196724,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -15950,8 +15949,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 19.018692,
-          "MagPercent": 19.018692,
+          "Mag": 20.0196724,
+          "MagPercent": 20.0196724,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -16432,7 +16431,8 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.716,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.716,
@@ -17913,7 +17913,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "MLCrit",
           "EffectId": "Ones",
@@ -17961,7 +17960,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "BossCrit",
           "EffectId": "Ones",
@@ -18010,7 +18008,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "PlayerCrit",
           "EffectId": "Ones",
@@ -18059,7 +18056,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "CritSmall",
           "EffectId": "Ones",
@@ -18108,7 +18104,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "CritLarge",
           "EffectId": "Ones",
@@ -18157,7 +18152,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "CritPlayer",
           "EffectId": "Ones",
@@ -18206,7 +18200,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "ECCritModSmall",
           "EffectId": "Ones",
@@ -18255,7 +18248,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "ECCritModLarge",
           "EffectId": "Ones",
@@ -18304,7 +18296,6 @@
           "Mag": 1.0,
           "MagPercent": 100.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "ECCritModPlayer",
           "EffectId": "Ones",
@@ -28630,7 +28621,6 @@
           "Mag": 0.01,
           "MagPercent": 1.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -28688,7 +28678,6 @@
           "Mag": 0.01,
           "MagPercent": 1.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -28746,7 +28735,6 @@
           "Mag": 0.01,
           "MagPercent": 1.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -28804,7 +28792,6 @@
           "Mag": 0.01,
           "MagPercent": 1.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -28862,7 +28849,6 @@
           "Mag": 0.01,
           "MagPercent": 1.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -28920,7 +28906,6 @@
           "Mag": 0.01,
           "MagPercent": 1.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -28978,7 +28963,6 @@
           "Mag": 0.01,
           "MagPercent": 1.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -29036,7 +29020,6 @@
           "Mag": 0.01,
           "MagPercent": 1.0,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Ones",
@@ -39635,7 +39618,6 @@
           "Mag": -0.025,
           "MagPercent": -2.5,
           "DisplayPercentage": true,
-          "VariableModified": true,
           "BaseProbability": 1.0,
           "IgnoreED": true,
           "Reward": "ScourgeProc",
@@ -39729,7 +39711,10 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.716,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true,
+      "Stacks": 100
     },
     {
       "CastTimeReal": 0.67,
@@ -41740,7 +41725,8 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.716,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "ToggleCost": 0.195,
@@ -43945,7 +43931,9 @@
         }
       ],
       "FullSetName": "Inherent.Inherent",
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "PowerIndex": 5640,
@@ -57340,7 +57328,9 @@
       ],
       "FullSetName": "Inherent.Inherent",
       "AoEModifier": 1.0,
-      "DisplayLocation": 8
+      "DisplayLocation": 8,
+      "Active": true,
+      "Taken": true
     }
   ]
 }

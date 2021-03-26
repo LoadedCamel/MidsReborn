@@ -5431,7 +5431,9 @@
       "FullSetName": "Incarnate.Judgement",
       "CastTime": 2.5,
       "AoEModifier": 1.0,
-      "DisplayLocation": 10
+      "DisplayLocation": 10,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.5,

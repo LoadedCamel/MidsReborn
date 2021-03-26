@@ -13704,7 +13704,7 @@
       "DisplayLocation": 10
     },
     {
-      "LocationIndex": 16,
+      "LocationIndex": 9,
       "PowerIndex": 4481,
       "PowerSetID": 2807,
       "PowerSetIndex": 29,
@@ -14201,7 +14201,9 @@
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Alpha",
       "AoEModifier": 1.0,
-      "DisplayLocation": 16
+      "DisplayLocation": 9,
+      "Active": true,
+      "Taken": true
     },
     {
       "LocationIndex": 13,
@@ -15649,7 +15651,7 @@
       "DisplayLocation": 11
     },
     {
-      "LocationIndex": 15,
+      "LocationIndex": 9,
       "PowerIndex": 4485,
       "PowerSetID": 2807,
       "PowerSetIndex": 33,
@@ -16479,7 +16481,7 @@
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Alpha",
       "AoEModifier": 1.0,
-      "DisplayLocation": 15,
+      "DisplayLocation": 9,
       "Active": true,
       "Taken": true
     },
@@ -28656,7 +28658,7 @@
       "DisplayLocation": 29
     },
     {
-      "LocationIndex": 35,
+      "LocationIndex": 8,
       "PowerIndex": 4512,
       "PowerSetID": 2807,
       "PowerSetIndex": 60,
@@ -29486,7 +29488,9 @@
       "HasGrantPowerEffect": true,
       "FullSetName": "Incarnate.Alpha",
       "AoEModifier": 1.0,
-      "DisplayLocation": 35
+      "DisplayLocation": 8,
+      "Active": true,
+      "Taken": true
     },
     {
       "LocationIndex": 30,

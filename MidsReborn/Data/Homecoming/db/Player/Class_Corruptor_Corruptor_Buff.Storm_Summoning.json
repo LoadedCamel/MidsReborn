@@ -105,8 +105,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.51835275,
-          "MagPercent": 3.51835275,
+          "Mag": 4.166471,
+          "MagPercent": 4.166471,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -161,8 +161,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.51835275,
-          "MagPercent": 3.51835275,
+          "Mag": 4.166471,
+          "MagPercent": 4.166471,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -221,8 +221,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.51835275,
-          "MagPercent": 3.51835275,
+          "Mag": 4.166471,
+          "MagPercent": 4.166471,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1167,6 +1167,7 @@
       "CastTime": 2.27,
       "Slottable": true,
       "AoEModifier": 1.0,
+      "Active": true,
       "Taken": true
     },
     {
@@ -2483,8 +2484,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.110736,
-          "MagPercent": 11.0736,
+          "Mag": 0.14995499,
+          "MagPercent": 14.9954987,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2541,8 +2542,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.110736,
-          "MagPercent": 11.0736,
+          "Mag": 0.14995499,
+          "MagPercent": 14.9954987,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2599,8 +2600,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 0.110736,
-          "MagPercent": 11.0736,
+          "Mag": 0.14995499,
+          "MagPercent": 14.9954987,
           "Duration": 2.25,
           "DisplayPercentage": true,
           "BaseProbability": 1.0,
@@ -2922,6 +2923,7 @@
           "MagPercent": 5000.0,
           "Duration": 15.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Level",
@@ -2978,6 +2980,7 @@
       "CastTime": 2.03,
       "Slottable": true,
       "AoEModifier": 1.0,
+      "Active": true,
       "Taken": true
     },
     {
@@ -3848,6 +3851,7 @@
           "MagPercent": 5000.0,
           "Duration": 30.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Level",
@@ -3986,6 +3990,7 @@
           "MagPercent": 5000.0,
           "Duration": 60.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Level",

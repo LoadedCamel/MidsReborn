@@ -2483,7 +2483,9 @@
       "FullSetName": "Stalker_Defense.Energy_Aura",
       "CastTime": 0.73,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.73,
@@ -3143,7 +3145,9 @@
       "FullSetName": "Stalker_Defense.Energy_Aura",
       "CastTime": 0.73,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.67,
@@ -3979,7 +3983,9 @@
       "FullSetName": "Stalker_Defense.Energy_Aura",
       "CastTime": 1.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.73,
@@ -5888,7 +5894,9 @@
       "FullSetName": "Stalker_Defense.Energy_Aura",
       "CastTime": 0.73,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.5,
@@ -6514,7 +6522,9 @@
       "FullSetName": "Stalker_Defense.Energy_Aura",
       "CastTime": 0.5,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.67,
@@ -7777,7 +7787,9 @@
       "FullSetName": "Stalker_Defense.Energy_Aura",
       "CastTime": 2.37,
       "Slottable": true,
-      "AoEModifier": 2.8
+      "AoEModifier": 2.8,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.17,
@@ -8014,7 +8026,9 @@
       "FullSetName": "Stalker_Defense.Energy_Aura",
       "CastTime": 1.17,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.0,

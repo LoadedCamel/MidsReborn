@@ -106,8 +106,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 10.56594,
-          "MagPercent": 10.56594,
+          "Mag": 12.5123005,
+          "MagPercent": 12.5123005,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -166,8 +166,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 24.80196,
-          "MagPercent": 24.80196,
+          "Mag": 29.3707466,
+          "MagPercent": 29.3707466,
           "Duration": 9.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -227,8 +227,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 10.56594,
-          "MagPercent": 10.56594,
+          "Mag": 12.5123005,
+          "MagPercent": 12.5123005,
           "Duration": 9.2,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
@@ -290,8 +290,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.543288,
-          "MagPercent": 3.543288,
+          "Mag": 4.19599962,
+          "MagPercent": 4.19599962,
           "Duration": 9.2,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
@@ -1144,8 +1144,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 52.8297,
-          "MagPercent": 52.8297,
+          "Mag": 62.5615,
+          "MagPercent": 62.5615,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1202,8 +1202,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 167.32486,
-          "MagPercent": 167.32486,
+          "Mag": 198.1479,
+          "MagPercent": 198.1479,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Damage",
@@ -1260,8 +1260,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 52.8297,
-          "MagPercent": 52.8297,
+          "Mag": 62.5615,
+          "MagPercent": 62.5615,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1320,8 +1320,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 83.66217,
-          "MagPercent": 83.66217,
+          "Mag": 99.07364,
+          "MagPercent": 99.07364,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1440,7 +1440,9 @@
       "FullSetName": "Controller_Control.Darkness_Control",
       "CastTime": 1.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.67,
@@ -1523,8 +1525,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.867861,
-          "MagPercent": 6.867861,
+          "Mag": 8.132995,
+          "MagPercent": 8.132995,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1584,8 +1586,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 18.8554478,
-          "MagPercent": 18.8554478,
+          "Mag": 22.328825,
+          "MagPercent": 22.328825,
           "Duration": 5.2,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -1646,8 +1648,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 6.867861,
-          "MagPercent": 6.867861,
+          "Mag": 8.132995,
+          "MagPercent": 8.132995,
           "Duration": 5.2,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
@@ -1710,8 +1712,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 9.427988,
-          "MagPercent": 9.427988,
+          "Mag": 11.1647253,
+          "MagPercent": 11.1647253,
           "Duration": 5.2,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
@@ -2301,7 +2303,9 @@
       "FullSetName": "Controller_Control.Darkness_Control",
       "CastTime": 1.67,
       "Slottable": true,
-      "AoEModifier": 3.39994049
+      "AoEModifier": 3.39994049,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.33,
@@ -2555,7 +2559,9 @@
       "FullSetName": "Controller_Control.Darkness_Control",
       "CastTime": 2.33,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.03,
@@ -2953,8 +2959,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.698079,
-          "MagPercent": 3.698079,
+          "Mag": 4.379305,
+          "MagPercent": 4.379305,
           "Duration": 4.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3014,8 +3020,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 16.64928,
-          "MagPercent": 16.64928,
+          "Mag": 19.7162571,
+          "MagPercent": 19.7162571,
           "Duration": 4.1,
           "BaseProbability": 1.0,
           "Reward": "",
@@ -3076,8 +3082,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 3.698079,
-          "MagPercent": 3.698079,
+          "Mag": 4.379305,
+          "MagPercent": 4.379305,
           "Duration": 4.1,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
@@ -3140,8 +3146,8 @@
         {
           "MagnitudeExpression": "",
           "Probability": 1.0,
-          "Mag": 8.324904,
-          "MagPercent": 8.324904,
+          "Mag": 9.858441,
+          "MagPercent": 9.858441,
           "Duration": 4.1,
           "InherentSpecial": true,
           "BaseProbability": 1.0,
@@ -3448,7 +3454,9 @@
       "FullSetName": "Controller_Control.Darkness_Control",
       "CastTime": 1.67,
       "Slottable": true,
-      "AoEModifier": 4.75
+      "AoEModifier": 4.75,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.33,
@@ -3692,7 +3700,8 @@
       "FullSetName": "Controller_Control.Darkness_Control",
       "CastTime": 2.33,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.67,
@@ -3775,6 +3784,7 @@
           "MagPercent": 5000.0,
           "Duration": 45.0,
           "DisplayPercentage": true,
+          "VariableModified": true,
           "BaseProbability": 1.0,
           "Reward": "",
           "EffectId": "Level",
@@ -3828,7 +3838,8 @@
       "FullSetName": "Controller_Control.Darkness_Control",
       "CastTime": 2.67,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.33,
@@ -3965,7 +3976,8 @@
       "FullSetName": "Controller_Control.Darkness_Control",
       "CastTime": 2.33,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     }
   ]
 }
