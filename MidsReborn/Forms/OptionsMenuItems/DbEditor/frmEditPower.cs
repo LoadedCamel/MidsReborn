@@ -575,9 +575,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbPowerType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            
             myPower.PowerType = (Enums.ePowerType) cbPowerType.SelectedIndex;
+            if ((myPower.ActivatePeriod > 0) & (myPower.PowerType == Enums.ePowerType.Toggle))
+            {
+                lblEndCost.Text = $"({myPower.EndCost / myPower.ActivatePeriod:##0.##}/s)";
+            }
+            else
+            {
+                lblEndCost.Text = "";
+            }
         }
 
         private void CheckScaleValues()
@@ -2169,12 +2177,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtAcc_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+
             var power = myPower;
-            var num = (float) Conversion.Val(txtAcc.Text);
-            if ((num >= 0.0) & (num <= 100.0))
-                power.Accuracy = num;
+            var res = float.TryParse(txtAcc.Text, out var num);
+            if (!res) return;
+
+            if (num < 0)
+            {
+                num = 0;
+                txtAcc.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+            else if (num > 100)
+            {
+                num = 100;
+                txtAcc.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+
+            power.Accuracy = num;
+            lblAcc.Text = $"({power.Accuracy * MidsContext.Config.BaseAcc * 100:##0.##}%)";
         }
 
         private void txtActivate_Leave(object sender, EventArgs e)
@@ -2186,12 +2207,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtActivate_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            
             var power = myPower;
-            var num = (float) Conversion.Val(txtActivate.Text);
-            if ((num >= 0.0) & (num <= 2147483904.0))
-                power.ActivatePeriod = num;
+            var ret = float.TryParse(txtActivate.Text, out var num);
+            if (!ret) return;
+
+            if (num < 0)
+            {
+                num = 0;
+                txtActivate.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+            else if (num > 2147483904)
+            {
+                num = 2147483904;
+                txtActivate.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+
+            power.ActivatePeriod = num;
+
+            if ((power.ActivatePeriod > 0) & (power.PowerType == Enums.ePowerType.Toggle))
+            {
+                lblEndCost.Text = $"({power.EndCost / power.ActivatePeriod:##0.##}/s)";
+            }
+            else
+            {
+                lblEndCost.Text = "";
+            }
         }
 
         private void txtArc_Leave(object sender, EventArgs e)
@@ -2206,7 +2248,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtArc.Text);
+            var num = Convert.ToSingle(txtArc.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
                 power.Arc = (int) Math.Round(num);
         }
@@ -2223,7 +2265,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtCastTime.Text);
+            var num = Convert.ToSingle(txtCastTime.Text);
             if ((num >= 0.0) & (num <= 100.0))
                 power.CastTimeReal = num;
         }
@@ -2251,12 +2293,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtEndCost_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+
             var power = myPower;
-            var num = (float) Conversion.Val(txtEndCost.Text);
-            if ((num >= 0.0) & (num <= 2147483904.0))
-                power.EndCost = num;
+            var res = float.TryParse(txtEndCost.Text, out var num);
+            if (!res) return;
+
+            if (num < 0)
+            {
+                num = 0;
+                txtEndCost.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+            else if (num > 2147483904)
+            {
+                num = 2147483904;
+                txtEndCost.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+
+            power.EndCost = num;
+            if ((power.ActivatePeriod > 0) & (power.PowerType == Enums.ePowerType.Toggle))
+            {
+                lblEndCost.Text = $"({power.EndCost / power.ActivatePeriod:##0.##}/s)";
+            }
+            else
+            {
+                lblEndCost.Text = "";
+            }
         }
 
         private void txtInterrupt_Leave(object sender, EventArgs e)
@@ -2271,7 +2333,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtInterrupt.Text);
+            var num = Convert.ToSingle(txtInterrupt.Text);
             if ((num >= 0.0) & (num <= 100.0))
                 power.InterruptTime = num;
         }
@@ -2305,7 +2367,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtLifeTimeGame.Text);
+            var num = Convert.ToSingle(txtLifeTimeGame.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.LifeTimeInGame = (int) Math.Round(num);
         }
@@ -2322,7 +2384,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtLifeTimeReal.Text);
+            var num = Convert.ToSingle(txtLifeTimeReal.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.LifeTime = (int) Math.Round(num);
         }
@@ -2339,7 +2401,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtMaxTargets.Text);
+            var num = Convert.ToSingle(txtMaxTargets.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
                 power.MaxTargets = (int) Math.Round(num);
         }
@@ -2371,7 +2433,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtNumCharges.Text);
+            var num = Convert.ToSingle(txtNumCharges.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.NumCharges = (int) Math.Round(num);
         }
@@ -2395,7 +2457,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtRadius.Text);
+            var num = Convert.ToSingle(txtRadius.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
                 power.Radius = (int) Math.Round(num);
         }
@@ -2412,7 +2474,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtRange.Text);
+            var num = Convert.ToSingle(txtRange.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.Range = num;
         }
@@ -2429,7 +2491,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtRangeSec.Text);
+            var num = Convert.ToSingle(txtRangeSec.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.RangeSecondary = num;
         }
@@ -2446,7 +2508,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtRechargeTime.Text);
+            var num = Convert.ToSingle(txtRechargeTime.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
             {
                 power.RechargeTime = num;
@@ -2473,7 +2535,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtUseageTime.Text);
+            var num = Convert.ToSingle(txtUseageTime.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.UsageTime = (int) Math.Round(num);
         }
@@ -2490,7 +2552,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating || cbInherentType.SelectedIndex > 0)
                 return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtVisualLocation.Text);
+            var num = Convert.ToSingle(txtVisualLocation.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
                 power.DisplayLocation = (int) Math.Round(num);
         }
