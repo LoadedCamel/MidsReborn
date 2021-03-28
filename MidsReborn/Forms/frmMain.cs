@@ -1540,9 +1540,20 @@ namespace Mids_Reborn.Forms
             RefreshInfo();
         }
 
-        private int[] fakeInitialize(params int[] nums)
+        private int[] GetSlotLevels()
         {
-            return nums;
+            var slotLevels = new List<int>();
+            for (var i = 0; i < DatabaseAPI.Database.Levels.Length; i++)
+            {
+                if (DatabaseAPI.Database.Levels[i].Slots <= 0) continue;
+
+                for (var j = 0; j < DatabaseAPI.Database.Levels[i].Slots; j++)
+                {
+                    slotLevels.Add(i + 1);
+                }
+            }
+
+            return slotLevels.ToArray();
         }
 
         private void FixPrimarySecondaryHeight()
@@ -4324,7 +4335,7 @@ namespace Mids_Reborn.Forms
         private void RearrangeAllSlotsInBuild(PowerEntry[] tp, bool notifyUser = false)
         {
             var index1 = 0;
-            var numArray1 = new int[tp.Length - 1 + 1];
+            var numArray1 = new int[tp.Length];
             var num1 = tp.Length - 1;
             for (var index2 = 0; index2 <= num1; ++index2)
             {
@@ -4363,11 +4374,7 @@ namespace Mids_Reborn.Forms
                 ++index3;
             }
 
-            var slotLevels = fakeInitialize(3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23,
-                23, 25, 25, 27, 27,
-                29, 29, 31, 31, 31, 33, 33, 33, 34, 34, 34, 36, 36, 36, 37, 37, 37, 39, 39, 39, 40, 40, 40, 42, 42, 42,
-                43, 43, 43, 45, 45, 45,
-                46, 46, 46, 48, 48, 48, 50, 50, 50);
+            var slotLevels = GetSlotLevels();
             var flag1 = false;
             var index6 = 0;
             var num5 = tp.Length - 1;
