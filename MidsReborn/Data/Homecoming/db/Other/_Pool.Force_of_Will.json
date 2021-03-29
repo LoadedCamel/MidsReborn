@@ -970,10 +970,13 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Pool.Force_of_Will",
       "CastTime": 2.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "ToggleCost": 0.46,
@@ -1604,7 +1607,9 @@
       ],
       "FullSetName": "Pool.Force_of_Will",
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.07,
@@ -3961,10 +3966,13 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Pool.Force_of_Will",
       "CastTime": 2.5,
       "Slottable": true,
-      "AoEModifier": 3.03996444
+      "AoEModifier": 3.03996444,
+      "Active": true,
+      "Taken": true
     },
     {
       "CastTimeReal": 0.73,

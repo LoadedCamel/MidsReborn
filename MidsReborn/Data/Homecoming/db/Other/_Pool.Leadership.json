@@ -2433,6 +2433,7 @@
       "CastTime": 1.5,
       "Slottable": true,
       "AoEModifier": 10.0,
+      "Active": true,
       "Taken": true
     },
     {

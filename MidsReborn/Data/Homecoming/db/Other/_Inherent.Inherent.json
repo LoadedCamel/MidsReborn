@@ -29079,7 +29079,7 @@
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 8,
+      "LocationIndex": 9,
       "PowerIndex": 5574,
       "PowerSetID": 2904,
       "PowerSetIndex": 81,
@@ -29323,7 +29323,7 @@
       "FullSetName": "Inherent.Inherent",
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 8,
+      "DisplayLocation": 9,
       "Taken": true
     },
     {
@@ -30415,7 +30415,7 @@
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 9,
+      "LocationIndex": 10,
       "PowerIndex": 5584,
       "PowerSetID": 2904,
       "PowerSetIndex": 91,
@@ -30717,12 +30717,12 @@
       "FullSetName": "Inherent.Inherent",
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 9,
+      "DisplayLocation": 10,
       "Taken": true
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 10,
+      "LocationIndex": 11,
       "PowerIndex": 5585,
       "PowerSetID": 2904,
       "PowerSetIndex": 92,
@@ -30966,7 +30966,7 @@
       "FullSetName": "Inherent.Inherent",
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 10,
+      "DisplayLocation": 11,
       "Taken": true
     },
     {
@@ -31207,7 +31207,7 @@
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 11,
+      "LocationIndex": 12,
       "PowerIndex": 5588,
       "PowerSetID": 2904,
       "PowerSetIndex": 95,
@@ -31451,12 +31451,12 @@
       "FullSetName": "Inherent.Inherent",
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 11,
+      "DisplayLocation": 12,
       "Taken": true
     },
     {
       "ToggleCost": 0.2925,
-      "LocationIndex": 12,
+      "LocationIndex": 13,
       "PowerIndex": 5589,
       "PowerSetID": 2904,
       "PowerSetIndex": 96,
@@ -31700,7 +31700,7 @@
       "FullSetName": "Inherent.Inherent",
       "Slottable": true,
       "AoEModifier": 1.0,
-      "DisplayLocation": 12,
+      "DisplayLocation": 13,
       "Taken": true
     },
     {
@@ -41040,6 +41040,7 @@
       "Slottable": true,
       "AoEModifier": 1.0,
       "DisplayLocation": 2,
+      "Active": true,
       "Taken": true
     },
     {
@@ -53505,7 +53506,7 @@
     {
       "CastTimeReal": 1.716,
       "ToggleCost": 0.455,
-      "LocationIndex": 13,
+      "LocationIndex": 14,
       "PowerIndex": 5656,
       "PowerSetID": 2904,
       "PowerSetIndex": 163,
@@ -54218,7 +54219,7 @@
       "FullSetName": "Inherent.Inherent",
       "CastTime": 1.716,
       "AoEModifier": 1.0,
-      "DisplayLocation": 13,
+      "DisplayLocation": 14,
       "Taken": true
     },
     {

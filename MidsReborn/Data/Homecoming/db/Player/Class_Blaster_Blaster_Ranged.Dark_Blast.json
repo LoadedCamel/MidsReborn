@@ -755,7 +755,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.0,
       "Slottable": true,
@@ -1497,7 +1496,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.67,
       "Slottable": true,
@@ -3070,11 +3068,9 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3128,11 +3124,9 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3185,11 +3179,9 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3408,11 +3400,9 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3462,11 +3452,9 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3515,11 +3503,9 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
-          "Validated": true,
           "nOverride": -1
         },
         {
@@ -3671,14 +3657,12 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True",
-              "Validated": true
+              "Value": "True"
             }
           ],
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.33,
       "Slottable": true,
@@ -4646,7 +4630,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.67,
       "Slottable": true,
@@ -5511,7 +5494,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.67,
       "Slottable": true,
@@ -6308,7 +6290,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 1.93,
       "Slottable": true,
@@ -7142,7 +7123,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Dark_Blast",
       "CastTime": 3.0,
       "Slottable": true,

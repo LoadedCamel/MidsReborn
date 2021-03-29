@@ -751,10 +751,12 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Psychic_Blast",
       "CastTime": 1.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.67,
@@ -2330,7 +2332,8 @@
       "FullSetName": "Blaster_Ranged.Psychic_Blast",
       "CastTime": 1.0,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.17,
@@ -2928,7 +2931,8 @@
       "FullSetName": "Blaster_Ranged.Psychic_Blast",
       "CastTime": 1.17,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 1.1,
@@ -3728,7 +3732,7 @@
       "AoEModifier": 1.0
     },
     {
-      "CastTimeReal": 3.0,
+      "CastTimeReal": 1.33,
       "ToggleCost": 14.352,
       "PowerIndex": 117,
       "PowerSetID": 12,
@@ -3751,7 +3755,7 @@
         "PowerIDNot": []
       },
       "ModesDisallowed": 2,
-      "Accuracy": 1.2,
+      "Accuracy": 1.0,
       "AccuracyMult": 1.2,
       "AttackTypes": 514,
       "GroupMembership": [],
@@ -3760,7 +3764,6 @@
       "TargetLoS": true,
       "Range": 175.0,
       "EndCost": 14.352,
-      "InterruptTime": 2.0,
       "RechargeTime": 12.0,
       "BaseRechargeTime": 12.0,
       "EffectArea": 1,
@@ -4015,9 +4018,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -4064,9 +4069,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -4113,9 +4120,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -4168,9 +4177,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -4224,9 +4235,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -4279,9 +4292,11 @@
           "ActiveConditionals": [
             {
               "Key": "Active:Inherent.Inherent.Fast_Snipe",
-              "Value": "True"
+              "Value": "True",
+              "Validated": true
             }
           ],
+          "Validated": true,
           "nOverride": -1
         },
         {
@@ -4439,10 +4454,12 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Psychic_Blast",
-      "CastTime": 3.0,
+      "CastTime": 1.33,
       "Slottable": true,
-      "AoEModifier": 1.0
+      "AoEModifier": 1.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 2.37,
@@ -5219,10 +5236,12 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Psychic_Blast",
       "CastTime": 2.37,
       "Slottable": true,
-      "AoEModifier": 4.0
+      "AoEModifier": 4.0,
+      "Taken": true
     },
     {
       "CastTimeReal": 3.0,
@@ -6910,10 +6929,12 @@
           "nOverride": -1
         }
       ],
+      "HasProcSlotted": true,
       "FullSetName": "Blaster_Ranged.Psychic_Blast",
       "CastTime": 1.97,
       "Slottable": true,
-      "AoEModifier": 4.75
+      "AoEModifier": 4.75,
+      "Taken": true
     }
   ]
 }

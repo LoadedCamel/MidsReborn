@@ -38,8 +38,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Dark_Blast",
-    "Hash": -125239882,
-    "Length": 229536
+    "Hash": -384771737,
+    "Length": 228901
   },
   {
     "Archetype": "Class_Blaster",
@@ -74,8 +74,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Psychic_Blast",
-    "Hash": -1835849031,
-    "Length": 222674
+    "Hash": -1608168912,
+    "Length": 223287
   },
   {
     "Archetype": "Class_Blaster",
@@ -98,8 +98,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Radiation_Manipulation",
-    "Hash": -100961521,
-    "Length": 302256
+    "Hash": 1069644237,
+    "Length": 302101
   },
   {
     "Archetype": "Class_Blaster",
@@ -176,8 +176,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Temporal_Manipulation",
-    "Hash": -294854158,
-    "Length": 273942
+    "Hash": -972176652,
+    "Length": 273835
   },
   {
     "Archetype": "Class_Defender",
@@ -17426,8 +17426,8 @@
   {
     "Archetype": "",
     "Fullname": "Inherent.Inherent",
-    "Hash": -1880563401,
-    "Length": 1804877
+    "Hash": 734161208,
+    "Length": 1804902
   },
   {
     "Archetype": "",
@@ -19796,14 +19796,14 @@
   {
     "Archetype": "",
     "Fullname": "Pool.Force_of_Will",
-    "Hash": 284884522,
-    "Length": 146877
+    "Hash": -2060859085,
+    "Length": 147074
   },
   {
     "Archetype": "",
     "Fullname": "Pool.Leadership",
-    "Hash": -1808984251,
-    "Length": 171326
+    "Hash": 81818528,
+    "Length": 171349
   },
   {
     "Archetype": "",

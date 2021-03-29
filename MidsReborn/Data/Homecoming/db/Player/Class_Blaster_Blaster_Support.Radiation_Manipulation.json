@@ -2699,7 +2699,6 @@
         }
       ],
       "HasGrantPowerEffect": true,
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Support.Radiation_Manipulation",
       "CastTime": 1.5,
       "Slottable": true,
@@ -4354,7 +4353,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Support.Radiation_Manipulation",
       "CastTime": 1.17,
       "Slottable": true,
@@ -4978,7 +4976,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Support.Radiation_Manipulation",
       "CastTime": 0.67,
       "Slottable": true,
@@ -5612,7 +5609,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Support.Radiation_Manipulation",
       "CastTime": 0.73,
       "Slottable": true,
@@ -6895,7 +6891,6 @@
           "nOverride": -1
         }
       ],
-      "HasProcSlotted": true,
       "FullSetName": "Blaster_Support.Radiation_Manipulation",
       "CastTime": 2.93,
       "Slottable": true,
