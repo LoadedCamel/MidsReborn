@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -15,6 +16,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         public frmDBDiffing(ISerialize serializer, frmPowerBrowser iParent)
         {
             InitializeComponent();
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             _serializer = serializer;
             _myParent = iParent;
             Load += Busy_OnLoad;
@@ -32,13 +34,30 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             Visible = true;
             SetMessage("Saving and Diffing Main database...");
+            UpdateProgress(0, "");
             var path = Files.SelectDataFileSave(Files.MxdbFileDB);
             DatabaseAPI.SaveMainDatabase(_serializer);
             DiffDatabase(_serializer, path, DatabaseAPI.MainDbName);
         }
 
+        private void UpdateProgress(int pbValue, string lblText)
+        {
+            progressBar1.Value = pbValue;
+            label1.Text = lblText;
+            Refresh();
+        }
+
+        private void UpdateProgress(decimal pbValue, string lblText)
+        {
+            progressBar1.Value = (int) Math.Round(pbValue * 100);
+            label1.Text = lblText;
+            Refresh();
+        }
+
         private void DiffDatabase(ISerialize serializer, string fn, string name)
         {
+            SetMessage("Saving and Diffing Main database...\r\n[ Metadata ]");
+
             var powersetPowers = DatabaseAPI.Database.Powersets.SelectMany(x => x.Powers).Select(p => p.PowerIndex).Distinct().ToList();
             // only powers that aren't in a powerset
             var powers = DatabaseAPI.Database.Power.Where(p => powersetPowers.Contains(p.PowerIndex) == false).ToList();
@@ -78,10 +97,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             var metadataPath = Path.Combine(Path.GetDirectoryName(fn), "db_metadata" + Path.GetExtension(fn));
             var (hasPrevious, prev) = ConfigData.LoadRawMhd<FHash[]>(serializer, metadataPath);
+            var nbArch = Math.Max(1, archPowersets.Length);
+            var nProgress = 0;
+            SetMessage("Saving and Diffing Main database...\r\n[ Powersets ]");
+            UpdateProgress(0, $"0% (0/{nbArch})");
+
             foreach (var ps in archPowersets)
             {
-                var at = DatabaseAPI.Database.Classes.FirstOrDefault(cl => ps.nArchetype != -1 && cl.Idx == ps.nArchetype);
-                var at2 = DatabaseAPI.Database.Classes.Length > ps.nArchetype && ps.nArchetype != -1 ? DatabaseAPI.Database.Classes[ps.nArchetype] : null;
+                // Variables not used
+                //var at = DatabaseAPI.Database.Classes.FirstOrDefault(cl => ps.nArchetype != -1 && cl.Idx == ps.nArchetype);
+                //var at2 = DatabaseAPI.Database.Classes.Length > ps.nArchetype && ps.nArchetype != -1 ? DatabaseAPI.Database.Classes[ps.nArchetype] : null;
                 if (ps.FullName?.Length == 0 || ps.FullName?.Length > 100)
                 {
                     continue;
@@ -89,7 +114,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 if (ps.FullName?.Contains(";") == true || string.IsNullOrWhiteSpace(ps.FullName))
                 {
-                    Console.Error.WriteLine("hmmm:" + ps.DisplayName);
+                    Debug.WriteLine($"hmmm: {ps.DisplayName}");
                 }
 
                 var psFn = Path.Combine(ps.nArchetype >= 0 ? playerPath : otherPath, ps.ATClass + "_" + ps.FullName + Path.GetExtension(fn));
@@ -100,21 +125,29 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 var psPrevious = hasPrevious ? prev.FirstOrDefault(psm => psm.Fullname == ps.FullName && psm.Archetype == ps.ATClass) : null;
                 var lastSaveResult = hasPrevious && psPrevious != null ? new RawSaveResult(hash: psPrevious.Hash, length: psPrevious.Length) : null;
-                var saveresult = ConfigData.SaveRawMhd(serializer, ps, psFn, lastSaveResult);
+                var saveResult = ConfigData.SaveRawMhd(serializer, ps, psFn, lastSaveResult);
+                if (saveResult == null)
+                {
+                    Close();
+
+                    return;
+                }
+
                 toWrite.Add(new FHash(
                     fullname: ps.FullName,
                     archetype: ps.ATClass,
-                    hash: saveresult.Hash,
-                    length: saveresult.Length
+                    hash: saveResult.Hash,
+                    length: saveResult.Length
                 ));
+
+                var percentProgress = ++nProgress / (decimal) nbArch;
+                if (nProgress % 50 != 0) continue;
+
+                UpdateProgress(percentProgress, $"{percentProgress:P1} ({nProgress}/{nbArch})");
             }
 
             ConfigData.SaveRawMhd(serializer, toWrite, metadataPath, null);
-            CloseForm();
-        }
-
-        private void CloseForm()
-        {
+            UpdateProgress(100, "");
             Close();
         }
     }

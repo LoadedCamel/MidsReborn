@@ -3756,7 +3756,7 @@
       },
       "ModesDisallowed": 2,
       "Accuracy": 1.0,
-      "AccuracyMult": 1.2,
+      "AccuracyMult": 1.0,
       "AttackTypes": 514,
       "GroupMembership": [],
       "EntitiesAffected": 2048,
@@ -5241,6 +5241,7 @@
       "CastTime": 2.37,
       "Slottable": true,
       "AoEModifier": 4.0,
+      "Active": true,
       "Taken": true
     },
     {

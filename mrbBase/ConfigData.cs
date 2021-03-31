@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -550,27 +552,49 @@ namespace mrbBase
 
         public static RawSaveResult SaveRawMhd(ISerialize serializer, object o, string fn, RawSaveResult lastSaveInfo)
         {
+            var rootDir = Path.GetDirectoryName(fn);
+            var targetFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}.{serializer.Extension}");
+            var rng = RandomNumberGenerator.Create();
+            var randomBytes = new byte[8];
+            rng.GetNonZeroBytes(randomBytes);
+            var randomIdCode = BitConverter.ToString(randomBytes)
+                .Replace("-", "")
+                .ToLowerInvariant();
+            var tempFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}_{randomIdCode}.tmp");
+            //Debug.WriteLine($"Target: {targetFile}, Temp: {tempFile}");
+
+            var fileHash = File.ReadAllText(targetFile).GetHashCode();
+            var newContent = "";
+            var newContentHash = 0;
             try
             {
-                var path = Path.Combine(Path.GetDirectoryName(fn),
-                    Path.GetFileNameWithoutExtension(fn) + "." + serializer.Extension);
-                var text = serializer.Serialize(o);
-                // don't save if the file will be the same
-                if (lastSaveInfo != null && text != null
-                                         && lastSaveInfo.Length > 0 && text.Length > 0
-                                         && lastSaveInfo.Hash != 0 && lastSaveInfo.Hash == text.GetHashCode()
-                                         && File.Exists(fn))
-                    return lastSaveInfo;
-                if (lastSaveInfo != null)
-                    Console.WriteLine("Writing out updated file: " + fn);
-                File.WriteAllText(path, text);
-                return new RawSaveResult(text?.Length ?? 0, text?.GetHashCode() ?? 0);
+                using (var fileStreamW = File.CreateText(tempFile))
+                {
+                    fileStreamW.Write(newContent = serializer.Serialize(o));
+                }
+
+                newContentHash = newContent.GetHashCode();
+                if (newContentHash != fileHash)
+                {
+                    File.Delete(targetFile);
+                    File.Move(tempFile, targetFile);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to save raw config: " + ex.Message, ex.GetType().Name);
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+
+                MessageBox.Show(
+                    $"Failed to save to {serializer.Extension.ToUpperInvariant()}: {ex.Message}\r\n\r\nFile: {targetFile}\r\nTemp file: {tempFile}",
+                    "Whoops", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
                 return null;
             }
+
+            return new RawSaveResult(newContent.Length, newContentHash);
         }
 
         private void SaveRawOverrides(ISerialize serializer, string iFilename, string name)

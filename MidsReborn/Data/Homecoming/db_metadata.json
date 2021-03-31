@@ -74,8 +74,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Ranged.Psychic_Blast",
-    "Hash": -1608168912,
-    "Length": 223287
+    "Hash": 954759633,
+    "Length": 223310
   },
   {
     "Archetype": "Class_Blaster",
@@ -176,8 +176,8 @@
   {
     "Archetype": "Class_Blaster",
     "Fullname": "Blaster_Support.Temporal_Manipulation",
-    "Hash": -972176652,
-    "Length": 273835
+    "Hash": -1632324805,
+    "Length": 274305
   },
   {
     "Archetype": "Class_Defender",
@@ -19814,8 +19814,8 @@
   {
     "Archetype": "",
     "Fullname": "Pool.Medicine",
-    "Hash": 1751763558,
-    "Length": 94028
+    "Hash": -833981934,
+    "Length": 93797
   },
   {
     "Archetype": "",
