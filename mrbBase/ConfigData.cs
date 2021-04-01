@@ -579,6 +579,10 @@ namespace mrbBase
                     File.Delete(targetFile);
                     File.Move(tempFile, targetFile);
                 }
+                else
+                {
+                    File.Delete(tempFile);
+                }
             }
             catch (Exception ex)
             {
