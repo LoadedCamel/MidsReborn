@@ -33,10 +33,12 @@ namespace mrbControls.pnlGFX2
             // 
             // ctlSlotViewer
             // 
-            this.Width = 30;
-            this.Height = 30;
+            this.Size = new System.Drawing.Size(30, 30);
             this.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs>(this.ctlSlotViewer_PaintSurface);
+            this.MouseEnter += new System.EventHandler(this.ctlSlotViewer_MouseEnter);
+            this.MouseLeave += new System.EventHandler(this.ctlSlotViewer_MouseLeave);
             this.ResumeLayout(false);
+
         }
 
         #endregion

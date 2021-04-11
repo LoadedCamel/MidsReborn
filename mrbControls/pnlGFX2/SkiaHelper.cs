@@ -26,5 +26,7 @@ namespace mrbControls.pnlGFX2
 
             return image;
         }
+
+        public static SKRect ToSKRect(Rectangle rect) => new(rect.Left, rect.Top, rect.Right, rect.Bottom);
     }
 }

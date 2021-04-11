@@ -12,8 +12,9 @@ namespace mrbControls.pnlGFX2
         {
             Auto = 0,
             Special = 1,
-            Io = 2,
-            Catalyzed = 3
+            Regular = 2,
+            Io = 3,
+            Attuned = 4
         }
 
         public ctlBuildViewer ParentBv;
@@ -24,20 +25,10 @@ namespace mrbControls.pnlGFX2
         private SKImageInfo _SKImageInfo;
         private SKSurface _SKSurface;
         private SKCanvas _SKCanvas;
-        private BorderType _BorderTypeOverride;
-        private bool _MouseOver;
 
-        public BorderType BorderTypeOverride
-        {
-            get => _BorderTypeOverride;
-            set => _BorderTypeOverride = value;
-        }
+        public BorderType BorderTypeOverride { get; set; }
 
-        public bool MouseOver
-        {
-            get => _MouseOver;
-            set => _MouseOver = value;
-        }
+        public bool MouseOver { get; set; }
 
         public ctlSlotViewer(clsDrawX drawX)
         {
@@ -53,8 +44,8 @@ namespace mrbControls.pnlGFX2
             _SKSurface = SKSurface.Create(_SKImageInfo);
             _SKCanvas = _SKSurface.Canvas;
             _SKCanvas.Clear();
-            _BorderTypeOverride = BorderType.Auto;
-            _MouseOver = false;
+            BorderTypeOverride = BorderType.Auto;
+            MouseOver = false;
             _drawX = drawX;
         }
 
@@ -85,45 +76,65 @@ namespace mrbControls.pnlGFX2
             RecreateHandle();
         }
 
-        private SKColorFilter GrayscaleFilter()
-        {
-            return SKColorFilter.CreateColorMatrix(new []
+        private SKColorFilter GrayscaleFilter() =>
+            SKColorFilter.CreateColorMatrix(new []
             {
                 0.21f, 0.72f, 0.07f, 0, 0,
                 0.21f, 0.72f, 0.07f, 0, 0,
                 0.21f, 0.72f, 0.07f, 0, 0,
                 0,     0,     0,     1, 0
             });
-        }
 
         private void Draw()
         {
-            if (_MouseOver)
-            {
-                _SKCanvas.Clear();
-                _SKCanvas.DrawBitmap(SkiaHelper.ToSKBitmap(_drawX.bxNewSlot.Bitmap), new SKPoint(0, 0));
+            _SKCanvas.Clear();
 
-                return;
-            }
-            
             var enhIdx = (_useAlternate ? _slot.FlippedEnhancement : _slot.Enhancement).Enh;
+            var enhGrade = (_useAlternate ? _slot.FlippedEnhancement : _slot.Enhancement).Grade;
             var imageIdx = enhIdx == -1
                 ? -1
                 : DatabaseAPI.Database.Enhancements[enhIdx].ImageIdx;
 
             if (imageIdx == -1)
             {
-                //var grayscaleEmptySlot = new Bitmap(Path.Combine(I9Gfx.ImagePath(), "Newslot.png"));
-                //_bxBuffer.Graphics.DrawImage(grayscaleEmptySlot, new Rectangle(0, 0, grayscaleEmptySlot.Width, grayscaleEmptySlot.Height),
-                //    0, 0,
-                //    grayscaleEmptySlot.Width, grayscaleEmptySlot.Height,
-                //    GraphicsUnit.Pixel,
-                //    GrayscaleIa());
+                if (MouseOver)
+                {
+                    _SKCanvas.DrawBitmap(SkiaHelper.ToSKBitmap(_drawX.bxNewSlot.Bitmap), new SKPoint(0, 0));
+                }
+                else
+                {
+                    using var paint = new SKPaint {ColorFilter = GrayscaleFilter()};
+                    _SKCanvas.DrawBitmap(SkiaHelper.ToSKBitmap(_drawX.bxNewSlot.Bitmap), _SKImageInfo.Rect, paint);
+                }
 
                 return;
             }
 
-            // _bxBuffer.Graphics.DrawImage(I9Gfx.Enhancements[imageIdx], new PointF(0, 0));
+            // Border
+            // Draw first because overlays are opaque
+            var borderType = BorderTypeOverride switch
+            {
+                BorderType.Regular => I9Gfx.ToGfxGrade(Enums.eType.Normal, enhGrade),
+                BorderType.Special => I9Gfx.ToGfxGrade(Enums.eType.SpecialO),
+                BorderType.Io => I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enhIdx].nIDSet >= 0
+                    ? Enums.eType.SetO
+                    : Enums.eType.InventO),
+                BorderType.Attuned => I9Gfx.ToGfxGrade(Enums.eType.SetO),
+                _ => I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enhIdx].TypeID, enhGrade)
+            };
+            var isAttuned = BorderTypeOverride == BorderType.Attuned || DatabaseAPI.EnhIsNaturallyAttuned(enhIdx);
+            var isSuperior = DatabaseAPI.EnhIsSuperior(enhIdx);
+            
+            // Attuned enhancement border is never loaded, and is not part of the enums.
+            // Consider for now enhancement image contains its own border.
+            if (!isAttuned)
+            {
+                _SKCanvas.DrawBitmap(SkiaHelper.ToSKBitmap(I9Gfx.Borders.Bitmap),
+                    SkiaHelper.ToSKRect(I9Gfx.GetOverlayRect(borderType)), _SKImageInfo.Rect);
+            }
+
+            // Enhancement
+            _SKCanvas.DrawBitmap(SkiaHelper.ToSKBitmap(I9Gfx.Enhancements[imageIdx]), new SKPoint(0, 0));
         }
 
         public void Flip()
@@ -133,7 +144,23 @@ namespace mrbControls.pnlGFX2
 
         private void ctlSlotViewer_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            // Draw
+            Draw();
+        }
+
+        private void ctlSlotViewer_MouseEnter(object sender, EventArgs e)
+        {
+            MouseOver = true;
+            var enhIdx = (_useAlternate ? _slot.FlippedEnhancement : _slot.Enhancement).Enh;
+
+            if (enhIdx == -1) Invalidate();
+        }
+
+        private void ctlSlotViewer_MouseLeave(object sender, EventArgs e)
+        {
+            MouseOver = false;
+            var enhIdx = (_useAlternate ? _slot.FlippedEnhancement : _slot.Enhancement).Enh;
+
+            if (enhIdx == -1) Invalidate();
         }
     }
 }
