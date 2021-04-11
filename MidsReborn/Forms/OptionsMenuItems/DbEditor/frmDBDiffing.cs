@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using mrbBase;
 
@@ -24,8 +25,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void SetMessage(string iMsg)
         {
-            if (lblmessage.Text == iMsg)
-                return;
+            if (lblmessage.Text == iMsg) return;
             lblmessage.Text = iMsg;
             Refresh();
         }
@@ -36,8 +36,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             SetMessage("Saving and Diffing Main database...");
             UpdateProgress(0, "");
             var path = Files.SelectDataFileSave(Files.MxdbFileDB);
-            DatabaseAPI.SaveMainDatabase(_serializer);
-            DiffDatabase(_serializer, path, DatabaseAPI.MainDbName);
+            //var asyncDbTask = new Task(() => DatabaseAPI.SaveMainDatabase(_serializer));
+            //asyncDbTask.Start();
+            //asyncDbTask.Wait();
+            
+            //var asyncDiffDb = new Task(() => DiffDatabase(_serializer, path, DatabaseAPI.MainDbName));
+            //asyncDiffDb.Start();
+            //asyncDiffDb.Wait();
         }
 
         private void UpdateProgress(int pbValue, string lblText)

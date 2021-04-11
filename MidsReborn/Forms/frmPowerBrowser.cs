@@ -227,9 +227,10 @@ namespace Mids_Reborn.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (!Debugger.IsAttached)
+            // Zed - 04/11/21 - disabled diffing
+            /*if (!Debugger.IsAttached)
             {
-                BusyMsg(@"Re-Indexing & Saving...");
+                BusyMsg(@"Re-Indexing && Saving...");
                 foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
                 Array.Sort(DatabaseAPI.Database.Power);
                 var serializer = MyApplication.GetSerializer();
@@ -251,7 +252,18 @@ namespace Mids_Reborn.Forms
                 using var diffForm = new frmDBDiffing(serializer, iParent);
                 diffForm.Closed += diffForm_Closed;
                 diffForm.ShowDialog(this);
-            }
+            }*/
+
+            BusyMsg(@"Re-Indexing && Saving...");
+            foreach (var power in DatabaseAPI.Database.Power) power.BaseRechargeTime = power.RechargeTime;
+            Array.Sort(DatabaseAPI.Database.Power);
+            var serializer = MyApplication.GetSerializer();
+            DatabaseAPI.AssignStaticIndexValues(serializer, false);
+            DatabaseAPI.MatchAllIDs();
+            DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
+            BusyHide();
+            DialogResult = DialogResult.OK;
+            Hide();
         }
 
         private void diffForm_Closed(object sender, EventArgs e)
