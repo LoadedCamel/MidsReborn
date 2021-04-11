@@ -53,7 +53,7 @@ namespace mrbControls
         public readonly List<ExtendedBitmap> bxPower;
 
         // The unplaced enhancement slot image
-        private readonly ExtendedBitmap bxNewSlot;
+        public readonly ExtendedBitmap bxNewSlot;
 
         // Graphics object of target drawing surface (The panel)
         private Graphics gTarget;

@@ -11,7 +11,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Forms.Controls;
@@ -6765,6 +6764,10 @@ namespace Mids_Reborn.Forms
         private int dragXOffset;
         private int dragYOffset;
         private clsDrawX drawing;
+        public clsDrawX DrawX
+        {
+            get => drawing;
+        }
         private int dvLastEnh;
         private bool dvLastNoLev;
         private int dvLastPower;
