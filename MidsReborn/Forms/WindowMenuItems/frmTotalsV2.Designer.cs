@@ -2306,8 +2306,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel5.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel5.ColumnCount = 3;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 57.42574F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.57426F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55.42574F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 44.57426F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 310F));
             this.tableLayoutPanel5.Controls.Add(this.lv27, 1, 3);
             this.tableLayoutPanel5.Controls.Add(this.bar27, 2, 3);
