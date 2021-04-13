@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase;
+using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
@@ -1330,11 +1332,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             //pbClose.Refresh();
             //pbTopMost.Refresh();
-            //Character.TotalStatistics uncappedStats = MidsContext.Character.Totals;
-            //Character.TotalStatistics cappedStats = MidsContext.Character.TotalsCapped;
+            var uncappedStats = MidsContext.Character.Totals;
+            //var cappedStats = MidsContext.Character.TotalsCapped;
             var displayStats = MidsContext.Character.DisplayStats;
             //var watch = Stopwatch.StartNew();
             tabControlAdv2.SuspendLayout();
+
+            Debug.WriteLine($"MaxFlySpeed: {uncappedStats.MaxFlySpd}, MaxRunSpeed: {uncappedStats.MaxRunSpd}, MaxJumpSpeed: {uncappedStats.MaxJumpSpd}");
+            Debug.WriteLine($"Base fly speed: {Statistics.BaseFlySpeed}, Base run speed: {Statistics.BaseRunSpeed}, Base jump speed: {Statistics.BaseJumpSpeed}");
 
             #region Bars setup
 

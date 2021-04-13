@@ -2349,7 +2349,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar27.Group = "Movement";
             this.bar27.Location = new System.Drawing.Point(198, 53);
             this.bar27.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.bar27.MaximumBarValue = 100F;
+            this.bar27.MaximumBarValue = 200F;
             this.bar27.MinimumBarValue = 0F;
             this.bar27.Name = "bar27";
             this.bar27.Size = new System.Drawing.Size(287, 13);
@@ -2374,7 +2374,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar26.Group = "Movement";
             this.bar26.Location = new System.Drawing.Point(198, 36);
             this.bar26.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.bar26.MaximumBarValue = 100F;
+            this.bar26.MaximumBarValue = 300F;
             this.bar26.MinimumBarValue = 0F;
             this.bar26.Name = "bar26";
             this.bar26.Size = new System.Drawing.Size(287, 13);
@@ -2399,7 +2399,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar25.Group = "Movement";
             this.bar25.Location = new System.Drawing.Point(198, 19);
             this.bar25.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.bar25.MaximumBarValue = 200F;
+            this.bar25.MaximumBarValue = 250F;
             this.bar25.MinimumBarValue = 0F;
             this.bar25.Name = "bar25";
             this.bar25.Size = new System.Drawing.Size(287, 13);
@@ -2425,7 +2425,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar24.Group = "Movement";
             this.bar24.Location = new System.Drawing.Point(198, 2);
             this.bar24.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.bar24.MaximumBarValue = 200F;
+            this.bar24.MaximumBarValue = 250F;
             this.bar24.MinimumBarValue = 0F;
             this.bar24.Name = "bar24";
             this.bar24.Size = new System.Drawing.Size(287, 13);
