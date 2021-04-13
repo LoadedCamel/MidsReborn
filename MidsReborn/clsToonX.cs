@@ -513,7 +513,7 @@ namespace Mids_Reborn
             // because increasing speed caps do not use 1.5x modifier fly speed gives.
             Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseRunSpeed;
             if (Totals.MaxFlySpd > 171.990005493164) //128.990005493164
-                Totals.MaxFlySpd = 171.99f; // 8.19f * 21.0f == 171.99f -- Note: althrough the cap can reach 8.19, there is currently no way to go beyond 7.1425 (149.99 fps)
+                Totals.MaxFlySpd = 171.99f; // 8.19f * 21.0f == 171.99f -- Note: although the cap can reach 8.19, there is currently no way to go beyond 7.1425 (149.99 fps)
             Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f) * Statistics.BaseRunSpeed;
             Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] * Statistics.BaseRunSpeed;
             if (Totals.MaxRunSpd > 176.35777) // 135.669998168945
