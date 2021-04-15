@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -13,8 +12,6 @@ using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
-using SkiaSharp;
-using SkiaSharp.Views;
 
 namespace Mids_Reborn
 {
@@ -316,7 +313,6 @@ namespace Mids_Reborn
                             shortFx.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, false, false,
                                 true));
                             sFxSelf.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.MaxFlySpeed, false, true));
-                            //Debug.WriteLine($"MaxFlySpeed: +{sFxSelf.Sum}");
                             nBuffs.Effect[(int) Enums.eStatType.MaxFlySpeed] += sFxSelf.Sum;
                             break;
                         default:
@@ -332,8 +328,6 @@ namespace Mids_Reborn
                     if (effect.ToWho != Enums.eToWho.Self && effect.ToWho != Enums.eToWho.All && effect.ToWho != Enums.eToWho.Ally)
                         continue;
 
-                    //Debug.WriteLine($"shortFX type: {effect.EffectType} / Mag: {effect.Mag}");
-                    
                     var pIdx = tPwr.PowerIndex;
                     if (!enhancementPass)
                     {
@@ -505,10 +499,8 @@ namespace Mids_Reborn
             Totals.HPRegen = _selfBuffs.Effect[(int)Enums.eStatType.HPRegen];
             Totals.EndRec = _selfBuffs.Effect[(int)Enums.eStatType.EndRec];
             Totals.Absorb = _selfBuffs.Effect[(int)Enums.eStatType.Absorb];
-            Debug.WriteLine($"FlySpeed (GDB_Totals()): {_selfBuffs.Effect[(int) Enums.eStatType.FlySpeed]}");
             Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
             // this number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
-            Debug.WriteLine($"MaxFlySpeed (GDB_Totals()): {_selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed]}");
             // Statistics.BaseFlySpeed -> Statistics.BaseRunSpeed
             // because increasing speed caps do not use 1.5x modifier fly speed gives.
             Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseRunSpeed;

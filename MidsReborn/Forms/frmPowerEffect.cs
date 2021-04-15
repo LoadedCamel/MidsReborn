@@ -963,9 +963,12 @@ namespace Mids_Reborn.Forms
             string value;
             ListViewItem item;
 
+            if (lvConditionalType.SelectedItems.Count <= 0) return;
+
             switch (lvConditionalType.SelectedItems[0].Text)
             {
                 case "Power Active":
+                    if (lvSubConditional.SelectedItems.Count <= 0) return;
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
@@ -980,6 +983,7 @@ namespace Mids_Reborn.Forms
                     myFX.ActiveConditionals.Add(new KeyValue<string, string>($"Active:{powerName}", value));
                     break;
                 case "Power Taken":
+                    if (lvSubConditional.SelectedItems.Count <= 0) return;
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
@@ -994,20 +998,18 @@ namespace Mids_Reborn.Forms
                     myFX.ActiveConditionals.Add(new KeyValue<string, string>($"Taken:{powerName}", value));
                     break;
                 case "Stacks":
+                    if (lvSubConditional.SelectedItems.Count <= 0) return;
+                    if (lvConditionalOp.SelectedItems.Count <= 0) return;
+                    if (lvConditionalBool.SelectedItems.Count <= 0) return;
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
-                    switch (lvConditionalOp.SelectedItems[0].Text)
+                    cOp = lvConditionalOp.SelectedItems[0].Text switch
                     {
-                        case "Equal To":
-                            cOp = "=";
-                            break;
-                        case "Greater Than":
-                            cOp = ">";
-                            break;
-                        case "Less Than":
-                            cOp = "<";
-                            break;
-                    }
+                        "Equal To" => "=",
+                        "Greater Than" => ">",
+                        "Less Than" => "<",
+                        _ => cOp
+                    };
                     value = lvConditionalBool.SelectedItems[0].Text;
                     item = new ListViewItem { Text = $@"Stacks:{power?.DisplayName}", Name = power?.FullName };
                     item.SubItems.Add(cOp);
@@ -1022,19 +1024,16 @@ namespace Mids_Reborn.Forms
                     myFX.ActiveConditionals.Add(new KeyValue<string, string>($"Stacks:{powerName}", $"{cOp} {value}"));
                     break;
                 case "Team Members":
+                    if (lvSubConditional.SelectedItems.Count <= 0) return;
+                    if (lvConditionalBool.SelectedItems.Count <= 0) return;
                     var archetype = lvSubConditional.SelectedItems[0].Text;
-                    switch (lvConditionalOp.SelectedItems[0].Text)
+                    cOp = lvConditionalOp.SelectedItems[0].Text switch
                     {
-                        case "Equal To":
-                            cOp = "=";
-                            break;
-                        case "Greater Than":
-                            cOp = ">";
-                            break;
-                        case "Less Than":
-                            cOp = "<";
-                            break;
-                    }
+                        "Equal To" => "=",
+                        "Greater Than" => ">",
+                        "Less Than" => "<",
+                        _ => cOp
+                    };
                     value = lvConditionalBool.SelectedItems[0].Text;
                     item = new ListViewItem { Text = $@"Team:{archetype}", Name = archetype };
                     item.SubItems.Add(cOp);
@@ -1055,6 +1054,8 @@ namespace Mids_Reborn.Forms
 
         private void removeConditional_Click(object sender, EventArgs e)
         {
+            if (lvActiveConditionals.SelectedItems.Count <= 0) return;
+
             foreach (var cVp in myFX.ActiveConditionals
                 .Where(kv => kv.Key.Contains(lvActiveConditionals.SelectedItems[0].Name)).ToList())
             {

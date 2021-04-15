@@ -1332,14 +1332,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             //pbClose.Refresh();
             //pbTopMost.Refresh();
-            var uncappedStats = MidsContext.Character.Totals;
+            //var uncappedStats = MidsContext.Character.Totals;
             //var cappedStats = MidsContext.Character.TotalsCapped;
             var displayStats = MidsContext.Character.DisplayStats;
             //var watch = Stopwatch.StartNew();
             tabControlAdv2.SuspendLayout();
-
-            Debug.WriteLine($"MaxFlySpeed: {uncappedStats.MaxFlySpd}, MaxRunSpeed: {uncappedStats.MaxRunSpd}, MaxJumpSpeed: {uncappedStats.MaxJumpSpd}");
-            Debug.WriteLine($"Base fly speed: {Statistics.BaseFlySpeed}, Base run speed: {Statistics.BaseRunSpeed}, Base jump speed: {Statistics.BaseJumpSpeed}");
 
             #region Bars setup
 
