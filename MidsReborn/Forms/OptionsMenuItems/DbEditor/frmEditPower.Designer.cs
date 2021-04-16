@@ -58,6 +58,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label2 = new System.Windows.Forms.Label();
             this.Label3 = new System.Windows.Forms.Label();
             this.GroupBox3 = new System.Windows.Forms.GroupBox();
+            this.udScaleStart = new System.Windows.Forms.NumericUpDown();
+            this.label19 = new System.Windows.Forms.Label();
             this.overideScale = new System.Windows.Forms.CheckBox();
             this.Label28 = new System.Windows.Forms.Label();
             this.udScaleMax = new System.Windows.Forms.NumericUpDown();
@@ -218,8 +220,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnFullPaste = new System.Windows.Forms.Button();
             this.btnFullCopy = new System.Windows.Forms.Button();
             this.btnCSVImport = new System.Windows.Forms.Button();
-            this.label19 = new System.Windows.Forms.Label();
-            this.udScaleStart = new System.Windows.Forms.NumericUpDown();
             this.tcPower.SuspendLayout();
             this.tpText.SuspendLayout();
             this.GroupBox4.SuspendLayout();
@@ -227,6 +227,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox6.SuspendLayout();
             this.GroupBox5.SuspendLayout();
             this.GroupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udScaleStart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udScaleMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udScaleMin)).BeginInit();
             this.GroupBox1.SuspendLayout();
@@ -248,7 +249,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpMutex.SuspendLayout();
             this.GroupBox2.SuspendLayout();
             this.tpSubPower.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udScaleStart)).BeginInit();
             this.SuspendLayout();
             // 
             // tcPower
@@ -334,6 +334,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // cbInherentType
             // 
+            this.cbInherentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbInherentType.Enabled = false;
             this.cbInherentType.FormattingEnabled = true;
             this.cbInherentType.Items.AddRange(new object[] {
@@ -561,6 +562,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox3.TabStop = false;
             this.GroupBox3.Text = "Power Scaling";
             // 
+            // udScaleStart
+            // 
+            this.udScaleStart.Location = new System.Drawing.Point(76, 73);
+            this.udScaleStart.Name = "udScaleStart";
+            this.udScaleStart.Size = new System.Drawing.Size(45, 20);
+            this.udScaleStart.TabIndex = 10;
+            this.udScaleStart.ValueChanged += new System.EventHandler(this.udScaleStart_ValueChanged);
+            this.udScaleStart.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udScaleStart_KeyPress);
+            this.udScaleStart.Leave += new System.EventHandler(this.udScaleStart_Leave);
+            // 
+            // label19
+            // 
+            this.label19.Location = new System.Drawing.Point(6, 75);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(64, 18);
+            this.label19.TabIndex = 9;
+            this.label19.Text = "Initial Value:";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // overideScale
             // 
             this.overideScale.AutoSize = true;
@@ -727,6 +747,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.txtNameDisplay.TabIndex = 0;
             this.txtNameDisplay.Text = "PowerName";
             this.txtNameDisplay.TextChanged += new System.EventHandler(this.txtPowerName_TextChanged);
+            this.txtNameDisplay.Leave += new System.EventHandler(this.txtNameDisplay_Leave);
             // 
             // cbNameGroup
             // 
@@ -2269,25 +2290,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnCSVImport.UseVisualStyleBackColor = true;
             this.btnCSVImport.Click += new System.EventHandler(this.btnCSVImport_Click);
             // 
-            // label19
-            // 
-            this.label19.Location = new System.Drawing.Point(6, 75);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(64, 18);
-            this.label19.TabIndex = 9;
-            this.label19.Text = "Initial Value:";
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // udScaleStart
-            // 
-            this.udScaleStart.Location = new System.Drawing.Point(76, 73);
-            this.udScaleStart.Name = "udScaleStart";
-            this.udScaleStart.Size = new System.Drawing.Size(45, 20);
-            this.udScaleStart.TabIndex = 10;
-            this.udScaleStart.ValueChanged += new System.EventHandler(this.udScaleStart_ValueChanged);
-            this.udScaleStart.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.udScaleStart_KeyPress);
-            this.udScaleStart.Leave += new System.EventHandler(this.udScaleStart_Leave);
-            // 
             // frmEditPower
             // 
             this.AcceptButton = this.btnOK;
@@ -2318,6 +2320,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox5.PerformLayout();
             this.GroupBox3.ResumeLayout(false);
             this.GroupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udScaleStart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udScaleMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udScaleMin)).EndInit();
             this.GroupBox1.ResumeLayout(false);
@@ -2341,7 +2344,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.tpMutex.ResumeLayout(false);
             this.GroupBox2.ResumeLayout(false);
             this.tpSubPower.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.udScaleStart)).EndInit();
             this.ResumeLayout(false);
 
         }
