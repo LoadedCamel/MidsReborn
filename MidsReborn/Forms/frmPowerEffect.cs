@@ -829,90 +829,102 @@ namespace Mids_Reborn.Forms
 
         private void txtFXAccuracy_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModAccuracy = Convert.ToSingle(txtFXAccuracy.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXAccuracy.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModAccuracy = num;
             UpdateFXText();
         }
         private void txtFXActivateInterval_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModActivatePeriod = Convert.ToSingle(txtFXActivateInterval.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXActivateInterval.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModActivatePeriod = num;
             UpdateFXText();
         }
         private void txtFXArc_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModArc = Convert.ToInt32(txtFXArc.Text);
+            if (Loading) return;
+            var ret = int.TryParse(txtFXArc.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModArc = num;
             UpdateFXText();
         }
         private void txtFXCastTime_TextChanged(object sender, EventArgs e)
         {
-            myFX.AtrModCastTime = Convert.ToSingle(txtFXCastTime.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXCastTime.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModCastTime = num;
             UpdateFXText();
         }
         private void cbFXEffectArea_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
+            if (Loading) return;
             myFX.AtrModEffectArea = (Enums.eEffectArea)cbFXEffectArea.SelectedIndex;
             UpdateFXText();
         }
         private void txtFXEnduranceCost_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModEnduranceCost = Convert.ToSingle(txtFXEnduranceCost.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXEnduranceCost.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModEnduranceCost = num;
             UpdateFXText();
         }
         private void txtFXInterruptTime_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModInterruptTime = Convert.ToSingle(txtFXInterruptTime.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXInterruptTime.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModInterruptTime = num;
             UpdateFXText();
         }
         private void txtFXMaxTargets_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModMaxTargets = Convert.ToInt32(txtFXAccuracy.Text);
+            if (Loading) return;
+            var ret = int.TryParse(txtFXMaxTargets.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModMaxTargets = num;
             UpdateFXText();
         }
         private void txtFXRadius_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModRadius = Convert.ToSingle(txtFXRadius.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXRadius.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModRadius = num;
             UpdateFXText();
         }
         private void txtFXRange_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModRange = Convert.ToSingle(txtFXRange.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXRange.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModRange = num;
             UpdateFXText();
         }
         private void txtFXRechargeTime_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModRechargeTime = Convert.ToSingle(txtFXRechargeTime.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXRechargeTime.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModRechargeTime = num;
             UpdateFXText();
         }
         private void txtFXSecondaryRange_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
-                return;
-            myFX.AtrModSecondaryRange = Convert.ToSingle(txtFXSecondaryRange.Text);
+            if (Loading) return;
+            var ret = float.TryParse(txtFXSecondaryRange.Text, out var num);
+            if (!ret) return;
+            myFX.AtrModSecondaryRange = num;
             UpdateFXText();
         }
 
         private void ListView_Leave(object sender, EventArgs e)
         {
-            var lvControl = (ctlListViewColored)sender;
+            var lvControl = (ctlListViewColored) sender;
             lvControl.LostFocusItem = lvControl.FocusedItem.Index;
         }
 
@@ -924,7 +936,7 @@ namespace Mids_Reborn.Forms
 
         private void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            var lvControl = (ctlListViewColored)sender;
+            var lvControl = (ctlListViewColored) sender;
             if (lvControl.Enabled)
             {
                 if (e.Item.Selected)
