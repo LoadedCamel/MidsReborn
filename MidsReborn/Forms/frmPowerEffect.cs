@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
+using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbControls;
@@ -1513,6 +1515,59 @@ namespace Mids_Reborn.Forms
             }
 
             lvSubSub.EndUpdate();
+        }
+
+        private void lvSubConditional_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (lvSubConditional.Items.Count <= 0) return;
+            if (e.Button != MouseButtons.Right) return;
+
+            var conditionalType = lvConditionalType.SelectedItems.Count <= 0
+                ? ""
+                : lvConditionalType.Items[lvConditionalType.SelectedItems[0].Index].Text;
+
+            if (conditionalType != "Power Taken" & conditionalType != "Power Active") return;
+
+            using var sf = new frmConditionalAttributeSearch();
+            var ret = sf.ShowDialog();
+            Debug.WriteLine(ret);
+            Debug.WriteLine(sf.SearchTerms.PowerName);
+            Debug.WriteLine(sf.SearchTerms.AtGroup);
+            if (ret == DialogResult.Cancel) return;
+            if (sf.SearchTerms.PowerName == "") return;
+
+            var searchAtGroup = sf.SearchTerms.AtGroup switch
+            {
+                "Any" => "",
+                "None" => "",
+                _ => sf.SearchTerms.AtGroup.ToLowerInvariant()
+            };
+            var searchPowerName = sf.SearchTerms.PowerName.ToLowerInvariant();
+
+            var n = lvSubConditional.Items.Count;
+            
+            for (var i = 0; i < n; i++)
+            {
+                var lvItem = lvSubConditional.Items[i].Text.ToLowerInvariant();
+                if (lvItem.StartsWith(searchPowerName))
+                {
+                    Debug.WriteLine($"Item: {lvItem}, searchAtGroup is empty: {searchAtGroup == ""}, lvItem.Contains(searchAtGroup): {lvItem.Contains($"[{searchAtGroup}")}");
+                }
+                if (lvItem.StartsWith(searchPowerName))
+                {
+                    if (searchAtGroup == "" | lvItem.Contains($"[{searchAtGroup}"))
+                    {
+                        lvSubConditional.Items[i].Selected = true;
+                        lvSubConditional.Items[i].EnsureVisible();
+                        
+                        return;
+                    }
+                }
+            }
+
+            MessageBox.Show(
+                $"No match found for '{sf.SearchTerms.PowerName}'{(searchAtGroup == "" ? "" : $" in AT/group {sf.SearchTerms.AtGroup}")}",
+                "Dammit", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

@@ -498,6 +498,7 @@ namespace Mids_Reborn.Forms
             this.lvSubConditional.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
             this.lvSubConditional.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvSubConditional_SelectionChanged);
             this.lvSubConditional.Leave += new System.EventHandler(this.ListView_Leave);
+            this.lvSubConditional.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvSubConditional_MouseClick);
             // 
             // columnHeader2
             // 
