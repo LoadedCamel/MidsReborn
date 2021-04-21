@@ -151,7 +151,7 @@ namespace Mids_Reborn.Forms.Controls
             AcceptButton = buttonOK;
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.White;
+            BackColor = SystemColors.Control;
             CancelButton = buttonCancel;
             ClientSize = new Size(487, 95);
             Controls.Add(inputIcon);
@@ -172,7 +172,6 @@ namespace Mids_Reborn.Forms.Controls
             ((ISupportInitialize)errorProviderText).EndInit();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion

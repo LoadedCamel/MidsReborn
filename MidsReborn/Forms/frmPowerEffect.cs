@@ -31,7 +31,7 @@ namespace Mids_Reborn.Forms
             myPower = fxPower;
             InitializeComponent();
             Load += frmPowerEffect_Load;
-            var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
             Icon = Resources.reborn;
             if (iFX != null) myFX = (IEffect)iFX.Clone();
         }
@@ -219,18 +219,18 @@ namespace Mids_Reborn.Forms
 
         private void DisplayEffectData()
         {
-            var Style = "####0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0##";
+            var style = "####0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0##";
             var fx = myFX;
             cbPercentageOverride.SelectedIndex = (int)fx.DisplayPercentageOverride;
-            txtFXScale.Text = Strings.Format(fx.Scale, Style);
-            txtFXDuration.Text = Strings.Format(fx.nDuration, Style);
-            txtFXMag.Text = Strings.Format(fx.nMagnitude, Style);
+            txtFXScale.Text = Strings.Format(fx.Scale, style);
+            txtFXDuration.Text = Strings.Format(fx.nDuration, style);
+            txtFXMag.Text = Strings.Format(fx.nMagnitude, style);
             cmbEffectId.Text = fx.EffectId;
             txtFXTicks.Text = Strings.Format(fx.Ticks, "####0");
             txtOverride.Text = fx.Override;
-            txtFXDelay.Text = Strings.Format(fx.DelayedTime, Style);
-            txtFXProb.Text = Strings.Format(fx.BaseProbability, Style);
-            txtPPM.Text = Strings.Format(fx.ProcsPerMinute, Style);
+            txtFXDelay.Text = Strings.Format(fx.DelayedTime, style);
+            txtFXProb.Text = Strings.Format(fx.BaseProbability, style);
+            txtPPM.Text = Strings.Format(fx.ProcsPerMinute, style);
             cbAttribute.SelectedIndex = (int)fx.AttribType;
             cbAspect.SelectedIndex = (int)fx.Aspect;
             cbModifier.SelectedIndex = DatabaseAPI.NidFromUidAttribMod(fx.ModifierTable);
@@ -1530,9 +1530,6 @@ namespace Mids_Reborn.Forms
 
             using var sf = new frmConditionalAttributeSearch();
             var ret = sf.ShowDialog();
-            Debug.WriteLine(ret);
-            Debug.WriteLine(sf.SearchTerms.PowerName);
-            Debug.WriteLine(sf.SearchTerms.AtGroup);
             if (ret == DialogResult.Cancel) return;
             if (sf.SearchTerms.PowerName == "") return;
 
