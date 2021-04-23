@@ -35,12 +35,13 @@ namespace Mids_Reborn.Forms
             Icon = Resources.reborn;
             if (iFX != null) myFX = (IEffect)iFX.Clone();
         }
+
         public frmPowerEffect(IEffect iFX)
         {
             Loading = true;
             InitializeComponent();
             Load += frmPowerEffect_Load;
-            var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
             Icon = Resources.reborn;
             if (iFX != null) myFX = (IEffect)iFX.Clone();
         }
@@ -411,6 +412,39 @@ namespace Mids_Reborn.Forms
                 Text = "Edit Effect";
             Loading = false;
             UpdateFXText();
+            InitSelectedItems();
+            /*if (myFX.EffectType != Enums.eEffectType.ModifyAttrib) return;
+            
+            var tpControls = tpPowerAttribs.Controls;
+            for (var rowIndex = 0; rowIndex < tpControls.Count; rowIndex++)
+            {
+                if (tpControls[rowIndex].Name == "cbTarget") continue;
+
+                tpControls[rowIndex].Enabled = tpControls[rowIndex].Name.Contains(myFX.PowerAttribs.ToString());
+            }*/
+        }
+
+        private void SelectItemByName(ListView lv, string itemName)
+        {
+            for (var i = 0; i < lv.Items.Count; i++)
+            {
+                if (lv.Items[i].Text != itemName) continue;
+
+                lv.Items[i].Selected = true;
+                lv.FocusedItem = lv.Items[i];
+                lv.Select();
+
+                return;
+            }
+        }
+        private void InitSelectedItems()
+        {
+            if (myFX.EffectType == Enums.eEffectType.None) return;
+            SelectItemByName(lvEffectType, myFX.EffectType.ToString());
+            if (myFX.EffectType == Enums.eEffectType.ModifyAttrib)
+            {
+                SelectItemByName(lvSubAttribute, myFX.PowerAttribs.ToString());
+            }
         }
 
         //change storing of Atr attributes from power to effect
@@ -593,42 +627,51 @@ namespace Mids_Reborn.Forms
         private void lvSubAttribute_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Loading || lvSubAttribute.SelectedIndices.Count < 1)
+            {
                 return;
-            var fx = myFX;
-            if ((fx.EffectType == Enums.eEffectType.Damage) | (fx.EffectType == Enums.eEffectType.DamageBuff) | (fx.EffectType == Enums.eEffectType.Defense) | (fx.EffectType == Enums.eEffectType.Resistance))
-            {
-                fx.DamageType = (Enums.eDamage)lvSubAttribute.SelectedIndices[0];
             }
-            else if ((fx.EffectType == Enums.eEffectType.Mez) | (fx.EffectType == Enums.eEffectType.MezResist))
+
+            var sIndex = lvSubAttribute.SelectedIndices[0];
+            var sText = lvSubAttribute.SelectedItems[0].Text;
+
+            if ((myFX.EffectType == Enums.eEffectType.Damage)
+                | (myFX.EffectType == Enums.eEffectType.DamageBuff)
+                | (myFX.EffectType == Enums.eEffectType.Defense)
+                | (myFX.EffectType == Enums.eEffectType.Resistance)
+                | (myFX.EffectType == Enums.eEffectType.Elusivity))
             {
-                fx.MezType = (Enums.eMez)lvSubAttribute.SelectedIndices[0];
+                myFX.DamageType = (Enums.eDamage)sIndex;
+            }
+            else if ((myFX.EffectType == Enums.eEffectType.Mez) | (myFX.EffectType == Enums.eEffectType.MezResist))
+            {
+                myFX.MezType = (Enums.eMez)sIndex;
             }
             else
             {
-                switch (fx.EffectType)
+                switch (myFX.EffectType)
                 {
                     case Enums.eEffectType.ResEffect:
-                        fx.ETModifies = (Enums.eEffectType)lvSubAttribute.SelectedIndices[0];
+                    case Enums.eEffectType.Enhancement:
+                        myFX.ETModifies = (Enums.eEffectType)sIndex;
                         break;
                     case Enums.eEffectType.EntCreate:
-                        fx.Summon = lvSubAttribute.SelectedItems[0].Text;
-                        break;
-                    case Enums.eEffectType.Enhancement:
-                        fx.ETModifies = (Enums.eEffectType)lvSubAttribute.SelectedIndices[0];
+                        myFX.Summon = sText;
                         break;
                     case Enums.eEffectType.GlobalChanceMod:
-                        fx.Reward = lvSubAttribute.SelectedItems[0].Text;
+                        myFX.Reward = sText;
                         break;
                     case Enums.eEffectType.GrantPower:
-                        fx.Summon = lvSubAttribute.SelectedItems[0].Text;
+                        myFX.Summon = sText;
                         break;
                     case Enums.eEffectType.ModifyAttrib:
-                        fx.PowerAttribs = (Enums.ePowerAttribs)lvSubAttribute.SelectedIndices[0];
+                        myFX.PowerAttribs = (Enums.ePowerAttribs)sIndex;
                         var tpControls = tpPowerAttribs.Controls;
                         for (var rowIndex = 0; rowIndex < tpControls.Count; rowIndex++)
                         {
-                            tpControls[rowIndex].Enabled = tpControls[rowIndex].Name.Contains(lvSubAttribute.SelectedItems[0].Text);
+                            tpControls[rowIndex].Enabled = tpControls[rowIndex].Name.Contains(sText);
                         }
+
+                        //cbTarget.Enabled = true;
 
                         break;
                 }
