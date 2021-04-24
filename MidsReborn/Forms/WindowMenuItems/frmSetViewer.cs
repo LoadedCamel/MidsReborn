@@ -1420,9 +1420,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.SpeedJumping => displayStats.MovementJumpSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
                     Enums.eEffectType.JumpHeight => displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond),
                     Enums.eEffectType.SpeedFlying => displayStats.MovementFlySpeed(Enums.eSpeedMeasure.MilesPerHour, false),
-                    // MaxRunSpeed
-                    // MaxJumpSpeed
-                    // MaxFlySpeed
                     
                     Enums.eEffectType.StealthRadius => MidsContext.Character.Totals.StealthPvE,
                     Enums.eEffectType.StealthRadiusPlayer => MidsContext.Character.Totals.StealthPvP,
@@ -1431,7 +1428,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     Enums.eEffectType.RechargeTime => displayStats.BuffHaste(false) - 100,
                     Enums.eEffectType.ToHit => displayStats.BuffToHit,
                     Enums.eEffectType.DamageBuff => displayStats.BuffDamage(false),
-                    Enums.eEffectType.Elusivity => MidsContext.Character.Totals.Elusivity,
+                    Enums.eEffectType.Elusivity => MidsContext.Character.Totals.ElusivityMax,
                     Enums.eEffectType.Enhancement => st.TargetEffectType switch
                     {
                         Enums.eEffectType.RechargeTime => displayStats.BuffHaste(false) - 100,

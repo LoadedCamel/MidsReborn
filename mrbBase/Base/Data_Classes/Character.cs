@@ -1583,7 +1583,8 @@ namespace mrbBase.Base.Data_Classes
             public float[] Mez { get; private set; }
             public float[] MezRes { get; private set; }
             public float[] DebuffRes { get; private set; }
-            public float Elusivity { get; set; }
+            public float[] Elusivity { get; set; }
+            public float ElusivityMax => Elusivity.Max();
             public float HPRegen { get; set; }
             public float HPMax { get; set; }
             public float Absorb { get; set; }
@@ -1614,8 +1615,8 @@ namespace mrbBase.Base.Data_Classes
                 Mez = new float[Enum.GetValues(Enums.eMez.None.GetType()).Length];
                 MezRes = new float[Enum.GetValues(Enums.eMez.None.GetType()).Length];
                 DebuffRes = new float[Enum.GetValues(Enums.eEffectType.None.GetType()).Length];
+                Elusivity = new float[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
                 if (!fullReset) return;
-                Elusivity = 0.0f;
                 HPRegen = 0.0f;
                 HPMax = 0.0f;
                 Absorb = 0.0f;

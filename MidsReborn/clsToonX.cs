@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -283,7 +284,10 @@ namespace Mids_Reborn
         private static void GBD_Stage(ref IPower tPwr, ref Enums.BuffsX nBuffs, bool enhancementPass)
         {
             if (tPwr == null || tPwr.PowerType == Enums.ePowerType.GlobalBoost)
+            {
                 return;
+            }
+
             var shortFx = new Enums.ShortFX();
             var sFxSelf = new Enums.ShortFX();
 
@@ -291,9 +295,18 @@ namespace Mids_Reborn
             {
                 var iEffect = (Enums.eEffectType) index1;
                 if (iEffect == Enums.eEffectType.Damage)
+                {
                     continue;
+                }
+
                 if (enhancementPass & (iEffect != Enums.eEffectType.DamageBuff))
+                {
                     shortFx.Assign(tPwr.GetEnhancementMagSum(iEffect, -1));
+                    if (iEffect == Enums.eEffectType.Elusivity)
+                    {
+                        //Debug.WriteLine(shortFx.);
+                    }
+                }
                 else
                     switch (iEffect)
                     {
@@ -407,6 +420,10 @@ namespace Mids_Reborn
                     {
                         nBuffs.Resistance[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
                     }
+                    else if ((iEffect == Enums.eEffectType.Elusivity && effect.DamageType != Enums.eDamage.None) & !enhancementPass)
+                    {
+                        nBuffs.Elusivity[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
+                    }
                     else if (!((effect.ETModifies == Enums.eEffectType.Accuracy) & enhancementPass))
                     {
                         if ((effect.ETModifies == Enums.eEffectType.Accuracy) & !enhancementPass)
@@ -454,39 +471,56 @@ namespace Mids_Reborn
             Totals.Init();
             TotalsCapped.Init();
             var canFly = false;
-            var num1 = CurrentBuild.Powers.Count - 1;
-            for (var index1 = 0; index1 <= num1; ++index1)
+            var num1 = CurrentBuild.Powers.Count;
+            for (var index1 = 0; index1 < num1; index1++)
             {
                 if (!(CurrentBuild.Powers[index1].StatInclude & (_buffedPower[index1] != null)))
+                {
                     continue;
+                }
+
                 if (_buffedPower[index1].PowerType == Enums.ePowerType.Toggle)
+                {
                     Totals.EndUse += _buffedPower[index1].ToggleCost;
-                var num2 = _buffedPower[index1].Effects.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                }
+
+                var num2 = _buffedPower[index1].Effects.Length;
+                for (var index2 = 0; index2 < num2; index2++)
+                {
                     if ((_buffedPower[index1].Effects[index2].EffectType == Enums.eEffectType.Fly) &
                         (_buffedPower[index1].Effects[index2].Mag > 0.0))
+                    {
                         canFly = true;
+                    }
+                }
             }
 
             if (Math.Abs(_selfBuffs.Defense[0]) > float.Epsilon)
-                for (var index = 1; index <= _selfBuffs.Defense.Length - 1; ++index)
+            {
+                for (var index = 1; index < _selfBuffs.Defense.Length; index++)
+                {
                     _selfBuffs.Defense[index] += _selfBuffs.Defense[0];
+                }
+            }
 
-            for (var index = 0; index <= _selfBuffs.Defense.Length - 1; ++index)
+            for (var index = 0; index < _selfBuffs.Defense.Length; index++)
             {
                 Totals.Def[index] = _selfBuffs.Defense[index];
                 Totals.Res[index] = _selfBuffs.Resistance[index];
+                Totals.Elusivity[index] = _selfBuffs.Elusivity[index];
             }
 
-            for (var index = 0; index <= _selfBuffs.StatusProtection.Length - 1; ++index)
+            for (var index = 0; index < _selfBuffs.StatusProtection.Length; index++)
             {
                 Totals.Mez[index] = _selfBuffs.StatusProtection[index];
                 Totals.MezRes[index] = _selfBuffs.StatusResistance[index] * 100f;
             }
 
-            for (var index = 0; index <= _selfBuffs.DebuffResistance.Length - 1; ++index)
+            for (var index = 0; index < _selfBuffs.DebuffResistance.Length; index++)
+            {
                 Totals.DebuffRes[index] = _selfBuffs.DebuffResistance[index] * 100f;
-            Totals.Elusivity = _selfBuffs.Effect[(int)Enums.eStatType.Elusivity];
+            }
+
             Totals.EndMax = _selfBuffs.MaxEnd;
             Totals.BuffAcc = _selfEnhance.Effect[(int)Enums.eStatType.BuffAcc] + _selfBuffs.Effect[(int)Enums.eStatType.BuffAcc];
             Totals.BuffEndRdx = _selfEnhance.Effect[(int)Enums.eStatType.BuffEndRdx];
@@ -499,30 +533,34 @@ namespace Mids_Reborn
             Totals.HPRegen = _selfBuffs.Effect[(int)Enums.eStatType.HPRegen];
             Totals.EndRec = _selfBuffs.Effect[(int)Enums.eStatType.EndRec];
             Totals.Absorb = _selfBuffs.Effect[(int)Enums.eStatType.Absorb];
+
             Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
-            // this number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
-            // Statistics.BaseFlySpeed -> Statistics.BaseRunSpeed
-            // because increasing speed caps do not use 1.5x modifier fly speed gives.
+            // This number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
+            // Statistics.BaseFlySpeed -> Statistics.BaseRunSpeed, because increasing speed caps do not use 1.5x modifier fly speed gives.
             Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseRunSpeed;
-            if (Totals.MaxFlySpd > 171.990005493164) //128.990005493164
+            if (Totals.MaxFlySpd > 171.990005493164) // 128.990005493164
                 Totals.MaxFlySpd = 171.99f; // 8.19f * 21.0f == 171.99f -- Note: although the cap can reach 8.19, there is currently no way to go beyond 7.1425 (149.99 fps)
+            
             Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f) * Statistics.BaseRunSpeed;
             Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] * Statistics.BaseRunSpeed;
             if (Totals.MaxRunSpd > 176.35777) // 135.669998168945
                 Totals.MaxRunSpd = 135.67f; // 8.398f * 21.0f == 135.67f
+            
             Totals.JumpSpd = (float) (Statistics.BaseJumpSpeed +
                                       (double) Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f) * Statistics.BaseJumpSpeed);
             Totals.MaxJumpSpd = (float) (114.400001525879 + _selfBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] * Statistics.BaseJumpSpeed);
             if (Totals.MaxJumpSpd > 166.256666) // 114.400001525879
                 Totals.MaxJumpSpd = 166.257f; // 7.917f * 21.0f // Statistics.MaxJumpSpeed == 114.4f
+            
             Totals.JumpHeight = (float) (4.0 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4.0);
+            
             Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + Archetype.Hitpoints;
             if (!canFly)
                 Totals.FlySpd = 0.0f;
             var maxDmgBuff = -1000f;
             var minDmgBuff = -1000f;
             var avgDmgBuff = 0.0f;
-            for (var index = 0; index <= _selfBuffs.Damage.Length - 1; ++index)
+            for (var index = 0; index < _selfBuffs.Damage.Length; index++)
             {
                 if (0 >= index || index >= 9)
                     continue;
@@ -535,11 +573,17 @@ namespace Mids_Reborn
 
             avgDmgBuff /= _selfEnhance.Damage.Length;
             if (maxDmgBuff - (double) avgDmgBuff < avgDmgBuff - (double) minDmgBuff)
+            {
                 Totals.BuffDam = maxDmgBuff;
+            }
             else if ((maxDmgBuff - (double) avgDmgBuff > avgDmgBuff - (double) minDmgBuff) & (minDmgBuff > 0.0))
+            {
                 Totals.BuffDam = minDmgBuff;
+            }
             else
+            {
                 Totals.BuffDam = maxDmgBuff;
+            }
 
             ApplyPvpDr();
             TotalsCapped.Assign(Totals);
@@ -547,23 +591,24 @@ namespace Mids_Reborn
             TotalsCapped.BuffHaste = Math.Min(TotalsCapped.BuffHaste, Archetype.RechargeCap - 1f);
             TotalsCapped.HPRegen = Math.Min(TotalsCapped.HPRegen, Archetype.RegenCap - 1f);
             TotalsCapped.EndRec = Math.Min(TotalsCapped.EndRec, Archetype.RecoveryCap - 1f);
-            var num11 = TotalsCapped.Res.Length - 1;
+            var num11 = TotalsCapped.Res.Length;
             for (var index = 0; index < num11; index++)
             {
                 TotalsCapped.Res[index] = Math.Min(TotalsCapped.Res[index], Archetype.ResCap);
             }
+
             if (Archetype.HPCap > 0.0)
             {
                 TotalsCapped.HPMax = Math.Min(TotalsCapped.HPMax, Archetype.HPCap);
                 TotalsCapped.Absorb = Math.Min(TotalsCapped.Absorb, TotalsCapped.HPMax);
             }
+
             TotalsCapped.RunSpd = Math.Min(TotalsCapped.RunSpd, 135.67f);
             TotalsCapped.JumpSpd = Math.Min(TotalsCapped.JumpSpd, 114.4f);
             TotalsCapped.FlySpd = Math.Min(TotalsCapped.FlySpd, 86f);
             TotalsCapped.Perception = Math.Min(TotalsCapped.Perception, Archetype.PerceptionCap);
         }
 
-        
         private bool GBPA_AddEnhFX(ref IPower iPower, int iIndex)
         {
             if (MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower == null)

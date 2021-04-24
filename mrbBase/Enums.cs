@@ -1765,6 +1765,7 @@ namespace mrbBase
             public float[] Damage;
             public float[] Defense;
             public float[] Resistance;
+            public float[] Elusivity;
             public float[] StatusProtection;
             public float[] StatusResistance;
             public float[] DebuffResistance;
@@ -1780,6 +1781,7 @@ namespace mrbBase
                 Damage = new float[Enum.GetValues(eDamage.None.GetType()).Length];
                 Defense = new float[Enum.GetValues(eDamage.None.GetType()).Length];
                 Resistance = new float[Enum.GetValues(eDamage.None.GetType()).Length];
+                Elusivity = new float[Enum.GetValues(eDamage.None.GetType()).Length];
                 StatusProtection = new float[Enum.GetValues(eMez.None.GetType()).Length];
                 StatusResistance = new float[Enum.GetValues(eMez.None.GetType()).Length];
                 DebuffResistance = new float[Enum.GetValues(eEffectType.None.GetType()).Length];

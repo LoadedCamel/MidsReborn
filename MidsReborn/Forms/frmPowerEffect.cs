@@ -413,15 +413,6 @@ namespace Mids_Reborn.Forms
             Loading = false;
             UpdateFXText();
             InitSelectedItems();
-            /*if (myFX.EffectType != Enums.eEffectType.ModifyAttrib) return;
-            
-            var tpControls = tpPowerAttribs.Controls;
-            for (var rowIndex = 0; rowIndex < tpControls.Count; rowIndex++)
-            {
-                if (tpControls[rowIndex].Name == "cbTarget") continue;
-
-                tpControls[rowIndex].Enabled = tpControls[rowIndex].Name.Contains(myFX.PowerAttribs.ToString());
-            }*/
         }
 
         private void SelectItemByName(ListView lv, string itemName)
@@ -431,6 +422,8 @@ namespace Mids_Reborn.Forms
                 if (lv.Items[i].Text != itemName) continue;
 
                 lv.Items[i].Selected = true;
+
+                // Prevent crash on lv*_Leave()
                 lv.FocusedItem = lv.Items[i];
                 lv.Select();
 
@@ -444,6 +437,22 @@ namespace Mids_Reborn.Forms
             if (myFX.EffectType == Enums.eEffectType.ModifyAttrib)
             {
                 SelectItemByName(lvSubAttribute, myFX.PowerAttribs.ToString());
+            }
+            else if (myFX.EffectType == Enums.eEffectType.Mez | myFX.EffectType == Enums.eEffectType.MezResist)
+            {
+                SelectItemByName(lvSubAttribute, myFX.MezType.ToString());
+            }
+            else if (myFX.EffectType == Enums.eEffectType.Damage
+                     | myFX.EffectType == Enums.eEffectType.DamageBuff
+                     | myFX.EffectType == Enums.eEffectType.Defense
+                     | myFX.EffectType == Enums.eEffectType.Resistance
+                     | myFX.EffectType == Enums.eEffectType.Elusivity)
+            {
+                SelectItemByName(lvSubAttribute, myFX.DamageType.ToString());
+            }
+            else if (myFX.EffectType == Enums.eEffectType.Enhancement)
+            {
+                SelectItemByName(lvSubAttribute, myFX.ETModifies.ToString());
             }
         }
 

@@ -280,6 +280,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar65 = new mrbControls.ctlLayeredBarPb();
             this.bar63 = new mrbControls.ctlLayeredBarPb();
             this.bar64 = new mrbControls.ctlLayeredBarPb();
+            this.lv60 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
             this.label136 = new System.Windows.Forms.Label();
             this.label137 = new System.Windows.Forms.Label();
             this.label138 = new System.Windows.Forms.Label();
@@ -288,7 +289,37 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.label141 = new System.Windows.Forms.Label();
             this.label142 = new System.Windows.Forms.Label();
             this.label143 = new System.Windows.Forms.Label();
-            this.lv60 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.label148 = new System.Windows.Forms.Label();
+            this.label149 = new System.Windows.Forms.Label();
+            this.label150 = new System.Windows.Forms.Label();
+            this.label151 = new System.Windows.Forms.Label();
+            this.label152 = new System.Windows.Forms.Label();
+            this.label153 = new System.Windows.Forms.Label();
+            this.label154 = new System.Windows.Forms.Label();
+            this.label155 = new System.Windows.Forms.Label();
+            this.label156 = new System.Windows.Forms.Label();
+            this.label157 = new System.Windows.Forms.Label();
+            this.label158 = new System.Windows.Forms.Label();
+            this.lv68 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv69 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv70 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv71 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv72 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv73 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv74 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv75 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv76 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.lv77 = new Mids_Reborn.Forms.WindowMenuItems.BarLabel();
+            this.bar68 = new mrbControls.ctlLayeredBarPb();
+            this.bar69 = new mrbControls.ctlLayeredBarPb();
+            this.bar70 = new mrbControls.ctlLayeredBarPb();
+            this.bar71 = new mrbControls.ctlLayeredBarPb();
+            this.bar72 = new mrbControls.ctlLayeredBarPb();
+            this.bar73 = new mrbControls.ctlLayeredBarPb();
+            this.bar74 = new mrbControls.ctlLayeredBarPb();
+            this.bar75 = new mrbControls.ctlLayeredBarPb();
+            this.bar76 = new mrbControls.ctlLayeredBarPb();
+            this.bar77 = new mrbControls.ctlLayeredBarPb();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopMost)).BeginInit();
             this.panel1.SuspendLayout();
@@ -494,7 +525,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv23.AutoSize = true;
             this.lv23.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv23.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv23.Location = new System.Drawing.Point(86, 38);
             this.lv23.Name = "lv23";
             this.lv23.Size = new System.Drawing.Size(91, 19);
@@ -505,7 +536,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv22.AutoSize = true;
             this.lv22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv22.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv22.Location = new System.Drawing.Point(86, 19);
             this.lv22.Name = "lv22";
             this.lv22.Size = new System.Drawing.Size(91, 19);
@@ -555,7 +586,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label45.AutoSize = true;
             this.label45.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label45.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label45.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label45.Location = new System.Drawing.Point(3, 0);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(77, 19);
@@ -567,7 +598,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label46.AutoSize = true;
             this.label46.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label46.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label46.Location = new System.Drawing.Point(3, 19);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(77, 19);
@@ -579,7 +610,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label47.AutoSize = true;
             this.label47.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label47.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label47.Location = new System.Drawing.Point(3, 38);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(77, 19);
@@ -591,7 +622,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv21.AutoSize = true;
             this.lv21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv21.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv21.Location = new System.Drawing.Point(86, 0);
             this.lv21.Name = "lv21";
             this.lv21.Size = new System.Drawing.Size(91, 19);
@@ -680,7 +711,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv20.AutoSize = true;
             this.lv20.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv20.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv20.Location = new System.Drawing.Point(87, 19);
             this.lv20.Name = "lv20";
             this.lv20.Size = new System.Drawing.Size(91, 19);
@@ -717,7 +748,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label41.AutoSize = true;
             this.label41.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label41.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label41.Location = new System.Drawing.Point(3, 0);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(78, 19);
@@ -729,7 +760,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label42.AutoSize = true;
             this.label42.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label42.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label42.Location = new System.Drawing.Point(3, 19);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(78, 19);
@@ -741,7 +772,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv19.AutoSize = true;
             this.lv19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv19.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv19.Location = new System.Drawing.Point(87, 0);
             this.lv19.Name = "lv19";
             this.lv19.Size = new System.Drawing.Size(91, 19);
@@ -814,7 +845,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv18.AutoSize = true;
             this.lv18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv18.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv18.Location = new System.Drawing.Point(86, 133);
             this.lv18.Name = "lv18";
             this.lv18.Size = new System.Drawing.Size(91, 19);
@@ -825,7 +856,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv17.AutoSize = true;
             this.lv17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv17.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv17.Location = new System.Drawing.Point(86, 114);
             this.lv17.Name = "lv17";
             this.lv17.Size = new System.Drawing.Size(91, 19);
@@ -836,7 +867,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv16.AutoSize = true;
             this.lv16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv16.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv16.Location = new System.Drawing.Point(86, 95);
             this.lv16.Name = "lv16";
             this.lv16.Size = new System.Drawing.Size(91, 19);
@@ -847,7 +878,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv15.AutoSize = true;
             this.lv15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv15.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv15.Location = new System.Drawing.Point(86, 76);
             this.lv15.Name = "lv15";
             this.lv15.Size = new System.Drawing.Size(91, 19);
@@ -858,7 +889,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv14.AutoSize = true;
             this.lv14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv14.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv14.Location = new System.Drawing.Point(86, 57);
             this.lv14.Name = "lv14";
             this.lv14.Size = new System.Drawing.Size(91, 19);
@@ -869,7 +900,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv13.AutoSize = true;
             this.lv13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv13.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv13.Location = new System.Drawing.Point(86, 38);
             this.lv13.Name = "lv13";
             this.lv13.Size = new System.Drawing.Size(91, 19);
@@ -880,7 +911,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv12.AutoSize = true;
             this.lv12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv12.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv12.Location = new System.Drawing.Point(86, 19);
             this.lv12.Name = "lv12";
             this.lv12.Size = new System.Drawing.Size(91, 19);
@@ -995,7 +1026,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label25.AutoSize = true;
             this.label25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label25.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label25.Location = new System.Drawing.Point(3, 0);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(77, 19);
@@ -1007,7 +1038,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label26.AutoSize = true;
             this.label26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label26.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label26.Location = new System.Drawing.Point(3, 19);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(77, 19);
@@ -1019,7 +1050,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label27.AutoSize = true;
             this.label27.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label27.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label27.Location = new System.Drawing.Point(3, 38);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(77, 19);
@@ -1031,7 +1062,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label28.AutoSize = true;
             this.label28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label28.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label28.Location = new System.Drawing.Point(3, 57);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(77, 19);
@@ -1043,7 +1074,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label29.AutoSize = true;
             this.label29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label29.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label29.Location = new System.Drawing.Point(3, 76);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(77, 19);
@@ -1055,7 +1086,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label30.AutoSize = true;
             this.label30.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label30.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label30.Location = new System.Drawing.Point(3, 95);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(77, 19);
@@ -1067,7 +1098,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label31.AutoSize = true;
             this.label31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label31.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label31.Location = new System.Drawing.Point(3, 114);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(77, 19);
@@ -1079,7 +1110,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label32.AutoSize = true;
             this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label32.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label32.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label32.Location = new System.Drawing.Point(3, 133);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(77, 19);
@@ -1091,7 +1122,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv11.AutoSize = true;
             this.lv11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv11.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv11.Location = new System.Drawing.Point(86, 0);
             this.lv11.Name = "lv11";
             this.lv11.Size = new System.Drawing.Size(91, 19);
@@ -1171,7 +1202,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv10.AutoSize = true;
             this.lv10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv10.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv10.Location = new System.Drawing.Point(87, 171);
             this.lv10.Name = "lv10";
             this.lv10.Size = new System.Drawing.Size(91, 19);
@@ -1195,7 +1226,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv9.AutoSize = true;
             this.lv9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv9.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv9.Location = new System.Drawing.Point(87, 152);
             this.lv9.Name = "lv9";
             this.lv9.Size = new System.Drawing.Size(91, 19);
@@ -1219,7 +1250,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv8.AutoSize = true;
             this.lv8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv8.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv8.Location = new System.Drawing.Point(87, 133);
             this.lv8.Name = "lv8";
             this.lv8.Size = new System.Drawing.Size(91, 19);
@@ -1243,7 +1274,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv7.AutoSize = true;
             this.lv7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv7.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv7.Location = new System.Drawing.Point(87, 114);
             this.lv7.Name = "lv7";
             this.lv7.Size = new System.Drawing.Size(91, 19);
@@ -1267,7 +1298,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv6.AutoSize = true;
             this.lv6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv6.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv6.Location = new System.Drawing.Point(87, 95);
             this.lv6.Name = "lv6";
             this.lv6.Size = new System.Drawing.Size(91, 19);
@@ -1291,7 +1322,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv5.AutoSize = true;
             this.lv5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv5.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv5.Location = new System.Drawing.Point(87, 76);
             this.lv5.Name = "lv5";
             this.lv5.Size = new System.Drawing.Size(91, 19);
@@ -1315,7 +1346,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv4.AutoSize = true;
             this.lv4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv4.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv4.Location = new System.Drawing.Point(87, 57);
             this.lv4.Name = "lv4";
             this.lv4.Size = new System.Drawing.Size(91, 19);
@@ -1339,7 +1370,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv3.AutoSize = true;
             this.lv3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv3.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv3.Location = new System.Drawing.Point(87, 38);
             this.lv3.Name = "lv3";
             this.lv3.Size = new System.Drawing.Size(91, 19);
@@ -1363,7 +1394,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv2.AutoSize = true;
             this.lv2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv2.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv2.Location = new System.Drawing.Point(87, 19);
             this.lv2.Name = "lv2";
             this.lv2.Size = new System.Drawing.Size(91, 19);
@@ -1387,7 +1418,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label5.Location = new System.Drawing.Point(3, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(78, 19);
@@ -1412,7 +1443,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label6.AutoSize = true;
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label6.Location = new System.Drawing.Point(3, 19);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(78, 19);
@@ -1424,7 +1455,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label7.AutoSize = true;
             this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label7.Location = new System.Drawing.Point(3, 38);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(78, 19);
@@ -1436,7 +1467,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label8.AutoSize = true;
             this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label8.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label8.Location = new System.Drawing.Point(3, 57);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(78, 19);
@@ -1448,7 +1479,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label9.AutoSize = true;
             this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label9.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label9.Location = new System.Drawing.Point(3, 76);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(78, 19);
@@ -1460,7 +1491,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label10.AutoSize = true;
             this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label10.Location = new System.Drawing.Point(3, 95);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(78, 19);
@@ -1472,7 +1503,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label11.AutoSize = true;
             this.label11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label11.Location = new System.Drawing.Point(3, 114);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(78, 19);
@@ -1484,7 +1515,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label12.AutoSize = true;
             this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label12.Location = new System.Drawing.Point(3, 133);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(78, 19);
@@ -1496,7 +1527,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label13.AutoSize = true;
             this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label13.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label13.Location = new System.Drawing.Point(3, 152);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(78, 19);
@@ -1508,7 +1539,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label14.AutoSize = true;
             this.label14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label14.Location = new System.Drawing.Point(3, 171);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(78, 19);
@@ -1520,7 +1551,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv1.AutoSize = true;
             this.lv1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv1.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv1.Location = new System.Drawing.Point(87, 0);
             this.lv1.Name = "lv1";
             this.lv1.Size = new System.Drawing.Size(91, 19);
@@ -1563,14 +1594,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel7
             // 
             this.gradientPanel7.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(0)))), ((int)(((byte)(32))))),
+            System.Drawing.Color.FromArgb(32, 0, 32),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel7.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel7.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
+            this.gradientPanel7.BorderColor = System.Drawing.Color.FromArgb(32, 0, 32);
             this.gradientPanel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel7.CanApplyTheme = false;
-            this.gradientPanel7.Controls.Add(this.gradientPanel14);
             this.gradientPanel7.Controls.Add(this.gradientPanel13);
             this.gradientPanel7.Controls.Add(this.gradientPanel12);
             this.gradientPanel7.Controls.Add(this.gradientPanel11);
@@ -1579,59 +1609,219 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.gradientPanel7.Controls.Add(this.gradientPanel8);
             this.gradientPanel7.Location = new System.Drawing.Point(9, 285);
             this.gradientPanel7.Name = "gradientPanel7";
-            this.gradientPanel7.Size = new System.Drawing.Size(515, 251);
+            this.gradientPanel7.Size = new System.Drawing.Size(515, 215);
             this.gradientPanel7.TabIndex = 11;
             // 
             // gradientPanel14
             // 
             this.gradientPanel14.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(2)))), ((int)(((byte)(201))))),
+            System.Drawing.Color.FromArgb(142, 2, 201),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel14.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel14.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(1)))), ((int)(((byte)(255)))));
+            this.gradientPanel14.BorderColor = System.Drawing.Color.FromArgb(180, 1, 255);
             this.gradientPanel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel14.CanApplyTheme = false;
             this.gradientPanel14.Controls.Add(this.tableLayoutPanel13);
-            this.gradientPanel14.Location = new System.Drawing.Point(3, 216);
+            this.gradientPanel14.Location = new System.Drawing.Point(8, 232);
             this.gradientPanel14.Name = "gradientPanel14";
-            this.gradientPanel14.Size = new System.Drawing.Size(510, 27);
+            this.gradientPanel14.Size = new System.Drawing.Size(514, 220);
             this.gradientPanel14.TabIndex = 8;
             // 
             // tableLayoutPanel13
             // 
             this.tableLayoutPanel13.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel13.ColumnCount = 3;
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.59155F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.40845F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 356F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 59.17284F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.82716F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 358F));
             this.tableLayoutPanel13.Controls.Add(this.label79, 0, 0);
-            this.tableLayoutPanel13.Controls.Add(this.bar37, 2, 0);
             this.tableLayoutPanel13.Controls.Add(this.lv37, 1, 0);
+            this.tableLayoutPanel13.Controls.Add(this.bar37, 2, 0);
+            this.tableLayoutPanel13.Controls.Add(this.label149, 0, 1);
+            this.tableLayoutPanel13.Controls.Add(this.lv68, 1, 1);
+            this.tableLayoutPanel13.Controls.Add(this.bar68, 2, 1);
+            this.tableLayoutPanel13.Controls.Add(this.label150, 0, 2);
+            this.tableLayoutPanel13.Controls.Add(this.lv69, 1, 2);
+            this.tableLayoutPanel13.Controls.Add(this.bar69, 2, 2);
+            this.tableLayoutPanel13.Controls.Add(this.label151, 0, 3);
+            this.tableLayoutPanel13.Controls.Add(this.lv70, 1, 3);
+            this.tableLayoutPanel13.Controls.Add(this.bar70, 2, 3);
+            this.tableLayoutPanel13.Controls.Add(this.label152, 0, 4);
+            this.tableLayoutPanel13.Controls.Add(this.lv71, 1, 4);
+            this.tableLayoutPanel13.Controls.Add(this.bar71, 2, 4);
+            this.tableLayoutPanel13.Controls.Add(this.label153, 0, 5);
+            this.tableLayoutPanel13.Controls.Add(this.lv72, 1, 5);
+            this.tableLayoutPanel13.Controls.Add(this.bar72, 2, 5);
+            this.tableLayoutPanel13.Controls.Add(this.label154, 0, 6);
+            this.tableLayoutPanel13.Controls.Add(this.lv73, 1, 6);
+            this.tableLayoutPanel13.Controls.Add(this.bar73, 2, 6);
+            this.tableLayoutPanel13.Controls.Add(this.label155, 0, 7);
+            this.tableLayoutPanel13.Controls.Add(this.lv74, 1, 7);
+            this.tableLayoutPanel13.Controls.Add(this.bar74, 2, 7);
+            this.tableLayoutPanel13.Controls.Add(this.label156, 0, 8);
+            this.tableLayoutPanel13.Controls.Add(this.lv75, 1, 8);
+            this.tableLayoutPanel13.Controls.Add(this.bar75, 2, 8);
+            this.tableLayoutPanel13.Controls.Add(this.label157, 0, 9);
+            this.tableLayoutPanel13.Controls.Add(this.lv76, 1, 9);
+            this.tableLayoutPanel13.Controls.Add(this.bar76, 2, 9);
+            this.tableLayoutPanel13.Controls.Add(this.label158, 0, 10);
+            this.tableLayoutPanel13.Controls.Add(this.lv77, 1, 10);
+            this.tableLayoutPanel13.Controls.Add(this.bar77, 2, 10);
             this.tableLayoutPanel13.Location = new System.Drawing.Point(4, 3);
             this.tableLayoutPanel13.Name = "tableLayoutPanel13";
-            this.tableLayoutPanel13.RowCount = 1;
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(506, 22);
+            this.tableLayoutPanel13.RowCount = 11;
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(506, 209);
             this.tableLayoutPanel13.TabIndex = 11;
             // 
             // label79
             // 
             this.label79.AutoSize = true;
             this.label79.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label79.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label79.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label79.Location = new System.Drawing.Point(3, 0);
             this.label79.Name = "label79";
             this.label79.Size = new System.Drawing.Size(66, 22);
             this.label79.TabIndex = 0;
-            this.label79.Text = "Elusivity:";
+            this.label79.Text = "Smashing:";
             this.label79.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label149
+            // 
+            this.label149.AutoSize = true;
+            this.label149.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label149.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label149.Location = new System.Drawing.Point(3, 0);
+            this.label149.Name = "label149";
+            this.label149.Size = new System.Drawing.Size(66, 22);
+            this.label149.TabIndex = 0;
+            this.label149.Text = "Lethal:";
+            this.label149.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label150
+            // 
+            this.label150.AutoSize = true;
+            this.label150.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label150.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label150.Location = new System.Drawing.Point(3, 0);
+            this.label150.Name = "label150";
+            this.label150.Size = new System.Drawing.Size(66, 22);
+            this.label150.TabIndex = 0;
+            this.label150.Text = "Fire:";
+            this.label150.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label151
+            // 
+            this.label151.AutoSize = true;
+            this.label151.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label151.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label151.Location = new System.Drawing.Point(3, 0);
+            this.label151.Name = "label151";
+            this.label151.Size = new System.Drawing.Size(66, 22);
+            this.label151.TabIndex = 0;
+            this.label151.Text = "Cold:";
+            this.label151.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label152
+            // 
+            this.label152.AutoSize = true;
+            this.label152.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label152.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label152.Location = new System.Drawing.Point(3, 0);
+            this.label152.Name = "label152";
+            this.label152.Size = new System.Drawing.Size(66, 22);
+            this.label152.TabIndex = 0;
+            this.label152.Text = "Energy:";
+            this.label152.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label153
+            // 
+            this.label153.AutoSize = true;
+            this.label153.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label153.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label153.Location = new System.Drawing.Point(3, 0);
+            this.label153.Name = "label153";
+            this.label153.Size = new System.Drawing.Size(66, 22);
+            this.label153.TabIndex = 0;
+            this.label153.Text = "Negative:";
+            this.label153.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label154
+            // 
+            this.label154.AutoSize = true;
+            this.label154.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label154.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label154.Location = new System.Drawing.Point(3, 0);
+            this.label154.Name = "label154";
+            this.label154.Size = new System.Drawing.Size(66, 22);
+            this.label154.TabIndex = 0;
+            this.label154.Text = "Toxic:";
+            this.label154.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label155
+            // 
+            this.label155.AutoSize = true;
+            this.label155.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label155.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label155.Location = new System.Drawing.Point(3, 0);
+            this.label155.Name = "label155";
+            this.label155.Size = new System.Drawing.Size(66, 22);
+            this.label155.TabIndex = 0;
+            this.label155.Text = "Psionic:";
+            this.label155.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label156
+            // 
+            this.label156.AutoSize = true;
+            this.label156.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label156.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label156.Location = new System.Drawing.Point(3, 0);
+            this.label156.Name = "label156";
+            this.label156.Size = new System.Drawing.Size(66, 22);
+            this.label156.TabIndex = 0;
+            this.label156.Text = "Melee:";
+            this.label156.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label157
+            // 
+            this.label157.AutoSize = true;
+            this.label157.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label157.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label157.Location = new System.Drawing.Point(3, 0);
+            this.label157.Name = "label157";
+            this.label157.Size = new System.Drawing.Size(66, 22);
+            this.label157.TabIndex = 0;
+            this.label157.Text = "Ranged:";
+            this.label157.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label158
+            // 
+            this.label158.AutoSize = true;
+            this.label158.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label158.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.label158.Location = new System.Drawing.Point(3, 0);
+            this.label158.Name = "label158";
+            this.label158.Size = new System.Drawing.Size(66, 22);
+            this.label158.TabIndex = 0;
+            this.label158.Text = "AoE:";
+            this.label158.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // bar37
             // 
             this.bar37.BackColor = System.Drawing.Color.Transparent;
             this.bar37.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bar37.Group = "";
+            this.bar37.Group = "Elusivity";
             this.bar37.Location = new System.Drawing.Point(152, 3);
             this.bar37.MaximumBarValue = 100F;
             this.bar37.MinimumBarValue = 0F;
@@ -1640,25 +1830,265 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.bar37.TabIndex = 0;
             this.bar37.Tip = "";
             // 
+            // bar68
+            // 
+            this.bar68.BackColor = System.Drawing.Color.Transparent;
+            this.bar68.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar68.Group = "Elusivity";
+            this.bar68.Location = new System.Drawing.Point(152, 3);
+            this.bar68.MaximumBarValue = 100F;
+            this.bar68.MinimumBarValue = 0F;
+            this.bar68.Name = "bar68";
+            this.bar68.Size = new System.Drawing.Size(343, 13);
+            this.bar68.TabIndex = 0;
+            this.bar68.Tip = "";
+            // 
+            // bar69
+            // 
+            this.bar69.BackColor = System.Drawing.Color.Transparent;
+            this.bar69.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar69.Group = "Elusivity";
+            this.bar69.Location = new System.Drawing.Point(152, 3);
+            this.bar69.MaximumBarValue = 100F;
+            this.bar69.MinimumBarValue = 0F;
+            this.bar69.Name = "bar69";
+            this.bar69.Size = new System.Drawing.Size(343, 13);
+            this.bar69.TabIndex = 0;
+            this.bar69.Tip = "";
+            // 
+            // bar70
+            // 
+            this.bar70.BackColor = System.Drawing.Color.Transparent;
+            this.bar70.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar70.Group = "Elusivity";
+            this.bar70.Location = new System.Drawing.Point(152, 3);
+            this.bar70.MaximumBarValue = 100F;
+            this.bar70.MinimumBarValue = 0F;
+            this.bar70.Name = "bar70";
+            this.bar70.Size = new System.Drawing.Size(343, 13);
+            this.bar70.TabIndex = 0;
+            this.bar70.Tip = "";
+            // 
+            // bar71
+            // 
+            this.bar71.BackColor = System.Drawing.Color.Transparent;
+            this.bar71.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar71.Group = "Elusivity";
+            this.bar71.Location = new System.Drawing.Point(152, 3);
+            this.bar71.MaximumBarValue = 100F;
+            this.bar71.MinimumBarValue = 0F;
+            this.bar71.Name = "bar71";
+            this.bar71.Size = new System.Drawing.Size(343, 13);
+            this.bar71.TabIndex = 0;
+            this.bar71.Tip = "";
+            // 
+            // bar72
+            // 
+            this.bar72.BackColor = System.Drawing.Color.Transparent;
+            this.bar72.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar72.Group = "Elusivity";
+            this.bar72.Location = new System.Drawing.Point(152, 3);
+            this.bar72.MaximumBarValue = 100F;
+            this.bar72.MinimumBarValue = 0F;
+            this.bar72.Name = "bar72";
+            this.bar72.Size = new System.Drawing.Size(343, 13);
+            this.bar72.TabIndex = 0;
+            this.bar72.Tip = "";
+            // 
+            // bar73
+            // 
+            this.bar73.BackColor = System.Drawing.Color.Transparent;
+            this.bar73.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar73.Group = "Elusivity";
+            this.bar73.Location = new System.Drawing.Point(152, 3);
+            this.bar73.MaximumBarValue = 100F;
+            this.bar73.MinimumBarValue = 0F;
+            this.bar73.Name = "bar73";
+            this.bar73.Size = new System.Drawing.Size(343, 13);
+            this.bar73.TabIndex = 0;
+            this.bar73.Tip = "";
+            // 
+            // bar74
+            // 
+            this.bar74.BackColor = System.Drawing.Color.Transparent;
+            this.bar74.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar74.Group = "Elusivity";
+            this.bar74.Location = new System.Drawing.Point(152, 3);
+            this.bar74.MaximumBarValue = 100F;
+            this.bar74.MinimumBarValue = 0F;
+            this.bar74.Name = "bar74";
+            this.bar74.Size = new System.Drawing.Size(343, 13);
+            this.bar74.TabIndex = 0;
+            this.bar74.Tip = "";
+            // 
+            // bar75
+            // 
+            this.bar75.BackColor = System.Drawing.Color.Transparent;
+            this.bar75.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar75.Group = "Elusivity";
+            this.bar75.Location = new System.Drawing.Point(152, 3);
+            this.bar75.MaximumBarValue = 100F;
+            this.bar75.MinimumBarValue = 0F;
+            this.bar75.Name = "bar75";
+            this.bar75.Size = new System.Drawing.Size(343, 13);
+            this.bar75.TabIndex = 0;
+            this.bar75.Tip = "";
+            // 
+            // bar76
+            // 
+            this.bar76.BackColor = System.Drawing.Color.Transparent;
+            this.bar76.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar76.Group = "Elusivity";
+            this.bar76.Location = new System.Drawing.Point(152, 3);
+            this.bar76.MaximumBarValue = 100F;
+            this.bar76.MinimumBarValue = 0F;
+            this.bar76.Name = "bar76";
+            this.bar76.Size = new System.Drawing.Size(343, 13);
+            this.bar76.TabIndex = 0;
+            this.bar76.Tip = "";
+            // 
+            // bar77
+            // 
+            this.bar77.BackColor = System.Drawing.Color.Transparent;
+            this.bar77.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bar77.Group = "Elusivity";
+            this.bar77.Location = new System.Drawing.Point(152, 3);
+            this.bar77.MaximumBarValue = 100F;
+            this.bar77.MinimumBarValue = 0F;
+            this.bar77.Name = "bar77";
+            this.bar77.Size = new System.Drawing.Size(343, 13);
+            this.bar77.TabIndex = 0;
+            this.bar77.Tip = "";
+            // 
             // lv37
             // 
             this.lv37.AutoSize = true;
             this.lv37.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv37.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv37.Location = new System.Drawing.Point(75, 0);
             this.lv37.Name = "lv37";
             this.lv37.Size = new System.Drawing.Size(71, 22);
             this.lv37.TabIndex = 10;
             this.lv37.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // lv68
+            // 
+            this.lv68.AutoSize = true;
+            this.lv68.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv68.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv68.Location = new System.Drawing.Point(75, 0);
+            this.lv68.Name = "lv68";
+            this.lv68.Size = new System.Drawing.Size(71, 22);
+            this.lv68.TabIndex = 10;
+            this.lv68.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv69
+            // 
+            this.lv69.AutoSize = true;
+            this.lv69.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv69.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv69.Location = new System.Drawing.Point(75, 0);
+            this.lv69.Name = "lv69";
+            this.lv69.Size = new System.Drawing.Size(71, 22);
+            this.lv69.TabIndex = 10;
+            this.lv69.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv70
+            // 
+            this.lv70.AutoSize = true;
+            this.lv70.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv70.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv70.Location = new System.Drawing.Point(75, 0);
+            this.lv70.Name = "lv70";
+            this.lv70.Size = new System.Drawing.Size(71, 22);
+            this.lv70.TabIndex = 10;
+            this.lv70.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv71
+            // 
+            this.lv71.AutoSize = true;
+            this.lv71.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv71.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv71.Location = new System.Drawing.Point(75, 0);
+            this.lv71.Name = "lv71";
+            this.lv71.Size = new System.Drawing.Size(71, 22);
+            this.lv71.TabIndex = 10;
+            this.lv71.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv72
+            // 
+            this.lv72.AutoSize = true;
+            this.lv72.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv72.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv72.Location = new System.Drawing.Point(75, 0);
+            this.lv72.Name = "lv72";
+            this.lv72.Size = new System.Drawing.Size(71, 22);
+            this.lv72.TabIndex = 10;
+            this.lv72.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv73
+            // 
+            this.lv73.AutoSize = true;
+            this.lv73.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv73.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv73.Location = new System.Drawing.Point(75, 0);
+            this.lv73.Name = "lv73";
+            this.lv73.Size = new System.Drawing.Size(71, 22);
+            this.lv73.TabIndex = 10;
+            this.lv73.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv74
+            // 
+            this.lv74.AutoSize = true;
+            this.lv74.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv74.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv74.Location = new System.Drawing.Point(75, 0);
+            this.lv74.Name = "lv74";
+            this.lv74.Size = new System.Drawing.Size(71, 22);
+            this.lv74.TabIndex = 10;
+            this.lv74.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv75
+            // 
+            this.lv75.AutoSize = true;
+            this.lv75.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv75.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv75.Location = new System.Drawing.Point(75, 0);
+            this.lv75.Name = "lv75";
+            this.lv75.Size = new System.Drawing.Size(71, 22);
+            this.lv75.TabIndex = 10;
+            this.lv75.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv76
+            // 
+            this.lv76.AutoSize = true;
+            this.lv76.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv76.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv76.Location = new System.Drawing.Point(75, 0);
+            this.lv76.Name = "lv76";
+            this.lv76.Size = new System.Drawing.Size(71, 22);
+            this.lv76.TabIndex = 10;
+            this.lv76.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lv77
+            // 
+            this.lv77.AutoSize = true;
+            this.lv77.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv77.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            this.lv77.Location = new System.Drawing.Point(75, 0);
+            this.lv77.Name = "lv77";
+            this.lv77.Size = new System.Drawing.Size(71, 22);
+            this.lv77.TabIndex = 10;
+            this.lv77.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // gradientPanel13
             // 
             this.gradientPanel13.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(61)))), ((int)(((byte)(138))))),
+            System.Drawing.Color.FromArgb(72, 61, 138),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel13.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel13.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(119)))), ((int)(((byte)(100)))), ((int)(((byte)(227)))));
+            this.gradientPanel13.BorderColor = System.Drawing.Color.FromArgb(119, 100, 227);
             this.gradientPanel13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel13.CanApplyTheme = false;
             this.gradientPanel13.Controls.Add(this.tableLayoutPanel12);
@@ -1688,7 +2118,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label77.AutoSize = true;
             this.label77.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label77.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label77.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label77.Location = new System.Drawing.Point(3, 0);
             this.label77.Name = "label77";
             this.label77.Size = new System.Drawing.Size(65, 22);
@@ -1713,7 +2143,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv36.AutoSize = true;
             this.lv36.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv36.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv36.Location = new System.Drawing.Point(74, 0);
             this.lv36.Name = "lv36";
             this.lv36.Size = new System.Drawing.Size(73, 22);
@@ -1723,11 +2153,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel12
             // 
             this.gradientPanel12.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(89)))), ((int)(((byte)(204))))),
+            System.Drawing.Color.FromArgb(105, 89, 204),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel12.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel12.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(112)))), ((int)(((byte)(255)))));
+            this.gradientPanel12.BorderColor = System.Drawing.Color.FromArgb(131, 112, 255);
             this.gradientPanel12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel12.CanApplyTheme = false;
             this.gradientPanel12.Controls.Add(this.tableLayoutPanel11);
@@ -1757,7 +2187,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label75.AutoSize = true;
             this.label75.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label75.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label75.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label75.Location = new System.Drawing.Point(3, 0);
             this.label75.Name = "label75";
             this.label75.Size = new System.Drawing.Size(68, 22);
@@ -1782,7 +2212,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv35.AutoSize = true;
             this.lv35.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv35.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv35.Location = new System.Drawing.Point(77, 0);
             this.lv35.Name = "lv35";
             this.lv35.Size = new System.Drawing.Size(70, 22);
@@ -1792,11 +2222,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel11
             // 
             this.gradientPanel11.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(61)))), ((int)(((byte)(61))))),
+            System.Drawing.Color.FromArgb(121, 61, 61),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel11.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel11.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(113)))), ((int)(((byte)(113)))));
+            this.gradientPanel11.BorderColor = System.Drawing.Color.FromArgb(227, 113, 113);
             this.gradientPanel11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel11.CanApplyTheme = false;
             this.gradientPanel11.Controls.Add(this.tableLayoutPanel10);
@@ -1826,7 +2256,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label72.AutoSize = true;
             this.label72.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label72.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label72.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label72.Location = new System.Drawing.Point(3, 0);
             this.label72.Name = "label72";
             this.label72.Size = new System.Drawing.Size(72, 22);
@@ -1851,7 +2281,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv34.AutoSize = true;
             this.lv34.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv34.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv34.Location = new System.Drawing.Point(81, 0);
             this.lv34.Name = "lv34";
             this.lv34.Size = new System.Drawing.Size(65, 22);
@@ -1861,11 +2291,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel10
             // 
             this.gradientPanel10.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(124)))), ((int)(((byte)(124)))), ((int)(((byte)(0))))),
+            System.Drawing.Color.FromArgb(124, 124, 0),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel10.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel10.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(227)))), ((int)(((byte)(0)))));
+            this.gradientPanel10.BorderColor = System.Drawing.Color.FromArgb(227, 227, 0);
             this.gradientPanel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel10.CanApplyTheme = false;
             this.gradientPanel10.Controls.Add(this.tableLayoutPanel9);
@@ -1895,7 +2325,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label68.AutoSize = true;
             this.label68.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label68.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label68.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label68.Location = new System.Drawing.Point(3, 0);
             this.label68.Name = "label68";
             this.label68.Size = new System.Drawing.Size(70, 22);
@@ -1920,7 +2350,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv33.AutoSize = true;
             this.lv33.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv33.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv33.Location = new System.Drawing.Point(79, 0);
             this.lv33.Name = "lv33";
             this.lv33.Size = new System.Drawing.Size(67, 22);
@@ -1930,11 +2360,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel9
             // 
             this.gradientPanel9.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(191)))), ((int)(((byte)(0))))),
+            System.Drawing.Color.FromArgb(191, 191, 0),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel9.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel9.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(0)))));
+            this.gradientPanel9.BorderColor = System.Drawing.Color.FromArgb(242, 242, 0);
             this.gradientPanel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel9.CanApplyTheme = false;
             this.gradientPanel9.Controls.Add(this.tableLayoutPanel8);
@@ -1964,7 +2394,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label65.AutoSize = true;
             this.label65.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label65.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label65.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label65.Location = new System.Drawing.Point(3, 0);
             this.label65.Name = "label65";
             this.label65.Size = new System.Drawing.Size(53, 22);
@@ -1989,7 +2419,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv32.AutoSize = true;
             this.lv32.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv32.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv32.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv32.Location = new System.Drawing.Point(62, 0);
             this.lv32.Name = "lv32";
             this.lv32.Size = new System.Drawing.Size(83, 22);
@@ -1999,11 +2429,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel8
             // 
             this.gradientPanel8.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(62)))), ((int)(((byte)(0))))),
+            System.Drawing.Color.FromArgb(185, 62, 0),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel8.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel8.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(81)))), ((int)(((byte)(0)))));
+            this.gradientPanel8.BorderColor = System.Drawing.Color.FromArgb(242, 81, 0);
             this.gradientPanel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel8.CanApplyTheme = false;
             this.gradientPanel8.Controls.Add(this.tableLayoutPanel7);
@@ -2033,7 +2463,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label69.AutoSize = true;
             this.label69.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label69.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label69.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label69.Location = new System.Drawing.Point(3, 0);
             this.label69.Name = "label69";
             this.label69.Size = new System.Drawing.Size(52, 22);
@@ -2058,7 +2488,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv31.AutoSize = true;
             this.lv31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv31.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv31.Location = new System.Drawing.Point(61, 0);
             this.lv31.Name = "lv31";
             this.lv31.Size = new System.Drawing.Size(84, 22);
@@ -2078,11 +2508,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel6
             // 
             this.gradientPanel6.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(61)))), ((int)(((byte)(138))))),
+            System.Drawing.Color.FromArgb(72, 61, 138),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel6.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel6.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(124)))), ((int)(((byte)(104)))), ((int)(((byte)(237)))));
+            this.gradientPanel6.BorderColor = System.Drawing.Color.FromArgb(124, 104, 237);
             this.gradientPanel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel6.CanApplyTheme = false;
             this.gradientPanel6.Controls.Add(this.tableLayoutPanel6);
@@ -2120,7 +2550,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv30.AutoSize = true;
             this.lv30.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv30.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv30.Location = new System.Drawing.Point(91, 38);
             this.lv30.Name = "lv30";
             this.lv30.Size = new System.Drawing.Size(71, 20);
@@ -2144,7 +2574,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv29.AutoSize = true;
             this.lv29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv29.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv29.Location = new System.Drawing.Point(91, 19);
             this.lv29.Name = "lv29";
             this.lv29.Size = new System.Drawing.Size(71, 19);
@@ -2168,7 +2598,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label55.AutoSize = true;
             this.label55.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label55.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label55.Location = new System.Drawing.Point(3, 0);
             this.label55.Name = "label55";
             this.label55.Size = new System.Drawing.Size(82, 19);
@@ -2193,7 +2623,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label56.AutoSize = true;
             this.label56.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label56.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label56.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label56.Location = new System.Drawing.Point(3, 19);
             this.label56.Name = "label56";
             this.label56.Size = new System.Drawing.Size(82, 19);
@@ -2205,7 +2635,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label64.AutoSize = true;
             this.label64.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label64.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label64.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label64.Location = new System.Drawing.Point(3, 38);
             this.label64.Name = "label64";
             this.label64.Size = new System.Drawing.Size(82, 20);
@@ -2217,7 +2647,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv28.AutoSize = true;
             this.lv28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv28.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv28.Location = new System.Drawing.Point(91, 0);
             this.lv28.Name = "lv28";
             this.lv28.Size = new System.Drawing.Size(71, 19);
@@ -2289,11 +2719,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel5
             // 
             this.gradientPanel5.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(127)))), ((int)(((byte)(95))))),
+            System.Drawing.Color.FromArgb(0, 127, 95),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel5.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel5.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(227)))), ((int)(((byte)(170)))));
+            this.gradientPanel5.BorderColor = System.Drawing.Color.FromArgb(0, 227, 170);
             this.gradientPanel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel5.CanApplyTheme = false;
             this.gradientPanel5.Controls.Add(this.tableLayoutPanel5);
@@ -2335,7 +2765,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv27.AutoSize = true;
             this.lv27.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv27.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv27.Location = new System.Drawing.Point(115, 51);
             this.lv27.Name = "lv27";
             this.lv27.Size = new System.Drawing.Size(77, 17);
@@ -2360,7 +2790,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv26.AutoSize = true;
             this.lv26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv26.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv26.Location = new System.Drawing.Point(115, 34);
             this.lv26.Name = "lv26";
             this.lv26.Size = new System.Drawing.Size(77, 17);
@@ -2385,7 +2815,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv25.AutoSize = true;
             this.lv25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv25.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv25.Location = new System.Drawing.Point(115, 17);
             this.lv25.Name = "lv25";
             this.lv25.Size = new System.Drawing.Size(77, 17);
@@ -2410,7 +2840,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label60.AutoSize = true;
             this.label60.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label60.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label60.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label60.Location = new System.Drawing.Point(3, 0);
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(106, 17);
@@ -2436,7 +2866,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label61.AutoSize = true;
             this.label61.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label61.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label61.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label61.Location = new System.Drawing.Point(3, 17);
             this.label61.Name = "label61";
             this.label61.Size = new System.Drawing.Size(106, 17);
@@ -2448,7 +2878,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label62.AutoSize = true;
             this.label62.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label62.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label62.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label62.Location = new System.Drawing.Point(3, 34);
             this.label62.Name = "label62";
             this.label62.Size = new System.Drawing.Size(106, 17);
@@ -2460,7 +2890,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label63.AutoSize = true;
             this.label63.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label63.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label63.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label63.Location = new System.Drawing.Point(3, 51);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(106, 17);
@@ -2472,7 +2902,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv24.AutoSize = true;
             this.lv24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv24.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv24.Location = new System.Drawing.Point(115, 0);
             this.lv24.Name = "lv24";
             this.lv24.Size = new System.Drawing.Size(77, 17);
@@ -2509,11 +2939,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel16
             // 
             this.gradientPanel16.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(0))))),
+            System.Drawing.Color.FromArgb(127, 127, 0),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel16.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel16.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(227)))), ((int)(((byte)(0)))));
+            this.gradientPanel16.BorderColor = System.Drawing.Color.FromArgb(227, 227, 0);
             this.gradientPanel16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel16.CanApplyTheme = false;
             this.gradientPanel16.Controls.Add(this.tableLayoutPanel15);
@@ -2583,7 +3013,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv59.AutoSize = true;
             this.lv59.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv59.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv59.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv59.Location = new System.Drawing.Point(98, 196);
             this.lv59.Name = "lv59";
             this.lv59.Size = new System.Drawing.Size(75, 20);
@@ -2594,7 +3024,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv58.AutoSize = true;
             this.lv58.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv58.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv58.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv58.Location = new System.Drawing.Point(98, 176);
             this.lv58.Name = "lv58";
             this.lv58.Size = new System.Drawing.Size(75, 20);
@@ -2605,7 +3035,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv57.AutoSize = true;
             this.lv57.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv57.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv57.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv57.Location = new System.Drawing.Point(98, 156);
             this.lv57.Name = "lv57";
             this.lv57.Size = new System.Drawing.Size(75, 20);
@@ -2616,7 +3046,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv56.AutoSize = true;
             this.lv56.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv56.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv56.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv56.Location = new System.Drawing.Point(98, 136);
             this.lv56.Name = "lv56";
             this.lv56.Size = new System.Drawing.Size(75, 20);
@@ -2627,7 +3057,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv55.AutoSize = true;
             this.lv55.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv55.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv55.Location = new System.Drawing.Point(98, 116);
             this.lv55.Name = "lv55";
             this.lv55.Size = new System.Drawing.Size(75, 20);
@@ -2638,7 +3068,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv54.AutoSize = true;
             this.lv54.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv54.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv54.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv54.Location = new System.Drawing.Point(98, 96);
             this.lv54.Name = "lv54";
             this.lv54.Size = new System.Drawing.Size(75, 20);
@@ -2649,7 +3079,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label112.AutoSize = true;
             this.label112.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label112.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label112.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label112.Location = new System.Drawing.Point(3, 196);
             this.label112.Name = "label112";
             this.label112.Size = new System.Drawing.Size(89, 20);
@@ -2661,7 +3091,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label113.AutoSize = true;
             this.label113.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label113.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label113.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label113.Location = new System.Drawing.Point(3, 176);
             this.label113.Name = "label113";
             this.label113.Size = new System.Drawing.Size(89, 20);
@@ -2673,7 +3103,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label114.AutoSize = true;
             this.label114.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label114.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label114.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label114.Location = new System.Drawing.Point(3, 156);
             this.label114.Name = "label114";
             this.label114.Size = new System.Drawing.Size(89, 20);
@@ -2685,7 +3115,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label115.AutoSize = true;
             this.label115.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label115.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label115.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label115.Location = new System.Drawing.Point(3, 136);
             this.label115.Name = "label115";
             this.label115.Size = new System.Drawing.Size(89, 20);
@@ -2697,7 +3127,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label116.AutoSize = true;
             this.label116.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label116.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label116.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label116.Location = new System.Drawing.Point(3, 116);
             this.label116.Name = "label116";
             this.label116.Size = new System.Drawing.Size(89, 20);
@@ -2709,7 +3139,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label117.AutoSize = true;
             this.label117.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label117.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label117.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label117.Location = new System.Drawing.Point(3, 96);
             this.label117.Name = "label117";
             this.label117.Size = new System.Drawing.Size(89, 20);
@@ -2721,7 +3151,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label118.AutoSize = true;
             this.label118.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label118.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label118.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label118.Location = new System.Drawing.Point(3, 76);
             this.label118.Name = "label118";
             this.label118.Size = new System.Drawing.Size(89, 20);
@@ -2733,7 +3163,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv52.AutoSize = true;
             this.lv52.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv52.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv52.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv52.Location = new System.Drawing.Point(98, 57);
             this.lv52.Name = "lv52";
             this.lv52.Size = new System.Drawing.Size(75, 19);
@@ -2757,7 +3187,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv51.AutoSize = true;
             this.lv51.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv51.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv51.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv51.Location = new System.Drawing.Point(98, 38);
             this.lv51.Name = "lv51";
             this.lv51.Size = new System.Drawing.Size(75, 19);
@@ -2781,7 +3211,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv50.AutoSize = true;
             this.lv50.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv50.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv50.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv50.Location = new System.Drawing.Point(98, 19);
             this.lv50.Name = "lv50";
             this.lv50.Size = new System.Drawing.Size(75, 19);
@@ -2805,7 +3235,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label122.AutoSize = true;
             this.label122.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label122.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label122.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label122.Location = new System.Drawing.Point(3, 0);
             this.label122.Name = "label122";
             this.label122.Size = new System.Drawing.Size(89, 19);
@@ -2830,7 +3260,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label123.AutoSize = true;
             this.label123.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label123.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label123.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label123.Location = new System.Drawing.Point(3, 19);
             this.label123.Name = "label123";
             this.label123.Size = new System.Drawing.Size(89, 19);
@@ -2842,7 +3272,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label124.AutoSize = true;
             this.label124.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label124.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label124.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label124.Location = new System.Drawing.Point(3, 38);
             this.label124.Name = "label124";
             this.label124.Size = new System.Drawing.Size(89, 19);
@@ -2854,7 +3284,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label125.AutoSize = true;
             this.label125.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label125.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label125.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label125.Location = new System.Drawing.Point(3, 57);
             this.label125.Name = "label125";
             this.label125.Size = new System.Drawing.Size(89, 19);
@@ -2866,7 +3296,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv49.AutoSize = true;
             this.lv49.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv49.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv49.Location = new System.Drawing.Point(98, 0);
             this.lv49.Name = "lv49";
             this.lv49.Size = new System.Drawing.Size(75, 19);
@@ -2968,7 +3398,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv53.AutoSize = true;
             this.lv53.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv53.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv53.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv53.Location = new System.Drawing.Point(98, 76);
             this.lv53.Name = "lv53";
             this.lv53.Size = new System.Drawing.Size(75, 20);
@@ -2988,11 +3418,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // gradientPanel15
             // 
             this.gradientPanel15.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(64)))), ((int)(((byte)(0))))),
+            System.Drawing.Color.FromArgb(127, 64, 0),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel15.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.gradientPanel15.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(113)))), ((int)(((byte)(0)))));
+            this.gradientPanel15.BorderColor = System.Drawing.Color.FromArgb(227, 113, 0);
             this.gradientPanel15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel15.CanApplyTheme = false;
             this.gradientPanel15.Controls.Add(this.tableLayoutPanel14);
@@ -3062,7 +3492,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv48.AutoSize = true;
             this.lv48.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv48.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv48.Location = new System.Drawing.Point(95, 196);
             this.lv48.Name = "lv48";
             this.lv48.Size = new System.Drawing.Size(77, 20);
@@ -3073,7 +3503,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv47.AutoSize = true;
             this.lv47.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv47.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv47.Location = new System.Drawing.Point(95, 176);
             this.lv47.Name = "lv47";
             this.lv47.Size = new System.Drawing.Size(77, 20);
@@ -3084,7 +3514,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv46.AutoSize = true;
             this.lv46.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv46.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv46.Location = new System.Drawing.Point(95, 156);
             this.lv46.Name = "lv46";
             this.lv46.Size = new System.Drawing.Size(77, 20);
@@ -3095,7 +3525,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv45.AutoSize = true;
             this.lv45.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv45.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv45.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv45.Location = new System.Drawing.Point(95, 136);
             this.lv45.Name = "lv45";
             this.lv45.Size = new System.Drawing.Size(77, 20);
@@ -3106,7 +3536,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv44.AutoSize = true;
             this.lv44.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv44.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv44.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv44.Location = new System.Drawing.Point(95, 116);
             this.lv44.Name = "lv44";
             this.lv44.Size = new System.Drawing.Size(77, 20);
@@ -3117,7 +3547,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv43.AutoSize = true;
             this.lv43.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv43.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv43.Location = new System.Drawing.Point(95, 96);
             this.lv43.Name = "lv43";
             this.lv43.Size = new System.Drawing.Size(77, 20);
@@ -3128,7 +3558,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label96.AutoSize = true;
             this.label96.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label96.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label96.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label96.Location = new System.Drawing.Point(3, 196);
             this.label96.Name = "label96";
             this.label96.Size = new System.Drawing.Size(86, 20);
@@ -3140,7 +3570,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label95.AutoSize = true;
             this.label95.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label95.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label95.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label95.Location = new System.Drawing.Point(3, 176);
             this.label95.Name = "label95";
             this.label95.Size = new System.Drawing.Size(86, 20);
@@ -3152,7 +3582,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label94.AutoSize = true;
             this.label94.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label94.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label94.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label94.Location = new System.Drawing.Point(3, 156);
             this.label94.Name = "label94";
             this.label94.Size = new System.Drawing.Size(86, 20);
@@ -3164,7 +3594,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label93.AutoSize = true;
             this.label93.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label93.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label93.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label93.Location = new System.Drawing.Point(3, 136);
             this.label93.Name = "label93";
             this.label93.Size = new System.Drawing.Size(86, 20);
@@ -3176,7 +3606,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label92.AutoSize = true;
             this.label92.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label92.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label92.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label92.Location = new System.Drawing.Point(3, 116);
             this.label92.Name = "label92";
             this.label92.Size = new System.Drawing.Size(86, 20);
@@ -3188,7 +3618,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label91.AutoSize = true;
             this.label91.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label91.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label91.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label91.Location = new System.Drawing.Point(3, 96);
             this.label91.Name = "label91";
             this.label91.Size = new System.Drawing.Size(86, 20);
@@ -3200,7 +3630,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label90.AutoSize = true;
             this.label90.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label90.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label90.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label90.Location = new System.Drawing.Point(3, 76);
             this.label90.Name = "label90";
             this.label90.Size = new System.Drawing.Size(86, 20);
@@ -3212,7 +3642,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv41.AutoSize = true;
             this.lv41.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv41.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv41.Location = new System.Drawing.Point(95, 57);
             this.lv41.Name = "lv41";
             this.lv41.Size = new System.Drawing.Size(77, 19);
@@ -3236,7 +3666,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv40.AutoSize = true;
             this.lv40.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv40.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv40.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv40.Location = new System.Drawing.Point(95, 38);
             this.lv40.Name = "lv40";
             this.lv40.Size = new System.Drawing.Size(77, 19);
@@ -3260,7 +3690,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv39.AutoSize = true;
             this.lv39.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv39.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv39.Location = new System.Drawing.Point(95, 19);
             this.lv39.Name = "lv39";
             this.lv39.Size = new System.Drawing.Size(77, 19);
@@ -3284,7 +3714,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label85.AutoSize = true;
             this.label85.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label85.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label85.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label85.Location = new System.Drawing.Point(3, 0);
             this.label85.Name = "label85";
             this.label85.Size = new System.Drawing.Size(86, 19);
@@ -3309,7 +3739,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label86.AutoSize = true;
             this.label86.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label86.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label86.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label86.Location = new System.Drawing.Point(3, 19);
             this.label86.Name = "label86";
             this.label86.Size = new System.Drawing.Size(86, 19);
@@ -3321,7 +3751,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label87.AutoSize = true;
             this.label87.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label87.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label87.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label87.Location = new System.Drawing.Point(3, 38);
             this.label87.Name = "label87";
             this.label87.Size = new System.Drawing.Size(86, 19);
@@ -3333,7 +3763,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label88.AutoSize = true;
             this.label88.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label88.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label88.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label88.Location = new System.Drawing.Point(3, 57);
             this.label88.Name = "label88";
             this.label88.Size = new System.Drawing.Size(86, 19);
@@ -3345,7 +3775,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv38.AutoSize = true;
             this.lv38.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv38.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv38.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv38.Location = new System.Drawing.Point(95, 0);
             this.lv38.Name = "lv38";
             this.lv38.Size = new System.Drawing.Size(77, 19);
@@ -3447,7 +3877,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv42.AutoSize = true;
             this.lv42.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv42.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv42.Location = new System.Drawing.Point(95, 76);
             this.lv42.Name = "lv42";
             this.lv42.Size = new System.Drawing.Size(77, 20);
@@ -3457,7 +3887,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // tabPageAdv1
             // 
             this.tabPageAdv1.Controls.Add(this.label128);
+            this.tabPageAdv1.Controls.Add(this.label148);
             this.tabPageAdv1.Controls.Add(this.gradientPanel17);
+            this.tabPageAdv1.Controls.Add(this.gradientPanel14);
             this.tabPageAdv1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.tabPageAdv1.Image = null;
             this.tabPageAdv1.ImageSize = new System.Drawing.Size(16, 16);
@@ -3473,16 +3905,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label128.AutoSize = true;
             this.label128.ForeColor = System.Drawing.Color.White;
-            this.label128.Location = new System.Drawing.Point(8, 69);
+            this.label128.Location = new System.Drawing.Point(8, 5);
             this.label128.Name = "label128";
             this.label128.Size = new System.Drawing.Size(125, 16);
             this.label128.TabIndex = 6;
             this.label128.Text = "Debuff Resistance:";
             // 
+            // label148
+            // 
+            this.label148.AutoSize = true;
+            this.label148.ForeColor = System.Drawing.Color.White;
+            this.label148.Location = new System.Drawing.Point(8, 205);
+            this.label148.Name = "label128";
+            this.label148.Size = new System.Drawing.Size(125, 16);
+            this.label148.TabIndex = 6;
+            this.label148.Text = "Elusivity:";
+            // 
             // gradientPanel17
             // 
             this.gradientPanel17.BackgroundColor = new Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, new System.Drawing.Color[] {
-            System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(127)))), ((int)(((byte)(127))))),
+            System.Drawing.Color.FromArgb(0, 127, 127),
             System.Drawing.Color.Black,
             System.Drawing.Color.Black});
             this.gradientPanel17.Border3DStyle = System.Windows.Forms.Border3DStyle.Etched;
@@ -3490,7 +3932,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.gradientPanel17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gradientPanel17.CanApplyTheme = false;
             this.gradientPanel17.Controls.Add(this.tableLayoutPanel16);
-            this.gradientPanel17.Location = new System.Drawing.Point(8, 88);
+            this.gradientPanel17.Location = new System.Drawing.Point(8, 28);
             this.gradientPanel17.Name = "gradientPanel17";
             this.gradientPanel17.Size = new System.Drawing.Size(514, 160);
             this.gradientPanel17.TabIndex = 5;
@@ -3499,8 +3941,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.tableLayoutPanel16.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel16.ColumnCount = 3;
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 56.17284F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 43.82716F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 59.17284F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.82716F));
             this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 358F));
             this.tableLayoutPanel16.Controls.Add(this.lv67, 1, 7);
             this.tableLayoutPanel16.Controls.Add(this.lv66, 1, 6);
@@ -3545,7 +3987,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv67.AutoSize = true;
             this.lv67.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv67.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv67.Location = new System.Drawing.Point(85, 133);
             this.lv67.Name = "lv67";
             this.lv67.Size = new System.Drawing.Size(58, 19);
@@ -3556,7 +3998,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv66.AutoSize = true;
             this.lv66.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv66.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv66.Location = new System.Drawing.Point(85, 114);
             this.lv66.Name = "lv66";
             this.lv66.Size = new System.Drawing.Size(58, 19);
@@ -3567,7 +4009,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv65.AutoSize = true;
             this.lv65.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv65.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv65.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv65.Location = new System.Drawing.Point(85, 95);
             this.lv65.Name = "lv65";
             this.lv65.Size = new System.Drawing.Size(58, 19);
@@ -3578,7 +4020,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv64.AutoSize = true;
             this.lv64.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv64.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv64.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv64.Location = new System.Drawing.Point(85, 76);
             this.lv64.Name = "lv64";
             this.lv64.Size = new System.Drawing.Size(58, 19);
@@ -3589,7 +4031,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv63.AutoSize = true;
             this.lv63.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv63.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv63.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv63.Location = new System.Drawing.Point(85, 57);
             this.lv63.Name = "lv63";
             this.lv63.Size = new System.Drawing.Size(58, 19);
@@ -3600,7 +4042,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv62.AutoSize = true;
             this.lv62.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv62.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv62.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv62.Location = new System.Drawing.Point(85, 38);
             this.lv62.Name = "lv62";
             this.lv62.Size = new System.Drawing.Size(58, 19);
@@ -3611,7 +4053,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv61.AutoSize = true;
             this.lv61.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv61.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv61.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv61.Location = new System.Drawing.Point(85, 19);
             this.lv61.Name = "lv61";
             this.lv61.Size = new System.Drawing.Size(58, 19);
@@ -3726,7 +4168,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label136.AutoSize = true;
             this.label136.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label136.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label136.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label136.Location = new System.Drawing.Point(3, 0);
             this.label136.Name = "label136";
             this.label136.Size = new System.Drawing.Size(76, 19);
@@ -3738,7 +4180,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label137.AutoSize = true;
             this.label137.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label137.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label137.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label137.Location = new System.Drawing.Point(3, 19);
             this.label137.Name = "label137";
             this.label137.Size = new System.Drawing.Size(76, 19);
@@ -3750,7 +4192,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label138.AutoSize = true;
             this.label138.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label138.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label138.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label138.Location = new System.Drawing.Point(3, 38);
             this.label138.Name = "label138";
             this.label138.Size = new System.Drawing.Size(76, 19);
@@ -3762,7 +4204,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label139.AutoSize = true;
             this.label139.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label139.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label139.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label139.Location = new System.Drawing.Point(3, 57);
             this.label139.Name = "label139";
             this.label139.Size = new System.Drawing.Size(76, 19);
@@ -3774,7 +4216,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label140.AutoSize = true;
             this.label140.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label140.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label140.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label140.Location = new System.Drawing.Point(3, 76);
             this.label140.Name = "label140";
             this.label140.Size = new System.Drawing.Size(76, 19);
@@ -3786,7 +4228,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label141.AutoSize = true;
             this.label141.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label141.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label141.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label141.Location = new System.Drawing.Point(3, 95);
             this.label141.Name = "label141";
             this.label141.Size = new System.Drawing.Size(76, 19);
@@ -3798,7 +4240,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label142.AutoSize = true;
             this.label142.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label142.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label142.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label142.Location = new System.Drawing.Point(3, 114);
             this.label142.Name = "label142";
             this.label142.Size = new System.Drawing.Size(76, 19);
@@ -3810,7 +4252,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.label143.AutoSize = true;
             this.label143.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label143.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.label143.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.label143.Location = new System.Drawing.Point(3, 133);
             this.label143.Name = "label143";
             this.label143.Size = new System.Drawing.Size(76, 19);
@@ -3822,7 +4264,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             this.lv60.AutoSize = true;
             this.lv60.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv60.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.lv60.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.lv60.Location = new System.Drawing.Point(85, 0);
             this.lv60.Name = "lv60";
             this.lv60.Size = new System.Drawing.Size(58, 19);
@@ -4188,5 +4630,36 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private Label label142;
         private Label label143;
         private BarLabel lv60;
+        private Label label148;
+        private Label label149;
+        private Label label150;
+        private Label label151;
+        private Label label152;
+        private Label label153;
+        private Label label154;
+        private Label label155;
+        private Label label156;
+        private Label label157;
+        private Label label158;
+        private BarLabel lv68;
+        private BarLabel lv69;
+        private BarLabel lv70;
+        private BarLabel lv71;
+        private BarLabel lv72;
+        private BarLabel lv73;
+        private BarLabel lv74;
+        private BarLabel lv75;
+        private BarLabel lv76;
+        private BarLabel lv77;
+        private ctlLayeredBarPb bar68;
+        private ctlLayeredBarPb bar69;
+        private ctlLayeredBarPb bar70;
+        private ctlLayeredBarPb bar71;
+        private ctlLayeredBarPb bar72;
+        private ctlLayeredBarPb bar73;
+        private ctlLayeredBarPb bar74;
+        private ctlLayeredBarPb bar75;
+        private ctlLayeredBarPb bar76;
+        private ctlLayeredBarPb bar77;
     }
 }

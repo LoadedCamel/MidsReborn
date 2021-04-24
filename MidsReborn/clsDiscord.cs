@@ -114,7 +114,7 @@ namespace Mids_Reborn
             statDictionary = new Dictionary<string, string> { { "Endurance Usage", endUse } };
             gatherData.Add("Endurance Usage", statDictionary);
 
-            var elusive = $"{Convert.ToDecimal(totalStat.Elusivity * 100):0.##}%";
+            var elusive = $"{Convert.ToDecimal(totalStat.ElusivityMax * 100):0.##}%";
             statDictionary = new Dictionary<string, string> { { "Elusivity", elusive } };
             gatherData.Add("Elusivity", statDictionary);
 

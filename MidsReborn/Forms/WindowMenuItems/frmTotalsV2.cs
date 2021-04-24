@@ -53,6 +53,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Toxic, Enums.eDamage.Psionic
         };
 
+        private readonly List<Enums.eDamage> ElusivityDamageList = new List<Enums.eDamage>()
+        {
+            Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
+            Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic,
+            Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
+        };
+
         private readonly List<Enums.eEffectType> MovementTypesList = new List<Enums.eEffectType>()
         {
             Enums.eEffectType.SpeedRunning, Enums.eEffectType.SpeedJumping, Enums.eEffectType.JumpHeight,
@@ -243,8 +250,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lv35.FormatType = 7;
             lv36.Group = "";
             lv36.FormatType = 0;
-            lv37.Group = "";
-            lv37.FormatType = 0;
 
             lv38.Group = "Status Protection";
             lv38.FormatType = 3;
@@ -308,6 +313,28 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lv66.FormatType = 0;
             lv67.Group = "Debuff Resistance";
             lv67.FormatType = 0;
+            lv37.Group = "Elusivity";
+            lv37.FormatType = 0;
+            lv68.Group = "Elusivity";
+            lv68.FormatType = 0;
+            lv69.Group = "Elusivity";
+            lv69.FormatType = 0;
+            lv70.Group = "Elusivity";
+            lv70.FormatType = 0;
+            lv71.Group = "Elusivity";
+            lv71.FormatType = 0;
+            lv72.Group = "Elusivity";
+            lv72.FormatType = 0;
+            lv73.Group = "Elusivity";
+            lv73.FormatType = 0;
+            lv74.Group = "Elusivity";
+            lv74.FormatType = 0;
+            lv75.Group = "Elusivity";
+            lv75.FormatType = 0;
+            lv76.Group = "Elusivity";
+            lv76.FormatType = 0;
+            lv77.Group = "Elusivity";
+            lv77.FormatType = 0;
         }
 
         #endregion
@@ -409,7 +436,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 (name: "base", color: Color.FromArgb(113, 86, 168))
             };
 
-            var elusivitySettings = new List<(string name, Color color)> // 37
+            var elusivitySettings = new List<(string name, Color color)> // 37, 68-77
             {
                 (name: "value", color: Color.FromArgb(163, 1, 231))
             };
@@ -477,7 +504,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             bar34.AssignNames(damageSettings);
             bar35.AssignNames(endRdxSettings);
             bar36.AssignNames(threatSettings);
-            bar37.AssignNames(elusivitySettings);
 
 
             bar38.AssignNames(statusProtectionSettings);
@@ -513,6 +539,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             bar65.AssignNames(debuffResistanceSettings);
             bar66.AssignNames(debuffResistanceSettings);
             bar67.AssignNames(debuffResistanceSettings);
+
+            bar37.AssignNames(elusivitySettings);
+            bar68.AssignNames(elusivitySettings);
+            bar69.AssignNames(elusivitySettings);
+            bar70.AssignNames(elusivitySettings);
+            bar71.AssignNames(elusivitySettings);
+            bar72.AssignNames(elusivitySettings);
+            bar73.AssignNames(elusivitySettings);
+            bar74.AssignNames(elusivitySettings);
+            bar75.AssignNames(elusivitySettings);
+            bar76.AssignNames(elusivitySettings);
+            bar77.AssignNames(elusivitySettings);
         }
 
         private string UcFirst(string s)
@@ -792,7 +830,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 .ToList();
 
             barsGroup.Sort((a, b) => GetBarIndex(a).CompareTo(GetBarIndex(b)));
-
             for (var i = 0; i < barsGroup.Count; i++)
             {
                 SetBarSingle(barsGroup[i], new List<float> {values[i]});
@@ -1164,37 +1201,47 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 33 => bar34,
                 34 => bar35,
                 35 => bar36,
-                36 => bar37,
-                37 => bar38,
-                38 => bar39,
-                39 => bar40,
-                40 => bar41,
-                41 => bar42,
-                42 => bar43,
-                43 => bar44,
-                44 => bar45,
-                45 => bar46,
-                46 => bar47,
-                47 => bar48,
-                48 => bar49,
-                49 => bar50,
-                50 => bar51,
-                51 => bar52,
-                52 => bar53,
-                53 => bar54,
-                54 => bar55,
-                55 => bar56,
-                56 => bar57,
-                57 => bar58,
-                58 => bar59,
-                59 => bar60,
-                60 => bar61,
-                61 => bar62,
-                62 => bar63,
-                63 => bar64,
-                64 => bar65,
-                65 => bar66,
-                66 => bar67,
+                36 => bar38,
+                37 => bar39,
+                38 => bar40,
+                39 => bar41,
+                40 => bar42,
+                41 => bar43,
+                42 => bar44,
+                43 => bar45,
+                44 => bar46,
+                45 => bar47,
+                46 => bar48,
+                47 => bar49,
+                48 => bar50,
+                49 => bar51,
+                50 => bar52,
+                51 => bar53,
+                52 => bar54,
+                53 => bar55,
+                54 => bar56,
+                55 => bar57,
+                56 => bar58,
+                57 => bar59,
+                58 => bar60,
+                59 => bar61,
+                60 => bar62,
+                61 => bar63,
+                62 => bar64,
+                63 => bar65,
+                64 => bar66,
+                65 => bar67,
+                66 => bar37,
+                67 => bar68,
+                68 => bar69,
+                69 => bar70,
+                70 => bar71,
+                71 => bar72,
+                72 => bar73,
+                73 => bar74,
+                74 => bar75,
+                75 => bar76,
+                76 => bar77,
                 _ => bar1
             };
         }
@@ -1244,37 +1291,47 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 33 => lv34,
                 34 => lv35,
                 35 => lv36,
-                36 => lv37,
-                37 => lv38,
-                38 => lv39,
-                39 => lv40,
-                40 => lv41,
-                41 => lv42,
-                42 => lv43,
-                43 => lv44,
-                44 => lv45,
-                45 => lv46,
-                46 => lv47,
-                47 => lv48,
-                48 => lv49,
-                49 => lv50,
-                50 => lv51,
-                51 => lv52,
-                52 => lv53,
-                53 => lv54,
-                54 => lv55,
-                55 => lv56,
-                56 => lv57,
-                57 => lv58,
-                58 => lv59,
-                59 => lv60,
-                60 => lv61,
-                61 => lv62,
-                62 => lv63,
-                63 => lv64,
-                64 => lv65,
-                65 => lv66,
-                66 => lv67,
+                36 => lv38,
+                37 => lv39,
+                38 => lv40,
+                39 => lv41,
+                40 => lv42,
+                41 => lv43,
+                42 => lv44,
+                43 => lv45,
+                44 => lv46,
+                45 => lv47,
+                46 => lv48,
+                47 => lv49,
+                48 => lv50,
+                49 => lv51,
+                50 => lv52,
+                51 => lv53,
+                52 => lv54,
+                53 => lv55,
+                54 => lv56,
+                55 => lv57,
+                56 => lv58,
+                57 => lv59,
+                58 => lv60,
+                59 => lv61,
+                60 => lv62,
+                61 => lv63,
+                62 => lv64,
+                63 => lv65,
+                64 => lv66,
+                65 => lv67,
+                66 => lv37,
+                67 => lv68,
+                68 => lv69,
+                69 => lv70,
+                70 => lv71,
+                71 => lv72,
+                72 => lv73,
+                73 => lv74,
+                74 => lv75,
+                75 => lv76,
+                76 => lv77,
                 _ => lv1
             };
         }
@@ -1473,11 +1530,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 MidsContext.Character.Archetype.BaseThreat * 100
             });
 
-            SetBarSingle(Enums.eBarType.Elusivity, new List<float>
-            {
-                MidsContext.Character.Totals.Elusivity * 100
-            });
-
             ///////////////////////////////
 
             SetBarsBulk(
@@ -1490,6 +1542,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 _barsList,
                 "Status Resistance",
                 MezList.Select(m => MidsContext.Character.Totals.MezRes[(int) m]).ToList()
+            );
+
+            SetBarsBulk(
+                _barsList,
+                "Elusivity",
+                ElusivityDamageList.Cast<int>().Select(t => (MidsContext.Character.Totals.Elusivity[t] + (MidsContext.Config.Inc.DisablePvE ? 0.4f : 0)) * 100).ToList()
             );
 
             ///////////////////////////////
@@ -1566,7 +1624,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetLvSingle(Enums.eBarType.Damage, displayStats.BuffDamage(false));
             SetLvSingle(Enums.eBarType.EndRdx, displayStats.BuffEndRdx);
             SetLvSingle(Enums.eBarType.ThreatLevel, displayStats.ThreatLevel);
-            SetLvSingle(Enums.eBarType.Elusivity, MidsContext.Character.Totals.Elusivity * 100);
 
             ///////////////////////////////
 
@@ -1593,6 +1650,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             : Statistics.MaxGenericDebuffRes,
                         MidsContext.Character.Totals.DebuffRes[(int)e]))
                     .ToArray()
+            );
+
+            SetLvsBulk(
+                _lvList,
+                "Elusivity",
+                ElusivityDamageList.Cast<int>().Select(t => (MidsContext.Character.Totals.Elusivity[t] + (MidsContext.Config.Inc.DisablePvE ? 0.4f : 0)) * 100).ToArray()
             );
 
             #endregion
