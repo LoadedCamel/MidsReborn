@@ -1102,14 +1102,11 @@ namespace mrbBase.Base.Data_Classes
 
             if (!noMag & EffectType != Enums.eEffectType.SilentKill)
             {
-                if (DisplayPercentage)
-                {
-                    sMag = $"{Utilities.FixDP(Mag * 100)}%";
-                }
-                else
-                {
-                    sMag = Utilities.FixDP(Mag);
-                }
+                sMag = MidsContext.Config.CoDEffectFormat
+                    ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? Mag : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
+                    : DisplayPercentage
+                        ? $"{Utilities.FixDP(Mag * 100)}%"
+                        : Utilities.FixDP(Mag);
             }
 
             if (!simple)
@@ -1258,7 +1255,7 @@ namespace mrbBase.Base.Data_Classes
                         else
                         {
                             sBuild = DisplayPercentage
-                                ? $"{Utilities.FixDP((Mag / 100) * MidsContext.Archetype.Hitpoints)} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
+                                ? $"{Utilities.FixDP(Mag / 100 * MidsContext.Archetype.Hitpoints)} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
                                 : $"{sMag} HP ({Utilities.FixDP(Mag / MidsContext.Archetype.Hitpoints * 100)}%) {sEffect}{sTarget}{sDuration}";
                         }
                     }
@@ -1271,7 +1268,7 @@ namespace mrbBase.Base.Data_Classes
                     if (!noMag)
                     {
                         sBuild = DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP((MidsContext.Archetype.Hitpoints / 100f) * (Mag * MidsContext.Archetype.BaseRegen * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({Utilities.FixDP(MidsContext.Archetype.Hitpoints / 100f * (Mag * MidsContext.Archetype.BaseRegen * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}";
                     }
                     else

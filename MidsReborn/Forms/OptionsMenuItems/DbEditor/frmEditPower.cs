@@ -1375,6 +1375,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 txtVisualLocation.ReadOnly = true;
             }
+
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
         private static int GetClassByID(int iID)
@@ -1930,8 +1932,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var power = myPower;
             lvFX.BeginUpdate();
             lvFX.Items.Clear();
-            var num = power.Effects.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var num = power.Effects.Length;
+            for (var index = 0; index < num; index++)
             {
                 lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true).Replace("\r\n", " - "));
             }
@@ -2654,6 +2656,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtNameDisplay_Leave(object sender, EventArgs e)
         {
             Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+        }
+
+        private void cbCoDFormat_CheckedChanged(object sender, EventArgs e)
+        {
+            MidsContext.Config.CoDEffectFormat = cbCoDFormat.Checked;
+            RefreshFXData(lvFX.SelectedIndices.Count <= 0 ? 0 : lvFX.SelectedIndices[0]);
         }
     }
 }

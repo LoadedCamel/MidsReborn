@@ -63,6 +63,7 @@ namespace mrbBase
         public string DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
         public string AppChangeLog { get; set; }
         public string DbChangeLog { get; set; }
+        public bool CoDEffectFormat = false;
         private ConfigData() : this(true, "")
         {
         }

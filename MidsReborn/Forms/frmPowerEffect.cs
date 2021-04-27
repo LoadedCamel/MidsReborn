@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -13,6 +12,7 @@ using Microsoft.VisualBasic;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
+using mrbBase.Base.Master_Classes;
 using mrbControls;
 
 namespace Mids_Reborn.Forms
@@ -413,6 +413,7 @@ namespace Mids_Reborn.Forms
             Loading = false;
             UpdateFXText();
             InitSelectedItems();
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
         private void SelectItemByName(ListView lv, string itemName)
@@ -1600,10 +1601,6 @@ namespace Mids_Reborn.Forms
                 var lvItem = lvSubConditional.Items[i].Text.ToLowerInvariant();
                 if (lvItem.StartsWith(searchPowerName))
                 {
-                    Debug.WriteLine($"Item: {lvItem}, searchAtGroup is empty: {searchAtGroup == ""}, lvItem.Contains(searchAtGroup): {lvItem.Contains($"[{searchAtGroup}")}");
-                }
-                if (lvItem.StartsWith(searchPowerName))
-                {
                     if (searchAtGroup == "" | lvItem.Contains($"[{searchAtGroup}"))
                     {
                         lvSubConditional.Items[i].Selected = true;
@@ -1617,6 +1614,12 @@ namespace Mids_Reborn.Forms
             MessageBox.Show(
                 $"No match found for '{sf.SearchTerms.PowerName}'{(searchAtGroup == "" ? "" : $" in AT/group {sf.SearchTerms.AtGroup}")}",
                 "Dammit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void cbCoDFormat_CheckedChanged(object sender, EventArgs e)
+        {
+            MidsContext.Config.CoDEffectFormat = cbCoDFormat.Checked;
+            UpdateFXText();
         }
     }
 }

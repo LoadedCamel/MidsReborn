@@ -220,6 +220,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnFullPaste = new System.Windows.Forms.Button();
             this.btnFullCopy = new System.Windows.Forms.Button();
             this.btnCSVImport = new System.Windows.Forms.Button();
+            this.cbCoDFormat = new System.Windows.Forms.CheckBox();
             this.tcPower.SuspendLayout();
             this.tpText.SuspendLayout();
             this.GroupBox4.SuspendLayout();
@@ -1547,6 +1548,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // pnlFX
             // 
+            this.pnlFX.Controls.Add(this.cbCoDFormat);
             this.pnlFX.Controls.Add(this.btnSetDamage);
             this.pnlFX.Controls.Add(this.btnFXEdit);
             this.pnlFX.Controls.Add(this.btnFXDown);
@@ -2290,6 +2292,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnCSVImport.UseVisualStyleBackColor = true;
             this.btnCSVImport.Click += new System.EventHandler(this.btnCSVImport_Click);
             // 
+            // cbCoDFormat
+            // 
+            this.cbCoDFormat.AutoSize = true;
+            this.cbCoDFormat.Location = new System.Drawing.Point(580, 292);
+            this.cbCoDFormat.Name = "cbCoDFormat";
+            this.cbCoDFormat.Size = new System.Drawing.Size(134, 18);
+            this.cbCoDFormat.TabIndex = 79;
+            this.cbCoDFormat.Text = "Use CoD effect format";
+            this.cbCoDFormat.UseVisualStyleBackColor = true;
+            this.cbCoDFormat.CheckedChanged += new System.EventHandler(this.cbCoDFormat_CheckedChanged);
+            // 
             // frmEditPower
             // 
             this.AcceptButton = this.btnOK;
@@ -2330,6 +2343,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox9.ResumeLayout(false);
             this.tpEffects.ResumeLayout(false);
             this.pnlFX.ResumeLayout(false);
+            this.pnlFX.PerformLayout();
             this.tpEnh.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbEnhancements)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEnhancementList)).EndInit();
@@ -2537,5 +2551,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private CheckBox overideScale;
         private NumericUpDown udScaleStart;
         private Label label19;
+        private CheckBox cbCoDFormat;
     }
 }

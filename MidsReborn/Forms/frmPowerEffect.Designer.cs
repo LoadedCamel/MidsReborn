@@ -136,6 +136,7 @@ namespace Mids_Reborn.Forms
             this.IgnoreED = new System.Windows.Forms.CheckBox();
             this.chkFXResistable = new System.Windows.Forms.CheckBox();
             this.chkNearGround = new System.Windows.Forms.CheckBox();
+            this.cbCoDFormat = new System.Windows.Forms.CheckBox();
             this.GroupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -1332,10 +1333,22 @@ namespace Mids_Reborn.Forms
             this.chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkNearGround.CheckedChanged += new System.EventHandler(this.chkNearGround_CheckedChanged);
             // 
+            // cbCoDFormat
+            // 
+            this.cbCoDFormat.AutoSize = true;
+            this.cbCoDFormat.Location = new System.Drawing.Point(840, 130);
+            this.cbCoDFormat.Name = "cbCoDFormat";
+            this.cbCoDFormat.Size = new System.Drawing.Size(134, 18);
+            this.cbCoDFormat.TabIndex = 175;
+            this.cbCoDFormat.Text = "Use CoD effect format";
+            this.cbCoDFormat.UseVisualStyleBackColor = true;
+            this.cbCoDFormat.CheckedChanged += new System.EventHandler(this.cbCoDFormat_CheckedChanged);
+            // 
             // frmPowerEffect
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1264, 756);
+            this.Controls.Add(this.cbCoDFormat);
             this.Controls.Add(this.chkCancelOnMiss);
             this.Controls.Add(this.chkStack);
             this.Controls.Add(this.chkFXBuffable);
@@ -1488,5 +1501,6 @@ namespace Mids_Reborn.Forms
         private CheckBox IgnoreED;
         private CheckBox chkFXResistable;
         private CheckBox chkNearGround;
+        private CheckBox cbCoDFormat;
     }
 }
