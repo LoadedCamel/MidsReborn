@@ -230,10 +230,10 @@
     <Compile Include="Forms\frmInitializing.Designer.cs">
       <DependentUpon>frmInitializing.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmSetListingPvP.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmSetListingPvP.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.Designer.cs">
       <DependentUpon>frmSetListingPvP.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\JsonImport\frmJsonImportMain.cs">
@@ -330,7 +330,7 @@
     <Compile Include="Forms\frmStats.Designer.cs">
       <DependentUpon>frmStats.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmSetListing.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListing.Designer.cs">
       <DependentUpon>frmSetListing.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmSetFind.Designer.cs">
@@ -345,10 +345,10 @@
     <Compile Include="Forms\frmPrint.Designer.cs">
       <DependentUpon>frmPrint.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmPowerEffect.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.Designer.cs">
       <DependentUpon>frmPowerEffect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmPowerBrowser.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.Designer.cs">
       <DependentUpon>frmPowerBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmOptionListDlg.Designer.cs">
@@ -2261,7 +2261,7 @@
     <EmbeddedResource Include="Forms\frmTeam.resx">
       <DependentUpon>frmTeam.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSetListingPvP.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.resx">
       <DependentUpon>frmSetListingPvP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
@@ -2396,10 +2396,10 @@
     <Compile Include="Forms\frmOptionListDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmPowerBrowser.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmPowerEffect.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmPrint.cs">
@@ -2420,7 +2420,7 @@
     <Compile Include="Forms\frmSetFind.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmSetListing.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListing.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmSetViewer.cs">
@@ -2507,10 +2507,11 @@
     <EmbeddedResource Include="Forms\frmOptionListDlg.resx">
       <DependentUpon>frmOptionListDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmPowerBrowser.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.resx">
       <DependentUpon>frmPowerBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmPowerEffect.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.resx">
       <DependentUpon>frmPowerEffect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPrint.resx">
@@ -2532,7 +2533,7 @@
     <EmbeddedResource Include="Forms\frmSetFind.resx">
       <DependentUpon>frmSetFind.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSetListing.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetListing.resx">
       <DependentUpon>frmSetListing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmSetViewer.resx">

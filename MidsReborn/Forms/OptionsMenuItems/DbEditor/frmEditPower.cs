@@ -108,8 +108,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             IEffect iFX = new Effect();
             var power1 = myPower;
             using var frmPowerEffect = new frmPowerEffect(iFX, power1);
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
-                return;
+            if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
+
             //var power1 = myPower;
             var power2 = power1;
             var effectArray = (IEffect[]) Utils.CopyArray(power2.Effects, new IEffect[power1.Effects.Length + 1]);
@@ -121,14 +121,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnFXEdit_Click(object sender, EventArgs e)
         {
-            if (lvFX.SelectedIndices.Count <= 0)
-                return;
+            if (lvFX.SelectedIndices.Count <= 0) return;
+            
             var power1 = myPower;
             var selectedIndex = lvFX.SelectedIndices[0];
             var iFX = (IEffect)myPower.Effects[selectedIndex].Clone();
-            using var frmPowerEffect = new frmPowerEffect(iFX, power1);
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
-                return;
+            using var frmPowerEffect = new frmPowerEffect(iFX, power1, selectedIndex);
+            if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
+
             myPower.Effects[selectedIndex] = (IEffect)frmPowerEffect.myFX.Clone();
             RefreshFXData();
             lvFX.SelectedIndex = selectedIndex;

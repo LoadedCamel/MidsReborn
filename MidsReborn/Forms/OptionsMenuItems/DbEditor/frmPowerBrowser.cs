@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -10,15 +9,13 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
-using Newtonsoft.Json;
 
-namespace Mids_Reborn.Forms
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmPowerBrowser : Form
     {

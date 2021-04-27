@@ -1103,7 +1103,7 @@ namespace mrbBase.Base.Data_Classes
             if (!noMag & EffectType != Enums.eEffectType.SilentKill)
             {
                 sMag = MidsContext.Config.CoDEffectFormat
-                    ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? Mag : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
+                    ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
                     : DisplayPercentage
                         ? $"{Utilities.FixDP(Mag * 100)}%"
                         : Utilities.FixDP(Mag);

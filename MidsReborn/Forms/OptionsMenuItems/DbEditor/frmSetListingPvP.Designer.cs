@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Mids_Reborn.Forms
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
-    public partial class frmSetListing
+    public partial class frmSetListingPvP
     {
         /// <summary>
         /// Required designer variable.
@@ -165,7 +165,7 @@ namespace Mids_Reborn.Forms
             // 
             this.btnDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnDelete.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDelete.Location = new System.Drawing.Point(624, 211);
+            this.btnDelete.Location = new System.Drawing.Point(624, 212);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(75, 23);
             this.btnDelete.TabIndex = 28;
@@ -219,7 +219,7 @@ namespace Mids_Reborn.Forms
             this.NoReload.Text = "Disable Image Reload";
             this.NoReload.CheckedChanged += new System.EventHandler(this.NoReload_CheckedChanged);
             // 
-            // frmSetListing
+            // frmSetListingPvP
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
@@ -237,10 +237,10 @@ namespace Mids_Reborn.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmSetListing";
+            this.Name = "frmSetListingPvP";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "PvE Invention Set Editor";
+            this.Text = "PvP Invention Set Editor";
             this.ResumeLayout(false);
 
         }

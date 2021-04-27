@@ -1,7 +1,6 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -9,13 +8,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 
-namespace Mids_Reborn.Forms
+namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmPowerEffect : Form
     {
@@ -24,8 +22,11 @@ namespace Mids_Reborn.Forms
         public IEffect myFX;
 
         private IPower myPower { get; set; }
+        private readonly List<string> ConditionalTypes;
+        private readonly List<string> ConditionalOps;
+        private readonly int EffectIndex;
 
-        public frmPowerEffect(IEffect iFX, IPower fxPower)
+        public frmPowerEffect(IEffect iFX, IPower fxPower, int fxIndex = 0)
         {
             Loading = true;
             myPower = fxPower;
@@ -33,17 +34,23 @@ namespace Mids_Reborn.Forms
             Load += frmPowerEffect_Load;
             //var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
             Icon = Resources.reborn;
+            ConditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
+            ConditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
             if (iFX != null) myFX = (IEffect)iFX.Clone();
+            EffectIndex = fxIndex;
         }
 
-        public frmPowerEffect(IEffect iFX)
+        public frmPowerEffect(IEffect iFX, int fxIndex = 0)
         {
             Loading = true;
             InitializeComponent();
             Load += frmPowerEffect_Load;
             //var componentResourceManager = new ComponentResourceManager(typeof(frmPowerEffect));
             Icon = Resources.reborn;
+            ConditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
+            ConditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
             if (iFX != null) myFX = (IEffect)iFX.Clone();
+            EffectIndex = fxIndex;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -121,6 +128,7 @@ namespace Mids_Reborn.Forms
             {
                 return;
             }
+
             if (myFX.ActiveConditionals.Count > 0)
             {
                 MessageBox.Show(@"You cannot use Special Cases when using Conditionals.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -136,6 +144,7 @@ namespace Mids_Reborn.Forms
                 myFX.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
                 Conditionals(true);
             }
+
             UpdateFXText();
         }
 
@@ -329,8 +338,8 @@ namespace Mids_Reborn.Forms
             cbPercentageOverride.Items.Add("No");
             cbAttribute.Items.AddRange(Enum.GetNames(myFX.AttribType.GetType()));
             cbAspect.Items.AddRange(Enum.GetNames(myFX.Aspect.GetType()));
-            var num1 = DatabaseAPI.Database.AttribMods.Modifier.Count - 1;
-            for (var index = 0; index <= num1; ++index)
+            var num1 = DatabaseAPI.Database.AttribMods.Modifier.Count;
+            for (var index = 0; index < num1; index++)
                 cbModifier.Items.Add(DatabaseAPI.Database.AttribMods.Modifier[index].ID);
             cbAffects.Items.Add("None");
             cbAffects.Items.Add("Target");
@@ -404,13 +413,22 @@ namespace Mids_Reborn.Forms
         {
             FillComboBoxes();
             DisplayEffectData();
-            if (myFX.GetPower() is IPower power)
-                Text = "Edit Effect " + Convert.ToString(myFX.nID) + " for: " + power.FullName;
+            if (myFX.GetPower() is { } power)
+            {
+                //Text = "Edit Effect " + Convert.ToString(myFX.nID) + " for: " + power.FullName;
+                Text = $"Edit Effect {EffectIndex} for: {power.FullName}";
+            }
             else if (myFX.Enhancement != null)
-                Text = "Edit Effect for: " + myFX.Enhancement.UID;
+            {
+                Text = $"Edit Effect for: {myFX.Enhancement.UID}";
+            }
             else
+            {
                 Text = "Edit Effect";
+            }
+
             Loading = false;
+            UpdateConditionalTypes();
             UpdateFXText();
             InitSelectedItems();
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
@@ -1372,12 +1390,11 @@ namespace Mids_Reborn.Forms
         private void UpdateConditionalTypes()
         {
             lvConditionalType.BeginUpdate();
-            var cTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
-            var indexVal = -1;
-            for (var index = 0; index < cTypes.Count; index++)
+            lvConditionalType.Items.Clear();
+            var indexVal = ConditionalTypes.Count - 1;
+            foreach (var c in ConditionalTypes)
             {
-                lvConditionalType.Items.Add(cTypes[index]);
-                indexVal = index;
+                lvConditionalType.Items.Add(c);
             }
 
             if (indexVal > -1)
@@ -1388,13 +1405,13 @@ namespace Mids_Reborn.Forms
 
             lvConditionalType.View = View.Details;
             lvConditionalType.EndUpdate();
-            if (lvConditionalOp.Items.Count == 0)
+
+            if (lvConditionalOp.Items.Count != 0) return;
+
+            
+            foreach (var op in ConditionalOps)
             {
-                var cOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
-                foreach (var op in cOps)
-                {
-                    lvConditionalOp.Items.Add(op);
-                }
+                lvConditionalOp.Items.Add(op);
             }
         }
 
