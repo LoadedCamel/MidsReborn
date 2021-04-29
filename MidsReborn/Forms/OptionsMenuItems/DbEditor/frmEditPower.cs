@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using FastDeepCloner;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.Controls;
@@ -106,15 +105,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnFXAdd_Click(object sender, EventArgs e)
         {
             IEffect iFX = new Effect();
-            var power1 = myPower;
-            using var frmPowerEffect = new frmPowerEffect(iFX, power1);
+            iFX.SetPower(myPower);
+            using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
 
-            //var power1 = myPower;
-            var power2 = power1;
-            var effectArray = (IEffect[]) Utils.CopyArray(power2.Effects, new IEffect[power1.Effects.Length + 1]);
-            power2.Effects = effectArray;
-            power1.Effects[power1.Effects.Length - 1] = (IEffect) frmPowerEffect.myFX.Clone();
+            var effectList = myPower.Effects.ToList();
+            effectList.Add((IEffect) frmPowerEffect.myFX.Clone());
+            myPower.Effects = effectList.ToArray();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
         }
@@ -123,13 +120,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lvFX.SelectedIndices.Count <= 0) return;
             
-            var power1 = myPower;
             var selectedIndex = lvFX.SelectedIndices[0];
-            var iFX = (IEffect)myPower.Effects[selectedIndex].Clone();
-            using var frmPowerEffect = new frmPowerEffect(iFX, power1, selectedIndex);
+            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
 
-            myPower.Effects[selectedIndex] = (IEffect)frmPowerEffect.myFX.Clone();
+            myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.myFX.Clone();
             RefreshFXData();
             lvFX.SelectedIndex = selectedIndex;
         }
@@ -152,58 +147,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvFX.SelectedIndex = selectedIndex + 1;
         }
 
-        /*private void btnFXDuplicate_Click(object sender, EventArgs e)
-        {
-            if (lvFX.SelectedIndices.Count <= 0)
-                return;
-            var iFX = (IEffect) myPower.Effects[lvFX.SelectedIndices[0]].Clone();
-            using var frmPowerEffect = new frmPowerEffect(iFX);
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
-                return;
-            var power1 = myPower;
-            var power2 = power1;
-            var effectArray = (IEffect[]) Utils.CopyArray(power2.Effects, new IEffect[power1.Effects.Length + 1]);
-            power2.Effects = effectArray;
-            power1.Effects[power1.Effects.Length - 1] = (IEffect) frmPowerEffect.myFX.Clone();
-            RefreshFXData();
-            lvFX.SelectedIndex = lvFX.Items.Count - 1;
-        }*/
-
         private void btnFXDuplicate_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndices.Count <= 0)
                 return;
 
-            IEffect[] newEffects = new IEffect[myPower.Effects.Length + 1];
-            for (var index = 0; index < myPower.Effects.Length; index++)
-            {
-                newEffects[index] = myPower.Effects[index];
-            }
-
-            newEffects[newEffects.Length - 1] ??= DeepCloner.Clone(myPower.Effects[lvFX.SelectedIndices[0]]);
-            var newEffect = newEffects[newEffects.Length - 1];
-            using var frmPowerEffect = new frmPowerEffect(newEffect, myPower);
+            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[lvFX.SelectedIndices[0]], myPower, myPower.Effects.Length);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
-            newEffects[newEffects.Length - 1] = frmPowerEffect.myFX;
-            myPower.Effects = new IEffect[newEffects.Length];
-            myPower.Effects = newEffects;
+
+            var effectList = myPower.Effects.ToList();
+            effectList.Add(frmPowerEffect.myFX);
+            myPower.Effects = effectList.ToArray();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
         }
-
-
 
         private void btnFXRemove_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndex < 0)
                 return;
-            var effectArray = new IEffect[myPower.Effects.Length - 1 + 1];
+            var effectArray = new IEffect[myPower.Effects.Length];
             var selectedIndex = lvFX.SelectedIndex;
             var num1 = effectArray.Length - 1;
             for (var index = 0; index <= num1; ++index)
                 effectArray[index] = (IEffect) myPower.Effects[index].Clone();
-            myPower.Effects = new IEffect[myPower.Effects.Length - 2 + 1];
+            myPower.Effects = new IEffect[myPower.Effects.Length - 1];
             var index1 = 0;
             var num2 = effectArray.Length - 1;
             for (var index2 = 0; index2 <= num2; ++index2)
@@ -306,8 +275,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
                 }
 
-                myPower.GroupMembership = new string[clbMutex.CheckedItems.Count - 1 + 1];
-                myPower.NGroupMembership = new int[clbMutex.CheckedItems.Count - 1 + 1];
+                myPower.GroupMembership = new string[clbMutex.CheckedItems.Count];
+                myPower.NGroupMembership = new int[clbMutex.CheckedItems.Count];
                 var checkedMutexCount = clbMutex.CheckedItems.Count - 1;
                 for (var index = 0; index <= checkedMutexCount; ++index)
                 {
@@ -465,7 +434,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvSPSelected.SelectedItems.Count < 1)
                 return;
             var text = lvSPSelected.SelectedItems[0].Text;
-            var strArray = new string[myPower.UIDSubPower.Length - 2 + 1];
+            var strArray = new string[myPower.UIDSubPower.Length - 1];
             var index1 = 0;
             var subPowerCount = myPower.UIDSubPower.Length - 1;
             for (var index2 = 0; index2 <= subPowerCount; ++index2)
@@ -476,7 +445,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 ++index1;
             }
 
-            myPower.UIDSubPower = new string[strArray.Length - 1 + 1];
+            myPower.UIDSubPower = new string[strArray.Length];
             Array.Copy(strArray, myPower.UIDSubPower, strArray.Length);
             SPFillList();
             var num2 = index1 - 1;
@@ -1462,7 +1431,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            myPower.IgnoreEnh = new Enums.eEnhance[lvDisablePass1.SelectedIndices.Count - 1 + 1];
+            myPower.IgnoreEnh = new Enums.eEnhance[lvDisablePass1.SelectedIndices.Count];
             var num = lvDisablePass1.SelectedIndices.Count - 1;
             for (var index = 0; index <= num; ++index)
                 myPower.IgnoreEnh[index] = (Enums.eEnhance) lvDisablePass1.SelectedIndices[index];
@@ -1473,7 +1442,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var power = myPower;
-            myPower.Ignore_Buff = new Enums.eEnhance[lvDisablePass4.SelectedIndices.Count - 1 + 1];
+            myPower.Ignore_Buff = new Enums.eEnhance[lvDisablePass4.SelectedIndices.Count];
             var num = lvDisablePass4.SelectedIndices.Count - 1;
             for (var index = 0; index <= num; ++index)
                 myPower.Ignore_Buff[index] = (Enums.eEnhance) lvDisablePass4.SelectedIndices[index];
@@ -1619,12 +1588,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!((num2 < myPower.Enhancements.Length) & (num1 > -1)))
                 return;
             var power = myPower;
-            var numArray = new int[power.Enhancements.Length - 1 + 1];
+            var numArray = new int[power.Enhancements.Length];
             var num3 = power.Enhancements.Length - 1;
             for (var index = 0; index <= num3; ++index)
                 numArray[index] = power.Enhancements[index];
             var index1 = 0;
-            power.Enhancements = new int[power.Enhancements.Length - 2 + 1];
+            power.Enhancements = new int[power.Enhancements.Length - 1];
             var num4 = numArray.Length - 1;
             for (var index2 = 0; index2 <= num4; ++index2)
             {
@@ -1692,12 +1661,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var invSetIndex = GetInvSetIndex(new Point(e.X, e.Y));
             if (!((invSetIndex < myPower.SetTypes.Length) & (invSetIndex > -1)))
                 return;
-            var numArray = new int[myPower.SetTypes.Length - 1 + 1];
+            var numArray = new int[myPower.SetTypes.Length];
             var num1 = myPower.SetTypes.Length - 1;
             for (var index = 0; index <= num1; ++index)
                 numArray[index] = (int) myPower.SetTypes[index];
             var index1 = 0;
-            myPower.SetTypes = new Enums.eSetType[myPower.SetTypes.Length - 2 + 1];
+            myPower.SetTypes = new Enums.eSetType[myPower.SetTypes.Length - 1];
             var num2 = numArray.Length - 1;
             for (var index2 = 0; index2 <= num2; ++index2)
             {
@@ -1793,7 +1762,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             if (lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1)
             {
-                var strArray1 = new string[myPower.Requires.PowerIDNot.Length - 1 + 1][];
+                var strArray1 = new string[myPower.Requires.PowerIDNot.Length][];
                 var num2 = num1;
                 var num3 = strArray1.Length - 1;
                 for (var index = 0; index <= num3; ++index)
@@ -1804,7 +1773,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     strArray1[index][1] = myPower.Requires.PowerIDNot[index][1];
                 }
 
-                myPower.Requires.PowerIDNot = new string[myPower.Requires.PowerIDNot.Length - 2 + 1][];
+                myPower.Requires.PowerIDNot = new string[myPower.Requires.PowerIDNot.Length - 1][];
                 var index1 = 0;
                 var num4 = strArray1.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
@@ -1820,7 +1789,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                var strArray1 = new string[myPower.Requires.PowerID.Length - 1 + 1][];
+                var strArray1 = new string[myPower.Requires.PowerID.Length][];
                 var num2 = num1;
                 var num3 = strArray1.Length - 1;
                 for (var index = 0; index <= num3; ++index)
@@ -1831,7 +1800,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     strArray1[index][1] = myPower.Requires.PowerID[index][1];
                 }
 
-                myPower.Requires.PowerID = new string[myPower.Requires.PowerID.Length - 2 + 1][];
+                myPower.Requires.PowerID = new string[myPower.Requires.PowerID.Length - 1][];
                 var index1 = 0;
                 var num4 = strArray1.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
@@ -2191,12 +2160,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void Store_Req_Classes()
         {
-            myPower.Requires.ClassName = new string[clbClassReq.CheckedIndices.Count - 1 + 1];
+            myPower.Requires.ClassName = new string[clbClassReq.CheckedIndices.Count];
             var num1 = clbClassReq.CheckedIndices.Count - 1;
             for (var index = 0; index <= num1; ++index)
                 myPower.Requires.ClassName[index] =
                     DatabaseAPI.Database.Classes[clbClassReq.CheckedIndices[index]].ClassName;
-            myPower.Requires.ClassNameNot = new string[clbClassExclude.CheckedIndices.Count - 1 + 1];
+            myPower.Requires.ClassNameNot = new string[clbClassExclude.CheckedIndices.Count];
             var num2 = clbClassExclude.CheckedIndices.Count - 1;
             for (var index = 0; index <= num2; ++index)
                 myPower.Requires.ClassNameNot[index] =

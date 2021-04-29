@@ -36,7 +36,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Icon = Resources.reborn;
             ConditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
             ConditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
-            if (iFX != null) myFX = (IEffect)iFX.Clone();
+            if (iFX != null) myFX = (IEffect) iFX.Clone();
             EffectIndex = fxIndex;
         }
 
@@ -49,8 +49,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Icon = Resources.reborn;
             ConditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
             ConditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
-            if (iFX != null) myFX = (IEffect)iFX.Clone();
+            if (iFX != null) myFX = (IEffect) iFX.Clone();
             EffectIndex = fxIndex;
+        }
+
+        private void frmPowerEffect_Load(object sender, EventArgs e)
+        {
+            FillComboBoxes();
+            DisplayEffectData();
+            if (myFX.GetPower() is { } power)
+            {
+                //Text = "Edit Effect " + Convert.ToString(myFX.nID) + " for: " + power.FullName;
+                Text = $"Edit Effect {EffectIndex} for: {power.FullName}";
+            }
+            else if (myFX.Enhancement != null)
+            {
+                Text = $"Edit Effect for: {myFX.Enhancement.UID}";
+            }
+            else
+            {
+                Text = "Edit Effect";
+            }
+
+            Loading = false;
+            UpdateConditionalTypes();
+            UpdateFXText();
+            InitSelectedItems();
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -407,31 +432,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 lvActiveConditionals.Refresh();
             }
 
-        }
-
-        private void frmPowerEffect_Load(object sender, EventArgs e)
-        {
-            FillComboBoxes();
-            DisplayEffectData();
-            if (myFX.GetPower() is { } power)
-            {
-                //Text = "Edit Effect " + Convert.ToString(myFX.nID) + " for: " + power.FullName;
-                Text = $"Edit Effect {EffectIndex} for: {power.FullName}";
-            }
-            else if (myFX.Enhancement != null)
-            {
-                Text = $"Edit Effect for: {myFX.Enhancement.UID}";
-            }
-            else
-            {
-                Text = "Edit Effect";
-            }
-
-            Loading = false;
-            UpdateConditionalTypes();
-            UpdateFXText();
-            InitSelectedItems();
-            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
         private void SelectItemByName(ListView lv, string itemName)

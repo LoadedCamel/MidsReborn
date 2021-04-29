@@ -880,7 +880,6 @@ namespace mrbBase.Base.Data_Classes
         public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false)
         {
             var sBuild = string.Empty;
-
             var sSubEffect = string.Empty;
             var sSubSubEffect = string.Empty;
             var sMag = string.Empty;
