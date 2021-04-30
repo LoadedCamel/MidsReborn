@@ -104,7 +104,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnFXAdd_Click(object sender, EventArgs e)
         {
-            IEffect iFX = new Effect();
+            IEffect iFX = new Effect
+            {
+                Scale = 1,
+                nMagnitude = 1
+            };
             iFX.SetPower(myPower);
             using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;

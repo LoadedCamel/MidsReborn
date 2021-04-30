@@ -44,6 +44,7 @@ namespace mrbBase.Base.Data_Classes
             AttribType = Enums.eAttribType.Magnitude;
             Aspect = Enums.eAspect.Str;
             ModifierTable = "Melee_Ones";
+            nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
             PowerFullName = string.Empty;
             Absorbed_PowerType = Enums.ePowerType.Auto_;
             Absorbed_Power_nID = -1;
@@ -342,30 +343,33 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                var num1 = 0.0f;
                 switch (AttribType)
                 {
                     case Enums.eAttribType.Magnitude:
-                        if (Math.Abs(Math_Mag - 0.0f) > 0.01)
+                        if (Math.Abs(Math_Mag) > 0.01)
+                        {
                             return Math_Mag;
-                        var num2 = nMagnitude;
-                        if (EffectType == Enums.eEffectType.Damage)
-                            num2 = -num2;
-                        num1 = Scale * num2 * DatabaseAPI.GetModifier(this);
-                        break;
-                    case Enums.eAttribType.Duration:
-                        if (Math.Abs(Math_Mag - 0.0f) > 0.01)
-                            return Math_Mag;
-                        num1 = nMagnitude;
-                        if (EffectType == Enums.eEffectType.Damage) num1 = -num1;
-                        break;
-                    case Enums.eAttribType.Expression:
-                        num1 = ParseMagnitudeExpression() * DatabaseAPI.GetModifier(this);
-                        if (EffectType == Enums.eEffectType.Damage) num1 = -num1;
-                        break;
-                }
+                        }
 
-                return num1;
+                        return Scale * nMagnitude
+                                     * (EffectType == Enums.eEffectType.Damage ? -1 : 1)
+                                     * DatabaseAPI.GetModifier(this);
+                    
+                    case Enums.eAttribType.Duration:
+                        if (Math.Abs(Math_Mag) > 0.01)
+                        {
+                            return Math_Mag;
+                        }
+
+                        return nMagnitude * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
+                    
+                    case Enums.eAttribType.Expression:
+                        return ParseMagnitudeExpression()
+                               * DatabaseAPI.GetModifier(this)
+                               * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
+                    default:
+                        return 0;
+                }
             }
         }
 
@@ -939,33 +943,20 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (BaseProbability < 1)
                 {
-                    if (BaseProbability >= 0.975f)
-                    {
-                        sChance = $"{BaseProbability * 100:#0.0}% chance"; //(BaseProbability * 100).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
-                    }
-                    else
-                    {
-                        sChance = $"{BaseProbability * 100:#0}% chance";
-                    }
+                    sChance = BaseProbability >= 0.975f ? $"{BaseProbability * 100:#0.0}% chance" : $"{BaseProbability * 100:#0}% chance";
                 }
             }
             else
             {
                 if (Probability < 1)
                 {
-                    if (Probability >= 0.975f)
-                    {
-                        sChance = $"{Probability * 100:#0.0}% chance";
-                    }
-                    else
-                    {
-                        sChance = $"{Probability * 100:#0}% chance";
-                    }
+                    sChance = Probability >= 0.975f ? $"{Probability * 100:#0.0}% chance" : $"{Probability * 100:#0}% chance";
 
                     if (CancelOnMiss)
                     {
                         sChance += ", Cancels on Miss";
                     }
+
                     if (ProcsPerMinute > 0 && fromPopup)
                     {
                         sChance = $"{ProcsPerMinute} PPM";
@@ -1150,7 +1141,6 @@ namespace mrbBase.Base.Data_Classes
                     sSuppressShort = "Combat Suppression";
                 }
             }
-
 
             switch (EffectType)
             {
@@ -1390,7 +1380,6 @@ namespace mrbBase.Base.Data_Classes
 
             return sEnh + sBuild + sExtra + sBuff + sVariable + sStack + sSuppress;
         }
-
 
         public void StoreTo(ref BinaryWriter writer)
         {

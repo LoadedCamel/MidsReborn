@@ -2521,8 +2521,8 @@ namespace mrbBase
         }
 
         private static float GetModifier(int iClass, int iTable, int iLevel)
-
         {
+            //Warning: calling this method with iTable == 0 can lead to super weird return values.
             float num;
             if (iClass < 0)
             {
