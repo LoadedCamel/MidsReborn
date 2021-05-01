@@ -600,7 +600,6 @@ namespace mrbBase
             return iIndexes.Length > 0 ? 0 : -1;
         }
 
-        // Zed -- imported from Hero Viewer
         public static bool EnhIsATO(int enhIdx)
         {
             if (enhIdx == -1) return false;
@@ -611,19 +610,19 @@ namespace mrbBase
 
             var enhSetData = Database.EnhancementSets[enhData.nIDSet];
 
-            return enhSetData.SetType == Enums.eSetType.Arachnos ||
-                   enhSetData.SetType == Enums.eSetType.Blaster ||
-                   enhSetData.SetType == Enums.eSetType.Brute ||
-                   enhSetData.SetType == Enums.eSetType.Controller ||
-                   enhSetData.SetType == Enums.eSetType.Corruptor ||
-                   enhSetData.SetType == Enums.eSetType.Defender ||
-                   enhSetData.SetType == Enums.eSetType.Dominator ||
-                   enhSetData.SetType == Enums.eSetType.Kheldian ||
-                   enhSetData.SetType == Enums.eSetType.Mastermind ||
-                   enhSetData.SetType == Enums.eSetType.Scrapper ||
-                   enhSetData.SetType == Enums.eSetType.Sentinel ||
-                   enhSetData.SetType == Enums.eSetType.Stalker ||
-                   enhSetData.SetType == Enums.eSetType.Tanker;
+            return enhSetData.SetType is Enums.eSetType.Arachnos
+                or Enums.eSetType.Blaster
+                or Enums.eSetType.Brute
+                or Enums.eSetType.Controller
+                or Enums.eSetType.Corruptor
+                or Enums.eSetType.Defender
+                or Enums.eSetType.Dominator
+                or Enums.eSetType.Kheldian
+                or Enums.eSetType.Mastermind
+                or Enums.eSetType.Scrapper
+                or Enums.eSetType.Sentinel
+                or Enums.eSetType.Stalker
+                or Enums.eSetType.Tanker;
         }
 
         public static bool EnhIsWinterEventE(int enhIdx)
@@ -663,7 +662,7 @@ namespace mrbBase
 
             var enhData = Database.Enhancements[enhIdx];
 
-            return (enhData.TypeID == Enums.eType.InventO || enhData.TypeID == Enums.eType.SetO) &&
+            return enhData.TypeID is Enums.eType.InventO or Enums.eType.SetO &&
                    !EnhIsNaturallyAttuned(enhIdx);
         }
 
@@ -761,19 +760,19 @@ namespace mrbBase
             return Database.Enhancements.Where(e =>
                 e.nIDSet > -1 &&
                 (
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Arachnos ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Blaster ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Brute ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Controller ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Corruptor ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Defender ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Dominator ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Kheldian ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Mastermind ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Scrapper ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Sentinel ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Stalker ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Tanker
+                    Database.EnhancementSets[e.nIDSet].SetType is Enums.eSetType.Arachnos
+                        or Enums.eSetType.Blaster
+                        or Enums.eSetType.Brute
+                        or Enums.eSetType.Controller
+                        or Enums.eSetType.Corruptor
+                        or Enums.eSetType.Defender
+                        or Enums.eSetType.Dominator
+                        or Enums.eSetType.Kheldian
+                        or Enums.eSetType.Mastermind
+                        or Enums.eSetType.Scrapper
+                        or Enums.eSetType.Sentinel
+                        or Enums.eSetType.Stalker
+                        or Enums.eSetType.Tanker
                 )
             ).Select(e => e.UID).ToArray();
         }
@@ -2523,42 +2522,18 @@ namespace mrbBase
         private static float GetModifier(int iClass, int iTable, int iLevel)
         {
             //Warning: calling this method with iTable == 0 can lead to super weird return values.
-            float num;
-            if (iClass < 0)
-            {
-                num = 0.0f;
-            }
-            else if (iTable < 0)
-            {
-                num = 0.0f;
-            }
-            else if (iLevel < 0)
-            {
-                num = 0.0f;
-            }
-            else if (iClass > Database.Classes.Length - 1)
-            {
-                num = 0.0f;
-            }
-            else
-            {
-                iClass = Database.Classes[iClass].Column;
-                if (iClass >= 0)
-                    if (iTable <= Database.AttribMods.Modifier.Count - 1)
-                        if (iLevel <= Database.AttribMods.Modifier[iTable].Table.Count - 1)
-                            if (iClass <= Database.AttribMods.Modifier[iTable].Table[iLevel].Count - 1)
-                                num = Database.AttribMods.Modifier[iTable].Table[iLevel][iClass];
-                            else
-                                num = 0.0f;
-                        else
-                            num = 0.0f;
-                    else
-                        num = 0.0f;
-                else
-                    num = 0.0f;
-            }
+            if (iClass < 0) return 0;
+            if (iTable < 0) return 0;
+            if (iLevel < 0) return 0;
+            if (iClass > Database.Classes.Length - 1) return 0;
 
-            return num;
+            var iClassColumn = Database.Classes[iClass].Column;
+            if (iClassColumn < 0) return 0;
+            if (iTable > Database.AttribMods.Modifier.Count - 1) return 0;
+            if (iLevel > Database.AttribMods.Modifier[iTable].Table.Count - 1) return 0;
+            if (iClassColumn > Database.AttribMods.Modifier[iTable].Table[iLevel].Count - 1) return 0;
+
+            return Database.AttribMods.Modifier[iTable].Table[iLevel][iClassColumn];
         }
 
         public static void MatchAllIDs(IMessager? iFrm = null)
