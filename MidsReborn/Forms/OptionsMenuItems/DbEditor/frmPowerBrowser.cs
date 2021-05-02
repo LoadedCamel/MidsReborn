@@ -834,6 +834,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                 ?.SetValue(lvPower, true, null);
 
+            btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
             try
             {
                 FillFilter();
@@ -1196,7 +1197,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void lvGroup_DoubleClick(object sender, EventArgs e)
-
         {
             if (cbFilter.SelectedIndex != 1)
                 return;
@@ -1204,7 +1204,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void lvGroup_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (Updating)
                 return;
@@ -1214,13 +1213,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void lvPower_DoubleClick(object sender, EventArgs e)
-
         {
             btnPowerEdit_Click(this, new EventArgs());
         }
 
         private void lvPower_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (lvPower.SelectedItems.Count <= 0)
                 return;
@@ -1228,13 +1225,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void lvSet_DoubleClick(object sender, EventArgs e)
-
         {
             btnSetEdit_Click(this, new EventArgs());
         }
 
         private void lvSet_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             if (Updating)
                 return;
@@ -1244,7 +1239,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void RefreshLists(int Group = -1, int Powerset = -1, int Power = -1)
-
         {
             var SelectGroup = Group;
             var SelectSet = Powerset;
@@ -1259,13 +1253,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void UpdateLists(int SelectGroup = -1, int SelectSet = -1, int SelectPower = -1)
-
         {
             List_Groups(SelectGroup);
             Application.DoEvents();
             List_Sets(SelectSet);
             Application.DoEvents();
             List_Powers(SelectPower);
+        }
+
+        private void btnManageHiddenPowers_Click(object sender, EventArgs e)
+        {
+            using var f = new frmRestoreHidden();
+            var ret = f.ShowDialog();
+            if (ret == DialogResult.OK)
+            {
+                RefreshLists();
+            }
         }
     }
 }

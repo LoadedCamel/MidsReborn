@@ -75,6 +75,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.Label2 = new System.Windows.Forms.Label();
+            this.btnManageHiddenPowers = new System.Windows.Forms.Button();
             this.pnlGroup.SuspendLayout();
             this.pnlSet.SuspendLayout();
             this.pnlPower.SuspendLayout();
@@ -499,10 +500,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Label2.TabIndex = 54;
             this.Label2.Text = "To edit Archetype Classes, change filtering to Classes";
             // 
+            // btnManageHiddenPowers
+            // 
+            this.btnManageHiddenPowers.Location = new System.Drawing.Point(473, 605);
+            this.btnManageHiddenPowers.Name = "btnManageHiddenPowers";
+            this.btnManageHiddenPowers.Size = new System.Drawing.Size(132, 32);
+            this.btnManageHiddenPowers.TabIndex = 55;
+            this.btnManageHiddenPowers.Text = "Manage Hidden Powers";
+            this.btnManageHiddenPowers.UseVisualStyleBackColor = true;
+            this.btnManageHiddenPowers.Click += new System.EventHandler(this.btnManageHiddenPowers_Click);
+            // 
             // frmPowerBrowser
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1053, 651);
+            this.Controls.Add(this.btnManageHiddenPowers);
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -575,5 +587,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         Panel pnlGroup;
         Panel pnlPower;
         Panel pnlSet;
+        private Button btnManageHiddenPowers;
     }
 }
