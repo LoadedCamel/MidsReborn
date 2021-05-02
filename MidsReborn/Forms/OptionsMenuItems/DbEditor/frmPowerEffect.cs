@@ -473,6 +473,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 SelectItemByName(lvSubAttribute, myFX.ETModifies.ToString());
             }
+
+            if ((myFX.EffectType == Enums.eEffectType.Enhancement | myFX.EffectType == Enums.eEffectType.ResEffect) &
+                myFX.ETModifies == Enums.eEffectType.Mez)
+            {
+                SelectItemByName(lvSubSub, myFX.MezType.ToString());
+            }
+            else if (myFX.EffectType == Enums.eEffectType.Enhancement &
+                     (myFX.ETModifies == Enums.eEffectType.Defense | myFX.ETModifies == Enums.eEffectType.Damage))
+            {
+                SelectItemByName(lvSubSub, myFX.DamageType.ToString());
+            }
         }
 
         //change storing of Atr attributes from power to effect
@@ -1547,23 +1558,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSubSub.BeginUpdate();
             lvSubSub.Items.Clear();
             var strArray = new string[0];
-            var fx = myFX;
-            if (((fx.EffectType == Enums.eEffectType.Enhancement) | (fx.EffectType == Enums.eEffectType.ResEffect)) & (fx.ETModifies == Enums.eEffectType.Mez))
+            if (((myFX.EffectType == Enums.eEffectType.Enhancement) | (myFX.EffectType == Enums.eEffectType.ResEffect)) & (myFX.ETModifies == Enums.eEffectType.Mez))
             {
                 lvSubSub.Columns[0].Text = "Mez Type";
                 lvSubSub.Columns[0].Width = -2;
-                strArray = Enum.GetNames(fx.MezType.GetType());
-                index1 = (int)fx.MezType;
+                strArray = Enum.GetNames(myFX.MezType.GetType());
+                index1 = (int)myFX.MezType;
             }
 
-            if (fx.EffectType == Enums.eEffectType.Enhancement && (fx.ETModifies == Enums.eEffectType.Defense) | (fx.ETModifies == Enums.eEffectType.Damage))
+            if (myFX.EffectType == Enums.eEffectType.Enhancement && (myFX.ETModifies == Enums.eEffectType.Defense) | (myFX.ETModifies == Enums.eEffectType.Damage))
             {
                 lvSubSub.Columns[0].Text = @"Damage Type";
                 lvSubSub.Columns[0].Width = -2;
-                strArray = Enum.GetNames(fx.DamageType.GetType());
-                index1 = (int)fx.DamageType;
+                strArray = Enum.GetNames(myFX.DamageType.GetType());
+                index1 = (int)myFX.DamageType;
             }
-
 
             if (strArray.Length > 0)
             {
