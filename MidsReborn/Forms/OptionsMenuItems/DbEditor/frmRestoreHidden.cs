@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using mrbBase;
+using mrbBase.Base.Extensions;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -20,10 +21,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmRestoreHidden_Load(object sender, EventArgs e)
         {
-            lvPowers
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvPowers, true, null);
+            lvPowers.EnableDoubleBuffer();
             ckIgnoreTemps.Checked = _ignoreTemps;
             PopulatePowersList();
             CenterToParent();

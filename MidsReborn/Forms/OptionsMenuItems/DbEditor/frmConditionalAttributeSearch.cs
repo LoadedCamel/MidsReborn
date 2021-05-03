@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using mrbBase;
+using mrbBase.Base.Data_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -20,31 +21,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Icon = Resources.reborn;
 
-            IgnoredClasses = new[]
-            {
-                "Henchman",
-                "Pet",
-                "Arch-villain",
-                "Elite Boss",
-                "Boss",
-                "Police",
-                "Hamidon",
-                "Giant Monster",
-                "Rularuu",
-                "Boss Signature Pets",
-                "Lieutenant",
-                "Lt_LongRangeDrone",
-                "Minion",
-                "Monument",
-                "Sniper",
-                "OilSlickTarget",
-                "PracticeBot",
-                "Underling",
-                "Swarm",
-                "Minion_UnkillableNPC",
-                "Reichsman",
-                ""
-            };
+            IgnoredClasses = Archetype.GetNpcClasses();
         }
 
         private void frmConditionalAttributeSearch_Load(object sender, EventArgs e)

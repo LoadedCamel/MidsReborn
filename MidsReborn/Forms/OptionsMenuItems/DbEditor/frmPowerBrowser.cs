@@ -13,6 +13,7 @@ using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -821,20 +822,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmPowerBrowser_Load(object sender, EventArgs e)
         {
-            lvGroup
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvGroup, true, null);
-            lvSet
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvSet, true, null);
-            lvPower
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvPower, true, null);
-
+            lvGroup.EnableDoubleBuffer();
+            lvSet.EnableDoubleBuffer();
+            lvPower.EnableDoubleBuffer();
             btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
+
             try
             {
                 FillFilter();

@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
@@ -10,6 +13,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 
@@ -30,7 +34,7 @@ namespace Mids_Reborn.Forms
             Load += frmSetFind_Load;
             setBonusList = new int[0];
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmSetFind));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmSetFind));
             Icon = Resources.reborn;
             Name = nameof(frmSetFind);
             ibClose.ButtonClicked += ibClose_ButtonClicked;
@@ -39,7 +43,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void AddEffect(ref string[] List, ref int[] nIDList, string Effect, int nID)
-
         {
             var num = List.Length - 1;
             for (var index = 0; index <= num; ++index)
@@ -52,7 +55,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void AddSetString(int nIDSet, int BonusID)
-
         {
             lvSet.Items.Add(new ListViewItem(new[]
             {
@@ -168,7 +170,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void FillSetList()
-
         {
             if ((lvBonus.SelectedItems.Count < 1) | (lvMag.SelectedItems.Count < 1))
             {
@@ -242,33 +243,79 @@ namespace Mids_Reborn.Forms
         }
 
         private void frmSetFind_FormClosed(object sender, FormClosedEventArgs e)
-
         {
             myParent.FloatSetFinder(false);
         }
 
-        private void frmSetFind_Load(object sender, EventArgs e)
+        private void SetImageButtonStyle(ImageButton ib)
+        {
+            ib.IA = myParent.Drawing.pImageAttributes;
+            ib.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
+            ib.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
+        }
 
+        private void frmSetFind_Load(object sender, EventArgs e)
         {
             setBonusList = DatabaseAPI.NidPowers("Set_Bonus.Set_Bonus");
             BackColor = myParent.BackColor;
-            ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            SetImageButtonStyle(ibClose);
+            SetImageButtonStyle(ibTopmost);
+            SetImageButtonStyle(ibSelAt);
+            SetImageButtonStyle(ibSelPowersetPri);
+            SetImageButtonStyle(ibSelPowersetSec);
             SetInfo.SetPopup(new PopUp.PopupData());
             FillImageList();
             FillEffectList();
+            FillArchetypesList();
+            FillPowersetsList();
+        }
+
+        private void FillArchetypesList()
+        {
+            var ignoredClasses = Archetype.GetNpcClasses();
+            var classesList = DatabaseAPI.Database.Classes.Select(at => at.DisplayName);
+            var playerClasses = classesList.Except(ignoredClasses);
+
+            cbArchetype.BeginUpdate();
+            cbArchetype.Items.Clear();
+            cbArchetype.Items.Add("--Archetype--");
+            foreach (var c in playerClasses)
+            {
+                cbArchetype.Items.Add(c);
+            }
+
+            cbArchetype.EndUpdate();
+        }
+
+        private void FillPowersetsList()
+        {
+            var selectedArchetype = cbArchetype.SelectedIndex > -1
+                ? cbArchetype.Items[cbArchetype.SelectedIndex].ToString()
+                : "";
+
+            var powerSets = selectedArchetype == ""
+                ? DatabaseAPI.Database.Powersets
+                    .Select(ps => ps.DisplayName)
+                : DatabaseAPI.Database.Powersets
+                    .Where(ps => ps.ATClass == selectedArchetype | ps.GroupName == "Inherent" | ps.GroupName == "Pool")
+                    .Select(ps => ps.FullName);
+
+            cbPowerset.BeginUpdate();
+            cbPowerset.Items.Clear();
+            cbPowerset.Items.Add("--Powerset--");
+            foreach (var ps in powerSets)
+            {
+                cbPowerset.Items.Add(ps);
+            }
+
+            cbPowerset.EndUpdate();
         }
 
         private string GetPowerString(int nIDPower)
-
         {
             var str1 = "";
             var returnString = "";
@@ -317,13 +364,11 @@ namespace Mids_Reborn.Forms
         }
 
         private void ibClose_ButtonClicked()
-
         {
             Close();
         }
 
         private void ibTopmost_ButtonClicked()
-
         {
             TopMost = ibTopmost.Checked;
             if (!TopMost)
@@ -333,23 +378,158 @@ namespace Mids_Reborn.Forms
 
         [DebuggerStepThrough]
         private void lvBonus_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             FillMagList();
         }
 
         private void lvMag_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             FillSetList();
         }
 
         private void lvSet_SelectedIndexChanged(object sender, EventArgs e)
-
         {
-            if (lvSet.SelectedItems.Count <= 0)
+            if (lvSet.SelectedItems.Count <= 0) return;
+
+            var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
+            SetInfo.SetPopup(Character.PopSetInfo(sIdx));
+            FillMatchingPowers(sIdx);
+        }
+
+        private void FillMatchingPowers(int sIdx)
+        {
+            var enhSet = DatabaseAPI.Database.EnhancementSets[sIdx];
+            var iconsDict = new Dictionary<int, KeyValuePair<string, int>>();
+            var powerSetsIconsDict = new Dictionary<string, int>();
+            var atIconsDict = new Dictionary<string, int>();
+            var imgIdx = 0;
+
+            var setGroup = enhSet.SetType;
+            var atClass = cbArchetype.SelectedIndex < 1
+                ? null
+                : DatabaseAPI.GetArchetypeByName(cbArchetype.Items[cbArchetype.SelectedIndex].ToString());
+
+            var powerSet = cbPowerset.SelectedIndex < 1 | atClass == null
+                ? null
+                : DatabaseAPI.GetPowersetByName(cbPowerset.Items[cbPowerset.SelectedIndex].ToString(), atClass.DisplayName);
+
+            var matchingPowers = DatabaseAPI.Database.Power.Where(p =>
+                (atClass == null || p.FullName.StartsWith($"{atClass.ClassName}.")) &
+                (powerSet == null || p.FullName.StartsWith($"{atClass.ClassName}.{powerSet.SetName}."))).ToList();
+
+            var matchingPowersets = matchingPowers.Select(p => DatabaseAPI.Database.Powersets[p.PowerSetIndex]).Distinct().ToList();
+            var matchingPowersetsIdx = matchingPowersets.Select(ps => Array.IndexOf(DatabaseAPI.Database.Powersets, ps)).ToList();
+            var matchingArchetypes = matchingPowers.Select(p => DatabaseAPI.GetArchetypeByName(DatabaseAPI.Database.Powersets[p.PowerSetIndex].ATClass)).Distinct().ToList();
+            var matchingArchetypesIdx = matchingArchetypes.Select(at => Array.IndexOf(DatabaseAPI.Database.Classes, at)).ToList();
+
+            var imgList = new ImageList {ColorDepth = ColorDepth.Depth32Bit, ImageSize = new Size(16, 16)};
+            for (var i = 0 ; i < matchingPowersets.Count ; i++)
+            {
+                var idx = matchingPowersetsIdx[i];
+                imgList.Images.Add(I9Gfx.Powersets.Bitmap.Clone(new Rectangle(0, idx * 16, 16, 16), PixelFormat.Canonical));
+                iconsDict.Add(imgIdx, new KeyValuePair<string, int>(matchingPowersets[i].FullName, 0));
+                powerSetsIconsDict.Add(matchingPowersets[i].FullName, imgIdx);
+
+                imgIdx++;
+            }
+
+            for (var i = 0 ; i<matchingArchetypes.Count ; i++)
+            {
+                var idx = matchingArchetypesIdx[i];
+                iconsDict.Add(imgIdx, new KeyValuePair<string, int>(matchingArchetypes[i].DisplayName, 1));
+                atIconsDict.Add(matchingArchetypes[i].DisplayName, imgIdx);
+
+                imgIdx++;
+            }
+
+            lvPowers.BeginUpdate();
+            lvPowers.Items.Clear();
+            lvPowers.SmallImageList = imgList;
+            for (var i = 0 ; i<matchingPowers.Count ; i++)
+            {
+                var lvItem = new ListViewItem();
+                var powerSetData = DatabaseAPI.Database.Powersets[matchingPowers[i].PowerSetIndex];
+                var powerSetFullName = powerSetData.FullName;
+                var atClassDisplayName = DatabaseAPI.GetArchetypeByName(powerSet.ATClass).DisplayName;
+                lvItem.SubItems.Add(atClassDisplayName);
+                lvItem.SubItems.Add(powerSetFullName);
+                lvItem.SubItems.Add(matchingPowers[i].DisplayName);
+                lvPowers.Items.Add(lvItem);
+                lvPowers.AddIconToSubItem(i, 0, atIconsDict[atClassDisplayName]);
+                lvPowers.AddIconToSubItem(i, 1, powerSetsIconsDict[powerSetFullName]);
+            }
+
+            lvPowers.ShowSubItemIcons();
+            lvPowers.EndUpdate();
+        }
+
+        private void ibSelAt_ButtonClicked()
+        {
+            var selectedArchetype = myParent.GetSelectedArchetype();
+            if (selectedArchetype == "")
+            {
+                cbArchetype.SelectedIndex = 0;
+
                 return;
-            SetInfo.SetPopup(Character.PopSetInfo(Convert.ToInt32(lvSet.SelectedItems[0].Tag)));
+            }
+
+            var n = cbArchetype.Items.Count;
+            for (var i = 1; i < n; i++)
+            {
+                if (selectedArchetype != cbArchetype.Items[i].ToString()) continue;
+
+                cbArchetype.SelectedIndex = i;
+
+                return;
+            }
+        }
+
+        private void SetCombosByPowerset(string at = "", string ps = "")
+        {
+            if (ps == "" | at == "")
+            {
+                cbPowerset.SelectedIndex = 0;
+
+                return;
+            }
+
+            var powerset = DatabaseAPI.GetPowersetByName(ps, at);
+            if (powerset == null)
+            {
+                cbArchetype.SelectedIndex = 0;
+                cbPowerset.SelectedIndex = 0;
+
+                return;
+            }
+
+            var n = cbArchetype.Items.Count;
+            for (var i = 1; i < n; i++)
+            {
+                if (at != cbArchetype.Items[i].ToString()) continue;
+
+                cbArchetype.SelectedIndex = i;
+                break;
+            }
+
+            n = cbPowerset.Items.Count;
+            for (var i = 1; i < n; i++)
+            {
+                if (powerset.FullName != cbPowerset.Items[i].ToString()) continue;
+
+                cbPowerset.SelectedIndex = i;
+
+                return;
+            }
+        }
+
+        private void ibSelPowersetPri_ButtonClicked()
+        {
+            SetCombosByPowerset(myParent.GetSelectedArchetype(), myParent.GetSelectedPrimaryPowerset());
+        }
+
+        private void ibSelPowersetSec_ButtonClicked()
+        {
+            SetCombosByPowerset(myParent.GetSelectedArchetype(), myParent.GetSelectedSecondaryPowerset());
         }
     }
 }

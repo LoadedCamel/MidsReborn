@@ -6,6 +6,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.My;
 using mrbBase;
+using mrbBase.Base.Extensions;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -205,10 +206,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmSalvageEdit_Load(object sender, EventArgs e)
         {
-            lvSalvage
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvSalvage, true, null);
+            lvSalvage.EnableDoubleBuffer();
 
             var salvageOrigin = Salvage.SalvageOrigin.Tech;
             var recipeRarity = Recipe.RecipeRarity.Common;

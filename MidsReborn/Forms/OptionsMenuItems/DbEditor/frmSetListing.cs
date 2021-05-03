@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Display;
+using mrbBase.Base.Extensions;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -240,10 +241,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmSetListing_Load(object sender, EventArgs e)
         {
-            lvSets
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvSets, true, null);
+            lvSets.EnableDoubleBuffer();
             DisplayList();
         }
 

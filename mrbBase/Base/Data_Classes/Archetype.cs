@@ -11,6 +11,7 @@ namespace mrbBase.Base.Data_Classes
     {
         public bool IsModified;
         public bool IsNew;
+
         public Image Image(List<string> atImages)
         {
             var img = atImages.FirstOrDefault(i => i.Contains(ClassName));
@@ -271,6 +272,35 @@ namespace mrbBase.Base.Data_Classes
             SecondaryGroup = array[9];
             PoolGroup = array[10];
             return true;
+        }
+
+        public static string[] GetNpcClasses()
+        {
+            return new[]
+            {
+                "Henchman",
+                "Pet",
+                "Arch-villain",
+                "Elite Boss",
+                "Boss",
+                "Police",
+                "Hamidon",
+                "Giant Monster",
+                "Rularuu",
+                "Boss Signature Pets",
+                "Lieutenant",
+                "Lt_LongRangeDrone",
+                "Minion",
+                "Monument",
+                "Sniper",
+                "OilSlickTarget",
+                "PracticeBot",
+                "Underling",
+                "Swarm",
+                "Minion_UnkillableNPC",
+                "Reichsman",
+                ""
+            };
         }
     }
 }

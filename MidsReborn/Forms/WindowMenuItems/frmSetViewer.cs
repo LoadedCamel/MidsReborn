@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 
@@ -1141,14 +1142,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmSetViewer_Load(object sender, EventArgs e)
         {
-            lstSets
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lstSets, true, null);
-            panelBars
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(panelBars, true, null);
+            lstSets.EnableDoubleBuffer();
+            panelBars.EnableDoubleBuffer();
         }
 
         private void frmSetViewer_Move(object sender, EventArgs e)

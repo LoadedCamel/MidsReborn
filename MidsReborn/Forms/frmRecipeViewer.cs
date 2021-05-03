@@ -9,6 +9,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 
@@ -701,15 +702,8 @@ namespace Mids_Reborn.Forms
 
         private void frmRecipeViewer_Load(object sender, EventArgs e)
         {
-            lvPower
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvPower, true, null);
-            lvDPA
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvDPA, true, null);
-
+            lvPower.EnableDoubleBuffer();
+            lvDPA.EnableDoubleBuffer();
             UpdateColorTheme();
             RecipeInfo.SetPopup(new PopUp.PopupData());
             ChangedRecipeInfoElements();

@@ -11,6 +11,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Display;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -326,10 +327,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void frmEnhEdit_Load(object sender, EventArgs e)
         {
             _bFrm = new frmBusy();
-            lvEnh
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvEnh, true, null);
+            lvEnh.EnableDoubleBuffer();
             Show();
             Refresh();
             DisplayList();

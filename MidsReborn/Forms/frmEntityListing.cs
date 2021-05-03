@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.My;
 using mrbBase;
+using mrbBase.Base.Extensions;
 
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
@@ -202,10 +203,7 @@ namespace Mids_Reborn.Forms
 
         private void frmEntityListing_Load(object sender, EventArgs e)
         {
-            lvEntity
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvEntity, true, null);
+            lvEntity.EnableDoubleBuffer();
             DisplayList();
         }
 

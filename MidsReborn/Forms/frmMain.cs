@@ -6489,6 +6489,21 @@ namespace Mids_Reborn.Forms
             UpdatePowerList(llPool3);
         }
 
+        public string GetSelectedArchetype()
+        {
+            return cbAT.SelectedIndex < 0 ? "" : cbAT.Items[cbAT.SelectedIndex].ToString();
+        }
+
+        public string GetSelectedPrimaryPowerset()
+        {
+            return cbPrimary.SelectedIndex < 0 ? "" : cbPrimary.Items[cbPrimary.SelectedIndex].ToString();
+        }
+
+        public string GetSelectedSecondaryPowerset()
+        {
+            return cbSecondary.SelectedIndex < 0 ? "" : cbSecondary.Items[cbSecondary.SelectedIndex].ToString();
+        }
+
         private void tsToggleCheckModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MidsContext.EnhCheckMode = !MidsContext.EnhCheckMode;

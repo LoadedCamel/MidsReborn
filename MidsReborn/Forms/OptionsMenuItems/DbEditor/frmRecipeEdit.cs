@@ -8,6 +8,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.WindowMenuItems;
 using Mids_Reborn.My;
 using mrbBase;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -89,12 +90,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmRecipeEdit_Load(object sender, EventArgs e)
         {
-            // Mitigate flickering on the ListView control.
-            // https://stackoverflow.com/a/42389596
-            lvDPA
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvDPA, true, null);
+            lvDPA.EnableDoubleBuffer();
             const Recipe.RecipeRarity recipeRarity = Recipe.RecipeRarity.Common;
             cbRarity.BeginUpdate();
             cbRarity.Items.Clear();
