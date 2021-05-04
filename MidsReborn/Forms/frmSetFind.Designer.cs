@@ -205,10 +205,12 @@ namespace Mids_Reborn.Forms
             this.columnHeader8,
             this.columnHeader9});
             this.lvPowers.FullRowSelect = true;
+            this.lvPowers.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvPowers.HideSelection = false;
             this.lvPowers.Location = new System.Drawing.Point(502, 350);
             this.lvPowers.MultiSelect = false;
             this.lvPowers.Name = "lvPowers";
+            this.lvPowers.ShowItemToolTips = true;
             this.lvPowers.Size = new System.Drawing.Size(460, 175);
             this.lvPowers.TabIndex = 6;
             this.lvPowers.UseCompatibleStateImageBehavior = false;

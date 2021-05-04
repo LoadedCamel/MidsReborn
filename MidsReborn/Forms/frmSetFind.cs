@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -442,7 +441,7 @@ namespace Mids_Reborn.Forms
                 .Select(p => DatabaseAPI.Database.Powersets[p.PowerSetID])
                 .Distinct()
                 .ToList();
-            Debug.WriteLine($"matchingPowersets: {string.Join(", ", matchingPowersets.Select(ps => $"<{ps.ATClass}, {ps.FullName}>"))}");
+            //Debug.WriteLine($"matchingPowersets: {string.Join(", ", matchingPowersets.Select(ps => $"<{ps.ATClass}, {ps.FullName}>"))}");
             
             var matchingPowersetsIdx = matchingPowersets
                 .Select(ps => Array.IndexOf(DatabaseAPI.Database.Powersets, ps))
@@ -452,17 +451,17 @@ namespace Mids_Reborn.Forms
                     .FirstOrDefault(at => DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == at.ClassName))
                 .Distinct()
                 .ToList();
-            Debug.WriteLine($"matchingArchetypes: {string.Join(", ", matchingArchetypes.Select(at => at == null ? "(null)" : at.ClassName))}");
+            //Debug.WriteLine($"matchingArchetypes: {string.Join(", ", matchingArchetypes.Select(at => at == null ? "(null)" : at.ClassName))}");
             
             var matchingArchetypesIdx = matchingArchetypes
                 .Select(at => Array.IndexOf(DatabaseAPI.Database.Classes, at))
                 .ToList();
 
-            var imgList = new ImageList {ColorDepth = ColorDepth.Depth32Bit, ImageSize = new Size(16, 16)};
+            var imgList = new ImageList {ColorDepth = ColorDepth.Depth32Bit, ImageSize = new Size(18, 16)};
             for (var i = 0 ; i < matchingPowersets.Count ; i++)
             {
                 var idx = matchingPowersetsIdx[i];
-                var icon = new Bitmap(16, 16);
+                var icon = new Bitmap(18, 16);
                 using (var g = Graphics.FromImage(icon))
                 {
                     if (idx < 0)
@@ -471,7 +470,8 @@ namespace Mids_Reborn.Forms
                     }
                     else
                     {
-                        g.DrawImage(I9Gfx.Powersets.Bitmap, new Rectangle(0, 0, 16, 16), new Rectangle(idx * 16, 0, 16, 16), GraphicsUnit.Pixel);
+                        // Weird offset... Icons appear cropped if pasted at (0, 0)
+                        g.DrawImage(I9Gfx.Powersets.Bitmap, new Rectangle(2, 0, 18, 16), new Rectangle(idx * 16, 0, 18, 16), GraphicsUnit.Pixel);
                     }
                 }
 
@@ -481,13 +481,10 @@ namespace Mids_Reborn.Forms
                 imgIdx++;
             }
 
-            Debug.WriteLine($"Matching Archetypes: {matchingArchetypes.Count}");
-            Debug.WriteLine($"Matching Archetypes: {string.Join(", ", matchingArchetypes.Select(at => at == null ? "(null)" : at.ClassName))}");
-            Debug.WriteLine($"Matching Archetype Indexes: {string.Join(", ", matchingArchetypesIdx)}");
             for (var i = 0; i < matchingArchetypes.Count; i++)
             {
                 var idx = matchingArchetypesIdx[i];
-                var icon = new Bitmap(16, 16);
+                var icon = new Bitmap(18, 16);
                 using (var g = Graphics.FromImage(icon))
                 {
                     if (idx < 0)
@@ -500,8 +497,6 @@ namespace Mids_Reborn.Forms
                     }
                 }
 
-                Debug.WriteLine($"Adding icon for archetype: {(matchingArchetypes[i] == null ? "(null)" : matchingArchetypes[i].ClassName)} at index {imgIdx}");
-                Debug.WriteLine($"Icon size: {icon.Width}x{icon.Height}");
                 imgList.Images.Add(icon);
                 atIconsDict.Add(matchingArchetypes[i] == null ? "" : matchingArchetypes[i].ClassName, imgIdx);
 
@@ -515,12 +510,13 @@ namespace Mids_Reborn.Forms
             {
                 var powerSetData = DatabaseAPI.Database.Powersets[matchingPowers[i].PowerSetID];
                 var powerSetFullName = powerSetData.FullName;
-                var powerSetChunks = powerSetFullName.Split('.');
-                var atClassFull = DatabaseAPI.Database.Classes.FirstOrDefault(at => powerSetChunks[0] == at.ClassName);
-                var lvItem = new ListViewItem();
-                lvItem.SubItems.Add(powerSetData.GroupName);
-                lvItem.SubItems.Add(powerSetData.SetName);
-                lvItem.SubItems.Add(matchingPowers[i].DisplayName);
+                var powerSetGroup = DatabaseAPI.Database.PowersetGroups[powerSetData.GroupName].Name;
+                var atClassFull = DatabaseAPI.Database.Classes.FirstOrDefault(at => powerSetData.ATClass == at.ClassName);
+
+                // Column 0 item text goes into the constructor.
+                // Column 1-2 item text go into lvItem.SubItems
+                var lvItem = new ListViewItem(powerSetGroup);
+                lvItem.SubItems.AddRange(new[] {powerSetData.SetName, matchingPowers[i].DisplayName});
                 lvPowers.Items.Add(lvItem);
                 lvPowers.AddIconToSubItem(i, 0, atIconsDict[atClassFull == null ? "" : atClassFull.ClassName]);
                 lvPowers.AddIconToSubItem(i, 1, powerSetsIconsDict[powerSetFullName]);
