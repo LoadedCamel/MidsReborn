@@ -272,6 +272,9 @@ namespace Mids_Reborn.Forms
             FillEffectList();
             FillArchetypesList();
             FillPowersetsList();
+
+            cbArchetype.SelectedIndex = 0;
+            cbPowerset.SelectedIndex = 0;
         }
 
         private void FillArchetypesList()
@@ -399,7 +402,6 @@ namespace Mids_Reborn.Forms
         private void FillMatchingPowers(int sIdx)
         {
             var enhSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-            var iconsDict = new Dictionary<int, KeyValuePair<string, int>>();
             var powerSetsIconsDict = new Dictionary<string, int>();
             var atIconsDict = new Dictionary<string, int>();
             var imgIdx = 0;
@@ -413,31 +415,95 @@ namespace Mids_Reborn.Forms
                 ? null
                 : DatabaseAPI.GetPowersetByName(cbPowerset.Items[cbPowerset.SelectedIndex].ToString(), atClass.DisplayName);
 
-            var matchingPowers = DatabaseAPI.Database.Power.Where(p =>
-                (atClass == null || p.FullName.StartsWith($"{atClass.ClassName}.")) &
-                (powerSet == null || p.FullName.StartsWith($"{atClass.ClassName}.{powerSet.SetName}."))).ToList();
+            List<IPower> matchingPowers;
+            if (atClass == null & powerSet == null)
+            {
+                matchingPowers = DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup)).ToList();
+            }
+            else if (powerSet != null)
+            {
+                matchingPowers = DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) & p.FullName.Contains($".{powerSet.SetName}")).ToList();
+            }
+            else
+            {
+                matchingPowers = DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) & p.FullName.StartsWith($"{atClass.ClassName}.{p.SetName}")).ToList();
+            }
 
-            var matchingPowersets = matchingPowers.Select(p => DatabaseAPI.Database.Powersets[p.PowerSetIndex]).Distinct().ToList();
-            var matchingPowersetsIdx = matchingPowersets.Select(ps => Array.IndexOf(DatabaseAPI.Database.Powersets, ps)).ToList();
-            var matchingArchetypes = matchingPowers.Select(p => DatabaseAPI.GetArchetypeByName(DatabaseAPI.Database.Powersets[p.PowerSetIndex].ATClass)).Distinct().ToList();
-            var matchingArchetypesIdx = matchingArchetypes.Select(at => Array.IndexOf(DatabaseAPI.Database.Classes, at)).ToList();
+            if (matchingPowers.Count <= 0)
+            {
+                lvPowers.BeginUpdate();
+                lvPowers.Items.Clear();
+                lvPowers.EndUpdate();
+
+                return;
+            }
+
+            var matchingPowersets = matchingPowers
+                .Select(p => DatabaseAPI.Database.Powersets[p.PowerSetID])
+                .Distinct()
+                .ToList();
+            Debug.WriteLine($"matchingPowersets: {string.Join(", ", matchingPowersets.Select(ps => $"<{ps.ATClass}, {ps.FullName}>"))}");
+            
+            var matchingPowersetsIdx = matchingPowersets
+                .Select(ps => Array.IndexOf(DatabaseAPI.Database.Powersets, ps))
+                .ToList();
+            var matchingArchetypes = matchingPowers
+                .Select(p => DatabaseAPI.Database.Classes
+                    .FirstOrDefault(at => DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == at.ClassName))
+                .Distinct()
+                .ToList();
+            Debug.WriteLine($"matchingArchetypes: {string.Join(", ", matchingArchetypes.Select(at => at == null ? "(null)" : at.ClassName))}");
+            
+            var matchingArchetypesIdx = matchingArchetypes
+                .Select(at => Array.IndexOf(DatabaseAPI.Database.Classes, at))
+                .ToList();
 
             var imgList = new ImageList {ColorDepth = ColorDepth.Depth32Bit, ImageSize = new Size(16, 16)};
             for (var i = 0 ; i < matchingPowersets.Count ; i++)
             {
                 var idx = matchingPowersetsIdx[i];
-                imgList.Images.Add(I9Gfx.Powersets.Bitmap.Clone(new Rectangle(0, idx * 16, 16, 16), PixelFormat.Canonical));
-                iconsDict.Add(imgIdx, new KeyValuePair<string, int>(matchingPowersets[i].FullName, 0));
+                var icon = new Bitmap(16, 16);
+                using (var g = Graphics.FromImage(icon))
+                {
+                    if (idx < 0)
+                    {
+                        g.DrawImage(I9Gfx.UnknownPowerset.Bitmap, new Rectangle(0, 0, 16, 16), new Rectangle(0, 0, 16, 16), GraphicsUnit.Pixel);
+                    }
+                    else
+                    {
+                        g.DrawImage(I9Gfx.Powersets.Bitmap, new Rectangle(0, 0, 16, 16), new Rectangle(idx * 16, 0, 16, 16), GraphicsUnit.Pixel);
+                    }
+                }
+
+                imgList.Images.Add(icon);
                 powerSetsIconsDict.Add(matchingPowersets[i].FullName, imgIdx);
 
                 imgIdx++;
             }
 
-            for (var i = 0 ; i<matchingArchetypes.Count ; i++)
+            Debug.WriteLine($"Matching Archetypes: {matchingArchetypes.Count}");
+            Debug.WriteLine($"Matching Archetypes: {string.Join(", ", matchingArchetypes.Select(at => at == null ? "(null)" : at.ClassName))}");
+            Debug.WriteLine($"Matching Archetype Indexes: {string.Join(", ", matchingArchetypesIdx)}");
+            for (var i = 0; i < matchingArchetypes.Count; i++)
             {
                 var idx = matchingArchetypesIdx[i];
-                iconsDict.Add(imgIdx, new KeyValuePair<string, int>(matchingArchetypes[i].DisplayName, 1));
-                atIconsDict.Add(matchingArchetypes[i].DisplayName, imgIdx);
+                var icon = new Bitmap(16, 16);
+                using (var g = Graphics.FromImage(icon))
+                {
+                    if (idx < 0)
+                    {
+                        g.DrawImage(I9Gfx.UnknownArchetype.Bitmap, new Rectangle(0, 0, 16, 16), new Rectangle(0, 0, 16, 16), GraphicsUnit.Pixel);
+                    }
+                    else
+                    {
+                        g.DrawImage(I9Gfx.Archetypes.Bitmap, new Rectangle(0, 0, 16, 16), new Rectangle(idx * 16, 0, 16, 16), GraphicsUnit.Pixel);
+                    }
+                }
+
+                Debug.WriteLine($"Adding icon for archetype: {(matchingArchetypes[i] == null ? "(null)" : matchingArchetypes[i].ClassName)} at index {imgIdx}");
+                Debug.WriteLine($"Icon size: {icon.Width}x{icon.Height}");
+                imgList.Images.Add(icon);
+                atIconsDict.Add(matchingArchetypes[i] == null ? "" : matchingArchetypes[i].ClassName, imgIdx);
 
                 imgIdx++;
             }
@@ -445,17 +511,18 @@ namespace Mids_Reborn.Forms
             lvPowers.BeginUpdate();
             lvPowers.Items.Clear();
             lvPowers.SmallImageList = imgList;
-            for (var i = 0 ; i<matchingPowers.Count ; i++)
+            for (var i = 0; i < matchingPowers.Count; i++)
             {
-                var lvItem = new ListViewItem();
-                var powerSetData = DatabaseAPI.Database.Powersets[matchingPowers[i].PowerSetIndex];
+                var powerSetData = DatabaseAPI.Database.Powersets[matchingPowers[i].PowerSetID];
                 var powerSetFullName = powerSetData.FullName;
-                var atClassDisplayName = DatabaseAPI.GetArchetypeByName(powerSet.ATClass).DisplayName;
-                lvItem.SubItems.Add(atClassDisplayName);
-                lvItem.SubItems.Add(powerSetFullName);
+                var powerSetChunks = powerSetFullName.Split('.');
+                var atClassFull = DatabaseAPI.Database.Classes.FirstOrDefault(at => powerSetChunks[0] == at.ClassName);
+                var lvItem = new ListViewItem();
+                lvItem.SubItems.Add(powerSetData.GroupName);
+                lvItem.SubItems.Add(powerSetData.SetName);
                 lvItem.SubItems.Add(matchingPowers[i].DisplayName);
                 lvPowers.Items.Add(lvItem);
-                lvPowers.AddIconToSubItem(i, 0, atIconsDict[atClassDisplayName]);
+                lvPowers.AddIconToSubItem(i, 0, atIconsDict[atClassFull == null ? "" : atClassFull.ClassName]);
                 lvPowers.AddIconToSubItem(i, 1, powerSetsIconsDict[powerSetFullName]);
             }
 
@@ -530,6 +597,23 @@ namespace Mids_Reborn.Forms
         private void ibSelPowersetSec_ButtonClicked()
         {
             SetCombosByPowerset(myParent.GetSelectedArchetype(), myParent.GetSelectedSecondaryPowerset());
+        }
+
+        private void cbArchetype_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbArchetype.SelectedIndex == 0) cbPowerset.SelectedIndex = 0;
+            if (lvSet.SelectedItems.Count <= 0) return;
+
+            var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
+            FillMatchingPowers(sIdx);
+        }
+
+        private void cbPowerset_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvSet.SelectedItems.Count <= 0) return;
+
+            var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
+            FillMatchingPowers(sIdx);
         }
     }
 }

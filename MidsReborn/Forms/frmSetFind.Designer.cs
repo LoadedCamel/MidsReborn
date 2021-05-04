@@ -55,10 +55,10 @@ namespace Mids_Reborn.Forms
             this.cbArchetype = new System.Windows.Forms.ComboBox();
             this.cbPowerset = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.ibSelPowersetSec = new mrbControls.ImageButton();
             this.label2 = new System.Windows.Forms.Label();
             this.ibSelAt = new mrbControls.ImageButton();
             this.ibSelPowersetPri = new mrbControls.ImageButton();
-            this.ibSelPowersetSec = new mrbControls.ImageButton();
             this.Panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -210,7 +210,6 @@ namespace Mids_Reborn.Forms
             this.lvPowers.MultiSelect = false;
             this.lvPowers.Name = "lvPowers";
             this.lvPowers.Size = new System.Drawing.Size(460, 175);
-            this.lvPowers.SmallImageList = this.ilSets;
             this.lvPowers.TabIndex = 6;
             this.lvPowers.UseCompatibleStateImageBehavior = false;
             this.lvPowers.View = System.Windows.Forms.View.Details;
@@ -247,6 +246,7 @@ namespace Mids_Reborn.Forms
             this.cbArchetype.Name = "cbArchetype";
             this.cbArchetype.Size = new System.Drawing.Size(121, 22);
             this.cbArchetype.TabIndex = 8;
+            this.cbArchetype.SelectedIndexChanged += new System.EventHandler(this.cbArchetype_SelectedIndexChanged);
             // 
             // cbPowerset
             // 
@@ -256,6 +256,7 @@ namespace Mids_Reborn.Forms
             this.cbPowerset.Name = "cbPowerset";
             this.cbPowerset.Size = new System.Drawing.Size(121, 22);
             this.cbPowerset.TabIndex = 9;
+            this.cbPowerset.SelectedIndexChanged += new System.EventHandler(this.cbPowerset_SelectedIndexChanged);
             // 
             // panel2
             // 
@@ -268,6 +269,20 @@ namespace Mids_Reborn.Forms
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(174, 173);
             this.panel2.TabIndex = 15;
+            // 
+            // ibSelPowersetSec
+            // 
+            this.ibSelPowersetSec.Checked = false;
+            this.ibSelPowersetSec.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.ibSelPowersetSec.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            this.ibSelPowersetSec.Location = new System.Drawing.Point(34, 124);
+            this.ibSelPowersetSec.Name = "ibSelPowersetSec";
+            this.ibSelPowersetSec.Size = new System.Drawing.Size(105, 22);
+            this.ibSelPowersetSec.TabIndex = 18;
+            this.ibSelPowersetSec.TextOff = "By Powerset (Sec)";
+            this.ibSelPowersetSec.TextOn = "Alt Text";
+            this.ibSelPowersetSec.Toggle = false;
+            this.ibSelPowersetSec.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibSelPowersetSec_ButtonClicked);
             // 
             // label2
             // 
@@ -306,20 +321,6 @@ namespace Mids_Reborn.Forms
             this.ibSelPowersetPri.TextOn = "Alt Text";
             this.ibSelPowersetPri.Toggle = false;
             this.ibSelPowersetPri.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibSelPowersetPri_ButtonClicked);
-            // 
-            // ibSelPowersetSec
-            // 
-            this.ibSelPowersetSec.Checked = false;
-            this.ibSelPowersetSec.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
-            this.ibSelPowersetSec.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            this.ibSelPowersetSec.Location = new System.Drawing.Point(34, 124);
-            this.ibSelPowersetSec.Name = "ibSelPowersetSec";
-            this.ibSelPowersetSec.Size = new System.Drawing.Size(105, 22);
-            this.ibSelPowersetSec.TabIndex = 18;
-            this.ibSelPowersetSec.TextOff = "By Powerset (Sec)";
-            this.ibSelPowersetSec.TextOn = "Alt Text";
-            this.ibSelPowersetSec.Toggle = false;
-            this.ibSelPowersetSec.ButtonClicked += new mrbControls.ImageButton.ButtonClickedEventHandler(this.ibSelPowersetSec_ButtonClicked);
             // 
             // frmSetFind
             // 

@@ -45,6 +45,8 @@ namespace mrbBase
         public static ExtendedBitmap Archetypes;
         public static ExtendedBitmap Origins;
         public static ExtendedBitmap Powersets;
+        public static ExtendedBitmap UnknownPowerset;
+        public static ExtendedBitmap UnknownArchetype;
 
         public static void SetOrigin(string iOrigin)
         {
@@ -73,6 +75,8 @@ namespace mrbBase
                 else
                     Powersets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
             }
+
+            UnknownPowerset = new ExtendedBitmap($"{ImagePath()}Unknown.png");
         }
 
         public static void LoadOriginImages()
@@ -118,6 +122,8 @@ namespace mrbBase
                 else
                     Archetypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
             }
+
+            UnknownArchetype = new ExtendedBitmap($"{ImagePath()}Unknown.png");
         }
 
         public static Origin.Grade ToGfxGrade(Enums.eType iType)
