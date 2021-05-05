@@ -97,11 +97,11 @@ namespace Mids_Reborn.Forms
             var height1 = imageSize1.Height;
             using var extendedBitmap = new ExtendedBitmap(width1, height1);
             ilSets.Images.Clear();
-            var num = DatabaseAPI.Database.EnhancementSets.Count - 1;
-            for (var index = 0; index <= num; ++index)
+            var num = DatabaseAPI.Database.EnhancementSets.Count;
+            for (var index = 0; index < num; index++)
                 if (DatabaseAPI.Database.EnhancementSets[index].ImageIdx > -1)
                 {
-                    extendedBitmap.Graphics.Clear(Color.White);
+                    extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
                     I9Gfx.DrawEnhancementSet(ref graphics, DatabaseAPI.Database.EnhancementSets[index].ImageIdx);
                     ilSets.Images.Add(extendedBitmap.Bitmap);
@@ -331,12 +331,12 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                var num1 = DatabaseAPI.Database.Power[nIDPower].Effects.Length - 1;
-                for (var index1 = 0; index1 <= num1; ++index1)
+                var num1 = DatabaseAPI.Database.Power[nIDPower].Effects.Length;
+                for (var index1 = 0; index1 < num1; index1++)
                 {
                     var flag = false;
-                    var num2 = returnMask.Length - 1;
-                    for (var index2 = 0; index2 <= num2; ++index2)
+                    var num2 = returnMask.Length;
+                    for (var index2 = 0; index2 < num2; index2++)
                         if (index1 == returnMask[index2])
                             flag = true;
 
@@ -414,19 +414,40 @@ namespace Mids_Reborn.Forms
                 ? null
                 : DatabaseAPI.GetPowersetByName(cbPowerset.Items[cbPowerset.SelectedIndex].ToString(), atClass.DisplayName);
 
-            List<IPower> matchingPowers;
-            if (atClass == null & powerSet == null)
+            var matchingPowers = ((atClass == null ? 0 : 2) + (powerSet == null ? 0 : 1)) switch
             {
-                matchingPowers = DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup)).ToList();
-            }
-            else if (powerSet != null)
-            {
-                matchingPowers = DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) & p.FullName.Contains($".{powerSet.SetName}")).ToList();
-            }
-            else
-            {
-                matchingPowers = DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) & p.FullName.StartsWith($"{atClass.ClassName}.{p.SetName}")).ToList();
-            }
+                // powerSet != null
+                1 => DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) &
+                                                           !p.HiddenPower &
+                                                           !p.FullName.StartsWith("Pets.") &
+                                                           !p.FullName.StartsWith("Villain_Pets.") &
+                                                           p.FullName.Contains($".{powerSet.SetName}")).ToList(),
+
+                // atClass != null
+                2 => DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) &
+                                                           !p.HiddenPower &
+                                                           !p.FullName.StartsWith("Pets.") &
+                                                           !p.FullName.StartsWith("Villain_Pets.") &
+                                                           (DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == atClass.ClassName |
+                                                            p.FullName.StartsWith("Inherent.Inherent.") |
+                                                            p.FullName.StartsWith("Epic."))).ToList(),
+
+                // powerSet != null & atClass != null
+                3 => DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) &
+                                                           !p.HiddenPower &
+                                                           !p.FullName.StartsWith("Pets.") &
+                                                           !p.FullName.StartsWith("Villain_Pets.") &
+                                                           p.FullName.Contains($".{powerSet.SetName}") &
+                                                           (DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == atClass.ClassName |
+                                                            p.FullName.StartsWith("Inherent.Inherent.") |
+                                                            p.FullName.StartsWith("Epic."))).ToList(),
+
+                // powerSet == null & atClass == null
+                _ => DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) &
+                                                           !p.HiddenPower &
+                                                           !p.FullName.StartsWith("Pets.") &
+                                                           !p.FullName.StartsWith("Villain_Pets.")).ToList()
+            };
 
             if (matchingPowers.Count <= 0)
             {
@@ -441,7 +462,6 @@ namespace Mids_Reborn.Forms
                 .Select(p => DatabaseAPI.Database.Powersets[p.PowerSetID])
                 .Distinct()
                 .ToList();
-            //Debug.WriteLine($"matchingPowersets: {string.Join(", ", matchingPowersets.Select(ps => $"<{ps.ATClass}, {ps.FullName}>"))}");
             
             var matchingPowersetsIdx = matchingPowersets
                 .Select(ps => Array.IndexOf(DatabaseAPI.Database.Powersets, ps))
@@ -451,7 +471,11 @@ namespace Mids_Reborn.Forms
                     .FirstOrDefault(at => DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == at.ClassName))
                 .Distinct()
                 .ToList();
-            //Debug.WriteLine($"matchingArchetypes: {string.Join(", ", matchingArchetypes.Select(at => at == null ? "(null)" : at.ClassName))}");
+            matchingArchetypes =
+                matchingArchetypes
+                    .Union(new[] {"Peacebringer", "Warshade"}.Select(DatabaseAPI.GetArchetypeByName))
+                    .Distinct()
+                    .ToList();
             
             var matchingArchetypesIdx = matchingArchetypes
                 .Select(at => Array.IndexOf(DatabaseAPI.Database.Classes, at))
@@ -466,12 +490,18 @@ namespace Mids_Reborn.Forms
                 {
                     if (idx < 0)
                     {
-                        g.DrawImage(I9Gfx.UnknownPowerset.Bitmap, new Rectangle(0, 0, 16, 16), new Rectangle(0, 0, 16, 16), GraphicsUnit.Pixel);
+                        g.DrawImage(I9Gfx.UnknownPowerset.Bitmap,
+                            new Rectangle(0, 0, 16, 16),
+                            new Rectangle(0, 0, 16, 16),
+                            GraphicsUnit.Pixel);
                     }
                     else
                     {
                         // Weird offset... Icons appear cropped if pasted at (0, 0)
-                        g.DrawImage(I9Gfx.Powersets.Bitmap, new Rectangle(2, 0, 18, 16), new Rectangle(idx * 16, 0, 18, 16), GraphicsUnit.Pixel);
+                        g.DrawImage(I9Gfx.Powersets.Bitmap,
+                            new Rectangle(2, 0, 18, 16),
+                            new Rectangle(idx * 16, 0, 18, 16),
+                            GraphicsUnit.Pixel);
                     }
                 }
 
@@ -481,24 +511,35 @@ namespace Mids_Reborn.Forms
                 imgIdx++;
             }
 
-            for (var i = 0; i < matchingArchetypes.Count; i++)
+            var n = matchingArchetypes.Count;
+            for (var i = 0; i < n + 1; i++)
             {
-                var idx = matchingArchetypesIdx[i];
+                var idx = i < n ? matchingArchetypesIdx[i] : -1;
                 var icon = new Bitmap(18, 16);
                 using (var g = Graphics.FromImage(icon))
                 {
-                    if (idx < 0)
+                    if (idx < 0 | i == n)
                     {
-                        g.DrawImage(I9Gfx.UnknownArchetype.Bitmap, new Rectangle(0, 0, 16, 16), new Rectangle(0, 0, 16, 16), GraphicsUnit.Pixel);
+                        g.DrawImage(I9Gfx.UnknownArchetype.Bitmap,
+                            new Rectangle(0, 0, 16, 16),
+                            new Rectangle(0, 0, 16, 16),
+                            GraphicsUnit.Pixel);
                     }
                     else
                     {
-                        g.DrawImage(I9Gfx.Archetypes.Bitmap, new Rectangle(0, 0, 16, 16), new Rectangle(idx * 16, 0, 16, 16), GraphicsUnit.Pixel);
+                        g.DrawImage(I9Gfx.Archetypes.Bitmap,
+                            new Rectangle(0, 0, 16, 16),
+                            new Rectangle(idx * 16, 0, 16, 16),
+                            GraphicsUnit.Pixel);
                     }
                 }
 
                 imgList.Images.Add(icon);
-                atIconsDict.Add(matchingArchetypes[i] == null ? "" : matchingArchetypes[i].ClassName, imgIdx);
+                atIconsDict.Add(i == n
+                    ? "unknown_generic"
+                    : matchingArchetypes[i] == null
+                        ? ""
+                        : matchingArchetypes[i].ClassName, imgIdx);
 
                 imgIdx++;
             }
@@ -506,19 +547,59 @@ namespace Mids_Reborn.Forms
             lvPowers.BeginUpdate();
             lvPowers.Items.Clear();
             lvPowers.SmallImageList = imgList;
+            var selectedClassIndex = atClass == null ? -1 : Array.IndexOf(DatabaseAPI.Database.Classes, atClass);
             for (var i = 0; i < matchingPowers.Count; i++)
             {
                 var powerSetData = DatabaseAPI.Database.Powersets[matchingPowers[i].PowerSetID];
                 var powerSetFullName = powerSetData.FullName;
                 var powerSetGroup = DatabaseAPI.Database.PowersetGroups[powerSetData.GroupName].Name;
                 var atClassFull = DatabaseAPI.Database.Classes.FirstOrDefault(at => powerSetData.ATClass == at.ClassName);
+                var allowedForClass = atClass == null || matchingPowers[i].AllowedForClass(selectedClassIndex);
+
+                if (!allowedForClass) continue;
+                if (atClassFull != null & atClass != null)
+                {
+                    if (atClassFull.ClassName != atClass.ClassName) continue;
+                    if (atClass.ClassName != "Class_Peacebringer" &
+                        (matchingPowers[i].DisplayName.StartsWith("White Dwarf") |
+                         matchingPowers[i].DisplayName.StartsWith("Bright Nova"))) continue;
+
+                    if (atClass.ClassName != "Class_Warshade" &
+                        (matchingPowers[i].DisplayName.StartsWith("Black Dwarf") |
+                         matchingPowers[i].DisplayName.StartsWith("Dark Nova"))) continue;
+                }
+
+                // Show Peacebringer/Warshade AT icon for Dwarves/Novas sub-powers
+                var overrideAtClass = "";
+                if (powerSetGroup == "Inherent")
+                {
+                    if (matchingPowers[i].DisplayName.StartsWith("White Dwarf") |
+                        matchingPowers[i].DisplayName.StartsWith("Bright Nova"))
+                    {
+                        overrideAtClass = "Class_Peacebringer";
+                    }
+                    else if (matchingPowers[i].DisplayName.StartsWith("Black Dwarf") |
+                             matchingPowers[i].DisplayName.StartsWith("Dark Nova"))
+                    {
+                        overrideAtClass = "Class_Warshade";
+                    }
+                }
 
                 // Column 0 item text goes into the constructor.
-                // Column 1-2 item text go into lvItem.SubItems
+                // Column 1-2 items text go into lvItem.SubItems .
                 var lvItem = new ListViewItem(powerSetGroup);
                 lvItem.SubItems.AddRange(new[] {powerSetData.SetName, matchingPowers[i].DisplayName});
                 lvPowers.Items.Add(lvItem);
-                lvPowers.AddIconToSubItem(i, 0, atIconsDict[atClassFull == null ? "" : atClassFull.ClassName]);
+                var atIconKey = overrideAtClass != ""
+                    ? overrideAtClass
+                    : atClassFull == null | powerSetGroup == "Epic" | powerSetGroup == "Inherent"
+                        ? "unknown_generic"
+                        : atClassFull.ClassName;
+
+                // Q&D fix for "unknown" icons now showing for Inherent / Epic when an archetype is selected.
+                if (atIconKey == "unknown_generic") continue;
+
+                lvPowers.AddIconToSubItem(i, 0, atIconsDict[atIconKey]);
                 lvPowers.AddIconToSubItem(i, 1, powerSetsIconsDict[powerSetFullName]);
             }
 
