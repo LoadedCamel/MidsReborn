@@ -905,15 +905,17 @@ namespace mrbBase
 
         public static List<IPowerset> GetEpicPowersets(string atClass)
         {
-            if (!string.IsNullOrWhiteSpace(atClass) && atClass != "Class_Peacebringer" && atClass != "Class_Warshade")
+            if (string.IsNullOrWhiteSpace(atClass) | atClass == "Class_Peacebringer" | atClass == "Class_Warshade")
             {
-                var archetype = GetArchetypeByName(atClass);
-                return archetype.Ancillary
-                    .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
-                    .ToList();
+                return new List<IPowerset>();
             }
 
-            return new List<IPowerset>();
+            var archetype = GetArchetypeByClassName(atClass);
+            if (archetype == null) return new List<IPowerset>();
+
+            return archetype.Ancillary
+                .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
+                .ToList();
         }
 
         public static int GetEnhancementByUIDName(string iName)

@@ -263,24 +263,22 @@ namespace Mids_Reborn.Forms
             BackColor = myParent.BackColor;
             SetImageButtonStyle(ibClose);
             SetImageButtonStyle(ibTopmost);
-            SetImageButtonStyle(ibSelAt);
-            SetImageButtonStyle(ibSelPowersetPri);
-            SetImageButtonStyle(ibSelPowersetSec);
             SetInfo.SetPopup(new PopUp.PopupData());
             FillImageList();
             FillEffectList();
             FillArchetypesList();
-            FillPowersetsList();
 
             cbArchetype.SelectedIndex = 0;
-            cbPowerset.SelectedIndex = 0;
         }
 
         private void FillArchetypesList()
         {
-            var ignoredClasses = Archetype.GetNpcClasses();
-            var classesList = DatabaseAPI.Database.Classes.Select(at => at.DisplayName);
-            var playerClasses = classesList.Except(ignoredClasses);
+            //var ignoredClasses = Archetype.GetNpcClasses();
+            //var classesList = DatabaseAPI.Database.Classes.Select(at => at.DisplayName);
+            //var playerClasses = classesList.Except(ignoredClasses);
+            var playerClasses = DatabaseAPI.Database.Classes
+                .Where(at => at.Playable)
+                .Select(at => at.DisplayName);
 
             cbArchetype.BeginUpdate();
             cbArchetype.Items.Clear();
@@ -291,30 +289,6 @@ namespace Mids_Reborn.Forms
             }
 
             cbArchetype.EndUpdate();
-        }
-
-        private void FillPowersetsList()
-        {
-            var selectedArchetype = cbArchetype.SelectedIndex > -1
-                ? cbArchetype.Items[cbArchetype.SelectedIndex].ToString()
-                : "";
-
-            var powerSets = selectedArchetype == ""
-                ? DatabaseAPI.Database.Powersets
-                    .Select(ps => ps.DisplayName)
-                : DatabaseAPI.Database.Powersets
-                    .Where(ps => ps.ATClass == selectedArchetype | ps.GroupName == "Inherent" | ps.GroupName == "Pool")
-                    .Select(ps => ps.FullName);
-
-            cbPowerset.BeginUpdate();
-            cbPowerset.Items.Clear();
-            cbPowerset.Items.Add("--Powerset--");
-            foreach (var ps in powerSets)
-            {
-                cbPowerset.Items.Add(ps);
-            }
-
-            cbPowerset.EndUpdate();
         }
 
         private string GetPowerString(int nIDPower)
@@ -430,10 +404,6 @@ namespace Mids_Reborn.Forms
                 ? null
                 : DatabaseAPI.GetArchetypeByName(cbArchetype.Items[cbArchetype.SelectedIndex].ToString());
 
-            var powerSet = cbPowerset.SelectedIndex < 1 | atClass == null
-                ? null
-                : DatabaseAPI.GetPowersetByName(cbPowerset.Items[cbPowerset.SelectedIndex].ToString(), atClass.DisplayName);
-
             var matchingPowers = DatabaseAPI.Database.Power
                 .Where(p => p.SetTypes.Contains(setGroup) &
                             !p.HiddenPower &
@@ -546,10 +516,11 @@ namespace Mids_Reborn.Forms
             lvPowers.Items.Clear();
             lvPowers.SmallImageList = imgList;
             var selectedClassIndex = atClass == null ? -1 : Array.IndexOf(DatabaseAPI.Database.Classes, atClass);
-            for (var i = 0; i < matchingPowers.Count; i++)
+            var epicPowersets = DatabaseAPI.GetEpicPowersets(atClass == null ? "" : atClass.ClassName);
+            var lvRow = 0;
+            foreach (var p in matchingPowers)
             {
-                var powerSetData = matchingPowers[i].GetPowerSet();
-                var powerSetFullName = powerSetData.FullName;
+                var powerSetData = p.GetPowerSet();
                 var powerSetGroup = DatabaseAPI.Database.PowersetGroups[powerSetData.GroupName].Name;
                 var allowedClasses = powerSetGroup == "Inherent" | powerSetGroup == "Epic" | powerSetGroup == "Pool"
                     ? new List<string>()
@@ -565,25 +536,31 @@ namespace Mids_Reborn.Forms
                             : DatabaseAPI.GetArchetypeByClassName(allowedClasses[0])
                         : null;
 
-                var allowedForClass = atClass == null || matchingPowers[i].AllowedForClass(selectedClassIndex);
-
+                var allowedForClass = atClass == null || p.AllowedForClass(selectedClassIndex);
                 if (!allowedForClass) continue;
+
+                if (atClass != null & powerSetGroup == "Epic" & epicPowersets.Count > 0)
+                {
+                    if (!epicPowersets.Contains(powerSetData)) continue;
+                }
+
                 if (atClassFull != null & atClass != null)
                 {
                     if (atClassFull.ClassName != atClass.ClassName) continue;
-                    if (atClass.ClassName != "Class_Peacebringer" & IsPeacebringerInherent(matchingPowers[i])) continue;
-                    if (atClass.ClassName != "Class_Warshade" & IsWarshadeInherent(matchingPowers[i])) continue;
+                    if (atClass.ClassName != "Class_Peacebringer" & IsPeacebringerInherent(p)) continue;
+                    if (atClass.ClassName != "Class_Warshade" & IsWarshadeInherent(p)) continue;
                 }
 
-                // Show Peacebringer/Warshade AT icon for Dwarves/Novas sub-powers
+                // Show Peacebringer/Warshade AT icon for Dwarves/Novas sub-powers,
+                // and other PB/WS inherents
                 var overrideAtClass = "";
                 if (powerSetGroup == "Inherent")
                 {
-                    if (IsPeacebringerInherent(matchingPowers[i]))
+                    if (IsPeacebringerInherent(p))
                     {
                         overrideAtClass = "Class_Peacebringer";
                     }
-                    else if (IsWarshadeInherent(matchingPowers[i]))
+                    else if (IsWarshadeInherent(p))
                     {
                         overrideAtClass = "Class_Warshade";
                     }
@@ -598,11 +575,13 @@ namespace Mids_Reborn.Forms
                 // Column 0 item text goes into the constructor.
                 // Column 1-2 items text go into lvItem.SubItems .
                 var lvItem = new ListViewItem(powerSetGroup, atIconsDict[atIconKey]);
-                lvItem.SubItems.AddRange(new[] {powerSetData.SetName, matchingPowers[i].DisplayName});
+                lvItem.SubItems.AddRange(new[] {powerSetData.SetName, p.DisplayName});
                 lvPowers.Items.Add(lvItem);
 
-                //lvPowers.AddIconToSubItem(i, 0, atIconsDict[atIconKey]);
-                lvPowers.AddIconToSubItem(i, 1, powerSetsIconsDict[powerSetData.FullName]);
+                //lvPowers.AddIconToSubItem(lvRow, 0, atIconsDict[atIconKey]);
+                lvPowers.AddIconToSubItem(lvRow, 1, powerSetsIconsDict[powerSetData.FullName]);
+
+                lvRow++;
             }
 
             lvPowers.ShowSubItemIcons();
@@ -630,64 +609,7 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        private void SetCombosByPowerset(string at = "", string ps = "")
-        {
-            if (ps == "" | at == "")
-            {
-                cbPowerset.SelectedIndex = 0;
-
-                return;
-            }
-
-            var powerset = DatabaseAPI.GetPowersetByName(ps, at);
-            if (powerset == null)
-            {
-                cbArchetype.SelectedIndex = 0;
-                cbPowerset.SelectedIndex = 0;
-
-                return;
-            }
-
-            var n = cbArchetype.Items.Count;
-            for (var i = 1; i < n; i++)
-            {
-                if (at != cbArchetype.Items[i].ToString()) continue;
-
-                cbArchetype.SelectedIndex = i;
-                break;
-            }
-
-            n = cbPowerset.Items.Count;
-            for (var i = 1; i < n; i++)
-            {
-                if (powerset.FullName != cbPowerset.Items[i].ToString()) continue;
-
-                cbPowerset.SelectedIndex = i;
-
-                return;
-            }
-        }
-
-        private void ibSelPowersetPri_ButtonClicked()
-        {
-            SetCombosByPowerset(myParent.GetSelectedArchetype(), myParent.GetSelectedPrimaryPowerset());
-        }
-
-        private void ibSelPowersetSec_ButtonClicked()
-        {
-            SetCombosByPowerset(myParent.GetSelectedArchetype(), myParent.GetSelectedSecondaryPowerset());
-        }
-
         private void cbArchetype_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbArchetype.SelectedIndex == 0) cbPowerset.SelectedIndex = 0;
-            if (lvSet.SelectedItems.Count <= 0) return;
-
-            var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
-            FillMatchingPowers(sIdx);
-        }
-
-        private void cbPowerset_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvSet.SelectedItems.Count <= 0) return;
 
