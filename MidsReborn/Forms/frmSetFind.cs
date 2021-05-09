@@ -398,6 +398,26 @@ namespace Mids_Reborn.Forms
             FillMatchingPowers(sIdx);
         }
 
+        private bool IsPeacebringerInherent(IPower power)
+        {
+            return power.GetPowerSet().SetName == "Inherent" &
+                   (power.PowerName == "Energy_Flight" |
+                    power.PowerName == "Combat_Flight" |
+                    power.PowerName == "Quantum_Acceleration" |
+                    power.PowerName.StartsWith("Bright_Nova") |
+                    power.PowerName.StartsWith("White_Dwarf"));
+        }
+
+        private bool IsWarshadeInherent(IPower power)
+        {
+            return power.GetPowerSet().SetName == "Inherent" &
+                   (power.PowerName == "Shadow_Recall" |
+                    power.PowerName == "Shadow_Step" |
+                    power.PowerName.StartsWith("Dark_Nova") |
+                    power.PowerName.StartsWith("Black_Dwarf"));
+        }
+
+
         private void FillMatchingPowers(int sIdx)
         {
             var enhSet = DatabaseAPI.Database.EnhancementSets[sIdx];
@@ -414,40 +434,12 @@ namespace Mids_Reborn.Forms
                 ? null
                 : DatabaseAPI.GetPowersetByName(cbPowerset.Items[cbPowerset.SelectedIndex].ToString(), atClass.DisplayName);
 
-            var matchingPowers = ((atClass == null ? 0 : 2) + (powerSet == null ? 0 : 1)) switch
-            {
-                // powerSet != null
-                1 => DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) &
-                                                           !p.HiddenPower &
-                                                           !p.FullName.StartsWith("Pets.") &
-                                                           !p.FullName.StartsWith("Villain_Pets.") &
-                                                           p.FullName.Contains($".{powerSet.SetName}")).ToList(),
-
-                // atClass != null
-                2 => DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) &
-                                                           !p.HiddenPower &
-                                                           !p.FullName.StartsWith("Pets.") &
-                                                           !p.FullName.StartsWith("Villain_Pets.") &
-                                                           (DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == atClass.ClassName |
-                                                            p.FullName.StartsWith("Inherent.Inherent.") |
-                                                            p.FullName.StartsWith("Epic."))).ToList(),
-
-                // powerSet != null & atClass != null
-                3 => DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) &
-                                                           !p.HiddenPower &
-                                                           !p.FullName.StartsWith("Pets.") &
-                                                           !p.FullName.StartsWith("Villain_Pets.") &
-                                                           p.FullName.Contains($".{powerSet.SetName}") &
-                                                           (DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == atClass.ClassName |
-                                                            p.FullName.StartsWith("Inherent.Inherent.") |
-                                                            p.FullName.StartsWith("Epic."))).ToList(),
-
-                // powerSet == null & atClass == null
-                _ => DatabaseAPI.Database.Power.Where(p => p.SetTypes.Contains(setGroup) &
-                                                           !p.HiddenPower &
-                                                           !p.FullName.StartsWith("Pets.") &
-                                                           !p.FullName.StartsWith("Villain_Pets.")).ToList()
-            };
+            var matchingPowers = DatabaseAPI.Database.Power
+                .Where(p => p.SetTypes.Contains(setGroup) &
+                            !p.HiddenPower &
+                            !p.FullName.StartsWith("Pets.") &
+                            !p.FullName.StartsWith("Villain_Pets."))
+                .ToList();
 
             if (matchingPowers.Count <= 0)
             {
@@ -459,14 +451,15 @@ namespace Mids_Reborn.Forms
             }
 
             var matchingPowersets = matchingPowers
-                .Select(p => DatabaseAPI.Database.Powersets[p.PowerSetID])
+                .Select(p => p.GetPowerSet())
                 .Distinct()
                 .ToList();
             
             var matchingPowersetsIdx = matchingPowersets
                 .Select(ps => Array.IndexOf(DatabaseAPI.Database.Powersets, ps))
                 .ToList();
-            var matchingArchetypes = matchingPowers
+            
+            /*var matchingArchetypes = matchingPowers
                 .Select(p => DatabaseAPI.Database.Classes
                     .FirstOrDefault(at => DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == at.ClassName))
                 .Distinct()
@@ -475,7 +468,11 @@ namespace Mids_Reborn.Forms
                 matchingArchetypes
                     .Union(new[] {"Peacebringer", "Warshade"}.Select(DatabaseAPI.GetArchetypeByName))
                     .Distinct()
-                    .ToList();
+                    .ToList();*/
+
+            var matchingArchetypes = DatabaseAPI.Database.Classes
+                .Where(at => at.Playable)
+                .ToList();
             
             var matchingArchetypesIdx = matchingArchetypes
                 .Select(at => Array.IndexOf(DatabaseAPI.Database.Classes, at))
@@ -503,9 +500,10 @@ namespace Mids_Reborn.Forms
                             new Rectangle(idx * 16, 0, 18, 16),
                             GraphicsUnit.Pixel);
                     }
+
+                    imgList.Images.Add(icon);
                 }
 
-                imgList.Images.Add(icon);
                 powerSetsIconsDict.Add(matchingPowersets[i].FullName, imgIdx);
 
                 imgIdx++;
@@ -538,7 +536,7 @@ namespace Mids_Reborn.Forms
                 atIconsDict.Add(i == n
                     ? "unknown_generic"
                     : matchingArchetypes[i] == null
-                        ? ""
+                        ? "unknown_generic"
                         : matchingArchetypes[i].ClassName, imgIdx);
 
                 imgIdx++;
@@ -550,57 +548,61 @@ namespace Mids_Reborn.Forms
             var selectedClassIndex = atClass == null ? -1 : Array.IndexOf(DatabaseAPI.Database.Classes, atClass);
             for (var i = 0; i < matchingPowers.Count; i++)
             {
-                var powerSetData = DatabaseAPI.Database.Powersets[matchingPowers[i].PowerSetID];
+                var powerSetData = matchingPowers[i].GetPowerSet();
                 var powerSetFullName = powerSetData.FullName;
                 var powerSetGroup = DatabaseAPI.Database.PowersetGroups[powerSetData.GroupName].Name;
-                var atClassFull = DatabaseAPI.Database.Classes.FirstOrDefault(at => powerSetData.ATClass == at.ClassName);
+                var allowedClasses = powerSetGroup == "Inherent" | powerSetGroup == "Epic" | powerSetGroup == "Pool"
+                    ? new List<string>()
+                    : powerSetData.GetArchetypes();
+                
+                var atClassFull = atClass == null
+                    ? allowedClasses.Count > 0
+                        ? DatabaseAPI.GetArchetypeByClassName(allowedClasses[0])
+                        : null
+                    : allowedClasses.Count > 0
+                        ? allowedClasses.Contains(atClass.ClassName)
+                            ? atClass
+                            : DatabaseAPI.GetArchetypeByClassName(allowedClasses[0])
+                        : null;
+
                 var allowedForClass = atClass == null || matchingPowers[i].AllowedForClass(selectedClassIndex);
 
                 if (!allowedForClass) continue;
                 if (atClassFull != null & atClass != null)
                 {
                     if (atClassFull.ClassName != atClass.ClassName) continue;
-                    if (atClass.ClassName != "Class_Peacebringer" &
-                        (matchingPowers[i].DisplayName.StartsWith("White Dwarf") |
-                         matchingPowers[i].DisplayName.StartsWith("Bright Nova"))) continue;
-
-                    if (atClass.ClassName != "Class_Warshade" &
-                        (matchingPowers[i].DisplayName.StartsWith("Black Dwarf") |
-                         matchingPowers[i].DisplayName.StartsWith("Dark Nova"))) continue;
+                    if (atClass.ClassName != "Class_Peacebringer" & IsPeacebringerInherent(matchingPowers[i])) continue;
+                    if (atClass.ClassName != "Class_Warshade" & IsWarshadeInherent(matchingPowers[i])) continue;
                 }
 
                 // Show Peacebringer/Warshade AT icon for Dwarves/Novas sub-powers
                 var overrideAtClass = "";
                 if (powerSetGroup == "Inherent")
                 {
-                    if (matchingPowers[i].DisplayName.StartsWith("White Dwarf") |
-                        matchingPowers[i].DisplayName.StartsWith("Bright Nova"))
+                    if (IsPeacebringerInherent(matchingPowers[i]))
                     {
                         overrideAtClass = "Class_Peacebringer";
                     }
-                    else if (matchingPowers[i].DisplayName.StartsWith("Black Dwarf") |
-                             matchingPowers[i].DisplayName.StartsWith("Dark Nova"))
+                    else if (IsWarshadeInherent(matchingPowers[i]))
                     {
                         overrideAtClass = "Class_Warshade";
                     }
                 }
 
-                // Column 0 item text goes into the constructor.
-                // Column 1-2 items text go into lvItem.SubItems .
-                var lvItem = new ListViewItem(powerSetGroup);
-                lvItem.SubItems.AddRange(new[] {powerSetData.SetName, matchingPowers[i].DisplayName});
-                lvPowers.Items.Add(lvItem);
                 var atIconKey = overrideAtClass != ""
                     ? overrideAtClass
-                    : atClassFull == null | powerSetGroup == "Epic" | powerSetGroup == "Inherent"
+                    : atClassFull == null | powerSetGroup == "Epic" | powerSetGroup == "Inherent" | powerSetGroup == "Pool"
                         ? "unknown_generic"
                         : atClassFull.ClassName;
 
-                // Q&D fix for "unknown" icons now showing for Inherent / Epic when an archetype is selected.
-                if (atIconKey == "unknown_generic") continue;
+                // Column 0 item text goes into the constructor.
+                // Column 1-2 items text go into lvItem.SubItems .
+                var lvItem = new ListViewItem(powerSetGroup, atIconsDict[atIconKey]);
+                lvItem.SubItems.AddRange(new[] {powerSetData.SetName, matchingPowers[i].DisplayName});
+                lvPowers.Items.Add(lvItem);
 
-                lvPowers.AddIconToSubItem(i, 0, atIconsDict[atIconKey]);
-                lvPowers.AddIconToSubItem(i, 1, powerSetsIconsDict[powerSetFullName]);
+                //lvPowers.AddIconToSubItem(i, 0, atIconsDict[atIconKey]);
+                lvPowers.AddIconToSubItem(i, 1, powerSetsIconsDict[powerSetData.FullName]);
             }
 
             lvPowers.ShowSubItemIcons();

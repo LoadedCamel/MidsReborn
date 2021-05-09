@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -124,6 +125,67 @@ namespace mrbBase
             }
 
             UnknownArchetype = new ExtendedBitmap($"{ImagePath()}Unknown.png");
+        }
+
+        public static Image GetArchetypeImage(IPower power)
+        {
+            var imgString = "";
+            var imgFile = "";
+            var atString = power.GetPowerSet().ATClass;
+            if (string.IsNullOrWhiteSpace(atString))
+            {
+                atString = power.Requires.ClassName[0];
+            }
+
+            if (string.IsNullOrWhiteSpace(atString))
+            {
+                imgFile = $"{ImagePath()}Unknown.png";
+            }
+            else
+            {
+                imgFile = $"{ImagePath()}OriginAT\\{atString}.png";
+                if (!File.Exists(imgFile))
+                {
+                    imgFile = $"{ImagePath()}Unknown.png";
+                }
+            }
+
+            return Image.FromFile(imgFile);
+        }
+
+        public static Image GetArchetypeImage(Archetype atClass)
+        {
+            var imgFile = $"{ImagePath()}OriginAT\\{atClass.ClassName}.png";
+            if (!File.Exists(imgFile))
+            {
+                imgFile = $"{ImagePath()}Unknown.png";
+            }
+
+            return Image.FromFile(imgFile);
+        }
+
+        public static Image GetPowersetImage(IPower power)
+        {
+            var imgString = power.GetPowerSet().ImageName;
+            var imgFile = $"{ImagePath()}Powersets\\{imgString}";
+            if (!File.Exists(imgFile))
+            {
+                imgFile = $"{ImagePath()}Unknown.png";
+            }
+
+            return Image.FromFile(imgFile);
+        }
+
+        public static Image GetPowersetImage(IPowerset powerset)
+        {
+            var imgString = powerset.ImageName;
+            var imgFile = $"{ImagePath()}Powersets\\{imgString}";
+            if (!File.Exists(imgFile))
+            {
+                imgFile = $"{ImagePath()}Unknown.png";
+            }
+
+            return Image.FromFile(imgFile);
         }
 
         public static Origin.Grade ToGfxGrade(Enums.eType iType)

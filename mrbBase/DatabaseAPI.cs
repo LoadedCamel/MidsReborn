@@ -489,6 +489,12 @@ namespace mrbBase
                 string.Equals(iArchetype, cls.DisplayName, StringComparison.OrdinalIgnoreCase));
         }
 
+        public static Archetype GetArchetypeByClassName(string iArchetype)
+        {
+            return Database.Classes.FirstOrDefault(cls =>
+                string.Equals(iArchetype, cls.ClassName, StringComparison.OrdinalIgnoreCase));
+        }
+
         public static int GetOriginByName(Archetype archetype, string iOrigin)
         {
             for (var index = 0; index < archetype.Origin.Length; ++index)
@@ -838,6 +844,76 @@ namespace mrbBase
                 return iName.IndexOf("Superior_", StringComparison.OrdinalIgnoreCase) > -1;
 
             return iName.IndexOf("Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
+        }
+
+        public static Dictionary<Enums.eSetType, List<IPower>> SlottablePowers()
+        {
+            var ret = new Dictionary<Enums.eSetType, List<IPower>>();
+            foreach (var power in Database.Power)
+            {
+                var powerset = power.GetPowerSet();
+                if (powerset.SetType != Enums.ePowerSetType.Primary &&
+                    powerset.SetType != Enums.ePowerSetType.Secondary &&
+                    powerset.SetType != Enums.ePowerSetType.Pool &&
+                    powerset.SetType != Enums.ePowerSetType.Ancillary &&
+                    powerset.SetType != Enums.ePowerSetType.Inherent) continue;
+
+                var setTypes = power.SetTypes.ToList();
+                foreach (var t in setTypes)
+                {
+                    if (!ret.ContainsKey(t)) ret[t] = new List<IPower>();
+                    ret[t].Add(power);
+                }
+            }
+
+            return ret;
+        }
+
+        public static List<IPower> SlottablePowersSetType(Enums.eSetType enhSetType)
+        {
+            var retList = new List<IPower>();
+            foreach (var power in Database.Power)
+            {
+                var powerset = power.GetPowerSet();
+                if (powerset.SetType != Enums.ePowerSetType.Primary &&
+                    powerset.SetType != Enums.ePowerSetType.Secondary &&
+                    powerset.SetType != Enums.ePowerSetType.Pool &&
+                    powerset.SetType != Enums.ePowerSetType.Ancillary &&
+                    powerset.SetType != Enums.ePowerSetType.Inherent) continue;
+                var setTypes = power.SetTypes.ToList();
+                var containsType = setTypes.Any(x => x == enhSetType);
+                if (containsType)
+                {
+                    retList.Add(power);
+                }
+            }
+
+            return retList;
+        }
+
+        public static List<IPowerset> GetEpicPowersets(Archetype atClass)
+        {
+            if (atClass.DisplayName != "Peacebringer" && atClass.DisplayName != "Warshade")
+            {
+                return atClass.Ancillary
+                    .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
+                    .ToList();
+            }
+
+            return new List<IPowerset>();
+        }
+
+        public static List<IPowerset> GetEpicPowersets(string atClass)
+        {
+            if (!string.IsNullOrWhiteSpace(atClass) && atClass != "Class_Peacebringer" && atClass != "Class_Warshade")
+            {
+                var archetype = GetArchetypeByName(atClass);
+                return archetype.Ancillary
+                    .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
+                    .ToList();
+            }
+
+            return new List<IPowerset>();
         }
 
         public static int GetEnhancementByUIDName(string iName)

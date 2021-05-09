@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace mrbBase
 {
@@ -167,6 +169,14 @@ namespace mrbBase
         public bool ClassOk(int nIDClass)
         {
             return Powers.Length > 0 && Powers[0].Requires.ClassOk(nIDClass);
+        }
+
+        public List<string> GetArchetypes()
+        {
+            if (!string.IsNullOrEmpty(ATClass)) return new List<string> { ATClass };
+            if (Powers.Length <= 0) return new List<string>();
+
+            return Powers[0].Requires.ClassName.ToList();
         }
 
         public void StoreTo(ref BinaryWriter writer)

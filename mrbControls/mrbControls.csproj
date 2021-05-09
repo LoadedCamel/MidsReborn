@@ -91,10 +91,10 @@
       <DependentUpon>ctlEnhPopupPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="ctlEnhTabControl.cs">
-      <SubType>Component</SubType>
+	    <SubType>Component</SubType>
     </Compile>
     <Compile Include="ctlEnhTabControl.Designer.cs">
-      <DependentUpon>ctlEnhTabControl.cs</DependentUpon>
+	    <DependentUpon>ctlEnhTabControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ctlListViewColored.cs">
       <SubType>Component</SubType>
@@ -220,6 +220,12 @@
     <Compile Include="ctlLayeredBarPb.cs" />
     <Compile Include="ctlLayeredBarPb.Designer.cs">
       <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlIconsLV.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlIconsLV.Designer.cs">
+      <DependentUpon>ctlIconsLV.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

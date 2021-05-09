@@ -207,11 +207,11 @@ namespace Mids_Reborn.Forms
             this.lvPowers.FullRowSelect = true;
             this.lvPowers.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvPowers.HideSelection = false;
-            this.lvPowers.Location = new System.Drawing.Point(502, 350);
+            this.lvPowers.Location = new System.Drawing.Point(502, 310);
             this.lvPowers.MultiSelect = false;
             this.lvPowers.Name = "lvPowers";
             this.lvPowers.ShowItemToolTips = true;
-            this.lvPowers.Size = new System.Drawing.Size(460, 175);
+            this.lvPowers.Size = new System.Drawing.Size(460, 215);
             this.lvPowers.TabIndex = 6;
             this.lvPowers.UseCompatibleStateImageBehavior = false;
             this.lvPowers.View = System.Windows.Forms.View.Details;
@@ -239,6 +239,7 @@ namespace Mids_Reborn.Forms
             this.label1.Size = new System.Drawing.Size(48, 14);
             this.label1.TabIndex = 7;
             this.label1.Text = "Filter by:";
+            this.label1.Visible = false;
             // 
             // cbArchetype
             // 
@@ -248,6 +249,7 @@ namespace Mids_Reborn.Forms
             this.cbArchetype.Name = "cbArchetype";
             this.cbArchetype.Size = new System.Drawing.Size(121, 22);
             this.cbArchetype.TabIndex = 8;
+            this.cbArchetype.Visible = false;
             this.cbArchetype.SelectedIndexChanged += new System.EventHandler(this.cbArchetype_SelectedIndexChanged);
             // 
             // cbPowerset
@@ -258,6 +260,7 @@ namespace Mids_Reborn.Forms
             this.cbPowerset.Name = "cbPowerset";
             this.cbPowerset.Size = new System.Drawing.Size(121, 22);
             this.cbPowerset.TabIndex = 9;
+            this.cbPowerset.Visible = false;
             this.cbPowerset.SelectedIndexChanged += new System.EventHandler(this.cbPowerset_SelectedIndexChanged);
             // 
             // panel2
@@ -267,10 +270,12 @@ namespace Mids_Reborn.Forms
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.ibSelAt);
             this.panel2.Controls.Add(this.ibSelPowersetPri);
+            this.panel2.Enabled = false;
             this.panel2.Location = new System.Drawing.Point(790, 73);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(174, 173);
             this.panel2.TabIndex = 15;
+            this.panel2.Visible = false;
             // 
             // ibSelPowersetSec
             // 

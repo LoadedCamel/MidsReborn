@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace mrbBase
@@ -52,6 +53,8 @@ namespace mrbBase
         void SetGroup(PowersetGroup group);
 
         bool ClassOk(int nIDClass);
+
+        public List<string> GetArchetypes();
 
         void StoreTo(ref BinaryWriter writer);
 
