@@ -30,7 +30,7 @@ namespace Mids_Reborn.Forms.Controls
         private InputBox()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         protected override void Dispose(bool disposing)
@@ -51,7 +51,7 @@ namespace Mids_Reborn.Forms.Controls
         private void InitializeComponent()
         {
             components = new Container();
-            resources = new ComponentResourceManager(typeof(InputBox));
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(InputBox));
             inputLabel = new Label();
             inputTextBox = new TextBox();
             buttonOK = new Button();
@@ -68,7 +68,7 @@ namespace Mids_Reborn.Forms.Controls
             // inputLabel
             // 
             inputLabel.AutoSize = true;
-            inputLabel.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            inputLabel.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             inputLabel.Location = new Point(73, 9);
             inputLabel.Name = "inputLabel";
             inputLabel.Size = new Size(71, 13);
@@ -83,7 +83,7 @@ namespace Mids_Reborn.Forms.Controls
             inputTextBox.Size = new Size(399, 20);
             inputTextBox.TabIndex = 1;
             inputTextBox.TextChanged += new EventHandler(inputTextBox_TextChanged);
-            inputTextBox.Validating += new CancelEventHandler(inputTextBox_Validating);
+            //inputTextBox.Validating += new CancelEventHandler(inputTextBox_Validating);
             // 
             // buttonOK
             // 
@@ -101,6 +101,7 @@ namespace Mids_Reborn.Forms.Controls
             // buttonCancel
             // 
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonCancel.CausesValidation = false;
             buttonCancel.DialogResult = DialogResult.Cancel;
             buttonCancel.FlatAppearance.BorderSize = 0;
             buttonCancel.Location = new Point(400, 4);
@@ -119,7 +120,7 @@ namespace Mids_Reborn.Forms.Controls
             panel1.Dock = DockStyle.Bottom;
             panel1.Location = new Point(0, 65);
             panel1.Name = "panel1";
-            panel1.Size = new Size(487, 30);
+            panel1.Size = new Size(492, 30);
             panel1.TabIndex = 4;
             // 
             // inputIcon
@@ -151,9 +152,10 @@ namespace Mids_Reborn.Forms.Controls
             AcceptButton = buttonOK;
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoValidate = AutoValidate.EnableAllowFocusChange;
             BackColor = SystemColors.Control;
             CancelButton = buttonCancel;
-            ClientSize = new Size(487, 95);
+            ClientSize = new Size(492, 95);
             Controls.Add(inputIcon);
             Controls.Add(panel1);
             Controls.Add(inputTextBox);
@@ -172,6 +174,7 @@ namespace Mids_Reborn.Forms.Controls
             ((ISupportInitialize)errorProviderText).EndInit();
             ResumeLayout(false);
             PerformLayout();
+
         }
 
         #endregion
@@ -216,27 +219,25 @@ namespace Mids_Reborn.Forms.Controls
             errorProviderText.SetError(inputTextBox, "");
         }
 
-        private void inputTextBox_Validating(object sender, CancelEventArgs e)
-        {
-            if (Validator == null) return;
-            var args = new InputBoxValidatingArgs { Text = inputTextBox.Text };
-            Validator(this, args);
-            if (!args.Cancel) return;
-            e.Cancel = true;
-            errorProviderText.SetError(inputTextBox, args.Message);
-        }
-
         private InputBoxValidatingHandler Validator { get; set; }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            Validator = null;
             Close();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            Close();
+            var args = new InputBoxValidatingArgs { Text = inputTextBox.Text };
+            Validator(this, args);
+            if (!args.Cancel)
+            {
+                Close();
+
+                return;
+            }
+
+            errorProviderText.SetError(inputTextBox, args.Message);
         }
     }
 

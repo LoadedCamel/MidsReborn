@@ -216,6 +216,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             e.Cancel = true;
             e.Message = "Required";
         }
+
         private void btnMutexAdd_Click(object sender, EventArgs e)
         {
             string b = null;
@@ -1405,29 +1406,30 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lblStaticIndex_Click(object sender, EventArgs e)
         {
-            string s = null;
-            InputBoxResult result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_Validating);
-            if (result.OK) { s = result.Text; }
-            try
-            {
-                var num1 = 1;
-                if (s != null) num1 = int.Parse(s, CultureInfo.InvariantCulture);
+            var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index",
+                $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            if (!result.OK) return;
 
-                if (num1 < 0)
-                {
-                    MessageBox.Show("The static index cannot be a negative number.", "Cannot assign index",
-                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-                else
-                {
-                    lblStaticIndex.Text = Convert.ToString(num1, CultureInfo.InvariantCulture);
-                    myPower.StaticIndex = num1;
-                }
-            }
-            catch (Exception ex)
+            var s = result.Text;
+            var parseRes = int.TryParse(s, out var num);
+            if (!parseRes)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Invalid format for the static index.\r\nMust be a positive integer.", "Cannot assign index",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
+
+            if (num < 0)
+            {
+                MessageBox.Show("The static index cannot be a negative number.", "Cannot assign index",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
+            }
+
+            lblStaticIndex.Text = s;
+            myPower.StaticIndex = num;
         }
 
         private void lvDisablePass1_SelectedIndexChanged(object sender, EventArgs e)
