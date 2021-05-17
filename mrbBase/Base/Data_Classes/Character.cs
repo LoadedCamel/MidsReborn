@@ -1402,6 +1402,14 @@ namespace mrbBase.Base.Data_Classes
                 poolOrder[minI] = 512;
             }
 
+            for (var i = 3; i < 7; i++)
+            {
+                if (Powersets[i].SetName == "Leadership_beta")
+                {
+                    Powersets[i] = DatabaseAPI.GetPowersetByName("Leadership");
+                }
+            }
+
             // HACK: this assumes at least 8 powersets exist, but the database is fully editable.
             PoolLocked[0] = PowersetUsed(Powersets[3]) & PoolUnique(Enums.PowersetType.Pool0);
             PoolLocked[1] = PowersetUsed(Powersets[4]) & PoolUnique(Enums.PowersetType.Pool1);
