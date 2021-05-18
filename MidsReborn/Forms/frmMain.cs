@@ -2560,7 +2560,11 @@ namespace Mids_Reborn.Forms
                 return;
             var ExtraString =
                 "This is a pool powerset. This powerset can be changed by removing all of the powers selected from it.";
-            ShowPopup(MidsContext.Character.Powersets[6].nID, MidsContext.Character.Archetype.Idx, cbPool3.Bounds,
+            // Bug: popup will turn into total garbage if the mouse pointer is within the popup drawing rectangle.
+            // Add a vertical offset to ensure the mouse pointer stays out of the popup. 
+            ShowPopup(MidsContext.Character.Powersets[6].nID, MidsContext.Character.Archetype.Idx, 
+                new Rectangle(lblLocked3.Location.X, lblLocked3.Location.Y - 3 * lblLocked3.Height, cbPool3.Bounds.Width, cbPool3.Bounds.Height),
+                //cbPool3.Bounds,
                 ExtraString);
         }
 
