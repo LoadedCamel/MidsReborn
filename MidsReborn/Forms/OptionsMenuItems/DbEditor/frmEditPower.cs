@@ -210,22 +210,44 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvFX.SelectedIndex = selectedIndex - 1;
         }
 
-        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
+        private static void inputBox_StaticIndexValidating(object sender, InputBoxValidatingArgs e)
         {
-            if (e.Text.Trim().Length != 0) return;
-            e.Cancel = true;
-            e.Message = "Required";
+            var isNumeric = int.TryParse(e.Text.Trim(), out var staticIndexResult);
+            if (isNumeric && staticIndexResult >= 0)
+            {
+                e.Message = staticIndexResult.ToString();
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Message = "Value must be a number and must also be greater or equal to 0";
+                e.Cancel = true;
+            }
+        }
+
+        private static void inputBox_MutexValidating(object sender, InputBoxValidatingArgs e)
+        {
+            if (e.Text.Trim().Length != 0)
+            {
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Cancel = true;
+                e.Message = "Required";
+            }
         }
 
         private void btnMutexAdd_Click(object sender, EventArgs e)
         {
-            string b = null;
-            InputBoxResult result = InputBox.Show("Enter a description for your build.", "Add Mutex Group", "New Group", InputBox.InputBoxIcon.Info, inputBox_Validating);
-            if (result.OK) { b = result.Text.Replace(" ", "_"); }
+            var result = InputBox.Show("Enter a name for the new group.", "Add Mutex Group", "New Group", InputBox.InputBoxIcon.Info, inputBox_MutexValidating);
+            if (!result.OK) return;
+
+            var b = result.Text.Replace(" ", "_");
             var count = clbMutex.Items.Count;
             var index = 0;
-            if (index > count)
-                return;
+            if (index > count) return;
+            
             if (string.Equals(clbMutex.Items[index].ToString(), b, StringComparison.OrdinalIgnoreCase))
             {
                 MessageBox.Show($"'{b}' is not unique!", "Unable to add", MessageBoxButtons.OK,
@@ -1406,37 +1428,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lblStaticIndex_Click(object sender, EventArgs e)
         {
-            var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index",
-                $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_Validating);
+            var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_StaticIndexValidating);
             if (!result.OK) return;
 
-            var s = result.Text;
-            var parseRes = int.TryParse(s, out var num);
-            if (!parseRes)
-            {
-                MessageBox.Show("Invalid format for the static index.\r\nMust be a positive integer.", "Cannot assign index",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                return;
-            }
-
-            if (num < 0)
-            {
-                MessageBox.Show("The static index cannot be a negative number.", "Cannot assign index",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                return;
-            }
-
-            lblStaticIndex.Text = s;
-            myPower.StaticIndex = num;
+            lblStaticIndex.Text = result.Text;
+            myPower.StaticIndex = int.Parse(result.Text);
         }
 
         private void lvDisablePass1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
                 return;
-            var power = myPower;
             myPower.IgnoreEnh = new Enums.eEnhance[lvDisablePass1.SelectedIndices.Count];
             var num = lvDisablePass1.SelectedIndices.Count - 1;
             for (var index = 0; index <= num; ++index)
@@ -1447,7 +1449,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating)
                 return;
-            var power = myPower;
             myPower.Ignore_Buff = new Enums.eEnhance[lvDisablePass4.SelectedIndices.Count];
             var num = lvDisablePass4.SelectedIndices.Count - 1;
             for (var index = 0; index <= num; ++index)
