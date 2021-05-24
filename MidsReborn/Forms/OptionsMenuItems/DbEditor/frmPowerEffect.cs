@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Master_Classes;
@@ -58,8 +57,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FillComboBoxes();
             DisplayEffectData();
             if (myFX.GetPower() is { } power)
-            {
-                //Text = "Edit Effect " + Convert.ToString(myFX.nID) + " for: " + power.FullName;
+            {                
                 Text = $"Edit Effect {EffectIndex} for: {power.FullName}";
             }
             else if (myFX.Enhancement != null)
@@ -254,39 +252,45 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void DisplayEffectData()
         {
-            var style = "####0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0##";
-            var fx = myFX;
-            cbPercentageOverride.SelectedIndex = (int)fx.DisplayPercentageOverride;
-            txtFXScale.Text = Strings.Format(fx.Scale, style);
-            txtFXDuration.Text = Strings.Format(fx.nDuration, style);
-            txtFXMag.Text = Strings.Format(fx.nMagnitude, style);
-            cmbEffectId.Text = fx.EffectId;
-            txtFXTicks.Text = Strings.Format(fx.Ticks, "####0");
-            txtOverride.Text = fx.Override;
-            txtFXDelay.Text = Strings.Format(fx.DelayedTime, style);
-            txtFXProb.Text = Strings.Format(fx.BaseProbability, style);
-            txtPPM.Text = Strings.Format(fx.ProcsPerMinute, style);
-            cbAttribute.SelectedIndex = (int)fx.AttribType;
-            cbAspect.SelectedIndex = (int)fx.Aspect;
-            cbModifier.SelectedIndex = DatabaseAPI.NidFromUidAttribMod(fx.ModifierTable);
+            cbPercentageOverride.SelectedIndex = (int)myFX.DisplayPercentageOverride;
+            txtFXScale.Text = $"{myFX.Scale:####0.0##}";
+            txtFXDuration.Text = $"{myFX.nDuration:####0.0##}";
+            txtFXMag.Text = $"{myFX.nMagnitude:####0.0##}";
+            cmbEffectId.Text = myFX.EffectId;
+            txtFXTicks.Text = $"{myFX.Ticks:####0}";
+            txtOverride.Text = myFX.Override;
+            txtFXDelay.Text = $"{myFX.DelayedTime:####0.0##}";
+            txtFXProb.Text = $"{myFX.BaseProbability:####0.0##}";
+            txtPPM.Text = $"{myFX.ProcsPerMinute:####0.0##}";
+            cbAttribute.SelectedIndex = (int)myFX.AttribType;
+            cbAspect.SelectedIndex = (int)myFX.Aspect;
+            cbModifier.SelectedIndex = DatabaseAPI.NidFromUidAttribMod(myFX.ModifierTable);
             lblAffectsCaster.Text = "";
-            if (fx.ToWho == Enums.eToWho.All)
+            if (myFX.ToWho == Enums.eToWho.All)
+            {
                 cbAffects.SelectedIndex = 1;
+            }
             else
-                cbAffects.SelectedIndex = (int)fx.ToWho;
-            var power = fx.GetPower();
+            {
+                cbAffects.SelectedIndex = (int)myFX.ToWho;
+            }
+
+            var power = myFX.GetPower();
             FillPowerAttribs();
             if (power != null && (power.EntitiesAutoHit & Enums.eEntity.Caster) > Enums.eEntity.None)
-                lblAffectsCaster.Text = @"Power also affects Self";
-            cbTarget.SelectedIndex = (int)fx.PvMode;
-            chkStack.Checked = fx.Stacking == Enums.eStacking.Yes;
-            chkFXBuffable.Checked = !fx.Buffable;
-            chkFXResistable.Checked = !fx.Resistible;
-            chkNearGround.Checked = fx.NearGround;
-            chkCancelOnMiss.Checked = fx.CancelOnMiss;
-            IgnoreED.Checked = fx.IgnoreED;
-            cbFXSpecialCase.SelectedIndex = (int)fx.SpecialCase;
-            if (fx.SpecialCase != Enums.eSpecialCase.None)
+            {
+                lblAffectsCaster.Text = "Power also affects Self";
+            }
+
+            cbTarget.SelectedIndex = (int)myFX.PvMode;
+            chkStack.Checked = myFX.Stacking == Enums.eStacking.Yes;
+            chkFXBuffable.Checked = !myFX.Buffable;
+            chkFXResistable.Checked = !myFX.Resistible;
+            chkNearGround.Checked = myFX.NearGround;
+            chkCancelOnMiss.Checked = myFX.CancelOnMiss;
+            IgnoreED.Checked = myFX.IgnoreED;
+            cbFXSpecialCase.SelectedIndex = (int)myFX.SpecialCase;
+            if (myFX.SpecialCase != Enums.eSpecialCase.None)
             {
                 Conditionals(false);
             }
@@ -295,35 +299,30 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Conditionals(true);
                 UpdateConditionals();
             }
-            cbFXClass.SelectedIndex = (int)fx.EffectClass;
-            chkVariable.Checked = fx.VariableModifiedOverride;
+
+            cbFXClass.SelectedIndex = (int)myFX.EffectClass;
+            chkVariable.Checked = myFX.VariableModifiedOverride;
             clbSuppression.BeginUpdate();
             clbSuppression.Items.Clear();
-            var names1 = Enum.GetNames(fx.Suppression.GetType());
-            var values = (int[])Enum.GetValues(fx.Suppression.GetType());
-            var num1 = names1.Length - 1;
-            for (var index = 0; index <= num1; ++index)
+            var names1 = Enum.GetNames(myFX.Suppression.GetType());
+            var values = (int[])Enum.GetValues(myFX.Suppression.GetType());
+            var num1 = names1.Length;
+            for (var index = 0; index < num1; index++)
+            {
                 clbSuppression.Items.Add(names1[index],
-                    (fx.Suppression & (Enums.eSuppress)values[index]) != Enums.eSuppress.None);
+                    (myFX.Suppression & (Enums.eSuppress)values[index]) != Enums.eSuppress.None);
+            }
+
             clbSuppression.EndUpdate();
             lvEffectType.BeginUpdate();
             lvEffectType.Items.Clear();
             var index1 = -1;
-            var names2 = Enum.GetNames(fx.EffectType.GetType());
-            int num2;
-            if (myPower == null)
-            {
-                num2 = names2.Length - 2;
-            }
-            else
-            {
-                num2 = names2.Length - 1;
-            }
-
-            for (var index2 = 0; index2 <= num2; ++index2)
+            var names2 = Enum.GetNames(myFX.EffectType.GetType());
+            int num2 = names2.Length - (myPower == null ? 1 : 0);
+            for (var index2 = 0; index2 < num2; index2++)
             {
                 lvEffectType.Items.Add(names2[index2]);
-                if ((Enums.eEffectType)index2 == fx.EffectType)
+                if ((Enums.eEffectType)index2 == myFX.EffectType)
                     index1 = index2;
             }
 
@@ -772,7 +771,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading)
                 return;
             var fx = myFX;
-            var num = (float)Conversion.Val(txtFXDelay.Text);
+            var ret = float.TryParse(txtFXDelay.Text, out var num);
+            if (!ret)
+                return;
             if ((num >= 0.0) & (num <= 2147483904.0))
                 fx.DelayedTime = num;
             UpdateFXText();
@@ -782,8 +783,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            txtFXDuration.Text = Strings.Format(myFX.nDuration,
-                "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0##");
+            txtFXDuration.Text = $"{myFX.nDuration:##0.0##}";
             UpdateFXText();
         }
 
@@ -792,7 +792,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Loading)
                 return;
             var fx = myFX;
-            var num = (float)Conversion.Val(txtFXDuration.Text);
+            var ret = float.TryParse(txtFXDuration.Text, out var num);
+            if (!ret)
+                return;
             if ((num >= 0.0) & (num <= 2147483904.0))
                 fx.nDuration = num;
             UpdateFXText();
@@ -810,13 +812,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            var fx = myFX;
-            var InputStr = txtFXMag.Text;
-            if (InputStr.EndsWith("%", StringComparison.InvariantCulture))
-                InputStr = InputStr.Substring(0, InputStr.Length - 1);
-            var num = (float)Conversion.Val(InputStr);
+            var inputStr = txtFXMag.Text;
+            if (inputStr.EndsWith("%", StringComparison.InvariantCulture))
+                inputStr = inputStr.Substring(0, inputStr.Length - 1);
+            var ret = float.TryParse(inputStr, out var num);
+            if (!ret)
+                return;
             if ((num >= -2147483904.0) & (num <= 2147483904.0))
-                fx.nMagnitude = num;
+                myFX.nMagnitude = num;
             UpdateFXText();
         }
 
@@ -824,14 +827,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            IEffect fx = myFX;
-            float num = (float)Conversion.Val(txtFXProb.Text);
+            var ret = float.TryParse(txtFXProb.Text, out var num);
+            if (!ret)
+                return;
             if (num >= 0.0 & num <= 2147483904.0)
             {
                 if (num > 1.0)
                     num /= 100f;
-                fx.BaseProbability = num;
-                //lblProb.Text = "(" + Strings.Format((float)(fx.BaseProbability * 100.0), "###0") + "%)";
+                myFX.BaseProbability = num;
+                //lblProb.Text = $"({fx.BaseProbability * 100:###0}%)";
             }
             UpdateFXText();
         }
@@ -848,7 +852,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            txtFXScale.Text = Strings.Format(myFX.Scale, "####0.0##");
+            txtFXScale.Text = $"{myFX.Scale:####0.0##}";
             UpdateFXText();
         }
 
@@ -856,13 +860,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            var fx = myFX;
             var fxScaleRaw = txtFXScale.Text;
             if (fxScaleRaw.EndsWith("%", StringComparison.InvariantCulture))
                 fxScaleRaw = fxScaleRaw.Substring(0, fxScaleRaw.Length - 1);
-            var fxScale = (float)Conversion.Val(fxScaleRaw);
+            var ret = float.TryParse(fxScaleRaw, out var fxScale);
+            if (!ret)
+                return;
+            //var fxScale = (float)Conversion.Val(fxScaleRaw);
             if ((fxScale >= -2147483904.0) & (fxScale <= 2147483904.0))
-                fx.Scale = fxScale;
+                myFX.Scale = fxScale;
             UpdateFXText();
         }
 
@@ -878,10 +884,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            var fx = myFX;
-            var fxTicks = (float)Conversion.Val(txtFXTicks.Text);
+            //var fxTicks = (float)Conversion.Val(txtFXTicks.Text);
+            var ret = float.TryParse(txtFXTicks.Text, out var fxTicks);
             if ((fxTicks >= 0.0) & (fxTicks <= 2147483904.0))
-                fx.Ticks = (int)Math.Round(fxTicks);
+                myFX.Ticks = (int)Math.Round(fxTicks);
             UpdateFXText();
         }
 
@@ -904,12 +910,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Loading)
                 return;
-            var ppm = (float)Conversion.Val(txtPPM.Text);
+            //var ppm = (float)Conversion.Val(txtPPM.Text);
+            var ret = float.TryParse(txtPPM.Text, out var ppm);
             if ((ppm >= 0.0) & (ppm < 2147483904.0))
                 myFX.ProcsPerMinute = ppm;
         }
-
-
 
         private void txtFXAccuracy_TextChanged(object sender, EventArgs e)
         {

@@ -91,10 +91,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
+                var oldStaticIndex = myPower.StaticIndex;
                 var memoryStream = new MemoryStream((byte[]) Clipboard.GetDataObject()?.GetData(format.Name) ??
                                                     throw new InvalidOperationException());
                 var reader = new BinaryReader(memoryStream);
                 myPower = new Power(reader) {GroupName = groupName, SetName = setName};
+                if (oldStaticIndex != myPower.StaticIndex)
+                {
+                    var ret = MessageBox.Show("Overwrite static index with the imported one?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (ret == DialogResult.No)
+                    {
+                        myPower.StaticIndex = oldStaticIndex;
+                        lblStaticIndex.Text = Convert.ToString(oldStaticIndex, CultureInfo.InvariantCulture);
+                    }
+                }
+
                 SetFullName();
                 refresh_PowerData();
                 reader.Close();
