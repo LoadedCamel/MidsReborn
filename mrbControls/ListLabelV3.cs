@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,97 +15,67 @@ namespace mrbControls
     public partial class ListLabelV3 : UserControl
     {
         public delegate void EmptyHoverEventHandler();
-
         public delegate void ExpandChangedEventHandler(bool Expanded);
-
         public delegate void ItemClickEventHandler(ListLabelItemV3 Item, MouseButtons Button);
-
         public delegate void ItemHoverEventHandler(ListLabelItemV3 Item);
-
         public delegate void ItemHoverEventHandler2(object sender, ListLabelItemV3 Item);
 
         public enum LLFontFlags
         {
             Normal = 0,
-
             Bold = 1,
-
             Italic = 2,
-
             Underline = 4,
-
             Strikethrough = 8
         }
 
         public enum LLItemState
         {
             Enabled,
-
             Selected,
-
             Disabled,
-
             SelectedDisabled,
-
             Invalid,
-
             Heading
         }
 
         public enum LLTextAlign
         {
             Left,
-
             Center,
-
             Right
         }
 
         private readonly Color[] Colors;
-
         private readonly Cursor[] Cursors;
-
         private readonly bool[] HighlightOn;
-
         private Color bgColor;
+        private Color hvrColor;
+
         private ExtendedBitmap bxBuffer;
 
         private bool canExpand;
-
         private bool canScroll;
-
         private bool DisableEvents;
         private bool DisableRedraw;
-
         private bool DragMode;
-
         private int expandMaxY;
 
-        private Color hvrColor;
+        public ListLabelItemV3[] Items => _Items.ToArray();
+        private List<ListLabelItemV3> _Items;
 
-        public ListLabelItemV3[] Items;
-
-        private eMouseTarget LastMouseMovetarget;
-
+        private eMouseTarget LastMouseMoveTarget;
         private Color scBarColor;
-
         private Color scButtonColor;
-
         private int ScrollOffset;
-
         private int ScrollSteps;
-
         private int ScrollWidth;
         private Size szNormal;
-
         private Rectangle TextArea;
-
         private bool TextOutline;
-
         private int VisibleLineCount;
 
         private int xPadding;
-
         private int yPadding;
 
         public ListLabelV3()
@@ -119,7 +91,7 @@ namespace mrbControls
             MouseDown += ListLabelV3_MouseDown;
             MouseWheel += ListLabelV3_MouseWheel;
             bxBuffer = null;
-            Items = new ListLabelItemV3[0];
+            _Items = new List<ListLabelItemV3>();
             Colors = new[]
             {
                 Color.LightBlue, Color.LightGreen, Color.LightGray, Color.DarkGreen, Color.Red, Color.Orange
@@ -156,8 +128,9 @@ namespace mrbControls
             scButtonColor = Color.FromArgb(96, 0, 192);
             ScrollSteps = 0;
             DragMode = false;
-            LastMouseMovetarget = eMouseTarget.None;
+            LastMouseMoveTarget = eMouseTarget.None;
             VisibleLineCount = 0;
+
             InitializeComponent();
         }
 
@@ -339,15 +312,15 @@ namespace mrbControls
         {
             get
             {
-                if ((Item.Index < 0) | (Item.Index > checked(Items.Length - 1)))
+                if ((Item.Index < 0) | (Item.Index > checked(_Items.Count - 1)))
                     return new ListLabelItemV3();
-                return Items[Item.Index];
+                return _Items[Item.Index];
             }
             set
             {
-                if ((Item.Index < 0) | (Item.Index > checked(Items.Length - 1)))
+                if ((Item.Index < 0) | (Item.Index > checked(_Items.Count - 1)))
                     return;
-                Items[Item.Index] = new ListLabelItemV3(value);
+                _Items[Item.Index] = new ListLabelItemV3(value);
                 Draw();
             }
         }
@@ -366,7 +339,7 @@ namespace mrbControls
 
         private int GetRealTotalHeight()
         {
-            return Items.Sum(e => e.ItemHeight);
+            return _Items.Sum(e => e.ItemHeight);
         }
 
         private void FillDefaultItems()
@@ -407,10 +380,8 @@ namespace mrbControls
         public void AddItem(ListLabelItemV3 iItem)
         {
             DisableEvents = true;
-            var num = Items.Length;
-            Items = (ListLabelItemV3[]) Utils.CopyArray(Items, new ListLabelItemV3[checked(num + 1)]);
-            Items[num] = iItem;
-            Items[num].Index = num;
+            var num = _Items.Count;
+            _Items.Add(iItem);
             WrapString(num);
             GetScrollSteps();
             DisableEvents = false;
@@ -418,7 +389,7 @@ namespace mrbControls
 
         public void ClearItems()
         {
-            Items = new ListLabelItemV3[0];
+            _Items = new List<ListLabelItemV3>();
             ScrollOffset = 0;
             HoverID = -1;
         }
@@ -434,7 +405,7 @@ namespace mrbControls
         {
             checked
             {
-                if (Items.Length == 0) return;
+                if (_Items.Count == 0) return;
                 InitBuffer();
                 if (AutoSize)
                 {
@@ -453,7 +424,7 @@ namespace mrbControls
                 }
                 else if (Name == "llAncillary" | Name.StartsWith("llPool"))
                 {
-                    Height = 18 * Items.Length;
+                    Height = 18 * _Items.Count;
                 }
                 
                 var bRect = new Rectangle(xPadding, 0, Width - xPadding * 2, Height);
@@ -478,7 +449,7 @@ namespace mrbControls
             SetLineHeight();
             checked
             {
-                for (var i = 0; i < Items.Length; i++) WrapString(i);
+                for (var i = 0; i < _Items.Count; i++) WrapString(i);
 
                 GetTotalLineCount();
                 GetScrollSteps();
@@ -489,15 +460,15 @@ namespace mrbControls
         {
             checked
             {
-                if (Operators.CompareString(Items[Index].Text, "", false) == 0) return;
+                if (Operators.CompareString(_Items[Index].Text, "", false) == 0) return;
                 InitBuffer();
                 var num = 1;
-                if (Items[Index].Text.Contains(" "))
+                if (_Items[Index].Text.Contains(" "))
                 {
-                    var array = Items[Index].Text.Split(" ".ToCharArray());
+                    var array = _Items[Index].Text.Split(" ".ToCharArray());
                     var stringFormat = new StringFormat(StringFormatFlags.NoWrap);
-                    var font = new Font(Font, (FontStyle) Items[Index].FontFlags);
-                    var str = (Items[Index].ItemState == LLItemState.Heading) ? "~  ~" : "";
+                    var font = new Font(Font, (FontStyle) _Items[Index].FontFlags);
+                    var str = (_Items[Index].ItemState == LLItemState.Heading) ? "~  ~" : "";
 
                     var text = array[0];
                     for (var i = 1; i < array.Length; i++)
@@ -508,7 +479,7 @@ namespace mrbControls
                         var layoutArea = new SizeF(1024f, Height);
                         if (Math.Ceiling(graphics.MeasureString(text2, font2, layoutArea, stringFormat).Width) > TextArea.Width)
                         {
-                            text = Items[Index].ItemState == LLItemState.Heading ? $"{text} ~\r\n~ {array[i]}" : $"{text}\r\n {array[i]}";
+                            text = _Items[Index].ItemState == LLItemState.Heading ? $"{text} ~\r\n~ {array[i]}" : $"{text}\r\n {array[i]}";
                             num++;
                         }
                         else
@@ -517,20 +488,20 @@ namespace mrbControls
                         }
                     }
 
-                    Items[Index].WrappedText = text;
+                    _Items[Index].WrappedText = text;
                 }
                 else
                 {
-                    Items[Index].WrappedText = Items[Index].Text;
+                    _Items[Index].WrappedText = _Items[Index].Text;
                 }
 
-                if (Items[Index].ItemState == LLItemState.Heading)
+                if (_Items[Index].ItemState == LLItemState.Heading)
                 {
-                    Items[Index].WrappedText = $"~ {Items[Index].WrappedText} ~";
+                    _Items[Index].WrappedText = $"~ {_Items[Index].WrappedText} ~";
                 }
 
-                Items[Index].LineCount = num;
-                Items[Index].ItemHeight = num * (ActualLineHeight - yPadding * 2) + yPadding * 2;
+                _Items[Index].LineCount = num;
+                _Items[Index].ItemHeight = num * (ActualLineHeight - yPadding * 2) + yPadding * 2;
             }
         }
 
@@ -550,8 +521,11 @@ namespace mrbControls
                 bxBuffer = new ExtendedBitmap(Width, Height);
             }
 
-            bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+            bxBuffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             bxBuffer.Graphics.TextContrast = 0;
+            bxBuffer.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            bxBuffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            bxBuffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
         }
 
         private int GetItemAtY(int y)
@@ -566,9 +540,9 @@ namespace mrbControls
                 }
                 else
                 {
-                    for (var i = ScrollOffset; i < Items.Length; i++)
+                    for (var i = ScrollOffset; i < _Items.Count; i++)
                     {
-                        num += Items[i].ItemHeight;
+                        num += _Items[i].ItemHeight;
                         if (y < num) return i;
                     }
 
@@ -667,13 +641,13 @@ namespace mrbControls
                             if (itemAtY > -1)
                             {
                                 var num2 = 0;
-                                for (var i = ScrollOffset; i < itemAtY; i++) num2 += Items[i].ItemHeight;
+                                for (var i = ScrollOffset; i < itemAtY; i++) num2 += _Items[i].ItemHeight;
 
-                                if (((num2 + Items[itemAtY].ItemHeight >= e.Y) &
-                                     (num2 + Items[itemAtY].ItemHeight <= TextArea.Height)) |
-                                    ((Items[itemAtY].LineCount > 1) & (num2 + ActualLineHeight >= e.Y) &
+                                if (((num2 + _Items[itemAtY].ItemHeight >= e.Y) &
+                                     (num2 + _Items[itemAtY].ItemHeight <= TextArea.Height)) |
+                                    ((_Items[itemAtY].LineCount > 1) & (num2 + ActualLineHeight >= e.Y) &
                                      (num2 + ActualLineHeight <= TextArea.Height)))
-                                    ItemClick?.Invoke(Items[itemAtY], e.Button);
+                                    ItemClick?.Invoke(_Items[itemAtY], e.Button);
                             }
 
                             break;
@@ -784,7 +758,7 @@ namespace mrbControls
         private void ListLabelV3_MouseLeave(object sender, EventArgs e)
         {
             Cursor = System.Windows.Forms.Cursors.Default;
-            LastMouseMovetarget = eMouseTarget.None;
+            LastMouseMoveTarget = eMouseTarget.None;
             HoverID = -1;
             Draw();
             EmptyHover?.Invoke();
@@ -815,11 +789,11 @@ namespace mrbControls
                                 }
 
                                 var num = 0;
-                                for (var i = ScrollOffset; i < itemAtY; i++) num += Items[i].ItemHeight;
+                                for (var i = ScrollOffset; i < itemAtY; i++) num += _Items[i].ItemHeight;
 
-                                if (!(((num + Items[itemAtY].ItemHeight >= e.Y) &
-                                       (num + Items[itemAtY].ItemHeight <= TextArea.Height)) |
-                                      ((Items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
+                                if (!(((num + _Items[itemAtY].ItemHeight >= e.Y) &
+                                       (num + _Items[itemAtY].ItemHeight <= TextArea.Height)) |
+                                      ((_Items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
                                        (num + ActualLineHeight <= TextArea.Height))))
                                 {
                                     if (HoverID != -1) flag = true;
@@ -829,20 +803,20 @@ namespace mrbControls
                                     goto IL_3EA;
                                 }
 
-                                cursor = Cursors[(int)Items[itemAtY].ItemState];
+                                cursor = Cursors[(int)_Items[itemAtY].ItemState];
                                 HoverID = itemAtY;
                                 Draw();
-                                ItemHover2?.Invoke(sender, Items[itemAtY]);
+                                ItemHover2?.Invoke(sender, _Items[itemAtY]);
                                 goto IL_3EA;
                             }
                         case eMouseTarget.UpButton:
-                            if (LastMouseMovetarget != mouseTarget) Draw();
+                            if (LastMouseMoveTarget != mouseTarget) Draw();
 
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
                             goto IL_3EA;
                         case eMouseTarget.DownButton:
-                            if (LastMouseMovetarget != mouseTarget) Draw();
+                            if (LastMouseMoveTarget != mouseTarget) Draw();
 
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
@@ -887,7 +861,7 @@ namespace mrbControls
                 if (flag) Draw();
 
                 Cursor = cursor;
-                LastMouseMovetarget = mouseTarget;
+                LastMouseMoveTarget = mouseTarget;
             }
         }
         private void ListLabelV3_MouseMove(object sender, MouseEventArgs e)
@@ -915,11 +889,11 @@ namespace mrbControls
                             }
 
                             var num = 0;
-                            for (var i = ScrollOffset; i < itemAtY ; i++) num += Items[i].ItemHeight;
+                            for (var i = ScrollOffset; i < itemAtY ; i++) num += _Items[i].ItemHeight;
 
-                            if (!(((num + Items[itemAtY].ItemHeight >= e.Y) &
-                                   (num + Items[itemAtY].ItemHeight <= TextArea.Height)) |
-                                  ((Items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
+                            if (!(((num + _Items[itemAtY].ItemHeight >= e.Y) &
+                                   (num + _Items[itemAtY].ItemHeight <= TextArea.Height)) |
+                                  ((_Items[itemAtY].LineCount > 1) & (num + ActualLineHeight >= e.Y) &
                                    (num + ActualLineHeight <= TextArea.Height))))
                             {
                                 if (HoverID != -1) flag = true;
@@ -929,20 +903,20 @@ namespace mrbControls
                                 goto IL_3EA;
                             }
 
-                            cursor = Cursors[(int) Items[itemAtY].ItemState];
+                            cursor = Cursors[(int) _Items[itemAtY].ItemState];
                             HoverID = itemAtY;
                             Draw();
-                            ItemHover?.Invoke(Items[itemAtY]);
+                            ItemHover?.Invoke(_Items[itemAtY]);
                             goto IL_3EA;
                         }
                         case eMouseTarget.UpButton:
-                            if (LastMouseMovetarget != mouseTarget) Draw();
+                            if (LastMouseMoveTarget != mouseTarget) Draw();
 
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
                             goto IL_3EA;
                         case eMouseTarget.DownButton:
-                            if (LastMouseMovetarget != mouseTarget) Draw();
+                            if (LastMouseMoveTarget != mouseTarget) Draw();
 
                             emptyHoverEvent = EmptyHover;
                             emptyHoverEvent?.Invoke();
@@ -987,7 +961,7 @@ namespace mrbControls
                 if (flag) Draw();
 
                 Cursor = cursor;
-                LastMouseMovetarget = mouseTarget;
+                LastMouseMoveTarget = mouseTarget;
             }
         }
 
@@ -1045,7 +1019,7 @@ namespace mrbControls
                 InitBuffer();
                 if ((Width == 0) | (Height == 0)) return;
                 bxBuffer.Graphics.Clear(isExpanded ? Color.Black : BackColor);
-                for (var i = ScrollOffset; i < Items.Length; i++) DrawItem(i);
+                for (var i = ScrollOffset; i < _Items.Count; i++) DrawItem(i);
 
                 DrawScrollBar();
                 DrawExpandButton();
@@ -1060,20 +1034,20 @@ namespace mrbControls
             {
                 if (Index < 0) return;
                 if (Index < ScrollOffset) return;
-                if (Index > Items.Length - 1)  return;
+                if (Index > _Items.Count - 1)  return;
                 var num = 0;
                 for (var i = ScrollOffset; i < Index; i++)
                 {
-                    num += Items[i].ItemHeight;
+                    num += _Items[i].ItemHeight;
                     if (num > Height) return;
                 }
 
-                var height = Items[Index].ItemHeight;
-                if (Items[Index].LineCount == 1)
+                var height = _Items[Index].ItemHeight;
+                if (_Items[Index].LineCount == 1)
                 {
-                    if (num + Items[Index].ItemHeight > TextArea.Height) return;
+                    if (num + _Items[Index].ItemHeight > TextArea.Height) return;
                 }
-                else if (num + Items[Index].ItemHeight > TextArea.Height)
+                else if (num + _Items[Index].ItemHeight > TextArea.Height)
                 {
                     if (num + ActualLineHeight > TextArea.Height) return;
 
@@ -1082,7 +1056,7 @@ namespace mrbControls
 
                 var rectangle = new Rectangle(TextArea.Left, num, TextArea.Width, height);
                 var stringFormat = new StringFormat();
-                stringFormat.Alignment = Items[Index].TextAlign switch
+                stringFormat.Alignment = _Items[Index].TextAlign switch
                 {
                     LLTextAlign.Left => StringAlignment.Near,
                     LLTextAlign.Center => StringAlignment.Center,
@@ -1091,16 +1065,13 @@ namespace mrbControls
                 };
 
                 var fontStyle = FontStyle.Regular;
-                if (Items[Index].Bold) fontStyle++;
+                if (_Items[Index].Bold) fontStyle++;
+                if (_Items[Index].Italic) fontStyle += 2;
+                if (_Items[Index].Underline) fontStyle += 4;
+                if (_Items[Index].Strikethrough) fontStyle += 8;
 
-                if (Items[Index].Italic) fontStyle += 2;
-
-                if (Items[Index].Underline) fontStyle += 4;
-
-                if (Items[Index].Strikethrough) fontStyle += 8;
-
-                var font = new Font(Font, fontStyle);
-                if (Index == HoverID && HighlightOn[(int) Items[Index].ItemState])
+                var font = new Font(new FontFamily("Tahoma"), Font.Size, fontStyle);
+                if (Index == HoverID && HighlightOn[(int) _Items[Index].ItemState])
                 {
                     var brush = new SolidBrush(hvrColor);
                     bxBuffer.Graphics.FillRectangle(brush, rectangle);
@@ -1111,25 +1082,26 @@ namespace mrbControls
                 {
                     var r = rectangle;
                     r.X--;
-                    bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
                     r.Y--;
-                    bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
                     r.X++;
-                    bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
                     r.X++;
-                    bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
                     r.Y++;
-                    bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
                     r.Y++;
-                    bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
                     r.X--;
-                    bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
                     r.X--;
-                    bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, r, stringFormat);
+                    bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, r, stringFormat);
                 }
 
-                brush2 = new SolidBrush(Colors[(int) Items[Index].ItemState]);
-                bxBuffer.Graphics.DrawString(Items[Index].WrappedText, font, brush2, rectangle, stringFormat);
+                brush2 = new SolidBrush(Colors[(int) _Items[Index].ItemState]);
+                bxBuffer.Graphics.DrawString(_Items[Index].WrappedText, font, brush2, rectangle, stringFormat);
+
             }
         }
 
@@ -1155,7 +1127,7 @@ namespace mrbControls
 
         private int GetTotalLineCount()
         {
-            return Items.Sum(e => e.LineCount);
+            return _Items.Sum(e => e.LineCount);
         }
 
         private int GetScrollSteps()
@@ -1170,7 +1142,7 @@ namespace mrbControls
 
                 var num = 0;
                 var wrapCount = 0;
-                foreach (var e in Items)
+                foreach (var e in _Items)
                 {
                     num += e.LineCount;
                     if (num > VisibleLineCount) wrapCount++;
@@ -1273,40 +1245,25 @@ namespace mrbControls
         private enum eMouseTarget
         {
             None,
-
             Item,
-
             UpButton,
-
             DownButton,
-
             ScrollBarUp,
-
             ScrollBarDown,
-
             ScrollBlock,
-
             ExpandButton
         }
 
         public class ListLabelItemV3
         {
             public readonly int IDXPower;
-
             public readonly int nIDPower;
-
             public readonly int nIDSet;
-
             private readonly string sTag;
-
             public LLFontFlags FontFlags;
-
             public int Index;
-
             public int ItemHeight;
-
             public int LineCount;
-
             public string WrappedText;
 
             public ListLabelItemV3()
