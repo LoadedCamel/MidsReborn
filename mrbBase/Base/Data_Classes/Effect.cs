@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
@@ -1092,7 +1089,7 @@ namespace mrbBase.Base.Data_Classes
 
             if (!noMag & EffectType != Enums.eEffectType.SilentKill)
             {
-                sMag = MidsContext.Config.CoDEffectFormat
+                sMag = MidsContext.Config.CoDEffectFormat & !fromPopup
                     ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
                     : DisplayPercentage
                         ? $"{Utilities.FixDP(Mag * 100)}%"

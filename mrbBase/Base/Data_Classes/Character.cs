@@ -1103,7 +1103,7 @@ namespace mrbBase.Base.Data_Classes
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
             for (var index = 0; index <= enhancementSet.Bonus.Length - 1; ++index)
             {
-                var effectString = enhancementSet.GetEffectString(index, false, true);
+                var effectString = enhancementSet.GetEffectString(index, false, true, true);
                 if (string.IsNullOrEmpty(effectString))
                     continue;
                 if (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP)

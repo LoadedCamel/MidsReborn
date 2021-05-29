@@ -209,7 +209,7 @@ namespace mrbBase
             return ret;
         }
 
-        public string GetEffectString(int index, bool special, bool longForm = false)
+        public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false)
         {
             var bonusItemArray = special ? SpecialBonus : Bonus;
             string str1;
@@ -231,7 +231,7 @@ namespace mrbBase
                         return string.Empty;
                     var empty2 = string.Empty;
                     var returnMask = new int[0];
-                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true);
+                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup);
                     if (!string.IsNullOrEmpty(empty2))
                         empty1 += empty2;
                     for (var index2 = 0; index2 < DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length; index2++)
@@ -248,7 +248,7 @@ namespace mrbBase
                         string str2;
                         str2 = longForm
                             ? DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2]
-                                .BuildEffectString(true)
+                                .BuildEffectString(true, "", false, false, false, fromPopup)
                             : DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2]
                                 .BuildEffectStringShort(false, true);
                         if (str2.Contains("EndRec"))

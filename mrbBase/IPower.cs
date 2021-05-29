@@ -269,7 +269,8 @@ namespace mrbBase
             ref int[] returnMask,
             bool shortForm,
             bool simple,
-            bool noMag = false);
+            bool noMag = false,
+            bool fromPopup = false);
 
         int[] AbsorbEffects(
             IPower source,

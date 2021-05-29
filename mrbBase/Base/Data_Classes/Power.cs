@@ -1834,7 +1834,7 @@ namespace mrbBase.Base.Data_Classes
         }
 
         
-        public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false)
+        public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false, bool fromPopup = false)
         {
             bool flag;
             if ((idEffect < 0) | (idEffect > Effects.Length - 1))
@@ -1877,7 +1877,7 @@ namespace mrbBase.Base.Data_Classes
                         : Enums.GetGroupedDamage(iDamage, shortForm);
                     str = shortForm
                         ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue)
-                        : effect.BuildEffectString(simple).Replace("Special", newValue);
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup).Replace("Special", newValue);
                 }
                 else if ((effect.EffectType == Enums.eEffectType.Mez) |
                          (effect.EffectType == Enums.eEffectType.MezResist))
@@ -1911,7 +1911,7 @@ namespace mrbBase.Base.Data_Classes
 
                     str = shortForm
                         ? effect.BuildEffectStringShort(noMag, simple).Replace("None", newValue)
-                        : effect.BuildEffectString(simple).Replace("None", newValue);
+                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup).Replace("None", newValue);
                     switch (effect.EffectType)
                     {
                         case Enums.eEffectType.MezResist:
@@ -1935,174 +1935,6 @@ namespace mrbBase.Base.Data_Classes
 
                             break;
                         }
-                        case Enums.eEffectType.None:
-                            break;
-                        case Enums.eEffectType.Accuracy:
-                            break;
-                        case Enums.eEffectType.ViewAttrib:
-                            break;
-                        case Enums.eEffectType.Damage:
-                            break;
-                        case Enums.eEffectType.DamageBuff:
-                            break;
-                        case Enums.eEffectType.Defense:
-                            break;
-                        case Enums.eEffectType.DropToggles:
-                            break;
-                        case Enums.eEffectType.Endurance:
-                            break;
-                        case Enums.eEffectType.EnduranceDiscount:
-                            break;
-                        case Enums.eEffectType.Enhancement:
-                            break;
-                        case Enums.eEffectType.Fly:
-                            break;
-                        case Enums.eEffectType.SpeedFlying:
-                            break;
-                        case Enums.eEffectType.GrantPower:
-                            break;
-                        case Enums.eEffectType.Heal:
-                            break;
-                        case Enums.eEffectType.HitPoints:
-                            break;
-                        case Enums.eEffectType.InterruptTime:
-                            break;
-                        case Enums.eEffectType.JumpHeight:
-                            break;
-                        case Enums.eEffectType.SpeedJumping:
-                            break;
-                        case Enums.eEffectType.Meter:
-                            break;
-                        case Enums.eEffectType.MovementControl:
-                            break;
-                        case Enums.eEffectType.MovementFriction:
-                            break;
-                        case Enums.eEffectType.PerceptionRadius:
-                            break;
-                        case Enums.eEffectType.Range:
-                            break;
-                        case Enums.eEffectType.RechargeTime:
-                            break;
-                        case Enums.eEffectType.Recovery:
-                            break;
-                        case Enums.eEffectType.Regeneration:
-                            break;
-                        case Enums.eEffectType.ResEffect:
-                            break;
-                        case Enums.eEffectType.Resistance:
-                            break;
-                        case Enums.eEffectType.RevokePower:
-                            break;
-                        case Enums.eEffectType.Reward:
-                            break;
-                        case Enums.eEffectType.SpeedRunning:
-                            break;
-                        case Enums.eEffectType.SetCostume:
-                            break;
-                        case Enums.eEffectType.SetMode:
-                            break;
-                        case Enums.eEffectType.Slow:
-                            break;
-                        case Enums.eEffectType.StealthRadius:
-                            break;
-                        case Enums.eEffectType.StealthRadiusPlayer:
-                            break;
-                        case Enums.eEffectType.EntCreate:
-                            break;
-                        case Enums.eEffectType.ThreatLevel:
-                            break;
-                        case Enums.eEffectType.ToHit:
-                            break;
-                        case Enums.eEffectType.Translucency:
-                            break;
-                        case Enums.eEffectType.XPDebtProtection:
-                            break;
-                        case Enums.eEffectType.SilentKill:
-                            break;
-                        case Enums.eEffectType.Elusivity:
-                            break;
-                        case Enums.eEffectType.GlobalChanceMod:
-                            break;
-                        case Enums.eEffectType.CombatModShift:
-                            break;
-                        case Enums.eEffectType.UnsetMode:
-                            break;
-                        case Enums.eEffectType.Rage:
-                            break;
-                        case Enums.eEffectType.MaxRunSpeed:
-                            break;
-                        case Enums.eEffectType.MaxJumpSpeed:
-                            break;
-                        case Enums.eEffectType.MaxFlySpeed:
-                            break;
-                        case Enums.eEffectType.DesignerStatus:
-                            break;
-                        case Enums.eEffectType.PowerRedirect:
-                            break;
-                        case Enums.eEffectType.TokenAdd:
-                            break;
-                        case Enums.eEffectType.ExperienceGain:
-                            break;
-                        case Enums.eEffectType.InfluenceGain:
-                            break;
-                        case Enums.eEffectType.PrestigeGain:
-                            break;
-                        case Enums.eEffectType.AddBehavior:
-                            break;
-                        case Enums.eEffectType.RechargePower:
-                            break;
-                        case Enums.eEffectType.RewardSourceTeam:
-                            break;
-                        case Enums.eEffectType.VisionPhase:
-                            break;
-                        case Enums.eEffectType.CombatPhase:
-                            break;
-                        case Enums.eEffectType.ClearFog:
-                            break;
-                        case Enums.eEffectType.SetSZEValue:
-                            break;
-                        case Enums.eEffectType.ExclusiveVisionPhase:
-                            break;
-                        case Enums.eEffectType.Absorb:
-                            break;
-                        case Enums.eEffectType.XAfraid:
-                            break;
-                        case Enums.eEffectType.XAvoid:
-                            break;
-                        case Enums.eEffectType.BeastRun:
-                            break;
-                        case Enums.eEffectType.ClearDamagers:
-                            break;
-                        case Enums.eEffectType.EntCreate_x:
-                            break;
-                        case Enums.eEffectType.Glide:
-                            break;
-                        case Enums.eEffectType.Hoverboard:
-                            break;
-                        case Enums.eEffectType.Jumppack:
-                            break;
-                        case Enums.eEffectType.MagicCarpet:
-                            break;
-                        case Enums.eEffectType.NinjaRun:
-                            break;
-                        case Enums.eEffectType.Null:
-                            break;
-                        case Enums.eEffectType.NullBool:
-                            break;
-                        case Enums.eEffectType.Stealth:
-                            break;
-                        case Enums.eEffectType.SteamJump:
-                            break;
-                        case Enums.eEffectType.Walk:
-                            break;
-                        case Enums.eEffectType.XPDebt:
-                            break;
-                        case Enums.eEffectType.ForceMove:
-                            break;
-                        case Enums.eEffectType.ModifyAttrib:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
                     }
                 }
                 else if (effect.EffectType == Enums.eEffectType.Enhancement)
@@ -2131,10 +1963,9 @@ namespace mrbBase.Base.Data_Classes
                             }
 
                             effect.ETModifies = Enums.eEffectType.Slow;
-                            if (shortForm)
-                                str = effect.BuildEffectStringShort(noMag, simple);
-                            else
-                                str = effect.BuildEffectString(simple);
+                            str = shortForm
+                                ? effect.BuildEffectStringShort(noMag, simple)
+                                : effect.BuildEffectString(simple, "", false, false, false, fromPopup);
                             if (BuffMode != Enums.eBuffMode.Debuff)
                             {
                                 str = str.Replace("Slow", "Movement");
