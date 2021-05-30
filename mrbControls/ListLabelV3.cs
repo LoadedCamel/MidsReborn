@@ -380,9 +380,13 @@ namespace mrbControls
         public void AddItem(ListLabelItemV3 iItem)
         {
             DisableEvents = true;
-            var num = _Items.Count;
+            if (iItem.Index < 0)
+            {
+                iItem.Index = _Items.Count;
+            }
+
             _Items.Add(iItem);
-            WrapString(num);
+            WrapString(_Items.Count - 1);
             GetScrollSteps();
             DisableEvents = false;
         }
