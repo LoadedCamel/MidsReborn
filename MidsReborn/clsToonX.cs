@@ -1905,9 +1905,9 @@ namespace Mids_Reborn
                                  ((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE) &
                                   !MidsContext.Config.Inc.DisablePvE) |
                                  (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any)))
-                                if (!string.IsNullOrWhiteSpace(enhancementSet.GetEffectString(bonusIdx, false, true)))
+                                if (!string.IsNullOrWhiteSpace(enhancementSet.GetEffectString(bonusIdx, false, true, true)))
                                     popupData.Sections[index1]
-                                        .Add(enhancementSet.GetEffectString(bonusIdx, false, true), PopUp.Colors.Effect,
+                                        .Add(enhancementSet.GetEffectString(bonusIdx, false, true, true), PopUp.Colors.Effect,
                                             0.9f, FontStyle.Bold, 1);
 
                         for (var enhIdx = 0;
@@ -1917,7 +1917,7 @@ namespace Mids_Reborn
                             var isSpecial = DatabaseAPI.IsSpecialEnh(CurrentBuild.SetBonus[index2].SetInfo[senInfoIdx]
                                 .EnhIndexes[enhIdx]);
                             if (isSpecial > -1)
-                                popupData.Sections[index1].Add(enhancementSet.GetEffectString(isSpecial, true, true),
+                                popupData.Sections[index1].Add(enhancementSet.GetEffectString(isSpecial, true, true, true),
                                     PopUp.Colors.Effect,
                                     0.9f, FontStyle.Bold, 1);
                         }
