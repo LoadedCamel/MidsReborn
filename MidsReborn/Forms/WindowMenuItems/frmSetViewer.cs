@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using mrbBase;
-using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
@@ -857,11 +855,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var str4 = "";
                     for (var index4 = 0; index4 < enhancementSet.Bonus.Length; index4++)
                     {
-                        if (!((setInfo[index3].SlottedCount >= enhancementSet.Bonus[index4].Slotted) & ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any) | ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))))
+                        if (!((setInfo[index3].SlottedCount >= enhancementSet.Bonus[index4].Slotted) &
+                              ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any) |
+                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvE) &
+                                !MidsContext.Config.Inc.DisablePvE) |
+                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvP) &
+                                MidsContext.Config.Inc.DisablePvE))))
+                        {
                             continue;
-                        if (str4 != "") str4 += RTF.Crlf();
+                        }
+
                         var localOverCap = false;
-                        var str5 = "  " + enhancementSet.GetEffectString(index4, false, true);
+                        var str5 = enhancementSet.GetEffectString(index4, false, true, true);
+                        if (string.IsNullOrWhiteSpace(str5)) continue;
+                        str5 = $"  {str5}";
+                        if (str4 != "") str4 += RTF.Crlf();
 
                         foreach (var esb in enhancementSet.Bonus[index4].Index)
                         {
@@ -892,7 +900,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             str4 += RTF.Crlf();
                         var str5 = str4 + RTF.Color(RTF.ElementID.Enhancement);
                         var localOverCap = false;
-                        var str6 = "  " + DatabaseAPI.Database.EnhancementSets[s.SetInfo[index2].SetIDX].GetEffectString(index5, true, true);
+                        var str6 = "  " + DatabaseAPI.Database.EnhancementSets[s.SetInfo[index2].SetIDX].GetEffectString(index5, true, true, true);
                         foreach (var sb in DatabaseAPI.Database.EnhancementSets[s.SetInfo[index2].SetIDX].SpecialBonus[index5].Index)
                         {
                             if (sb <= -1) continue;
@@ -934,7 +942,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 foreach (var csb in cumulativeSetBonuses)
                 {
                     if (iStr != "") iStr += RTF.Crlf();
-                    var str2 = csb.BuildEffectString(true);
+                    var str2 = csb.BuildEffectString(true, "", false, false, false, true);
                     if (!str2.StartsWith("+")) str2 = "+" + str2;
                     str2 = Regex.Replace(str2, @"Endurance\b|Max End", "Max Endurance");
                     iStr += str2;
@@ -1002,11 +1010,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         string effectString;
                         if (l2Group != Enums.eFXSubGroup.NoGroup)
                         {
-                            effectString = e.Fx.BuildEffectString(true).Replace(effectName, fxGroup.Key.L2GroupText());
+                            effectString = e.Fx.BuildEffectString(true, "", false, false, false, true).Replace(effectName, fxGroup.Key.L2GroupText());
                         }
                         else
                         {
-                            effectString = e.Fx.BuildEffectString(true);
+                            effectString = e.Fx.BuildEffectString(true, "", false, false, false, true);
                         }
 
                         if (!effectString.StartsWith("+"))
@@ -1064,7 +1072,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var enhancementSet = DatabaseAPI.Database.EnhancementSets[sb.SetInfo[index2].SetIDX];
                     if (enhancementSet.ImageIdx > -1)
                     {
-                        extendedBitmap.Graphics.Clear(Color.White);
+                        extendedBitmap.Graphics.Clear(Color.Transparent);
                         var graphics = extendedBitmap.Graphics;
                         I9Gfx.DrawEnhancementSet(ref graphics, enhancementSet.ImageIdx);
                         ilSet.Images.Add(extendedBitmap.Bitmap);
@@ -1194,6 +1202,16 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             MidsContext.Config.ShrinkFrmSets = Width < 700;
         }
 
+        private void SetupImageButton(ImageButton ib)
+        {
+            var imageOffIdx = MidsContext.Character.IsHero() ? 2 : 4;
+            var imageOnIdx = imageOffIdx + 1;
+
+            ib.IA = myParent.Drawing.pImageAttributes;
+            ib.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
+            ib.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
+        }
+
         public void UpdateData()
         {
             if (myParent == null) return;
@@ -1217,21 +1235,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var imageOffIdx = MidsContext.Character.IsHero() ? 2 : 4;
             var imageOnIdx = imageOffIdx + 1;
 
-            btnClose.IA = myParent.Drawing.pImageAttributes;
-            btnClose.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
-            btnClose.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
-
-            chkOnTop.IA = myParent.Drawing.pImageAttributes;
-            chkOnTop.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
-            chkOnTop.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
-
-            btnSmall.IA = myParent.Drawing.pImageAttributes;
-            btnSmall.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
-            btnSmall.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
-
-            btnDetailFx.IA = myParent.Drawing.pImageAttributes;
-            btnDetailFx.ImageOff = myParent.Drawing.bxPower[imageOffIdx].Bitmap;
-            btnDetailFx.ImageOn = myParent.Drawing.bxPower[imageOnIdx].Bitmap;
+            SetupImageButton(btnClose);
+            SetupImageButton(chkOnTop);
+            SetupImageButton(btnSmall);
+            SetupImageButton(btnDetailFx);
 
             DisplayList();
             DrawBars();

@@ -53,13 +53,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // lstSets
             // 
-            this.lstSets.BackColor = System.Drawing.Color.White;
+            this.lstSets.BackColor = System.Drawing.SystemColors.Window;
             this.lstSets.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lstSets.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ColumnHeader1,
             this.ColumnHeader2,
             this.ColumnHeader3});
-            this.lstSets.ForeColor = System.Drawing.Color.Black;
+            this.lstSets.ForeColor = System.Drawing.SystemColors.WindowText;
             this.lstSets.FullRowSelect = true;
             this.lstSets.HideSelection = false;
             this.lstSets.LargeImageList = this.ilSet;
@@ -76,12 +76,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // ColumnHeader1
             // 
             this.ColumnHeader1.Text = "Set";
-            this.ColumnHeader1.Width = 208;
+            this.ColumnHeader1.Width = 268;
             // 
             // ColumnHeader2
             // 
             this.ColumnHeader2.Text = "Power";
-            this.ColumnHeader2.Width = 184;
+            this.ColumnHeader2.Width = 244;
             // 
             // ColumnHeader3
             // 
