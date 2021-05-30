@@ -256,7 +256,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             if (_locked)
                 return;
-            IPower power1 = new Power(_myPowers[pIDX]);
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {
@@ -265,6 +264,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
             else
             {
+                IPower power1 = new Power(_myPowers[pIDX]);
                 var index1 = iPopup.Add();
                 var str = string.Empty;
                 switch (power1.PowerType)
@@ -334,8 +334,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     {
                         var index4 = iPopup.Add();
                         power1.Effects[index3].SetPower(power1);
-                        var strArray = power1.Effects[index3].BuildEffectString().Replace("[", "\r\n")
-                            .Replace("\r\n", "^").Replace("  ", string.Empty).Replace("]", string.Empty).Split(chArray);
+                        var strArray = power1.Effects[index3].BuildEffectString(false, "", false, false, false, true)
+                            .Replace("[", "\r\n")
+                            .Replace("\r\n", "^")
+                            .Replace("  ", string.Empty)
+                            .Replace("]", string.Empty)
+                            .Split(chArray);
                         var num2 = strArray.Length - 1;
                         for (var index5 = 0; index5 <= num2; ++index5)
                             if (index5 == 0)
