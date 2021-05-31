@@ -1124,7 +1124,7 @@ namespace mrbBase.Base.Data_Classes
 
             for (var index = 0; index <= enhancementSet.SpecialBonus.Length - 1; ++index)
             {
-                var effectString = enhancementSet.GetEffectString(index, true, true);
+                var effectString = enhancementSet.GetEffectString(index, true, true, true);
                 if (string.IsNullOrEmpty(effectString))
                     continue;
                 var flag = false;

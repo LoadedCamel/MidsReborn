@@ -364,7 +364,7 @@ namespace mrbBase
                                     power.Effects[idEffect].Buffable = true;
                                     if (power.Effects[idEffect].Absorbed_EffectID == index1)
                                     {
-                                        power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false);
+                                        power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false, false, true);
                                     }
 
                                     if (returnMask.Length <= 0)
@@ -404,7 +404,7 @@ namespace mrbBase
 
                                     power.Effects[index2].Stacking = Enums.eStacking.Yes;
                                     power.Effects[index2].Buffable = true;
-                                    stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString());
+                                    stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true));
                                 }
                             }
                             else if (!power.Effects[index1].Absorbed_Effect && power.Effects[index1].EffectType != Enums.eEffectType.Enhancement)
