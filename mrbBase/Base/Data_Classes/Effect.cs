@@ -1089,7 +1089,7 @@ namespace mrbBase.Base.Data_Classes
 
             if (!noMag & EffectType != Enums.eEffectType.SilentKill)
             {
-                sMag = MidsContext.Config.CoDEffectFormat & !fromPopup
+                sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
                     ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
                     : DisplayPercentage
                         ? $"{Utilities.FixDP(Mag * 100)}%"
@@ -1177,7 +1177,7 @@ namespace mrbBase.Base.Data_Classes
                 case Enums.eEffectType.Mez:
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
                     if (Duration > 0 & (simple == false | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
-                        sDuration = $"{Utilities.FixDP(Duration)} second ";
+                        sDuration = $"{(MidsContext.Config.CoDEffectFormat ? $"({Scale} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
                     if (!noMag)
                         sMag = $" (Mag {sMag})";
                     sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
@@ -1280,7 +1280,9 @@ namespace mrbBase.Base.Data_Classes
                     string tSummon;
                     if (summon > -1)
                     {
-                        tSummon = " " + DatabaseAPI.Database.Entities[summon].DisplayName;
+                        tSummon = " " + (MidsContext.Config.CoDEffectFormat
+                            ? $"({DatabaseAPI.Database.Entities[summon].UID})"
+                            : DatabaseAPI.Database.Entities[summon].DisplayName);
                     }
                     else
                     {
@@ -1304,7 +1306,7 @@ namespace mrbBase.Base.Data_Classes
                     string tGrant;
                     var pID = DatabaseAPI.GetPowerByFullName(Summon);
                     tGrant = pID != null
-                        ? $" {pID.DisplayName}"
+                        ? $" {(MidsContext.Config.CoDEffectFormat ? $"({pID.FullName})" : pID.DisplayName)}"
                         : $" {Summon}";
                     sBuild = $"{sEffect}{tGrant}{sTarget}";
                     break;
