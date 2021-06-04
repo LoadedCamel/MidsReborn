@@ -761,7 +761,9 @@ namespace mrbBase
                 };
                 PairedBase = 10.25f;
                 PairedBold = false;
-                PowersSelectBase = 8.25f;
+                // Zed: With Tahoma, spaces tend to be munched if PowersSelectBase is at 8.25
+                // Looks good with 8.50 with no other noticeable difference.
+                PowersSelectBase = 8.50f;
                 PowersSelectBold = false;
                 PowersBase = 9.25f;
                 PowersBold = true;
