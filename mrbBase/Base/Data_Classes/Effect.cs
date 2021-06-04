@@ -1177,7 +1177,7 @@ namespace mrbBase.Base.Data_Classes
                 case Enums.eEffectType.Mez:
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
                     if (Duration > 0 & (simple == false | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
-                        sDuration = $"{(MidsContext.Config.CoDEffectFormat ? $"({Scale} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                        sDuration = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
                     if (!noMag)
                         sMag = $" (Mag {sMag})";
                     sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
