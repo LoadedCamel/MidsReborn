@@ -940,14 +940,41 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (BaseProbability < 1)
                 {
-                    sChance = BaseProbability >= 0.975f ? $"{BaseProbability * 100:#0.0}% chance" : $"{BaseProbability * 100:#0}% chance";
+                    if (BaseProbability >= 0.01 & (EffectId == "" | EffectId == "Ones"))
+                    {
+                        sChance = BaseProbability >= 0.975f
+                            ? $"{BaseProbability * 100:#0.0}% chance"
+                            : $"{BaseProbability * 100:#0}% chance";
+                    }
+                    else
+                    {
+                        sChance = $"when {EffectId}";
+                    }
+
+                    if (CancelOnMiss)
+                    {
+                        sChance += ", Cancels on Miss";
+                    }
                 }
+                /*else if (EffectId != "" & EffectId != "Ones")
+                {
+                    sChance = $"when {EffectId}";
+                }*/
             }
             else
             {
                 if (Probability < 1)
                 {
-                    sChance = Probability >= 0.975f ? $"{Probability * 100:#0.0}% chance" : $"{Probability * 100:#0}% chance";
+                    if (Probability >= 0.01 & (EffectId == "" | EffectId == "Ones"))
+                    {
+                        sChance = Probability >= 0.975f
+                            ? $"{Probability * 100:#0.0}% chance"
+                            : $"{Probability * 100:#0}% chance";
+                    }
+                    else
+                    {
+                        sChance = $"when {EffectId}";
+                    }
 
                     if (CancelOnMiss)
                     {
@@ -959,6 +986,10 @@ namespace mrbBase.Base.Data_Classes
                         sChance = $"{ProcsPerMinute} PPM";
                     }
                 }
+                /*else if (EffectId != "" & EffectId != "Ones")
+                {
+                    sChance = $"when {EffectId}";
+                }*/
             }
 
             var resistPresent = false;

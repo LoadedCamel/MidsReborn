@@ -242,11 +242,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             UpdateFXText();
         }
 
-        private void cmbEffectId_TextChanged(object sender, EventArgs e)
+        private void cmbEffectId_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Loading)
                 return;
-            myFX.EffectId = cmbEffectId.Text;
+
+            var index = cmbEffectId.SelectedIndex;
+            if (cmbEffectId.SelectedIndex < 0)
+                return;
+
+            myFX.EffectId = cmbEffectId.Items[cmbEffectId.SelectedIndex].ToString();
             UpdateFXText();
         }
 
@@ -256,7 +261,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             txtFXScale.Text = $"{myFX.Scale:####0.0##}";
             txtFXDuration.Text = $"{myFX.nDuration:####0.0##}";
             txtFXMag.Text = $"{myFX.nMagnitude:####0.0##}";
-            cmbEffectId.Text = myFX.EffectId;
             txtFXTicks.Text = $"{myFX.Ticks:####0}";
             txtOverride.Text = myFX.Override;
             txtFXDelay.Text = $"{myFX.DelayedTime:####0.0##}";
@@ -273,6 +277,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 cbAffects.SelectedIndex = (int)myFX.ToWho;
+            }
+
+            var nbFxId = cmbEffectId.Items.Count;
+            for (var i = 0; i < nbFxId; i++)
+            {
+                if (cmbEffectId.Items[i].ToString() != myFX.EffectId) continue;
+
+                cmbEffectId.SelectedIndex = i;
+                break;
             }
 
             var power = myFX.GetPower();
@@ -455,6 +468,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (myFX.EffectType == Enums.eEffectType.ModifyAttrib)
             {
                 SelectItemByName(lvSubAttribute, myFX.PowerAttribs.ToString());
+            }
+            else if (myFX.EffectType == Enums.eEffectType.EntCreate)
+            {
+                SelectItemByName(lvSubAttribute, myFX.Summon);
             }
             else if (myFX.EffectType == Enums.eEffectType.Mez | myFX.EffectType == Enums.eEffectType.MezResist)
             {
