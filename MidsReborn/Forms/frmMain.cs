@@ -3434,6 +3434,17 @@ namespace Mids_Reborn.Forms
             pnlGFXFlow.Focus();
         }
 
+        // Ensure the bottom part of main UI is visible when scrolling down.
+        private void pnlGFXFlow_Scroll(object sender, ScrollEventArgs e)
+        {
+            var delta = e.NewValue - e.OldValue;
+            if (e.ScrollOrientation == ScrollOrientation.VerticalScroll & delta > 0)
+            {
+                // pnlGFX.Refresh() ?
+                pnlGFXFlow.Refresh();
+            }
+        }
+
         // if we are loading a file, the file isn't modified when this method is called
         internal void PowerModified(bool markModified)
         {
