@@ -3285,12 +3285,16 @@ namespace Mids_Reborn.Forms.Controls
                 info_DataList.Top = Info_txtLarge.Bottom + 4;
             }
             //Controls Dataview Sizing for Info panel.
-            Info_Damage.ColorBackEnd = VillainColor
+            /*Info_Damage.ColorBackEnd = VillainColor
                 ? MidsContext.Config.RtFont.ColorBackgroundVillain
                 : MidsContext.Config.RtFont.ColorBackgroundHero;
             Info_Damage.ColorBackStart = VillainColor
                 ? MidsContext.Config.RtFont.ColorBackgroundVillain
                 : MidsContext.Config.RtFont.ColorBackgroundHero;
+            */
+            Info_Damage.ColorBackStart = Color.Black;
+            Info_Damage.ColorBackEnd = Color.FromArgb(64, 0, 0);
+
             Info_Damage.ColorBaseEnd = MidsContext.Config.RtFont.ColorDamageBarBase;
             Info_Damage.ColorBaseStart = MidsContext.Config.RtFont.ColorDamageBarBase;
             Info_Damage.ColorEnhEnd = MidsContext.Config.RtFont.ColorDamageBarEnh;
@@ -3317,7 +3321,26 @@ namespace Mids_Reborn.Forms.Controls
 
         private void SetBackColor()
         {
-            info_Title.BackColor = VillainColor
+            info_Title.BackColor = Color.Black;
+            Info_txtLarge.BackColor = Color.Black;
+            info_txtSmall.BackColor = Color.Black;
+            info_DataList.BackColor = Color.Black;
+            Info_Damage.BackColor = Color.Black;
+            fx_List1.BackColor = Color.Black;
+            fx_List2.BackColor = Color.Black;
+            fx_List3.BackColor = Color.Black;
+            fx_Title.BackColor = Color.Black;
+            total_Misc.BackColor = Color.Black;
+            total_Title.BackColor = Color.Black;
+            enhListing.BackColor = Color.Black;
+            Enh_Title.BackColor = Color.Black;
+            enhNameDisp.BackColor = Color.Black;
+            lblFloat.BackColor = Color.Black;
+            lblShrink.BackColor = Color.Black;
+            Info_Damage.ColorBackStart = Color.Black;
+            Info_Damage.ColorBackEnd = Color.FromArgb(64, 0, 0);
+
+            /*info_Title.BackColor = VillainColor
                 ? MidsContext.Config.RtFont.ColorBackgroundVillain
                 : MidsContext.Config.RtFont.ColorBackgroundHero;
             Info_txtLarge.BackColor = VillainColor
@@ -3359,8 +3382,9 @@ namespace Mids_Reborn.Forms.Controls
             enhNameDisp.BackColor = VillainColor
                 ? MidsContext.Config.RtFont.ColorBackgroundVillain
                 : MidsContext.Config.RtFont.ColorBackgroundHero;
+            */
             DoPaint();
-            lblFloat.BackColor = VillainColor
+            /*lblFloat.BackColor = VillainColor
                 ? MidsContext.Config.RtFont.ColorBackgroundVillain
                 : MidsContext.Config.RtFont.ColorBackgroundHero;
             lblShrink.BackColor = VillainColor
@@ -3372,6 +3396,7 @@ namespace Mids_Reborn.Forms.Controls
             Info_Damage.ColorBackStart = VillainColor
                 ? MidsContext.Config.RtFont.ColorBackgroundVillain
                 : MidsContext.Config.RtFont.ColorBackgroundHero;
+            */
             info_DataList.Draw();
             Info_Damage.Draw(); //Drawing controls
             fx_List1.Draw();
