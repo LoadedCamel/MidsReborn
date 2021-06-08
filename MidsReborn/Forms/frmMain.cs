@@ -3152,7 +3152,7 @@ namespace Mids_Reborn.Forms
         {
             drawing.DrawPowerSlot(ref powerEntry, singleDraw);
             var powerPos = drawing.PowerPosition(powerEntry, true);
-            drawing.Refresh(new Rectangle(powerPos.X, powerPos.Y, drawing.SzPower.Width, drawing.SzPower.Height + (int)Math.Ceiling(6 * drawing.ScaleValue)));
+            drawing.Refresh(new Rectangle(powerPos.X, powerPos.Y, drawing.SzPower.Width, drawing.SzPower.Height * 2 + (int)Math.Ceiling(6 * drawing.ScaleValue)));
             if (refreshInfo) RefreshInfo();
         }
 
