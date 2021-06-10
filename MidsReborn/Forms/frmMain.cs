@@ -1385,6 +1385,7 @@ namespace Mids_Reborn.Forms
             pnlGFX.Update();
             pnlGFX.Refresh();
             NoResizeEvent = true;
+            DoRedraw();
         }
 
         private bool doSave()
