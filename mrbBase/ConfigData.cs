@@ -241,7 +241,10 @@ namespace mrbBase
                     MessageBox.Show("Failed to load json config, falling back to mhd");
                 }
             else
+            {
                 _current = new ConfigData(false, Files.GetConfigFilename(true));
+                File.WriteAllText(Files.GetConfigFilename(false), "");
+            }
 
             _current.InitializeComponent();
         }
