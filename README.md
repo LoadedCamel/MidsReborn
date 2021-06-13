@@ -41,4 +41,4 @@ https://twitter.com/midsreborn
 ### Notes
 >Windows setup binaries are generated using **Advanced Installer** thanks to our friends at Caphyon.
 
->**Sorry MacOS users, but Catilina is NOT supported at this time**
+>**MacOS Catilina/BigSur users, follow this guide to get MRB up and running on your systems. https://youtu.be/qlRDeJ5BR9E **
