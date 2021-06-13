@@ -175,23 +175,6 @@
     <Compile Include="PairedList.Designer.cs">
       <DependentUpon>PairedList.cs</DependentUpon>
     </Compile>
-    <Compile Include="pnlGFX2\SkiaHelper.cs" />
-    <Compile Include="pnlGFX2\ctlBuildViewer.cs" />
-    <Compile Include="pnlGFX2\ctlBuildViewer.Designer.cs">
-      <DependentUpon>ctlBuildViewer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="pnlGFX2\ctlPowerViewer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="pnlGFX2\ctlPowerViewer.Designer.cs">
-      <DependentUpon>ctlPowerViewer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="pnlGFX2\ctlSlotViewer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="pnlGFX2\ctlSlotViewer.Designer.cs">
-      <DependentUpon>ctlSlotViewer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ctlProgressBar.cs">
       <SubType>Component</SubType>
@@ -256,9 +239,6 @@
     <EmbeddedResource Include="PairedList.resx">
       <DependentUpon>PairedList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="pnlGFX2\ctlSlotViewer.resx">
-      <DependentUpon>ctlSlotViewer.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resources" />
   </ItemGroup>
   <ItemGroup>
@@ -273,12 +253,6 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="SkiaSharp">
-      <Version>2.80.2</Version>
-    </PackageReference>
-    <PackageReference Include="SkiaSharp.Views">
-      <Version>2.80.2</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Grid.Windows">
       <Version>18.4.0.31</Version>
