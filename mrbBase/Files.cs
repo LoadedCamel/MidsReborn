@@ -36,7 +36,7 @@ namespace mrbBase
         public const string RoamingFolder = "Data\\";
         public static string FileData = string.Empty;
 
-        private static string FNameJsonConfig => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), JsonFileConfig);
+        public static string FNameJsonConfig => Path.Combine(Path.Combine(GetAssemblyLoc(), RoamingFolder), JsonFileConfig);
 
         public static string GetConfigSpFile()
         {
@@ -162,24 +162,23 @@ namespace mrbBase
 
         internal static string GetConfigFilename(bool forceMhd)
         {
-            try
+            switch (forceMhd)
             {
-                if (!forceMhd && File.Exists(FNameJsonConfig))
+                case false when File.Exists(FNameJsonConfig):
                 {
                     return FNameJsonConfig;
                 }
-
-                if (File.Exists(FNameConfig) || !File.Exists(FNameConfig))
+                case false when !File.Exists(FNameJsonConfig):
+                {
+                    MessageBox.Show(@"Config file doesn't exist, generating a new one.");
+                    return FNameJsonConfig;
+                }
+                case true when File.Exists(FNameConfig):
                 {
                     return FNameConfig;
                 }
+            }
 
-                return FNameConfig;
-            }
-            catch
-            {
-                MessageBox.Show(@"Config file doesn't exist.");
-            }
             return FNameConfig;
         }
 

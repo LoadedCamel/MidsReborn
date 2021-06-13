@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace mrbBase
 {
@@ -79,7 +77,8 @@ namespace mrbBase
             Export = new ExportConfig();
             CompOverride = Array.Empty<Enums.CompOverride>();
             if (deserializing) return;
-            if (!string.IsNullOrEmpty(iFilename) && File.Exists(iFilename))
+            if (iFilename != Files.FNameJsonConfig && File.Exists(iFilename))
+            {
                 try
                 {
                     LegacyForMigration(iFilename);
@@ -88,12 +87,13 @@ namespace mrbBase
                 {
                     MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                 }
+            }
+
             TeamMembers = new Dictionary<string, int>();
             Registered = 0;
             DiscordAuthorized = false;
             InitializeComponent();
         }
-
 
         // these properties require setters for deserialization
         public SDamageMath DamageMath { get; } = new SDamageMath();
@@ -200,10 +200,7 @@ namespace mrbBase
         {
             get
             {
-                ConfigData configData;
-                if ((configData = _current) == null)
-                    throw new InvalidOperationException("Config was not initialized before access");
-                //configData = ConfigData._current = ConfigData.Initialize();
+                var configData = _current;
                 return configData;
             }
         }
@@ -219,18 +216,27 @@ namespace mrbBase
             oldMethod.SaveConfig(serializer);
         }
 
+        private static void GenerateDefaultConfig(ISerialize serializer, string fileName)
+        {
+            File.WriteAllText(fileName, string.Empty);
+            _current = new ConfigData(false, fileName);
+            SaveRawMhd(serializer, _current, fileName, new RawSaveResult(0, 0));
+        }
+
         public static void Initialize(ISerialize serializer)
         {
             // migrate
             // force Mhd if it exists, then rename it
             var mhdFn = Files.GetConfigFilename(true);
+            var fn = Files.GetConfigFilename(false);
             if (File.Exists(mhdFn))
             {
                 MigrateToSerializer(mhdFn, serializer);
             }
 
-            var fn = Files.GetConfigFilename(false);
-            if (File.Exists(fn) && fn.EndsWith(".json"))
+            
+            if (File.Exists(fn))
+            {
                 try
                 {
                     var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
@@ -238,12 +244,14 @@ namespace mrbBase
                 }
                 catch
                 {
-                    MessageBox.Show("Failed to load json config, falling back to mhd");
+                    GenerateDefaultConfig(serializer, fn);
+                    Initialize(serializer);
                 }
+            }
             else
             {
-                _current = new ConfigData(false, Files.GetConfigFilename(true));
-                File.WriteAllText(Files.GetConfigFilename(false), "");
+                GenerateDefaultConfig(serializer, fn);
+                Initialize(serializer);
             }
 
             _current.InitializeComponent();
