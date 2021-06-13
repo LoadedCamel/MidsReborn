@@ -77,7 +77,8 @@ namespace mrbBase
             Export = new ExportConfig();
             CompOverride = Array.Empty<Enums.CompOverride>();
             if (deserializing) return;
-            if (!string.IsNullOrEmpty(iFilename) && File.Exists(iFilename))
+            if (iFilename != Files.FNameJsonConfig && File.Exists(iFilename))
+            {
                 try
                 {
                     LegacyForMigration(iFilename);
@@ -86,6 +87,8 @@ namespace mrbBase
                 {
                     MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                 }
+            }
+
             TeamMembers = new Dictionary<string, int>();
             Registered = 0;
             DiscordAuthorized = false;
@@ -197,12 +200,7 @@ namespace mrbBase
         {
             get
             {
-                ConfigData configData;
-                if ((configData = _current) == null)
-                {
-                    throw new InvalidOperationException("Config was not initialized before access");
-                }
-
+                var configData = _current;
                 return configData;
             }
         }
@@ -218,12 +216,11 @@ namespace mrbBase
             oldMethod.SaveConfig(serializer);
         }
 
-        private static void GenerateDefaultConfig(ISerialize serializer)
+        private static void GenerateDefaultConfig(ISerialize serializer, string fileName)
         {
-            var fn = Files.GetConfigFilename(false).Replace(".mhd", ".json");
-            File.WriteAllText(fn, "");
-            _current = new ConfigData();
-            SaveRawMhd(serializer, _current, fn, new RawSaveResult(0, 0));
+            File.WriteAllText(fileName, string.Empty);
+            _current = new ConfigData(false, fileName);
+            SaveRawMhd(serializer, _current, fileName, new RawSaveResult(0, 0));
         }
 
         public static void Initialize(ISerialize serializer)
@@ -231,37 +228,29 @@ namespace mrbBase
             // migrate
             // force Mhd if it exists, then rename it
             var mhdFn = Files.GetConfigFilename(true);
+            var fn = Files.GetConfigFilename(false);
             if (File.Exists(mhdFn))
             {
                 MigrateToSerializer(mhdFn, serializer);
             }
 
-            var fn = Files.GetConfigFilename(false);
+            
             if (File.Exists(fn))
             {
-                if (fn.EndsWith(".json"))
+                try
                 {
-                    try
-                    {
-                        var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
-                        _current = value;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Failed to load json config, falling back to defaults.");
-                        GenerateDefaultConfig(serializer);
-                        Initialize(serializer);
-                    }
+                    var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
+                    _current = value;
                 }
-                else if (fn.EndsWith(".mhd"))
+                catch
                 {
-                    _current = new ConfigData(false, fn);
+                    GenerateDefaultConfig(serializer, fn);
+                    Initialize(serializer);
                 }
             }
             else
             {
-                MessageBox.Show("Could not find json config, falling back to defaults.");
-                GenerateDefaultConfig(serializer);
+                GenerateDefaultConfig(serializer, fn);
                 Initialize(serializer);
             }
 

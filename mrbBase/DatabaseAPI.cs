@@ -1301,7 +1301,7 @@ namespace mrbBase
         {
             get
             {
-                var name = new DirectoryInfo(MidsContext.Config.DataPath).Name;
+                string name = MidsContext.Config == null ? new DirectoryInfo(Files.FDefaultPath).Name : new DirectoryInfo(MidsContext.Config.DataPath).Name;
                 return name;
             }
         }
