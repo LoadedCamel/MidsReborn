@@ -53,7 +53,7 @@ namespace mrbControls
         public readonly List<ExtendedBitmap> bxPower;
 
         // The unplaced enhancement slot image
-        private readonly ExtendedBitmap bxNewSlot;
+        public readonly ExtendedBitmap bxNewSlot;
 
         // Graphics object of target drawing surface (The panel)
         private Graphics gTarget;
@@ -69,7 +69,7 @@ namespace mrbControls
         public ImageAttributes pImageAttributes;
 
         // Scaling variables
-        private float ScaleValue;
+        public float ScaleValue { get; private set; }
         public bool Scaling { get; private set; }
 
         public static readonly float[][] heroMatrix =
@@ -2197,8 +2197,7 @@ namespace mrbControls
             };
         }
 
-
-        public Point PowerPosition(PowerEntry powerEntry, int displayLocation = -1)
+        private Point PowerPositionCR(PowerEntry powerEntry, int displayLocation = -1)
         {
             var powerIdx = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry);
             checked
@@ -2280,31 +2279,31 @@ namespace mrbControls
                     }
                 }
 
-                return CRtoXY(iCol, iRow);
+                return new Point(iCol, iRow);
             }
         }
 
+        public Point PowerPosition(PowerEntry powerEntry, int displayLocation = -1)
+        {
+            var crPos = PowerPositionCR(powerEntry, displayLocation);
 
-        private Point CRtoXY(int iCol, int iRow)
+            return CRtoXY(crPos.X, crPos.Y);
+        }
+
+        public Point PowerPosition(PowerEntry powerEntry, bool ignorePadding, int displayLocation = -1)
+        {
+            var crPos = PowerPositionCR(powerEntry, displayLocation);
+
+            return CRtoXY(crPos.X, crPos.Y, ignorePadding);
+        }
+
+        private Point CRtoXY(int iCol, int iRow, bool ignorePadding=false)
         {
             // Convert a column/row location to the top left XY co-ord of a power entry
             // 3 Columns, 15 Rows
-            var result = new Point(0, 0);
-            checked
-            {
-                if (iRow >= vcRowsPowers)
-                {
-                    result.X = iCol * (SzPower.Width + PaddingX);
-                    result.Y = OffsetInherent + iRow * (SzPower.Height + PaddingY);
-                }
-                else
-                {
-                    result.X = iCol * (SzPower.Width + PaddingX);
-                    result.Y = iRow * (SzPower.Height + PaddingY);
-                }
-
-                return result;
-            }
+            return new Point(
+                iCol * (SzPower.Width + PaddingX * (ignorePadding ? 0 : 1)),
+                iRow * (SzPower.Height + (PaddingY - (ignorePadding ? (int)Math.Round(5 / ScaleValue): 0))) + (iRow >= vcRowsPowers ? OffsetInherent : 0));
         }
 
         public Size GetDrawingArea()

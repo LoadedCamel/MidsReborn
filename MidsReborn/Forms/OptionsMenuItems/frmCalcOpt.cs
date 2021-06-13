@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using Mids_Reborn.Forms.ImportExportItems;
 using mrbBase;
 using mrbBase.Base.Master_Classes;
+using WK.Libraries.BetterFolderBrowserNS;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems
 {
@@ -34,14 +35,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             defActs = new short[20];
             InitializeComponent();
             Name = nameof(frmCalcOpt);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmCalcOpt));
-            optTO.Image = (Image)componentResourceManager.GetObject("optTO.Image");
-            optDO.Image = (Image)componentResourceManager.GetObject("optDO.Image");
-            optSO.Image = (Image)componentResourceManager.GetObject("optSO.Image");
-            Label9.Text = componentResourceManager.GetString("Label9.Text");
-            Label5.Text = componentResourceManager.GetString("Label5.Text");
-            myTip.SetToolTip(udExHigh, componentResourceManager.GetString("udExHigh.ToolTip"));
-            Label15.Text = componentResourceManager.GetString("Label15.Text");
+            optTO.Image = Resources.optTO_Image;
+            optDO.Image = Resources.optDO_Image;
+            optSO.Image = Resources.optSO_Image;
+            myTip.SetToolTip(udExHigh, "Set this to the level of your character.\r\n" +
+                    "This setting will not reduce the number of slots / powers placed to match the level.\r\n" +
+                    "Powers available after the level set here will still be calculated unless you disable them."
+            );
+            Label15.Text = "Swap = two powers are swapped. The powers in between are unaffected by the transition.\r\n"
+                           + "Move = One power is moved to the position of another. The power being replaced, as well as the powers in between, are shifted in the direction of the powers being moved.\r\n"
+                           + "Shift = cascading swaps.Shifting down means powers are moved to a lower level, starting with the lowest.Shifting up means powers are moved to a higher level, starting with the highest.";
+
+            Label5.Text =
+                "When exemplared below level 32, the game scales your enhancements down. If you want to see the approximate values for your character when exemplared, enter a starting level and exemplar level"
+                + " (Remember that if your build's level is different to the starting level set here, the numbers will be wrong!)";
+
+            Label9.Text =
+                "Some attacks have a chance to deal additional damage (such as fire). Because this damage isn't always going to happen, the attack's damage can be calculated either as an average,"
+                + " at maximum possible (as thought the extra damage always happens), or at minimum (as though it never happens).\r\n"
+                + "Note that this also affects how Scrapper damage is displayed with Critical Hit is toggled on.\r\n"
+                + "Where an attack has a chance to do additional damage:";
             Icon = Resources.reborn;
             myParent = iParent;
         }
@@ -459,15 +472,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             var regAssociations = FileAssociation.CheckAssociations();
             if (!regAssociations)
             {
-                lblAssocStatus.Text = "Status: settings missing";
+                lblAssocStatus.Text = @"Status: settings missing";
             }
             else if (!string.Equals(associatedProgram, Application.ExecutablePath, StringComparison.InvariantCultureIgnoreCase))
             {
-                lblAssocStatus.Text = "Status: .MXD set to a different program";
+                lblAssocStatus.Text = @"Status: .MXD set to a different program";
             }
             else
             {
-                lblAssocStatus.Text = "Status: Ok";
+                lblAssocStatus.Text = @"Status: Ok";
             }
         }
 
@@ -542,6 +555,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private void SetControls()
         {
             var config = MidsContext.Config;
+            SuspendLayout();
             optSO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.SingleO;
             optDO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.DualO;
             optTO.Checked = config.CalcEnhOrigin == Enums.eEnhGrade.TrainingO;
@@ -584,12 +598,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkPowersBold.Checked = config.RtFont.PowersBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
             lblSaveFolder.Text = config.GetSaveFolder();
-            //this.txtUpdatePath.Text = config.UpdatePath;
+            lblDatabaseLoc.Text = config.DataPath;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
             chkUseArcanaTime.Checked = config.UseArcanaTime;
             cbUpdateURL.Text = MidsContext.Config.UpdatePath;
+            cbDBUpdateURL.Text = MidsContext.Config.DbUpdatePath;
             TeamSize.Value = new decimal(config.TeamSize);
             var index = 0;
             do
@@ -600,6 +615,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
 
             cbTotalsWindowTitleOpt.SelectedIndex = (int)config.TotalsWindowTitleStyle;
             chkOldStyle.Checked = config.UseOldTotalsWindow;
+            cbCurrency.Items.Clear();
+            foreach (var c in Enum.GetValues(typeof(Enums.RewardCurrency)))
+            {
+                cbCurrency.Items.Add(clsRewardCurrency.GetCurrencyName((Enums.RewardCurrency) c));
+            }
+
+            cbCurrency.SelectedIndex = (int) config.PreferredCurrency;
+
+            ResumeLayout();
         }
 
         private void setupScenarios()
@@ -810,6 +834,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.UseArcanaTime = chkUseArcanaTime.Checked;
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
             config.UpdatePath = cbUpdateURL.Text;
+            config.DbUpdatePath = cbDBUpdateURL.Text;
             config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle) cbTotalsWindowTitleOpt.SelectedIndex;
             config.UseOldTotalsWindow = chkOldStyle.Checked;
             var index = 0;
@@ -818,6 +843,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 config.DragDropScenarioAction[index] = defActs[index];
                 ++index;
             } while (index <= 19);
+            config.DataPath = lblDatabaseLoc.Text;
+            config.PreferredCurrency = (Enums.RewardCurrency) cbCurrency.SelectedIndex;
         }
 
         private void btnFileAssoc_Click(object sender, EventArgs e)
@@ -832,6 +859,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             {
                 MessageBox.Show("Could not update file associations.", "Boo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnDatabaseLoc_Click(object sender, EventArgs e)
+        {
+            using var fBrowse = new BetterFolderBrowser
+            {
+                Multiselect = false,
+                RootFolder = Path.Combine(Files.GetAssemblyLoc(), Files.RoamingFolder),
+                Title = @"Select the location of the database files"
+            };
+            if (fBrowse.ShowDialog(this) == DialogResult.OK)
+            {
+                myParent.DbChangeRequested = true;
+                lblDatabaseLoc.Text = fBrowse.SelectedPath;
+            }
+
+        }
+
+        private void btnResetDatabaseLoc_Click(object sender, EventArgs e)
+        {
+            lblDatabaseLoc.Text = Files.FDefaultPath;
         }
     }
 }

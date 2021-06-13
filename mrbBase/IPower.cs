@@ -153,6 +153,8 @@ namespace mrbBase
 
         int VariableMax { get; set; }
 
+        int VariableStart { get; set; }
+
         int[] NIDSubPower { get; set; }
 
         string[] UIDSubPower { get; set; }
@@ -237,6 +239,7 @@ namespace mrbBase
             bool includeDelayed = false,
             bool onlySelf = false,
             bool onlyTarget = false,
+            bool onlyAlly = false,
             bool maxMode = false);
 
         Enums.ShortFX GetDamageMagSum(
@@ -244,16 +247,15 @@ namespace mrbBase
             Enums.eDamage iSub,
             bool includeDelayed = false);
 
-        Enums.ShortFX GetEffectMag(Enums.eEffectType iEffect, Enums.eToWho iTarget = Enums.eToWho.Unspecified,
-            bool allowDelay = false);
+        Enums.ShortFX GetEffectMag(Enums.eEffectType iEffect, Enums.eToWho iTarget = Enums.eToWho.Unspecified, bool allowDelay = false);
 
         bool AffectsTarget(Enums.eEffectType iEffect);
 
         bool AffectsSelf(Enums.eEffectType iEffect);
 
-        bool I9FXPresentP(Enums.eEffectType iEffect, Enums.eMez iMez = Enums.eMez.None);
+        bool AffectsAlly(Enums.eEffectType iEffect);
 
-        bool UpdateFromCSV(string iCSV);
+        bool I9FXPresentP(Enums.eEffectType iEffect, Enums.eMez iMez = Enums.eMez.None);
 
         bool IgnoreEnhancement(Enums.eEnhance iEffect);
 
@@ -267,7 +269,8 @@ namespace mrbBase
             ref int[] returnMask,
             bool shortForm,
             bool simple,
-            bool noMag = false);
+            bool noMag = false,
+            bool fromPopup = false);
 
         int[] AbsorbEffects(
             IPower source,

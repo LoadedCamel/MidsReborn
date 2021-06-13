@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 
@@ -879,7 +879,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     case Enums.eType.Normal:
                         popupData1.Sections[index1]
-                            .Add(iSlot.GetEnhancementString(), Color.FromArgb(0, byte.MaxValue, 0));
+                            .Add(iSlot.GetEnhancementString(), Color.FromArgb(0, 255, 0));
                         break;
                     case Enums.eType.InventO:
                         popupData1.Sections[index1]
@@ -889,12 +889,15 @@ namespace mrbBase.Base.Data_Classes
                         break;
                     case Enums.eType.SpecialO:
                         popupData1.Sections[index1].Add(iSlot.GetEnhancementString(),
-                            Color.FromArgb(byte.MaxValue, byte.MaxValue, 0));
+                            Color.FromArgb(255, 255, 0));
                         break;
                     case Enums.eType.SetO:
-                        popupData1.Sections[index1]
-                            .Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false),
-                                PopUp.Colors.Invention);
+                        if (!DatabaseAPI.EnhIsNaturallyAttuned(iSlot.Enh))
+                        {
+                            popupData1.Sections[index1]
+                                .Add("Invention Level: " + (iSlot.IOLevel + 1) + iSlot.GetRelativeString(false),
+                                    PopUp.Colors.Invention);
+                        }
                         break;
                 }
 
@@ -921,11 +924,11 @@ namespace mrbBase.Base.Data_Classes
 
                         var index2 = popupData1.Add();
                         var strArray1 = BreakByNewLine(iSlot.GetEnhancementStringLong());
-                        for (var index3 = 0; index3 <= strArray1.Length - 1; ++index3)
+                        foreach (var s in strArray1)
                         {
-                            var strArray2 = BreakByBracket(strArray1[index3]);
-                            popupData1.Sections[index2].Add(strArray2[0], Color.FromArgb(0, byte.MaxValue, 0),
-                                strArray2[1], Color.FromArgb(0, byte.MaxValue, 0), 0.9f);
+                            var strArray2 = BreakByBracket(s);
+                            popupData1.Sections[index2].Add(strArray2[0], Color.FromArgb(0, 255, 0),
+                                strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
                         }
 
                         break;
@@ -935,7 +938,7 @@ namespace mrbBase.Base.Data_Classes
                             popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title);
                         var index4 = popupData1.Add();
                         var strArray3 = BreakByNewLine(iSlot.GetEnhancementStringLong());
-                        for (var index3 = 0; index3 <= strArray3.Length - 1; ++index3)
+                        for (var index3 = 0; index3 < strArray3.Length; index3++)
                         {
                             var strArray2 = !enhancement.HasPowerEffect
                                 ? BreakByBracket(strArray3[index3])
@@ -970,7 +973,7 @@ namespace mrbBase.Base.Data_Classes
                 }
                 else if (enhancement.TypeID == Enums.eType.SetO || enhancement.TypeID == Enums.eType.InventO)
                 {
-                    popupData1.Add(PopRecipeInfo(enhancement.RecipeIDX, iSlot.IOLevel));
+                    popupData1.Add(PopRecipeInfo(enhancement.RecipeIDX, iSlot.IOLevel, iSlot.RelativeLevel));
                 }
 
                 popupData2 = popupData1;
@@ -1100,7 +1103,7 @@ namespace mrbBase.Base.Data_Classes
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
             for (var index = 0; index <= enhancementSet.Bonus.Length - 1; ++index)
             {
-                var effectString = enhancementSet.GetEffectString(index, false, true);
+                var effectString = enhancementSet.GetEffectString(index, false, true, true);
                 if (string.IsNullOrEmpty(effectString))
                     continue;
                 if (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP)
@@ -1121,7 +1124,7 @@ namespace mrbBase.Base.Data_Classes
 
             for (var index = 0; index <= enhancementSet.SpecialBonus.Length - 1; ++index)
             {
-                var effectString = enhancementSet.GetEffectString(index, true, true);
+                var effectString = enhancementSet.GetEffectString(index, true, true, true);
                 if (string.IsNullOrEmpty(effectString))
                     continue;
                 var flag = false;
@@ -1142,22 +1145,38 @@ namespace mrbBase.Base.Data_Classes
             return section1;
         }
 
-        public static PopUp.Section PopRecipeInfo(int rIdx, int iLevel)
+        private static void GetSalvageCostOuter(ref Dictionary<Enums.RewardCurrency, int> costList, Salvage s, int amount)
+        {
+            var sCost = clsRewardCurrency.GetSalvageCost(s, MidsContext.Config.PreferredCurrency, amount);
+            if (sCost != null)
+            {
+                costList[MidsContext.Config.PreferredCurrency] += (int) sCost;
+            }
+            else
+            {
+                var sCost2 = clsRewardCurrency.GetSalvageCost(s, Enums.RewardCurrency.RewardMerit, amount);
+                if (sCost2 != null)
+                {
+                    costList[Enums.RewardCurrency.RewardMerit] += (int) sCost2;
+                }
+            }
+        }
+
+        public static PopUp.Section PopRecipeInfo(int rIdx, int iLevel, Enums.eEnhRelative relLevel = Enums.eEnhRelative.Even)
         {
             var section1 = new PopUp.Section();
             if (rIdx < 0) return section1;
 
             var recipe = DatabaseAPI.Database.Recipes[rIdx];
-            if (recipe.ExternalName.Contains("Superior")) return section1;
             var index1 = -1;
-            var num1 = 52;
-            var num2 = 0;
-            for (var index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
+            var lvlUbound = 52;
+            var lvlLbound = 0;
+            for (var index2 = 0; index2 < recipe.Item.Length; index2++)
             {
-                if (recipe.Item[index2].Level > num2)
-                    num2 = recipe.Item[index2].Level;
-                if (recipe.Item[index2].Level < num1)
-                    num1 = recipe.Item[index2].Level;
+                if (recipe.Item[index2].Level > lvlLbound)
+                    lvlLbound = recipe.Item[index2].Level;
+                if (recipe.Item[index2].Level < lvlUbound)
+                    lvlUbound = recipe.Item[index2].Level;
                 if (recipe.Item[index2].Level != iLevel)
                     continue;
                 index1 = index2;
@@ -1167,7 +1186,7 @@ namespace mrbBase.Base.Data_Classes
             if (index1 < 0)
             {
                 iLevel = Enhancement.GranularLevelZb(iLevel, 0, 49);
-                for (var index2 = 0; index2 <= recipe.Item.Length - 1; ++index2)
+                for (var index2 = 0; index2 < recipe.Item.Length; index2++)
                 {
                     if (recipe.Item[index2].Level != iLevel)
                         continue;
@@ -1179,10 +1198,15 @@ namespace mrbBase.Base.Data_Classes
             if (index1 < 0) return section1;
 
             var recipeEntry = recipe.Item[index1];
-            var str = string.Empty;
-            if (recipe.EnhIdx > -1)
-                str = " - " + DatabaseAPI.Database.Enhancements[recipe.EnhIdx].LongName;
-            section1.Add("Recipe" + str, PopUp.Colors.Title);
+            if (recipe.EnhIdx > -1 & !recipe.IsGeneric & !recipe.InternalName.StartsWith("G_"))
+            {
+                section1.Add($"Recipe - {DatabaseAPI.Database.Enhancements[recipe.EnhIdx].LongName}", PopUp.Colors.Title);
+            }
+            else
+            {
+                section1.Add($"Materials:", PopUp.Colors.Title);
+            }
+
             if (recipeEntry.BuyCost > 0)
                 section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}",
                     PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
@@ -1192,26 +1216,70 @@ namespace mrbBase.Base.Data_Classes
             if (recipeEntry.CraftCostM > 0)
                 section1.Add("Craft Cost (Memorized):", PopUp.Colors.Effect, $"{recipeEntry.CraftCostM:###,###,##0}",
                     PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+
+            var subRecipesCost = Enum.GetValues(typeof(Enums.RewardCurrency))
+                .Cast<Enums.RewardCurrency>()
+                .ToDictionary(c => c, _ => 0);
+
             for (var index2 = 0;
-                index2 <= recipeEntry.Salvage.Length - 1 &&
+                index2 < recipeEntry.Salvage.Length &&
                 (index2 == 0 || recipeEntry.SalvageIdx[index2] != recipeEntry.SalvageIdx[0]);
-                ++index2)
+                index2++)
             {
-                if (recipeEntry.SalvageIdx[index2] < 0)
-                    continue;
-                var empty = string.Empty;
+                if (recipeEntry.SalvageIdx[index2] < 0) continue;
+
                 var iColor = DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].Rarity switch
                 {
-                    Recipe.RecipeRarity.Common => PopUp.Colors.Common,
                     Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
                     Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
                     Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => PopUp.Colors.Common
                 };
-                if (recipeEntry.Count[index2] > 0)
-                    section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName + empty,
-                        iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
+
+                if (recipeEntry.Count[index2] <= 0) continue;
+
+                section1.Add(DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]].ExternalName,
+                    iColor, recipeEntry.Count[index2].ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
+                    0.9f, FontStyle.Bold, 1);
+                GetSalvageCostOuter(ref subRecipesCost, DatabaseAPI.Database.Salvage[recipeEntry.SalvageIdx[index2]],
+                    recipeEntry.Count[index2]);
+            }
+
+            var numBoosters = relLevel switch
+            {
+                Enums.eEnhRelative.PlusOne => 1,
+                Enums.eEnhRelative.PlusTwo => 2,
+                Enums.eEnhRelative.PlusThree => 3,
+                Enums.eEnhRelative.PlusFour => 4,
+                Enums.eEnhRelative.PlusFive => 5,
+                _ => 0
+            };
+
+            if (numBoosters > 0)
+            {
+                //section1.Add("", PopUp.Colors.Title);
+                section1.Add("Enhancement Booster",
+                    PopUp.Colors.Rare, numBoosters.ToString(CultureInfo.InvariantCulture), PopUp.Colors.Title,
+                    0.9f, FontStyle.Bold, 1);
+                var boosterSalvage = DatabaseAPI.Database.Salvage.First(s => s.ExternalName == "Enhancement Booster");
+                GetSalvageCostOuter(ref subRecipesCost, boosterSalvage, numBoosters);
+            }
+
+            var subCostTotal = subRecipesCost.Count <= 0 ? 0 : subRecipesCost.Sum(e => e.Value);
+            if (subRecipesCost.Count > 0 & subCostTotal > 0)
+            {
+                section1.Add("", PopUp.Colors.Title);
+                section1.Add($"Salvage detailed cost:", PopUp.Colors.Title);
+                foreach (var c in subRecipesCost)
+                {
+                    if (c.Value <= 0) continue;
+                    var cAmt = c.Key == Enums.RewardCurrency.Influence
+                        ? $"{c.Value:###,###,##0}"
+                        : c.Value.ToString(CultureInfo.InvariantCulture);
+                    section1.Add(clsRewardCurrency.GetCurrencyName(c.Key),
+                        clsRewardCurrency.GetCurrencyRarityColor(c.Key), cAmt, PopUp.Colors.Title,
                         0.9f, FontStyle.Bold, 1);
+                }
             }
 
             return section1;
@@ -1332,6 +1400,14 @@ namespace mrbBase.Base.Data_Classes
                     continue;
                 Powersets[i + 3] = DatabaseAPI.Database.Powersets[poolIndex[minI]];
                 poolOrder[minI] = 512;
+            }
+
+            for (var i = 3; i < 7; i++)
+            {
+                if (Powersets[i].SetName == "Leadership_beta")
+                {
+                    Powersets[i] = DatabaseAPI.GetPowersetByName("Leadership");
+                }
             }
 
             // HACK: this assumes at least 8 powersets exist, but the database is fully editable.
@@ -1515,7 +1591,8 @@ namespace mrbBase.Base.Data_Classes
             public float[] Mez { get; private set; }
             public float[] MezRes { get; private set; }
             public float[] DebuffRes { get; private set; }
-            public float Elusivity { get; set; }
+            public float[] Elusivity { get; set; }
+            public float ElusivityMax => Elusivity.Max();
             public float HPRegen { get; set; }
             public float HPMax { get; set; }
             public float Absorb { get; set; }
@@ -1546,8 +1623,8 @@ namespace mrbBase.Base.Data_Classes
                 Mez = new float[Enum.GetValues(Enums.eMez.None.GetType()).Length];
                 MezRes = new float[Enum.GetValues(Enums.eMez.None.GetType()).Length];
                 DebuffRes = new float[Enum.GetValues(Enums.eEffectType.None.GetType()).Length];
+                Elusivity = new float[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
                 if (!fullReset) return;
-                Elusivity = 0.0f;
                 HPRegen = 0.0f;
                 HPMax = 0.0f;
                 Absorb = 0.0f;

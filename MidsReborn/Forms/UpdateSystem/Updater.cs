@@ -40,10 +40,21 @@ namespace Mids_Reborn.Forms.UpdateSystem
         {
             DownloadThread = new Thread(() =>
             {
+                var path = string.Empty;
+                switch (Type)
+                {
+                    case "App":
+                        path = MidsContext.Config.UpdatePath;
+                        break;
+                    case "Database":
+                        path = MidsContext.Config.DbUpdatePath;
+                        break;
+                }
                 var client = new WebClient();
                 circularProgressBar1.Text = @"Downloading";
                 client.DownloadFileCompleted += Client_DownloadFileCompleted;
-                UpdateFile = new Uri($"{Path.GetDirectoryName(MidsContext.Config.UpdatePath)?.Replace("https:\\", "https://").Replace("\\", "/")}/{VersionText}.zip");
+                var lastSeg = new Uri(path).Segments.Last();
+                UpdateFile = new Uri($"{path.Replace(lastSeg, $"{VersionText}.zip")}");
                 Directory.CreateDirectory($"{Path.GetTempPath()}\\MidsTemp\\");
                 TempFile = $"{Path.GetTempPath()}\\MidsTemp\\{VersionText}.zip";
                 client.DownloadFileAsync(UpdateFile, TempFile);
@@ -75,10 +86,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 case "App":
                     circularProgressBar1.Text = @"Installing";
                     foreach (var filename in Directory.GetFiles(dirLoc, "*.dll"))
+                    {
                         File.Move(filename, $"{filename}.bak");
+                    }
 
-                    File.Move(Assembly.GetExecutingAssembly().Location,
-                        $"{Assembly.GetExecutingAssembly().Location}.bak");
+                    File.Move(Assembly.GetExecutingAssembly().Location, $"{Assembly.GetExecutingAssembly().Location}.bak");
                     break;
                 case "Database":
                     circularProgressBar1.Text = @"Installing";

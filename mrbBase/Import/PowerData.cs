@@ -21,7 +21,6 @@ namespace mrbBase.Import
             else
             {
                 Data = new Power();
-                IsValid = Data.UpdateFromCSV(iString);
                 _csvString = iString;
                 if (DatabaseAPI.GetPowersetByName(Data.GroupName + "." + Data.SetName) == null)
                 {
@@ -61,7 +60,6 @@ namespace mrbBase.Import
                 return;
             DatabaseAPI.Database.Power[Index].IsNew = IsNew;
             DatabaseAPI.Database.Power[Index].IsModified = true;
-            DatabaseAPI.Database.Power[Index].UpdateFromCSV(_csvString);
         }
 
         public bool CheckDifference(out string message)

@@ -18,18 +18,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
 		private void BusyHide()
 		{
-	        if (_bFrm == null)
-		        return;
+	        if (_bFrm == null) return;
 	        _bFrm.Close();
-	        _bFrm = null;
         }
 
         private void BusyMsg(string sMessage)
-
         {
-	        using var bFrm = new frmBusy();
-	        bFrm.Show(this);
-	        bFrm.SetMessage(sMessage);
+	        _bFrm.SetMessage(sMessage);
+            _bFrm.Show(this);
         }
 
 		public FrmGCMEditor(ref frmMain iParent)
@@ -37,7 +33,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
             Load += frmGCMEditor_Load;
             InitializeComponent();
+            Icon = Resources.reborn;
             _myParent = iParent;
+            _bFrm = new frmBusy();
         }
 
         private void frmGCMEditor_Load(object sender, EventArgs e)
@@ -56,7 +54,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             lvModifiers.Columns[0].Text = @"Current Modifiers";
-            lvModifiers.Columns[0].Width = -2;
             lvModifiers.EndUpdate();
         }
 

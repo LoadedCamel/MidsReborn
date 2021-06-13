@@ -84,9 +84,36 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AttribModDefParser.cs" />
+    <Compile Include="clsBuildSalvageSummary.cs" />
     <Compile Include="clsShoppingCheckList.cs" />
     <Compile Include="clsGenFreebies.cs" />
     <Compile Include="clsOAuth.cs" />
+    <Compile Include="Forms\frmBuildSalvageHud.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmBuildSalvageHud.Designer.cs">
+      <DependentUpon>frmBuildSalvageHud.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.Designer.cs">
+      <DependentUpon>frmRestoreHidden.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmConditionalAttributeSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmConditionalAttributeSearch.Designer.cs">
+      <DependentUpon>frmConditionalAttributeSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.Designer.cs">
+      <DependentUpon>frmDBConvert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\DbUpdate.cs" />
+    <Compile Include="Forms\UpdateSystem\AppUpdate.cs" />
     <Compile Include="Forms\UpdateSystem\clsZip.cs" />
     <Compile Include="clsDiscord.cs" />
     <Compile Include="FileAssociation.cs" />
@@ -104,6 +131,12 @@
     </Compile>
     <Compile Include="Forms\Controls\InputBox.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\PatchQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateSystem\PatchQuery.Designer.cs">
+      <DependentUpon>PatchQuery.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\UpdateSystem\UpdateQuery.cs">
       <SubType>Form</SubType>
@@ -203,16 +236,10 @@
     <Compile Include="Forms\frmInitializing.Designer.cs">
       <DependentUpon>frmInitializing.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmUpdate.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmUpdate.Designer.cs">
-      <DependentUpon>frmUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmSetListingPvP.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmSetListingPvP.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.Designer.cs">
       <DependentUpon>frmSetListingPvP.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\JsonImport\frmJsonImportMain.cs">
@@ -303,16 +330,13 @@
     <Compile Include="Forms\ImportExportItems\frmExportColor.Designer.cs">
       <DependentUpon>frmExportColor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmZStatus.Designer.cs">
-      <DependentUpon>frmZStatus.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmTweakMatching.Designer.cs">
       <DependentUpon>frmTweakMatching.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmStats.Designer.cs">
       <DependentUpon>frmStats.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmSetListing.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListing.Designer.cs">
       <DependentUpon>frmSetListing.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmSetFind.Designer.cs">
@@ -327,10 +351,10 @@
     <Compile Include="Forms\frmPrint.Designer.cs">
       <DependentUpon>frmPrint.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmPowerEffect.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.Designer.cs">
       <DependentUpon>frmPowerEffect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmPowerBrowser.Designer.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.Designer.cs">
       <DependentUpon>frmPowerBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmOptionListDlg.Designer.cs">
@@ -341,42 +365,6 @@
     </Compile>
     <Compile Include="Forms\frmIncarnate.Designer.cs">
       <DependentUpon>frmIncarnate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SetBonusAssignment.Designer.cs">
-      <DependentUpon>frmImport_SetBonusAssignment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SetAssignments.Designer.cs">
-      <DependentUpon>frmImport_SetAssignments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SalvageReq.Designer.cs">
-      <DependentUpon>frmImport_SalvageReq.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Recipe.Designer.cs">
-      <DependentUpon>frmImport_Recipe.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Powerset.Designer.cs">
-      <DependentUpon>frmImport_Powerset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Power.Designer.cs">
-      <DependentUpon>frmImport_Power.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Entities.Designer.cs">
-      <DependentUpon>frmImport_Entities.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_EnhancementEffects.Designer.cs">
-      <DependentUpon>frmImport_EnhancementEffects.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Archetype.Designer.cs">
-      <DependentUpon>frmImport_Archetype.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportPowerLevels.Designer.cs">
-      <DependentUpon>frmImportPowerLevels.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportEnhSets.Designer.cs">
-      <DependentUpon>frmImportEnhSets.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportEffects.Designer.cs">
-      <DependentUpon>frmImportEffects.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmFloatingStats.Designer.cs">
       <DependentUpon>frmFloatingStats.cs</DependentUpon>
@@ -389,9 +377,6 @@
     </Compile>
     <Compile Include="Forms\frmEnhData.Designer.cs">
       <DependentUpon>frmEnhData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmCSV.Designer.cs">
-      <DependentUpon>frmCSV.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmBusy.Designer.cs">
       <DependentUpon>frmBusy.cs</DependentUpon>
@@ -492,12 +477,27 @@
     <Content Include="Images\Classes\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\AttribMod.json">
+    <Content Include="Data\Homecoming\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\GlobalMods.mhd">
+    <Content Include="Data\Homecoming\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Forms\frmBuildSalvageHud.resx">
+      <DependentUpon>frmBuildSalvageHud.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmConditionalAttributeSearch.resx">
+      <DependentUpon>frmConditionalAttributeSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmDBConvert.resx">
+      <DependentUpon>frmDBConvert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.resx">
+      <DependentUpon>frmRestoreHidden.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateSystem\PatchQuery.resx">
+      <DependentUpon>PatchQuery.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmIncarnates.resx">
       <DependentUpon>frmIncarnates.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -511,10 +511,10 @@
     <EmbeddedResource Include="UIv2\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Data\NLevels.mhd">
+    <Content Include="Data\Homecoming\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\RLevels.mhd">
+    <Content Include="Data\Homecoming\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Images\defaultAvatar.png" />
@@ -2233,6 +2233,8 @@
     <None Include="Resources\AncientScroll.png" />
     <None Include="Resources\EnhancementBooster.png" />
     <None Include="Resources\EnhancementCatalyst.png" />
+    <None Include="Resources\Icon_AncientMemories.png" />
+    <None Include="Resources\Icon_DisorientingField.png" />
     <Content Include="Web\authorized.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2268,10 +2270,7 @@
     <EmbeddedResource Include="Forms\frmTeam.resx">
       <DependentUpon>frmTeam.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmUpdate.resx">
-      <DependentUpon>frmUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSetListingPvP.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetListingPvP.resx">
       <DependentUpon>frmSetListingPvP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonImport\frmJsonImportMain.resx">
@@ -2294,9 +2293,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.resx">
       <DependentUpon>frmSetEditPvP.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsMenuItems\frmAttribModImporter.resx">
-      <DependentUpon>frmAttribModImporter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateSystem\PatchNotes.resx">
       <DependentUpon>PatchNotes.cs</DependentUpon>
@@ -2352,9 +2348,6 @@
     <Compile Include="Forms\WindowMenuItems\frmCompare.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmCSV.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\WindowMenuItems\frmData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2397,42 +2390,6 @@
     <Compile Include="Forms\ImportExportItems\frmForum.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportEffects.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportEnhSets.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImportPowerLevels.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Archetype.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_EnhancementEffects.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Entities.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Power.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Powerset.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_Recipe.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SalvageReq.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SetAssignments.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportExportItems\frmImport_SetBonusAssignment.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\frmIncarnate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2448,10 +2405,10 @@
     <Compile Include="Forms\frmOptionListDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmPowerBrowser.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmPowerEffect.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmPrint.cs">
@@ -2472,7 +2429,7 @@
     <Compile Include="Forms\frmSetFind.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmSetListing.cs">
+    <Compile Include="Forms\OptionsMenuItems\DbEditor\frmSetListing.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\WindowMenuItems\frmSetViewer.cs">
@@ -2482,9 +2439,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmTweakMatching.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmZStatus.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainModule.cs" />
@@ -2504,9 +2458,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmCompare.resx">
       <DependentUpon>frmCompare.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmCSV.resx">
-      <DependentUpon>frmCSV.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmData.resx">
       <DependentUpon>frmData.cs</DependentUpon>
@@ -2550,42 +2501,6 @@
     <EmbeddedResource Include="Forms\ImportExportItems\frmForum.resx">
       <DependentUpon>frmForum.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Archetype.resx">
-      <DependentUpon>frmImport_Archetype.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_EnhancementEffects.resx">
-      <DependentUpon>frmImport_EnhancementEffects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Entities.resx">
-      <DependentUpon>frmImport_Entities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Power.resx">
-      <DependentUpon>frmImport_Power.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Powerset.resx">
-      <DependentUpon>frmImport_Powerset.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_Recipe.resx">
-      <DependentUpon>frmImport_Recipe.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_SalvageReq.resx">
-      <DependentUpon>frmImport_SalvageReq.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_SetAssignments.resx">
-      <DependentUpon>frmImport_SetAssignments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImport_SetBonusAssignment.resx">
-      <DependentUpon>frmImport_SetBonusAssignment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImportEffects.resx">
-      <DependentUpon>frmImportEffects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImportEnhSets.resx">
-      <DependentUpon>frmImportEnhSets.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportExportItems\frmImportPowerLevels.resx">
-      <DependentUpon>frmImportPowerLevels.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmIncarnate.resx">
       <DependentUpon>frmIncarnate.cs</DependentUpon>
     </EmbeddedResource>
@@ -2601,10 +2516,11 @@
     <EmbeddedResource Include="Forms\frmOptionListDlg.resx">
       <DependentUpon>frmOptionListDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmPowerBrowser.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.resx">
       <DependentUpon>frmPowerBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmPowerEffect.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmPowerEffect.resx">
       <DependentUpon>frmPowerEffect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPrint.resx">
@@ -2626,7 +2542,7 @@
     <EmbeddedResource Include="Forms\frmSetFind.resx">
       <DependentUpon>frmSetFind.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSetListing.resx">
+    <EmbeddedResource Include="Forms\OptionsMenuItems\DbEditor\frmSetListing.resx">
       <DependentUpon>frmSetListing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindowMenuItems\frmSetViewer.resx">
@@ -2637,9 +2553,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmTweakMatching.resx">
       <DependentUpon>frmTweakMatching.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmZStatus.resx">
-      <DependentUpon>frmZStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -2675,42 +2588,45 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\bbcode.mhd">
+    <Content Include="Data\Homecoming\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Compare.mhd">
+    <Content Include="Data\Homecoming\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\EClasses.mhd">
+    <Content Include="Data\Homecoming\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\EnhDB.mhd">
+    <Content Include="Data\Homecoming\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\I12.mhd">
+    <Content Include="Data\Homecoming\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\I9.mhd">
+    <Content Include="Data\Homecoming\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Maths.mhd">
+    <Content Include="Data\Homecoming\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Origins.mhd">
+    <Content Include="Data\Homecoming\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Recipe.mhd">
+    <Content Include="Data\Homecoming\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Salvage.mhd">
+    <Content Include="Data\Homecoming\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\SetTypes.mhd">
+    <Content Include="Data\Homecoming\SetTypes.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BetterFolderBrowser">
+      <Version>1.2.0</Version>
+    </PackageReference>
     <PackageReference Include="CircularProgressBar">
       <Version>2.8.0.16</Version>
     </PackageReference>
@@ -2721,7 +2637,7 @@
       <Version>5.15.3</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="RandomString4Net">
       <Version>1.3.0</Version>

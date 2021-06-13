@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,8 +11,7 @@ using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
-using mrbControls; //using Microsoft.VisualBasic;
-//using Microsoft.VisualBasic.CompilerServices;
+using mrbControls;
 
 namespace Mids_Reborn.Forms
 {
@@ -411,7 +409,7 @@ namespace Mids_Reborn.Forms
             if (Button == MouseButtons.Right)
             {
                 Locked = false;
-                miniPowerInfo(Item.Index);
+                MiniPowerInfo(Item.Index);
                 lblLock.Visible = true;
                 Locked = true;
                 return;
@@ -451,7 +449,7 @@ namespace Mids_Reborn.Forms
 
         private void llLeft_ItemHover(ListLabelV3.ListLabelItemV3 Item)
         {
-            miniPowerInfo(Item.Index);
+            MiniPowerInfo(Item.Index);
         }
 
         private void llLeft_MouseEnter(object sender, EventArgs e)
@@ -467,7 +465,7 @@ namespace Mids_Reborn.Forms
             if (Button == MouseButtons.Right)
             {
                 Locked = false;
-                miniPowerInfo(pIDX);
+                MiniPowerInfo(pIDX);
                 lblLock.Visible = true;
                 Locked = true;
             }
@@ -512,7 +510,7 @@ namespace Mids_Reborn.Forms
         private void llRight_ItemHover(ListLabelV3.ListLabelItemV3 Item)
 
         {
-            miniPowerInfo(Item.Index + LLLeft.Items.Length);
+            MiniPowerInfo(Item.Index + LLLeft.Items.Length);
         }
 
         private void llRight_MouseEnter(object sender, EventArgs e)
@@ -529,13 +527,10 @@ namespace Mids_Reborn.Forms
             this.loreBtn = loreBtn;
         }
 
-        private void miniPowerInfo(int pIDX)
+        private void MiniPowerInfo(int pIDX)
         {
             if (Locked)
                 return;
-            IPower power1 = new Power(myPowers[pIDX]);
-            power1.AbsorbPetEffects();
-            power1.ApplyGrantPowerEffects();
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {
@@ -544,6 +539,9 @@ namespace Mids_Reborn.Forms
             }
             else
             {
+                IPower power1 = new Power(myPowers[pIDX]);
+                power1.AbsorbPetEffects();
+                power1.ApplyGrantPowerEffects();
                 var index1 = iPopup.Add();
                 var str1 = "";
                 switch (power1.PowerType)
@@ -620,8 +618,12 @@ namespace Mids_Reborn.Forms
                             continue;
                         var index4 = iPopup.Add();
                         power1.Effects[index3].SetPower(power1);
-                        var strArray = power1.Effects[index3].BuildEffectString().Replace("[", "\r\n")
-                            .Replace("\r\n", "^").Replace("  ", "").Replace("]", "").Split(chArray);
+                        var strArray = power1.Effects[index3].BuildEffectString(false, "", false, false, false, true)
+                            .Replace("[", "\r\n")
+                            .Replace("\r\n", "^")
+                            .Replace("  ", "")
+                            .Replace("]", "")
+                            .Split(chArray);
                         var num2 = strArray.Length - 1;
                         for (var index5 = 0; index5 <= num2; ++index5)
                             if (index5 == 0)

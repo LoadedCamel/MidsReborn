@@ -57,7 +57,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.lblRevision = new System.Windows.Forms.NumericUpDown();
             this.lblRevisionDate = new System.Windows.Forms.TextBox();
             this.btnExportJson = new System.Windows.Forms.Button();
-            this.pbGraph = new ctlDataGraph();
+            this.pbGraph = new mrbControls.ctlDataGraph();
             ((System.ComponentModel.ISupportInitialize)(this.lblRevision)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGraph)).BeginInit();
             this.SuspendLayout();
@@ -262,7 +262,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbArchetype.FormattingEnabled = true;
             this.cbArchetype.Location = new System.Drawing.Point(299, 5);
             this.cbArchetype.Name = "cbArchetype";
-            this.cbArchetype.Size = new System.Drawing.Size(209, 21);
+            this.cbArchetype.Size = new System.Drawing.Size(318, 21);
             this.cbArchetype.TabIndex = 24;
             this.cbArchetype.SelectionChangeCommitted += new System.EventHandler(this.cbArchetype_SelectionChangeCommitted);
             // 

@@ -11,6 +11,7 @@ namespace mrbBase.Base.Data_Classes
     {
         public bool IsModified;
         public bool IsNew;
+
         public Image Image(List<string> atImages)
         {
             var img = atImages.FirstOrDefault(i => i.Contains(ClassName));
@@ -56,8 +57,7 @@ namespace mrbBase.Base.Data_Classes
             ClassName = "NewClass";
         }
 
-        public Archetype(Archetype template)
-            : this()
+        public Archetype(Archetype template) : this()
         {
             Idx = template.Idx;
             DisplayName = template.DisplayName;
@@ -86,8 +86,7 @@ namespace mrbBase.Base.Data_Classes
             PerceptionCap = template.PerceptionCap;
         }
 
-        public Archetype(BinaryReader reader)
-            : this()
+        public Archetype(BinaryReader reader) : this()
         {
             DisplayName = reader.ReadString();
             Hitpoints = reader.ReadInt32();
@@ -162,6 +161,8 @@ namespace mrbBase.Base.Data_Classes
         private string PoolGroup { get; set; }
 
         public bool Playable { get; set; }
+
+        public bool Pet { get; set; }
 
         public float BaseRecovery { get; set; }
 
@@ -271,6 +272,35 @@ namespace mrbBase.Base.Data_Classes
             SecondaryGroup = array[9];
             PoolGroup = array[10];
             return true;
+        }
+
+        public static string[] GetNpcClasses()
+        {
+            return new[]
+            {
+                "Henchman",
+                "Pet",
+                "Arch-villain",
+                "Elite Boss",
+                "Boss",
+                "Police",
+                "Hamidon",
+                "Giant Monster",
+                "Rularuu",
+                "Boss Signature Pets",
+                "Lieutenant",
+                "Lt_LongRangeDrone",
+                "Minion",
+                "Monument",
+                "Sniper",
+                "OilSlickTarget",
+                "PracticeBot",
+                "Underling",
+                "Swarm",
+                "Minion_UnkillableNPC",
+                "Reichsman",
+                ""
+            };
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -14,6 +15,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmDPSCalc : Form
     {
+        private struct EE
+        {
+            public bool Enabled;
+            public bool Played;
+        }
+
         private readonly frmMain myParent;
 
         private ExtendedBitmap bxRecipe;
@@ -52,16 +59,20 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private TextBox tbDPSOutput;
         private ToolTip ToolTip1;
 
+        private EE _EE;
+
         public frmDPSCalc(frmMain iParent)
         {
             FormClosed += frmDPSCalc_FormClosed;
             Load += frmDPSCalc_Load;
             InitializeComponent();
             Name = nameof(frmDPSCalc);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmDPSCalc));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmDPSCalc));
             Icon = Resources.reborn;
             myParent = iParent;
             bxRecipe = new ExtendedBitmap(I9Gfx.GetRecipeName());
+            GlobalPowerList = new PowerList[0];
+            _EE = new EE { Enabled = false, Played = false };
         }
 
         private void chkSortByLevel_CheckedChanged(object sender, EventArgs e)
@@ -166,18 +177,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             myParent.FloatDPSCalc(false);
         }
 
+        private void SetIbStyle(ImageButton ib)
+        {
+            ib.IA = myParent.Drawing.pImageAttributes;
+            ib.ImageOff = myParent.Drawing.bxPower[MidsContext.Character.IsHero() ? 2 : 4].Bitmap;
+            ib.ImageOn = myParent.Drawing.bxPower[MidsContext.Character.IsHero() ? 3 : 5].Bitmap;
+        }
+
         private void frmDPSCalc_Load(object sender, EventArgs e)
         {
-            ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            SetIbStyle(ibClose);
+            SetIbStyle(ibTopmost);
+            SetIbStyle(ibClear);
+            SetIbStyle(ibAutoMode);
         }
 
         private void ibClear_ButtonClicked()
@@ -366,26 +378,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         public void UpdateData()
         {
             BackColor = myParent.BackColor;
-            ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibClear.IA = myParent.Drawing.pImageAttributes;
-            ibClear.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClear.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibAutoMode.IA = myParent.Drawing.pImageAttributes;
-            ibAutoMode.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibAutoMode.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            SetIbStyle(ibClose);
+            SetIbStyle(ibTopmost);
+            SetIbStyle(ibClear);
+            SetIbStyle(ibAutoMode);
             FillPowerList();
         }
 
@@ -398,8 +394,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var endCost = enhancedPower.EndCost;
             var effectMag1 = enhancedPower.GetEffectMag(Enums.eEffectType.DamageBuff, Enums.eToWho.Self);
             var effectMag2 = enhancedPower.GetEffectMag(Enums.eEffectType.Resistance, Enums.eToWho.Target);
+            var effectMag3 = enhancedPower.GetEffectMag(Enums.eEffectType.DamageBuff, Enums.eToWho.Ally);
+            var effectMag4 = enhancedPower.GetEffectMag(Enums.eEffectType.Resistance, Enums.eToWho.Ally);
             effectMag1.Multiply();
             effectMag2.Multiply();
+            effectMag3.Multiply();
+            effectMag4.Multiply();
             var num2 = damageValue / num1;
             string[] strArray;
             if (Math.Abs(damageValue) > float.Epsilon)
@@ -409,7 +409,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     rechargeTime.ToString(CultureInfo.InvariantCulture), num1.ToString(CultureInfo.InvariantCulture),
                     endCost.ToString(CultureInfo.InvariantCulture),
                     effectMag1.Sum.ToString(CultureInfo.InvariantCulture),
-                    effectMag2.Sum.ToString(CultureInfo.InvariantCulture), powerLocation.ToString()
+                    effectMag2.Sum.ToString(CultureInfo.InvariantCulture),
+                    effectMag3.Sum.ToString(CultureInfo.InvariantCulture),
+                    effectMag4.Sum.ToString(CultureInfo.InvariantCulture),
+                    powerLocation.ToString()
                 };
             else
                 strArray = new[]
@@ -418,7 +421,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     num1.ToString(CultureInfo.InvariantCulture),
                     endCost.ToString(CultureInfo.InvariantCulture),
                     effectMag1.Sum.ToString(CultureInfo.InvariantCulture),
-                    effectMag2.Sum.ToString(CultureInfo.InvariantCulture), powerLocation.ToString()
+                    effectMag2.Sum.ToString(CultureInfo.InvariantCulture),
+                    effectMag3.Sum.ToString(CultureInfo.InvariantCulture),
+                    effectMag4.Sum.ToString(CultureInfo.InvariantCulture),
+                    powerLocation.ToString()
                 };
             return strArray;
         }
@@ -497,6 +503,20 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                 if (array.Length > 1)
                 {
+                    if (array.Length == 2)
+                    {
+                        if (_EE.Enabled & !_EE.Played &
+                            ((array[0].PowerName.EndsWith("- Brawl") & array[1].PowerName.EndsWith("- Mercurial Blow")) |
+                             (array[0].PowerName.EndsWith("- Mercurial Blow") & array[1].PowerName.EndsWith("- Brawl"))))
+                        {
+                            tbDPSOutput.Text = "*Plays Burly Brawl* I'm here for you, Smith...";
+                            tbDPSOutput.Refresh();
+                            Thread.Sleep(2000);
+                            _EE.Played = true;
+                        }
+                    }
+
+                    _EE.Enabled = false;
                     Array.Sort(array, (x, y) => x.HidenDPA.CompareTo(y.HidenDPA));
                     var num1 = array[length - 1].Recharge + 5f;
                     var num2 = length - 1;
@@ -561,11 +581,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 else if (array.Length == 1)
                 {
-                    tbDPSOutput.Text = "You cannot make an attack chain from one attack";
+                    _EE.Enabled = array[0].PowerName.EndsWith("- Brawl") & array[0].Recharge <= 0.5;
+                    tbDPSOutput.Text = _EE.Enabled
+                        ? "Hmm, this is almost an attack chain. Find some pole you can hop on for some real damage!"
+                        : "You cannot make an attack chain from one attack";
                 }
                 else
                 {
                     tbDPSOutput.Text = "Come on Kiddo, gotta pick something :)";
+                    _EE.Enabled = false;
                 }
             }
             else

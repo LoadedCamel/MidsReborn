@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using mrbBase.Base.Master_Classes;
 
 namespace mrbBase.Base.Data_Classes
@@ -43,6 +41,7 @@ namespace mrbBase.Base.Data_Classes
             AttribType = Enums.eAttribType.Magnitude;
             Aspect = Enums.eAspect.Str;
             ModifierTable = "Melee_Ones";
+            nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
             PowerFullName = string.Empty;
             Absorbed_PowerType = Enums.ePowerType.Auto_;
             Absorbed_Power_nID = -1;
@@ -86,87 +85,128 @@ namespace mrbBase.Base.Data_Classes
             this.power = power;
         }
 
-        public Effect(BinaryReader reader)
-            : this()
+        public Effect(BinaryReader reader, bool useOld = false) : this()
         {
-            PowerFullName = reader.ReadString();
-            UniqueID = reader.ReadInt32();
-            EffectClass = (Enums.eEffectClass)reader.ReadInt32();
-            EffectType = (Enums.eEffectType)reader.ReadInt32();
-            DamageType = (Enums.eDamage)reader.ReadInt32();
-            MezType = (Enums.eMez)reader.ReadInt32();
-            ETModifies = (Enums.eEffectType)reader.ReadInt32();
-            Summon = reader.ReadString();
-            DelayedTime = reader.ReadSingle();
-            Ticks = reader.ReadInt32();
-            Stacking = (Enums.eStacking)reader.ReadInt32();
-            BaseProbability = reader.ReadSingle();
-            Suppression = (Enums.eSuppress)reader.ReadInt32();
-            Buffable = reader.ReadBoolean();
-            Resistible = reader.ReadBoolean();
-            SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
-            VariableModifiedOverride = reader.ReadBoolean();
-            PvMode = (Enums.ePvX)reader.ReadInt32();
-            ToWho = (Enums.eToWho)reader.ReadInt32();
-            DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
-            Scale = reader.ReadSingle();
-            nMagnitude = reader.ReadSingle();
-            nDuration = reader.ReadSingle();
-            AttribType = (Enums.eAttribType)reader.ReadInt32();
-            Aspect = (Enums.eAspect)reader.ReadInt32();
-            ModifierTable = reader.ReadString();
-            nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
-            NearGround = reader.ReadBoolean();
-            CancelOnMiss = reader.ReadBoolean();
-            RequiresToHitCheck = reader.ReadBoolean();
-            UIDClassName = reader.ReadString();
-            nIDClassName = reader.ReadInt32();
-            MagnitudeExpression = reader.ReadString();
-            Reward = reader.ReadString();
-            EffectId = reader.ReadString();
-            IgnoreED = reader.ReadBoolean();
-            Override = reader.ReadString();
-            ProcsPerMinute = reader.ReadSingle();
-
-            PowerAttribs = (Enums.ePowerAttribs)reader.ReadInt32();
-            AtrOrigAccuracy = reader.ReadSingle();
-            AtrOrigActivatePeriod = reader.ReadSingle();
-            AtrOrigArc = reader.ReadInt32();
-            AtrOrigCastTime = reader.ReadSingle();
-            AtrOrigEffectArea = (Enums.eEffectArea)reader.ReadInt32();
-            AtrOrigEnduranceCost = reader.ReadSingle();
-            AtrOrigInterruptTime = reader.ReadSingle();
-            AtrOrigMaxTargets = reader.ReadInt32();
-            AtrOrigRadius = reader.ReadSingle();
-            AtrOrigRange = reader.ReadSingle();
-            AtrOrigRechargeTime = reader.ReadSingle();
-            AtrOrigSecondaryRange = reader.ReadSingle();
-
-            AtrModAccuracy = reader.ReadSingle();
-            AtrModActivatePeriod = reader.ReadSingle();
-            AtrModArc = reader.ReadInt32();
-            AtrModCastTime = reader.ReadSingle();
-            AtrModEffectArea = (Enums.eEffectArea)reader.ReadInt32();
-            AtrModEnduranceCost = reader.ReadSingle();
-            AtrModInterruptTime = reader.ReadSingle();
-            AtrModMaxTargets = reader.ReadInt32();
-            AtrModRadius = reader.ReadSingle();
-            AtrModRange = reader.ReadSingle();
-            AtrModRechargeTime = reader.ReadSingle();
-            AtrModSecondaryRange = reader.ReadSingle();
-
-            var conditionalCount = reader.ReadInt32();
-            for (var cIndex = 0; cIndex < conditionalCount; cIndex++)
+            if (!useOld)
             {
-                var cKey = reader.ReadString();
-                var cValue = reader.ReadString();
-                ActiveConditionals.Add(new KeyValue<string, string>(cKey, cValue));
-            }
+                PowerFullName = reader.ReadString();
+                UniqueID = reader.ReadInt32();
+                EffectClass = (Enums.eEffectClass)reader.ReadInt32();
+                EffectType = (Enums.eEffectType)reader.ReadInt32();
+                DamageType = (Enums.eDamage)reader.ReadInt32();
+                MezType = (Enums.eMez)reader.ReadInt32();
+                ETModifies = (Enums.eEffectType)reader.ReadInt32();
+                Summon = reader.ReadString();
+                DelayedTime = reader.ReadSingle();
+                Ticks = reader.ReadInt32();
+                Stacking = (Enums.eStacking)reader.ReadInt32();
+                BaseProbability = reader.ReadSingle();
+                Suppression = (Enums.eSuppress)reader.ReadInt32();
+                Buffable = reader.ReadBoolean();
+                Resistible = reader.ReadBoolean();
+                SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
+                VariableModifiedOverride = reader.ReadBoolean();
+                PvMode = (Enums.ePvX)reader.ReadInt32();
+                ToWho = (Enums.eToWho)reader.ReadInt32();
+                DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
+                Scale = reader.ReadSingle();
+                nMagnitude = reader.ReadSingle();
+                nDuration = reader.ReadSingle();
+                AttribType = (Enums.eAttribType)reader.ReadInt32();
+                Aspect = (Enums.eAspect)reader.ReadInt32();
+                ModifierTable = reader.ReadString();
+                nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
+                NearGround = reader.ReadBoolean();
+                CancelOnMiss = reader.ReadBoolean();
+                RequiresToHitCheck = reader.ReadBoolean();
+                UIDClassName = reader.ReadString();
+                nIDClassName = reader.ReadInt32();
+                MagnitudeExpression = reader.ReadString();
+                Reward = reader.ReadString();
+                EffectId = reader.ReadString();
+                IgnoreED = reader.ReadBoolean();
+                Override = reader.ReadString();
+                ProcsPerMinute = reader.ReadSingle();
 
-            /*if (DatabaseAPI.Database.EffectIds.Contains(EffectId))
-                return;
-            DatabaseAPI.Database.EffectIds.Add(EffectId)*/
-            ;
+                PowerAttribs = (Enums.ePowerAttribs)reader.ReadInt32();
+                AtrOrigAccuracy = reader.ReadSingle();
+                AtrOrigActivatePeriod = reader.ReadSingle();
+                AtrOrigArc = reader.ReadInt32();
+                AtrOrigCastTime = reader.ReadSingle();
+                AtrOrigEffectArea = (Enums.eEffectArea)reader.ReadInt32();
+                AtrOrigEnduranceCost = reader.ReadSingle();
+                AtrOrigInterruptTime = reader.ReadSingle();
+                AtrOrigMaxTargets = reader.ReadInt32();
+                AtrOrigRadius = reader.ReadSingle();
+                AtrOrigRange = reader.ReadSingle();
+                AtrOrigRechargeTime = reader.ReadSingle();
+                AtrOrigSecondaryRange = reader.ReadSingle();
+
+                AtrModAccuracy = reader.ReadSingle();
+                AtrModActivatePeriod = reader.ReadSingle();
+                AtrModArc = reader.ReadInt32();
+                AtrModCastTime = reader.ReadSingle();
+                AtrModEffectArea = (Enums.eEffectArea)reader.ReadInt32();
+                AtrModEnduranceCost = reader.ReadSingle();
+                AtrModInterruptTime = reader.ReadSingle();
+                AtrModMaxTargets = reader.ReadInt32();
+                AtrModRadius = reader.ReadSingle();
+                AtrModRange = reader.ReadSingle();
+                AtrModRechargeTime = reader.ReadSingle();
+                AtrModSecondaryRange = reader.ReadSingle();
+
+                var conditionalCount = reader.ReadInt32();
+                for (var cIndex = 0; cIndex < conditionalCount; cIndex++)
+                {
+                    var cKey = reader.ReadString();
+                    var cValue = reader.ReadString();
+                    ActiveConditionals.Add(new KeyValue<string, string>(cKey, cValue));
+                }
+            }
+            else
+            {
+                PowerFullName = reader.ReadString();
+                UniqueID = reader.ReadInt32();
+                EffectClass = (Enums.eEffectClass)reader.ReadInt32();
+                EffectType = (Enums.eEffectType)reader.ReadInt32();
+                DamageType = (Enums.eDamage)reader.ReadInt32();
+                MezType = (Enums.eMez)reader.ReadInt32();
+                ETModifies = (Enums.eEffectType)reader.ReadInt32();
+                Summon = reader.ReadString();
+                DelayedTime = reader.ReadSingle();
+                Ticks = reader.ReadInt32();
+                Stacking = (Enums.eStacking)reader.ReadInt32();
+                BaseProbability = reader.ReadSingle();
+                Suppression = (Enums.eSuppress)reader.ReadInt32();
+                Buffable = reader.ReadBoolean();
+                Resistible = reader.ReadBoolean();
+                SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
+                VariableModifiedOverride = reader.ReadBoolean();
+                PvMode = (Enums.ePvX)reader.ReadInt32();
+                ToWho = (Enums.eToWho)reader.ReadInt32();
+                DisplayPercentageOverride = (Enums.eOverrideBoolean)reader.ReadInt32();
+                Scale = reader.ReadSingle();
+                nMagnitude = reader.ReadSingle();
+                nDuration = reader.ReadSingle();
+                AttribType = (Enums.eAttribType)reader.ReadInt32();
+                Aspect = (Enums.eAspect)reader.ReadInt32();
+                ModifierTable = reader.ReadString();
+                nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
+                NearGround = reader.ReadBoolean();
+                CancelOnMiss = reader.ReadBoolean();
+                RequiresToHitCheck = reader.ReadBoolean();
+                UIDClassName = reader.ReadString();
+                nIDClassName = reader.ReadInt32();
+                MagnitudeExpression = reader.ReadString();
+                Reward = reader.ReadString();
+                EffectId = reader.ReadString();
+                IgnoreED = reader.ReadBoolean();
+                Override = reader.ReadString();
+                ProcsPerMinute = reader.ReadSingle();
+                if (DatabaseAPI.Database.EffectIds.Contains(EffectId))
+                    return;
+                DatabaseAPI.Database.EffectIds.Add(EffectId);
+            }
         }
 
         private Effect(IEffect template)
@@ -300,30 +340,33 @@ namespace mrbBase.Base.Data_Classes
         {
             get
             {
-                var num1 = 0.0f;
                 switch (AttribType)
                 {
                     case Enums.eAttribType.Magnitude:
-                        if (Math.Abs(Math_Mag - 0.0f) > 0.01)
+                        if (Math.Abs(Math_Mag) > 0.01)
+                        {
                             return Math_Mag;
-                        var num2 = nMagnitude;
-                        if (EffectType == Enums.eEffectType.Damage)
-                            num2 = -num2;
-                        num1 = Scale * num2 * DatabaseAPI.GetModifier(this);
-                        break;
-                    case Enums.eAttribType.Duration:
-                        if (Math.Abs(Math_Mag - 0.0f) > 0.01)
-                            return Math_Mag;
-                        num1 = nMagnitude;
-                        if (EffectType == Enums.eEffectType.Damage) num1 = -num1;
-                        break;
-                    case Enums.eAttribType.Expression:
-                        num1 = ParseMagnitudeExpression() * DatabaseAPI.GetModifier(this);
-                        if (EffectType == Enums.eEffectType.Damage) num1 = -num1;
-                        break;
-                }
+                        }
 
-                return num1;
+                        return Scale * nMagnitude
+                                     * (EffectType == Enums.eEffectType.Damage ? -1 : 1)
+                                     * DatabaseAPI.GetModifier(this);
+                    
+                    case Enums.eAttribType.Duration:
+                        if (Math.Abs(Math_Mag) > 0.01)
+                        {
+                            return Math_Mag;
+                        }
+
+                        return nMagnitude * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
+                    
+                    case Enums.eAttribType.Expression:
+                        return ParseMagnitudeExpression()
+                               * DatabaseAPI.GetModifier(this)
+                               * (EffectType == Enums.eEffectType.Damage ? -1 : 1);
+                    default:
+                        return 0;
+                }
             }
         }
 
@@ -403,7 +446,7 @@ namespace mrbBase.Base.Data_Classes
                 bool flag;
                 if (VariableModifiedOverride)
                 {
-                    flag = true;
+                    flag = false;
                 }
                 else
                 {
@@ -427,11 +470,11 @@ namespace mrbBase.Base.Data_Classes
                         }
                     }
 
-                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes))
+                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes))
                     {
                         flag = true;
                     }
-                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes))
+                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target | ToWho == Enums.eToWho.Ally) & (Stacking == Enums.eStacking.Yes))
                     {
                         flag = true;
                     }
@@ -441,7 +484,7 @@ namespace mrbBase.Base.Data_Classes
                         {
                             for (var index = 0; index <= power.Effects.Length - 1; ++index)
                             {
-                                if ((power.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (power.Effects[index].ToWho == Enums.eToWho.Target) & (power.Effects[index].Stacking == Enums.eStacking.Yes))
+                                if ((power.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (power.Effects[index].ToWho == Enums.eToWho.Target | power.Effects[index].ToWho == Enums.eToWho.Ally) & (power.Effects[index].Stacking == Enums.eStacking.Yes))
                                 {
                                     return false;
                                 }
@@ -659,6 +702,7 @@ namespace mrbBase.Base.Data_Classes
                 {
                     Enums.eToWho.Target => " to Tgt",
                     Enums.eToWho.Self => " to Slf",
+                    Enums.eToWho.Ally => " to Ally",
                     _ => str3
                 };
             if (useBaseProbability)
@@ -836,27 +880,26 @@ namespace mrbBase.Base.Data_Classes
 
         public string BuildEffectString(bool simple = false, string specialCat = "", bool noMag = false, bool grouped = false, bool useBaseProbability = false, bool fromPopup = false)
         {
-            string sBuild = string.Empty;
-
-            string sSubEffect = string.Empty;
-            string sSubSubEffect = string.Empty;
-            string sMag = string.Empty;
-            string sDuration = string.Empty;
-            string sChance = string.Empty;
-            string sTarget = string.Empty;
-            string sPvx = string.Empty;
-            string sStack = string.Empty;
-            string sBuff = string.Empty;
-            string sDelay = string.Empty;
-            string sResist = string.Empty;
-            string sSpecial = string.Empty;
-            string sSuppress = string.Empty;
-            string sVariable = string.Empty;
-            string sToHit = string.Empty;
-            string sEnh = string.Empty;
-            string sSuppressShort = string.Empty;
-            string sConditional = string.Empty;
-            string sNearGround = string.Empty;
+            var sBuild = string.Empty;
+            var sSubEffect = string.Empty;
+            var sSubSubEffect = string.Empty;
+            var sMag = string.Empty;
+            var sDuration = string.Empty;
+            var sChance = string.Empty;
+            var sTarget = string.Empty;
+            var sPvx = string.Empty;
+            var sStack = string.Empty;
+            var sBuff = string.Empty;
+            var sDelay = string.Empty;
+            var sResist = string.Empty;
+            var sSpecial = string.Empty;
+            var sSuppress = string.Empty;
+            var sVariable = string.Empty;
+            var sToHit = string.Empty;
+            var sEnh = string.Empty;
+            var sSuppressShort = string.Empty;
+            var sConditional = string.Empty;
+            var sNearGround = string.Empty;
 
             if (power != null && power.VariableEnabled && VariableModified)
             {
@@ -867,7 +910,7 @@ namespace mrbBase.Base.Data_Classes
             {
                 sEnh = "(From Enh) ";
             }
-            string sEffect = Enums.GetEffectName(EffectType);
+            var sEffect = Enums.GetEffectName(EffectType);
 
             if (!simple)
             {
@@ -879,6 +922,10 @@ namespace mrbBase.Base.Data_Classes
                 {
                     sTarget = " to Self";
                 }
+                else if (ToWho == Enums.eToWho.Ally)
+                {
+                    sTarget = " to Ally";
+                }
                 if (RequiresToHitCheck)
                 {
                     sToHit = " requires ToHit check";
@@ -887,47 +934,65 @@ namespace mrbBase.Base.Data_Classes
 
             if (ProcsPerMinute > 0 && Probability < 0.01)
             {
-                sChance = ProcsPerMinute + "PPM";
+                sChance = $"{ProcsPerMinute}PPM";
             }
             else if (useBaseProbability)
             {
                 if (BaseProbability < 1)
                 {
-                    if (BaseProbability >= 0.975f)
+                    if (BaseProbability >= 0.01 & (EffectId == "" | EffectId == "Ones"))
                     {
-                        sChance = (BaseProbability * 100).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
+                        sChance = BaseProbability >= 0.975f
+                            ? $"{BaseProbability * 100:#0.0}% chance"
+                            : $"{BaseProbability * 100:#0}% chance";
                     }
                     else
                     {
-                        sChance = (BaseProbability * 100).ToString("#0") + "% chance";
-                    }
-                }
-            }
-            else
-            {
-                if (Probability < 1)
-                {
-                    if (Probability >= 0.975f)
-                    {
-                        sChance = (Probability * 100).ToString("#0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "0") + "% chance";
-                    }
-                    else
-                    {
-                        sChance = (Probability * 100).ToString("#0") + "% chance";
+                        sChance = $"when {EffectId}";
                     }
 
                     if (CancelOnMiss)
                     {
                         sChance += ", Cancels on Miss";
                     }
+                }
+                /*else if (EffectId != "" & EffectId != "Ones")
+                {
+                    sChance = $"when {EffectId}";
+                }*/
+            }
+            else
+            {
+                if (Probability < 1)
+                {
+                    if (Probability >= 0.01 & (EffectId == "" | EffectId == "Ones"))
+                    {
+                        sChance = Probability >= 0.975f
+                            ? $"{Probability * 100:#0.0}% chance"
+                            : $"{Probability * 100:#0}% chance";
+                    }
+                    else
+                    {
+                        sChance = $"when {EffectId}";
+                    }
+
+                    if (CancelOnMiss)
+                    {
+                        sChance += ", Cancels on Miss";
+                    }
+
                     if (ProcsPerMinute > 0 && fromPopup)
                     {
                         sChance = $"{ProcsPerMinute} PPM";
                     }
                 }
+                /*else if (EffectId != "" & EffectId != "Ones")
+                {
+                    sChance = $"when {EffectId}";
+                }*/
             }
 
-            bool resistPresent = false;
+            var resistPresent = false;
             if (Resistible == false)
             {
                 if ((!simple & ToWho != Enums.eToWho.Self) | EffectType == Enums.eEffectType.Damage)
@@ -977,7 +1042,7 @@ namespace mrbBase.Base.Data_Classes
 
                 if (DelayedTime > 0)
                 {
-                    sDelay = "after " + Utilities.FixDP(DelayedTime) + " seconds";
+                    sDelay = $"after {Utilities.FixDP(DelayedTime)} seconds";
                 }
             }
 
@@ -1023,7 +1088,7 @@ namespace mrbBase.Base.Data_Classes
             if (!simple || Scale > 0 && EffectType == Enums.eEffectType.Mez)
             {
                 sDuration = string.Empty;
-                string sForOver = " for ";
+                var sForOver = " for ";
                 switch (EffectType)
                 {
                     case Enums.eEffectType.Damage:
@@ -1036,11 +1101,11 @@ namespace mrbBase.Base.Data_Classes
 
                 if (Duration > 0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0))
                 {
-                    sDuration += sForOver + Utilities.FixDP(Duration) + " seconds";
+                    sDuration += $"{sForOver}{Utilities.FixDP(Duration)} seconds";
                 }
                 else if (Absorbed_Duration > 0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0))
                 {
-                    sDuration += sForOver + Utilities.FixDP(Absorbed_Duration) + " seconds";
+                    sDuration += $"{sForOver}{Utilities.FixDP(Absorbed_Duration)} seconds";
                 }
                 else
                 {
@@ -1049,21 +1114,17 @@ namespace mrbBase.Base.Data_Classes
                 // If .Absorbed_Interval > 0 Then
                 if (Absorbed_Interval > 0 & Absorbed_Interval < 900)
                 {
-                    sDuration += " every " + Utilities.FixDP(Absorbed_Interval) + " seconds";
+                    sDuration += $" every {Utilities.FixDP(Absorbed_Interval)} seconds";
                 }
             }
 
-            if (noMag == false & EffectType != Enums.eEffectType.SilentKill)
+            if (!noMag & EffectType != Enums.eEffectType.SilentKill)
             {
-                if (DisplayPercentage)
-                {
-                    sMag = Utilities.FixDP(Mag * 100);
-                    sMag += "%";
-                }
-                else
-                {
-                    sMag = Utilities.FixDP(Mag);
-                }
+                sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
+                    ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1)} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
+                    : DisplayPercentage
+                        ? $"{Utilities.FixDP(Mag * 100)}%"
+                        : Utilities.FixDP(Mag);
             }
 
             if (!simple)
@@ -1109,7 +1170,6 @@ namespace mrbBase.Base.Data_Classes
                 }
             }
 
-
             switch (EffectType)
             {
                 case Enums.eEffectType.Elusivity:
@@ -1124,40 +1184,40 @@ namespace mrbBase.Base.Data_Classes
                         {
                             if (Ticks > 0)
                             {
-                                sMag = Ticks + " x " + sMag;
+                                sMag = $"{Ticks} x {sMag}";
                             }
-                            sBuild = sMag + " " + sSubEffect + " " + sEffect + sTarget + sDuration;
+                            sBuild = $"{sMag} {sSubEffect} {sEffect}{sTarget}{sDuration}";
                         }
                         else
                         {
-                            sSubEffect = "(" + sSubEffect + ")";
+                            sSubEffect = $"({sSubEffect})";
                             if (DamageType == Enums.eDamage.None)
                                 sSubEffect = string.Empty;
-                            sBuild = sMag + " " + sEffect + sSubEffect + sTarget + sDuration;
+                            sBuild = $"{sMag} {sEffect}{sSubEffect}{sTarget}{sDuration}";
                         }
                     }
                     else
                     {
-                        sBuild = sMag + " " + specialCat + " " + sTarget + sDuration;
+                        sBuild = $"{sMag} {specialCat} {sTarget}{sDuration}";
                     }
                     break;
                 case Enums.eEffectType.StealthRadius:
                 case Enums.eEffectType.StealthRadiusPlayer:
-                    sBuild = sMag + "ft " + sEffect + sTarget + sDuration;
+                    sBuild = $"{sMag}ft {sEffect}{sTarget}{sDuration}";
                     break;
                 case Enums.eEffectType.Mez:
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
                     if (Duration > 0 & (simple == false | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback & MezType != Enums.eMez.Knockup)))
-                        sDuration = Utilities.FixDP(Duration) + " second ";
-                    if (noMag == false)
-                        sMag = " (Mag " + sMag + ")";
-                    sBuild = sDuration + sSubEffect + sMag + sTarget;
+                        sDuration = $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                    if (!noMag)
+                        sMag = $" (Mag {sMag})";
+                    sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
                     break;
                 case Enums.eEffectType.MezResist:
                     sSubEffect = Enum.GetName(MezType.GetType(), MezType);
                     if (noMag == false)
-                        sMag = " " + sMag;
-                    sBuild = sEffect + "(" + sSubEffect + ")" + sMag + sTarget + sDuration;
+                        sMag = $" {sMag}";
+                    sBuild = $"{sEffect}({sSubEffect}){sMag}{sTarget}{sDuration}";
                     break;
 
                 case Enums.eEffectType.ResEffect:
@@ -1181,44 +1241,39 @@ namespace mrbBase.Base.Data_Classes
                     }
                     else if (ETModifies == Enums.eEffectType.Defense | ETModifies == Enums.eEffectType.Resistance | ETModifies == Enums.eEffectType.Damage)
                     {
-                        tSpStr = Enums.GetDamageName(DamageType) + " " + Enums.GetEffectName(ETModifies);
+                        tSpStr = $"{Enums.GetDamageName(DamageType)} {Enums.GetEffectName(ETModifies)}";
                     }
                     else
                     {
                         tSpStr = Enums.GetEffectName(ETModifies);
                     }
 
-                    sBuild = sMag + " " + sEffect + "(" + tSpStr + ")" + sTarget + sDuration;
+                    sBuild = $"{sMag} {sEffect}({tSpStr}){sTarget}{sDuration}";
                     break;
                 case Enums.eEffectType.None:
                     sBuild = Special;
                     if (Special == "Debt Protection")
                     {
-                        sBuild = sMag + "% " + sBuild;
+                        sBuild = $"{sMag}% {sBuild}";
                     }
                     break;
                 case Enums.eEffectType.Heal:
                 case Enums.eEffectType.HitPoints:
-                    if (noMag == false)
+                    if (!noMag)
                     {
                         if (Ticks > 0)
                         {
-                            sMag = Ticks + " x " + sMag;
+                            sMag = $"{Ticks} x {sMag}";
                         }
                         if (Aspect == Enums.eAspect.Cur)
                         {
-                            sBuild = Utilities.FixDP(Mag * 100) + "% " + sEffect + sTarget + sDuration;
+                            sBuild = $"{Utilities.FixDP(Mag * 100)}% {sEffect}{sTarget}{sDuration}";
                         }
                         else
                         {
-                            if (DisplayPercentage == false)
-                            {
-                                sBuild = sMag + " HP (" + Utilities.FixDP(Mag / MidsContext.Archetype.Hitpoints * 100) + "%) " + sEffect + sTarget + sDuration;
-                            }
-                            else
-                            {
-                                sBuild = Utilities.FixDP((Mag / 100) * MidsContext.Archetype.Hitpoints) + " HP (" + sMag + ") " + sEffect + sTarget + sDuration;
-                            }
+                            sBuild = DisplayPercentage
+                                ? $"{Utilities.FixDP(Mag / 100 * MidsContext.Archetype.Hitpoints)} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
+                                : $"{sMag} HP ({Utilities.FixDP(Mag / MidsContext.Archetype.Hitpoints * 100)}%) {sEffect}{sTarget}{sDuration}";
                         }
                     }
                     else
@@ -1227,16 +1282,11 @@ namespace mrbBase.Base.Data_Classes
                     }
                     break;
                 case Enums.eEffectType.Regeneration:
-                    if (noMag == false)
+                    if (!noMag)
                     {
-                        if (DisplayPercentage)
-                        {
-                            sBuild = sMag + " (" + Utilities.FixDP((MidsContext.Archetype.Hitpoints / 100f) * (Mag * MidsContext.Archetype.BaseRegen * Statistics.BaseMagic)) + " HP/sec) " + sEffect + sTarget + sDuration;
-                        }
-                        else
-                        {
-                            sBuild = sMag + " " + sEffect + sTarget + sDuration;
-                        }
+                        sBuild = DisplayPercentage
+                            ? $"{sMag} ({Utilities.FixDP(MidsContext.Archetype.Hitpoints / 100f * (Mag * MidsContext.Archetype.BaseRegen * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
+                            : $"{sMag} {sEffect}{sTarget}{sDuration}";
                     }
                     else
                     {
@@ -1244,16 +1294,11 @@ namespace mrbBase.Base.Data_Classes
                     }
                     break;
                 case Enums.eEffectType.Recovery:
-                    if (noMag == false)
+                    if (!noMag)
                     {
-                        if (DisplayPercentage)
-                        {
-                            sBuild = sMag + " (" + Utilities.FixDP(Mag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic)) + " End/sec) " + sEffect + sTarget + sDuration;
-                        }
-                        else
-                        {
-                            sBuild = sMag + " " + sEffect + sTarget + sDuration;
-                        }
+                        sBuild = DisplayPercentage
+                            ? $"{sMag} ({Utilities.FixDP(Mag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
+                            : $"{sMag} {sEffect}{sTarget}{sDuration}";
                     }
                     else
                     {
@@ -1266,105 +1311,62 @@ namespace mrbBase.Base.Data_Classes
                     string tSummon;
                     if (summon > -1)
                     {
-                        tSummon = " " + DatabaseAPI.Database.Entities[summon].DisplayName;
+                        tSummon = " " + (MidsContext.Config.CoDEffectFormat
+                            ? $"({DatabaseAPI.Database.Entities[summon].UID})"
+                            : DatabaseAPI.Database.Entities[summon].DisplayName);
                     }
                     else
                     {
                         tSummon = " " + Summon;
                     }
-                    if (Duration > 9999)
-                    {
-                        sBuild = sEffect + tSummon + sTarget;
-                    }
-                    else
-                    {
-                        sBuild = sEffect + tSummon + sTarget + sDuration;
-                    }
+                    sBuild = $"{sEffect}{tSummon}{sTarget}{(Duration > 9999 ? "" : sDuration)}";
                     break;
                 case Enums.eEffectType.Endurance:
                     if (noMag) sBuild = "+Max End";
                     else if (Aspect == Enums.eAspect.Max)
                     {
-                        sBuild = sMag + "% Max End" + sTarget + sDuration;
+                        sBuild = $"{sMag}% Max End{sTarget}{sDuration}";
                     }
                     else
                     {
-                        sBuild = sMag + " " + sEffect + sTarget + sDuration;
+                        sBuild = $"{sMag} {sEffect}{sTarget}{sDuration}";
                     }
                     break;
                 case Enums.eEffectType.GrantPower:
                     sResist = string.Empty;
                     string tGrant;
                     var pID = DatabaseAPI.GetPowerByFullName(Summon);
-                    if (pID != null)
-                    {
-                        tGrant = " " + pID.DisplayName;
-                    }
-                    else
-                    {
-                        tGrant = " " + Summon;
-                    }
-                    sBuild = sEffect + tGrant + sTarget;
+                    tGrant = pID != null
+                        ? $" {(MidsContext.Config.CoDEffectFormat ? $"({pID.FullName})" : pID.DisplayName)}"
+                        : $" {Summon}";
+                    sBuild = $"{sEffect}{tGrant}{sTarget}";
                     break;
                 case Enums.eEffectType.GlobalChanceMod:
-                    sBuild = sMag + " " + sEffect + " " + Reward + sTarget + sDuration;
+                    sBuild = $"{sMag} {sEffect} {Reward}{sTarget}{sDuration}";
                     break;
                 case Enums.eEffectType.ModifyAttrib:
                     sSubEffect = Enum.GetName(PowerAttribs.GetType(), PowerAttribs);
-                    if (sSubEffect == "Accuracy")
+                    sBuild = sSubEffect switch
                     {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModAccuracy} ({Convert.ToDecimal(AtrModAccuracy * MidsContext.Config.BaseAcc * 100f):0.##}%)";
-                    }
-                    else if (sSubEffect == "ActivateInterval")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModActivatePeriod} second(s)";
-                    }
-                    else if (sSubEffect == "Arc")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModArc} degrees";
-                    }
-                    else if (sSubEffect == "CastTime")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModCastTime} second(s)";
-                    }
-                    else if (sSubEffect == "EffectArea")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {Enum.GetName(typeof(Enums.eEffectArea), AtrModEffectArea)}";
-                    }
-                    else if (sSubEffect == "EnduranceCost")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModEnduranceCost}";
-                    }
-                    else if (sSubEffect == "InterruptTime")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModInterruptTime} second(s)";
-                    }
-                    else if (sSubEffect == "MaxTargets")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModMaxTargets} target(s)";
-                    }
-                    else if (sSubEffect == "Radius")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModRadius} feet";
-                    }
-                    else if (sSubEffect == "Range")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModRange} feet";
-                    }
-                    else if (sSubEffect == "RechargeTime")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModRechargeTime} second(s)";
-                    }
-                    else if (sSubEffect == "SecondaryRange")
-                    {
-                        sBuild = $"{sEffect}({sSubEffect}) to {AtrModSecondaryRange} feet";
-                    }
+                        "Accuracy" => $"{sEffect}({sSubEffect}) to {AtrModAccuracy} ({Convert.ToDecimal(AtrModAccuracy * MidsContext.Config.BaseAcc * 100f):0.##}%)",
+                        "ActivateInterval" => $"{sEffect}({sSubEffect}) to {AtrModActivatePeriod} second(s)",
+                        "Arc" => $"{sEffect}({sSubEffect}) to {AtrModArc} degrees",
+                        "CastTime" => $"{sEffect}({sSubEffect}) to {AtrModCastTime} second(s)",
+                        "EffectArea" => $"{sEffect}({sSubEffect}) to {Enum.GetName(typeof(Enums.eEffectArea), AtrModEffectArea)}",
+                        "EnduranceCost" => $"{sEffect}({sSubEffect}) to {AtrModEnduranceCost}",
+                        "InterruptTime" => $"{sEffect}({sSubEffect}) to {AtrModInterruptTime} second(s)",
+                        "MaxTargets" => $"{sEffect}({sSubEffect}) to {AtrModMaxTargets} target(s)",
+                        "Radius" => $"{sEffect}({sSubEffect}) to {AtrModRadius} feet",
+                        "Range" => $"{sEffect}({sSubEffect}) to {AtrModRange} feet",
+                        "RechargeTime" => $"{sEffect}({sSubEffect}) to {AtrModRechargeTime} second(s)",
+                        "SecondaryRange" => $"{sEffect}({sSubEffect}) to {AtrModSecondaryRange} feet",
+                        _ => sBuild
+                    };
                     break;
                 default:
-                    sBuild = sMag + " " + sEffect + sTarget + sDuration;
+                    sBuild = $"{sMag} {sEffect}{sTarget}{sDuration}";
                     break;
             }
-
 
             var sExtra = string.Empty;
             var sExtra2 = string.Empty;
@@ -1408,7 +1410,6 @@ namespace mrbBase.Base.Data_Classes
 
             return sEnh + sBuild + sExtra + sBuff + sVariable + sStack + sSuppress;
         }
-
 
         public void StoreTo(ref BinaryWriter writer)
         {
@@ -1485,560 +1486,6 @@ namespace mrbBase.Base.Data_Classes
             }
         }
 
-        public bool ImportFromCSV(string iCSV)
-        {
-            bool flag;
-            if (iCSV == null)
-            {
-                flag = false;
-            }
-            else if (string.IsNullOrEmpty(iCSV))
-            {
-                flag = false;
-            }
-            else
-            {
-                var array = CSV.ToArray(iCSV);
-                if (array.Length < 34)
-                {
-                    flag = false;
-                }
-                else
-                {
-                    if (UniqueID < 1)
-                        UniqueID = int.Parse(array[34]);
-                    PowerFullName = array[0];
-                    Aspect = (Enums.eAspect)Enums.StringToFlaggedEnum(array[2], Aspect, true);
-                    AttribType = (Enums.eAttribType)Enums.StringToFlaggedEnum(array[6], AttribType, true);
-                    EffectId = array[37];
-                    Reward = array[29];
-                    MagnitudeExpression = array[27];
-                    IgnoreED = int.Parse(array[38]) > 0;
-                    EffectType = Enums.eEffectType.None;
-                    ETModifies = Enums.eEffectType.None;
-                    MezType = Enums.eMez.None;
-                    DamageType = Enums.eDamage.None;
-                    Special = string.Empty;
-                    Summon = string.Empty;
-                    if (Enums.IsEnumValue(array[3], Enums.eEffectType.None))
-                    {
-                        EffectType =
-                            (Enums.eEffectType)Enums.StringToFlaggedEnum(array[3], Enums.eEffectType.None, true);
-                        switch (Aspect)
-                        {
-                            case Enums.eAspect.Res:
-                                ETModifies = EffectType;
-                                EffectType = Enums.eEffectType.ResEffect;
-                                break;
-                            case Enums.eAspect.Str:
-                                ETModifies = EffectType;
-                                EffectType = Enums.eEffectType.Enhancement;
-                                break;
-                        }
-                    }
-                    else if (Enums.IsEnumValue(array[3], Enums.eCSVImport_Damage.None))
-                    {
-                        DamageType =
-                            (Enums.eDamage)Enums.StringToFlaggedEnum(array[3], Enums.eCSVImport_Damage.None, true);
-                        switch (Aspect)
-                        {
-                            case Enums.eAspect.Res:
-                                EffectType = Enums.eEffectType.Resistance;
-                                break;
-                            case Enums.eAspect.Abs:
-                                EffectType = Enums.eEffectType.Damage;
-                                break;
-                            case Enums.eAspect.Str:
-                                EffectType = Enums.eEffectType.DamageBuff;
-                                break;
-                            case Enums.eAspect.Cur:
-                                EffectType = Enums.eEffectType.Damage;
-                                break;
-                            default:
-                                var num = (int)MessageBox.Show(
-                                    "Unable to interpret Damage-based attribute:\n" + array[0],
-                                    "Interpretation Failed");
-                                break;
-                        }
-                    }
-                    else if (Enums.IsEnumValue(array[3], Enums.eCSVImport_Damage_Def.None))
-                    {
-                        DamageType =
-                            (Enums.eDamage)Enums.StringToFlaggedEnum(array[3], Enums.eCSVImport_Damage_Def.None, true);
-                        switch (Aspect)
-                        {
-                            case Enums.eAspect.Str:
-                                ETModifies = Enums.eEffectType.Defense;
-                                EffectType = Enums.eEffectType.Enhancement;
-                                break;
-                            case Enums.eAspect.Cur:
-                                EffectType = Enums.eEffectType.Defense;
-                                break;
-                        }
-                    }
-                    else if (Enums.IsEnumValue(array[3], Enums.eCSVImport_Damage_Elusivity.None))
-                    {
-                        DamageType = (Enums.eDamage)Enums.StringToFlaggedEnum(array[3],
-                            Enums.eCSVImport_Damage_Elusivity.None, true);
-                        if (Aspect == Enums.eAspect.Str)
-                        {
-                            EffectType = Enums.eEffectType.Elusivity;
-                        }
-                        else
-                        {
-                            var num = (int)MessageBox.Show(
-                                "Unable to interpret Elusivity field - not STR based:\n" + array[0],
-                                "Interpretation Failed");
-                        }
-                    }
-                    else if (Enums.IsEnumValue(array[3], MezType))
-                    {
-                        MezType = (Enums.eMez)Enums.StringToFlaggedEnum(array[3], MezType, true);
-                        switch (Aspect)
-                        {
-                            case Enums.eAspect.Res:
-                                EffectType = Enums.eEffectType.MezResist;
-                                break;
-                            case Enums.eAspect.Abs:
-                                EffectType = Enums.eEffectType.Mez;
-                                break;
-                            case Enums.eAspect.Str:
-                                ETModifies = Enums.eEffectType.Mez;
-                                EffectType = Enums.eEffectType.Enhancement;
-                                break;
-                            case Enums.eAspect.Cur:
-                                EffectType = Enums.eEffectType.Mez;
-                                break;
-                            default:
-                                var num = (int)MessageBox.Show("Unable to interpret Mez-based attribute:\n" + array[0],
-                                    "Interpretation Failed");
-                                break;
-                        }
-                    }
-
-                    Summon = EffectType switch
-                    {
-                        Enums.eEffectType.GrantPower => Reward,
-                        Enums.eEffectType.EntCreate => array[13],
-                        _ => Summon
-                    };
-                    nDuration = float.Parse(array[16]);
-                    ModifierTable = array[1];
-                    nMagnitude = float.Parse(array[17]);
-                    Scale = float.Parse(array[5]);
-                    NearGround = int.Parse(array[21]) > 0;
-                    CancelOnMiss = int.Parse(array[22]) > 0;
-                    Override = array[40];
-                    ProcsPerMinute = float.Parse(array[59]);
-                    Ticks = 0;
-                    if (float.Parse(array[19]) > 0.0)
-                        Ticks = (int)(1.0 + Math.Floor(nDuration / (double)float.Parse(array[19])));
-                    DelayedTime = float.Parse(array[15]);
-                    Stacking = array[18].ToLower() == "stack" ? Enums.eStacking.Yes : Enums.eStacking.No;
-                    BaseProbability = float.Parse(array[20]);
-                    Suppression = (Enums.eSuppress)Enums.StringToFlaggedEnum(array[9].Replace(" ", ","), Suppression);
-                    if (Suppression == Enums.eSuppress.None)
-                        Suppression =
-                            (Enums.eSuppress)Enums.StringToFlaggedEnum(array[10].Replace(" ", ","), Suppression);
-                    Buffable = int.Parse(array[7]) > 0;
-                    Resistible = int.Parse(array[8]) > 0;
-                    var lower = array[26].ToLower();
-                    if (power != null)
-                    {
-                        var ps = power.GetPowerSet();
-                        if (ps != null && ps.nArchetype > -1)
-                        {
-                            if (lower.Contains("kDD".ToLower()))
-                                SpecialCase = Enums.eSpecialCase.Combo;
-                            else
-                                switch (DatabaseAPI.Database.Classes[ps.nArchetype].PrimaryGroup.ToLower())
-                                {
-                                    case "scrapper_melee":
-                                        var str = lower;
-                                        if (EffectType == Enums.eEffectType.Damage && !string.IsNullOrEmpty(lower) &&
-                                            Probability <= 0.1)
-                                        {
-                                            switch (str)
-                                            {
-                                                case
-                                                    "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq || enttype target> player eq || ! arch source> class_scrapper == &&"
-                                                    :
-                                                case
-                                                    "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq || enttype target> player eq || !"
-                                                    :
-                                                    SpecialCase = Enums.eSpecialCase.CriticalHit;
-                                                    goto label_77;
-                                                case
-                                                    "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq || arch source> class_scrapper == &&"
-                                                    :
-                                                case
-                                                    "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq ||"
-                                                    :
-                                                    SpecialCase = Enums.eSpecialCase.CriticalMinion;
-                                                    goto label_77;
-                                            }
-
-                                            SpecialCase = Enums.eSpecialCase.CriticalHit;
-                                            goto label_77;
-                                        }
-                                        else
-                                        {
-                                            goto label_77;
-                                        }
-                                    case "controller_control":
-                                        if (EffectType == Enums.eEffectType.Damage && lower.Contains("kheld"))
-                                        {
-                                            SpecialCase = Enums.eSpecialCase.Containment;
-                                            goto label_77;
-                                        }
-                                        else
-                                        {
-                                            goto label_77;
-                                        }
-                                    case "dominator_control":
-                                        if (lower.Contains("kStealth source".ToLower()))
-                                        {
-                                            SpecialCase = Enums.eSpecialCase.Domination;
-                                            goto label_77;
-                                        }
-                                        else
-                                        {
-                                            goto label_77;
-                                        }
-                                    case "stalker_melee":
-                                        if (lower.Contains("kMeter source> 0".ToLower()))
-                                            SpecialCase = Enums.eSpecialCase.Assassination;
-                                        if (lower.Contains("kHeld target> 0".ToLower()))
-                                            SpecialCase = Enums.eSpecialCase.Mezzed;
-                                        if (MagnitudeExpression.IndexOf("TeamSize",
-                                            StringComparison.OrdinalIgnoreCase) > -1)
-                                        {
-                                            SpecialCase = Enums.eSpecialCase.None;
-                                            BaseProbability = 0.1f;
-                                            AttribType = Enums.eAttribType.Magnitude;
-                                            goto label_77;
-                                        }
-                                        else
-                                        {
-                                            goto label_77;
-                                        }
-                                    case "blaster_ranged":
-                                        if (lower.Contains("kRange_Finder_Mode".ToLower()))
-                                        {
-                                            SpecialCase = Enums.eSpecialCase.TargetDroneActive;
-                                            goto label_77;
-                                        }
-                                        else
-                                        {
-                                            goto label_77;
-                                        }
-                                    case "corruptor_ranged":
-                                        if (lower.Contains("kHitPoints%".ToLower()))
-                                        {
-                                            SpecialCase = Enums.eSpecialCase.Scourge;
-                                            goto label_77;
-                                        }
-                                        else
-                                        {
-                                            goto label_77;
-                                        }
-                                    case "arachnos_soldiers":
-                                        if (lower.Contains("kMeter source> 0".ToLower()))
-                                        {
-                                            SpecialCase = Enums.eSpecialCase.Hidden;
-                                            goto label_77;
-                                        }
-                                        else
-                                        {
-                                            goto label_77;
-                                        }
-                                    case "widow_training":
-                                        if (lower.Contains("kMeter source> 0".ToLower()))
-                                        {
-                                            SpecialCase = Enums.eSpecialCase.Hidden;
-                                            goto label_77;
-                                        }
-                                        else
-                                        {
-                                            goto label_77;
-                                        }
-                                    default:
-                                        switch (lower)
-                                        {
-                                            case
-                                                "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq || enttype target> player eq || ! arch source> class_scrapper == &&"
-                                                :
-                                                SpecialCase = Enums.eSpecialCase.CriticalHit;
-                                                goto default;
-                                            case
-                                                "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq || arch source> class_scrapper == &&"
-                                                :
-                                                SpecialCase = Enums.eSpecialCase.CriticalMinion;
-                                                goto default;
-                                            case null:
-                                                break;
-                                            default:
-                                                goto case null;
-                                        }
-
-                                        break;
-                                }
-                        }
-
-                    label_77:
-                        if (SpecialCase == Enums.eSpecialCase.None)
-                        {
-                            var str = lower;
-                            if ((lower.Contains("arch source> class_scrapper eq") ||
-                                 lower.Contains("arch source> class_scrapper ==")) && Probability < 0.9)
-                            {
-                                switch (str)
-                                {
-                                    case
-                                        "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq || enttype target> player eq || ! arch source> class_scrapper == &&"
-                                        :
-                                    case
-                                        "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq || enttype target> player eq || !"
-                                        :
-                                        SpecialCase = Enums.eSpecialCase.CriticalHit;
-                                        goto label_101;
-                                    case
-                                        "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq || arch source> class_scrapper == &&"
-                                        :
-                                    case
-                                        "arch target> class_minion_grunt eq arch target> class_minion_small eq || arch target> class_minion_pets eq || arch target> class_minion_swarm eq ||"
-                                        :
-                                        SpecialCase = Enums.eSpecialCase.CriticalMinion;
-                                        goto label_101;
-                                }
-
-                                SpecialCase = Enums.eSpecialCase.CriticalHit;
-                            }
-                            else if ((lower.Contains("arch source> class_controller eq") ||
-                                      lower.Contains("arch source> class_controller ==".ToLower())) &&
-                                     lower.Contains("kheld") && EffectType == Enums.eEffectType.Damage)
-                            {
-                                SpecialCase = Enums.eSpecialCase.Containment;
-                            }
-                            else if (lower.Contains("kmeter source> .9") && lower.Contains("kheld"))
-                            {
-                                SpecialCase = Enums.eSpecialCase.Mezzed;
-                            }
-                            else if (lower.Contains("kmeter source> 0"))
-                            {
-                                SpecialCase = Enums.eSpecialCase.Assassination;
-                            }
-                            else if (lower.Contains("arch source> class_corruptor eq") && lower.Contains("khitpoints%"))
-                            {
-                                SpecialCase = Enums.eSpecialCase.Scourge;
-                            }
-                            else if (lower.Contains("arch source> class_dominator") &&
-                                     !lower.Contains("arch source> class_dominator eq !") &&
-                                     lower.Contains("kstealth source>"))
-                            {
-                                SpecialCase = Enums.eSpecialCase.Domination;
-                            }
-                            else if (lower.Contains("khitpoints%"))
-                            {
-                                SpecialCase = Enums.eSpecialCase.Scourge;
-                            }
-                            else if (lower.Contains("kdd"))
-                            {
-                                SpecialCase = Enums.eSpecialCase.Combo;
-                            }
-                        }
-                    }
-
-                label_101:
-                    if (lower.Contains("Electronic target.HasTag?".ToLower()))
-                        SpecialCase = Enums.eSpecialCase.Robot;
-                    if (lower.IndexOf("source.TeamSize> 1", StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.TeamSize1;
-                    else if (lower.IndexOf("source.TeamSize> 2", StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.TeamSize2;
-                    else if (lower.IndexOf("source.TeamSize> 3", StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.TeamSize3;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Combo_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Combo_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Combo_Level_3 source.ownPower? !",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ComboLevel0;
-                    else if (lower.IndexOf("Temporary_Powers.Temporary_Powers.Combo_Level_1 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ComboLevel1;
-                    else if (lower.IndexOf("Temporary_Powers.Temporary_Powers.Combo_Level_2 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ComboLevel2;
-                    else if (lower.IndexOf("Temporary_Powers.Temporary_Powers.Combo_Level_3 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ComboLevel3;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_3 source.ownPower? !",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfBody0;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_1 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfBody1;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_2 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfBody2;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Body_Level_3 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfBody3;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_3 source.ownPower? !",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfMind0;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_1 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfMind1;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_2 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfMind2;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Mind_Level_3 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfMind3;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_1 source.ownPower? ! Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_2 source.ownPower? ! && Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_3 source.ownPower? !",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfSoul0;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_1 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfSoul1;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_2 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfSoul2;
-                    else if (lower.IndexOf(
-                        "Temporary_Powers.Temporary_Powers.Perfection_of_Soul_Level_3 source.ownPower?",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.PerfectionOfSoul3;
-                    else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 0 ==",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ComboLevel0;
-                    else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 1 ==",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ComboLevel1;
-                    else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 2 ==",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ComboLevel2;
-                    else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 3 ==",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ComboLevel3;
-                    else if (lower.IndexOf("temporary_powers.temporary_powers.tidal_power source.ownPowerNum? 2 <=",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.NotComboLevel3;
-                    else if (lower.IndexOf("cur.kToHit source> .97 >=", StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.ToHit97;
-                    else if (lower.Contains("temporary_powers.temporary_powers.time_crawl_debuff target.ownpower? !"))
-                        SpecialCase = Enums.eSpecialCase.NotDelayed;
-                    else if (lower.Contains("temporary_powers.temporary_powers.time_crawl_debuff target.ownpower?"))
-                        SpecialCase = Enums.eSpecialCase.Delayed;
-                    else if (lower.Contains(
-                        "temporary_powers.temporary_powers.temporal_selection_buff target.ownpower? !"))
-                        SpecialCase = Enums.eSpecialCase.NotAccelerated;
-                    else if (lower.Contains(
-                        "temporary_powers.temporary_powers.temporal_selection_buff target.ownpower?"))
-                        SpecialCase = Enums.eSpecialCase.Accelerated;
-                    else if (lower.Contains("temporary_powers.temporary_powers.beam_rifle_debuff target.ownpower? !"))
-                        SpecialCase = Enums.eSpecialCase.NotDisintegrated;
-                    else if (lower.Contains("temporary_powers.temporary_powers.beam_rifle_debuff target.ownpower?"))
-                        SpecialCase = Enums.eSpecialCase.Disintegrated;
-                    else if (lower.Contains("kfastmode source.mode?"))
-                        SpecialCase = Enums.eSpecialCase.FastMode;
-                    else if (lower.IndexOf("kOffensiveAdaptation source.Mode? ! kDefensiveAdaptation source.Mode? ! &&",
-                        StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.NotDefensiveNorOffensiveAdaptation;
-                    else if (lower.IndexOf("kDefensiveAdaptation source.Mode? !", StringComparison.OrdinalIgnoreCase) >
-                             -1)
-                        SpecialCase = Enums.eSpecialCase.NotDefensiveAdaptation;
-                    else if (lower.IndexOf("kDefensiveAdaptation source.Mode?", StringComparison.OrdinalIgnoreCase) >
-                             -1)
-                        SpecialCase = Enums.eSpecialCase.DefensiveAdaptation;
-                    else if (lower.IndexOf("kRestedAdaptation source.Mode?", StringComparison.OrdinalIgnoreCase) > -1)
-                        SpecialCase = Enums.eSpecialCase.EfficientAdaptation;
-                    else if (lower.IndexOf("kOffensiveAdaptation source.Mode?", StringComparison.OrdinalIgnoreCase) >
-                             -1)
-                        SpecialCase = Enums.eSpecialCase.OffensiveAdaptation;
-                    if (!string.IsNullOrEmpty(lower) &&
-                        (!lower.Contains("!") || lower.Contains("Raid target.HasTag?".ToLower())) &&
-                        UidClassRegex.IsMatch(array[26]))
-                    {
-                        UIDClassName = UidClassRegex.Matches(array[26])[0].Groups[2].Value;
-                        nIDClassName = DatabaseAPI.NidFromUidClass(UIDClassName);
-                    }
-
-                    PvMode =
-                        !lower.Contains("entref target> entref source> eq ! enttype target> player eq &&".ToLower())
-                            ? !(lower.Contains("enttype target> player eq || !".ToLower()) |
-                                (SpecialCase == Enums.eSpecialCase.CriticalMinion))
-                                ? !lower.Contains("enttype target> critter eq".ToLower())
-                                    ? !lower.Contains("enttype target> player eq".ToLower())
-                                        ? !lower.Contains("isPVPMap? !".ToLower())
-                                            ? !lower.Contains("isPVPMap?".ToLower()) ? Enums.ePvX.Any : Enums.ePvX.PvP
-                                            : Enums.ePvX.PvE
-                                        : Enums.ePvX.PvP
-                                    : Enums.ePvX.PvE
-                                : Enums.ePvX.PvE
-                            : Enums.ePvX.Any;
-                    if (lower.Contains("@ToHitRoll".ToLower()))
-                    {
-                        RequiresToHitCheck = true;
-                        if (lower.Contains("Raid target.HasTag? @ToHitRoll".ToLower()))
-                            SpecialCase = Enums.eSpecialCase.VersusSpecial;
-                    }
-
-                    switch (array[4].ToLower())
-                    {
-                        case "self":
-                            ToWho = Enums.eToWho.Self;
-                            goto default;
-                        case "target":
-                            ToWho = power == null ? Enums.eToWho.Target :
-                                (power.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
-                                lower == "entref target> entref source> eq !" ? Enums.eToWho.Target : Enums.eToWho.All;
-                            goto default;
-                        case null:
-                            var ps = power?.GetPowerSet();
-                            if (power != null && ps != null)
-                            {
-                                if (string.Equals(ps.ATClass, "CLASS_BLASTER", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    nModifierTable = DatabaseAPI.NidFromUidAttribMod(ModifierTable);
-                                    if ((EffectType == Enums.eEffectType.DamageBuff) & (Scale < 1.0) && Scale > 0.0 &&
-                                        ToWho == Enums.eToWho.Self && SpecialCase == Enums.eSpecialCase.None)
-                                        SpecialCase = Enums.eSpecialCase.Defiance;
-                                }
-                                else if (ps.SetType == Enums.ePowerSetType.Inherent &&
-                                         EffectType == Enums.eEffectType.DamageBuff &&
-                                         (AttribType == Enums.eAttribType.Expression) &
-                                         (Math.Abs(Scale - 0.0f) < 0.01) && power.Requires.ClassName.Length > 0 &&
-                                         string.Equals(power.Requires.ClassName[0], "CLASS_BRUTE",
-                                             StringComparison.OrdinalIgnoreCase))
-                                {
-                                    Stacking = Enums.eStacking.Yes;
-                                    AttribType = Enums.eAttribType.Magnitude;
-                                    Scale = 0.02f;
-                                }
-                            }
-
-                            flag = true;
-                            break;
-                        default:
-                            goto case null;
-                    }
-                }
-            }
-
-            return flag;
-        }
-
         public int SetTicks(float iDuration, float iInterval)
         {
             Ticks = 0;
@@ -2070,7 +1517,15 @@ namespace mrbBase.Base.Data_Classes
                 switch (condition)
                 {
                     case "Active":
-                        cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                        bool? boolVal = Convert.ToBoolean(cVp.Value);
+                        if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                        {
+                            cVp.Validated = true;
+                        }
+                        else
+                        {
+                            cVp.Validated = false;
+                        }
 
                         break;
                     case "Taken":
@@ -2176,13 +1631,19 @@ namespace mrbBase.Base.Data_Classes
 
                 if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Active")
                 {
-                    cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                    bool? boolVal = Convert.ToBoolean(cVp.Value);
+                    if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                    {
+                        cVp.Validated = true;
+                    }
+                    else
+                    {
+                        cVp.Validated = false;
+                    }
                 }
-                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) &&
-                         condition == "Taken")
+                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Taken")
                 {
-                    cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
-                        .Equals(Convert.ToBoolean(cVp.Value));
+                    cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower).Equals(Convert.ToBoolean(cVp.Value));
                 }
                 else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) &&
                          condition == "Stacks")
@@ -2275,7 +1736,15 @@ namespace mrbBase.Base.Data_Classes
                     case "Active":
                         if (conditionPower != null)
                         {
-                            cVp.Validated = conditionPower.Active.Equals(Convert.ToBoolean(cVp.Value));
+                            bool? boolVal = Convert.ToBoolean(cVp.Value);
+                            if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
+                            {
+                                cVp.Validated = true;
+                            }
+                            else
+                            {
+                                cVp.Validated = false;
+                            }
                         }
 
                         break;
@@ -2688,7 +2157,7 @@ namespace mrbBase.Base.Data_Classes
                             if (conditionPower != null)
                             {
                                 bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (conditionPower.Active == boolVal)
+                                if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
                                 {
                                     cVp.Validated = true;
                                 }
@@ -3065,7 +2534,7 @@ namespace mrbBase.Base.Data_Classes
                             if (conditionPower != null)
                             {
                                 bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (conditionPower.Active == boolVal)
+                                if (conditionPower.Active == boolVal && MidsContext.Character.CurrentBuild.PowerUsed(conditionPower))
                                 {
                                     cVp.Validated = true;
                                 }

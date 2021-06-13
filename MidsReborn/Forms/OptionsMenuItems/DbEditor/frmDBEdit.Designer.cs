@@ -70,6 +70,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnAttribModEdit = new System.Windows.Forms.Button();
             this.btnGCMIO = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.btnDBConverter = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             this.GroupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -532,11 +533,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnDBConverter
+            // 
+            this.btnDBConverter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnDBConverter.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDBConverter.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnDBConverter.Location = new System.Drawing.Point(236, 328);
+            this.btnDBConverter.Name = "btnDBConverter";
+            this.btnDBConverter.Size = new System.Drawing.Size(164, 24);
+            this.btnDBConverter.TabIndex = 32;
+            this.btnDBConverter.Text = "DB Converter";
+            this.btnDBConverter.UseVisualStyleBackColor = true;
+            this.btnDBConverter.Click += new System.EventHandler(this.btnDBConverter_Click);
+            // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(416, 462);
+            this.Controls.Add(this.btnDBConverter);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnAttribModEdit);
             this.Controls.Add(this.btnGCMIO);
@@ -583,5 +598,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnGCMIO;
         private Button btnAttribModEdit;
         private Button button1;
+        private Button btnDBConverter;
     }
 }

@@ -117,40 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="myTip.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="myTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </data>
-  <data name="cPicker.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="cPicker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>102, 17</value>
-  </data>
-  <data name="fbdSave.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="fbdSave.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>192, 17</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="optDO.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Resources\optDO.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="optSO.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Resources\optSO.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="optTO.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Resources\optTO.Image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Label15.Text" xml:space="preserve">
-    <value>Swap = two powers are swapped. The powers in between are unaffected by the transition.
-Move = one power is moved to the position of another. The power being replaced, as well as all powers in between, are shifted in the direction of the power being moved.
-Shift = cascading swaps. Shifting down means powers are moved to a lower level, starting with the lowest. Shifting up means powers are moved to a higher level, starting with the highest.</value>
-  </data>
-  <data name="Label5.Text" xml:space="preserve">
-    <value>When exemplared below level 32, the game scales your enhancements down. If you want to see the approximate values for your character when exemplared, enter a starting level and exemplar level (Remember that if your build's level is different to the starting level set here, the numbers will be wrong!)</value>
-  </data>
-  <data name="Label9.Text" xml:space="preserve">
-    <value>Some attacks have a chance to deal additional damage (such as fire). Because this damage isn't always going to happen, the attack's damage can be calculated either as an average, at maximum possible (as though the extra damage always happens), or at minimum (as though it never happens).
-Note that this also affects how Scrapper damage is displayed when Critical Hit is toggled on.
-Where an attack has a chance to do additional damage:</value>
-  </data>
-  <data name="udExHigh.ToolTip" xml:space="preserve">
-    <value>Set this to the level of your character. This setting will not reduce the number of slots/powers placed to match the level. Powers available after the level set here will still be calculated unless you disable them.</value>
-  </data>
+  </metadata>
 </root>

@@ -656,7 +656,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 displayStats.Perception(false), 0.0f, "This, minus a player's stealth radius, is the distance you can see it.");
             graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
             graphStealth.Draw();
-            string iTip10 = "This affects how critters prioritise you as a threat.\r\nLower values make you a less tempting target.\r\nThe " +
+            string iTip10 = "This affects how critters prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe " +
                             MidsContext.Character.Archetype.DisplayName + " base Threat Level of " +
                             Strings.Format((float) (MidsContext.Character.Archetype.BaseThreat * 100.0), "##0") +
                             "% is included in this figure.";
@@ -667,8 +667,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphThreat.Max = 800f;
             graphThreat.Draw();
             graphElusivity.Clear();
-            graphElusivity.AddItem("Elusivity:|" + Strings.Format((float) (MidsContext.Character.Totals.Elusivity * 100.0), "##0.##") + "%",
-                MidsContext.Character.Totals.Elusivity * 100f, 0.0f, "This effect resists accuracy buffs of enemies attacking you.");
+            float sElusivity = MidsContext.Character.Totals.ElusivityMax;
+            graphElusivity.AddItem("Elusivity:|" + Strings.Format((float) (sElusivity * 100.0), "##0.##") + "%",
+                sElusivity * 100f, 0.0f, "This effect resists accuracy buffs of enemies attacking you.");
             graphElusivity.Max = 100f;
             graphElusivity.Draw();
             if (Math.Abs(graphAcc.Font.Size - (double) MidsContext.Config.RtFont.PairedBase) > float.Epsilon)

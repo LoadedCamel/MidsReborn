@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -57,8 +59,11 @@ namespace mrbBase
         private string _defaultSaveFolderOverride;
         private Size _lastSize = new Size(1072, 760);
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
-        public string UpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
-
+        public string UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
+        public string DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
+        public string AppChangeLog { get; set; }
+        public string DbChangeLog { get; set; }
+        public bool CoDEffectFormat = false;
         private ConfigData() : this(true, "")
         {
         }
@@ -86,8 +91,9 @@ namespace mrbBase
             TeamMembers = new Dictionary<string, int>();
             Registered = 0;
             DiscordAuthorized = false;
-            IntializeComponent();
+            InitializeComponent();
         }
+
 
         // these properties require setters for deserialization
         public SDamageMath DamageMath { get; } = new SDamageMath();
@@ -161,7 +167,13 @@ namespace mrbBase
         public bool LongExport { get; set; }
         public bool MasterMode { get; set; }
         public bool ShrinkFrmSets { get; set; }
+        public bool ConvertOldDb { get; set; }
+        public bool FirstRun { get; set; } = true;
+        public string SourceDataPath { get; set; }
+        public string ConversionDataPath { get; set; }
+        public string DataPath { get; set; } = Path.Combine(Files.GetAssemblyLoc(), "Data\\Homecoming\\");
 
+        public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
 
         public string DefaultSaveFolderOverride
         {
@@ -199,7 +211,7 @@ namespace mrbBase
         private static void MigrateToSerializer(string mhdFn, ISerialize serializer)
         {
             var oldMethod = new ConfigData(false, mhdFn);
-            oldMethod.IntializeComponent();
+            oldMethod.InitializeComponent();
             var file = mhdFn + ".old";
             if (File.Exists(file))
                 file += "2";
@@ -213,7 +225,9 @@ namespace mrbBase
             // force Mhd if it exists, then rename it
             var mhdFn = Files.GetConfigFilename(true);
             if (File.Exists(mhdFn))
+            {
                 MigrateToSerializer(mhdFn, serializer);
+            }
 
             var fn = Files.GetConfigFilename(false);
             if (File.Exists(fn) && fn.EndsWith(".json"))
@@ -227,16 +241,23 @@ namespace mrbBase
                     MessageBox.Show("Failed to load json config, falling back to mhd");
                 }
             else
+            {
                 _current = new ConfigData(false, Files.GetConfigFilename(true));
+                File.WriteAllText(Files.GetConfigFilename(false), "");
+            }
 
-            _current.IntializeComponent();
+            _current.InitializeComponent();
         }
 
-        private void IntializeComponent()
+        private void InitializeComponent()
         {
-            if (string.IsNullOrEmpty(UpdatePath))
-                UpdatePath = "https://midsreborn.com/mids_updates/update_manifest.xml";
+            if (string.IsNullOrWhiteSpace(UpdatePath))
+                UpdatePath = "https://midsreborn.com/mids_updates/app/update_manifest.xml";
 
+            if (string.IsNullOrWhiteSpace(DbUpdatePath))
+                DbUpdatePath = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
+            if (string.IsNullOrWhiteSpace(DataPath))
+                DataPath = Files.FDefaultPath;
             RelocateSaveFolder(false);
             try
             {
@@ -510,7 +531,7 @@ namespace mrbBase
 
         private void LoadOverrides()
         {
-            using var fileStream = new FileStream(Files.SelectDataFileLoad("Compare.mhd"), FileMode.Open, FileAccess.Read);
+            using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath), FileMode.Open, FileAccess.Read);
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != "Mids' Hero Designer Comparison Overrides")
             {
@@ -535,27 +556,53 @@ namespace mrbBase
 
         public static RawSaveResult SaveRawMhd(ISerialize serializer, object o, string fn, RawSaveResult lastSaveInfo)
         {
+            var rootDir = Path.GetDirectoryName(fn);
+            var targetFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}.{serializer.Extension}");
+            var rng = RandomNumberGenerator.Create();
+            var randomBytes = new byte[8];
+            rng.GetNonZeroBytes(randomBytes);
+            var randomIdCode = BitConverter.ToString(randomBytes)
+                .Replace("-", "")
+                .ToLowerInvariant();
+            var tempFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}_{randomIdCode}.tmp");
+            //Debug.WriteLine($"Target: {targetFile}, Temp: {tempFile}");
+
+            var fileHash = File.ReadAllText(targetFile).GetHashCode();
+            var newContent = "";
+            var newContentHash = 0;
             try
             {
-                var path = Path.Combine(Path.GetDirectoryName(fn),
-                    Path.GetFileNameWithoutExtension(fn) + "." + serializer.Extension);
-                var text = serializer.Serialize(o);
-                // don't save if the file will be the same
-                if (lastSaveInfo != null && text != null
-                                         && lastSaveInfo.Length > 0 && text.Length > 0
-                                         && lastSaveInfo.Hash != 0 && lastSaveInfo.Hash == text.GetHashCode()
-                                         && File.Exists(fn))
-                    return lastSaveInfo;
-                if (lastSaveInfo != null)
-                    Console.WriteLine("Writing out updated file: " + fn);
-                File.WriteAllText(path, text);
-                return new RawSaveResult(text?.Length ?? 0, text?.GetHashCode() ?? 0);
+                using (var fileStreamW = File.CreateText(tempFile))
+                {
+                    fileStreamW.Write(newContent = serializer.Serialize(o));
+                }
+
+                newContentHash = newContent.GetHashCode();
+                if (newContentHash != fileHash)
+                {
+                    File.Delete(targetFile);
+                    File.Move(tempFile, targetFile);
+                }
+                else
+                {
+                    File.Delete(tempFile);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to save raw config: " + ex.Message, ex.GetType().Name);
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+
+                MessageBox.Show(
+                    $"Failed to save to {serializer.Extension.ToUpperInvariant()}: {ex.Message}\r\n\r\nFile: {targetFile}\r\nTemp file: {tempFile}",
+                    "Whoops", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
                 return null;
             }
+
+            return new RawSaveResult(newContent.Length, newContentHash);
         }
 
         private void SaveRawOverrides(ISerialize serializer, string iFilename, string name)
@@ -691,7 +738,7 @@ namespace mrbBase
                 RTFBase = 16;
                 RTFBold = true;
                 ColorBackgroundHero = Color.Black;
-                ColorBackgroundVillain = Color.FromArgb(32, 0, 0);
+                ColorBackgroundVillain = Color.Black;
                 ColorEnhancement = Color.FromArgb(0, byte.MaxValue, 0);
                 ColorFaded = Color.FromArgb(192, 192, 192);
                 ColorInvention = Color.FromArgb(0, byte.MaxValue, byte.MaxValue);
@@ -717,7 +764,9 @@ namespace mrbBase
                 };
                 PairedBase = 10.25f;
                 PairedBold = false;
-                PowersSelectBase = 8.25f;
+                // Zed: With Tahoma, spaces tend to be munched if PowersSelectBase is at 8.25
+                // Looks good with 8.50 with no other noticeable difference.
+                PowersSelectBase = 8.50f;
                 PowersSelectBold = false;
                 PowersBase = 9.25f;
                 PowersBold = true;

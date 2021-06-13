@@ -61,14 +61,14 @@ namespace Mids_Reborn.Forms.Controls
             inputImages = new ImageList(components);
             errorProviderText = new ErrorProvider(components);
             panel1.SuspendLayout();
-            ((ISupportInitialize)inputIcon).BeginInit();
-            ((ISupportInitialize)errorProviderText).BeginInit();
+            ((ISupportInitialize) inputIcon).BeginInit();
+            ((ISupportInitialize) errorProviderText).BeginInit();
             SuspendLayout();
             // 
             // inputLabel
             // 
             inputLabel.AutoSize = true;
-            inputLabel.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+            inputLabel.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             inputLabel.Location = new Point(73, 9);
             inputLabel.Name = "inputLabel";
             inputLabel.Size = new Size(71, 13);
@@ -78,7 +78,7 @@ namespace Mids_Reborn.Forms.Controls
             // inputTextBox
             // 
             inputTextBox.Location = new Point(76, 37);
-            inputTextBox.Multiline = true;
+            inputTextBox.Multiline = false;
             inputTextBox.Name = "inputTextBox";
             inputTextBox.Size = new Size(399, 20);
             inputTextBox.TabIndex = 1;
@@ -109,6 +109,7 @@ namespace Mids_Reborn.Forms.Controls
             buttonCancel.TabIndex = 3;
             buttonCancel.Text = "Cancel";
             buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.CausesValidation = false;
             buttonCancel.Click += new EventHandler(buttonCancel_Click);
             // 
             // panel1
@@ -119,7 +120,7 @@ namespace Mids_Reborn.Forms.Controls
             panel1.Dock = DockStyle.Bottom;
             panel1.Location = new Point(0, 65);
             panel1.Name = "panel1";
-            panel1.Size = new Size(487, 30);
+            panel1.Size = new Size(492, 30);
             panel1.TabIndex = 4;
             // 
             // inputIcon
@@ -133,7 +134,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // inputImages
             // 
-            inputImages.ImageStream = (ImageListStreamer)resources.GetObject("inputImages.ImageStream");
+            inputImages.ImageStream = (ImageListStreamer) resources.GetObject("inputImages.ImageStream");
             inputImages.TransparentColor = Color.Transparent;
             inputImages.Images.SetKeyName(0, "None.png");
             inputImages.Images.SetKeyName(1, "Info.png");
@@ -151,9 +152,9 @@ namespace Mids_Reborn.Forms.Controls
             AcceptButton = buttonOK;
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.White;
+            BackColor = SystemColors.Control;
             CancelButton = buttonCancel;
-            ClientSize = new Size(487, 95);
+            ClientSize = new Size(492, 95);
             Controls.Add(inputIcon);
             Controls.Add(panel1);
             Controls.Add(inputTextBox);
@@ -168,11 +169,10 @@ namespace Mids_Reborn.Forms.Controls
             Text = "Title";
             TopMost = true;
             panel1.ResumeLayout(false);
-            ((ISupportInitialize)inputIcon).EndInit();
-            ((ISupportInitialize)errorProviderText).EndInit();
+            ((ISupportInitialize) inputIcon).EndInit();
+            ((ISupportInitialize) errorProviderText).EndInit();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
@@ -181,11 +181,12 @@ namespace Mids_Reborn.Forms.Controls
         {
             using var form = new InputBox
             {
-                inputLabel = { Text = prompt },
+                inputLabel = {Text = prompt},
                 Text = title,
-                inputTextBox = { Text = defaultResponse },
-                inputIcon = { Image = inputImages.Images[(int)icon] }
+                inputTextBox = {Text = defaultResponse},
+                inputIcon = {Image = inputImages.Images[(int) icon]}
             };
+
             if (xpos >= 0 && ypos >= 0)
             {
                 form.StartPosition = FormStartPosition.Manual;
@@ -196,10 +197,9 @@ namespace Mids_Reborn.Forms.Controls
             {
                 form.StartPosition = FormStartPosition.CenterParent;
             }
+
             form.Validator = validator;
-
             var result = form.ShowDialog();
-
             var returnVal = new InputBoxResult();
             if (result != DialogResult.OK) return returnVal;
             returnVal.Text = form.inputTextBox.Text;
@@ -220,9 +220,12 @@ namespace Mids_Reborn.Forms.Controls
         private void inputTextBox_Validating(object sender, CancelEventArgs e)
         {
             if (Validator == null) return;
-            var args = new InputBoxValidatingArgs { Text = inputTextBox.Text };
+            if (buttonCancel.Focused) return;
+            
+            var args = new InputBoxValidatingArgs {Text = inputTextBox.Text};
             Validator(this, args);
             if (!args.Cancel) return;
+            
             e.Cancel = true;
             errorProviderText.SetError(inputTextBox, args.Message);
         }
@@ -231,12 +234,13 @@ namespace Mids_Reborn.Forms.Controls
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            Validator = null;
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.OK;
             Close();
         }
     }

@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using mrbBase;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.UpdateSystem
@@ -16,6 +18,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
         private bool ReadNotes { get; set; }
         public string Type { get; set; }
         public string Version { get; set; }
+        private string ChangeLog { get; set; }
         public PatchNotes(frmMain parent, bool notes)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
@@ -24,6 +27,8 @@ namespace Mids_Reborn.Forms.UpdateSystem
             InitializeComponent();
             _parent = parent;
         }
+
+        
 
         private int GetStartingLine(string src)
         {
@@ -37,7 +42,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 while ((result = reader.ReadLine()) != null)
                 {
                     i++;
-                    if (result == "# [Released]")
+                    if (result.Contains($"## {Type} [{Version}]"))
                     {
                         var startLine = i + 1;
                         return startLine;
@@ -50,15 +55,27 @@ namespace Mids_Reborn.Forms.UpdateSystem
 
         private void PatchNotes_LoadEvent(object sender, EventArgs e)
         {
+            Console.WriteLine(Type);
+            switch (Type)
+            {
+                case "App":
+                    ChangeLog = MidsContext.Config.AppChangeLog;
+                    Text = $"Viewing \"MRB {Version}\" Patch Notes";
+                    break;
+                case "Database":
+                    ChangeLog = MidsContext.Config.DbChangeLog;
+                    Text = $"Viewing \"{Type} {Version}\" Patch Notes";
+                    break;
+            }
             if (ReadNotes)
             {
                 closeUpdate.Text = @"UPDATE";
             }
 
-            int startLine = GetStartingLine("https://midsreborn.com/mids_updates/changelog.txt");
+            int startLine = GetStartingLine(ChangeLog);
             richTextBox1.ForeColor = Color.AliceBlue;
             using var client = new WebClient();
-            var stream = client.OpenRead("https://midsreborn.com/mids_updates/changelog.txt");
+            var stream = client.OpenRead(ChangeLog);
             if (stream == null) return;
             using var reader = new StreamReader(stream);
             var builder = new StringBuilder(richTextBox1.Text);
@@ -68,20 +85,15 @@ namespace Mids_Reborn.Forms.UpdateSystem
             while ((result = reader.ReadLine()) != null)
             {
                 i++;
-                if (i > startLine)
+                if (i >= startLine)
                 {
-                    if (result.Contains($"## {Type} [{Version}]"))
-                    {
-                        builder.AppendFormat($"{result}\r\n");
-                    }
-                    else if (result.Contains($"## {Type}") && !result.Contains($"[{Version}]"))
+                    var regMatch = new Regex("(##.*\\[.*\\])");
+                    if (regMatch.IsMatch(result))
                     {
                         break;
                     }
-                    else
-                    {
-                        builder.AppendFormat($"{result}\r\n");
-                    }
+
+                    builder.AppendFormat($"{result}\r\n");
                 }
             }
 

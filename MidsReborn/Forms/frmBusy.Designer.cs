@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace Mids_Reborn.Forms
 {
@@ -54,10 +55,13 @@ namespace Mids_Reborn.Forms
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Working...";
+            this.Name = "frmBusy";
             this.TopMost = true;
             this.ResumeLayout(false);
         }
 
         #endregion
+
+        private Label Message;
     }
 }

@@ -1,15 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.WindowMenuItems;
 using Mids_Reborn.My;
 using mrbBase;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -91,12 +90,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmRecipeEdit_Load(object sender, EventArgs e)
         {
-            // Mitigate flickering on the ListView control.
-            // https://stackoverflow.com/a/42389596
-            lvDPA
-                .GetType()
-                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(lvDPA, true, null);
+            lvDPA.EnableDoubleBuffer();
             const Recipe.RecipeRarity recipeRarity = Recipe.RecipeRarity.Common;
             cbRarity.BeginUpdate();
             cbRarity.Items.Clear();
@@ -201,22 +195,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             return true;
         }
 
-        private void AssignRecipeIndexes(bool async = true)
+        private void AssignRecipeIndexes()
         {
-            var t = new Task(() =>
+            var recipesArr = new Recipe[_tempRecipes.Length];
+            var l = lvDPA.Items.Count;
+            var recipesInfo = new KeyValuePair<int, string>[l];
+            // Pre-load info from listview for speedup
+            for (var i = 0; i < l; i++)
             {
-                var recipesArr = new Recipe[_tempRecipes.Length];
-                for (var i = 0; i < lvDPA.Items.Count; i++)
-                {
-                    var index = Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text);
-                    recipesArr[index] = _tempRecipes.First(r => r.InternalName == lvDPA.Items[i].SubItems[0].Text);
-                }
+                recipesInfo[i] = new KeyValuePair<int, string>(Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text), lvDPA.Items[i].SubItems[0].Text);
+            }
 
-                _tempRecipes = (Recipe[]) recipesArr.Clone();
-            });
-            
-            t.Start();
-            if (!async) t.Wait();
+            for (var i = 0; i < l; i++)
+            {
+                recipesArr[recipesInfo[i].Key] = _tempRecipes.First(r => r.InternalName == recipesInfo[i].Value);
+            }
+
+            _tempRecipes = (Recipe[]) recipesArr.Clone();
         }
 
         private void AssignNewRecipes()
@@ -254,7 +249,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            DatabaseAPI.LoadRecipes();
+            //DatabaseAPI.LoadRecipes();
             Close();
         }
 
@@ -318,8 +313,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (!CheckIndexesConsistency()) return;
-            
-            AssignRecipeIndexes(false);
+
+            AssignRecipeIndexes();
             AssignNewRecipes();
             DatabaseAPI.Database.Recipes = (Recipe[]) _tempRecipes.Clone();
             DatabaseAPI.Database.Enhancements = (IEnhancement[]) _tempEnhancements.Clone();
@@ -351,7 +346,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (_recipeListPrevSelected == -1)
             {
                 EnableRecipeEntryControls();
-                _recipeListPrevSelected = lvDPA.SelectedItems[0].Index;
+                _recipeListPrevSelected = lvDPA.SelectedItems.Count > 0
+                    ? lvDPA.SelectedItems[0].Index
+                    : -1;
             }
             udStaticIndex.Value = rIndex;
             lvDPA.Items[lvDPA.Items.Count - 1].Selected = true;
@@ -362,8 +359,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbIsGeneric.Checked = true;
             cbEnh.Select();
             _noUpdate = false;
-
-            //Debug.WriteLine($"RAdd: rIndex: {rIndex}\r\nEnhIdx: {_tempRecipes[rIndex].EnhIdx}\r\nEnhancement: '{_tempRecipes[rIndex].Enhancement}'");
         }
 
         private void btnRDel_Click(object sender, EventArgs e)
@@ -438,9 +433,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (_noUpdate || RecipeID() <= -1 || cbEnh.SelectedIndex <= -1) return;
             var recipe = _tempRecipes[RecipeID()];
-            recipe.EnhIdx = cbEnh.SelectedText.ToLower() == "none" | cbEnh.SelectedIndex == _noEnhancementIdx
+            var selectedItem = cbEnh.SelectedIndex >= 0 ? cbEnh.SelectedItem.ToString() : "";
+            recipe.EnhIdx = selectedItem.ToLowerInvariant() == "none" | cbEnh.SelectedIndex == _noEnhancementIdx
                 ? -1
-                : _tempEnhancements.TryFindIndex(e => e.UID == cbEnh.SelectedText);
+                : _tempEnhancements.TryFindIndex(enh => enh.UID == selectedItem);
             if (recipe.EnhIdx > -1)
             {
                 recipe.Enhancement = cbEnh.Text;
@@ -460,8 +456,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 recipe.Enhancement = "";
             }
 
-            //Debug.WriteLine($"cbEnh_cb: rIndex: {RecipeID()}\r\nrecipe.EnhIdx: {recipe.EnhIdx}");
-
             UpdateListItem(RecipeID());
         }
 
@@ -475,50 +469,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbSalX_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_noUpdate || RecipeID() < 0 || EntryID() < 0) return;
-            if (cbIsRecipe0.Checked)
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].RecipeIdx[0] = cbSal0.SelectedIndex - 1;
-            }
-            else
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[0] = cbSal0.SelectedIndex - 1;
-            }
+            _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[0] = cbSal0.SelectedIndex - 1;
+            _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[1] = cbSal1.SelectedIndex - 1;
+            _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[2] = cbSal2.SelectedIndex - 1;
+            _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[3] = cbSal3.SelectedIndex - 1;
+            _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[4] = cbSal4.SelectedIndex - 1;
 
-            if (cbIsRecipe1.Checked)
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].RecipeIdx[1] = cbSal1.SelectedIndex - 1;
-            }
-            else
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[1] = cbSal1.SelectedIndex - 1;
-            }
-
-            if (cbIsRecipe2.Checked)
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].RecipeIdx[2] = cbSal2.SelectedIndex - 1;
-            }
-            else
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[2] = cbSal2.SelectedIndex - 1;
-            }
-
-            if (cbIsRecipe3.Checked)
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].RecipeIdx[3] = cbSal3.SelectedIndex - 1;
-            }
-            else
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[3] = cbSal3.SelectedIndex - 1;
-            }
-
-            if (cbIsRecipe4.Checked)
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].RecipeIdx[4] = cbSal4.SelectedIndex - 1;
-            }
-            else
-            {
-                _tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[4] = cbSal4.SelectedIndex - 1;
-            }
             /*if ((cbSal0.SelectedIndex > 0) & (decimal.Compare(udSal0.Value, new decimal(1)) < 0))
                 udSal0.Value = new decimal(1);
             if ((cbSal1.SelectedIndex > 0) & (decimal.Compare(udSal1.Value, new decimal(1)) < 0))
@@ -574,11 +530,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbSal4.Enabled = false;
             udSal4.Value = 0;
             udSal4.Enabled = false;
-            cbIsRecipe0.Enabled = false;
-            cbIsRecipe1.Enabled = false;
-            cbIsRecipe2.Enabled = false;
-            cbIsRecipe3.Enabled = false;
-            cbIsRecipe4.Enabled = false;
         }
 
         private void EnableRecipeEntryControls()
@@ -598,11 +549,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             udSal3.Enabled = true;
             cbSal4.Enabled = true;
             udSal4.Enabled = true;
-            cbIsRecipe0.Enabled = true;
-            cbIsRecipe1.Enabled = true;
-            cbIsRecipe2.Enabled = true;
-            cbIsRecipe3.Enabled = true;
-            cbIsRecipe4.Enabled = true;
         }
 
         private void ClearInfo()
@@ -673,7 +619,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             
             var num = _tempRecipes[rId].Item[_tempRecipes[rId].Item.Length - 1].Level + 1;
             if (num >= nMax) return;
-            for (var index = num; index < nMax; index++)
+            for (var index = num; index <= nMax; index++)
             {
                 _tempRecipes[rId].Item = (Recipe.RecipeEntry[]) Utils.CopyArray(
                     _tempRecipes[rId].Item,
@@ -752,7 +698,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 _tempRecipes[iRecipe].Item[iItem].Salvage[iIndex] = DatabaseAPI.Database.Salvage[_tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[iIndex]].InternalName;
-                Debug.WriteLine($"SetSalvageStringFromIDX: {DatabaseAPI.Database.Salvage[_tempRecipes[RecipeID()].Item[EntryID()].SalvageIdx[iIndex]].InternalName}");
             }
         }
 
@@ -780,91 +725,30 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             udCraftM.Value = recipeEntry.CraftCostM;
             udCraftM.Enabled = true;
 
-            if (recipeEntry.RecipeIdx[0] > -1)
-            {
-                if (!cbIsRecipe0.Checked) PopulateComboBoxList(ref cbSal0, false);
-                cbIsRecipe0.Checked = true;
-                udSal0.Value = 1;
-                udSal0.Visible = false;
-                cbSal0.SelectedIndex = recipeEntry.RecipeIdx[0] + 1;
-            }
-            else
-            {
-                if (cbIsRecipe0.Checked) PopulateComboBoxList(ref cbSal0);
-                cbIsRecipe0.Checked = false;
-                udSal0.Value = recipeEntry.Count[0];
-                udSal0.Visible = true;
-                cbSal0.SelectedIndex = recipeEntry.SalvageIdx[0] + 1;
-            }
+            PopulateComboBoxList(ref cbSal0);
+            udSal0.Value = recipeEntry.Count[0];
+            udSal0.Visible = true;
+            cbSal0.SelectedIndex = recipeEntry.SalvageIdx[0] + 1;
 
-            if (recipeEntry.RecipeIdx[1] > -1)
-            {
-                if (!cbIsRecipe1.Checked) PopulateComboBoxList(ref cbSal1, false);
-                cbIsRecipe1.Checked = true;
-                udSal1.Value = 1;
-                udSal1.Visible = false;
-                cbSal1.SelectedIndex = recipeEntry.RecipeIdx[1] + 1;
-            }
-            else
-            {
-                if (cbIsRecipe1.Checked) PopulateComboBoxList(ref cbSal1, false);
-                cbIsRecipe1.Checked = false;
-                udSal1.Value = recipeEntry.Count[1];
-                udSal1.Visible = true;
-                cbSal1.SelectedIndex = recipeEntry.SalvageIdx[1] + 1;
-            }
+            PopulateComboBoxList(ref cbSal1);
+            udSal1.Value = 1;
+            udSal1.Visible = true;
+            cbSal1.SelectedIndex = recipeEntry.SalvageIdx[1] + 1;
 
-            if (recipeEntry.RecipeIdx[2] > -1)
-            {
-                if (!cbIsRecipe2.Checked) PopulateComboBoxList(ref cbSal2, false);
-                cbIsRecipe2.Checked = true;
-                udSal2.Value = 1;
-                udSal2.Visible = false;
-                cbSal2.SelectedIndex = recipeEntry.RecipeIdx[2] + 1;
-            }
-            else
-            {
-                if (cbIsRecipe2.Checked) PopulateComboBoxList(ref cbSal2, false);
-                cbIsRecipe2.Checked = false;
-                udSal2.Value = recipeEntry.Count[2];
-                udSal2.Visible = true;
-                cbSal2.SelectedIndex = recipeEntry.SalvageIdx[2] + 1;
-            }
+            PopulateComboBoxList(ref cbSal2);
+            udSal2.Value = 1;
+            udSal2.Visible = true;
+            cbSal2.SelectedIndex = recipeEntry.SalvageIdx[2] + 1;
 
-            if (recipeEntry.RecipeIdx[3] > -1)
-            {
-                if (!cbIsRecipe3.Checked) PopulateComboBoxList(ref cbSal3, false);
-                cbIsRecipe3.Checked = true;
-                udSal3.Value = 1;
-                udSal3.Visible = false;
-                cbSal3.SelectedIndex = recipeEntry.RecipeIdx[3] + 1;
-            }
-            else
-            {
-                if (cbIsRecipe3.Checked) PopulateComboBoxList(ref cbSal3, false);
-                cbIsRecipe3.Checked = false;
-                udSal3.Value = recipeEntry.Count[3];
-                udSal3.Visible = true;
-                PopulateComboBoxList(ref cbSal3);
-                cbSal3.SelectedIndex = recipeEntry.SalvageIdx[3] + 1;
-            }
+            PopulateComboBoxList(ref cbSal3);
+            udSal3.Value = 1;
+            udSal3.Visible = true;
+            cbSal3.SelectedIndex = recipeEntry.SalvageIdx[3] + 1;
 
-            if (recipeEntry.RecipeIdx[4] > -1)
-            {
-                if (!cbIsRecipe4.Checked) PopulateComboBoxList(ref cbSal4, false);
-                cbIsRecipe4.Checked = true;
-                udSal4.Value = 1;
-                udSal4.Visible = false;
-                cbSal4.SelectedIndex = recipeEntry.RecipeIdx[4] + 1;
-            }
-            else
-            {
-                if (cbIsRecipe4.Checked) PopulateComboBoxList(ref cbSal4, false);
-                cbIsRecipe4.Checked = false;
-                udSal4.Value = recipeEntry.Count[4];
-                udSal4.Visible = true;
-                cbSal4.SelectedIndex = recipeEntry.SalvageIdx[4] + 1;
-            }
+            PopulateComboBoxList(ref cbSal4);
+            udSal4.Value = 1;
+            udSal4.Visible = true;
+            cbSal4.SelectedIndex = recipeEntry.SalvageIdx[4] + 1;
 
             _noUpdate = false;
         }
@@ -908,11 +792,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (dupIndex > -1 & eIndex > -1)
             {
-                lstItems.SelectedIndex = dupIndex;
+                lstItems.SelectedIndex = Math.Min(lstItems.Items.Count - 1, dupIndex);
             }
             else
             {
-                lstItems.SelectedIndex = si;
+                lstItems.SelectedIndex = Math.Min(lstItems.Items.Count - 1, si);
             }
         }
 
@@ -1004,7 +888,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var rId = RecipeID();
             var eId = EntryID();
-            //Debug.WriteLine($"udCostX_Leave: noUpdate: {_noUpdate}, rId: {rId}, eId: {eId}");
             if (_noUpdate || rId < 0 || eId < 0) return;
             var recipeItem = _tempRecipes[rId].Item[eId];
             recipeItem.Level = MinMax(udLevel) - 1;
@@ -1078,103 +961,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvDPA.Items[index].SubItems[4].Text = Convert.ToString(_tempRecipes[index].Item.Length, CultureInfo.InvariantCulture);
             lvDPA.Items[index].SubItems[5].Text = GetRecipeFlags(index);
             lvDPA.EndUpdate();
-        }
-
-        private void cbIsRecipe_CheckedChanged(object sender, EventArgs e)
-        {
-            var target = sender as CheckBox;
-            var state = target != null && target.Checked;
-            var rId = RecipeID();
-            var eId = EntryID();
-            if (target == null) return;
-            switch (target.Name)
-            {
-                case "cbIsRecipe0":
-                    PopulateComboBoxList(ref cbSal0, !state);
-                    cbSal0.SelectedIndex = 0;
-                    udSal0.Visible = !state;
-                    if (!state)
-                    {
-                        _tempRecipes[rId].Item[eId].SalvageIdx[0] = 0;
-                        Label2.Text = "Sub-recipe components (Ingredient #1):";
-                        lstSubRecipeComponents.Items.Clear();
-                    }
-                    else
-                    {
-                        _tempRecipes[rId].Item[eId].RecipeIdx[0] = 0;
-                    }
-
-                    break;
-
-                case "cbIsRecipe1":
-                    PopulateComboBoxList(ref cbSal1, !state);
-                    cbSal1.SelectedIndex = 0;
-                    udSal1.Visible = !state;
-                    if (!state)
-                    {
-                        _tempRecipes[rId].Item[eId].SalvageIdx[1] = 0;
-                        Label2.Text = "Sub-recipe components (Ingredient #2):";
-                        lstSubRecipeComponents.Items.Clear();
-                    }
-                    else
-                    {
-                        _tempRecipes[rId].Item[eId].RecipeIdx[1] = 0;
-                    }
-
-                    break;
-
-                case "cbIsRecipe2":
-                    PopulateComboBoxList(ref cbSal2, !state);
-                    cbSal2.SelectedIndex = 0;
-                    udSal2.Visible = !state;
-                    if (!state)
-                    {
-                        _tempRecipes[rId].Item[eId].SalvageIdx[2] = 0;
-                        Label2.Text = "Sub-recipe components (Ingredient #3):";
-                        lstSubRecipeComponents.Items.Clear();
-                    }
-                    else
-                    {
-                        _tempRecipes[rId].Item[eId].RecipeIdx[2] = 0;
-                    }
-
-                    break;
-
-                case "cbIsRecipe3":
-                    PopulateComboBoxList(ref cbSal3, !state);
-                    cbSal3.SelectedIndex = 0;
-                    udSal3.Visible = !state;
-                    if (!state)
-                    {
-                        _tempRecipes[rId].Item[eId].SalvageIdx[3] = 0;
-                        Label2.Text = "Sub-recipe components (Ingredient #4):";
-                        lstSubRecipeComponents.Items.Clear();
-                    }
-                    else
-                    {
-                        _tempRecipes[rId].Item[eId].RecipeIdx[3] = 0;
-                    }
-
-                    break;
-
-                case "cbIsRecipe4":
-                    PopulateComboBoxList(ref cbSal4, !state);
-                    cbSal4.SelectedIndex = 0;
-                    udSal4.Visible = !state;
-                    if (!state)
-                    {
-                        _tempRecipes[rId].Item[eId].SalvageIdx[4] = 0;
-                        Label2.Text = "Sub-recipe components (Ingredient #5):";
-                        lstSubRecipeComponents.Items.Clear();
-                    }
-                    else
-                    {
-                        _tempRecipes[rId].Item[eId].RecipeIdx[4] = 0;
-                    }
-
-                    break;
-            }
-            groupBox4.Visible = state;
         }
 
         private void PopulateComboBoxList(ref ComboBox ctl, bool withSalvage = true)
@@ -1265,62 +1051,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             lvDPA.EndUpdate();
             lvDPA.ResumeLayout();
-        }
-
-        private void cbSal_Enter_UpdateSubRecipe(int idx)
-        {
-            var rId = RecipeID();
-            var eId = EntryID();
-            groupBox4.Visible = cbIsRecipe0.Checked;
-            label4.Text = $"Sub-recipe components(Ingredient #{idx + 1}):";
-            var subRecipe = _tempRecipes[_tempRecipes[rId].Item[eId].RecipeIdx[idx]];
-            Debug.WriteLine($"cbSal: subRecipe: {subRecipe.ExternalName} ({idx})");
-            var mainLevel = _tempRecipes[rId].Item[eId].Level;
-            var subRecipeEntry = subRecipe.Item.Where(item => item.Level == mainLevel).DefaultIfEmpty(subRecipe.Item[0]).First();
-            
-            lstSubRecipeComponents.BeginUpdate();
-            lstSubRecipeComponents.Items.Clear();
-            for (var i = 0; i < subRecipeEntry.Salvage.Length; i++)
-            {
-                if (subRecipeEntry.SalvageIdx[i] <= -1) continue;
-                lstSubRecipeComponents.Items.Add(DatabaseAPI.Database.Salvage[subRecipeEntry.SalvageIdx[i]]);
-            }
-            lstSubRecipeComponents.EndUpdate();
-        }
-
-        private void cbSal0_Enter(object sender, EventArgs e)
-        {
-            if (!cbIsRecipe0.Checked) return;
-            cbSal_Enter_UpdateSubRecipe(0);
-        }
-
-        private void cbSal1_Enter(object sender, EventArgs e)
-        {
-            if (!cbIsRecipe1.Checked) return;
-            cbSal_Enter_UpdateSubRecipe(1);
-        }
-
-        private void cbSal2_Enter(object sender, EventArgs e)
-        {
-            if (!cbIsRecipe2.Checked) return;
-            cbSal_Enter_UpdateSubRecipe(2);
-        }
-
-        private void cbSal3_Enter(object sender, EventArgs e)
-        {
-            if (!cbIsRecipe3.Checked) return;
-            cbSal_Enter_UpdateSubRecipe(3);
-        }
-
-        private void cbSal4_Enter(object sender, EventArgs e)
-        {
-            if (!cbIsRecipe4.Checked) return;
-            cbSal_Enter_UpdateSubRecipe(4);
-        }
-
-        private void cbSalX_Leave(object sender, EventArgs e)
-        {
-            groupBox4.Visible = false;
         }
 
         private void lvDPA_ColumnClick(object sender, ColumnClickEventArgs e)

@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using mrbBase.Base.Data_Classes;
@@ -122,7 +123,7 @@ namespace mrbBase
                 return AttribMod[uID];
             }
 
-            for (var index = 0; index <= Database.AttribMods.Modifier.Length - 1; ++index)
+            for (var index = 0; index <= Database.AttribMods.Modifier.Count - 1; ++index)
             {
                 if (!string.Equals(uID, Database.AttribMods.Modifier[index].ID, StringComparison.OrdinalIgnoreCase))
                     continue;
@@ -161,7 +162,7 @@ namespace mrbBase
         }
 
         //Powerset Groups
-        private static void FillGroupArray()
+        public static void FillGroupArray()
         {
             Database.PowersetGroups = new Dictionary<string, PowersetGroup>();
             foreach (var powerset in Database.Powersets)
@@ -407,8 +408,8 @@ namespace mrbBase
 
         public static string[] UidMutexAll()
         {
-            var items = Database.Power.SelectMany(pow => pow.GroupMembership).Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
+            var items = new List<string>();
+            items = Database.Power.SelectMany(pow => pow.GroupMembership).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
             items.Sort();
             return items.ToArray();
         }
@@ -486,6 +487,12 @@ namespace mrbBase
         {
             return Database.Classes.FirstOrDefault(cls =>
                 string.Equals(iArchetype, cls.DisplayName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static Archetype GetArchetypeByClassName(string iArchetype)
+        {
+            return Database.Classes.FirstOrDefault(cls =>
+                string.Equals(iArchetype, cls.ClassName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int GetOriginByName(Archetype archetype, string iOrigin)
@@ -599,34 +606,35 @@ namespace mrbBase
             return iIndexes.Length > 0 ? 0 : -1;
         }
 
-        // Zed -- imported from Hero Viewer
         public static bool EnhIsATO(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.nIDSet == -1) return false;
 
             var enhSetData = Database.EnhancementSets[enhData.nIDSet];
 
-            return enhSetData.SetType == Enums.eSetType.Arachnos ||
-                   enhSetData.SetType == Enums.eSetType.Blaster ||
-                   enhSetData.SetType == Enums.eSetType.Brute ||
-                   enhSetData.SetType == Enums.eSetType.Controller ||
-                   enhSetData.SetType == Enums.eSetType.Corruptor ||
-                   enhSetData.SetType == Enums.eSetType.Defender ||
-                   enhSetData.SetType == Enums.eSetType.Dominator ||
-                   enhSetData.SetType == Enums.eSetType.Kheldian ||
-                   enhSetData.SetType == Enums.eSetType.Mastermind ||
-                   enhSetData.SetType == Enums.eSetType.Scrapper ||
-                   enhSetData.SetType == Enums.eSetType.Sentinel ||
-                   enhSetData.SetType == Enums.eSetType.Stalker ||
-                   enhSetData.SetType == Enums.eSetType.Tanker;
+            return enhSetData.SetType is Enums.eSetType.Arachnos
+                or Enums.eSetType.Blaster
+                or Enums.eSetType.Brute
+                or Enums.eSetType.Controller
+                or Enums.eSetType.Corruptor
+                or Enums.eSetType.Defender
+                or Enums.eSetType.Dominator
+                or Enums.eSetType.Kheldian
+                or Enums.eSetType.Mastermind
+                or Enums.eSetType.Scrapper
+                or Enums.eSetType.Sentinel
+                or Enums.eSetType.Stalker
+                or Enums.eSetType.Tanker;
         }
 
         public static bool EnhIsWinterEventE(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.nIDSet == -1) return false;
@@ -643,6 +651,7 @@ namespace mrbBase
         public static bool EnhIsMovieE(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.nIDSet == -1) return false;
@@ -655,10 +664,11 @@ namespace mrbBase
         public static bool EnhIsIO(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
 
-            return (enhData.TypeID == Enums.eType.InventO || enhData.TypeID == Enums.eType.SetO) &&
+            return enhData.TypeID is Enums.eType.InventO or Enums.eType.SetO &&
                    !EnhIsNaturallyAttuned(enhIdx);
         }
 
@@ -667,6 +677,7 @@ namespace mrbBase
         public static bool EnhCanReceiveCatalyst(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
 
@@ -677,6 +688,7 @@ namespace mrbBase
         public static bool EnhIsSuperior(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.RecipeIDX == -1) return false;
@@ -690,6 +702,7 @@ namespace mrbBase
         public static bool EnhIsSuperiorIO(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             if (enhData.RecipeIDX == -1) return false;
@@ -702,6 +715,7 @@ namespace mrbBase
         public static bool EnhIsNaturallyAttuned(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || EnhIsMovieE(enhIdx);
         }
@@ -712,6 +726,7 @@ namespace mrbBase
         public static bool CanCatalystUpgradeSuperior(int enhIdx)
         {
             if (enhIdx == -1) return false;
+            if (enhIdx >= Database.Enhancements.Length) return false;
 
             var enhData = Database.Enhancements[enhIdx];
             Recipe.RecipeRarity enhRarity;
@@ -751,19 +766,19 @@ namespace mrbBase
             return Database.Enhancements.Where(e =>
                 e.nIDSet > -1 &&
                 (
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Arachnos ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Blaster ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Brute ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Controller ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Corruptor ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Defender ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Dominator ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Kheldian ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Mastermind ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Scrapper ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Sentinel ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Stalker ||
-                    Database.EnhancementSets[e.nIDSet].SetType == Enums.eSetType.Tanker
+                    Database.EnhancementSets[e.nIDSet].SetType is Enums.eSetType.Arachnos
+                        or Enums.eSetType.Blaster
+                        or Enums.eSetType.Brute
+                        or Enums.eSetType.Controller
+                        or Enums.eSetType.Corruptor
+                        or Enums.eSetType.Defender
+                        or Enums.eSetType.Dominator
+                        or Enums.eSetType.Kheldian
+                        or Enums.eSetType.Mastermind
+                        or Enums.eSetType.Scrapper
+                        or Enums.eSetType.Sentinel
+                        or Enums.eSetType.Stalker
+                        or Enums.eSetType.Tanker
                 )
             ).Select(e => e.UID).ToArray();
         }
@@ -829,6 +844,78 @@ namespace mrbBase
                 return iName.IndexOf("Superior_", StringComparison.OrdinalIgnoreCase) > -1;
 
             return iName.IndexOf("Attuned_", StringComparison.OrdinalIgnoreCase) > -1;
+        }
+
+        public static Dictionary<Enums.eSetType, List<IPower>> SlottablePowers()
+        {
+            var ret = new Dictionary<Enums.eSetType, List<IPower>>();
+            foreach (var power in Database.Power)
+            {
+                var powerset = power.GetPowerSet();
+                if (powerset.SetType != Enums.ePowerSetType.Primary &&
+                    powerset.SetType != Enums.ePowerSetType.Secondary &&
+                    powerset.SetType != Enums.ePowerSetType.Pool &&
+                    powerset.SetType != Enums.ePowerSetType.Ancillary &&
+                    powerset.SetType != Enums.ePowerSetType.Inherent) continue;
+
+                var setTypes = power.SetTypes.ToList();
+                foreach (var t in setTypes)
+                {
+                    if (!ret.ContainsKey(t)) ret[t] = new List<IPower>();
+                    ret[t].Add(power);
+                }
+            }
+
+            return ret;
+        }
+
+        public static List<IPower> SlottablePowersSetType(Enums.eSetType enhSetType)
+        {
+            var retList = new List<IPower>();
+            foreach (var power in Database.Power)
+            {
+                var powerset = power.GetPowerSet();
+                if (powerset.SetType != Enums.ePowerSetType.Primary &&
+                    powerset.SetType != Enums.ePowerSetType.Secondary &&
+                    powerset.SetType != Enums.ePowerSetType.Pool &&
+                    powerset.SetType != Enums.ePowerSetType.Ancillary &&
+                    powerset.SetType != Enums.ePowerSetType.Inherent) continue;
+                var setTypes = power.SetTypes.ToList();
+                var containsType = setTypes.Any(x => x == enhSetType);
+                if (containsType)
+                {
+                    retList.Add(power);
+                }
+            }
+
+            return retList;
+        }
+
+        public static List<IPowerset> GetEpicPowersets(Archetype atClass)
+        {
+            if (atClass.DisplayName != "Peacebringer" && atClass.DisplayName != "Warshade")
+            {
+                return atClass.Ancillary
+                    .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
+                    .ToList();
+            }
+
+            return new List<IPowerset>();
+        }
+
+        public static List<IPowerset> GetEpicPowersets(string atClass)
+        {
+            if (string.IsNullOrWhiteSpace(atClass) | atClass == "Class_Peacebringer" | atClass == "Class_Warshade")
+            {
+                return new List<IPowerset>();
+            }
+
+            var archetype = GetArchetypeByClassName(atClass);
+            if (archetype == null) return new List<IPowerset>();
+
+            return archetype.Ancillary
+                .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
+                .ToList();
         }
 
         public static int GetEnhancementByUIDName(string iName)
@@ -1210,7 +1297,16 @@ namespace mrbBase
         }
         #endregion
 
-        public static void CheckEhcBoosts()
+        public static string DatabaseName
+        {
+            get
+            {
+                var name = new DirectoryInfo(MidsContext.Config.DataPath).Name;
+                return name;
+            }
+        }
+
+        private static void CheckEhcBoosts()
         {
             foreach (var power in Database.Power)
             {
@@ -1230,12 +1326,21 @@ namespace mrbBase
             }
         }
 
-        public static void SaveMainDatabase(ISerialize serializer)
+        public static void SaveMainDatabase(ISerialize serializer, string iPath = "")
         {
             //MergeDatabaseFile();
             //Task.Delay(1500);
-            CheckEhcBoosts();
-            var path = Files.SelectDataFileSave(Files.MxdbFileDB);
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                CheckEhcBoosts();
+                path = Files.SelectDataFileSave(Files.MxdbFileDB);
+            }
+            else
+            {
+                CheckEhcBoosts();
+                path = Files.SelectDataFileSave(Files.MxdbFileDB, iPath);
+            }
 
             FileStream fileStream;
             BinaryWriter writer;
@@ -1262,19 +1367,36 @@ namespace mrbBase
                 Console.WriteLine(Database.ArchetypeVersion);
                 writer.Write(Database.Classes.Length - 1);
                 for (var index = 0; index <= Database.Classes.Length - 1; ++index)
+                {
                     Database.Classes[index].StoreTo(ref writer);
+                }
+
                 writer.Write("BEGIN:POWERSETS");
                 Database.PowersetVersion.StoreTo(writer);
                 writer.Write(Database.Powersets.Length - 1);
                 for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
+                {
                     Database.Powersets[index].StoreTo(ref writer);
+                }
+
                 writer.Write("BEGIN:POWERS");
                 Database.PowerVersion.StoreTo(writer);
                 Database.PowerLevelVersion.StoreTo(writer);
                 Database.PowerEffectVersion.StoreTo(writer);
                 Database.IOAssignmentVersion.StoreTo(writer);
                 writer.Write(Database.Power.Length - 1);
-                for (var index = 0; index <= Database.Power.Length - 1; ++index) Database.Power[index].StoreTo(ref writer);
+                for (var index = 0; index <= Database.Power.Length - 1; ++index)
+                {
+                    try
+                    {
+                        Database.Power[index].StoreTo(ref writer);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                }
+
                 writer.Write("BEGIN:SUMMONS");
                 Database.StoreEntities(writer);
                 writer.Close();
@@ -1293,10 +1415,19 @@ namespace mrbBase
             var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
             File.WriteAllText($@"{Application.StartupPath}\\data\\Ents.json", serialized);
         }
-        public static bool LoadMainDatabase()
+        public static bool LoadMainDatabase(string iPath = "", bool useOld = false)
         {
             ClearLookups();
-            var path = Files.SelectDataFileLoad(Files.MxdbFileDB);
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileLoad(Files.MxdbFileDB);
+            }
+            else
+            {
+                path = Files.SelectDataFileLoad(Files.MxdbFileDB, iPath);
+            }
+
             FileStream fileStream;
             BinaryReader reader;
             try
@@ -1312,7 +1443,10 @@ namespace mrbBase
             try
             {
                 if (reader.ReadString() != "Mids' Hero Designer Database MK II")
-                    MessageBox.Show("Expected MHD header, got something else!", "Eeeeee!");
+                {
+                    MessageBox.Show(@"Expected MHD header, got something else!", @"Eeeeee!");
+                }
+
                 Database.Version = reader.ReadSingle();
                 var year = reader.ReadInt32();
                 if (year > 0)
@@ -1329,7 +1463,7 @@ namespace mrbBase
                 Database.Issue = reader.ReadInt32();
                 if (reader.ReadString() != "BEGIN:ARCHETYPES")
                 {
-                    MessageBox.Show("Expected Archetype Data, got something else!", "Eeeeee!");
+                    MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
                     reader.Close();
                     fileStream.Close();
                     return false;
@@ -1338,10 +1472,13 @@ namespace mrbBase
                 Database.ArchetypeVersion.Load(reader);
                 Database.Classes = new Archetype[reader.ReadInt32() + 1];
                 for (var index = 0; index < Database.Classes.Length; ++index)
+                {
                     Database.Classes[index] = new Archetype(reader)
                     {
                         Idx = index
                     };
+                }
+
                 if (reader.ReadString() != "BEGIN:POWERSETS")
                 {
                     MessageBox.Show("Expected Powerset Data, got something else!", "Eeeeee!");
@@ -1379,14 +1516,29 @@ namespace mrbBase
                 Database.PowerEffectVersion.Load(reader);
                 Database.IOAssignmentVersion.Load(reader);
                 Database.Power = new IPower[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Database.Power.Length - 1; ++index)
+                if (!useOld)
                 {
-                    Database.Power[index] = new Power(reader);
-                    ++num3;
-                    if (num3 <= 50)
-                        continue;
-                    num3 = 0;
-                    Application.DoEvents();
+                    for (var index = 0; index <= Database.Power.Length - 1; ++index)
+                    {
+                        Database.Power[index] = new Power(reader);
+                        ++num3;
+                        if (num3 <= 50)
+                            continue;
+                        num3 = 0;
+                        Application.DoEvents();
+                    }
+                }
+                else
+                {
+                    for (var index = 0; index <= Database.Power.Length - 1; ++index)
+                    {
+                        Database.Power[index] = new Power(reader, true);
+                        ++num3;
+                        if (num3 <= 50)
+                            continue;
+                        num3 = 0;
+                        Application.DoEvents();
+                    }
                 }
 
                 if (reader.ReadString() != "BEGIN:SUMMONS")
@@ -1401,25 +1553,35 @@ namespace mrbBase
                 reader.Close();
                 fileStream.Close();
             }
-            catch
+            catch (Exception e)
             {
                 reader.Close();
                 fileStream.Close();
+                MessageBox.Show(e.StackTrace);
                 return false;
             }
 
             return true;
         }
 
-        public static void LoadDatabaseVersion()
+        public static void LoadDatabaseVersion(string iPath = "")
         {
-            var target = Files.SelectDataFileLoad("I12.mhd");
-            Database.Version = GetDatabaseVersion(target);
+            string target;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                target = Files.SelectDataFileLoad("I12.mhd");
+                Database.Version = GetDatabaseVersion(target);
+            }
+            else
+            {
+                target = Files.SelectDataFileLoad("I12.mhd", iPath);
+                Database.Version = GetDatabaseVersion(target);
+            }
         }
 
         private static float GetDatabaseVersion(string fp)
         {
-            var fName = Debugger.IsAttached ? Files.SearchUp("Data", fp) : fp;
+            var fName = fp;
             var num1 = -1f;
             float num2;
             if (!File.Exists(fName))
@@ -1456,44 +1618,69 @@ namespace mrbBase
             return num2;
         }
 
-        public static bool LoadEffectIdsDatabase()
+        public static bool LoadEffectIdsDatabase(string iPath = "")
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds);
-            Database.EffectIds.Clear();
-            FileStream fileStream;
-            BinaryReader reader;
-            try
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
             {
-                fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-                reader = new BinaryReader(fileStream);
+                path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds);
             }
-            catch
+            else
             {
-                return false;
+                path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds, iPath);
             }
 
-            try
+            if (File.Exists(path))
             {
-                var efIdCount = reader.ReadInt32();
-                for (var index = 0; index < efIdCount; index++)
+                Database.EffectIds.Clear();
+                FileStream fileStream;
+                BinaryReader reader;
+                try
                 {
-                    Database.EffectIds.Add(reader.ReadString());
+                    fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                    reader = new BinaryReader(fileStream);
                 }
-                reader.Close();
-                fileStream.Close();
+                catch
+                {
+                    return false;
+                }
+
+                try
+                {
+                    var efIdCount = reader.ReadInt32();
+                    for (var index = 0; index < efIdCount; index++)
+                    {
+                        Database.EffectIds.Add(reader.ReadString());
+                    }
+
+                    reader.Close();
+                    fileStream.Close();
+                }
+                catch
+                {
+                    reader.Close();
+                    fileStream.Close();
+                    return false;
+                }
+
+                return true;
             }
-            catch
-            {
-                reader.Close();
-                fileStream.Close();
-                return false;
-            }
+
             return true;
         }
 
-        public static void SaveEffectIdsDatabase()
+        public static void SaveEffectIdsDatabase(string iPath = "")
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds);
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileSave(Files.MxdbFileEffectIds);
+            }
+            else
+            {
+                path = Files.SelectDataFileSave(Files.MxdbFileEffectIds, iPath);
+            }
+
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1525,16 +1712,16 @@ namespace mrbBase
             }
         }
 
-        public static bool LoadLevelsDatabase()
+        public static bool LoadLevelsDatabase(string iPath = "")
         {
             var path = string.Empty;
             switch (MidsContext.Config.BuildMode)
             {
                 case Enums.dmModes.Normal:
-                    path = Files.SelectDataFileLoad("NLevels.mhd");
+                    path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileNLevels) : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
                     break;
                 case Enums.dmModes.Respec:
-                    path = Files.SelectDataFileLoad("RLevels.mhd");
+                    path = string.IsNullOrWhiteSpace(iPath) ? Files.SelectDataFileLoad(Files.MxdbFileRLevels) : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
                     break;
             }
             Database.Levels = new LevelMap[0];
@@ -1564,9 +1751,18 @@ namespace mrbBase
             return true;
         }
 
-        public static void LoadOrigins()
+        public static void LoadOrigins(string iPath = "")
         {
-            var path = Files.SelectDataFileLoad("Origins.mhd");
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileLoad("Origins.mhd");
+            }
+            else
+            {
+                path = Files.SelectDataFileLoad("Origins.mhd", iPath);
+            }
+
             Database.Origins = new List<Origin>();
             StreamReader streamReader;
             try
@@ -1615,11 +1811,8 @@ namespace mrbBase
 
         public static int IsSpecialEnh(int enhID)
         {
-            for (var index = 0;
-                index < Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements.Length;
-                ++index)
-                if (enhID == Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements[index] &&
-                    Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].SpecialBonus[index].Index.Length > 0)
+            for (var index = 0; index < Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements.Length; ++index)
+                if (enhID == Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements[index] && Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].SpecialBonus[index].Index.Length > 0)
                     return index;
             return -1;
         }
@@ -1670,27 +1863,32 @@ namespace mrbBase
             var numArray = new int[7];
             var strArray = new string[7];
             foreach (var recipe in Database.Recipes)
-            foreach (var recipeEntry in recipe.Item)
-                for (var index1 = 0; index1 <= recipeEntry.Salvage.Length - 1; ++index1)
-                    if (recipeEntry.Salvage[index1] == strArray[index1])
+            {
+                foreach (var recipeEntry in recipe.Item)
+                {
+                    for (var index1 = 0; index1 <= recipeEntry.Salvage.Length - 1; ++index1)
                     {
-                        recipeEntry.SalvageIdx[index1] = numArray[index1];
-                    }
-                    else
-                    {
-                        recipeEntry.SalvageIdx[index1] = -1;
-                        var a = recipeEntry.Salvage[index1];
-                        for (var index2 = 0; index2 <= Database.Salvage.Length - 1; ++index2)
+                        if (recipeEntry.Salvage[index1] == strArray[index1])
                         {
-                            if (!string.Equals(a, Database.Salvage[index2].InternalName,
-                                StringComparison.OrdinalIgnoreCase))
-                                continue;
-                            recipeEntry.SalvageIdx[index1] = index2;
-                            numArray[index1] = index2;
-                            strArray[index1] = recipeEntry.Salvage[index1];
-                            break;
+                            recipeEntry.SalvageIdx[index1] = numArray[index1];
+                        }
+                        else
+                        {
+                            recipeEntry.SalvageIdx[index1] = -1;
+                            var a = recipeEntry.Salvage[index1];
+                            for (var index2 = 0; index2 <= Database.Salvage.Length - 1; ++index2)
+                            {
+                                if (!string.Equals(a, Database.Salvage[index2].InternalName, StringComparison.OrdinalIgnoreCase))
+                                    continue;
+                                recipeEntry.SalvageIdx[index1] = index2;
+                                numArray[index1] = index2;
+                                strArray[index1] = recipeEntry.Salvage[index1];
+                                break;
+                            }
                         }
                     }
+                }
+            }
         }
 
         public static void AssignRecipeIDs()
@@ -1719,9 +1917,18 @@ namespace mrbBase
             }
         }
 
-        public static void LoadRecipes()
+        public static void LoadRecipes(string iPath = "", bool useOld = false)
         {
-            var path = Files.SelectDataFileLoad("Recipe.mhd");
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileLoad("Recipe.mhd");
+            }
+            else
+            {
+                path = Files.SelectDataFileLoad("Recipe.mhd", iPath);
+            }
+
             Database.Recipes = new Recipe[0];
             FileStream fileStream;
             BinaryReader reader;
@@ -1743,14 +1950,29 @@ namespace mrbBase
                 Database.RecipeRevisionDate = DateTime.FromBinary(reader.ReadInt64());
                 var num = 0;
                 Database.Recipes = new Recipe[reader.ReadInt32() + 1];
-                for (var index = 0; index < Database.Recipes.Length; ++index)
+                if (!useOld)
                 {
-                    Database.Recipes[index] = new Recipe(reader);
-                    ++num;
-                    if (num <= 100)
-                        continue;
-                    num = 0;
-                    Application.DoEvents();
+                    for (var index = 0; index < Database.Recipes.Length; ++index)
+                    {
+                        Database.Recipes[index] = new Recipe(reader);
+                        ++num;
+                        if (num <= 100)
+                            continue;
+                        num = 0;
+                        Application.DoEvents();
+                    }
+                }
+                else
+                {
+                    for (var index = 0; index < Database.Recipes.Length; ++index)
+                    {
+                        Database.Recipes[index] = new Recipe(reader, true);
+                        ++num;
+                        if (num <= 100)
+                            continue;
+                        num = 0;
+                        Application.DoEvents();
+                    }
                 }
             }
             else
@@ -1774,10 +1996,19 @@ namespace mrbBase
             ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
         }
 
-        public static void SaveRecipes(ISerialize serializer)
+        public static void SaveRecipes(ISerialize serializer, string iPath = "")
         {
-            var path = Files.SelectDataFileSave("Recipe.mhd");
-            SaveRecipesRaw(serializer, path, RecipeName);
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileSave("Recipe.mhd");
+            }
+            else
+            {
+                path = Files.SelectDataFileSave("Recipe.mhd", iPath);
+            }
+
+            //SaveRecipesRaw(serializer, path, RecipeName);
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1811,9 +2042,18 @@ namespace mrbBase
             }
         }
 
-        public static void LoadSalvage()
+        public static void LoadSalvage(string iPath = "")
         {
-            var path = Files.SelectDataFileLoad("Salvage.mhd");
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileLoad("Salvage.mhd");
+            }
+            else
+            {
+                path = Files.SelectDataFileLoad("Salvage.mhd", iPath);
+            }
+
             Database.Salvage = new Salvage[0];
             FileStream fileStream;
             BinaryReader reader;
@@ -1862,10 +2102,19 @@ namespace mrbBase
             ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
         }
 
-        public static void SaveSalvage(ISerialize serializer)
+        public static void SaveSalvage(ISerialize serializer, string iPath = "")
         {
-            var path = Files.SelectDataFileSave("Salvage.mhd");
-            SaveSalvageRaw(serializer, path, SalvageName);
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileSave("Salvage.mhd");
+            }
+            else
+            {
+                path = Files.SelectDataFileSave("Salvage.mhd", iPath);
+            }
+
+            //SaveSalvageRaw(serializer, path, SalvageName);
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1908,10 +2157,19 @@ namespace mrbBase
             ConfigData.SaveRawMhd(serializer, toSerialize, filename, null);
         }
 
-        public static void SaveEnhancementDb(ISerialize serializer)
+        public static void SaveEnhancementDb(ISerialize serializer, string iPath = "")
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileEnhDB);
-            SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileSave(Files.MxdbFileEnhDB);
+            }
+            else
+            {
+                path = Files.SelectDataFileSave(Files.MxdbFileEnhDB, iPath);
+            }
+
+            //SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
             using var fileStream = new FileStream(path, FileMode.Create);
             using var writer = new BinaryWriter(fileStream, Encoding.UTF8);
             try
@@ -1975,9 +2233,18 @@ namespace mrbBase
         }
     }*/
 
-        public static void LoadEnhancementDb()
+        public static void LoadEnhancementDb(string iPath = "", bool useOld = false)
         {
-            var path = Files.SelectDataFileLoad("EnhDB.mhd");
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileLoad("EnhDB.mhd");
+            }
+            else
+            {
+                path = Files.SelectDataFileLoad("EnhDB.mhd", iPath);
+            }
+
             Database.Enhancements = new IEnhancement[0];
             FileStream fileStream;
             BinaryReader reader;
@@ -2006,14 +2273,31 @@ namespace mrbBase
                     var versionEnhDb = Database.VersionEnhDb;
                     var num1 = 0;
                     Database.Enhancements = new IEnhancement[reader.ReadInt32() + 1];
-                    for (var index = 0; index < Database.Enhancements.Length; ++index)
+                    if (!useOld)
                     {
-                        Database.Enhancements[index] = new Enhancement(reader);
-                        ++num1;
-                        if (num1 <= 5)
-                            continue;
-                        num1 = 0;
-                        Application.DoEvents();
+                        for (var index = 0; index < Database.Enhancements.Length; ++index)
+                        {
+
+                            Database.Enhancements[index] = new Enhancement(reader);
+                            ++num1;
+                            if (num1 <= 5)
+                                continue;
+                            num1 = 0;
+                            Application.DoEvents();
+                        }
+                    }
+                    else
+                    {
+                        for (var index = 0; index < Database.Enhancements.Length; ++index)
+                        {
+
+                            Database.Enhancements[index] = new Enhancement(reader, true);
+                            ++num1;
+                            if (num1 <= 5)
+                                continue;
+                            num1 = 0;
+                            Application.DoEvents();
+                        }
                     }
 
                     Database.EnhancementSets = new EnhancementSetCollection();
@@ -2034,65 +2318,80 @@ namespace mrbBase
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Enhancement Database file isn't how it should be (" + ex.Message +
-                    ")\nNo Enhancements have been loaded.", "Huh...");
+                MessageBox.Show("Enhancement Database file isn't how it should be (" + ex.Message + "\r\n" + ex.StackTrace + ")\nNo Enhancements have been loaded.", "Huh...");
                 Database.Enhancements = new IEnhancement[0];
                 reader.Close();
                 fileStream.Close();
             }
         }
 
-        public static bool LoadEnhancementClasses()
+        public static bool LoadEnhancementClasses(string iPath = "")
         {
-            using (var streamReader = new StreamReader(Files.SelectDataFileLoad(Files.MxdbFileEClasses)))
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
             {
-                Database.EnhancementClasses = new Enums.sEnhClass[0];
-                try
-                {
-                    if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, "Version:")))
-                        throw new EndOfStreamException("Unable to load Enhancement Class data, version header not found!");
-                    if (!FileIO.IOSeek(streamReader, "Index"))
-                        throw new EndOfStreamException("Unable to load Enhancement Class data, section header not found!");
-                    var enhancementClasses = Database.EnhancementClasses;
-                    string[] strArray;
-                    do
-                    {
-                        strArray = FileIO.IOGrab(streamReader);
-                        if (strArray[0] != "End")
-                        {
-                            Array.Resize(ref enhancementClasses, enhancementClasses.Length + 1);
-                            enhancementClasses[enhancementClasses.Length - 1].ID = int.Parse(strArray[0]);
-                            enhancementClasses[enhancementClasses.Length - 1].Name = strArray[1];
-                            enhancementClasses[enhancementClasses.Length - 1].ShortName = strArray[2];
-                            enhancementClasses[enhancementClasses.Length - 1].ClassID = strArray[3];
-                            enhancementClasses[enhancementClasses.Length - 1].Desc = strArray[4];
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    } while (strArray[0] != "End");
-
-                    Database.EnhancementClasses = enhancementClasses;
-                    Application.DoEvents();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                    streamReader.Close();
-                    return false;
-                }
-
-                streamReader.Close();
+                path = Files.SelectDataFileLoad(Files.MxdbFileEClasses);
             }
+            else
+            {
+                path = Files.SelectDataFileLoad(Files.MxdbFileEClasses, iPath);
+            }
+
+            using var streamReader = new StreamReader(path);
+            Database.EnhancementClasses = new Enums.sEnhClass[0];
+            try
+            {
+                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, "Version:")))
+                    throw new EndOfStreamException("Unable to load Enhancement Class data, version header not found!");
+                if (!FileIO.IOSeek(streamReader, "Index"))
+                    throw new EndOfStreamException("Unable to load Enhancement Class data, section header not found!");
+                var enhancementClasses = Database.EnhancementClasses;
+                string[] strArray;
+                do
+                {
+                    strArray = FileIO.IOGrab(streamReader);
+                    if (strArray[0] != "End")
+                    {
+                        Array.Resize(ref enhancementClasses, enhancementClasses.Length + 1);
+                        enhancementClasses[enhancementClasses.Length - 1].ID = int.Parse(strArray[0]);
+                        enhancementClasses[enhancementClasses.Length - 1].Name = strArray[1];
+                        enhancementClasses[enhancementClasses.Length - 1].ShortName = strArray[2];
+                        enhancementClasses[enhancementClasses.Length - 1].ClassID = strArray[3];
+                        enhancementClasses[enhancementClasses.Length - 1].Desc = strArray[4];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (strArray[0] != "End");
+
+                Database.EnhancementClasses = enhancementClasses;
+                Application.DoEvents();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+                streamReader.Close();
+                return false;
+            }
+
+            streamReader.Close();
 
             return true;
         }
 
-        public static void LoadSetTypeStrings()
+        public static void LoadSetTypeStrings(string iPath = "")
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileSetTypes);
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileLoad(Files.MxdbFileSetTypes);
+            }
+            else
+            {
+                path = Files.SelectDataFileLoad(Files.MxdbFileSetTypes, iPath);
+            }
+
             Database.SetTypeStringLong = new string[0];
             Database.SetTypeStringShort = new string[0];
             StreamReader streamReader;
@@ -2166,9 +2465,18 @@ namespace mrbBase
             streamReader.Close();
         }
 
-        public static bool LoadMaths()
+        public static bool LoadMaths(string iPath = "")
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileMaths);
+            string path;
+            if (string.IsNullOrWhiteSpace(iPath))
+            {
+                path = Files.SelectDataFileLoad(Files.MxdbFileMaths);
+            }
+            else
+            {
+                path = Files.SelectDataFileLoad(Files.MxdbFileMaths, iPath);
+            }
+
             StreamReader streamReader;
             try
             {
@@ -2245,11 +2553,20 @@ namespace mrbBase
             foreach (var enhancementSet in Database.EnhancementSets)
             {
                 foreach (var bonu in enhancementSet.Bonus)
+                {
                     for (var index = 0; index < bonu.Index.Length; ++index)
+                    {
                         bonu.Index[index] = NidFromUidPower(bonu.Name[index]);
+                    }
+                }
+
                 foreach (var specialBonu in enhancementSet.SpecialBonus)
+                {
                     for (var index = 0; index <= specialBonu.Index.Length - 1; ++index)
+                    {
                         specialBonu.Index[index] = NidFromUidPower(specialBonu.Name[index]);
+                    }
+                }
             }
         }
 
@@ -2281,40 +2598,20 @@ namespace mrbBase
         }
 
         private static float GetModifier(int iClass, int iTable, int iLevel)
-
         {
-            float num;
-            if (iClass < 0)
-            {
-                num = 0.0f;
-            }
-            else if (iTable < 0)
-            {
-                num = 0.0f;
-            }
-            else if (iLevel < 0)
-            {
-                num = 0.0f;
-            }
-            else if (iClass > Database.Classes.Length - 1)
-            {
-                num = 0.0f;
-            }
-            else
-            {
-                iClass = Database.Classes[iClass].Column;
-                num = iClass >= 0
-                    ? iTable <= Database.AttribMods.Modifier.Length - 1
-                        ? iLevel <= Database.AttribMods.Modifier[iTable].Table.Length - 1
-                            ? iClass <= Database.AttribMods.Modifier[iTable].Table[iLevel].Length - 1
-                                ? Database.AttribMods.Modifier[iTable].Table[iLevel][iClass]
-                                : 0.0f
-                            : 0.0f
-                        : 0.0f
-                    : 0.0f;
-            }
+            //Warning: calling this method with iTable == 0 can lead to super weird return values.
+            if (iClass < 0) return 0;
+            if (iTable < 0) return 0;
+            if (iLevel < 0) return 0;
+            if (iClass > Database.Classes.Length - 1) return 0;
 
-            return num;
+            var iClassColumn = Database.Classes[iClass].Column;
+            if (iClassColumn < 0) return 0;
+            if (iTable > Database.AttribMods.Modifier.Count - 1) return 0;
+            if (iLevel > Database.AttribMods.Modifier[iTable].Table.Count - 1) return 0;
+            if (iClassColumn > Database.AttribMods.Modifier[iTable].Table[iLevel].Count - 1) return 0;
+
+            return Database.AttribMods.Modifier[iTable].Table[iLevel][iClassColumn];
         }
 
         public static void MatchAllIDs(IMessager? iFrm = null)
@@ -2343,7 +2640,7 @@ namespace mrbBase
             iFrm?.SetMessage(iMsg);
         }
 
-        private static void MatchArchetypeIDs()
+        public static void MatchArchetypeIDs()
 
         {
             for (var index = 0; index <= Database.Classes.Length - 1; ++index)
@@ -2356,7 +2653,7 @@ namespace mrbBase
             }
         }
 
-        private static void MatchPowersetIDs()
+        public static void MatchPowersetIDs()
 
         {
             for (var index1 = 0; index1 <= Database.Powersets.Length - 1; ++index1)
@@ -2382,7 +2679,7 @@ namespace mrbBase
             }
         }
 
-        private static void MatchPowerIDs()
+        public static void MatchPowerIDs()
         {
             Database.MutexList = UidMutexAll();
             for (var index = 0; index < Database.Power.Length; ++index)
@@ -2504,7 +2801,7 @@ namespace mrbBase
             }
         }
 
-        private static void SetPowersetsFromGroups()
+        public static void SetPowersetsFromGroups()
         {
             for (var index1 = 0; index1 < Database.Classes.Length; ++index1)
             {
@@ -2617,7 +2914,7 @@ namespace mrbBase
             return num;
         }
 
-        private static void MatchModifierIDs()
+        public static void MatchModifierIDs()
         {
             foreach (var power in Database.Power)
             {

@@ -546,7 +546,7 @@ namespace Mids_Reborn
         private string BuildSetBonusListShort()
 
         {
-            var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses();
+            var cumulativeSetBonuses = MidsContext.Character.CurrentBuild.GetCumulativeSetBonuses().ToArray();
             Array.Sort(cumulativeSetBonuses);
             var iText = "";
             var num = cumulativeSetBonuses.Length - 1;

@@ -45,7 +45,7 @@ namespace mrbBase.Import
                         else
                         {
                             Data = new Effect(DatabaseAPI.Database.Power[Index]);
-                            Data.ImportFromCSV(iString);
+                            //Data.ImportFromCSV(iString);
                             if (DatabaseAPI.Database.Power[Index].NeverAutoUpdate)
                                 IsLocked = true;
                             _csvString = iString;
@@ -79,7 +79,7 @@ namespace mrbBase.Import
                 }
                 else
                 {
-                    DatabaseAPI.Database.Power[Index].Effects[Nid].ImportFromCSV(_csvString);
+                    //DatabaseAPI.Database.Power[Index].Effects[Nid].ImportFromCSV(_csvString);
                     flag = true;
                 }
             }

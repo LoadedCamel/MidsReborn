@@ -200,6 +200,10 @@
     <Compile Include="ctlLayeredBar.Designer.cs">
       <DependentUpon>ctlLayeredBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="ctlLayeredBarPb.cs" />
+    <Compile Include="ctlLayeredBarPb.Designer.cs">
+      <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ctlCombo.resx">
@@ -211,6 +215,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ctlLayeredBar.resx">
       <DependentUpon>ctlLayeredBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlLayeredBarPb.resx">
+      <DependentUpon>ctlLayeredBarPb.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ctlLockedTextBox.resx">
       <DependentUpon>ctlLockedTextBox.cs</DependentUpon>
@@ -245,7 +252,7 @@
       <Version>1.3.5</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Grid.Windows">
       <Version>18.4.0.31</Version>
@@ -269,5 +276,6 @@
       <Name>mrbBase</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

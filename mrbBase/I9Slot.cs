@@ -265,9 +265,9 @@ namespace mrbBase
                             case Enums.eEffMode.Enhancement when sEffect.Schedule != Enums.eSchedule.None:
                             {
                                 var scheduleMult = GetScheduleMult(enhancement.TypeID, sEffect.Schedule);
-                                if (sEffect.Multiplier > 0.0)
+                                if (Math.Abs(sEffect.Multiplier) > float.Epsilon)
                                 {
-                                    scheduleMult *= sEffect.Multiplier;
+                                    scheduleMult = (float)Math.Round(scheduleMult * sEffect.Multiplier * 1000) / 1000;
                                 }
 
                                 var id = (Enums.eEnhance) sEffect.Enhance.ID;
@@ -319,9 +319,14 @@ namespace mrbBase
                                 {
                                     if (stringBuilder.Length > 0)
                                         stringBuilder.Append("\n");
-                                    stringBuilder.AppendFormat("{0}  enhancement (Sched. {1}: {2}%)", str2,
+                                    stringBuilder.AppendFormat("{0}  enhancement (Sched. {1}: {2}%{3})", str2,
                                         Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule),
-                                        (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo));
+                                        (scheduleMult * 100f).ToString(NumberFormatInfo.CurrentInfo),
+                                        Math.Abs(sEffect.Multiplier) > float.Epsilon &
+                                            sEffect.Multiplier != 1 &
+                                            sEffect.Multiplier != 0.625 &
+                                            sEffect.Multiplier != 0.5 &
+                                            sEffect.Multiplier != 0.4375 ? $" [x{sEffect.Multiplier}]" : "");
                                 }
 
                                 break;
@@ -359,7 +364,7 @@ namespace mrbBase
                                     power.Effects[idEffect].Buffable = true;
                                     if (power.Effects[idEffect].Absorbed_EffectID == index1)
                                     {
-                                        power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false);
+                                        power.GetEffectStringGrouped(idEffect, ref empty, ref returnMask, false, false, false, true);
                                     }
 
                                     if (returnMask.Length <= 0)
@@ -399,7 +404,7 @@ namespace mrbBase
 
                                     power.Effects[index2].Stacking = Enums.eStacking.Yes;
                                     power.Effects[index2].Buffable = true;
-                                    stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString());
+                                    stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true));
                                 }
                             }
                             else if (!power.Effects[index1].Absorbed_Effect && power.Effects[index1].EffectType != Enums.eEffectType.Enhancement)

@@ -1752,7 +1752,7 @@ namespace mrbControls
                 var specialOLimit = AllowPlusThreeSpecialO ? Enums.eEnhRelative.PlusThree : Enums.eEnhRelative.PlusTwo;
 
                 if (SelectedEnhancement != null && (DatabaseAPI.EnhHasCatalyst(SelectedEnhancement.UID) ||
-                                                    DatabaseAPI.EnhIsNaturallyAttuned(SelectedEnhancement.StaticIndex)))
+                                                    DatabaseAPI.EnhIsNaturallyAttuned(Array.IndexOf(DatabaseAPI.Database.Enhancements, SelectedEnhancement))))
                     eEnhRelative = Enums.eEnhRelative.Even;
                 //if (eEnhRelative > Enums.eEnhRelative.PlusThree & (UI.View.TabID == Enums.eType.Normal | (int) UI.View.TabID == 3))
                 else if ((eEnhRelative > Enums.eEnhRelative.PlusThree) & (UI.View.TabID == Enums.eType.Normal))

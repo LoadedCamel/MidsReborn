@@ -227,17 +227,19 @@ namespace Mids_Reborn
             CharacterInfo = new RawCharacterInfo();
         }
 
+        // Some power internal names differs from game
+        private string CheckForAliases(string fullName)
+        {
+            return fullName.ToLowerInvariant() switch
+            {
+                "pool.flight.afterburner" => "Pool.Flight.Evasive_Maneuvers",
+                "peacebringer_defensive.luminous_aura.quantum_acceleration" => "Peacebringer_Defensive.Luminous_Aura.Quantum_Maneuvers",
+                _ => fullName
+            };
+        }
+
         public List<PowerEntry>? Parse()
         {
-            Regex r;
-            Match m;
-            Regex r1;
-            Regex r2;
-            Regex r3;
-            Match m1;
-            Match m2;
-            Match m3;
-
             string rawPowerset;
             var p = new RawPowerData {Valid = false};
             var powerSlots = new List<RawEnhData>();
@@ -246,9 +248,9 @@ namespace Mids_Reborn
             var listPowers = new List<PowerEntry>();
             string[] powerIDChunks;
 
-            r1 = new Regex(@"^Level ([0-9]+)\: (.+)$"); // Picked power
-            r2 = new Regex(@"^[\t\s]*EMPTY$"); // Empty enhancement slot
-            r3 = new Regex(@"^[\t\s]*([0-9a-zA-Z\+\:\-_]+) \(([0-9]+)(\+([1-5]))?\)$"); // Filled enhancement slot
+            var r1 = new Regex(@"^Level ([0-9]+)\: (.+)$");
+            var r2 = new Regex(@"^[\t\s]*EMPTY$");
+            var r3 = new Regex(@"^[\t\s]*([0-9a-zA-Z\+\:\-_]+) \(([0-9]+)(\+([1-5]))?\)$");
 
             var line = -1;
             string lineText;
@@ -260,8 +262,8 @@ namespace Mids_Reborn
                 if (line == 0)
                 {
                     // Name, Level, Origin, ClassID
-                    r = new Regex(@"^([^\:]+)\: Level ([0-9]+) ([a-zA-Z]+) ([a-zA-Z_]+)$");
-                    m = r.Match(lineText);
+                    var r = new Regex(@"^([^\:]+)\: Level ([0-9]+) ([a-zA-Z]+) ([a-zA-Z_]+)$");
+                    var m = r.Match(lineText);
                     if (!m.Success)
                     {
                         MessageBox.Show("This build cannot be imported because it doesn't match the expected format.",
@@ -270,7 +272,7 @@ namespace Mids_Reborn
                     }
 
                     CharacterInfo.Name = m.Groups[1].Value;
-                    CharacterInfo.Archetype = m.Groups[4].Value.Replace("Class_", string.Empty);
+                    CharacterInfo.Archetype = m.Groups[4].Value.Replace("Class_", "");
                     CharacterInfo.Origin = m.Groups[3].Value;
                     CharacterInfo.Level = Convert.ToInt32(m.Groups[2].Value, null);
 
@@ -281,9 +283,9 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                m1 = r1.Match(lineText);
-                m2 = r2.Match(lineText);
-                m3 = r3.Match(lineText);
+                var m1 = r1.Match(lineText);
+                var m2 = r2.Match(lineText);
+                var m3 = r3.Match(lineText);
 
                 if (m1.Success)
                 {
@@ -291,7 +293,7 @@ namespace Mids_Reborn
 
                     powerIDChunks = m1.Groups[2].Value.Split(' ');
                     rawPowerset = (powerIDChunks[0] + "." + powerIDChunks[1]).Trim();
-                    p.FullName = m1.Groups[2].Value.Replace(" ", ".");
+                    p.FullName = CheckForAliases(m1.Groups[2].Value.Replace(" ", "."));
                     p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
                     p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     if (p.pData == null)

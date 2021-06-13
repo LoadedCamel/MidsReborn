@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using FastDeepCloner;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Mids_Reborn.Forms.Controls;
@@ -91,10 +91,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
+                var oldStaticIndex = myPower.StaticIndex;
                 var memoryStream = new MemoryStream((byte[]) Clipboard.GetDataObject()?.GetData(format.Name) ??
                                                     throw new InvalidOperationException());
                 var reader = new BinaryReader(memoryStream);
                 myPower = new Power(reader) {GroupName = groupName, SetName = setName};
+                if (oldStaticIndex != myPower.StaticIndex)
+                {
+                    var ret = MessageBox.Show("Overwrite static index with the imported one?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (ret == DialogResult.No)
+                    {
+                        myPower.StaticIndex = oldStaticIndex;
+                        lblStaticIndex.Text = Convert.ToString(oldStaticIndex, CultureInfo.InvariantCulture);
+                    }
+                }
+
                 SetFullName();
                 refresh_PowerData();
                 reader.Close();
@@ -104,31 +115,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnFXAdd_Click(object sender, EventArgs e)
         {
-            IEffect iFX = new Effect();
-            var power1 = myPower;
-            using var frmPowerEffect = new frmPowerEffect(iFX, power1);
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
-                return;
-            //var power1 = myPower;
-            var power2 = power1;
-            var effectArray = (IEffect[]) Utils.CopyArray(power2.Effects, new IEffect[power1.Effects.Length + 1]);
-            power2.Effects = effectArray;
-            power1.Effects[power1.Effects.Length - 1] = (IEffect) frmPowerEffect.myFX.Clone();
+            IEffect iFX = new Effect
+            {
+                Scale = 1,
+                nMagnitude = 1
+            };
+            iFX.SetPower(myPower);
+            using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length);
+            if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
+
+            var effectList = myPower.Effects.ToList();
+            effectList.Add((IEffect) frmPowerEffect.myFX.Clone());
+            myPower.Effects = effectList.ToArray();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
         }
 
         private void btnFXEdit_Click(object sender, EventArgs e)
         {
-            if (lvFX.SelectedIndices.Count <= 0)
-                return;
-            var power1 = myPower;
+            if (lvFX.SelectedIndices.Count <= 0) return;
+            
             var selectedIndex = lvFX.SelectedIndices[0];
-            var iFX = (IEffect)myPower.Effects[selectedIndex].Clone();
-            using var frmPowerEffect = new frmPowerEffect(iFX, power1);
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
-                return;
-            myPower.Effects[selectedIndex] = (IEffect)frmPowerEffect.myFX.Clone();
+            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
+            if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
+
+            myPower.Effects[selectedIndex] = (IEffect) frmPowerEffect.myFX.Clone();
             RefreshFXData();
             lvFX.SelectedIndex = selectedIndex;
         }
@@ -151,58 +162,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvFX.SelectedIndex = selectedIndex + 1;
         }
 
-        /*private void btnFXDuplicate_Click(object sender, EventArgs e)
-        {
-            if (lvFX.SelectedIndices.Count <= 0)
-                return;
-            var iFX = (IEffect) myPower.Effects[lvFX.SelectedIndices[0]].Clone();
-            using var frmPowerEffect = new frmPowerEffect(iFX);
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
-                return;
-            var power1 = myPower;
-            var power2 = power1;
-            var effectArray = (IEffect[]) Utils.CopyArray(power2.Effects, new IEffect[power1.Effects.Length + 1]);
-            power2.Effects = effectArray;
-            power1.Effects[power1.Effects.Length - 1] = (IEffect) frmPowerEffect.myFX.Clone();
-            RefreshFXData();
-            lvFX.SelectedIndex = lvFX.Items.Count - 1;
-        }*/
-
         private void btnFXDuplicate_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndices.Count <= 0)
                 return;
 
-            IEffect[] newEffects = new IEffect[myPower.Effects.Length + 1];
-            for (var index = 0; index < myPower.Effects.Length; index++)
-            {
-                newEffects[index] = myPower.Effects[index];
-            }
-
-            newEffects[newEffects.Length - 1] ??= DeepCloner.Clone(myPower.Effects[lvFX.SelectedIndices[0]]);
-            var newEffect = newEffects[newEffects.Length - 1];
-            using var frmPowerEffect = new frmPowerEffect(newEffect, myPower);
+            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[lvFX.SelectedIndices[0]], myPower, myPower.Effects.Length);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
-            newEffects[newEffects.Length - 1] = frmPowerEffect.myFX;
-            myPower.Effects = new IEffect[newEffects.Length];
-            myPower.Effects = newEffects;
+
+            var effectList = myPower.Effects.ToList();
+            effectList.Add(frmPowerEffect.myFX);
+            myPower.Effects = effectList.ToArray();
             RefreshFXData();
             lvFX.SelectedIndex = lvFX.Items.Count - 1;
         }
-
-
 
         private void btnFXRemove_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndex < 0)
                 return;
-            var effectArray = new IEffect[myPower.Effects.Length - 1 + 1];
+            var effectArray = new IEffect[myPower.Effects.Length];
             var selectedIndex = lvFX.SelectedIndex;
             var num1 = effectArray.Length - 1;
             for (var index = 0; index <= num1; ++index)
                 effectArray[index] = (IEffect) myPower.Effects[index].Clone();
-            myPower.Effects = new IEffect[myPower.Effects.Length - 2 + 1];
+            myPower.Effects = new IEffect[myPower.Effects.Length - 1];
             var index1 = 0;
             var num2 = effectArray.Length - 1;
             for (var index2 = 0; index2 <= num2; ++index2)
@@ -236,21 +221,44 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvFX.SelectedIndex = selectedIndex - 1;
         }
 
-        private static void inputBox_Validating(object sender, InputBoxValidatingArgs e)
+        private static void inputBox_StaticIndexValidating(object sender, InputBoxValidatingArgs e)
         {
-            if (e.Text.Trim().Length != 0) return;
-            e.Cancel = true;
-            e.Message = "Required";
+            var isNumeric = int.TryParse(e.Text.Trim(), out var staticIndexResult);
+            if (isNumeric && staticIndexResult >= 0)
+            {
+                e.Message = staticIndexResult.ToString();
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Message = "Value must be a number and must also be greater or equal to 0";
+                e.Cancel = true;
+            }
         }
+
+        private static void inputBox_MutexValidating(object sender, InputBoxValidatingArgs e)
+        {
+            if (e.Text.Trim().Length != 0)
+            {
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Cancel = true;
+                e.Message = "Required";
+            }
+        }
+
         private void btnMutexAdd_Click(object sender, EventArgs e)
         {
-            string b = null;
-            InputBoxResult result = InputBox.Show("Enter a description for your build.", "Add Mutex Group", "New Group", InputBox.InputBoxIcon.Info, inputBox_Validating);
-            if (result.OK) { b = result.Text.Replace(" ", "_"); }
+            var result = InputBox.Show("Enter a name for the new group.", "Add Mutex Group", "New Group", InputBox.InputBoxIcon.Info, inputBox_MutexValidating);
+            if (!result.OK) return;
+
+            var b = result.Text.Replace(" ", "_");
             var count = clbMutex.Items.Count;
             var index = 0;
-            if (index > count)
-                return;
+            if (index > count) return;
+            
             if (string.Equals(clbMutex.Items[index].ToString(), b, StringComparison.OrdinalIgnoreCase))
             {
                 MessageBox.Show($"'{b}' is not unique!", "Unable to add", MessageBoxButtons.OK,
@@ -301,12 +309,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
                     else
                     {
-                        myPower.VariableMax = Convert.ToInt32(udScaleMax.Value);
+                        myPower.VariableMax = (int) Math.Round(udScaleMax.Value);
                     }
                 }
 
-                myPower.GroupMembership = new string[clbMutex.CheckedItems.Count - 1 + 1];
-                myPower.NGroupMembership = new int[clbMutex.CheckedItems.Count - 1 + 1];
+                myPower.GroupMembership = new string[clbMutex.CheckedItems.Count];
+                myPower.NGroupMembership = new int[clbMutex.CheckedItems.Count];
                 var checkedMutexCount = clbMutex.CheckedItems.Count - 1;
                 for (var index = 0; index <= checkedMutexCount; ++index)
                 {
@@ -464,7 +472,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (lvSPSelected.SelectedItems.Count < 1)
                 return;
             var text = lvSPSelected.SelectedItems[0].Text;
-            var strArray = new string[myPower.UIDSubPower.Length - 2 + 1];
+            var strArray = new string[myPower.UIDSubPower.Length - 1];
             var index1 = 0;
             var subPowerCount = myPower.UIDSubPower.Length - 1;
             for (var index2 = 0; index2 <= subPowerCount; ++index2)
@@ -475,7 +483,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 ++index1;
             }
 
-            myPower.UIDSubPower = new string[strArray.Length - 1 + 1];
+            myPower.UIDSubPower = new string[strArray.Length];
             Array.Copy(strArray, myPower.UIDSubPower, strArray.Length);
             SPFillList();
             var num2 = index1 - 1;
@@ -523,8 +531,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating)
                 return;
+            myPower.GroupName = cbNameGroup.Text;
             DisplayNameData();
             FillComboNameSet();
+            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbNameGroup_SelectedIndexChanged(object sender, EventArgs e)
@@ -533,6 +543,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             myPower.GroupName = cbNameGroup.Text;
             SetFullName();
+            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbNameGroup_TextChanged(object sender, EventArgs e)
@@ -547,7 +558,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating)
                 return;
+            myPower.SetName = cbNameSet.Text;
             DisplayNameData();
+            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbNameSet_SelectedIndexChanged(object sender, EventArgs e)
@@ -556,6 +569,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             myPower.SetName = cbNameSet.Text;
             SetFullName();
+            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void cbNameSet_TextChanged(object sender, EventArgs e)
@@ -575,14 +589,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void cbPowerType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            
             myPower.PowerType = (Enums.ePowerType) cbPowerType.SelectedIndex;
+            if ((myPower.ActivatePeriod > 0) & (myPower.PowerType == Enums.ePowerType.Toggle))
+            {
+                lblEndCost.Text = $"({myPower.EndCost / myPower.ActivatePeriod:##0.##}/s)";
+            }
+            else
+            {
+                lblEndCost.Text = "";
+            }
         }
 
         private void CheckScaleValues()
         {
-            if (Conversion.Val(udScaleMin.Text) >= Conversion.Val(udScaleMax.Text))
+            var ret = float.TryParse(udScaleStart.Text, out var scaleStart);
+            if (!ret) return;
+
+            ret = float.TryParse(udScaleMin.Text, out var scaleMin);
+            if (!ret) return;
+
+            ret = float.TryParse(udScaleMax.Text, out var scaleMax);
+            if (!ret) return;
+
+            if (scaleMin >= scaleMax)
             {
                 udScaleMin.BackColor = Color.Coral;
                 udScaleMax.BackColor = Color.Coral;
@@ -591,6 +622,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 udScaleMin.BackColor = SystemColors.Window;
                 udScaleMax.BackColor = SystemColors.Window;
+            }
+
+            if (scaleStart > scaleMin && scaleStart <= scaleMax)
+            {
+                udScaleStart.BackColor = Color.Coral;
+            }
+            else
+            {
+                udScaleStart.BackColor = SystemColors.Window;
             }
         }
 
@@ -703,6 +743,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
 
             myPower.VariableEnabled = chkScale.Checked;
+            udScaleStart.Enabled = myPower.VariableEnabled;
             udScaleMax.Enabled = myPower.VariableEnabled;
             udScaleMin.Enabled = myPower.VariableEnabled;
             overideScale.Enabled = myPower.VariableEnabled;
@@ -812,17 +853,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }
 
+        private bool CheckPowersetExists(string psFullName)
+        {
+            return DatabaseAPI.Database.Powersets.Count(e => e.FullName == psFullName) == 1;
+        }
+
         private void DisplayNameData()
         {
-            var power = myPower;
-            lblNameFull.Text = $@"{power.GroupName}.{power.SetName}.{power.PowerName}";
-            if (!string.IsNullOrWhiteSpace(power.GroupName) | !string.IsNullOrWhiteSpace(power.SetName) |
-                !string.IsNullOrWhiteSpace(power.PowerName))
-                lblNameUnique.Text = @"This name is invalid.";
-            else if (PowerFullNameIsUnique(Convert.ToString(power.PowerIndex, CultureInfo.InvariantCulture)))
-                lblNameUnique.Text = @"This name is unique.";
+            lblNameFull.Text = $"{myPower.GroupName}.{myPower.SetName}.{myPower.PowerName}";
+            if (string.IsNullOrWhiteSpace(myPower.GroupName) | string.IsNullOrWhiteSpace(myPower.SetName) |
+                string.IsNullOrWhiteSpace(myPower.PowerName))
+            {
+                lblNameUnique.Text = "This name is invalid.";
+            }
+            else if (!CheckPowersetExists($"{myPower.GroupName}.{myPower.SetName}"))
+            {
+                lblNameUnique.Text = "This powerset does not exist.";
+            }
+            else if (PowerFullNameIsUnique(Convert.ToString(myPower.PowerIndex, CultureInfo.InvariantCulture)))
+            {
+                lblNameUnique.Text = "This name is unique.";
+            }
             else
-                lblNameUnique.Text = @"This name is NOT unique.";
+            {
+                lblNameUnique.Text = "This name is NOT unique.";
+            }
         }
 
         private void DrawAcceptedSets()
@@ -1128,6 +1183,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DisplayNameData();
             txtDescLong.Text = power.DescLong;
             txtDescShort.Text = power.DescShort;
+            udScaleStart.Value = new decimal(power.VariableStart);
             udScaleMin.Value = new decimal(power.VariableMin);
             udScaleMax.Value = new decimal(power.VariableMax);
             txtScaleName.Text = power.VariableName;
@@ -1326,6 +1382,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 txtVisualLocation.ReadOnly = true;
             }
+
+            cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
 
         private static int GetClassByID(int iID)
@@ -1381,37 +1439,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lblStaticIndex_Click(object sender, EventArgs e)
         {
-            string s = null;
-            InputBoxResult result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_Validating);
-            if (result.OK) { s = result.Text; }
-            try
-            {
-                var num1 = 1;
-                if (s != null) num1 = int.Parse(s, CultureInfo.InvariantCulture);
+            var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_StaticIndexValidating);
+            if (!result.OK) return;
 
-                if (num1 < 0)
-                {
-                    MessageBox.Show("The static index cannot be a negative number.", "Cannot assign index",
-                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-                else
-                {
-                    lblStaticIndex.Text = Convert.ToString(num1, CultureInfo.InvariantCulture);
-                    myPower.StaticIndex = num1;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            lblStaticIndex.Text = result.Text;
+            myPower.StaticIndex = int.Parse(result.Text);
         }
 
         private void lvDisablePass1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
                 return;
-            var power = myPower;
-            myPower.IgnoreEnh = new Enums.eEnhance[lvDisablePass1.SelectedIndices.Count - 1 + 1];
+            myPower.IgnoreEnh = new Enums.eEnhance[lvDisablePass1.SelectedIndices.Count];
             var num = lvDisablePass1.SelectedIndices.Count - 1;
             for (var index = 0; index <= num; ++index)
                 myPower.IgnoreEnh[index] = (Enums.eEnhance) lvDisablePass1.SelectedIndices[index];
@@ -1421,8 +1460,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating)
                 return;
-            var power = myPower;
-            myPower.Ignore_Buff = new Enums.eEnhance[lvDisablePass4.SelectedIndices.Count - 1 + 1];
+            myPower.Ignore_Buff = new Enums.eEnhance[lvDisablePass4.SelectedIndices.Count];
             var num = lvDisablePass4.SelectedIndices.Count - 1;
             for (var index = 0; index <= num; ++index)
                 myPower.Ignore_Buff[index] = (Enums.eEnhance) lvDisablePass4.SelectedIndices[index];
@@ -1568,12 +1606,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!((num2 < myPower.Enhancements.Length) & (num1 > -1)))
                 return;
             var power = myPower;
-            var numArray = new int[power.Enhancements.Length - 1 + 1];
+            var numArray = new int[power.Enhancements.Length];
             var num3 = power.Enhancements.Length - 1;
             for (var index = 0; index <= num3; ++index)
                 numArray[index] = power.Enhancements[index];
             var index1 = 0;
-            power.Enhancements = new int[power.Enhancements.Length - 2 + 1];
+            power.Enhancements = new int[power.Enhancements.Length - 1];
             var num4 = numArray.Length - 1;
             for (var index2 = 0; index2 <= num4; ++index2)
             {
@@ -1641,12 +1679,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var invSetIndex = GetInvSetIndex(new Point(e.X, e.Y));
             if (!((invSetIndex < myPower.SetTypes.Length) & (invSetIndex > -1)))
                 return;
-            var numArray = new int[myPower.SetTypes.Length - 1 + 1];
+            var numArray = new int[myPower.SetTypes.Length];
             var num1 = myPower.SetTypes.Length - 1;
             for (var index = 0; index <= num1; ++index)
                 numArray[index] = (int) myPower.SetTypes[index];
             var index1 = 0;
-            myPower.SetTypes = new Enums.eSetType[myPower.SetTypes.Length - 2 + 1];
+            myPower.SetTypes = new Enums.eSetType[myPower.SetTypes.Length - 1];
             var num2 = numArray.Length - 1;
             for (var index2 = 0; index2 <= num2; ++index2)
             {
@@ -1682,11 +1720,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (string.IsNullOrEmpty(iFullName))
                 return true;
-            var num = DatabaseAPI.Database.Power.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var num = DatabaseAPI.Database.Power.Length;
+            for (var index = 0; index < num; index++)
+            {
                 if (index != skipId && string.Equals(DatabaseAPI.Database.Power[index].FullName, iFullName,
                     StringComparison.OrdinalIgnoreCase))
                     return false;
+            }
+
             return true;
         }
 
@@ -1739,7 +1780,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             if (lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1)
             {
-                var strArray1 = new string[myPower.Requires.PowerIDNot.Length - 1 + 1][];
+                var strArray1 = new string[myPower.Requires.PowerIDNot.Length][];
                 var num2 = num1;
                 var num3 = strArray1.Length - 1;
                 for (var index = 0; index <= num3; ++index)
@@ -1750,7 +1791,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     strArray1[index][1] = myPower.Requires.PowerIDNot[index][1];
                 }
 
-                myPower.Requires.PowerIDNot = new string[myPower.Requires.PowerIDNot.Length - 2 + 1][];
+                myPower.Requires.PowerIDNot = new string[myPower.Requires.PowerIDNot.Length - 1][];
                 var index1 = 0;
                 var num4 = strArray1.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
@@ -1766,7 +1807,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                var strArray1 = new string[myPower.Requires.PowerID.Length - 1 + 1][];
+                var strArray1 = new string[myPower.Requires.PowerID.Length][];
                 var num2 = num1;
                 var num3 = strArray1.Length - 1;
                 for (var index = 0; index <= num3; ++index)
@@ -1777,7 +1818,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     strArray1[index][1] = myPower.Requires.PowerID[index][1];
                 }
 
-                myPower.Requires.PowerID = new string[myPower.Requires.PowerID.Length - 2 + 1][];
+                myPower.Requires.PowerID = new string[myPower.Requires.PowerID.Length - 1][];
                 var index1 = 0;
                 var num4 = strArray1.Length - 1;
                 for (var index2 = 0; index2 <= num4; ++index2)
@@ -1878,8 +1919,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var power = myPower;
             lvFX.BeginUpdate();
             lvFX.Items.Clear();
-            var num = power.Effects.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var num = power.Effects.Length;
+            for (var index = 0; index < num; index++)
             {
                 lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true).Replace("\r\n", " - "));
             }
@@ -2137,12 +2178,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void Store_Req_Classes()
         {
-            myPower.Requires.ClassName = new string[clbClassReq.CheckedIndices.Count - 1 + 1];
+            myPower.Requires.ClassName = new string[clbClassReq.CheckedIndices.Count];
             var num1 = clbClassReq.CheckedIndices.Count - 1;
             for (var index = 0; index <= num1; ++index)
                 myPower.Requires.ClassName[index] =
                     DatabaseAPI.Database.Classes[clbClassReq.CheckedIndices[index]].ClassName;
-            myPower.Requires.ClassNameNot = new string[clbClassExclude.CheckedIndices.Count - 1 + 1];
+            myPower.Requires.ClassNameNot = new string[clbClassExclude.CheckedIndices.Count];
             var num2 = clbClassExclude.CheckedIndices.Count - 1;
             for (var index = 0; index <= num2; ++index)
                 myPower.Requires.ClassNameNot[index] =
@@ -2158,12 +2199,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtAcc_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+
             var power = myPower;
-            var num = (float) Conversion.Val(txtAcc.Text);
-            if ((num >= 0.0) & (num <= 100.0))
-                power.Accuracy = num;
+            var res = float.TryParse(txtAcc.Text, out var num);
+            if (!res) return;
+
+            if (num < 0)
+            {
+                num = 0;
+                txtAcc.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+            else if (num > 100)
+            {
+                num = 100;
+                txtAcc.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+
+            power.Accuracy = num;
+            lblAcc.Text = $"({power.Accuracy * MidsContext.Config.BaseAcc * 100:##0.##}%)";
         }
 
         private void txtActivate_Leave(object sender, EventArgs e)
@@ -2175,12 +2229,33 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtActivate_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            
             var power = myPower;
-            var num = (float) Conversion.Val(txtActivate.Text);
-            if ((num >= 0.0) & (num <= 2147483904.0))
-                power.ActivatePeriod = num;
+            var ret = float.TryParse(txtActivate.Text, out var num);
+            if (!ret) return;
+
+            if (num < 0)
+            {
+                num = 0;
+                txtActivate.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+            else if (num > 2147483904)
+            {
+                num = 2147483904;
+                txtActivate.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+
+            power.ActivatePeriod = num;
+
+            if ((power.ActivatePeriod > 0) & (power.PowerType == Enums.ePowerType.Toggle))
+            {
+                lblEndCost.Text = $"({power.EndCost / power.ActivatePeriod:##0.##}/s)";
+            }
+            else
+            {
+                lblEndCost.Text = "";
+            }
         }
 
         private void txtArc_Leave(object sender, EventArgs e)
@@ -2192,10 +2267,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtArc_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtArc.Text, out var num);
+            if (!ret) return;
+
             var power = myPower;
-            var num = (float) Conversion.Val(txtArc.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
                 power.Arc = (int) Math.Round(num);
         }
@@ -2209,10 +2285,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtCastTime_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtCastTime.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtCastTime.Text);
             if ((num >= 0.0) & (num <= 100.0))
                 power.CastTimeReal = num;
         }
@@ -2240,12 +2316,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtEndCost_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+
             var power = myPower;
-            var num = (float) Conversion.Val(txtEndCost.Text);
-            if ((num >= 0.0) & (num <= 2147483904.0))
-                power.EndCost = num;
+            var res = float.TryParse(txtEndCost.Text, out var num);
+            if (!res) return;
+
+            if (num < 0)
+            {
+                num = 0;
+                txtEndCost.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+            else if (num > 2147483904)
+            {
+                num = 2147483904;
+                txtEndCost.Text = Convert.ToString(num, CultureInfo.InvariantCulture);
+            }
+
+            power.EndCost = num;
+            if ((power.ActivatePeriod > 0) & (power.PowerType == Enums.ePowerType.Toggle))
+            {
+                lblEndCost.Text = $"({power.EndCost / power.ActivatePeriod:##0.##}/s)";
+            }
+            else
+            {
+                lblEndCost.Text = "";
+            }
         }
 
         private void txtInterrupt_Leave(object sender, EventArgs e)
@@ -2257,10 +2353,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtInterrupt_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtInterrupt.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtInterrupt.Text);
             if ((num >= 0.0) & (num <= 100.0))
                 power.InterruptTime = num;
         }
@@ -2274,44 +2370,42 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtLevel_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = int.TryParse(txtLevel.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (int) Math.Round(Conversion.Val(txtLevel.Text));
             if ((num >= 0) & (num < 51))
                 power.Level = num;
         }
 
         private void txtLifeTimeGame_Leave(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
             txtLifeTimeGame.Text = Convert.ToString(myPower.LifeTimeInGame, CultureInfo.InvariantCulture);
         }
 
         private void txtLifeTimeGame_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtLifeTimeGame.Text, out var num);
             var power = myPower;
-            var num = (float) Conversion.Val(txtLifeTimeGame.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.LifeTimeInGame = (int) Math.Round(num);
         }
 
         private void txtLifeTimeReal_Leave(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
             txtLifeTimeReal.Text = Convert.ToString(myPower.LifeTime, CultureInfo.InvariantCulture);
         }
 
         private void txtLifeTimeReal_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtLifeTimeReal.Text, out var num);
+            if (!ret) return;
+
             var power = myPower;
-            var num = (float) Conversion.Val(txtLifeTimeReal.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.LifeTime = (int) Math.Round(num);
         }
@@ -2325,10 +2419,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtMaxTargets_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtMaxTargets.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtMaxTargets.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
                 power.MaxTargets = (int) Math.Round(num);
         }
@@ -2337,7 +2431,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating)
                 return;
+            myPower.PowerName = txtNamePower.Text;
             DisplayNameData();
+            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void txtNamePower_TextChanged(object sender, EventArgs e)
@@ -2346,6 +2442,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             myPower.PowerName = txtNamePower.Text;
             SetFullName();
+            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
         }
 
         private void txtNumCharges_Leave(object sender, EventArgs e)
@@ -2357,10 +2454,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtNumCharges_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtNumCharges.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtNumCharges.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.NumCharges = (int) Math.Round(num);
         }
@@ -2381,10 +2478,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtRadius_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtRadius.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtRadius.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
                 power.Radius = (int) Math.Round(num);
         }
@@ -2398,10 +2495,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtRange_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtRange.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtRange.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.Range = num;
         }
@@ -2415,10 +2512,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtRangeSec_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtRangeSec.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtRangeSec.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.RangeSecondary = num;
         }
@@ -2434,8 +2531,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating)
                 return;
+            var ret = float.TryParse(txtRechargeTime.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtRechargeTime.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
             {
                 power.RechargeTime = num;
@@ -2459,10 +2557,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtUseageTime_TextChanged(object sender, EventArgs e)
         {
-            if (Updating)
-                return;
+            if (Updating) return;
+            var ret = float.TryParse(txtUseageTime.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtUseageTime.Text);
             if ((num >= 0.0) & (num < 2147483904.0))
                 power.UsageTime = (int) Math.Round(num);
         }
@@ -2478,8 +2576,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (Updating || cbInherentType.SelectedIndex > 0)
                 return;
+            var ret = float.TryParse(txtVisualLocation.Text, out var num);
+            if (!ret) return;
             var power = myPower;
-            var num = (float) Conversion.Val(txtVisualLocation.Text);
             if ((num >= 0.0) & (num <= 2147483904.0))
                 power.DisplayLocation = (int) Math.Round(num);
         }
@@ -2491,13 +2590,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void udScaleMax_Leave(object sender, EventArgs e)
         {
-            myPower.VariableMax = (int) Math.Round(Conversion.Val(udScaleMax.Text));
+            var ret = float.TryParse(udScaleMax.Text, out var num);
+            if (!ret) return;
+            myPower.VariableMax = (int) Math.Round(num);
             CheckScaleValues();
         }
 
         private void udScaleMax_ValueChanged(object sender, EventArgs e)
         {
-            myPower.VariableMax = Convert.ToInt32(udScaleMax.Value);
+            myPower.VariableMax = (int) Math.Round(udScaleMax.Value);
             CheckScaleValues();
         }
 
@@ -2508,16 +2609,46 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void udScaleMin_Leave(object sender, EventArgs e)
         {
-            myPower.VariableMin = (int) Math.Round(Conversion.Val(udScaleMin.Text));
+            var ret = float.TryParse(udScaleMin.Text, out var num);
+            if (!ret) return;
+            myPower.VariableMin = (int) Math.Round(num);
             CheckScaleValues();
         }
 
         private void udScaleMin_ValueChanged(object sender, EventArgs e)
         {
-            myPower.VariableMin = Convert.ToInt32(udScaleMin.Value);
+            myPower.VariableMin = (int) Math.Round(udScaleMin.Value);
             CheckScaleValues();
         }
 
-        
+        private void udScaleStart_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CheckScaleValues();
+        }
+
+        private void udScaleStart_Leave(object sender, EventArgs e)
+        {
+            var ret = float.TryParse(udScaleStart.Text, out var num);
+            if (!ret) return;
+            myPower.VariableStart = (int) Math.Round(num);
+            CheckScaleValues();
+        }
+
+        private void udScaleStart_ValueChanged(object sender, EventArgs e)
+        {
+            myPower.VariableStart = (int) Math.Round(udScaleStart.Value);
+            CheckScaleValues();
+        }
+
+        private void txtNameDisplay_Leave(object sender, EventArgs e)
+        {
+            Text = $"Edit Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+        }
+
+        private void cbCoDFormat_CheckedChanged(object sender, EventArgs e)
+        {
+            MidsContext.Config.CoDEffectFormat = cbCoDFormat.Checked;
+            RefreshFXData(lvFX.SelectedIndices.Count <= 0 ? 0 : lvFX.SelectedIndices[0]);
+        }
     }
 }

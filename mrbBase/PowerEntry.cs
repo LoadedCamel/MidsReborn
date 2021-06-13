@@ -84,7 +84,15 @@ namespace mrbBase
             }
 
             Tag = false;
-            VariableValue = 0;
+            if (Power != null && Power.VariableStart > Power.VariableMin && Power.VariableStart <= Power.VariableMax)
+            {
+                VariableValue = Power.VariableStart;
+                Power.Stacks = VariableValue;
+            }
+            else
+            {
+                VariableValue = 0;
+            }
             ProcInclude = false;
         }
 

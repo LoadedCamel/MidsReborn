@@ -1,13 +1,15 @@
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 
@@ -15,128 +17,6 @@ namespace Mids_Reborn.Forms
 {
     public partial class frmRecipeViewer : Form
     {
-        #region BuildSavageSummary sub-class
-        private static class BuildSalvageSummary
-        {
-            public static int EnhObtained { get; private set; }
-            public static int EnhCatalysts { get; private set; }
-            public static int EnhBoosters { get; private set; }
-            public static int TotalEnhancements { get; private set; }
-
-            public static void CalcAll()
-            {
-                TotalEnhancements = 0;
-                EnhObtained = 0;
-                EnhCatalysts = 0;
-                EnhBoosters = 0;
-
-                foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-                {
-                    for (var j = 0; j < p.Slots.Length; j++)
-                    {
-                        var enhIdx = p.Slots[j].Enhancement.Enh;
-
-                        if (enhIdx > -1) TotalEnhancements++;
-                        if (p.Slots[j].Enhancement.Obtained & enhIdx > -1) EnhObtained++;
-                        if (enhIdx == -1) continue;
-
-                        var enhName = Database.Instance.Enhancements[enhIdx].UID;
-                        if (DatabaseAPI.EnhHasCatalyst(enhName) && DatabaseAPI.EnhIsSuperior(enhIdx)) EnhCatalysts++;
-
-                        var relativeLevel = p.Slots[j].Enhancement.RelativeLevel;
-                        if (DatabaseAPI.EnhIsIO(enhIdx))
-                        {
-                            EnhBoosters += relativeLevel switch
-                            {
-                                Enums.eEnhRelative.PlusOne => 1,
-                                Enums.eEnhRelative.PlusTwo => 2,
-                                Enums.eEnhRelative.PlusThree => 3,
-                                Enums.eEnhRelative.PlusFour => 4,
-                                Enums.eEnhRelative.PlusFive => 5,
-                                _ => 0
-                            };
-                        }
-                    }
-                }
-            }
-
-            public static void CalcTotalEnhancements()
-            {
-                TotalEnhancements = 0;
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
-                {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
-                    {
-                        if (MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh > -1)
-                            TotalEnhancements++;
-                    }
-                }
-            }
-
-            public static void CalcEnhObtained()
-            {
-                EnhObtained = 0;
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
-                {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
-                    {
-                        if (MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Obtained &
-                            MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh > -1)
-                        {
-                            EnhObtained++;
-                        }
-
-                    }
-                }
-            }
-
-            public static void CalcEnhCatalysts()
-            {
-                EnhCatalysts = 0;
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
-                {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
-                    {
-                        var enhIdx = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh;
-                        if (enhIdx == -1) continue;
-                        var enhName = Database.Instance.Enhancements[enhIdx].UID;
-
-                        if (DatabaseAPI.EnhHasCatalyst(enhName) && DatabaseAPI.EnhIsSuperior(enhIdx)) EnhCatalysts++;
-                    }
-                }
-            }
-
-            public static void CalcEnhBoosters()
-            {
-                EnhBoosters = 0;
-                for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
-                {
-                    for (var j = 0; j < MidsContext.Character.CurrentBuild.Powers[i].Slots.Length; i++)
-                    {
-                        var enhIdx = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.Enh;
-                        if (enhIdx == -1) continue;
-
-                        var relativeLevel = MidsContext.Character.CurrentBuild.Powers[i].Slots[j].Enhancement.RelativeLevel;
-                        if (DatabaseAPI.EnhIsIO(enhIdx) &
-                            relativeLevel != Enums.eEnhRelative.Even &
-                            relativeLevel != Enums.eEnhRelative.None)
-                        {
-                            EnhBoosters += relativeLevel switch
-                            {
-                                Enums.eEnhRelative.PlusOne => 1,
-                                Enums.eEnhRelative.PlusTwo => 2,
-                                Enums.eEnhRelative.PlusThree => 3,
-                                Enums.eEnhRelative.PlusFour => 4,
-                                Enums.eEnhRelative.PlusFive => 5,
-                                _ => 0
-                            };
-                        }
-                    }
-                }
-            }
-        }
-        #endregion
-
         private readonly ExtendedBitmap bxRecipe;
         private readonly frmMain myParent;
 
@@ -146,17 +26,19 @@ namespace Mids_Reborn.Forms
         private ImageButton ibTopmost;
 
         private bool Loading;
+        private bool SalvageHudVisible;
         private int nonRecipeCount;
         private ctlPopUp RecipeInfo;
 
         public frmRecipeViewer(frmMain iParent)
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             FormClosed += frmRecipeViewer_FormClosed;
             Load += frmRecipeViewer_Load;
             Loading = true;
             InitializeComponent();
             Name = nameof(frmRecipeViewer);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeViewer));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmRecipeViewer));
             Icon = Resources.reborn;
             RecipeInfo.MouseWheel += RecipeInfo_MouseWheel;
             RecipeInfo.MouseEnter += RecipeInfo_MouseEnter;
@@ -173,21 +55,17 @@ namespace Mids_Reborn.Forms
             ibTopmost.ButtonClicked += ibTopmost_ButtonClicked;
             ibEnhCheckMode.ButtonClicked += ibEnhCheckMode_ButtonClicked;
             myParent = iParent;
-            bxRecipe = new ExtendedBitmap(I9Gfx.GetRecipeName());
+            bxRecipe = new ExtendedBitmap(I9Gfx.GetRecipeTransparentName());
         }
 
         public void RecalcSalvage()
         {
-            BuildSalvageSummary.CalcAll();
-            lblEnhObtained.Text = $"Obtained: {BuildSalvageSummary.EnhObtained}/{BuildSalvageSummary.TotalEnhancements}";
-            lblCatalysts.Text = $"x{BuildSalvageSummary.EnhCatalysts}";
-            lblBoosters.Text = $"x{BuildSalvageSummary.EnhBoosters}";
+            BuildSalvageSummary.UpdateAllSalvage(lblEnhObtained, lblCatalysts, lblBoosters);
         }
 
         public void UpdateEnhObtained()
         {
-            BuildSalvageSummary.CalcEnhObtained();
-            lblEnhObtained.Text = $"Obtained: {BuildSalvageSummary.EnhObtained}/{BuildSalvageSummary.TotalEnhancements}";
+            BuildSalvageSummary.UpdateEnhObtained(lblEnhObtained);
         }
 
         private void AddToImageList(int eIDX)
@@ -211,69 +89,149 @@ namespace Mids_Reborn.Forms
             }
         }
 
+        private Font GetBestFitFont(Label lbl, string txt, float minSize, float maxSize, FontStyle fontStyle = FontStyle.Regular)
+        {
+            // http://csharphelper.com/blog/2015/04/size-a-font-to-fit-a-label-in-c/
+            if (txt.Length <= 0) return new Font(lbl.Font.FontFamily, maxSize, fontStyle, GraphicsUnit.Pixel, 0);
+
+            var bestSize = maxSize;
+            var w = lbl.DisplayRectangle.Width - 3;
+            var h = lbl.DisplayRectangle.Height - 3;
+            using (var g = lbl.CreateGraphics())
+            {
+                for (var i = minSize; i <= maxSize; i += 0.5f)
+                {
+                    using var f = new Font(lbl.Font.FontFamily, i, fontStyle, GraphicsUnit.Pixel, 0);
+                    var txtSize = g.MeasureString(txt, f);
+                    if (txtSize.Width <= w & txtSize.Height <= h) continue;
+
+                    bestSize = i - 1;
+                    break;
+                }
+            }
+
+            return new Font(lbl.Font.FontFamily, bestSize, fontStyle, GraphicsUnit.Pixel, 0);
+        }
+
+        private int GetNumBoostersFromLv(ListViewItem lvItem)
+        {
+            var linkedEnhIdx = Convert.ToInt32(lvItem.Tag);
+            var lvPowerName = lvItem.SubItems[2].Text;
+            var powerEntry = MidsContext.Character.CurrentBuild.Powers.First(p => p.Power.DisplayName == lvPowerName);
+            //var linkedEnh = DatabaseAPI.Database.Enhancements[linkedEnhIdx];
+            var powerSlot = powerEntry.Slots.First(ps => ps.Enhancement.Enh == linkedEnhIdx);
+            var numBoosters = powerSlot.Enhancement.RelativeLevel switch
+            {
+                Enums.eEnhRelative.PlusOne => 1,
+                Enums.eEnhRelative.PlusTwo => 2,
+                Enums.eEnhRelative.PlusThree => 3,
+                Enums.eEnhRelative.PlusFour => 4,
+                Enums.eEnhRelative.PlusFive => 5,
+                _ => 0
+            };
+
+            return numBoosters;
+        }
+
+        private int GetPopupDataLines(PopUp.PopupData popupData)
+        {
+            return popupData.Sections?.Sum(s => s.Content.Length) ?? 0;
+        }
+
+        private void ChangeVScrollBarState(PopUp.PopupData popupData)
+        {
+            var lines = GetPopupDataLines(popupData);
+            VScrollBar1.Enabled = lines > 12;
+            VScrollBar1.Visible = lines > 12;
+        }
+
         private PopUp.PopupData BuildList(bool Mini)
         {
             var iIndent = 1;
             var popupData = new PopUp.PopupData();
             var tl = new CountingList[0];
-            if (lvDPA.SelectedIndices.Count < 1 || lvDPA.SelectedItems[0].Text.Contains("Superior"))
+            if (lvDPA.SelectedIndices.Count < 1)
+            {
+                ChangeVScrollBarState(popupData);
                 return popupData;
+            }
+            var boosterSalvageIdx = Array.IndexOf(DatabaseAPI.Database.Salvage,
+                DatabaseAPI.Database.Salvage.First(s => s.ExternalName == "Enhancement Booster"));
+            RecipeInfo.SuspendLayout();
+            var numBoosters = 0;
             if (lvDPA.SelectedIndices[0] == 0)
             {
-                var numArray1 = new int[DatabaseAPI.Database.Salvage.Length - 1 + 1];
+                var salvageTotalCount = new Dictionary<int, int>();
+                var recipeTotalCount = new Dictionary<KeyValuePair<int, int>, int>();
                 var num1 = 0;
                 var num2 = 0;
                 var num3 = 0;
                 var num4 = 0;
                 DrawIcon(-1);
-                var numArray2 = new int[DatabaseAPI.Database.Recipes.Length - 1 + 1][];
-                var num5 = numArray2.Length - 1;
-                for (var index = 0; index <= num5; ++index)
-                {
-                    var numArray3 = new int[DatabaseAPI.Database.Recipes[index].Item.Length - 1 + 1];
-                    numArray2[index] = numArray3;
-                }
 
-                var num6 = lvDPA.Items.Count - 1;
-                for (var index1 = 1; index1 <= num6; ++index1)
+                var lvRecipesItems = lvDPA.Items.Count;
+                for (var i = 1; i < lvRecipesItems; i++)
                 {
-                    var rIDX = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[index1].Tag)].RecipeIDX;
-                    if (lvDPA.Items[index1].SubItems[1].Text == "*")
+                    var rIDX = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[i].Tag)].RecipeIDX;
+                    if (lvDPA.Items[i].SubItems[1].Text == "*")
                     {
                         rIDX = -1;
-                        putInList(ref tl, lvDPA.Items[index1].Text);
+                        putInList(ref tl, lvDPA.Items[i].Text);
                     }
 
                     if (rIDX <= -1)
                         continue;
-                    var iLevel = Convert.ToInt32(lvDPA.Items[index1].SubItems[1].Text) - 1;
+                    var iLevel = Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text) - 1;
                     var itemId = FindItemID(rIDX, iLevel);
                     if (itemId <= -1)
                         continue;
+
                     if (chkRecipe.Checked)
-                        ++numArray2[rIDX][itemId];
-                    var recipeEntry = DatabaseAPI.Database.Recipes[rIDX].Item[itemId];
-                    var num7 = recipeEntry.SalvageIdx.Length - 1;
-                    for (var index2 = 0; index2 <= num7; ++index2)
                     {
-                        if (!((recipeEntry.SalvageIdx[index2] > -1) & (recipeEntry.Count[index2] > 0)))
-                            continue;
-                        if (!((index2 != 0) & (recipeEntry.SalvageIdx[index2] == recipeEntry.SalvageIdx[0])))
+                        var rk = new KeyValuePair<int, int>(rIDX, itemId);
+                        if (!recipeTotalCount.ContainsKey(rk))
                         {
-                            numArray1[recipeEntry.SalvageIdx[index2]] += recipeEntry.Count[index2];
-                            num4 += recipeEntry.Count[index2];
+                            recipeTotalCount.Add(rk, 1);
                         }
                         else
                         {
-                            break;
+                            recipeTotalCount[rk]++;
                         }
+                    }
+
+                    var recipeEntry = DatabaseAPI.Database.Recipes[rIDX].Item[itemId];
+                    for (var j = 0 ; j < recipeEntry.SalvageIdx.Length; j++)
+                    {
+                        var cs = recipeEntry.SalvageIdx[j];
+                        var csc = recipeEntry.Count[j];
+                        if (cs <= -1 || csc <= 0) continue;
+
+                        if (!salvageTotalCount.ContainsKey(cs))
+                        {
+                            salvageTotalCount.Add(cs, csc);
+                        }
+                        else
+                        {
+                            salvageTotalCount[cs] += csc;
+                        }
+
+                        num4 += csc;
+                    }
+
+                    numBoosters = GetNumBoostersFromLv(lvDPA.Items[i]);
+                    if (!salvageTotalCount.ContainsKey(boosterSalvageIdx))
+                    {
+                        salvageTotalCount.Add(boosterSalvageIdx, numBoosters);
+                    }
+                    else
+                    {
+                        salvageTotalCount[boosterSalvageIdx] += numBoosters;
                     }
 
                     num1 += recipeEntry.CraftCost;
                     if (recipeEntry.CraftCostM > 0)
                         num3 += recipeEntry.CraftCostM;
-                    else if (DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[index1].Tag)].TypeID ==
-                             Enums.eType.SetO)
+                    else if (DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[i].Tag)].TypeID == Enums.eType.SetO)
                         num3 += recipeEntry.CraftCost;
                     num2 += recipeEntry.BuyCost;
                 }
@@ -292,91 +250,52 @@ namespace Mids_Reborn.Forms
                                 .DisplayName
                             : "All Powers", PopUp.Colors.Title);
                 else
-                    popupData.Sections[index3].Add(Convert.ToString(lvPower.CheckedIndices.Count) + " Powers",
+                    popupData.Sections[index3].Add($"{lvPower.CheckedIndices.Count} Powers",
                         PopUp.Colors.Title);
                 if (!chkRecipe.Checked)
-                    popupData.Sections[index3].Add(Convert.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:",
+                    popupData.Sections[index3].Add($"{lvDPA.Items.Count - nonRecipeCount} Recipes:",
                         PopUp.Colors.Title);
-                if (Mini)
-                {
-                    var str = "Buy:";
-                    if (num2 > 0)
-                        popupData.Sections[index3].Add($"{str} {num2:###,###,##0}",
-                            PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
-                }
-                else
-                {
-                    var iText = "Buy Cost:";
-                    if (num2 > 0)
-                        popupData.Sections[index3].Add(iText, PopUp.Colors.Invention,
-                            $"{num2:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
-                }
+                if (num2 > 0)
+                    popupData.Sections[index3].Add($"Buy{(Mini ? "" : " Cost")}: {num2:###,###,##0}",
+                        PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
 
-                if (Mini)
-                {
-                    var str = "Craft:";
-                    if (num1 > 0)
-                        popupData.Sections[index3].Add(str + " " + $"{num1:###,###,##0}",
-                            PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
-                }
-                else
-                {
-                    var iText = "Craft Cost:";
-                    if (num1 > 0)
-                        popupData.Sections[index3].Add(iText, PopUp.Colors.Invention,
-                            $"{num1:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
-                }
+                if (num1 > 0)
+                    popupData.Sections[index3].Add($"Craft{(Mini ? "" : " Cost")}: {num1:###,###,##0}",
+                        PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
 
-                if (Mini)
-                {
-                    var str = "Craft (Mem'd):";
-                    if ((num3 > 0) & (num3 != num1))
-                        popupData.Sections[index3].Add($"{str} {num3:###,###,##0}",
-                            PopUp.Colors.Effect, 0.9f, FontStyle.Bold, iIndent);
-                }
-                else
-                {
-                    var iText = "Craft Cost (Memorized Common):";
-                    if ((num3 > 0) & (num3 != num1))
-                        popupData.Sections[index3].Add(iText, PopUp.Colors.Effect, $"{num3:###,###,##0}",
-                            PopUp.Colors.Effect, 0.9f, FontStyle.Bold, iIndent);
-                }
+                if ((num3 > 0) & (num3 != num1))
+                    popupData.Sections[index3].Add($"Craft ({(Mini ? "Mem'd" : "Memorized Common")}): {num3:###,###,##0}",
+                        PopUp.Colors.Effect, 0.9f, FontStyle.Bold, iIndent);
 
                 if (chkRecipe.Checked)
                 {
                     RecipeInfo.ColumnPosition = 0.75f;
                     var index1 = popupData.Add();
-                    popupData.Sections[index1].Add(Convert.ToString(lvDPA.Items.Count - nonRecipeCount) + " Recipes:",
-                        PopUp.Colors.Title);
-                    var num7 = numArray2.Length - 1;
-                    for (var index2 = 0; index2 <= num7; ++index2)
+                    popupData.Sections[index1].Add($"{lvDPA.Items.Count - nonRecipeCount} Recipes:", PopUp.Colors.Title);
+                    foreach (var ri in recipeTotalCount)
                     {
-                        var num8 = numArray2[index2].Length - 1;
-                        for (var index4 = 0; index4 <= num8; ++index4)
+                        var rId = ri.Key.Key;
+                        var rEntryId = ri.Key.Value;
+                        var rAmt = ri.Value;
+                        var color = DatabaseAPI.Database.Recipes[rId].Rarity switch
                         {
-                            if (numArray2[index2][index4] <= 0)
-                                continue;
-                            var color = DatabaseAPI.Database.Recipes[index2].Rarity switch
-                            {
-                                Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
-                                Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
-                                Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
-                                _ => PopUp.Colors.Text
-                            };
-                            if (Mini)
-                                popupData.Sections[index1].Add(" " + Convert.ToString(numArray2[index2][index4]) + " x",
-                                    color,
-                                    DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[index2]
-                                        .EnhIdx) + " (" +
-                                    Convert.ToString(DatabaseAPI.Database.Recipes[index2].Item[index4].Level + 1) + ")",
-                                    color, 0.9f, FontStyle.Bold, iIndent);
-                            else
-                                popupData.Sections[index1].Add(
-                                    DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[index2]
-                                        .EnhIdx) + " (" +
-                                    Convert.ToString(DatabaseAPI.Database.Recipes[index2].Item[index4].Level + 1) + ")",
-                                    color, Convert.ToString(numArray2[index2][index4]), color, 0.9f, FontStyle.Bold,
-                                    iIndent);
+                            Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
+                            Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                            Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
+                            _ => PopUp.Colors.Text
+                        };
+                        if (Mini)
+                        {
+                            popupData.Sections[index1].Add($" {rAmt} x",
+                                color,
+                                $"{DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[rId].EnhIdx)} ({DatabaseAPI.Database.Recipes[rId].Item[rEntryId].Level + 1})",
+                                color, 0.9f, FontStyle.Bold, iIndent);
+                        }
+                        else
+                        {
+                            popupData.Sections[index1].Add(
+                                $"{DatabaseAPI.GetEnhancementNameShortWSet(DatabaseAPI.Database.Recipes[rId].EnhIdx)} ({DatabaseAPI.Database.Recipes[rId].Item[rEntryId].Level + 1})",
+                                color, Convert.ToString(rAmt), color, 0.9f, FontStyle.Bold, iIndent);
                         }
                     }
 
@@ -394,26 +313,28 @@ namespace Mids_Reborn.Forms
                 }
 
                 var index5 = popupData.Add();
-                var iText1 = !Mini ? Convert.ToString(num4) + " Salvage Items:" : Convert.ToString(num4) + " Items:";
+                var iText1 = Mini ? $"{num4} Items:" : $"{num4} Salvage Items:";
                 popupData.Sections[index5].Add(iText1, PopUp.Colors.Title);
-                var num9 = numArray1.Length - 1;
-                for (var index1 = 0; index1 <= num9; ++index1)
+                foreach (var sl in salvageTotalCount)
                 {
-                    if (numArray1[index1] <= 0)
-                        continue;
-                    var color = DatabaseAPI.Database.Salvage[index1].Rarity switch
+                    var color = DatabaseAPI.Database.Salvage[sl.Key].Rarity switch
                     {
                         Recipe.RecipeRarity.Common => PopUp.Colors.Common,
                         Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
                         Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
                         _ => Color.White
                     };
+
                     if (Mini)
-                        popupData.Sections[index5].Add(" " + Convert.ToString(numArray1[index1]) + " x", color,
-                            DatabaseAPI.Database.Salvage[index1].ExternalName, color, 0.9f);
+                    {
+                        popupData.Sections[index5].Add($" {sl.Value} x", color,
+                            DatabaseAPI.Database.Salvage[sl.Key].ExternalName, color, 0.9f);
+                    }
                     else
-                        popupData.Sections[index5].Add(DatabaseAPI.Database.Salvage[index1].ExternalName, color,
-                            Convert.ToString(numArray1[index1]), color, 0.9f, FontStyle.Bold, 1);
+                    {
+                        popupData.Sections[index5].Add(DatabaseAPI.Database.Salvage[sl.Key].ExternalName, color,
+                            $"{sl.Value}", color, 0.9f, FontStyle.Bold, 1);
+                    }
                 }
 
                 popupData.Sections[index5].Content = sortPopupStrings(Mini, 1, popupData.Sections[index5].Content);
@@ -421,48 +342,81 @@ namespace Mids_Reborn.Forms
                     return popupData;
                 {
                     var index1 = popupData.Add();
-                    var iText2 = !Mini
-                        ? Convert.ToString(nonRecipeCount - 1) + " Non-Crafted Enhancements:"
-                        : Convert.ToString(nonRecipeCount - 1) + " Enhs:";
+                    var iText2 = Mini
+                        ? $"{nonRecipeCount - 1} Enhs:"
+                        : $"{nonRecipeCount - 1} Non-Crafted Enhancements:";
+
                     popupData.Sections[index1].Add(iText2, PopUp.Colors.Title);
-                    var num7 = tl.Length - 1;
-                    for (var index2 = 0; index2 <= num7; ++index2)
+                    for (var index2 = 0; index2 < tl.Length; index2++)
                     {
-                        var common = PopUp.Colors.Common;
                         if (Mini)
-                            popupData.Sections[index1].Add(" " + Convert.ToString(tl[index2].Count) + " x", common,
-                                tl[index2].Text, common, 0.9f);
+                        {
+                            popupData.Sections[index1].Add($" {tl[index2].Count} x", PopUp.Colors.Common,
+                                tl[index2].Text, PopUp.Colors.Common, 0.9f);
+                        }
                         else
-                            popupData.Sections[index1].Add(tl[index2].Text, common, Convert.ToString(tl[index2].Count),
-                                common, 0.9f, FontStyle.Bold, 1);
+                        {
+                            popupData.Sections[index1].Add(tl[index2].Text, PopUp.Colors.Common, Convert.ToString(tl[index2].Count),
+                                PopUp.Colors.Common, 0.9f, FontStyle.Bold, 1);
+                        }
                     }
 
                     popupData.Sections[index1].Content = sortPopupStrings(Mini, 1, popupData.Sections[index1].Content);
                 }
+
+                ChangeVScrollBarState(popupData);
+                RecipeInfo.ResumeLayout();
+
                 return popupData;
             }
 
-            lblHeader.Text = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].LongName +
-                             " (" + lvDPA.SelectedItems[0].SubItems[1].Text + ")";
+            numBoosters = GetNumBoostersFromLv(lvDPA.SelectedItems[0]);
+            var boostersRelLevel = numBoosters switch
+            {
+                1 => Enums.eEnhRelative.PlusOne,
+                2 => Enums.eEnhRelative.PlusTwo,
+                3 => Enums.eEnhRelative.PlusThree,
+                4 => Enums.eEnhRelative.PlusFour,
+                5 => Enums.eEnhRelative.PlusFive,
+                _ => Enums.eEnhRelative.Even
+            };
+            var headerText = $"{DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].LongName} ({lvDPA.SelectedItems[0].SubItems[1].Text}{(numBoosters > 0 ? $"+{numBoosters}" : "")})";
+            lblHeader.SuspendLayout();
+            lblHeader.Font = GetBestFitFont(lblHeader, headerText, 10f, 18f, FontStyle.Bold);
+            lblHeader.Text = headerText;
+            lblHeader.ResumeLayout();
             var rIdx = DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.SelectedItems[0].Tag)].RecipeIDX;
             if (lvDPA.SelectedItems[0].SubItems[1].Text == "*")
+            {
                 rIdx = -1;
+            }
+
             DrawIcon(Convert.ToInt32(lvDPA.SelectedItems[0].Tag));
             if (rIdx <= -1)
-                return popupData;
             {
-                var index1 = popupData.Add();
-                popupData.Sections[index1] = Character.PopRecipeInfo(rIdx, Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text) - 1);
-                if (popupData.Sections[index1].Content != null && popupData.Sections[index1].Content.Length > 0)
-                {
-                    var content = popupData.Sections[index1].Content;
-                    var index2 = 0;
-                    content[index2].Text = content[index2].Text + " (" + lvDPA.SelectedItems[0].SubItems[1].Text + ")";
-                    return popupData;
-                }
+                ChangeVScrollBarState(popupData);
 
-                popupData.Sections[index1].Content[0].Text = "";
+                return popupData;
             }
+
+            var index4 = popupData.Add();
+            popupData.Sections[index4] = Character.PopRecipeInfo(rIdx,
+                Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text) - 1,
+                boostersRelLevel);
+            if (popupData.Sections[index4].Content != null && popupData.Sections[index4].Content.Length > 0)
+            {
+                var content = popupData.Sections[index4].Content;
+                content[0].Text = $"{content[0].Text} ({lvDPA.SelectedItems[0].SubItems[1].Text})";
+                ChangeVScrollBarState(popupData);
+
+                return popupData;
+            }
+
+            var sContent = popupData.Sections[index4].Content;
+            if (sContent != null) sContent[0].Text = "";
+
+            ChangeVScrollBarState(popupData);
+            RecipeInfo.ResumeLayout();
             return popupData;
         }
 
@@ -561,13 +515,13 @@ namespace Mids_Reborn.Forms
             return num;
         }
 
-        private void DrawIcon(int Index)
+        private void DrawIcon(int index)
         {
             var extendedBitmap = new ExtendedBitmap(bxRecipe.Size);
             extendedBitmap.Graphics.Clear(Color.Black);
+            extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_AncientMemories, 0, 0);
+            //extendedBitmap.Graphics.DrawImageUnscaled(index > -1 ? I9Gfx.Enhancements[index] : Resources.Icon_DisorientingField, 0, 0);
             extendedBitmap.Graphics.DrawImageUnscaled(bxRecipe.Bitmap, 0, 0);
-            if (Index > -1)
-                extendedBitmap.Graphics.DrawImageUnscaled(I9Gfx.Enhancements[Index], 0, 0);
             pbRecipe.Image = new Bitmap(extendedBitmap.Bitmap);
         }
 
@@ -669,8 +623,8 @@ namespace Mids_Reborn.Forms
             lvPower.Sorting = SortOrder.None;
             lvPower.Items.Add(" - All Powers - ");
             lvPower.Items[lvPower.Items.Count - 1].Tag = -1;
-            var num = MidsContext.Character.CurrentBuild.Powers.Count - 1;
-            for (var hIdx = 0; hIdx <= num; ++hIdx)
+            var num = MidsContext.Character.CurrentBuild.Powers.Count;
+            for (var hIdx = 0; hIdx < num; hIdx++)
             {
                 if (!((MidsContext.Character.CurrentBuild.Powers[hIdx].NIDPower > -1) & HasIOs(hIdx)))
                     continue;
@@ -698,8 +652,8 @@ namespace Mids_Reborn.Forms
             var num1 = -1;
             var num2 = 52;
             var num3 = 0;
-            var num4 = DatabaseAPI.Database.Recipes[rIDX].Item.Length - 1;
-            for (var index = 0; index <= num4; ++index)
+            var num4 = DatabaseAPI.Database.Recipes[rIDX].Item.Length;
+            for (var index = 0; index < num4; index++)
             {
                 if (DatabaseAPI.Database.Recipes[rIDX].Item[index].Level > num3)
                     num3 = DatabaseAPI.Database.Recipes[rIDX].Item[index].Level;
@@ -715,8 +669,8 @@ namespace Mids_Reborn.Forms
                 return num1 >= 0 ? num1 : -1;
             {
                 iLevel = Enhancement.GranularLevelZb(iLevel, 0, 49);
-                var num5 = DatabaseAPI.Database.Recipes[rIDX].Item.Length - 1;
-                for (var index = 0; index <= num5; ++index)
+                var num5 = DatabaseAPI.Database.Recipes[rIDX].Item.Length;
+                for (var index = 0; index < num5; index++)
                 {
                     if (DatabaseAPI.Database.Recipes[rIDX].Item[index].Level != iLevel)
                         continue;
@@ -729,16 +683,57 @@ namespace Mids_Reborn.Forms
 
         private void frmRecipeViewer_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ibEnhCheckMode.Checked = false;
-            pSalvageSummary.Visible = false;
-            MidsContext.EnhCheckMode = false;
+            if (SalvageHudVisible)
+            {
+                myParent.FloatBuildSalvageHud(true);
+            }
+            else
+            {
+                MidsContext.EnhCheckMode = false;
+                ibEnhCheckMode.Checked = false;
+                pSalvageSummary.Visible = false;
+                myParent.UpdateEnhCheckModeToolStrip();
+                myParent.DoRedraw();
+            }
+
             StoreLocation();
-            myParent.DoRedraw();
             myParent.FloatRecipe(false);
         }
 
         private void frmRecipeViewer_Load(object sender, EventArgs e)
         {
+            lvPower.EnableDoubleBuffer();
+            lvDPA.EnableDoubleBuffer();
+            UpdateColorTheme();
+            RecipeInfo.SetPopup(new PopUp.PopupData());
+            ChangedRecipeInfoElements();
+            chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
+            RecalcSalvage();
+            SalvageHudVisible = myParent.IsSalvageHudVisible();
+            if (SalvageHudVisible)
+            {
+                myParent.SetSalvageHudOnCloseExecution(false);
+                myParent.FloatBuildSalvageHud(false);
+            }
+            else
+            {
+                MidsContext.EnhCheckMode = false;
+                myParent.UpdateEnhCheckModeToolStrip();
+            }
+
+            ibEnhCheckMode.Checked = false;
+            pSalvageSummary.Visible = false;
+            if (SalvageHudVisible)
+            {
+                myParent.Activate();
+            }
+
+            Loading = false;
+        }
+
+        public void UpdateColorTheme()
+        {
+            BackColor = myParent.BackColor;
             ibClose.IA = myParent.Drawing.pImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
@@ -746,6 +741,7 @@ namespace Mids_Reborn.Forms
             ibClose.ImageOn = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[3].Bitmap
                 : myParent.Drawing.bxPower[5].Bitmap;
+            
             ibTopmost.IA = myParent.Drawing.pImageAttributes;
             ibTopmost.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
@@ -753,27 +749,37 @@ namespace Mids_Reborn.Forms
             ibTopmost.ImageOn = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[3].Bitmap
                 : myParent.Drawing.bxPower[5].Bitmap;
-            RecipeInfo.SetPopup(new PopUp.PopupData());
-            ChangedRecipeInfoElements();
-            chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
-            RecalcSalvage();
+            
             ibEnhCheckMode.IA = myParent.Drawing.pImageAttributes;
             ibEnhCheckMode.ImageOff = MidsContext.Character.IsHero()
                 ? myParent.Drawing.bxPower[2].Bitmap
                 : myParent.Drawing.bxPower[4].Bitmap;
-            ibEnhCheckMode.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            MidsContext.EnhCheckMode = false;
-            ibEnhCheckMode.Checked = false;
-            pSalvageSummary.Visible = false;
-            Loading = false;
+            ibEnhCheckMode.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
+
+            ibClipboard.IA = myParent.Drawing.pImageAttributes;
+            ibClipboard.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
+            ibClipboard.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
+
+            ibMiniList.IA = myParent.Drawing.pImageAttributes;
+            ibMiniList.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
+            ibMiniList.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
         }
 
         private bool HasIOs(int hIDX)
         {
             if (hIDX < 0)
                 return false;
-            var num = MidsContext.Character.CurrentBuild.Powers[hIDX].Slots.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers[hIDX].Slots.Length; index++)
                 if (MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index].Enhancement.Enh > -1)
                     return true;
             return false;
@@ -783,17 +789,15 @@ namespace Mids_Reborn.Forms
         {
             var str1 = "";
             var popupData = BuildList(true);
-            var num1 = RecipeInfo.pData.Sections.Length - 1;
-            for (var index1 = 0; index1 <= num1; ++index1)
+            for (var index1 = 0; index1 < RecipeInfo.pData.Sections.Length; index1++)
             {
-                var num2 = RecipeInfo.pData.Sections[index1].Content.Length - 1;
-                for (var index2 = 0; index2 <= num2; ++index2)
+                for (var index2 = 0; index2 < RecipeInfo.pData.Sections[index1].Content.Length; index2++)
                 {
                     var content = popupData.Sections[index1].Content;
                     var index3 = index2;
                     var str2 = str1 + content[index3].Text;
                     if (content[index3].TextColumn != "")
-                        str2 = str2 + "  " + content[index3].TextColumn;
+                        str2 += $"  {content[index3].TextColumn}";
                     str1 = str2 + "\r\n";
                 }
 
@@ -836,10 +840,8 @@ namespace Mids_Reborn.Forms
 
         private void ibEnhCheckMode_ButtonClicked()
         {
-            Debug.WriteLine($"Check mode (before): {ibEnhCheckMode.Checked}");
-            ibEnhCheckMode.Checked = !ibEnhCheckMode.Checked;
             MidsContext.EnhCheckMode = ibEnhCheckMode.Checked;
-            Debug.WriteLine($"Check mode (after): {ibEnhCheckMode.Checked}");
+            RecalcSalvage();
             pSalvageSummary.Visible = MidsContext.EnhCheckMode;
             myParent.DoRedraw();
         }
@@ -851,9 +853,12 @@ namespace Mids_Reborn.Forms
             {
                 if (Operators.ConditionalCompareObjectLess(e.Item.Tag, 0, false) && e.Item.Checked)
                 {
-                    var num = lvPower.Items.Count - 1;
-                    for (var index = 1; index <= num; ++index)
-                        lvPower.Items[index].Checked = false;
+                    foreach (var o in lvPower.Items)
+                    {
+                        var el = (ListViewItem) o;
+                        if (el.SubItems[0].ToString().Contains("All Powers")) continue;
+                        el.Checked = false;
+                    }
                 }
             }
             else if (e.Item.Checked)
@@ -904,12 +909,10 @@ namespace Mids_Reborn.Forms
 
         private void RecipeInfo_MouseWheel(object sender, MouseEventArgs e)
         {
-            VScrollBar1.Value =
-                Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, e.Delta > 0 ? -1 : 1)); // Interaction.IIf(e.Delta > 0, -1, 1)
-            if (VScrollBar1.Value > VScrollBar1.Maximum - 9)
-                VScrollBar1.Value = VScrollBar1.Maximum - 9;
-            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender),
-                new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+            //VScrollBar1.Value =
+                //Convert.ToInt32(Operators.AddObject(VScrollBar1.Value, e.Delta > 0 ? -1 : 1)); // Interaction.IIf(e.Delta > 0, -1, 1)
+            VScrollBar1.Value = Math.Max(VScrollBar1.Minimum, Math.Min(VScrollBar1.Maximum - 9, VScrollBar1.Value + (e.Delta > 0 ? -1 : 1)));
+            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender), new ScrollEventArgs(ScrollEventType.EndScroll, 0));
         }
 
         public void SetLocation()
@@ -945,7 +948,7 @@ namespace Mids_Reborn.Forms
             PopUp.StringValue[] inStrs)
         {
             var num1 = 0;
-            var numArray = new int[inStrs.Length - 1 + 1];
+            var numArray = new int[inStrs.Length];
             var num2 = numArray.Length - 1;
             for (var index1 = 0; index1 <= num2; ++index1)
             {
@@ -977,7 +980,7 @@ namespace Mids_Reborn.Forms
                     numArray[index1] = index1;
             }
 
-            var stringValueArray = new PopUp.StringValue[inStrs.Length - 1 + 1];
+            var stringValueArray = new PopUp.StringValue[inStrs.Length];
             var num5 = inStrs.Length - 1;
             for (var index = 0; index <= num5; ++index)
                 stringValueArray[index] = inStrs[numArray[index]];
@@ -996,28 +999,10 @@ namespace Mids_Reborn.Forms
 
         public void UpdateData()
         {
-            BackColor = myParent.BackColor;
-            ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibClipboard.IA = myParent.Drawing.pImageAttributes;
-            ibClipboard.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClipboard.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibMiniList.IA = myParent.Drawing.pImageAttributes;
-            ibMiniList.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibMiniList.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            UpdateColorTheme();
             FillPowerList();
+            ibEnhCheckMode.Checked = MidsContext.EnhCheckMode;
+            pSalvageSummary.Visible = MidsContext.EnhCheckMode;
         }
 
         private void UpdatePowerList()

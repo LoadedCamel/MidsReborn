@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
@@ -10,6 +12,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using mrbBase;
 using mrbBase.Base.Data_Classes;
 using mrbBase.Base.Display;
+using mrbBase.Base.Extensions;
 using mrbBase.Base.Master_Classes;
 using mrbControls;
 
@@ -30,7 +33,7 @@ namespace Mids_Reborn.Forms
             Load += frmSetFind_Load;
             setBonusList = new int[0];
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmSetFind));
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmSetFind));
             Icon = Resources.reborn;
             Name = nameof(frmSetFind);
             ibClose.ButtonClicked += ibClose_ButtonClicked;
@@ -39,7 +42,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void AddEffect(ref string[] List, ref int[] nIDList, string Effect, int nID)
-
         {
             var num = List.Length - 1;
             for (var index = 0; index <= num; ++index)
@@ -52,7 +54,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void AddSetString(int nIDSet, int BonusID)
-
         {
             lvSet.Items.Add(new ListViewItem(new[]
             {
@@ -96,11 +97,11 @@ namespace Mids_Reborn.Forms
             var height1 = imageSize1.Height;
             using var extendedBitmap = new ExtendedBitmap(width1, height1);
             ilSets.Images.Clear();
-            var num = DatabaseAPI.Database.EnhancementSets.Count - 1;
-            for (var index = 0; index <= num; ++index)
+            var num = DatabaseAPI.Database.EnhancementSets.Count;
+            for (var index = 0; index < num; index++)
                 if (DatabaseAPI.Database.EnhancementSets[index].ImageIdx > -1)
                 {
-                    extendedBitmap.Graphics.Clear(Color.White);
+                    extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
                     I9Gfx.DrawEnhancementSet(ref graphics, DatabaseAPI.Database.EnhancementSets[index].ImageIdx);
                     ilSets.Images.Add(extendedBitmap.Bitmap);
@@ -168,7 +169,6 @@ namespace Mids_Reborn.Forms
         }
 
         private void FillSetList()
-
         {
             if ((lvBonus.SelectedItems.Count < 1) | (lvMag.SelectedItems.Count < 1))
             {
@@ -242,33 +242,56 @@ namespace Mids_Reborn.Forms
         }
 
         private void frmSetFind_FormClosed(object sender, FormClosedEventArgs e)
-
         {
             myParent.FloatSetFinder(false);
         }
 
-        private void frmSetFind_Load(object sender, EventArgs e)
+        private void SetImageButtonStyle(ImageButton ib)
+        {
+            ib.IA = myParent.Drawing.pImageAttributes;
+            ib.ImageOff = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[2].Bitmap
+                : myParent.Drawing.bxPower[4].Bitmap;
+            ib.ImageOn = MidsContext.Character.IsHero()
+                ? myParent.Drawing.bxPower[3].Bitmap
+                : myParent.Drawing.bxPower[5].Bitmap;
+        }
 
+        private void frmSetFind_Load(object sender, EventArgs e)
         {
             setBonusList = DatabaseAPI.NidPowers("Set_Bonus.Set_Bonus");
             BackColor = myParent.BackColor;
-            ibClose.IA = myParent.Drawing.pImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
-            ibTopmost.IA = myParent.Drawing.pImageAttributes;
-            ibTopmost.ImageOff = MidsContext.Character.IsHero()
-                ? myParent.Drawing.bxPower[2].Bitmap
-                : myParent.Drawing.bxPower[4].Bitmap;
-            ibTopmost.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.bxPower[3].Bitmap : myParent.Drawing.bxPower[5].Bitmap;
+            SetImageButtonStyle(ibClose);
+            SetImageButtonStyle(ibTopmost);
             SetInfo.SetPopup(new PopUp.PopupData());
             FillImageList();
             FillEffectList();
+            FillArchetypesList();
+
+            cbArchetype.SelectedIndex = 0;
+        }
+
+        private void FillArchetypesList()
+        {
+            //var ignoredClasses = Archetype.GetNpcClasses();
+            //var classesList = DatabaseAPI.Database.Classes.Select(at => at.DisplayName);
+            //var playerClasses = classesList.Except(ignoredClasses);
+            var playerClasses = DatabaseAPI.Database.Classes
+                .Where(at => at.Playable)
+                .Select(at => at.DisplayName);
+
+            cbArchetype.BeginUpdate();
+            cbArchetype.Items.Clear();
+            cbArchetype.Items.Add("--Archetype--");
+            foreach (var c in playerClasses)
+            {
+                cbArchetype.Items.Add(c);
+            }
+
+            cbArchetype.EndUpdate();
         }
 
         private string GetPowerString(int nIDPower)
-
         {
             var str1 = "";
             var returnString = "";
@@ -282,12 +305,12 @@ namespace Mids_Reborn.Forms
             }
             else
             {
-                var num1 = DatabaseAPI.Database.Power[nIDPower].Effects.Length - 1;
-                for (var index1 = 0; index1 <= num1; ++index1)
+                var num1 = DatabaseAPI.Database.Power[nIDPower].Effects.Length;
+                for (var index1 = 0; index1 < num1; index1++)
                 {
                     var flag = false;
-                    var num2 = returnMask.Length - 1;
-                    for (var index2 = 0; index2 <= num2; ++index2)
+                    var num2 = returnMask.Length;
+                    for (var index2 = 0; index2 < num2; index2++)
                         if (index1 == returnMask[index2])
                             flag = true;
 
@@ -317,13 +340,11 @@ namespace Mids_Reborn.Forms
         }
 
         private void ibClose_ButtonClicked()
-
         {
             Close();
         }
 
         private void ibTopmost_ButtonClicked()
-
         {
             TopMost = ibTopmost.Checked;
             if (!TopMost)
@@ -333,23 +354,267 @@ namespace Mids_Reborn.Forms
 
         [DebuggerStepThrough]
         private void lvBonus_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             FillMagList();
         }
 
         private void lvMag_SelectedIndexChanged(object sender, EventArgs e)
-
         {
             FillSetList();
         }
 
         private void lvSet_SelectedIndexChanged(object sender, EventArgs e)
-
         {
-            if (lvSet.SelectedItems.Count <= 0)
+            if (lvSet.SelectedItems.Count <= 0) return;
+
+            var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
+            SetInfo.SetPopup(Character.PopSetInfo(sIdx));
+            FillMatchingPowers(sIdx);
+        }
+
+        private bool IsPeacebringerInherent(IPower power)
+        {
+            return power.GetPowerSet().SetName == "Inherent" &
+                   (power.PowerName == "Energy_Flight" |
+                    power.PowerName == "Combat_Flight" |
+                    power.PowerName == "Quantum_Acceleration" |
+                    power.PowerName.StartsWith("Bright_Nova") |
+                    power.PowerName.StartsWith("White_Dwarf"));
+        }
+
+        private bool IsWarshadeInherent(IPower power)
+        {
+            return power.GetPowerSet().SetName == "Inherent" &
+                   (power.PowerName == "Shadow_Recall" |
+                    power.PowerName == "Shadow_Step" |
+                    power.PowerName.StartsWith("Dark_Nova") |
+                    power.PowerName.StartsWith("Black_Dwarf"));
+        }
+
+
+        private void FillMatchingPowers(int sIdx)
+        {
+            var enhSet = DatabaseAPI.Database.EnhancementSets[sIdx];
+            var powerSetsIconsDict = new Dictionary<string, int>();
+            var atIconsDict = new Dictionary<string, int>();
+            var imgIdx = 0;
+
+            var setGroup = enhSet.SetType;
+            var atClass = cbArchetype.SelectedIndex < 1
+                ? null
+                : DatabaseAPI.GetArchetypeByName(cbArchetype.Items[cbArchetype.SelectedIndex].ToString());
+
+            var matchingPowers = DatabaseAPI.Database.Power
+                .Where(p => p.SetTypes.Contains(setGroup) &
+                            !p.HiddenPower &
+                            !p.FullName.StartsWith("Pets.") &
+                            !p.FullName.StartsWith("Villain_Pets."))
+                .ToList();
+
+            if (matchingPowers.Count <= 0)
+            {
+                lvPowers.BeginUpdate();
+                lvPowers.Items.Clear();
+                lvPowers.EndUpdate();
+
                 return;
-            SetInfo.SetPopup(Character.PopSetInfo(Convert.ToInt32(lvSet.SelectedItems[0].Tag)));
+            }
+
+            var matchingPowersets = matchingPowers
+                .Select(p => p.GetPowerSet())
+                .Distinct()
+                .ToList();
+            
+            var matchingPowersetsIdx = matchingPowersets
+                .Select(ps => Array.IndexOf(DatabaseAPI.Database.Powersets, ps))
+                .ToList();
+            
+            /*var matchingArchetypes = matchingPowers
+                .Select(p => DatabaseAPI.Database.Classes
+                    .FirstOrDefault(at => DatabaseAPI.Database.Powersets[p.PowerSetID].ATClass == at.ClassName))
+                .Distinct()
+                .ToList();
+            matchingArchetypes =
+                matchingArchetypes
+                    .Union(new[] {"Peacebringer", "Warshade"}.Select(DatabaseAPI.GetArchetypeByName))
+                    .Distinct()
+                    .ToList();*/
+
+            var matchingArchetypes = DatabaseAPI.Database.Classes
+                .Where(at => at.Playable)
+                .ToList();
+            
+            var matchingArchetypesIdx = matchingArchetypes
+                .Select(at => Array.IndexOf(DatabaseAPI.Database.Classes, at))
+                .ToList();
+
+            var imgList = new ImageList {ColorDepth = ColorDepth.Depth32Bit, ImageSize = new Size(18, 16)};
+            for (var i = 0 ; i < matchingPowersets.Count ; i++)
+            {
+                var idx = matchingPowersetsIdx[i];
+                var icon = new Bitmap(18, 16);
+                using (var g = Graphics.FromImage(icon))
+                {
+                    if (idx < 0)
+                    {
+                        g.DrawImage(I9Gfx.UnknownPowerset.Bitmap,
+                            new Rectangle(0, 0, 16, 16),
+                            new Rectangle(0, 0, 16, 16),
+                            GraphicsUnit.Pixel);
+                    }
+                    else
+                    {
+                        // Weird offset... Icons appear cropped if pasted at (0, 0)
+                        g.DrawImage(I9Gfx.Powersets.Bitmap,
+                            new Rectangle(2, 0, 18, 16),
+                            new Rectangle(idx * 16, 0, 18, 16),
+                            GraphicsUnit.Pixel);
+                    }
+
+                    imgList.Images.Add(icon);
+                }
+
+                powerSetsIconsDict.Add(matchingPowersets[i].FullName, imgIdx);
+
+                imgIdx++;
+            }
+
+            var n = matchingArchetypes.Count;
+            for (var i = 0; i < n + 1; i++)
+            {
+                var idx = i < n ? matchingArchetypesIdx[i] : -1;
+                var icon = new Bitmap(18, 16);
+                using (var g = Graphics.FromImage(icon))
+                {
+                    if (idx < 0 | i == n)
+                    {
+                        g.DrawImage(I9Gfx.UnknownArchetype.Bitmap,
+                            new Rectangle(0, 0, 16, 16),
+                            new Rectangle(0, 0, 16, 16),
+                            GraphicsUnit.Pixel);
+                    }
+                    else
+                    {
+                        g.DrawImage(I9Gfx.Archetypes.Bitmap,
+                            new Rectangle(0, 0, 16, 16),
+                            new Rectangle(idx * 16, 0, 16, 16),
+                            GraphicsUnit.Pixel);
+                    }
+                }
+
+                imgList.Images.Add(icon);
+                atIconsDict.Add(i == n
+                    ? "unknown_generic"
+                    : matchingArchetypes[i] == null
+                        ? "unknown_generic"
+                        : matchingArchetypes[i].ClassName, imgIdx);
+
+                imgIdx++;
+            }
+
+            lvPowers.BeginUpdate();
+            lvPowers.Items.Clear();
+            lvPowers.SmallImageList = imgList;
+            var selectedClassIndex = atClass == null ? -1 : Array.IndexOf(DatabaseAPI.Database.Classes, atClass);
+            var epicPowersets = DatabaseAPI.GetEpicPowersets(atClass == null ? "" : atClass.ClassName);
+            var lvRow = 0;
+            foreach (var p in matchingPowers)
+            {
+                var powerSetData = p.GetPowerSet();
+                var powerSetGroup = DatabaseAPI.Database.PowersetGroups[powerSetData.GroupName].Name;
+                var allowedClasses = powerSetGroup == "Inherent" | powerSetGroup == "Epic" | powerSetGroup == "Pool"
+                    ? new List<string>()
+                    : powerSetData.GetArchetypes();
+                
+                var atClassFull = atClass == null
+                    ? allowedClasses.Count > 0
+                        ? DatabaseAPI.GetArchetypeByClassName(allowedClasses[0])
+                        : null
+                    : allowedClasses.Count > 0
+                        ? allowedClasses.Contains(atClass.ClassName)
+                            ? atClass
+                            : DatabaseAPI.GetArchetypeByClassName(allowedClasses[0])
+                        : null;
+
+                var allowedForClass = atClass == null || p.AllowedForClass(selectedClassIndex);
+                if (!allowedForClass) continue;
+
+                if (atClass != null & powerSetGroup == "Epic" & epicPowersets.Count > 0)
+                {
+                    if (!epicPowersets.Contains(powerSetData)) continue;
+                }
+
+                if (atClassFull != null & atClass != null)
+                {
+                    if (atClassFull.ClassName != atClass.ClassName) continue;
+                    if (atClass.ClassName != "Class_Peacebringer" & IsPeacebringerInherent(p)) continue;
+                    if (atClass.ClassName != "Class_Warshade" & IsWarshadeInherent(p)) continue;
+                }
+
+                // Show Peacebringer/Warshade AT icon for Dwarves/Novas sub-powers,
+                // and other PB/WS inherents
+                var overrideAtClass = "";
+                if (powerSetGroup == "Inherent")
+                {
+                    if (IsPeacebringerInherent(p))
+                    {
+                        overrideAtClass = "Class_Peacebringer";
+                    }
+                    else if (IsWarshadeInherent(p))
+                    {
+                        overrideAtClass = "Class_Warshade";
+                    }
+                }
+
+                var atIconKey = overrideAtClass != ""
+                    ? overrideAtClass
+                    : atClassFull == null | powerSetGroup == "Epic" | powerSetGroup == "Inherent" | powerSetGroup == "Pool"
+                        ? "unknown_generic"
+                        : atClassFull.ClassName;
+
+                // Column 0 item text goes into the constructor.
+                // Column 1-2 items text go into lvItem.SubItems .
+                var lvItem = new ListViewItem(powerSetGroup, atIconsDict[atIconKey]);
+                lvItem.SubItems.AddRange(new[] {powerSetData.SetName, p.DisplayName});
+                lvPowers.Items.Add(lvItem);
+
+                //lvPowers.AddIconToSubItem(lvRow, 0, atIconsDict[atIconKey]);
+                lvPowers.AddIconToSubItem(lvRow, 1, powerSetsIconsDict[powerSetData.FullName]);
+
+                lvRow++;
+            }
+
+            lvPowers.ShowSubItemIcons();
+            lvPowers.EndUpdate();
+        }
+
+        private void ibSelAt_ButtonClicked()
+        {
+            var selectedArchetype = myParent.GetSelectedArchetype();
+            if (selectedArchetype == "")
+            {
+                cbArchetype.SelectedIndex = 0;
+
+                return;
+            }
+
+            var n = cbArchetype.Items.Count;
+            for (var i = 1; i < n; i++)
+            {
+                if (selectedArchetype != cbArchetype.Items[i].ToString()) continue;
+
+                cbArchetype.SelectedIndex = i;
+
+                return;
+            }
+        }
+
+        private void cbArchetype_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvSet.SelectedItems.Count <= 0) return;
+
+            var sIdx = Convert.ToInt32(lvSet.SelectedItems[0].Tag);
+            FillMatchingPowers(sIdx);
         }
     }
 }

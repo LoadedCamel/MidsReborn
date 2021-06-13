@@ -43,11 +43,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnOK = new System.Windows.Forms.Button();
             this.btnReGuess = new System.Windows.Forms.Button();
             this.GroupBox1 = new System.Windows.Forms.GroupBox();
-            this.cbIsRecipe4 = new System.Windows.Forms.CheckBox();
-            this.cbIsRecipe3 = new System.Windows.Forms.CheckBox();
-            this.cbIsRecipe2 = new System.Windows.Forms.CheckBox();
-            this.cbIsRecipe1 = new System.Windows.Forms.CheckBox();
-            this.cbIsRecipe0 = new System.Windows.Forms.CheckBox();
             this.btnGuessCost = new System.Windows.Forms.Button();
             this.udSal4 = new System.Windows.Forms.NumericUpDown();
             this.Label14 = new System.Windows.Forms.Label();
@@ -104,9 +99,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnRDel = new System.Windows.Forms.Button();
             this.btnRunSeq = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lstSubRecipeComponents = new System.Windows.Forms.ListBox();
             this.btnMassUpdateTags = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -126,7 +118,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udStaticIndex)).BeginInit();
             this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -216,11 +207,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // GroupBox1
             // 
-            this.GroupBox1.Controls.Add(this.cbIsRecipe4);
-            this.GroupBox1.Controls.Add(this.cbIsRecipe3);
-            this.GroupBox1.Controls.Add(this.cbIsRecipe2);
-            this.GroupBox1.Controls.Add(this.cbIsRecipe1);
-            this.GroupBox1.Controls.Add(this.cbIsRecipe0);
             this.GroupBox1.Controls.Add(this.btnGuessCost);
             this.GroupBox1.Controls.Add(this.udSal4);
             this.GroupBox1.Controls.Add(this.Label14);
@@ -253,61 +239,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox1.TabIndex = 8;
             this.GroupBox1.TabStop = false;
             this.GroupBox1.Text = "Recipe Info:";
-            // 
-            // cbIsRecipe4
-            // 
-            this.cbIsRecipe4.AutoSize = true;
-            this.cbIsRecipe4.Location = new System.Drawing.Point(606, 135);
-            this.cbIsRecipe4.Name = "cbIsRecipe4";
-            this.cbIsRecipe4.Size = new System.Drawing.Size(76, 18);
-            this.cbIsRecipe4.TabIndex = 355;
-            this.cbIsRecipe4.Text = "Is a recipe";
-            this.cbIsRecipe4.UseVisualStyleBackColor = true;
-            this.cbIsRecipe4.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
-            // 
-            // cbIsRecipe3
-            // 
-            this.cbIsRecipe3.AutoSize = true;
-            this.cbIsRecipe3.Location = new System.Drawing.Point(606, 107);
-            this.cbIsRecipe3.Name = "cbIsRecipe3";
-            this.cbIsRecipe3.Size = new System.Drawing.Size(76, 18);
-            this.cbIsRecipe3.TabIndex = 354;
-            this.cbIsRecipe3.Text = "Is a recipe";
-            this.cbIsRecipe3.UseVisualStyleBackColor = true;
-            this.cbIsRecipe3.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
-            // 
-            // cbIsRecipe2
-            // 
-            this.cbIsRecipe2.AutoSize = true;
-            this.cbIsRecipe2.Location = new System.Drawing.Point(606, 78);
-            this.cbIsRecipe2.Name = "cbIsRecipe2";
-            this.cbIsRecipe2.Size = new System.Drawing.Size(76, 18);
-            this.cbIsRecipe2.TabIndex = 353;
-            this.cbIsRecipe2.Text = "Is a recipe";
-            this.cbIsRecipe2.UseVisualStyleBackColor = true;
-            this.cbIsRecipe2.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
-            // 
-            // cbIsRecipe1
-            // 
-            this.cbIsRecipe1.AutoSize = true;
-            this.cbIsRecipe1.Location = new System.Drawing.Point(606, 49);
-            this.cbIsRecipe1.Name = "cbIsRecipe1";
-            this.cbIsRecipe1.Size = new System.Drawing.Size(76, 18);
-            this.cbIsRecipe1.TabIndex = 352;
-            this.cbIsRecipe1.Text = "Is a recipe";
-            this.cbIsRecipe1.UseVisualStyleBackColor = true;
-            this.cbIsRecipe1.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
-            // 
-            // cbIsRecipe0
-            // 
-            this.cbIsRecipe0.AutoSize = true;
-            this.cbIsRecipe0.Location = new System.Drawing.Point(606, 23);
-            this.cbIsRecipe0.Name = "cbIsRecipe0";
-            this.cbIsRecipe0.Size = new System.Drawing.Size(76, 18);
-            this.cbIsRecipe0.TabIndex = 351;
-            this.cbIsRecipe0.Text = "Is a recipe";
-            this.cbIsRecipe0.UseVisualStyleBackColor = true;
-            this.cbIsRecipe0.CheckedChanged += new System.EventHandler(this.cbIsRecipe_CheckedChanged);
             // 
             // btnGuessCost
             // 
@@ -358,7 +289,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal4.Size = new System.Drawing.Size(202, 22);
             this.cbSal4.TabIndex = 33;
             this.cbSal4.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
-            this.cbSal4.Enter += new System.EventHandler(this.cbSal4_Enter);
             // 
             // udSal3
             // 
@@ -399,7 +329,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal3.Size = new System.Drawing.Size(202, 22);
             this.cbSal3.TabIndex = 30;
             this.cbSal3.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
-            this.cbSal3.Enter += new System.EventHandler(this.cbSal3_Enter);
             // 
             // udSal2
             // 
@@ -440,7 +369,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal2.Size = new System.Drawing.Size(202, 22);
             this.cbSal2.TabIndex = 27;
             this.cbSal2.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
-            this.cbSal2.Enter += new System.EventHandler(this.cbSal2_Enter);
             // 
             // udSal1
             // 
@@ -481,7 +409,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal1.Size = new System.Drawing.Size(202, 22);
             this.cbSal1.TabIndex = 24;
             this.cbSal1.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
-            this.cbSal1.Enter += new System.EventHandler(this.cbSal1_Enter);
             // 
             // udSal0
             // 
@@ -522,8 +449,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.cbSal0.Size = new System.Drawing.Size(202, 22);
             this.cbSal0.TabIndex = 21;
             this.cbSal0.SelectedIndexChanged += new System.EventHandler(this.cbSalX_SelectedIndexChanged);
-            this.cbSal0.Enter += new System.EventHandler(this.cbSal0_Enter);
-            this.cbSal0.Leave += new System.EventHandler(this.cbSalX_Leave);
             // 
             // Label9
             // 
@@ -998,36 +923,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Recipe Entries:";
             // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.label4);
-            this.groupBox4.Controls.Add(this.lstSubRecipeComponents);
-            this.groupBox4.Location = new System.Drawing.Point(706, 366);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(409, 164);
-            this.groupBox4.TabIndex = 28;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Sub-Recipe Info:";
-            this.groupBox4.Visible = false;
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(6, 16);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(202, 18);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "Sub-recipe components (Ingredient #1):";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // lstSubRecipeComponents
-            // 
-            this.lstSubRecipeComponents.FormattingEnabled = true;
-            this.lstSubRecipeComponents.ItemHeight = 14;
-            this.lstSubRecipeComponents.Location = new System.Drawing.Point(6, 39);
-            this.lstSubRecipeComponents.Name = "lstSubRecipeComponents";
-            this.lstSubRecipeComponents.Size = new System.Drawing.Size(397, 116);
-            this.lstSubRecipeComponents.TabIndex = 0;
-            // 
             // btnMassUpdateTags
             // 
             this.btnMassUpdateTags.Location = new System.Drawing.Point(456, 536);
@@ -1082,7 +977,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.Controls.Add(this.btnPrepareTags);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnMassUpdateTags);
-            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnRunSeq);
             this.Controls.Add(this.btnRDel);
@@ -1101,7 +995,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.ShowInTaskbar = false;
             this.Text = "Recipe Editor";
             this.GroupBox1.ResumeLayout(false);
-            this.GroupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udSal4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal2)).EndInit();
@@ -1116,7 +1009,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.GroupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udStaticIndex)).EndInit();
             this.groupBox3.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -1182,15 +1074,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         NumericUpDown udSal2;
         NumericUpDown udSal3;
         NumericUpDown udSal4;
-        private CheckBox cbIsRecipe4;
-        private CheckBox cbIsRecipe3;
-        private CheckBox cbIsRecipe2;
-        private CheckBox cbIsRecipe1;
-        private CheckBox cbIsRecipe0;
         private GroupBox groupBox3;
-        private GroupBox groupBox4;
-        private Label label4;
-        private ListBox lstSubRecipeComponents;
         private CheckBox cbIsVirtual;
         private CheckBox cbIsGeneric;
         private CheckBox cbIsHidden;

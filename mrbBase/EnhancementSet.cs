@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using FastDeepCloner;
+using mrbBase.Base.Data_Classes;
 
 namespace mrbBase
 {
@@ -138,7 +142,74 @@ namespace mrbBase
             }
         }
 
-        public string GetEffectString(int index, bool special, bool longForm = false)
+        public List<IEffect> GetEffectDetailedData(int index, bool special)
+        {
+            var ret = new List<IEffect>();
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 | index > bonusItemArray.Length - 1)
+            {
+                return ret;
+            }
+
+            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
+            {
+                if (bonusItemArray[index].Index[i] < 0) continue;
+                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
+
+                var linkedPower = DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
+                ret.AddRange((IEnumerable<IEffect>) linkedPower.Effects.Clone());
+            }
+
+            return ret;
+        }
+
+        public Dictionary<string, List<IEffect>> GetEffectDetailedData2(int index, bool special)
+        {
+            var ret = new Dictionary<string, List<IEffect>>();
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 | index > bonusItemArray.Length - 1)
+            {
+                return ret;
+            }
+
+            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
+            {
+                if (bonusItemArray[index].Index[i] < 0) continue;
+                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
+
+                var linkedPower = DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
+                if (!ret.ContainsKey(linkedPower.FullName))
+                {
+                    ret.Add(linkedPower.FullName, new List<IEffect>());
+                }
+                ret[linkedPower.FullName].AddRange((IEnumerable<IEffect>)linkedPower.Effects.Clone());
+            }
+
+            return ret;
+        }
+
+        public List<Power> GetEnhancementSetLinkedPowers(int index, bool special)
+        {
+            var ret = new List<Power>();
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 | index > bonusItemArray.Length - 1)
+            {
+                return ret;
+            }
+
+            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
+            {
+                if (bonusItemArray[index].Index[i] < 0) continue;
+                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
+
+                var linkedPower = (Power) DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
+                ret.Add(linkedPower.Clone());
+            }
+
+            return ret;
+        }
+
+        public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false)
         {
             var bonusItemArray = special ? SpecialBonus : Bonus;
             string str1;
@@ -160,16 +231,13 @@ namespace mrbBase
                         return string.Empty;
                     var empty2 = string.Empty;
                     var returnMask = new int[0];
-                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]]
-                        .GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true);
+                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup);
                     if (!string.IsNullOrEmpty(empty2))
                         empty1 += empty2;
-                    for (var index2 = 0;
-                        index2 <= DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length - 1;
-                        ++index2)
+                    for (var index2 = 0; index2 < DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length; index2++)
                     {
                         var flag = false;
-                        for (var index3 = 0; index3 <= returnMask.Length - 1; ++index3)
+                        for (var index3 = 0; index3 < returnMask.Length; index3++)
                             if (index2 == returnMask[index3])
                                 flag = true;
 
@@ -177,9 +245,10 @@ namespace mrbBase
                             continue;
                         if (!string.IsNullOrEmpty(empty1))
                             empty1 += ", ";
-                        var str2 = longForm
+                        string str2;
+                        str2 = longForm
                             ? DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2]
-                                .BuildEffectString(true)
+                                .BuildEffectString(true, "", false, false, false, fromPopup)
                             : DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2]
                                 .BuildEffectStringShort(false, true);
                         if (str2.Contains("EndRec"))

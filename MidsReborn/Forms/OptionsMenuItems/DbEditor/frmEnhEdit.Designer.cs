@@ -99,7 +99,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // ColumnHeader5
             // 
             this.ColumnHeader5.Text = "Set";
-            this.ColumnHeader5.Width = 147;
+            this.ColumnHeader5.Width = 145;
             // 
             // ilEnh
             // 

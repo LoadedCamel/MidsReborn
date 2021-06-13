@@ -169,18 +169,49 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 if (num13 > 10000.0)
                     num13 = 1153f;
                 MyAT.PerceptionCap = num13;
-                MyAT.PrimaryGroup = cbPriGroup.Text;
-                MyAT.SecondaryGroup = cbSecGroup.Text;
+                if (!DatabaseAPI.Database.PowersetGroups.ContainsKey(cbPriGroup.Text))
+                {
+                    DatabaseAPI.Database.PowersetGroups.Add(cbPriGroup.Text, new PowersetGroup(cbPriGroup.Text));
+                    MyAT.PrimaryGroup = cbPriGroup.Text;
+                }
+                else
+                {
+                    MyAT.PrimaryGroup = cbPriGroup.Text;
+                }
+                if (!DatabaseAPI.Database.PowersetGroups.ContainsKey(cbSecGroup.Text))
+                {
+                    DatabaseAPI.Database.PowersetGroups.Add(cbSecGroup.Text, new PowersetGroup(cbSecGroup.Text));
+                    MyAT.SecondaryGroup = cbSecGroup.Text;
+                }
+                else
+                {
+                    MyAT.SecondaryGroup = cbSecGroup.Text;
+                }
                 MyAT.Origin = new string[clbOrigin.CheckedItems.Count - 1 + 1];
                 var num14 = clbOrigin.CheckedItems.Count - 1;
                 for (var index = 0; index <= num14; ++index)
+                {
                     MyAT.Origin[index] = Convert.ToString(clbOrigin.CheckedItems[index]);
-                MyAT.Column = decimal.Compare(udColumn.Value, new decimal(0)) >= 0
-                    ? Convert.ToInt32(udColumn.Value)
-                    : 0;
-                MyAT.BaseThreat = decimal.Compare(udThreat.Value, new decimal(0)) >= 0
-                    ? Convert.ToSingle(udThreat.Value)
-                    : 0.0f;
+                }
+
+                if (decimal.Compare(udColumn.Value, new decimal(0)) >= 0)
+                {
+                    MyAT.Column = Convert.ToInt32(udColumn.Value);
+                }
+                else
+                {
+                    MyAT.Column = 0;
+                }
+
+                if (decimal.Compare(udThreat.Value, new decimal(0)) >= 0)
+                {
+                    MyAT.BaseThreat = Convert.ToSingle(udThreat.Value);
+                }
+                else
+                {
+                    MyAT.BaseThreat = 0.0f;
+                }
+
                 DialogResult = DialogResult.OK;
                 Hide();
             }
@@ -233,16 +264,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
                 cbClassType.SelectedIndex = 0;
             cbClassType.EndUpdate();
-            udColumn.Value =
-                !((decimal.Compare(new decimal(MyAT.Column + 2), udColumn.Maximum) <= 0) &
-                  (decimal.Compare(new decimal(MyAT.Column), udColumn.Minimum) >= 0))
-                    ? udColumn.Minimum
-                    : new decimal(MyAT.Column);
-            udThreat.Value =
-                !((MyAT.BaseThreat > (double) Convert.ToSingle(udThreat.Maximum)) |
-                  (MyAT.BaseThreat < (double) Convert.ToSingle(udThreat.Minimum)))
-                    ? new decimal(MyAT.BaseThreat)
-                    : new decimal(0);
+            if (!((decimal.Compare(new decimal(MyAT.Column + 2), udColumn.Maximum) <= 0) & (decimal.Compare(new decimal(MyAT.Column), udColumn.Minimum) >= 0)))
+            {
+                udColumn.Value = udColumn.Minimum;
+            }
+            else
+            {
+                udColumn.Value = new decimal(MyAT.Column);
+            }
+
+            if (!((MyAT.BaseThreat > (double) Convert.ToSingle(udThreat.Maximum)) | (MyAT.BaseThreat < (double) Convert.ToSingle(udThreat.Minimum))))
+            {
+                udThreat.Value = new decimal(MyAT.BaseThreat);
+            }
+            else
+            {
+                udThreat.Value = new decimal(0);
+            }
+
             chkPlayable.Checked = MyAT.Playable;
             txtHP.Text = Convert.ToString(MyAT.Hitpoints, CultureInfo.InvariantCulture);
             txtHPCap.Text = Convert.ToString(MyAT.HPCap, CultureInfo.InvariantCulture);

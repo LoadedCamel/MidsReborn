@@ -180,7 +180,7 @@ namespace mrbBase
 
         void StoreTo(ref BinaryWriter writer);
 
-        bool ImportFromCSV(string iCSV);
+        //bool ImportFromCSV(string iCSV);
 
         int SetTicks(float iDuration, float iInterval);
 

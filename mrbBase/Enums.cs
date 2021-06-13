@@ -1080,6 +1080,7 @@ namespace mrbBase
             Unspecified,
             Target,
             Self,
+            Ally,
             All
         }
 
@@ -1270,6 +1271,46 @@ namespace mrbBase
             DebuffResistanceRegen = 66
         }
 
+        public enum eFXGroup
+        {
+            Offense = 0,
+            Defense = 1,
+            Survival = 2,
+            StatusEffects = 3,
+            Movement = 4,
+            Perception = 5,
+            Misc = 6
+        }
+
+        public enum eFXSubGroup
+        {
+            NoGroup = 0,
+            DamageAll = 1,
+            MezResistAll = 2,
+            SmashLethalDefense = 3,
+            FireColdDefense = 4,
+            EnergyNegativeDefense = 5,
+            SmashLethalResistance = 6,
+            FireColdResistance = 7,
+            EnergyNegativeResistance = 8,
+            SlowResistance = 9,
+            SlowBuffs = 10,
+            KnockProtection = 11,
+            KnockResistance = 12,
+            Jump = 13
+        }
+
+        public enum RewardCurrency
+        {
+            RewardMerit = 0,
+            AstralMerit = 1,
+            EmpyreanMerit = 2,
+            AlignmentMerit = 3,
+            VanguardMerit = 4,
+            AETicket = 5,
+            Influence = 6
+        }
+
         public static bool MezDurationEnhancable(eMez mezEnum)
         {
             return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized ||
@@ -1290,6 +1331,11 @@ namespace mrbBase
         public static string GetMezName(eMezShort iID)
         {
             return ((eMez) iID).ToString();
+        }
+
+        public static string GetMezName(eMez iID)
+        {
+            return iID.ToString();
         }
 
         public static string GetMezNameShort(eMezShort iID)
@@ -1719,6 +1765,7 @@ namespace mrbBase
             public float[] Damage;
             public float[] Defense;
             public float[] Resistance;
+            public float[] Elusivity;
             public float[] StatusProtection;
             public float[] StatusResistance;
             public float[] DebuffResistance;
@@ -1734,6 +1781,7 @@ namespace mrbBase
                 Damage = new float[Enum.GetValues(eDamage.None.GetType()).Length];
                 Defense = new float[Enum.GetValues(eDamage.None.GetType()).Length];
                 Resistance = new float[Enum.GetValues(eDamage.None.GetType()).Length];
+                Elusivity = new float[Enum.GetValues(eDamage.None.GetType()).Length];
                 StatusProtection = new float[Enum.GetValues(eMez.None.GetType()).Length];
                 StatusResistance = new float[Enum.GetValues(eMez.None.GetType()).Length];
                 DebuffResistance = new float[Enum.GetValues(eEffectType.None.GetType()).Length];

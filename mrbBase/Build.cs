@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -208,16 +209,16 @@ namespace mrbBase
         {
             var str = newVal switch
             {
-                Enums.eEnhGrade.None => "This value should never be passed to the function!",
+                //Enums.eEnhGrade.None => "None", // This value should never be passed to the function!
                 Enums.eEnhGrade.TrainingO => "Training",
                 Enums.eEnhGrade.DualO => "Dual",
                 Enums.eEnhGrade.SingleO => "Single",
                 _ => string.Empty
             };
 
-            if (MessageBox.Show(
-                $@"Really set all placed Regular enhancements to {str} Origin?\n\nThis will not affect any Invention or Special enhancements.",
-                @"Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (TopMostMessageBox(
+                $"Really set all placed Regular enhancements to {str} Origin?\r\n\r\nThis will not affect any Invention or Special enhancements.",
+                "Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return false;
             foreach (var power in Powers)
                 foreach (var slot in power.Slots)
@@ -230,24 +231,23 @@ namespace mrbBase
 
         public bool SetIOLevels(int newVal, bool iSetMin, bool iSetMax)
         {
-            string text;
+            var text = "Really set all placed Invention and Set enhancements to ";
             if (!iSetMin & !iSetMax)
             {
-                text = "Really set all placed Invention and Set enhancements to level " + newVal + 1 +
-                       "?\n\nNote: Enhancements which are not available at the default level will be set to the closest value.";
+                text += $"level {newVal + 1}?\r\n\r\nNote: Enhancements which are not available at the default level will be set to the closest one.";
             }
             else if (iSetMin)
             {
                 newVal = 0;
-                text = "Really set all placed Invention and Set enhancements to their minimum possible level?";
+                text += "their minimum possible level?";
             }
             else
             {
                 newVal = 52;
-                text = "Really set all placed Invention and Set enhancements to their maximum possible level?";
+                text += "their maximum possible level?";
             }
 
-            if (MessageBox.Show(text, "Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (TopMostMessageBox(text, "Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return false;
             foreach (var power in Powers)
                 foreach (var slot in power.Slots)
@@ -548,7 +548,18 @@ namespace mrbBase
             return popupData;
         }
 
-        public bool SetEnhRelativelevels(Enums.eEnhRelative newVal)
+        // https://stackoverflow.com/a/65888392
+        // frmMain.FloatTop(false) should be used here but it is unreachable.
+        private DialogResult TopMostMessageBox(string msg, string title, MessageBoxButtons buttons = MessageBoxButtons.OK)
+        {
+            using var form = new Form { TopMost = true };
+            var ret = MessageBox.Show(form, msg, title, buttons);
+            form.Dispose();
+
+            return ret;
+        }
+
+        public bool SetEnhRelativeLevels(Enums.eEnhRelative newVal)
         {
             var display = newVal switch
             {
@@ -565,13 +576,8 @@ namespace mrbBase
                 _ => throw new ArgumentOutOfRangeException(nameof(newVal), newVal, null)
             };
 
-            if (MessageBox.Show(
-                    $@"Really set all placed enhancements to a relative level of {display}?
-
-Note: Normal enhancements cannot go above +3,
-Special enhancements cannot go above +2,
-and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) !=
-                DialogResult.Yes)
+            if (TopMostMessageBox($"Really set all placed enhancements to a relative level of {display}?\r\n\r\nNote: Normal and special enhancements cannot go above +3,\r\nInventions cannot go below +0.",
+                    "Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return false;
             foreach (var power in Powers)
                 foreach (var slot in power.Slots)
@@ -579,11 +585,7 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                     if (slot.Enhancement.Enh <= -1) continue;
 
                     var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
-                    if (enhancement.TypeID == Enums.eType.SpecialO)
-                    {
-                        if (newVal > Enums.eEnhRelative.PlusTwo) newVal = Enums.eEnhRelative.PlusTwo;
-                    }
-                    else if (enhancement.TypeID == Enums.eType.Normal)
+                    if (enhancement.TypeID == Enums.eType.SpecialO || enhancement.TypeID == Enums.eType.Normal)
                     {
                         if (newVal > Enums.eEnhRelative.PlusThree) newVal = Enums.eEnhRelative.PlusThree;
                     }
@@ -868,10 +870,10 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                 }
             }
 
-            for (var powerIdx = 0; powerIdx < Powers.Count; ++powerIdx)
+            for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
             {
                 var power = Powers[powerIdx];
-                for (var slotIndex = 0; slotIndex <= power.Slots.Length - 1; ++slotIndex)
+                for (var slotIndex = 0; slotIndex < power.Slots.Length; slotIndex++)
                 {
                     if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
                         continue;
@@ -879,7 +881,7 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                     {
                         if (!silent)
                         {
-                            MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
+                            MessageBox.Show($"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", "Unable To Slot Enhancement");
                         }
                         return false;
                     }
@@ -968,12 +970,18 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                     PowerIndex = index1
                 };
                 if (Powers[index1].Level <= MidsContext.Config.ForceLevel)
+                {
                     for (var index2 = 0; index2 < Powers[index1].SlotCount; ++index2)
+                    {
                         i9SetData.Add(ref Powers[index1].Slots[index2].Enhancement);
+                    }
+                }
 
                 i9SetData.BuildEffects(!MidsContext.Config.Inc.DisablePvE ? Enums.ePvX.PvE : Enums.ePvX.PvP);
                 if (!i9SetData.Empty)
+                {
                     SetBonus.Add(i9SetData);
+                }
             }
 
             _setBonusVirtualPower = null;
@@ -987,7 +995,11 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
             var nidPowers = DatabaseAPI.NidPowers("set_bonus");
             var setCount = new int[nidPowers.Length];
             for (var index = 0; index < setCount.Length; ++index)
+            {
                 setCount[index] = 0;
+            }
+
+            bool skipEffects = false;
             var effectList = new List<IEffect>();
             foreach (var setBonus in SetBonus)
                 foreach (var setInfo in setBonus.SetInfo)
@@ -996,37 +1008,48 @@ and Inventions cannot go below +0.", @"Are you sure?", MessageBoxButtons.YesNo) 
                         if (power > setCount.Length - 1)
                             throw new IndexOutOfRangeException("power to setBonusArray");
                         ++setCount[power];
+                        
+                        if ((DatabaseAPI.Database.Power[power].Target & Enums.eEntity.MyPet) != 0 && (DatabaseAPI.Database.Power[power].EntitiesAffected & Enums.eEntity.MyPet) != 0)
+                        {
+                            skipEffects = true;
+                        }
+                        //Console.WriteLine($"{DatabaseAPI.Database.Power[power].DisplayName} skip effects? {skipEffects}");
                         if (setCount[power] < 6)
+                        {
                             effectList.AddRange(DatabaseAPI.Database.Power[power].Effects.Select(t => (IEffect)t.Clone()));
+                        }
                     }
 
             power1.Effects = effectList.ToArray();
             return power1;
         }
 
-        public IEffect[] GetCumulativeSetBonuses()
+        public List<IEffect> GetCumulativeSetBonuses()
         {
             var bonusVirtualPower = SetBonusVirtualPower;
-            var array = Array.Empty<IEffect>();
+            var fxList = new List<IEffect>();
             foreach (var effIdx in bonusVirtualPower.Effects)
             {
                 if (effIdx.EffectType == Enums.eEffectType.None && string.IsNullOrEmpty(effIdx.Special))
                     continue;
-                var index2 = GcsbCheck(array, effIdx);
+                var index2 = GcsbCheck(fxList.ToArray(), effIdx);
                 if (index2 < 0)
                 {
-                    Array.Resize(ref array, array.Length + 1);
-                    var index3 = array.Length - 1;
-                    array[index3] = (IEffect)effIdx.Clone();
-                    array[index3].Math_Mag = effIdx.Mag;
+                    var fx = (IEffect) effIdx.Clone();
+                    fx.Math_Mag = effIdx.Mag;
+                    fxList = fxList.Append(fx).ToList();
+                    /*Array.Resize(ref fxList, fxList.Length + 1);
+                    var index3 = fxList.Length - 1;
+                    fxList[index3] = (IEffect)effIdx.Clone();
+                    fxList[index3].Math_Mag = effIdx.Mag;*/
                 }
                 else
                 {
-                    array[index2].Math_Mag += effIdx.Mag;
+                    fxList[index2].Math_Mag += effIdx.Mag;
                 }
             }
 
-            return array;
+            return fxList;
         }
 
         private static int GcsbCheck(IEffect[] fxList, IEffect testFX)

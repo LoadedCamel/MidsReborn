@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using mrbBase.Base.Master_Classes;
 using Newtonsoft.Json;
 
 namespace mrbBase
@@ -75,10 +76,8 @@ namespace mrbBase
         {
             try
             {
-                if (!Directory.Exists(Path.GetDirectoryName(filename)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(filename));
-                }
+                var path = Path.GetDirectoryName(filename);
+                if (path != null) Directory.CreateDirectory(path);
                 var json = serializer.Serialize(obj);
                 File.WriteAllText(filename, json);
             }

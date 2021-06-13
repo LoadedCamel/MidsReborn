@@ -78,56 +78,108 @@ namespace mrbBase
             Superior = iEnh.Superior;
         }
 
-        public Enhancement(BinaryReader reader)
+        public Enhancement(BinaryReader reader, bool useOld = false)
         {
-            RecipeIDX = -1;
-            IsModified = false;
-            IsNew = false;
-            StaticIndex = reader.ReadInt32();
-            Name = reader.ReadString();
-            ShortName = reader.ReadString();
-            Desc = reader.ReadString();
-            TypeID = (Enums.eType) reader.ReadInt32();
-            SubTypeID = (Enums.eSubtype) reader.ReadInt32();
-            ClassID = new int[reader.ReadInt32() + 1];
-            for (var index = 0; index < ClassID.Length; ++index)
-                ClassID[index] = reader.ReadInt32();
-            Image = reader.ReadString();
-            nIDSet = reader.ReadInt32();
-            UIDSet = reader.ReadString();
-            EffectChance = reader.ReadSingle();
-            LevelMin = reader.ReadInt32();
-            LevelMax = reader.ReadInt32();
-            Unique = reader.ReadBoolean();
-            MutExID = (Enums.eEnhMutex) reader.ReadInt32();
-            BuffMode = (Enums.eBuffDebuff) reader.ReadInt32();
-            if (MutExID < Enums.eEnhMutex.None)
-                MutExID = Enums.eEnhMutex.None;
-            Effect = new Enums.sEffect[reader.ReadInt32() + 1];
-            for (var index = 0; index <= Effect.Length - 1; ++index)
+            if (!useOld)
             {
-                Effect[index].Mode = (Enums.eEffMode) reader.ReadInt32();
-                Effect[index].BuffMode = (Enums.eBuffDebuff) reader.ReadInt32();
-                Effect[index].Enhance.ID = reader.ReadInt32();
-                Effect[index].Enhance.SubID = reader.ReadInt32();
-                Effect[index].Schedule = (Enums.eSchedule) reader.ReadInt32();
-                Effect[index].Multiplier = reader.ReadSingle();
-                ref var local = ref Effect[index];
-                Effect effect;
-                if (!reader.ReadBoolean())
-                    effect = null;
-                else
-                    effect = new Effect(reader)
-                    {
-                        isEnhancementEffect = true
-                    };
-                local.FX = effect;
-            }
+                RecipeIDX = -1;
+                IsModified = false;
+                IsNew = false;
+                StaticIndex = reader.ReadInt32();
+                Name = reader.ReadString();
+                ShortName = reader.ReadString();
+                Desc = reader.ReadString();
+                TypeID = (Enums.eType) reader.ReadInt32();
+                SubTypeID = (Enums.eSubtype) reader.ReadInt32();
+                ClassID = new int[reader.ReadInt32() + 1];
+                for (var index = 0; index < ClassID.Length; ++index)
+                    ClassID[index] = reader.ReadInt32();
+                Image = reader.ReadString();
+                nIDSet = reader.ReadInt32();
+                UIDSet = reader.ReadString();
+                EffectChance = reader.ReadSingle();
+                LevelMin = reader.ReadInt32();
+                LevelMax = reader.ReadInt32();
+                Unique = reader.ReadBoolean();
+                MutExID = (Enums.eEnhMutex) reader.ReadInt32();
+                BuffMode = (Enums.eBuffDebuff) reader.ReadInt32();
+                if (MutExID < Enums.eEnhMutex.None)
+                    MutExID = Enums.eEnhMutex.None;
+                Effect = new Enums.sEffect[reader.ReadInt32() + 1];
+                for (var index = 0; index <= Effect.Length - 1; ++index)
+                {
+                    Effect[index].Mode = (Enums.eEffMode) reader.ReadInt32();
+                    Effect[index].BuffMode = (Enums.eBuffDebuff) reader.ReadInt32();
+                    Effect[index].Enhance.ID = reader.ReadInt32();
+                    Effect[index].Enhance.SubID = reader.ReadInt32();
+                    Effect[index].Schedule = (Enums.eSchedule) reader.ReadInt32();
+                    Effect[index].Multiplier = reader.ReadSingle();
+                    ref var local = ref Effect[index];
+                    Effect effect;
+                    if (!reader.ReadBoolean())
+                        effect = null;
+                    else
+                        effect = new Effect(reader)
+                        {
+                            isEnhancementEffect = true
+                        };
+                    local.FX = effect;
+                }
 
-            UID = reader.ReadString();
-            RecipeName = reader.ReadString();
-            Superior = reader.ReadBoolean();
-            IsProc = reader.ReadBoolean();
+                UID = reader.ReadString();
+                RecipeName = reader.ReadString();
+                Superior = reader.ReadBoolean();
+                IsProc = reader.ReadBoolean();
+            }
+            else
+            {
+                RecipeIDX = -1;
+                IsModified = false;
+                IsNew = false;
+                StaticIndex = reader.ReadInt32();
+                Name = reader.ReadString();
+                ShortName = reader.ReadString();
+                Desc = reader.ReadString();
+                TypeID = (Enums.eType)reader.ReadInt32();
+                SubTypeID = (Enums.eSubtype)reader.ReadInt32();
+                ClassID = new int[reader.ReadInt32() + 1];
+                for (int index = 0; index < ClassID.Length; ++index)
+                    ClassID[index] = reader.ReadInt32();
+                Image = reader.ReadString();
+                nIDSet = reader.ReadInt32();
+                UIDSet = reader.ReadString();
+                EffectChance = reader.ReadSingle();
+                LevelMin = reader.ReadInt32();
+                LevelMax = reader.ReadInt32();
+                Unique = reader.ReadBoolean();
+                MutExID = (Enums.eEnhMutex)reader.ReadInt32();
+                BuffMode = (Enums.eBuffDebuff)reader.ReadInt32();
+                if (MutExID < Enums.eEnhMutex.None)
+                    MutExID = Enums.eEnhMutex.None;
+                Effect = new Enums.sEffect[reader.ReadInt32() + 1];
+                for (int index = 0; index <= Effect.Length - 1; ++index)
+                {
+                    Effect[index].Mode = (Enums.eEffMode)reader.ReadInt32();
+                    Effect[index].BuffMode = (Enums.eBuffDebuff)reader.ReadInt32();
+                    Effect[index].Enhance.ID = reader.ReadInt32();
+                    Effect[index].Enhance.SubID = reader.ReadInt32();
+                    Effect[index].Schedule = (Enums.eSchedule)reader.ReadInt32();
+                    Effect[index].Multiplier = reader.ReadSingle();
+                    ref Enums.sEffect local = ref Effect[index];
+                    Effect effect;
+                    if (!reader.ReadBoolean())
+                        effect = null;
+                    else
+                        effect = new Effect(reader, true)
+                        {
+                            isEnhancementEffect = true
+                        };
+                    local.FX = effect;
+                }
+                UID = reader.ReadString();
+                RecipeName = reader.ReadString();
+                Superior = reader.ReadBoolean();
+            }
         }
 
         public bool IsModified { get; set; }

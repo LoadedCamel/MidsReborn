@@ -114,7 +114,7 @@ namespace Mids_Reborn
             statDictionary = new Dictionary<string, string> { { "Endurance Usage", endUse } };
             gatherData.Add("Endurance Usage", statDictionary);
 
-            var elusive = $"{Convert.ToDecimal(totalStat.Elusivity * 100):0.##}%";
+            var elusive = $"{Convert.ToDecimal(totalStat.ElusivityMax * 100):0.##}%";
             statDictionary = new Dictionary<string, string> { { "Elusivity", elusive } };
             gatherData.Add("Elusivity", statDictionary);
 
@@ -257,13 +257,24 @@ namespace Mids_Reborn
                 SubmittedOn = dataToon.SubmittedOn
             });
             var response = client.Execute(request);
-            if (response.Content == "Build submitted successfully")
+            switch (response.Content)
             {
-                Form.ActiveForm?.Close();
-            }
-            else
-            {
-                MessageBox.Show($"Error Code: {response.StatusCode}\r\nResponse: {response.Content}\r\nRecommendation: Please reach out to the RebornTeam to resolve this issue.", @"MidsBot Error Response");
+                case "Build submitted successfully":
+                    var successfulSubmit = MessageBox.Show(@"Your build has been submitted successfully.", @"Successful Submission");
+                    if (successfulSubmit == DialogResult.OK)
+                    {
+                        Form.ActiveForm?.Close();
+                    }
+                    break;
+                case "ValidationError: \"Name\" is not allowed to be empty":
+                    MessageBox.Show($"Validation Error: Build name cannot be empty.\r\n\r\nRecommendation: Fill out the build/character name prior to submitting.", @"MidsBot Error Response");
+                    break;
+                case "Unauthorized Server":
+                    MessageBox.Show($"Submission Error: Unauthorized server\r\n\r\nRecommendation: Have your server admin invite MidsBot to the discord.", @"MidsBot Error Response");
+                    break;
+                default:
+                    MessageBox.Show($"Error: {response.Content}\r\n\r\nRecommendation: Please reach out to the RebornTeam to resolve this issue.", @"MidsBot Error Response");
+                    break;
             }
         }
 
