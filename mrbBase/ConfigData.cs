@@ -218,6 +218,14 @@ namespace mrbBase
             oldMethod.SaveConfig(serializer);
         }
 
+        private static void GenerateDefaultConfig(ISerialize serializer)
+        {
+            var fn = Files.GetConfigFilename(false).Replace(".mhd", ".json");
+            File.WriteAllText(fn, "");
+            _current = new ConfigData();
+            SaveRawMhd(serializer, _current, fn, new RawSaveResult(0, 0));
+        }
+
         public static void Initialize(ISerialize serializer)
         {
             // migrate
@@ -240,7 +248,9 @@ namespace mrbBase
                     }
                     catch
                     {
-                        MessageBox.Show("Failed to load json config, falling back to mhd");
+                        MessageBox.Show("Failed to load json config, falling back to defaults.");
+                        GenerateDefaultConfig(serializer);
+                        Initialize(serializer);
                     }
                 }
                 else if (fn.EndsWith(".mhd"))
@@ -250,10 +260,8 @@ namespace mrbBase
             }
             else
             {
-                fn = Files.GetConfigFilename(false).Replace(".mhd", ".json");
-                File.WriteAllText(fn, "");
-                _current = new ConfigData();
-                SaveRawMhd(serializer, _current, fn, new RawSaveResult(0, 0));
+                MessageBox.Show("Could not find json config, falling back to defaults.");
+                GenerateDefaultConfig(serializer);
                 Initialize(serializer);
             }
 
