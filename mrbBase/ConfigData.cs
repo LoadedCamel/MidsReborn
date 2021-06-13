@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace mrbBase
 {
@@ -93,7 +91,6 @@ namespace mrbBase
             DiscordAuthorized = false;
             InitializeComponent();
         }
-
 
         // these properties require setters for deserialization
         public SDamageMath DamageMath { get; } = new SDamageMath();
@@ -202,8 +199,10 @@ namespace mrbBase
             {
                 ConfigData configData;
                 if ((configData = _current) == null)
+                {
                     throw new InvalidOperationException("Config was not initialized before access");
-                //configData = ConfigData._current = ConfigData.Initialize();
+                }
+
                 return configData;
             }
         }
@@ -230,20 +229,32 @@ namespace mrbBase
             }
 
             var fn = Files.GetConfigFilename(false);
-            if (File.Exists(fn) && fn.EndsWith(".json"))
-                try
+            if (File.Exists(fn))
+            {
+                if (fn.EndsWith(".json"))
                 {
-                    var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
-                    _current = value;
+                    try
+                    {
+                        var value = serializer.Deserialize<ConfigData>(File.ReadAllText(fn));
+                        _current = value;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Failed to load json config, falling back to mhd");
+                    }
                 }
-                catch
+                else if (fn.EndsWith(".mhd"))
                 {
-                    MessageBox.Show("Failed to load json config, falling back to mhd");
+                    _current = new ConfigData(false, fn);
                 }
+            }
             else
             {
-                _current = new ConfigData(false, Files.GetConfigFilename(true));
-                File.WriteAllText(Files.GetConfigFilename(false), "");
+                fn = Files.GetConfigFilename(false).Replace(".mhd", ".json");
+                File.WriteAllText(fn, "");
+                _current = new ConfigData();
+                SaveRawMhd(serializer, _current, fn, new RawSaveResult(0, 0));
+                Initialize(serializer);
             }
 
             _current.InitializeComponent();
