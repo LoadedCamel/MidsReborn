@@ -45,12 +45,15 @@ namespace mrbBase.Base.Master_Classes
             switch (type)
             {
                 case "Auth":
+                    if (ConfigSp.Auth == null) return null;
                     ConfigSp.Auth.TryGetValue(name, out var authValue);
                     return authValue?.ToString();
                 case "User":
+                    if (ConfigSp.User == null) return null;
                     ConfigSp.User.TryGetValue(name, out var userValue);
                     return userValue?.ToString();
                 case "BotUser":
+                    if (ConfigSp.BotUser == null) return null;
                     ConfigSp.BotUser.TryGetValue(name, out var botValue);
                     return botValue?.ToString();
                 default:

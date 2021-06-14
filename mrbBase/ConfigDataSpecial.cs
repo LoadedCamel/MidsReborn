@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using mrbBase.Base.Master_Classes;
 using Newtonsoft.Json;
 
 namespace mrbBase
@@ -93,6 +92,18 @@ namespace mrbBase
         public void SaveConfig(ISerialize serializer)
         {
             Save(serializer, Files.GetConfigSpFile());
+        }
+
+        // Zed: checks the presence of an auth token.
+        // This is --very-- basic and may need refinement.
+        public static bool HasAuth()
+        {
+            if (_current.Auth == null) return false;
+            if (Convert.ToInt32(_current.Auth["expires_in"]) <= 0) return false;
+            if (string.IsNullOrEmpty(Convert.ToString(_current.Auth["access_token"]))) return false;
+            if (string.IsNullOrEmpty(Convert.ToString(_current.Auth["refresh_token"]))) return false;
+
+            return true;
         }
     }
 
