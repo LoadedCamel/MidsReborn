@@ -221,6 +221,7 @@ namespace Mids_Reborn.Forms
             loading = true;
             try
             {
+                if (!ConfigDataSpecial.HasAuth()) MidsContext.Config.DiscordAuthorized = false;
                 if (!MidsContext.Config.DiscordAuthorized && File.Exists(Files.GetConfigSpFile()))
                 {
                     if (!string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "username")) && !string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "access_token")))
