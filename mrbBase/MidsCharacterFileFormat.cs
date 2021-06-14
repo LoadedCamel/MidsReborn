@@ -343,28 +343,31 @@ namespace mrbBase
                 var powerSetCount = r.ReadInt32();
                 var expectedArrayLength = new IPowerset[powerSetCount + 1].Length;
                 var names = new List<string>();
-                var hasBetaLeadership = false;
                 for (var index = 0; index < powerSetCount + 1; ++index)
                 {
                     var iName = r.ReadString();
                     if (iName == "Pool.Leadership_beta")
                     {
-                        hasBetaLeadership = true;
                         iName = "Pool.Leadership";
                     }
+
                     names.Add(iName);
                 }
 
                 var errors = MidsContext.Character.LoadPowersetsByName(names);
                 foreach (var (i, n) in errors)
+                {
                     MessageBox.Show($"Failed to load powerset by name:{n} at {i}", "Powerset load failure");
+                }
+
                 MidsContext.Character.CurrentBuild.LastPower = r.ReadInt32() - 1;
                 var oldDbConversionTable = new Dictionary<int, int>();
-                oldDbConversionTable.Add(10849, 1809);  // Pool.Leadership_beta.Defense      --> Pool.Leadership.Defense
-                oldDbConversionTable.Add(10850, 1810);  // Pool.Leadership_beta.Assault      --> Pool.Leadership.Assault
-                oldDbConversionTable.Add(10851, 1811);  // Pool.Leadership_beta.Tactics      --> Pool.Leadership.Tactics
-                oldDbConversionTable.Add(10852, 1812);  // Pool.Leadership_beta.Vengeance    --> Pool.Leadership.Vengeance
-                oldDbConversionTable.Add(10853, 10918); // Pool.Leadership_beta.Victory_Rush --> Pool.Leadership.Victory_Rush
+                oldDbConversionTable.Add(10849, 1809);  // Pool.Leadership_beta.Defense       -->  Pool.Leadership.Defense
+                oldDbConversionTable.Add(10850, 1810);  // Pool.Leadership_beta.Assault       -->  Pool.Leadership.Assault
+                oldDbConversionTable.Add(10851, 1811);  // Pool.Leadership_beta.Tactics       -->  Pool.Leadership.Tactics
+                oldDbConversionTable.Add(10852, 1812);  // Pool.Leadership_beta.Vengeance     -->  Pool.Leadership.Vengeance
+                oldDbConversionTable.Add(10853, 10918); // Pool.Leadership_beta.Victory_Rush  -->  Pool.Leadership.Victory_Rush
+                oldDbConversionTable.Add(5632, 10946);  // Pool.Flight.Afterburner            -->  Pool.Flight.Evasive_Maneuvers
 
                 var pEntryList = new List<PowerEntry>();
                 var powerCount = r.ReadInt32();
@@ -384,10 +387,12 @@ namespace mrbBase
                         else
                         {
                             sidPower1 = r.ReadInt32();
-                            if (hasBetaLeadership & oldDbConversionTable.ContainsKey(sidPower1))
+                            //if (hasBetaLeadership & oldDbConversionTable.ContainsKey(sidPower1))
+                            if (oldDbConversionTable.ContainsKey(sidPower1))
                             {
                                 sidPower1 = oldDbConversionTable[sidPower1];
                             }
+
                             nId = DatabaseAPI.NidFromStaticIndexPower(sidPower1);
                         }
 
