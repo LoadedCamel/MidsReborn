@@ -63,6 +63,8 @@ namespace mrbBase
 
         Salvage[] Salvage { get; set; }
 
+        PowersReplTable ReplTable { get; set; }
+
         List<Origin> Origins { get; set; }
 
         float VersionEnhDb { get; set; }

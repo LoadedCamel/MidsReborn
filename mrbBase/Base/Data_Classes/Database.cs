@@ -45,6 +45,8 @@ namespace mrbBase.Base.Data_Classes
 
         public Salvage[] Salvage { get; set; }
 
+        public PowersReplTable ReplTable { get; set; }
+
         public List<Origin> Origins { get; set; }
 
         public IDictionary<string, PowersetGroup> PowersetGroups { get; set; }

@@ -2145,6 +2145,21 @@ namespace mrbBase
             }
         }
 
+        public static void LoadReplacementTable()
+        {
+            try
+            {
+                PowersReplTable.Initialize();
+                Database.ReplTable = PowersReplTable.Current;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"An error occurred loading the automatic powers replacement table.\r\nOld powers will now be converted and may appear blank\r\nwhen loading builds.\r\n\r\n{ex.Message}",
+                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         private static void SaveEnhancementDbRaw(ISerialize serializer, string filename, string name)
         {
             var toSerialize = new

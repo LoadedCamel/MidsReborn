@@ -517,6 +517,9 @@
     <Content Include="Data\Homecoming\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Data\Homecoming\PowersReplTable.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Images\defaultAvatar.png" />
     <Content Include="Images\Enhancements\Acc.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
