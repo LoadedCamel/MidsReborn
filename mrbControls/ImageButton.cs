@@ -223,6 +223,8 @@ namespace mrbControls
         // Token: 0x060001BA RID: 442 RVA: 0x00010938 File Offset: 0x0000EB38
         private void Redraw()
         {
+            if (IsDisposed) return;
+
             Draw();
             if (bxOut.Bitmap != null) CreateGraphics().DrawImage(bxOut.Bitmap, 0, 0);
         }
