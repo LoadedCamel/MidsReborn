@@ -9,7 +9,6 @@ using Mids_Reborn.Forms.WindowMenuItems;
 using Mids_Reborn.My;
 using mrbBase;
 using mrbBase.Base.Extensions;
-using mrbBase.Base.Master_Classes;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -145,7 +144,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbSal4.EndUpdate();
             _lvColumnSorter = new ListViewColumnSorter();
             lvDPA.ListViewItemSorter = _lvColumnSorter;
-            btnPrepareTags.Visible = MidsContext.Config.MasterMode;
             ClearInfo();
             _recipeListPrevSelected = -1;
             _noUpdate = false;
@@ -619,22 +617,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             
             var num = _tempRecipes[rId].Item[_tempRecipes[rId].Item.Length - 1].Level + 1;
             if (num >= nMax) return;
+
+            var listItems = _tempRecipes[rId].Item.ToList();
             for (var index = num; index <= nMax; index++)
             {
-                _tempRecipes[rId].Item = (Recipe.RecipeEntry[]) Utils.CopyArray(
-                    _tempRecipes[rId].Item,
-                    new Recipe.RecipeEntry[_tempRecipes[rId].Item.Length + 1]);
-                _tempRecipes[rId]
-                        .Item[_tempRecipes[rId].Item.Length - 1] =
-                    new Recipe.RecipeEntry(_tempRecipes[rId]
-                        .Item[_tempRecipes[rId].Item.Length - 2]) {Level = index};
-                _tempRecipes[rId].Item[_tempRecipes[rId].Item.Length - 1]
-                    .CraftCost = GetCostByLevel(_tempRecipes[rId]
-                    .Item[_tempRecipes[rId].Item.Length - 1].Level);
+                listItems.Add(new Recipe.RecipeEntry(listItems[listItems.Count - 1]) {Level = index});
+                listItems[listItems.Count - 1].CraftCost = GetCostByLevel(index);
             }
 
-            ShowRecipeInfo(rId);
+            _tempRecipes[rId].Item = listItems.ToArray();
+            PopulateRecipeEntries(rId);
             lstItems.SelectedIndex = lstItems.Items.Count - 1;
+            var el = _tempRecipes[rId].Item.Last();
+            ShowEntryInfo(rId, Array.FindIndex(_tempRecipes[rId].Item, e => e.Level == el.Level));
         }
 
         private void lstItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -1093,7 +1088,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             btnMassUpdateTags.Enabled = false;
             btnAutoMarkGeneric.Enabled = false;
-            btnPrepareTags.Enabled = false;
             label17.Text = "Updating tags... 0%";
             panel1.Visible = true;
             label17.Refresh();
@@ -1124,7 +1118,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             panel1.Visible = false;
             btnMassUpdateTags.Enabled = true;
             btnAutoMarkGeneric.Enabled = true;
-            btnPrepareTags.Enabled = true;
         }
 
         private void btnMassUpdateTags_Click(object sender, EventArgs e)
@@ -1135,7 +1128,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             btnMassUpdateTags.Enabled = false;
             btnAutoMarkGeneric.Enabled = false;
-            btnPrepareTags.Enabled = false;
             var filterParams = frmFilter.FilterResult;
             if (filterParams.G == frmRecipeEditorBulkFilter.FlagAction.Ignore &
                 filterParams.V == frmRecipeEditorBulkFilter.FlagAction.Ignore &
@@ -1228,75 +1220,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             panel1.Visible = false;
             btnMassUpdateTags.Enabled = true;
             btnAutoMarkGeneric.Enabled = true;
-            btnPrepareTags.Enabled = true;
             frmFilter.Dispose();
-        }
-
-        // Internal use only.
-        private void btnPrepareTags_Click(object sender, EventArgs e)
-        {
-            btnMassUpdateTags.Enabled = false;
-            btnAutoMarkGeneric.Enabled = false;
-            btnPrepareTags.Enabled = false;
-
-            label17.Text = "Updating tags... 0%";
-            panel1.Visible = true;
-            label17.Refresh();
-
-            lvDPA.SuspendLayout();
-            lvDPA.BeginUpdate();
-            for (var i = 0; i < lvDPA.Items.Count; i++)
-            {
-                var index = Convert.ToInt32(lvDPA.Items[i].SubItems[1].Text);
-                var recipe = _tempRecipes[index];
-                var updated = false;
-                if (index <= 824 |
-                    index == 955 |
-                    index >= 1008 & index <= 1019 |
-                    index >= 1043 & index <= 1059 |
-                    index >= 1063 & index <= 1072 |
-                    index >= 1079 & index <= 1127 |
-                    index >= 1908 & index <= 2308)
-                {
-                    recipe.IsHidden = true;
-                    updated = true;
-                }
-
-                if (index == 0 |
-                    index >= 2092 & index <= 2176 |
-                    index >= 2227 & index <= 2283 |
-                    index >= 2339 & index <= 2343)
-                {
-                    recipe.IsVirtual = true;
-                    updated = true;
-                }
-
-                recipe.IsGeneric = recipe.EnhIdx == -1;
-
-                if (updated | recipe.EnhIdx == -1)
-                {
-                    lvDPA.Items[i].SubItems[5].Text = GetRecipeFlags(index);
-                }
-                
-                if (i <= 0 || i % 10 != 0) continue;
-
-                var vp = (int)Math.Round((float)i / lvDPA.Items.Count * 100);
-                label17.Text = $"Updating tags... {vp}%";
-                label17.Refresh();
-                progressBar1.Value = vp;
-            }
-
-            if (lvDPA.SelectedItems.Count > 0)
-            {
-                cbIsGeneric.Checked = _tempRecipes[Convert.ToInt32(lvDPA.SelectedItems[0].SubItems[1].Text)].IsGeneric;
-            }
-            lvDPA.EndUpdate();
-            lvDPA.ResumeLayout();
-
-            panel1.Visible = false;
-            btnMassUpdateTags.Enabled = true;
-            btnAutoMarkGeneric.Enabled = true;
-            btnPrepareTags.Enabled = true;
         }
     }
 }
