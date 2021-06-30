@@ -6174,9 +6174,16 @@ namespace Mids_Reborn.Forms
         private void UpdateControls(bool ForceComplete = false)
         {
             if (loading) return;
-            MidsContext.Config.DiscordEnabled ??= true;
+            if (!MidsContext.Config.DiscordEnabled.HasValue && MidsContext.Config.DiscordAuthorized)
+            {
+                MidsContext.Config.DiscordEnabled = true;
+            }
+            else
+            {
+                MidsContext.Config.DiscordEnabled = false;
+            }
             tsExportDiscord.Enabled = (bool) MidsContext.Config.DiscordEnabled;
-            if ((bool) MidsContext.Config.DiscordEnabled)
+            if (MidsContext.Config.DiscordEnabled is true)
             {
                 ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
                 if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
