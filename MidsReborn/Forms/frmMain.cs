@@ -50,7 +50,7 @@ namespace Mids_Reborn.Forms
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
                 ConfigData.Initialize(MyApplication.GetSerializer());
-                if (MidsContext.Config.DiscordEnabled)
+                if (MidsContext.Config.DiscordEnabled is true)
                 {
                     ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
                 }
@@ -250,8 +250,8 @@ namespace Mids_Reborn.Forms
                     MidsContext.Config.IsInitialized = true;
                 }
 
-                
-                if (MidsContext.Config.DiscordEnabled)
+
+                if (MidsContext.Config.DiscordEnabled is true)
                 {
                     if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
                     {
@@ -2003,7 +2003,7 @@ namespace Mids_Reborn.Forms
         {
             MidsContext.Config.LastSize = Size;
             MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
-            if (MidsContext.Config.DiscordEnabled)
+            if (MidsContext.Config.DiscordEnabled is true)
             {
                 MidsContext.ConfigSp.SaveConfig(MyApplication.GetSerializer());
             }
@@ -6174,8 +6174,9 @@ namespace Mids_Reborn.Forms
         private void UpdateControls(bool ForceComplete = false)
         {
             if (loading) return;
-            tsExportDiscord.Enabled = MidsContext.Config.DiscordEnabled;
-            if (MidsContext.Config.DiscordEnabled)
+            MidsContext.Config.DiscordEnabled ??= true;
+            tsExportDiscord.Enabled = (bool) MidsContext.Config.DiscordEnabled;
+            if ((bool) MidsContext.Config.DiscordEnabled)
             {
                 ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
                 if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)

@@ -588,7 +588,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkRelSignOnly.Checked = config.ShowRelSymbols;
             chkIOPrintLevels.Checked = !config.I9.DisablePrintIOLevels;
             chkColorPrint.Checked = config.PrintInColor;
-            chkDiscordEnabled.Checked = config.DiscordEnabled;
+            if (config.DiscordEnabled != null) chkDiscordEnabled.Checked = (bool) config.DiscordEnabled;
             udRTFSize.Value = new decimal(config.RtFont.RTFBase / 2.0);
             udStatSize.Value = new decimal(config.RtFont.PairedBase);
             udPowSelectSize.Value = new decimal(config.RtFont.PowersSelectBase);
