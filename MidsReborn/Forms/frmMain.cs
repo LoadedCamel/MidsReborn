@@ -6178,36 +6178,45 @@ namespace Mids_Reborn.Forms
             {
                 MidsContext.Config.DiscordEnabled = true;
             }
-            else
+            else if (!MidsContext.Config.DiscordEnabled.HasValue && !MidsContext.Config.DiscordAuthorized)
             {
                 MidsContext.Config.DiscordEnabled = false;
             }
-            tsExportDiscord.Enabled = (bool) MidsContext.Config.DiscordEnabled;
-            if (MidsContext.Config.DiscordEnabled is true)
+
+            if (MidsContext.Config.DiscordEnabled != null)
             {
-                ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
-                if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
+                tsExportDiscord.Enabled = (bool) MidsContext.Config.DiscordEnabled;
+                if (MidsContext.Config.DiscordEnabled is true)
                 {
-                    MidsContext.ConfigSp.IsInitialized = true;
-                }
-            }
-            else
-            {
-                if (MidsContext.Config.DiscordAuthorized)
-                {
-                    MidsContext.ConfigSp.Auth.TryGetValue("access_token", out var token);
-                    clsOAuth.RevokeToken(token?.ToString());
-                    MidsContext.Config.DiscordAuthorized = false;
-                }
-                if (MidsContext.Config.Registered == 1)
-                {
-                    if (clsDiscord.DeauthorizationRequest())
+                    ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                    if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
                     {
-                        File.Delete(Files.GetConfigSpFile());
+                        MidsContext.ConfigSp.IsInitialized = true;
+                    }
+                }
+                else
+                {
+                    if (MidsContext.Config.DiscordAuthorized && File.Exists(Files.GetConfigSpFile()))
+                    {
+                        MidsContext.ConfigSp.Auth.TryGetValue("access_token", out var token);
+                        clsOAuth.RevokeToken(token?.ToString());
+                        MidsContext.Config.DiscordAuthorized = false;
+                    }
+
+                    if (MidsContext.Config.Registered == 1)
+                    {
+                        if (File.Exists(Files.GetConfigSpFile()))
+                        {
+                            if (clsDiscord.DeauthorizationRequest())
+                            {
+                                File.Delete(Files.GetConfigSpFile());
+                            }
+                        }
                         MidsContext.Config.Registered = 0;
                     }
                 }
             }
+
             NoUpdate = true;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
             var cbAT = new ComboBoxT<Archetype>(this.cbAT);
