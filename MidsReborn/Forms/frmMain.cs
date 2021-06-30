@@ -6185,6 +6185,12 @@ namespace Mids_Reborn.Forms
             }
             else
             {
+                if (MidsContext.Config.DiscordAuthorized)
+                {
+                    MidsContext.ConfigSp.Auth.TryGetValue("access_token", out var token);
+                    clsOAuth.RevokeToken(token?.ToString());
+                    MidsContext.Config.DiscordAuthorized = false;
+                }
                 if (MidsContext.Config.Registered == 1)
                 {
                     if (clsDiscord.DeauthorizationRequest())
@@ -6192,10 +6198,6 @@ namespace Mids_Reborn.Forms
                         File.Delete(Files.GetConfigSpFile());
                         MidsContext.Config.Registered = 0;
                     }
-                }
-                if (MidsContext.Config.DiscordAuthorized)
-                {
-                    MidsContext.Config.DiscordAuthorized = false;
                 }
             }
             NoUpdate = true;
