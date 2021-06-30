@@ -275,7 +275,6 @@ namespace Mids_Reborn.Forms
                     }
                 }
 
-                //tsExportDiscord.Enabled = MidsContext.Config.DiscordEnabled;
                 var args = Environment.GetCommandLineArgs();
                 if (findCommandLineParameter(args, "RECOVERY"))
                 {
@@ -6176,6 +6175,29 @@ namespace Mids_Reborn.Forms
         {
             if (loading) return;
             tsExportDiscord.Enabled = MidsContext.Config.DiscordEnabled;
+            if (MidsContext.Config.DiscordEnabled)
+            {
+                ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
+                {
+                    MidsContext.ConfigSp.IsInitialized = true;
+                }
+            }
+            else
+            {
+                if (MidsContext.Config.Registered == 1)
+                {
+                    if (clsDiscord.DeauthorizationRequest())
+                    {
+                        File.Delete(Files.GetConfigSpFile());
+                        MidsContext.Config.Registered = 0;
+                    }
+                }
+                if (MidsContext.Config.DiscordAuthorized)
+                {
+                    MidsContext.Config.DiscordAuthorized = false;
+                }
+            }
             NoUpdate = true;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
             var cbAT = new ComboBoxT<Archetype>(this.cbAT);

@@ -278,6 +278,28 @@ namespace Mids_Reborn
             }
         }
 
+        public static bool DeauthorizationRequest()
+        {
+            try
+            {
+                var client = new RestClient(BOT_API_ENDPOINT);
+                var request = new RestRequest("v2/users/deauthorize", Method.POST);
+                var regName = $"{MidsContext.GetCryptedValue("User", "username")}#{MidsContext.GetCryptedValue("User", "discriminator")}";
+                request.AddParameter("username", regName);
+                request.AddParameter("pass_token", MidsContext.GetCryptedValue("BotUser", "pass_token"));
+                var response = client.Execute(request);
+                if (response.Content == "Successfully Deauthorized") return true;
+                MessageBox.Show($"Error Code: {response.StatusCode}\r\nResponse: {response.Content}\r\nRecommendation: Please report this issue to the RebornTeam.", @"MidsBot Error Response");
+                return false;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public static void MbRegister()
         {
             try
