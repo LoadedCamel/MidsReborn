@@ -50,7 +50,10 @@ namespace Mids_Reborn.Forms
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
                 ConfigData.Initialize(MyApplication.GetSerializer());
-                ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                if (MidsContext.Config.DiscordEnabled)
+                {
+                    ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                }
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
                 FormClosing += frmMain_Closing;
@@ -221,23 +224,11 @@ namespace Mids_Reborn.Forms
             loading = true;
             try
             {
-                if (!ConfigDataSpecial.HasAuth()) MidsContext.Config.DiscordAuthorized = false;
-                if (!MidsContext.Config.DiscordAuthorized && File.Exists(Files.GetConfigSpFile()))
-                {
-                    if (!string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "username")) && !string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "access_token")))
-                    {
-                        MidsContext.Config.DiscordAuthorized = true;
-                        MidsContext.Config.Registered = 1;
-                    }
-                    else
-                    {
-                        File.Delete(Files.GetConfigSpFile());
-                        MidsContext.Config.DiscordAuthorized = false;
-                        MidsContext.Config.Registered = 0;
-                    }
-                }
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
+                {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
+                }
+
                 var height1 = 0;
                 var width1 = 0;
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
@@ -259,11 +250,32 @@ namespace Mids_Reborn.Forms
                     MidsContext.Config.IsInitialized = true;
                 }
 
-                if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
+                
+                if (MidsContext.Config.DiscordEnabled)
                 {
-                    MidsContext.ConfigSp.IsInitialized = true;
+                    if (!this.IsInDesignMode() && !MidsContext.ConfigSp.IsInitialized)
+                    {
+                        MidsContext.ConfigSp.IsInitialized = true;
+                    }
+                    if (!ConfigDataSpecial.HasAuth()) MidsContext.Config.DiscordAuthorized = false;
+                    if (!MidsContext.Config.DiscordAuthorized && File.Exists(Files.GetConfigSpFile()))
+                    {
+                        if (!string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "username")) &&
+                            !string.IsNullOrWhiteSpace(MidsContext.GetCryptedValue("BotUser", "access_token")))
+                        {
+                            MidsContext.Config.DiscordAuthorized = true;
+                            MidsContext.Config.Registered = 1;
+                        }
+                        else
+                        {
+                            File.Delete(Files.GetConfigSpFile());
+                            MidsContext.Config.DiscordAuthorized = false;
+                            MidsContext.Config.Registered = 0;
+                        }
+                    }
                 }
 
+                //tsExportDiscord.Enabled = MidsContext.Config.DiscordEnabled;
                 var args = Environment.GetCommandLineArgs();
                 if (findCommandLineParameter(args, "RECOVERY"))
                 {
@@ -1992,7 +2004,10 @@ namespace Mids_Reborn.Forms
         {
             MidsContext.Config.LastSize = Size;
             MidsContext.Config.SaveConfig(MyApplication.GetSerializer());
-            MidsContext.ConfigSp.SaveConfig(MyApplication.GetSerializer());
+            if (MidsContext.Config.DiscordEnabled)
+            {
+                MidsContext.ConfigSp.SaveConfig(MyApplication.GetSerializer());
+            }
         }
 
         private void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -6160,7 +6175,7 @@ namespace Mids_Reborn.Forms
         private void UpdateControls(bool ForceComplete = false)
         {
             if (loading) return;
-
+            tsExportDiscord.Enabled = MidsContext.Config.DiscordEnabled;
             NoUpdate = true;
             var all = Array.FindAll(DatabaseAPI.Database.Classes, GetPlayableClasses);
             var cbAT = new ComboBoxT<Archetype>(this.cbAT);

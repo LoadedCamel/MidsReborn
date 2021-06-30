@@ -588,6 +588,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             chkRelSignOnly.Checked = config.ShowRelSymbols;
             chkIOPrintLevels.Checked = !config.I9.DisablePrintIOLevels;
             chkColorPrint.Checked = config.PrintInColor;
+            chkDiscordEnabled.Checked = config.DiscordEnabled;
             udRTFSize.Value = new decimal(config.RtFont.RTFBase / 2.0);
             udStatSize.Value = new decimal(config.RtFont.PairedBase);
             udPowSelectSize.Value = new decimal(config.RtFont.PowersSelectBase);
@@ -809,6 +810,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             config.ShowSOLevels = chkShowSOLevels.Checked;
             config.I9.DisablePrintIOLevels = !chkIOPrintLevels.Checked;
             config.PrintInColor = chkColorPrint.Checked;
+            config.DiscordEnabled = chkDiscordEnabled.Checked;
             config.RtFont.RTFBase = Convert.ToInt32(decimal.Multiply(udRTFSize.Value, new decimal(2)));
             config.RtFont.PairedBase = Convert.ToSingle(udStatSize.Value);
             config.RtFont.RTFBold = chkTextBold.Checked;
