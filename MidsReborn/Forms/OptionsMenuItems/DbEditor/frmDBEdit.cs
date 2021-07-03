@@ -205,9 +205,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtDBVer_TextChanged(object sender, EventArgs e)
         {
-            var num = Convert.ToSingle(txtDBVer.Text);
-            if (num < 1.0)
-                num = 1f;
+            var ret = float.TryParse(txtDBVer.Text, out var num);
+            if (!ret) return;
+
+            if (num < 1) num = 1;
             DatabaseAPI.Database.Version = num;
         }
 
