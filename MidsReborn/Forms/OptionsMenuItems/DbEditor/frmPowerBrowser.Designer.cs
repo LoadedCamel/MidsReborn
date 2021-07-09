@@ -76,6 +76,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnCancel = new System.Windows.Forms.Button();
             this.Label2 = new System.Windows.Forms.Label();
             this.btnManageHiddenPowers = new System.Windows.Forms.Button();
+            this.btnMassOp = new System.Windows.Forms.Button();
             this.pnlGroup.SuspendLayout();
             this.pnlSet.SuspendLayout();
             this.pnlPower.SuspendLayout();
@@ -510,10 +511,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnManageHiddenPowers.UseVisualStyleBackColor = true;
             this.btnManageHiddenPowers.Click += new System.EventHandler(this.btnManageHiddenPowers_Click);
             // 
+            // btnMassOp
+            // 
+            this.btnMassOp.Location = new System.Drawing.Point(335, 605);
+            this.btnMassOp.Name = "btnMassOp";
+            this.btnMassOp.Size = new System.Drawing.Size(132, 32);
+            this.btnMassOp.TabIndex = 56;
+            this.btnMassOp.Text = "Mass op.";
+            this.btnMassOp.UseVisualStyleBackColor = true;
+            this.btnMassOp.Visible = false;
+            this.btnMassOp.Click += new System.EventHandler(this.btnMassOp_Click);
+            // 
             // frmPowerBrowser
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1053, 651);
+            this.Controls.Add(this.btnMassOp);
             this.Controls.Add(this.btnManageHiddenPowers);
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.btnCancel);
@@ -588,5 +601,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         Panel pnlPower;
         Panel pnlSet;
         private Button btnManageHiddenPowers;
+        private Button btnMassOp;
     }
 }

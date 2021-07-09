@@ -1262,5 +1262,65 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 RefreshLists();
             }
         }
+
+        private void btnMassOp_Click(object sender, EventArgs e)
+        {
+            // [Zed] This is a "quick and dirty" mass processing routine.
+            // Todo: turn this into a real search/process form.
+
+            return;
+            
+            BusyMsg("Fetching Scrapper powers...");
+            Debug.WriteLine("Fetching powers");
+            var powers = DatabaseAPI.Database.Power.Where(p => p.FullName.StartsWith("Scrapper_Melee."));
+            Debug.WriteLine("Counting effects");
+            var fxNb = powers.Sum(p => p.Effects.Length);
+
+            BusyHide();
+            BusyMsg($"Updating {powers.Count()} powers ({fxNb} effects)...");
+            foreach (var p in powers)
+            {
+                foreach (var fx in p.Effects)
+                {
+                    if (fx.EffectId == "MLCrit" | fx.EffectId == "ECCritModSmall" | fx.EffectId == "CritSmall")
+                    {
+                        fx.SpecialCase = Enums.eSpecialCase.CriticalMinion;
+                        Debug.WriteLine($"MLCrit updated for {p.FullName}");
+                    }
+                    else if (fx.EffectId == "BossCrit" | fx.EffectId == "CritLarge" | fx.SpecialCase == Enums.eSpecialCase.CriticalBoss)
+                    {
+                        fx.SpecialCase = Enums.eSpecialCase.None;
+                        fx.EffectId = "BossCrit";
+                        fx.ActiveConditionals.Clear();
+                        fx.ActiveConditionals.Add(new KeyValue<string, string>("Active:Inherent.Inherent.Critical_Hit", "True"));
+                        Debug.WriteLine($"BossCrit updated for {p.FullName}");
+                    }
+                    else if (fx.EffectId == "PlayerCrit" | fx.EffectId == "CritPlayer")
+                    {
+                        fx.SpecialCase = Enums.eSpecialCase.None;
+                        fx.EffectId = "PlayerCrit";
+                        fx.ActiveConditionals.Clear();
+                        fx.ActiveConditionals.Add(new KeyValue<string, string>("Active:Inherent.Inherent.Critical_Hit", "True"));
+                        Debug.WriteLine($"PlayerCrit updated for {p.FullName}");
+                    }
+                    else if (fx.EffectId == "ECCritModLarge")
+                    {
+                        fx.SpecialCase = Enums.eSpecialCase.None;
+                        fx.ActiveConditionals.Clear();
+                        fx.ActiveConditionals.Add(new KeyValue<string, string>("Active:Inherent.Inherent.Critical_Hit", "True"));
+                        Debug.WriteLine($"ECCritModLarge updated for {p.FullName}");
+                    }
+                    else if (fx.EffectId == "ECCritModPlayer")
+                    {
+                        fx.SpecialCase = Enums.eSpecialCase.None;
+                        fx.ActiveConditionals.Clear();
+                        fx.ActiveConditionals.Add(new KeyValue<string, string>("Active:Inherent.Inherent.Critical_Hit", "True"));
+                        Debug.WriteLine($"ECCritModPlayer updated for {p.FullName}");
+                    }
+                }
+            }
+
+            BusyHide();
+        }
     }
 }
