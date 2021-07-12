@@ -103,7 +103,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.panel1 = new System.Windows.Forms.Panel();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label17 = new System.Windows.Forms.Label();
-            this.btnPrepareTags = new System.Windows.Forms.Button();
             this.GroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udSal4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udSal3)).BeginInit();
@@ -960,21 +959,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.label17.TabIndex = 30;
             this.label17.Text = "Updating tags... 100%";
             // 
-            // btnPrepareTags
-            // 
-            this.btnPrepareTags.Location = new System.Drawing.Point(906, 536);
-            this.btnPrepareTags.Name = "btnPrepareTags";
-            this.btnPrepareTags.Size = new System.Drawing.Size(125, 24);
-            this.btnPrepareTags.TabIndex = 33;
-            this.btnPrepareTags.Text = "Prepare tags";
-            this.btnPrepareTags.UseVisualStyleBackColor = true;
-            this.btnPrepareTags.Click += new System.EventHandler(this.btnPrepareTags_Click);
-            // 
             // frmRecipeEdit
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1127, 568);
-            this.Controls.Add(this.btnPrepareTags);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnMassUpdateTags);
             this.Controls.Add(this.groupBox3);
@@ -1087,6 +1075,5 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Panel panel1;
         private ProgressBar progressBar1;
         private Label label17;
-        private Button btnPrepareTags;
     }
 }

@@ -90,6 +90,7 @@ namespace mrbBase
             }
 
             TeamMembers = new Dictionary<string, int>();
+            DiscordEnabled = false;
             Registered = 0;
             DiscordAuthorized = false;
             InitializeComponent();
@@ -132,6 +133,7 @@ namespace mrbBase
         public Enums.GraphStyle StatGraphStyle { get; set; } = Enums.GraphStyle.Stacked;
         public Enums.CompOverride[] CompOverride { get; set; }
 
+        public bool? DiscordEnabled { get; set; }
         public bool DiscordAuthorized { get; set; }
         public int Registered { get; set; } = 0;
         public bool DisableDesaturateInherent { get; set; }

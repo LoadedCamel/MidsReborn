@@ -940,15 +940,18 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (BaseProbability < 1)
                 {
-                    if (BaseProbability >= 0.01 & (EffectId == "" | EffectId == "Ones"))
+                    if (BaseProbability >= 0.01)
                     {
                         sChance = BaseProbability >= 0.975f
                             ? $"{BaseProbability * 100:#0.0}% chance"
                             : $"{BaseProbability * 100:#0}% chance";
+
+                        sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
                     }
-                    else
+                    
+                    if (EffectId != "" & EffectId != "Ones")
                     {
-                        sChance = $"when {EffectId}";
+                        sChance += $"when {EffectId}";
                     }
 
                     if (CancelOnMiss)
@@ -965,15 +968,18 @@ namespace mrbBase.Base.Data_Classes
             {
                 if (Probability < 1)
                 {
-                    if (Probability >= 0.01 & (EffectId == "" | EffectId == "Ones"))
+                    if (Probability >= 0.01)
                     {
                         sChance = Probability >= 0.975f
                             ? $"{Probability * 100:#0.0}% chance"
                             : $"{Probability * 100:#0}% chance";
+
+                        sChance += EffectId == "" | EffectId == "Ones" ? "" : " ";
                     }
-                    else
+
+                    if (EffectId != "" & EffectId != "Ones")
                     {
-                        sChance = $"when {EffectId}";
+                        sChance += $"when {EffectId}";
                     }
 
                     if (CancelOnMiss)
@@ -1403,12 +1409,7 @@ namespace mrbBase.Base.Data_Classes
 
             if (sExtra.Equals(" ()")) { sExtra = ""; }
 
-            if (sConditional != "")
-            {
-                return sEnh + sBuild + sExtra2 + sBuff + sVariable + sStack + sSuppress;
-            }
-
-            return sEnh + sBuild + sExtra + sBuff + sVariable + sStack + sSuppress;
+            return (sEnh + sBuild + (sConditional != "" ? sExtra2 : sExtra) + sBuff + sVariable + sStack + sSuppress).Trim();
         }
 
         public void StoreTo(ref BinaryWriter writer)

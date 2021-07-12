@@ -104,6 +104,23 @@ namespace Mids_Reborn
             }
         }
 
+        public static void RevokeToken(string accessCode)
+        {
+            try
+            {
+                var client = new RestClient(API_ENDPOINT);
+                var request = new RestRequest("oauth2/token/revoke", Method.POST);
+                request.AddParameter("client_id", CLIENT_ID);
+                request.AddParameter("client_secret", CLIENT_SECRET);
+                request.AddParameter("token", accessCode);
+                client.Execute(request);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
+        }
+
         public static bool RefreshToken(string refreshToken)
         {
             try

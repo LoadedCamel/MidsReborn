@@ -104,8 +104,10 @@ namespace Mids_Reborn
 
                     iFrm?.SetMessage("Loading Recipe Database...");
                     DatabaseAPI.LoadSalvage(path);
-
                     DatabaseAPI.LoadRecipes(path, true);
+
+                    iFrm?.SetMessage("Loading Powers Replacement Table...");
+                    DatabaseAPI.LoadReplacementTable();
 
                     iFrm?.SetMessage("Loading Graphics...");
                     var taskArray = new Task[9];
@@ -178,6 +180,9 @@ namespace Mids_Reborn
                     iFrm?.SetMessage("Loading Recipe Database...");
                     DatabaseAPI.LoadSalvage(path);
                     DatabaseAPI.LoadRecipes(path);
+
+                    iFrm?.SetMessage("Loading Powers Replacement Table...");
+                    DatabaseAPI.LoadReplacementTable();
 
                     iFrm?.SetMessage("Loading Graphics...");
                     var taskArray = new Task[9];

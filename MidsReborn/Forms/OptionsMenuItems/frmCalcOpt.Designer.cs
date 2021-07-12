@@ -191,6 +191,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.myTip = new System.Windows.Forms.ToolTip(this.components);
             this.cPicker = new System.Windows.Forms.ColorDialog();
             this.fbdSave = new System.Windows.Forms.FolderBrowserDialog();
+            this.chkDiscordEnabled = new System.Windows.Forms.CheckBox();
             this.TabControl1.SuspendLayout();
             this.TabPage3.SuspendLayout();
             this.groupBox18.SuspendLayout();
@@ -1978,6 +1979,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             this.cPicker.FullOpen = true;
             // 
+            // chkDiscordEnabled
+            // 
+            this.chkDiscordEnabled.AutoSize = true;
+            this.chkDiscordEnabled.Location = new System.Drawing.Point(12, 366);
+            this.chkDiscordEnabled.Name = "chkDiscordEnabled";
+            this.chkDiscordEnabled.Size = new System.Drawing.Size(129, 18);
+            this.chkDiscordEnabled.TabIndex = 61;
+            this.chkDiscordEnabled.Text = "Enable DiscordExport";
+            this.chkDiscordEnabled.UseVisualStyleBackColor = true;
+            // 
             // frmCalcOpt
             // 
             this.AcceptButton = this.btnOK;
@@ -1985,6 +1996,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(757, 392);
+            this.Controls.Add(this.chkDiscordEnabled);
             this.Controls.Add(this.chkColorPrint);
             this.Controls.Add(this.TabControl1);
             this.Controls.Add(this.btnCancel);
@@ -2042,6 +2054,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             this.groupBox19.ResumeLayout(false);
             this.GroupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
         #endregion
@@ -2206,5 +2219,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Label Label37;
         private ComboBox cbCurrency;
         private Label label19;
+        private CheckBox chkDiscordEnabled;
     }
 }

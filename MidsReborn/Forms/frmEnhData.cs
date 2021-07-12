@@ -64,7 +64,7 @@ namespace Mids_Reborn.Forms
 
         private int RecipeIndexToCbSel(IEnhancement enh)
         {
-            return cbRecipe.FindStringExact(DatabaseAPI.Database.Recipes[enh.RecipeIDX].InternalName);
+            return cbRecipe.FindStringExact(enh.RecipeIDX < 0 ? "" : DatabaseAPI.Database.Recipes[enh.RecipeIDX].InternalName);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
