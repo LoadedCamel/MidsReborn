@@ -220,7 +220,7 @@ namespace mrbBase
 
         private static void GenerateDefaultConfig(ISerialize serializer, string fileName)
         {
-            File.WriteAllText(fileName, string.Empty);
+            File.WriteAllText(fileName, "");
             _current = new ConfigData(false, fileName);
             SaveRawMhd(serializer, _current, fileName, new RawSaveResult(0, 0));
         }
@@ -279,6 +279,28 @@ namespace mrbBase
             }
         }
 
+        public Color GetStreamColor(BinaryReader br, Enums.eColorSetting clSetting, bool autoFix = true)
+        {
+            var cl = br.ReadRGB();
+            if (autoFix & cl.R == 0 & cl.G == 0 & cl.B == 0)
+            {
+                return RtFont.GetDefaultColorSetting(clSetting);
+            }
+
+            return cl;
+        }
+
+        public float GetStreamFontSize(BinaryReader br, Enums.eFontSizeSetting fntSetting, bool autoFix = true)
+        {
+            var fntSize = br.ReadSingle();
+            if (autoFix & !RtFont.ValidFontSize(fntSize))
+            {
+                return RtFont.GetDefaultFontSizeSetting(fntSetting);
+            }
+
+            return fntSize;
+        }
+        
         private void LegacyForMigration(string iFilename)
         {
             //using (FileStream fileStream = new FileStream(iFilename, FileMode.Open, FileAccess.Read))
@@ -374,23 +396,28 @@ namespace mrbBase
 
                 if (version >= 1.21000003814697)
                 {
-                    RtFont.PairedBase = reader.ReadSingle();
-                    RtFont.PairedBold = reader.ReadBoolean();
+                    // Bold fonts disabled but on powers - some rendering issues when hovering lists.
+                    RtFont.PairedBase = GetStreamFontSize(reader, Enums.eFontSizeSetting.PairedBase);
+                    //RtFont.PairedBold =
+                    reader.ReadBoolean();
+                    RtFont.PairedBold = false;
                     RtFont.RTFBase = reader.ReadInt32();
                     RtFont.RTFBold = reader.ReadBoolean();
-                    RtFont.ColorBackgroundHero = reader.ReadRGB();
-                    RtFont.ColorBackgroundVillain = reader.ReadRGB();
-                    RtFont.ColorEnhancement = reader.ReadRGB();
-                    RtFont.ColorFaded = reader.ReadRGB();
-                    RtFont.ColorInvention = reader.ReadRGB();
-                    RtFont.ColorInventionInv = reader.ReadRGB();
-                    RtFont.ColorText = reader.ReadRGB();
-                    RtFont.ColorWarning = reader.ReadRGB();
-                    RtFont.ColorPlName = reader.ReadRGB();
-                    RtFont.ColorPlSpecial = reader.ReadRGB();
-                    RtFont.PowersSelectBase = reader.ReadSingle();
-                    RtFont.PowersSelectBold = reader.ReadBoolean();
-                    RtFont.PowersBase = reader.ReadSingle();
+                    RtFont.ColorBackgroundHero = GetStreamColor(reader, Enums.eColorSetting.ColorBackgroundHero);
+                    RtFont.ColorBackgroundVillain = GetStreamColor(reader, Enums.eColorSetting.ColorBackgroundVillain);
+                    RtFont.ColorEnhancement = GetStreamColor(reader, Enums.eColorSetting.ColorEnhancement);
+                    RtFont.ColorFaded = GetStreamColor(reader, Enums.eColorSetting.ColorFaded);
+                    RtFont.ColorInvention = GetStreamColor(reader, Enums.eColorSetting.ColorInvention);
+                    RtFont.ColorInventionInv = GetStreamColor(reader, Enums.eColorSetting.ColorInventionInv);
+                    RtFont.ColorText = GetStreamColor(reader, Enums.eColorSetting.ColorText);
+                    RtFont.ColorWarning = GetStreamColor(reader, Enums.eColorSetting.ColorWarning);
+                    RtFont.ColorPlName = GetStreamColor(reader, Enums.eColorSetting.ColorPlName);
+                    RtFont.ColorPlSpecial = GetStreamColor(reader, Enums.eColorSetting.ColorPlSpecial);
+                    RtFont.PowersSelectBase = GetStreamFontSize(reader, Enums.eFontSizeSetting.PowersSelectBase);
+                    //RtFont.PowersSelectBold =
+                    reader.ReadBoolean();
+                    RtFont.PowersSelectBold = false;
+                    RtFont.PowersBase = GetStreamFontSize(reader, Enums.eFontSizeSetting.PowersBase);
                     RtFont.PowersBold = reader.ReadBoolean();
                 }
 
@@ -399,14 +426,14 @@ namespace mrbBase
                     ShowSlotLevels = reader.ReadBoolean();
                     DisableLoadLastFileOnStart = !reader.ReadBoolean();
                     LastFileName = reader.ReadString();
-                    RtFont.ColorPowerAvailable = reader.ReadRGB();
-                    RtFont.ColorPowerDisabled = reader.ReadRGB();
-                    RtFont.ColorPowerTakenHero = reader.ReadRGB();
-                    RtFont.ColorPowerTakenDarkHero = reader.ReadRGB();
-                    RtFont.ColorPowerHighlightHero = reader.ReadRGB();
-                    RtFont.ColorPowerTakenVillain = reader.ReadRGB();
-                    RtFont.ColorPowerTakenDarkVillain = reader.ReadRGB();
-                    RtFont.ColorPowerHighlightVillain = reader.ReadRGB();
+                    RtFont.ColorPowerAvailable = GetStreamColor(reader, Enums.eColorSetting.ColorPowerAvailable);
+                    RtFont.ColorPowerDisabled = GetStreamColor(reader, Enums.eColorSetting.ColorPowerDisabled);
+                    RtFont.ColorPowerTakenHero = GetStreamColor(reader, Enums.eColorSetting.ColorPowerTakenHero);
+                    RtFont.ColorPowerTakenDarkHero = GetStreamColor(reader, Enums.eColorSetting.ColorPowerTakenDarkHero);
+                    RtFont.ColorPowerHighlightHero = GetStreamColor(reader, Enums.eColorSetting.ColorPowerHighlightHero);
+                    RtFont.ColorPowerTakenVillain = GetStreamColor(reader, Enums.eColorSetting.ColorPowerTakenVillain);
+                    RtFont.ColorPowerTakenDarkVillain = GetStreamColor(reader, Enums.eColorSetting.ColorPowerTakenDarkVillain);
+                    RtFont.ColorPowerHighlightVillain = GetStreamColor(reader, Enums.eColorSetting.ColorPowerHighlightVillain);
                 }
 
                 if (version >= 1.23000001907349)
@@ -568,6 +595,7 @@ namespace mrbBase
         {
             var rootDir = Path.GetDirectoryName(fn);
             var targetFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}.{serializer.Extension}");
+
             var rng = RandomNumberGenerator.Create();
             var randomBytes = new byte[8];
             rng.GetNonZeroBytes(randomBytes);
@@ -743,42 +771,86 @@ namespace mrbBase
                 PowersBold = iFs.PowersBold;
             }
 
+            public bool ValidFontSize(float fntSize)
+            {
+                return fntSize >= 6 & fntSize <= 14;
+            }
+
+            public Color GetDefaultColorSetting(Enums.eColorSetting clSetting)
+            {
+                return clSetting switch
+                {
+                    Enums.eColorSetting.ColorBackgroundHero => Color.FromArgb(0, 0, 32), //Color.Black;
+                    Enums.eColorSetting.ColorBackgroundVillain => Color.FromArgb(32, 0, 0), //Color.Black;
+                    Enums.eColorSetting.ColorText => Color.White,
+                    Enums.eColorSetting.ColorInvention => Color.Cyan,
+                    Enums.eColorSetting.ColorInventionInv => Color.Navy,
+                    Enums.eColorSetting.ColorFaded => Color.Silver,
+                    Enums.eColorSetting.ColorEnhancement => Color.Lime,
+                    Enums.eColorSetting.ColorWarning => Color.Red,
+                    Enums.eColorSetting.ColorPlName => Color.FromArgb(192, 192, 255),
+                    Enums.eColorSetting.ColorPlSpecial => Color.FromArgb(128, 128, 255),
+                    Enums.eColorSetting.ColorPowerAvailable => Color.Gold,
+                    Enums.eColorSetting.ColorPowerDisabled => Color.DimGray,
+                    Enums.eColorSetting.ColorPowerTakenHero => Color.FromArgb(116, 168, 234),
+                    Enums.eColorSetting.ColorPowerTakenDarkHero => Color.DodgerBlue,
+                    Enums.eColorSetting.ColorPowerHighlightHero => Color.FromArgb(64, 64, 96),
+                    Enums.eColorSetting.ColorPowerTakenVillain => Color.FromArgb(191, 74, 56),
+                    Enums.eColorSetting.ColorPowerTakenDarkVillain => Color.Maroon,
+                    Enums.eColorSetting.ColorPowerHighlightVillain => Color.FromArgb(96, 64, 64),
+                    Enums.eColorSetting.ColorDamageBarBase => Color.FromArgb(0, 0, 32),
+                    Enums.eColorSetting.ColorDamageBarEnh => Color.FromArgb(0, 0, 32),
+                    _ => Color.FromArgb(0, 0, 0)
+                };
+            }
+
+            public float GetDefaultFontSizeSetting(Enums.eFontSizeSetting fntSetting)
+            {
+                return fntSetting switch
+                {
+                    Enums.eFontSizeSetting.PairedBase => 10.25f,
+                    Enums.eFontSizeSetting.PowersSelectBase => 8.50f,
+                    Enums.eFontSizeSetting.PowersBase => 9.25f,
+                    _ => 8.50f
+                };
+            }
+
             public void SetDefault()
             {
                 RTFBase = 16;
                 RTFBold = true;
-                ColorBackgroundHero = Color.Black;
-                ColorBackgroundVillain = Color.Black;
-                ColorEnhancement = Color.FromArgb(0, byte.MaxValue, 0);
-                ColorFaded = Color.FromArgb(192, 192, 192);
-                ColorInvention = Color.FromArgb(0, byte.MaxValue, byte.MaxValue);
-                ColorInventionInv = Color.FromArgb(0, 0, 128);
-                ColorText = Color.FromArgb(byte.MaxValue, byte.MaxValue, byte.MaxValue);
-                ColorWarning = Color.FromArgb(byte.MaxValue, 0, 0);
-                ColorPlName = Color.FromArgb(192, 192, byte.MaxValue);
-                ColorPlSpecial = Color.FromArgb(128, 128, byte.MaxValue);
-                ColorPowerAvailable = Color.Gold;
-                ColorPowerDisabled = Color.DimGray;
-                ColorPowerTakenHero = Color.FromArgb(116, 168, 234);
-                ColorPowerTakenDarkHero = Color.DodgerBlue;
-                ColorPowerHighlightHero = Color.FromArgb(64, 64, 96);
-                ColorPowerTakenVillain = Color.FromArgb(191, 74, 56);
-                ColorPowerTakenDarkVillain = Color.Maroon;
-                ColorPowerHighlightVillain = Color.FromArgb(96, 64, 64);
-                ColorDamageBarBase = Color.LimeGreen;
-                ColorDamageBarEnh = Color.DarkRed;
+                ColorBackgroundHero = GetDefaultColorSetting(Enums.eColorSetting.ColorBackgroundHero);
+                ColorBackgroundVillain = GetDefaultColorSetting(Enums.eColorSetting.ColorBackgroundVillain);
+                ColorText = GetDefaultColorSetting(Enums.eColorSetting.ColorText);
+                ColorInvention = GetDefaultColorSetting(Enums.eColorSetting.ColorInvention);
+                ColorInventionInv = GetDefaultColorSetting(Enums.eColorSetting.ColorInventionInv);
+                ColorFaded = GetDefaultColorSetting(Enums.eColorSetting.ColorFaded);
+                ColorEnhancement = GetDefaultColorSetting(Enums.eColorSetting.ColorEnhancement);
+                ColorWarning = GetDefaultColorSetting(Enums.eColorSetting.ColorWarning);
+                ColorPlName = GetDefaultColorSetting(Enums.eColorSetting.ColorPlName);
+                ColorPlSpecial = GetDefaultColorSetting(Enums.eColorSetting.ColorPlSpecial);
+                ColorPowerAvailable = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerAvailable);
+                ColorPowerDisabled = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerDisabled);
+                ColorPowerTakenHero = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerTakenHero);
+                ColorPowerTakenDarkHero = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerTakenDarkHero);
+                ColorPowerHighlightHero = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerHighlightHero);
+                ColorPowerTakenVillain = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerTakenVillain);
+                ColorPowerTakenDarkVillain = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerTakenDarkVillain);
+                ColorPowerHighlightVillain = GetDefaultColorSetting(Enums.eColorSetting.ColorPowerHighlightVillain);
+                ColorDamageBarBase = GetDefaultColorSetting(Enums.eColorSetting.ColorDamageBarBase);
+                ColorDamageBarEnh = GetDefaultColorSetting(Enums.eColorSetting.ColorDamageBarEnh);
                 ColorList = new List<Color>
                 {
                     ColorPowerTakenHero, ColorPowerTakenDarkHero, ColorPowerHighlightHero, ColorPowerTakenVillain,
                     ColorPowerTakenDarkVillain, ColorPowerHighlightVillain
                 };
-                PairedBase = 10.25f;
+                PairedBase = GetDefaultFontSizeSetting(Enums.eFontSizeSetting.PairedBase);
                 PairedBold = false;
                 // Zed: With Tahoma, spaces tend to be munched if PowersSelectBase is at 8.25
                 // Looks good with 8.50 with no other noticeable difference.
-                PowersSelectBase = 8.50f;
+                PowersSelectBase = GetDefaultFontSizeSetting(Enums.eFontSizeSetting.PowersSelectBase);
                 PowersSelectBold = false;
-                PowersBase = 9.25f;
+                PowersBase = GetDefaultFontSizeSetting(Enums.eFontSizeSetting.PowersBase);
                 PowersBold = true;
             }
         }
