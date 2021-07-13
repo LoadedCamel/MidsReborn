@@ -965,8 +965,6 @@ namespace mrbControls
             var brush = new SolidBrush(outlineColor);
             var layoutRectangle = bounds;
             var layoutRectangle2 = new RectangleF(layoutRectangle.X, layoutRectangle.Y, layoutRectangle.Width, bFont.GetHeight(g));
-            Debug.WriteLine($"Font size: {bFont.Size}, {bFont.GetHeight(g)}");
-            Debug.WriteLine($"DrawOutlineText() layoutRectangle2: {{X: {layoutRectangle2.X}, Y: {layoutRectangle2.Y}, Width: {layoutRectangle2.Width}, Height: {layoutRectangle2.Height}}}");
             layoutRectangle2.X -= outlineSpace;
             if (!smallMode)
                 g.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);
