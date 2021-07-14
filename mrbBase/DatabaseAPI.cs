@@ -1364,7 +1364,7 @@ namespace mrbBase
                 writer.Write(Database.Issue);
                 writer.Write("BEGIN:ARCHETYPES");
                 Database.ArchetypeVersion.StoreTo(writer);
-                Console.WriteLine(Database.ArchetypeVersion);
+                //Console.WriteLine(Database.ArchetypeVersion);
                 writer.Write(Database.Classes.Length - 1);
                 for (var index = 0; index <= Database.Classes.Length - 1; ++index)
                 {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using FastDeepCloner;
 using mrbBase.Base.Display;
 using mrbBase.Base.Master_Classes;
 
@@ -1379,6 +1379,19 @@ namespace mrbBase.Base.Data_Classes
             var poolIndex = new int[4];
             for (var i = 3; i <= 6; ++i)
             {
+                // This can actually happen.
+                // See: https://forums.homecomingservers.com/topic/19963-mids-reborn-hero-designer/?do=findComment&comment=382180
+                if (Powersets[i] == null)
+                {
+                    if (i == 3)
+                    {
+                        Powersets[i] = DatabaseAPI.GetPowersetByIndex(DatabaseAPI.GetPowersetIndexesByGroupName("Pool")[0]);
+                    }
+                    else
+                    {
+                        Powersets[i] = Powersets[i - 1].Clone();
+                    }
+                }
                 var ps = Powersets[i];
                 poolIndex[i - 3] = ps?.nID ?? -1;
                 poolOrder[i - 3] = ps != null ? GetEarliestPowerIndex(Powersets[i].nID) : -1;
