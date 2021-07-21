@@ -1353,7 +1353,11 @@ namespace Mids_Reborn.Forms
                 pw.Power.FullName.StartsWith("Inherent.Inherent.White_Dwarf") |
                 pw.Power.FullName.StartsWith("Inherent.Inherent.Bright_Nova"));
 
-            if (dp.Level != -2) DoResize();
+            if (dp.Level != -2)
+            {
+                pnlGFX.Update();
+                pnlGFX.Refresh();
+            }
 
             return true;
         }
