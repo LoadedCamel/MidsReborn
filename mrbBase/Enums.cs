@@ -1311,6 +1311,37 @@ namespace mrbBase
             Influence = 6
         }
 
+        public enum eColorSetting
+        {
+            ColorBackgroundHero = 0,
+            ColorBackgroundVillain = 1,
+            ColorText = 2,
+            ColorInvention = 3,
+            ColorInventionInv = 4,
+            ColorFaded = 5,
+            ColorEnhancement = 6,
+            ColorWarning = 7,
+            ColorPlName = 8,
+            ColorPlSpecial = 9,
+            ColorPowerAvailable = 10,
+            ColorPowerDisabled = 11,
+            ColorPowerTakenHero = 12,
+            ColorPowerTakenDarkHero = 13,
+            ColorPowerHighlightHero = 14,
+            ColorPowerTakenVillain = 15,
+            ColorPowerTakenDarkVillain = 16,
+            ColorPowerHighlightVillain = 17,
+            ColorDamageBarBase = 18,
+            ColorDamageBarEnh = 19
+        }
+
+        public enum eFontSizeSetting
+        {
+            PairedBase = 0,
+            PowersSelectBase = 1,
+            PowersBase = 2
+        }
+
         public static bool MezDurationEnhancable(eMez mezEnum)
         {
             return mezEnum == eMez.Confused || mezEnum == eMez.Held || mezEnum == eMez.Immobilized ||

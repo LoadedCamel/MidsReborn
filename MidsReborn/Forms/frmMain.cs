@@ -1340,6 +1340,25 @@ namespace Mids_Reborn.Forms
             UpdateColors();
             FloatUpdate(true);
 
+            // Force rendering the bottom part of the main build UI if it any of the selected powers match these conditions:
+            // - Any accolade
+            // - Any incarnate power
+            // - Any PB/WS shapeshifting special power (dwarves and novae)
+            var dp = new PowerEntry { Level = -2 };
+            var p = MidsContext.Character.CurrentBuild.Powers.DefaultIfEmpty(dp).FirstOrDefault(pw =>
+                pw.Power.FullName.StartsWith("Temporary_Powers.Accolades.") |
+                pw.Power.FullName.StartsWith("Incarnate.") |
+                pw.Power.FullName.StartsWith("Inherent.Inherent.Black_Dwarf") |
+                pw.Power.FullName.StartsWith("Inherent.Inherent.Dark_Nova") |
+                pw.Power.FullName.StartsWith("Inherent.Inherent.White_Dwarf") |
+                pw.Power.FullName.StartsWith("Inherent.Inherent.Bright_Nova"));
+
+            if (dp.Level != -2)
+            {
+                pnlGFX.Update();
+                pnlGFX.Refresh();
+            }
+
             return true;
         }
 

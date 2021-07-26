@@ -51,7 +51,7 @@ namespace mrbBase
 
         public static string FNamePowersRepl => Path.Combine(FPathAppData, MxdbPowersReplTable);
 
-        private static string FPathAppData => MidsContext.Config.DataPath;
+        private static string FPathAppData => MidsContext.Config != null ? MidsContext.Config.DataPath : FDefaultPath;
 
         internal static string SearchUp(string folder, string fn)
         {
@@ -173,7 +173,8 @@ namespace mrbBase
                 }
                 case false when !File.Exists(FNameJsonConfig):
                 {
-                    MessageBox.Show(@"Config file doesn't exist, generating a new one.");
+                    MessageBox.Show(@"Config file doesn't exist, generating a new one.", "Missing config file", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    File.WriteAllText(FNameJsonConfig, "");
                     return FNameJsonConfig;
                 }
                 case true when File.Exists(FNameConfig):

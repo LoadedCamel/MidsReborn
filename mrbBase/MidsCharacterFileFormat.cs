@@ -347,10 +347,15 @@ namespace mrbBase
                 for (var index = 0; index < powerSetCount + 1; ++index)
                 {
                     var iName = r.ReadString();
-                    if (iName == "Pool.Leadership_beta")
+                    iName = iName switch
                     {
-                        iName = "Pool.Leadership";
-                    }
+                        "Pool.Leadership_beta" => "Pool.Leadership",
+
+                        // Partial support for builds made with MHD 1.x
+                        "Blaster_Support.Atomic_Manipulation" => "Blaster_Support.Radiation_Manipulation",
+                        "Pool.Fitness" => "Pool.Invisibility",
+                        _ => iName
+                    };
 
                     names.Add(iName);
                 }

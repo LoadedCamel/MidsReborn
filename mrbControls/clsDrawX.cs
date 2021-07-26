@@ -686,10 +686,10 @@ namespace mrbControls
                 SolidBrush solidBrush;
                 //if (!System.Diagnostics.Debugger.IsAttached || !this.IsInDesignMode() || !System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
                 var inDesigner = Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv");
-                for (var i = 0; i <= iSlot.Slots.Length - 1; i++)
+                for (var i = 0; i < iSlot.Slots.Length; i++)
                 {
                     var slot = iSlot.Slots[i];
-                    // Enhancment spacing and position?
+                    // Enhancement spacing and position?
                     rectangleF.X = slotLocation.X + (szSlot.Width + 2) * i;
                     rectangleF.Y = slotLocation.Y;
                     //
@@ -964,8 +964,7 @@ namespace mrbControls
 
             var brush = new SolidBrush(outlineColor);
             var layoutRectangle = bounds;
-            var layoutRectangle2 = new RectangleF(layoutRectangle.X, layoutRectangle.Y, layoutRectangle.Width,
-                bFont.GetHeight(g));
+            var layoutRectangle2 = new RectangleF(layoutRectangle.X, layoutRectangle.Y, layoutRectangle.Width, bFont.GetHeight(g));
             layoutRectangle2.X -= outlineSpace;
             if (!smallMode)
                 g.DrawString(iStr, bFont, brush, layoutRectangle2, stringFormat);

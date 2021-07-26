@@ -65,7 +65,7 @@ namespace mrbBase
 
         public static byte[] UncompressChunk(ref byte[] iBytes, int outSize)
         {
-            Console.WriteLine(Environment.CurrentDirectory);
+            //Console.WriteLine(Environment.CurrentDirectory);
             // zlib doesn't seem to work in 64bit, try this, and fallback to trying zlib if failed
             //if (is64BitProcess && File.Exists(ExternalCompressionName))
             //{
