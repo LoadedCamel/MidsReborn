@@ -163,7 +163,7 @@ namespace mrbBase
             return string.Empty;
         }*/
 
-        internal static string GetConfigFilename(bool forceMhd)
+        public static string GetConfigFilename(bool forceMhd)
         {
             switch (forceMhd)
             {
@@ -173,7 +173,7 @@ namespace mrbBase
                 }
                 case false when !File.Exists(FNameJsonConfig):
                 {
-                    MessageBox.Show(@"Config file doesn't exist, generating a new one.", "Missing config file", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(@"Config file doesn't exist, generating a new one.", @"Missing config file", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     File.WriteAllText(FNameJsonConfig, "");
                     return FNameJsonConfig;
                 }

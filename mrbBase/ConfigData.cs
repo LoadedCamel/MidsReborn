@@ -62,8 +62,21 @@ namespace mrbBase
         public string AppChangeLog { get; set; }
         public string DbChangeLog { get; set; }
         public bool CoDEffectFormat = false;
-        private ConfigData() : this(true, "")
+        public ConfigData()
         {
+            DamageMath.Calculate = EDamageMath.Average;
+            DamageMath.ReturnValue = EDamageReturn.Numeric;
+            I9.DefaultIOLevel = 49;
+            TotalsWindowTitleStyle = ETotalsWindowTitleStyle.Generic;
+            RtFont.SetDefault();
+            Tips = new Tips();
+            Export = new ExportConfig();
+            CompOverride = Array.Empty<Enums.CompOverride>();
+            TeamMembers = new Dictionary<string, int>();
+            DiscordEnabled = false;
+            Registered = 0;
+            DiscordAuthorized = false;
+            InitializeComponent();
         }
 
         private ConfigData(bool deserializing, string iFilename)
@@ -218,13 +231,6 @@ namespace mrbBase
             oldMethod.SaveConfig(serializer);
         }
 
-        private static void GenerateDefaultConfig(ISerialize serializer, string fileName)
-        {
-            File.WriteAllText(fileName, "");
-            _current = new ConfigData(false, fileName);
-            SaveRawMhd(serializer, _current, fileName, new RawSaveResult(0, 0));
-        }
-
         public static void Initialize(ISerialize serializer)
         {
             // migrate
@@ -246,14 +252,8 @@ namespace mrbBase
                 }
                 catch
                 {
-                    GenerateDefaultConfig(serializer, fn);
-                    Initialize(serializer);
+                    MessageBox.Show("Failed to read config file.");
                 }
-            }
-            else
-            {
-                GenerateDefaultConfig(serializer, fn);
-                Initialize(serializer);
             }
 
             _current.InitializeComponent();
@@ -504,7 +504,7 @@ namespace mrbBase
             SaveRawMhd(serializer, this, iFilename, null);
         }
 
-        private void Save(ISerialize serializer, string iFilename)
+        public void Save(ISerialize serializer, string iFilename)
         {
             SaveRaw(serializer, iFilename);
         }
