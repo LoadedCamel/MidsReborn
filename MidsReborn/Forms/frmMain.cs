@@ -49,10 +49,27 @@ namespace Mids_Reborn.Forms
         {
             if (!Debugger.IsAttached || !this.IsInDesignMode() || !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv"))
             {
-                ConfigData.Initialize(MyApplication.GetSerializer());
-                if (MidsContext.Config.DiscordEnabled is true)
+                if (File.Exists(Files.GetConfigFilename(false)))
                 {
-                    ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                    var fInfo = new FileInfo(Files.GetConfigFilename(false));
+                    if (fInfo.Length > 0)
+                    {
+                        ConfigData.Initialize(MyApplication.GetSerializer());
+                        if (MidsContext.Config.DiscordEnabled is true)
+                        {
+                            ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                        }
+                    }
+                    else
+                    {
+                        var tempConfig = new ConfigData();
+                        tempConfig.Save(MyApplication.GetSerializer(), Files.GetConfigFilename(false));
+                        ConfigData.Initialize(MyApplication.GetSerializer());
+                        if (MidsContext.Config.DiscordEnabled is true)
+                        {
+                            ConfigDataSpecial.Initialize(MyApplication.GetSerializer());
+                        }
+                    }
                 }
                 Load += frmMain_Load;
                 Closed += frmMain_Closed;
@@ -931,7 +948,8 @@ namespace Mids_Reborn.Forms
 
         private bool CloseCommand()
         {
-            if (MainModule.MidsController.Toon == null) return false;
+            if (MidsContext.Config.FirstRun) MidsContext.Config.FirstRun = false;
+                if (MainModule.MidsController.Toon == null) return false;
 
             if (!(MainModule.MidsController.Toon.Locked & FileModified))
                 return false;
