@@ -64,6 +64,7 @@ namespace Mids_Reborn.Forms
                     {
                         var tempConfig = new ConfigData();
                         tempConfig.Save(MyApplication.GetSerializer(), Files.GetConfigFilename(false));
+                        tempConfig.SaveConfig(MyApplication.GetSerializer());
                         ConfigData.Initialize(MyApplication.GetSerializer());
                         if (MidsContext.Config.DiscordEnabled is true)
                         {
