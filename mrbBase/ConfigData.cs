@@ -595,6 +595,7 @@ namespace mrbBase
         {
             var rootDir = Path.GetDirectoryName(fn);
             var targetFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(fn)}.{serializer.Extension}");
+            if (!File.Exists(targetFile)) File.WriteAllText(targetFile, string.Empty);
 
             var rng = RandomNumberGenerator.Create();
             var randomBytes = new byte[8];

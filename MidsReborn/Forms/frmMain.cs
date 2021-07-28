@@ -64,6 +64,7 @@ namespace Mids_Reborn.Forms
                     {
                         var tempConfig = new ConfigData();
                         tempConfig.Save(MyApplication.GetSerializer(), Files.GetConfigFilename(false));
+                        tempConfig.SaveConfig(MyApplication.GetSerializer());
                         ConfigData.Initialize(MyApplication.GetSerializer());
                         if (MidsContext.Config.DiscordEnabled is true)
                         {
@@ -1362,20 +1363,23 @@ namespace Mids_Reborn.Forms
             // - Any accolade
             // - Any incarnate power
             // - Any PB/WS shapeshifting special power (dwarves and novae)
-            var dp = new PowerEntry { Level = -2 };
-            var p = MidsContext.Character.CurrentBuild.Powers.DefaultIfEmpty(dp).FirstOrDefault(pw =>
-                pw.Power.FullName.StartsWith("Temporary_Powers.Accolades.") |
-                pw.Power.FullName.StartsWith("Incarnate.") |
-                pw.Power.FullName.StartsWith("Inherent.Inherent.Black_Dwarf") |
-                pw.Power.FullName.StartsWith("Inherent.Inherent.Dark_Nova") |
-                pw.Power.FullName.StartsWith("Inherent.Inherent.White_Dwarf") |
-                pw.Power.FullName.StartsWith("Inherent.Inherent.Bright_Nova"));
-
-            if (dp.Level != -2)
+            var pEntry = MidsContext.Character.CurrentBuild.Powers.Any(pe =>
             {
-                pnlGFX.Update();
-                pnlGFX.Refresh();
-            }
+                return pe.Power.FullName switch
+                {
+                    { } a when a.StartsWith("Temporary_Powers.Accolades.") => true,
+                    { } b when b.StartsWith("Incarnate.") => true,
+                    { } c when c.StartsWith("Inherent.Inherent.Black_Dwarf") => true,
+                    { } d when d.StartsWith("Inherent.Inherent.Dark_Nova") => true,
+                    { } e when e.StartsWith("Inherent.Inherent.White_Dwarf") => true,
+                    { } f when f.StartsWith("Inherent.Inherent.Bright_Nova") => true,
+                    _ => false
+                };
+            });
+
+            if (!pEntry) return true;
+            pnlGFX.Update();
+            pnlGFX.Refresh();
 
             return true;
         }
