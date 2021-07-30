@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -901,7 +902,10 @@ namespace mrbBase.Base.Data_Classes
             var sConditional = string.Empty;
             var sNearGround = string.Empty;
 
-            if (power != null && power.VariableEnabled && VariableModified)
+            // Some variable effect may not show that they are,
+            // e.g. Kinetics Fulcrum Shift self buff effect.
+            // VariableModified will be false if ToWho is set to Self.
+            if (power != null && power.VariableEnabled && VariableModified | ToWho == Enums.eToWho.Self)
             {
                 sVariable = " (Variable)";
             }
